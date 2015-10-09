@@ -2665,4 +2665,53 @@ Author and (c): Michael Starks, 2014 -->
 </decoder>
 
 
+
+<!-- OSSEC PUPPET decoder, v1.0 2015/10/07
+  -  Created by Wazuh, Inc. <ossec@wazuh.com>.
+  -
+  -  Copyright (C) 2009-2011 Trend Micro Inc.
+  -  All rights reserved.
+  -
+  -  This program is a free software; you can redistribute it
+  -  and/or modify it under the terms of the GNU General Public
+  -  License (version 2) as published by the FSF - Free Software
+  -  Foundation.
+  -
+  -  License details: http://www.ossec.net/en/licensing.html
+-->
+
+
+<!-- PUPPET MASTER -->
+<!-- Oct  1 10:32:26 puppet puppet-master[1055]: Starting Puppet master version 3.8.3 -->
+<decoder name="puppet-master">
+    <program_name>^puppet-master</program_name>
+</decoder>
+
+<!-- Oct  1 10:32:26 puppet puppet-master[1055]: Starting Puppet master version 3.8.3 -->
+<decoder name="puppet-master-starting">
+  <parent>puppet-master</parent>
+  <prematch>^Starting Puppet master </prematch>
+  <regex offset="after_prematch">^version (\S+)</regex>
+  <order>extra_data</order>
+</decoder>
+
+<!-- Oct  1 17:56:52 puppet puppet-master[7879]: Permission denied - /etc/puppet/modules/ossec/files/ossec-agent-win32-2.8.exe -->
+<decoder name="puppet-master-permission">
+  <parent>puppet-master</parent>
+  <prematch>^Permission denied - </prematch>
+  <regex offset="after_prematch">^(\S+)</regex>
+  <order>extra_data</order>
+</decoder>
+
+
+<!-- PUPPET AGENT -->
+<!-- Oct  5 17:43:18 puppet puppet-agent[6273]: Caught INT; storing stop -->
+<decoder name="puppet-agent">
+    <program_name>^puppet-agent</program_name>
+</decoder>
+
+
+<!-- OSSEC PUPPET decoder -->
+
+
 <!-- EOF -->
