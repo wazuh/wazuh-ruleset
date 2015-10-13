@@ -2666,7 +2666,7 @@ Author and (c): Michael Starks, 2014 -->
 
 
 
-<!-- OSSEC PUPPET decoder, v1.0 2015/10/07
+<!-- OSSEC PUPPET decoder, v1.0 2015/10/13
   -  Created by Wazuh, Inc. <ossec@wazuh.com>.
   -
   -  Copyright (C) 2009-2011 Trend Micro Inc.
@@ -2688,7 +2688,7 @@ Author and (c): Michael Starks, 2014 -->
 </decoder>
 
 <!-- Oct  1 10:32:26 puppet puppet-master[1055]: Starting Puppet master version 3.8.3 -->
-<decoder name="puppet-master-starting">
+<decoder name="puppet-master-version">
   <parent>puppet-master</parent>
   <prematch>^Starting Puppet master </prematch>
   <regex offset="after_prematch">^version (\S+)</regex>
@@ -2705,11 +2705,42 @@ Author and (c): Michael Starks, 2014 -->
 
 
 <!-- PUPPET AGENT -->
-<!-- Oct  5 17:43:18 puppet puppet-agent[6273]: Caught INT; storing stop -->
+<!-- Oct  5 16:13:20 puppet puppet-agent[9113]: Starting Puppet client version 3.8.3 -->
 <decoder name="puppet-agent">
     <program_name>^puppet-agent</program_name>
 </decoder>
 
+<!-- Oct  5 16:13:20 puppet puppet-agent[9113]: Starting Puppet client version 3.8.3 -->
+<decoder name="puppet-agent-version">
+  <parent>puppet-agent</parent>
+  <prematch>^Starting Puppet client </prematch>
+  <regex offset="after_prematch">^version (\S+)</regex>
+  <order>extra_data</order>
+</decoder>
+
+ <!-- Oct  5 16:13:23 puppet puppet-agent[9126]: No /etc/puppet/puppetdb.conf file found; falling back to default server and port puppetdb:8081 -->
+<decoder name="puppet-agent-nofile1">
+  <parent>puppet-agent</parent>
+  <prematch>^No </prematch>
+  <regex offset="after_prematch">^(\S+) file found</regex>
+  <order>extra_data</order>
+</decoder>
+
+<!-- Oct  5 16:13:20 puppet puppet-agent[9113]: Puppet::Type::User::ProviderDirectoryservice: file /usr/bin/dsimport does not exist -->
+<decoder name="puppet-agent-nofile2">
+  <parent>puppet-agent</parent>
+  <prematch>file </prematch>
+  <regex offset="after_prematch">^(\S+) does not exist</regex>
+  <order>extra_data</order>
+</decoder>
+
+<!-- Oct  5 16:13:19 puppet puppet-agent[9113]: Failed to load library 'selinux' for feature 'selinux' -->
+<decoder name="puppet-agent-failed-library">
+  <parent>puppet-agent</parent>
+  <prematch>^Failed to load library '</prematch>
+  <regex offset="after_prematch">^(\S+)'</regex>
+  <order>extra_data</order>
+</decoder>
 
 <!-- OSSEC PUPPET decoder -->
 
