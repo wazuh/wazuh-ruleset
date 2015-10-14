@@ -309,5 +309,45 @@
         <description>Puppet Agent: Info - executing </description>
     </rule>
     
+    
+    
+    <!-- Commnads -->
+    
+    <!--
+        Last run: 
+            Check the field "time:last_run" in file /var/lib/puppet/state/last_run_summary.yaml
+        
+        Setup: 
+            2 options:
+                Option 1: Configure every agent: Add <localfile> to ossec.conf
+                Option 2:
+                    In every agent configure the agent logcollector option to accept remote commands from the manager: internal_options.conf > logcollector.remote_commands=1
+                    In Master create the file /var/ossec/etc/shared/agent.conf with <localfile>
+        
+            Copy-paste in ossec.conf (option 1) or agent.conf (option 2):
+                <localfile>
+                    <log_format>full_command</log_format>
+                    <command>timestamp_puppet=`cat /var/lib/puppet/state/last_run_summary.yaml | grep last_run | cut -d: -f 2 | tr -d '[[:space:]]'`;timestamp_current_date=$(date +"%s");diff_min=$((($timestamp_current_date-$timestamp_puppet)/60));if [ "$diff_min" -le "30" ];then echo "Puppet: OK. It runs in the last 30 minutes";else puppet_date=`date -d @"$timestamp_puppet"`;echo "Puppet: KO. Last run: $puppet_date";fi</command>
+                    <frequency>2100</frequency>
+                </localfile>
+    -->
+    <rule id="80090" level="0">
+        <if_sid>530</if_sid>
+        <match>^ossec: output: 'timestamp_puppet</match>
+        <description>Command check if puppet runs every 30 min or less</description>
+    </rule>
+    
+    <rule id="80091" level="0">
+        <if_sid>80090</if_sid>
+        <match>Puppet: OK</match>
+        <description>Puppet ran in the last 30 minutes</description>
+    </rule>
+    
+    <rule id="80092" level="5">
+        <if_sid>80090</if_sid>
+        <match>Puppet: KO</match>
+        <description>Puppet did not run in the last 30 minutes</description>
+    </rule>
+    
 </group>
 <!-- Puppet -->
