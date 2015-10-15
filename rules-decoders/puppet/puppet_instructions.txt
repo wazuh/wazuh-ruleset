@@ -1,0 +1,22 @@
+TODO
+
+    1. Copy decoders...
+    2. Copy rules...
+    3. Setup commands:
+        ...
+        Last run: 
+            Check the field "time:last_run" in file /var/lib/puppet/state/last_run_summary.yaml
+        
+        Setup: 
+            2 options:
+                Option 1: Configure every agent: Add <localfile> to ossec.conf
+                Option 2:
+                    In every agent configure the agent logcollector option to accept remote commands from the manager: internal_options.conf > logcollector.remote_commands=1
+                    In Master create the file /var/ossec/etc/shared/agent.conf with <localfile>
+        
+            Copy-paste in ossec.conf (option 1) or agent.conf (option 2):
+                <localfile>
+                    <log_format>full_command</log_format>
+                    <command>timestamp_puppet=`cat /var/lib/puppet/state/last_run_summary.yaml | grep last_run | cut -d: -f 2 | tr -d '[[:space:]]'`;timestamp_current_date=$(date +"%s");diff_min=$((($timestamp_current_date-$timestamp_puppet)/60));if [ "$diff_min" -le "30" ];then echo "Puppet: OK. It runs in the last 30 minutes";else puppet_date=`date -d @"$timestamp_puppet"`;echo "Puppet: KO. Last run: $puppet_date";fi</command>
+                    <frequency>2100</frequency>
+                </localfile>
