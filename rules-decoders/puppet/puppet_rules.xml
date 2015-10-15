@@ -1,4 +1,4 @@
-<!-- puppet_rules.xml, v1.0 2015/10/13
+<!-- puppet_rules.xml, v1.0 2015/10/15
   -  Created by Wazuh, Inc. <ossec@wazuh.com>.
   -
   -  Copyright (C) 2009-2011 Trend Micro Inc.
@@ -13,6 +13,7 @@
   -->
 
 <!-- Puppet messages -->
+<!-- ID: 80000 - 80100 -->
 <group name="puppet,">
 
     <!--
@@ -110,7 +111,7 @@
     - *failed*
     - *has failure*
     -->
-    <rule id="80006" level="5">
+    <rule id="80006" level="15">
         <if_sid>80000</if_sid>
         <match>^Could not run: Address already in use</match>
         <description>Puppet Master: not run - address in use</description>
@@ -200,8 +201,6 @@
     </rule>
     
 
-    
-    
     <!--
     Errors
     *Not file found
@@ -217,6 +216,9 @@
     *Failed to apply catalog
     - 2015-10-04T08:02:57.257269+00:00 vp21a00is-isgsec015 puppet-agent[1966]: Failed to apply catalog: Could not find dependency File[/etc/yum.conf] for Package[puppet] at /isgadmin/puppet/environments/core/modules/core/manifests/puppet/client.pp:62
     - Oct  5 15:49:48 puppet puppet-agent[7393]: Failed to apply catalog: Could not retrieve local facts: Failed to submit 'replace facts' command for puppet.yokatan.com to PuppetDB at puppetdb:8081: getaddrinfo: Name or service not known
+    
+    *Connection refused
+    - Oct 13 12:48:08 server puppet-agent[3277]: (/File[/var/lib/puppet/facts.d]) Failed to generate additional resources using 'eval_generate': Connection refused - connect(2)
     
     *Errors
     - Oct  5 15:49:28 puppet puppet-agent[7393]: Unable to fetch my node definition, but the agent run will continue:
@@ -252,7 +254,13 @@
         <description>Puppet Agent: Error - failed to apply catalog</description>
     </rule>
     
-    <rule id="80058" level="4">
+    <rule id="80058" level="10">
+        <if_sid>80001</if_sid>
+        <match>Connection refused - connect</match>
+        <description>Puppet Agent: connection refused</description>
+    </rule>
+    
+    <rule id="80059" level="4">
         <if_sid>80001</if_sid>
         <match>^Unable to fetch|does not support|Not using cache|Could not retrieve|Failed|failed|has failure</match>
         <description>Puppet Agent: Error</description>
@@ -284,26 +292,26 @@
     
     - Oct  8 11:51:20 vpc-puppet puppet-agent[16317]: Executing '/usr/bin/apt-key add /tmp/apt_key20151008-16317-8e36sn'
     -->
-    <rule id="80059" level="0">
+    <rule id="80070" level="0">
         <if_sid>80001</if_sid>
         <match>created|defined</match>
         <regex>\(\.+\) created|\(\.+\) defined</regex>
         <description>Puppet Agent: Info - create or defined content</description>
     </rule>
     
-    <rule id="80060" level="0">
+    <rule id="80071" level="0">
         <if_sid>80001</if_sid>
         <match>^Retrieving|^Loading|^Caching|^Evicting|^Using settings|^Finishing transaction|^Configuring| connection for|mode changed|Autorequiring</match>
         <description>Puppet Agent: Info</description>
     </rule>
     
-    <rule id="80061" level="2">
+    <rule id="80072" level="2">
         <if_sid>80001</if_sid>
         <match>^Applying configuration|^Finished catalog</match>
         <description>Puppet Agent: Info - applying configuration</description>
     </rule>
     
-    <rule id="80062" level="2">
+    <rule id="80073" level="2">
         <if_sid>80001</if_sid>
         <match>^Executing</match>
         <description>Puppet Agent: Info - executing </description>
@@ -318,18 +326,18 @@
             Check the field "time:last_run" in file /var/lib/puppet/state/last_run_summary.yaml
         
         Setup: 
-            2 options:
-                Option 1: Configure every agent: Add <localfile> to ossec.conf
-                Option 2:
-                    In every agent configure the agent logcollector option to accept remote commands from the manager: internal_options.conf > logcollector.remote_commands=1
-                    In Master create the file /var/ossec/etc/shared/agent.conf with <localfile>
+        These rules need to read a command output, so it is necessary to copy the code below to /var/ossec/etc/ossec.conf (in every agent)
         
-            Copy-paste in ossec.conf (option 1) or agent.conf (option 2):
-                <localfile>
-                    <log_format>full_command</log_format>
-                    <command>timestamp_puppet=`cat /var/lib/puppet/state/last_run_summary.yaml | grep last_run | cut -d: -f 2 | tr -d '[[:space:]]'`;timestamp_current_date=$(date +"%s");diff_min=$((($timestamp_current_date-$timestamp_puppet)/60));if [ "$diff_min" -le "30" ];then echo "Puppet: OK. It runs in the last 30 minutes";else puppet_date=`date -d @"$timestamp_puppet"`;echo "Puppet: KO. Last run: $puppet_date";fi</command>
-                    <frequency>2100</frequency>
-                </localfile>
+        <localfile>
+            <log_format>full_command</log_format>
+            <command>timestamp_puppet=`cat /var/lib/puppet/state/last_run_summary.yaml | grep last_run | cut -d: -f 2 | tr -d '[[:space:]]'`;timestamp_current_date=$(date +"%s");diff_min=$((($timestamp_current_date-$timestamp_puppet)/60));if [ "$diff_min" -le "30" ];then echo "Puppet: OK. It runs in the last 30 minutes";else puppet_date=`date -d @"$timestamp_puppet"`;echo "Puppet: KO. Last run: $puppet_date";fi</command>
+            <frequency>2100</frequency>
+        </localfile>
+        
+        *Also you can copy the code to /var/ossec/etc/shared/agent.conf in OSSEC Master and configure in every agent the logcollector option to accept remote commands from the manager: 
+            /var/ossec/etc/internal_options.conf:
+                # Logcollector - If it should accept remote commands from the manager
+                logcollector.remote_commands=1
     -->
     <rule id="80090" level="0">
         <if_sid>530</if_sid>
