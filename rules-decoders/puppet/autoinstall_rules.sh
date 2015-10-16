@@ -5,8 +5,8 @@
 # You need to run the script as root
 #   sudo ./autoinstall_rules.sh
 
-x_decoder="a_decoders.xml"
-x_rules="a_rules.xml"
+x_decoder="puppet_decoders.xml"
+x_rules="puppet_rules.xml"
 path_decoder="/var/ossec/etc/decoder.xml"
 path_rules="/var/ossec/rules/"
 
