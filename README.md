@@ -10,12 +10,13 @@ Directory structure:
     |
     │ ├── rules-decoders      
     │   ├── ossec            # OSSEC Rules & Decoders updated by Wazuh
-    │     ├── decoders.xml
+    │     ├── decoder.xml
     │     ├── *_rules.xml
     │   ├── <new_software>   # New Wazuh rules & decoders
 	|     ├── new_software_decoders.xml
 	|     ├── new_software_rules.xml  
 	|     ├── instructions.txt  
+	|     ├── autoinstall_rules.sh  
     |
     │ ├── README.md    
 
