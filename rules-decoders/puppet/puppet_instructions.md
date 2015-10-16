@@ -14,7 +14,11 @@ You can run the script ***./autoinstall_rules.sh***, or follow the instructions:
 </localfile>
 ```
 
-\*Also you can copy the code to */var/ossec/etc/shared/agent.conf* in **OSSEC Manager** and configure in every agent the logcollector option to accept remote commands from the manager: 
+\*Also you can copy the code to */var/ossec/etc/shared/agent.conf* in **OSSEC Manager**:
+```xml
+<agent_config> "localfile_code" </agent_config>
+```
+ and configure in **every agent** the logcollector option to accept remote commands from the manager: 
 */var/ossec/etc/internal_options.conf*:
 
     # Logcollector - If it should accept remote commands from the manager
