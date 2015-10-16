@@ -1,6 +1,8 @@
 #Instructions for Puppet rules
 **Created by Wazuh, Inc. <ossec@wazuh.com>**
 
+You can run the script ***./autoinstall_rules.sh***, or follow the instructions:
+
  1. Append *puppet_decoders.xml* to */var/ossec/etc/decoders.xml*
  2. Copy *puppet_rules.xml* to */var/ossec/rules/*
  3. Some rules need to read a command output, so it is necessary to copy the code below to */var/ossec/etc/ossec.conf* (in **every agent**)
@@ -12,7 +14,7 @@
 </localfile>
 ```
 
-\*Also you can copy the code to */var/ossec/etc/shared/agent.conf* in **OSSEC Master** and configure in every agent the logcollector option to accept remote commands from the manager: 
+\*Also you can copy the code to */var/ossec/etc/shared/agent.conf* in **OSSEC Manager** and configure in every agent the logcollector option to accept remote commands from the manager: 
 */var/ossec/etc/internal_options.conf*:
 
     # Logcollector - If it should accept remote commands from the manager
