@@ -1,0 +1,177 @@
+<!-- netscaler_rules.xml, v1.0 2015/10/23
+  -  Created by Wazuh, Inc. <ossec@wazuh.com>.
+  -  jesus@wazuh.com
+  -  
+  -  Copyright (C) 2009-2011 Trend Micro Inc.
+  -  All rights reserved.
+  -
+  -  This program is a free software; you can redistribute it
+  -  and/or modify it under the terms of the GNU General Public
+  -  License (version 2) as published by the FSF - Free Software
+  -  Foundation.
+  -
+  -  License details: http://www.ossec.net/en/licensing.html
+  -->
+
+<!-- Netscaler messages -->
+<!-- 
+ID: 80100 - 80200 
+Features: AAA, UI, SSLVPN, EVENT, SSLLOG, APPFW, TCP, ROUTING, SNMP, ACL, TRANSFORM, APPFW_RESP, AAATM, PITBOSS, CVPN
+-->
+<group name="netscaler,">
+
+    <rule id="80100" level="0">
+        <decoded_as>netscaler</decoded_as>
+        <description>Netscaler messages grouped.</description>
+        <group>netscaler</group>
+    </rule>
+
+    <rule id="80101" level="2">
+        <if_sid>80100</if_sid>
+        <id>AAA</id>
+        <description>Netscaler AAA messages</description>
+        <group>netscaler, netscaler-aaa</group>
+    </rule>
+    
+    <rule id="80102" level="2">
+        <if_sid>80100</if_sid>
+        <id>UI</id>
+        <description>Netscaler UI messages</description>
+        <group>netscaler, netscaler-ui</group>
+    </rule>
+    
+    <rule id="80103" level="2">
+        <if_sid>80100</if_sid>
+        <id>SSLVPN</id>
+        <description>Netscaler SSLVPN messages</description>
+        <group>netscaler, netscaler-sslvpn</group>
+    </rule>
+    
+    <rule id="80104" level="2">
+        <if_sid>80100</if_sid>
+        <id>EVENT</id>
+        <description>Netscaler EVENT messages</description>
+        <group>netscaler, netscaler-event</group>
+    </rule>
+    
+    <rule id="80105" level="2">
+        <if_sid>80100</if_sid>
+        <id>SSLLOG</id>
+        <description>Netscaler SSLLOG messages</description>
+        <group>netscaler, netscaler-ssllog</group>
+    </rule>
+    
+    <rule id="80106" level="2">
+        <if_sid>80100</if_sid>
+        <id>APPFW</id>
+        <description>Netscaler APPFW messages</description>
+        <group>netscaler, netscaler-appfw</group>
+    </rule>
+    
+    <rule id="80107" level="2">
+        <if_sid>80100</if_sid>
+        <id>TCP</id>
+        <description>Netscaler TCP messages</description>
+        <group>netscaler, netscaler-tcp</group>
+    </rule>
+    
+    <rule id="80108" level="2">
+        <if_sid>80100</if_sid>
+        <id>ROUTING</id>
+        <description>Netscaler ROUTING messages</description>
+        <group>netscaler, netscaler-routing</group>
+    </rule>
+    
+    <rule id="80109" level="2">
+        <if_sid>80100</if_sid>
+        <id>SNMP</id>
+        <description>Netscaler SNMP messages</description>
+        <group>netscaler, netscaler-snmp</group>
+    </rule>
+    
+    <rule id="80110" level="2">
+        <if_sid>80100</if_sid>
+        <id>ACL</id>
+        <description>Netscaler ACL messages</description>
+        <group>netscaler, netscaler-acl</group>
+    </rule>
+    
+    <rule id="80111" level="2">
+        <if_sid>80100</if_sid>
+        <id>TRANSFORM</id>
+        <description>Netscaler TRANSFORM messages</description>
+        <group>netscaler, netscaler-transform</group>
+    </rule>
+    
+    <rule id="80112" level="2">
+        <if_sid>80100</if_sid>
+        <id>APPFW_RESP</id>
+        <description>Netscaler APPFW_RESP messages</description>
+        <group>netscaler, netscaler-appfw_resp</group>
+    </rule>
+    
+    <rule id="80113" level="2">
+        <if_sid>80100</if_sid>
+        <id>AAATM</id>
+        <description>Netscaler AAATM messages</description>
+        <group>netscaler, netscaler-aaatm</group>
+    </rule>
+    
+    <rule id="80114" level="2">
+        <if_sid>80100</if_sid>
+        <id>PITBOSS</id>
+        <description>Netscaler PITBOSS messages</description>
+        <group>netscaler, netscaler-pitboss</group>
+    </rule>
+    
+    <rule id="80115" level="2">
+        <if_sid>80100</if_sid>
+        <id>CVP</id>
+        <description>Netscaler CVP messages</description>
+        <group>netscaler, netscaler-cvp</group>
+    </rule>
+    
+    <!--
+    AAA LOGIN_FAILED
+    02/12/2012: 17:16:28 GMT CUA30070LBN5501 PPE-3 : AAA LOGIN_FAILED 233 0 : User smulpuru - Client_ip 04.xx.158.50 - Failure_reason "External authentication server denied access"
+    -->
+    <rule id="80116" level="5">
+        <if_sid>80101</if_sid>
+        <match>AAA LOGIN_FAILED</match>
+        <description>Netscaler: AAA login failed</description>
+        <group>authentication_failed,netscaler,netscaler-aaa,pci_dss_10.2.4,pci_dss_10.2.5,</group> 
+    </rule>
+    
+    <rule id="80117" level="10" frequency="6">
+        <if_matched_sid>80116</if_matched_sid>
+        <same_source_ip />
+        <description>Multiple Netscaler authentication failures.</description>
+        <group>authentication_failures,netscaler,netscaler-aaa,pci_dss_10.2.4,pci_dss_10.2.5,pci_dss_11.4,</group>
+    </rule> 
+    
+    <!--
+    UI CMD_EXECUTED
+    02/14/2012: 14:32:35 GMT CUA30070LBN6202 PPE-1 : UI CMD_EXECUTED 427 :  User ******** - Remote_ip 10.31.66.1 - Command "bind system global SYSLOG -priority 0" - Status "ERROR AJAJAJAJ"
+    -->
+    <!-- Fix Me: !Success ???? -->
+    <rule id="80118" level="5">
+        <if_sid>80102</if_sid>
+        <match>UI CMD_EXECUTED</match>
+        <status>ERROR</status>
+        <description>Netscaler: UI command executed failed</description>
+        <group>netscaler,netscaler-ui,</group> 
+    </rule>
+    
+    <!-- Fix Me: It is not working: action parser? -->
+    <!-- 02/14/2012: 14:32:35 GMT CUA30070LBN6202 PPE-1 : UI CMD_EXECUTED 427 :  User ******** - Remote_ip 10.31.66.1 - Command "delete TEST" - Status "Success" -->
+    <rule id="80119" level="6">
+        <if_sid>80102</if_sid>
+        <match>UI CMD_EXECUTED</match>
+        <action>delete</action>
+        <description>Netscaler: UI dangerous command</description>
+        <group>netscaler,netscaler-ui,</group> 
+    </rule>
+
+
+</group>
+<!-- netscaler -->
