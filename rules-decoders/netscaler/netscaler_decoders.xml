@@ -127,6 +127,16 @@ Jul 16 15:00:39 <local0.err> 10.90.192.54 07/16/2007:15:00:39 GMT ns : SSLVPN CL
 </decoder>
 
 <!--
+ACL
+Jun  8 16:03:12 <local0.info> 10.12.33.16 06/08/2009:16:03:12 GMT ns : ACL ACL_PKT_LOG 67868 :  Source 10.12.33.12:5353 -- > Destination 224.0.0.251:5353 - Protocol UDP - TimeStamp 871184790(ms) - Hitcount 0 - Hit Rule Deny.12 - Data
+-->
+<decoder name="netscaler-ACL">
+    <parent>netscaler</parent>
+    <prematch> ACL ACL_PKT_LOG</prematch>
+    <regex offset="after_parent">(ACL) ACL_PKT_LOG\.+Source (\S+) --\.+Destination (\S+) - Protocol (\S+) - \.+Hit Rule (\.+) - Data</regex>
+    <order>id,srcip,dstip,protocol,extra_data</order>
+</decoder>
+<!--
 Generic
 -->
 <decoder name="netscaler-generic">

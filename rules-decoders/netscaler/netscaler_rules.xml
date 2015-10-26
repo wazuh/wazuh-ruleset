@@ -48,7 +48,7 @@ id (Decoder): AAA, UI, SSLVPN, EVENT, SSLLOG, APPFW, TCP, ROUTING, SNMP, ACL, TR
     02/14/2012: 14:32:35 GMT CUA30070LBN6202 PPE-1 : UI CMD_EXECUTED 427 :  User ******** - Remote_ip 10.31.66.1 - Command "bind system global SYSLOG -priority 0" - Status "... error ..."
     02/14/2012: 14:32:35 GMT CUA30070LBN6202 PPE-1 : UI CMD_EXECUTED 427 :  User ******** - Remote_ip 10.31.66.1 - Command "bind system global SYSLOG -priority 0" - Status "Success"
     -->
-    <rule id="80103" level="5">
+    <rule id="80103" level="2">
         <if_sid>80100</if_sid>
         <match>UI CMD_EXECUTED</match>
         <status>Success</status>
@@ -72,7 +72,7 @@ id (Decoder): AAA, UI, SSLVPN, EVENT, SSLLOG, APPFW, TCP, ROUTING, SNMP, ACL, TR
     </rule> 
     
     <!-- 02/14/2012: 14:32:35 GMT CUA30070LBN6202 PPE-1 : UI CMD_EXECUTED 427 :  User ******** - Remote_ip 10.31.66.1 - Command "delete TEST" - Status "Success" -->
-    <rule id="80106" level="6">
+    <rule id="80106" level="10">
         <if_sid>80100</if_sid>
         <match>UI CMD_EXECUTED</match>
         <regex>Command "(\.*delete\.*)"</regex>
@@ -289,5 +289,119 @@ id (Decoder): AAA, UI, SSLVPN, EVENT, SSLLOG, APPFW, TCP, ROUTING, SNMP, ACL, TR
         <group>netscaler-event,</group> 
     </rule>
     
+    <!--
+    APPFW APPFW_STARTURL
+    APPFW APPFW_DENYURL
+    APPFW APPFW_REFERER_HEADER
+    APPFW APPFW_CSRF_TAG
+    APPFW APPFW_XSS
+    APPFW APPFW_XML_XSS
+    APPFW APPFW_SQL
+    APPFW APPFW_XML_SQL
+    APPFW APPFW_COOKIE
+    APPFW APPFW_FIELDCONSISTENCY
+    APPFW APPFW_BUFFEROVERFLOW_URL
+    APPFW APPFW_BUFFEROVER FLOW_COOKIE
+    APPFW APPFW_BUFFEROVERFLOW_HDR
+    APPFW APPFW_FIELDFORMAT
+    APPFW APPFW_SAFECOMMERCE
+    APPFW APPFW_SAFECOMMERCE_XFORM
+    APPFW APPFW_SAFEOBJECT
+    APPFW APPFW_SIGNATURE_MATCH
+    -->
+    <rule id="80127" level="2">
+        <if_sid>80100</if_sid>
+        <match>APPFW APPFW_STARTURL|APPFW APPFW_DENYURL|APPFW APPFW_REFERER_HEADER|APPFW APPFW_CSRF_TAG|APPFW APPFW_XSS|APPFW APPFW_XML_XSS|APPFW APPFW_SQL|APPFW APPFW_XML_SQL|APPFW APPFW_COOKIE|APPFW APPFW_FIELDCONSISTENCY|APPFWAPPFW_BUFFEROVERFLOW_URL|APPFW APPFW_BUFFEROVER FLOW_COOKIE|APPFW APPFW_BUFFEROVERFLOW_HDR|APPFW APPFW_FIELDFORMAT|APPFW APPFW_SAFECOMMERCE|APPFW APPFW_SAFECOMMERCE_XFORM|APPFW APPFW_SAFEOBJECT|APPFW APPFW_SIGNATURE_MATCH</match>
+        <description>Netscaler: Firewall violation</description>
+        <group>netscaler-APPFW,pci_dss_1.4,pci_dss_6.5,pci_dss_6.6,</group> 
+    </rule>
+    
+    
+    <!--
+    APPFW AF_UTHREAD_STACK_ERR
+    -->
+    <rule id="80128" level="5">
+        <if_sid>80100</if_sid>
+        <match>APPFW AF_UTHREAD_STACK_ERR</match>
+        <description>Netscaler: Firewall: Appsecure uthread at 0x%x had a stack error</description>
+        <group>netscaler-APPFW,pci_dss_1.4,pci_dss_6.5.2,</group> 
+    </rule>
+    
+    <!--
+        06/26/2010:11:41:06 GMT ns PPE-0 : APPFW APPFW_XML_ERR_DOS_TRIGGERED ...
+        06/26/2010:11:41:06 GMT ns PPE-0 : APPFW APPFW_XML_DDOS_ERR_MSG_SEND_FAIL ...
+    -->
+    <rule id="80129" level="4">
+        <if_sid>80100</if_sid>
+        <match>APPFW APPFW_XML_ERR_DOS|APPFW APPFW_XML_DDOS_ERR</match>
+        <description>Netscaler: Firewall: DOS\DDOS error</description>
+        <group>netscaler-APPFW,pci_dss_1.4,pci_dss_11.4,</group> 
+    </rule>
+    
+    <!--
+        SNMP TRAP_SENT INFO Trap Sent Information
+        SNMP TRAP_DROPPED INFO Trap Dropped information
+        
+        06/26/2010:11:41:06 GMT ns PPE-0 : SNMP TRAP_SENT ...
+        06/26/2010:11:41:06 GMT ns PPE-0 : SNMP TRAP_DROPPED ...
+    -->
+    <rule id="80130" level="2">
+        <if_sid>80100</if_sid>
+        <match>SNMP TRAP_SENT</match>
+        <description>Netscaler: SNMP Trap Sent</description>
+        <group>netscaler-SNMP,</group> 
+    </rule>
+    
+    <rule id="80131" level="2">
+        <if_sid>80100</if_sid>
+        <match>SNMP TRAP_DROPPED</match>
+        <description>Netscaler: SNMP Trap Dropped</description>
+        <group>netscaler-SNMP,</group> 
+    </rule>
+
+    <!--
+    ACL ACL_PKT_LOG
+    Jun  8 16:03:12 <local0.info> 10.12.33.16 06/08/2009:16:03:12 GMT ns : ACL ACL_PKT_LOG 67868 :  Source 10.12.33.12:5353 -- > Destination 224.0.0.251:5353 - Protocol UDP - TimeStamp 871184790(ms) - Hitcount 0 - Hit Rule Deny.12 - Data
+    -->
+    <rule id="80132" level="2">
+        <if_sid>80100</if_sid>
+        <match>ACL ACL_PKT_LOG</match>
+        <description>Netscaler: ACL Packet Log</description>
+        <group>netscaler-ACL,</group> 
+    </rule>
+
+    <!--
+    TRANSFORM REQ_PARSE_ERROR
+    TRANSFORM PCRE_ERROR
+    TRANSFORM REQ_WRITE_ERROR
+    06/26/2010:11:41:06 GMT ns PPE-0 : TRANSFORM REQ_PARSE_ERROR ...
+    06/26/2010:11:41:06 GMT ns PPE-0 : TRANSFORM PCRE_ERROR ...
+    06/26/2010:11:41:06 GMT ns PPE-0 : TRANSFORM REQ_WRITE_ERROR ...
+    -->
+    <rule id="80133" level="2">
+        <if_sid>80100</if_sid>
+        <match>TRANSFORM REQ_PARSE_ERROR|TRANSFORM PCRE_ERROR|TRANSFORM REQ_WRITE_ERROR</match>
+        <description>Netscaler: URL Transformation error</description>
+        <group>netscaler-TRANSFORM,</group> 
+    </rule>
+    
+    
+<!--
+ToDo:
+
+APPFW_RESP APPFW_XML_XSS
+APPFW_RESP APPFW_XML_SQL
+APPFW_XML_ATTACHMENT_ERR_INVALIDHEADER
+APPFW_XML_ATTACHMENT_ERR_INVALID_HEADER
+APPFW_XML_DDOS_ERR_MSG_SEND_FAI
+APPFW_XML_DOS_ERR_CHAR_DATA_LENGTH
+APPFW_XML_ERR    ..y para el otro?
+
+AAATM LOGIN
+AAATM LOGOUT
+AAATM HTTP_RESOURCEACCESS_DENIED
+
+UI CMD action:login
+-->
 </group>
 <!-- netscaler -->
