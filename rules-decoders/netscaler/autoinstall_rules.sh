@@ -5,53 +5,43 @@
 # You need to run the script as root
 #   sudo ./autoinstall_rules.sh
 
+backup="backup_netscaler"
 x_decoder="netscaler_decoders.xml"
 x_rules="netscaler_rules.xml"
-path_decoder="/var/ossec/etc/decoder.xml"
-path_rules="/var/ossec/rules/"
+
+ossec_path="/var/ossec/"
 
 #Exit immediately if a command exits with a non-zero status
 set -e
 
-# Decoders
-read -p "1. Append $x_decoder to $path_decoder? (Y/n) " -n 1
+read -p "OSSEC path is \"$ossec_path\"? (Y/n)" -n 1
 
 if [[ $REPLY =~ ^[nN]$ ]]; then
     echo
-    read -p "Path to OSSEC decoders.xml: " 
-    path_decoder=$REPLY
+    read -p "Path to OSSEC: " 
+    ossec_path=$REPLY
 fi
 
-if [ -f "$path_decoder" ]
-then
-	cat $x_decoder >> $path_decoder
-else
-	echo "Error: $path_decoder does not exist"
-    exit
-fi
+path_decoder=$ossec_path"etc/decoder.xml"
+path_rules=$ossec_path"rules/"
+path_ossec=$ossec_path"etc/ossec.conf"
+
+# Decoders
+echo "1. Append $x_decoder to $path_decoder"
+cp $path_decoder  $path_decoder.$backup
+cat $x_decoder >> $path_decoder
+echo "[Done]"
 
 # Rules 
-read -p "2. Copy $x_rules to $path_rules? (Y/n) " -n 1
+echo "2. Copy $x_rules to $path_rules"
+cp $x_rules $path_rules
+echo "[Done]"
 
-if [[ $REPLY =~ ^[nN]$ ]]; then
-    echo
-    read -p "Path to OSSEC rules: " 
-    path_rules=$REPLY
-fi
-
-if [ -d "$path_rules" ]
-then
-	cp $x_rules $path_rules
-else
-	echo "Error: $path_rules does not exist"
-    exit
-fi
-
-
-# Info
-echo "3. **MANUAL STEP**"
-echo "Follow the third instruction indicated in the file instructions.md"
-
+# ossec.conf
+echo  "3. Add <include>$x_rules</include> to $path_ossec"
+cp $path_ossec  $path_ossec.$backup
+sed -i "s/.*<\/rules>.*/    <include>$x_rules<\/include>\n&/" $path_ossec
+echo "[Done]"
 
 # Wazuh
 echo -e "\nWazuh, Inc\n"
