@@ -1,4 +1,4 @@
-<!-- OSSEC Netscaler decoder, v1.0 2015/10/23
+<!-- OSSEC Netscaler decoder, v1.0 2015/10/27
   -  Created by Wazuh, Inc. <ossec@wazuh.com>.
   -  jesus@wazuh.com
   -
@@ -136,6 +136,29 @@ Jun  8 16:03:12 <local0.info> 10.12.33.16 06/08/2009:16:03:12 GMT ns : ACL ACL_P
     <regex offset="after_parent">(ACL) ACL_PKT_LOG\.+Source (\S+) --\.+Destination (\S+) - Protocol (\S+) - \.+Hit Rule (\.+) - Data</regex>
     <order>id,srcip,dstip,protocol,extra_data</order>
 </decoder>
+
+<!--
+AAATM LOGIN
+Jul 31 04:37:59 <local0.info> 127.0.0.2 07/31/2015:04:37:59 GMT  0-PPE-0 : default AAATM LOGIN 790 0 : Context user1@aaatm-test.com@10.102.229.222 - SessionId: 4- User user1@aaatm-test.com - Client_ip 10.102.229.222 - Nat_ip "Mapped Ip" - Vserver 10.102.42.32:443 - Browser_type "Mozilla/5.0 (Windows NT 6.0; rv:39.0) Gecko/20100101 Firefox/39.0" - Group(s) "N/A"
+-->
+<decoder name="netscaler-AAATM-LOGIN">
+    <parent>netscaler</parent>
+    <prematch> AAATM LOGIN</prematch>
+    <regex offset="after_parent">(AAATM) LOGIN\.+User (\S+) - Client_ip (\S+) - Nat_ip "\.+" - Vserver (\S+)</regex>
+    <order>id,srcuser,srcip,dstip</order>
+</decoder>
+
+<!--
+AAATM LOGOUT
+Jan 13 23:22:25 <local0.info> 10.217.28.160 01/13/2015:23:22:25 GMT  0-PPE-0 : AAATM LOGOUT 3312 0 : Context _57007c730f84b76545378fd2e042fc95@10.252.112.245 - SessionId: 58- User _57007c730f84b76545378fd2e042fc95 - Client_ip 10.252.112.245 - Nat_ip "Mapped Ip" - Vserver 10.217.28.163:443 - Start_time "01/13/2015:23:22:17 GMT" - End_time "01/13/2015:23:22:25 GMT" - Duration 00:00:08  - Http_resources_accessed 0 - Total_TCP_connections 0 - Total_policies_allowed 0 - Total_policies_denied 0 - Total_bytes_send 0 - Total_bytes_recv 0 - Total_compressedbytes_send 0 - Total_compressedbytes_recv 0 - Compression_ratio_send 0.00% - Compression_ratio_recv 0.00% - LogoutMethod "FreedViaDHT" - Group(s) "N/A"
+-->
+<decoder name="netscaler-AAATM-LOGOUT">
+    <parent>netscaler</parent>
+    <prematch> AAATM LOGOUT</prematch>
+    <regex offset="after_parent">(AAATM) LOGOUT \.+User (\S+) - Client_ip (\S+) - Nat_ip "\.+" - Vserver (\S+) - Start_time "\.+" - End_time "\.+" - Duration (\S+)</regex>
+    <order>id,srcuser,srcip,dstip</order>
+</decoder>
+
 <!--
 Generic
 -->
