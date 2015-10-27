@@ -1,4 +1,4 @@
-<!-- netscaler_rules.xml, v1.0 2015/10/26
+<!-- netscaler_rules.xml, v1.0 2015/10/27
   -  Created by Wazuh, Inc. <ossec@wazuh.com>.
   -  jesus@wazuh.com
   -  
@@ -56,7 +56,7 @@ id (Decoder): AAA, UI, SSLVPN, EVENT, SSLLOG, APPFW, TCP, ROUTING, SNMP, ACL, TR
         <group>netscaler-ui,</group> 
     </rule>
     
-    <rule id="80104" level="5">
+    <rule id="80104" level="4">
         <if_sid>80100</if_sid>
         <match>UI CMD_EXECUTED</match>
         <status>Error</status>
@@ -179,7 +179,6 @@ id (Decoder): AAA, UI, SSLVPN, EVENT, SSLLOG, APPFW, TCP, ROUTING, SNMP, ACL, TR
     
     <!--
     EVENT ALERTSTARTED
-    06/26/2010:11:41:06 GMT ns PPE-0 : EVENT ALERTSTARTED ??
     -->
     <rule id="80117" level="2">
         <if_sid>80100</if_sid>
@@ -190,7 +189,6 @@ id (Decoder): AAA, UI, SSLVPN, EVENT, SSLLOG, APPFW, TCP, ROUTING, SNMP, ACL, TR
     
     <!--
     EVENT ALERTENDED
-    06/26/2010:11:41:06 GMT ns PPE-0 : EVENT ALERTENDED ??
     -->
     <rule id="80118" level="2">
         <if_sid>80100</if_sid>
@@ -201,7 +199,6 @@ id (Decoder): AAA, UI, SSLVPN, EVENT, SSLLOG, APPFW, TCP, ROUTING, SNMP, ACL, TR
     
     <!--
     EVENT STARTSYS
-    06/26/2010:11:41:06 GMT ns PPE-0 : EVENT STARTSYS ??
     -->
     <rule id="80119" level="2">
         <if_sid>80100</if_sid>
@@ -212,7 +209,6 @@ id (Decoder): AAA, UI, SSLVPN, EVENT, SSLLOG, APPFW, TCP, ROUTING, SNMP, ACL, TR
   
     <!--
     EVENT STOPSYS
-    06/26/2010:11:41:06 GMT ns PPE-0 : EVENT STOPSYS ??
     -->
     <rule id="80120" level="2">
         <if_sid>80100</if_sid>
@@ -223,7 +219,6 @@ id (Decoder): AAA, UI, SSLVPN, EVENT, SSLLOG, APPFW, TCP, ROUTING, SNMP, ACL, TR
   
     <!--
     EVENT NICSTART
-    06/26/2010:11:41:06 GMT ns PPE-0 : EVENT NICSTART ??
     -->
     <rule id="80121" level="2">
         <if_sid>80100</if_sid>
@@ -234,7 +229,6 @@ id (Decoder): AAA, UI, SSLVPN, EVENT, SSLLOG, APPFW, TCP, ROUTING, SNMP, ACL, TR
   
     <!--
     EVENT NICSTOP
-    06/26/2010:11:41:06 GMT ns PPE-0 : EVENT NICSTOP ??
     -->
     <rule id="80122" level="2">
         <if_sid>80100</if_sid>
@@ -245,7 +239,6 @@ id (Decoder): AAA, UI, SSLVPN, EVENT, SSLLOG, APPFW, TCP, ROUTING, SNMP, ACL, TR
   
     <!--
     EVENT NICHANG
-    06/26/2010:11:41:06 GMT ns PPE-0 : EVENT NICHANG ??
     -->
     <rule id="80123" level="2">
         <if_sid>80100</if_sid>
@@ -256,7 +249,6 @@ id (Decoder): AAA, UI, SSLVPN, EVENT, SSLLOG, APPFW, TCP, ROUTING, SNMP, ACL, TR
   
     <!--
     EVENT NICRESET
-    06/26/2010:11:41:06 GMT ns PPE-0 : EVENT NICRESET ??
     -->
     <rule id="80124" level="2">
         <if_sid>80100</if_sid>
@@ -267,9 +259,6 @@ id (Decoder): AAA, UI, SSLVPN, EVENT, SSLLOG, APPFW, TCP, ROUTING, SNMP, ACL, TR
     
     <!--
     EVENT FREEBADMEM|EVENT FREEDUPMEM|EVENT FREEEXTMEM
-    06/26/2010:11:41:06 GMT ns PPE-0 : EVENT FREEBADMEM ??
-    06/26/2010:11:41:06 GMT ns PPE-0 : EVENT FREEDUPMEM ??
-    06/26/2010:11:41:06 GMT ns PPE-0 : EVENT FREEEXTMEM ??
     -->
     <rule id="80125" level="5">
         <if_sid>80100</if_sid>
@@ -280,7 +269,6 @@ id (Decoder): AAA, UI, SSLVPN, EVENT, SSLLOG, APPFW, TCP, ROUTING, SNMP, ACL, TR
     
     <!--
     EVENT PROPFAIL
-    06/26/2010:11:41:06 GMT ns PPE-0 : EVENT PROPFAIL ??
     -->
     <rule id="80126" level="5">
         <if_sid>80100</if_sid>
@@ -292,6 +280,7 @@ id (Decoder): AAA, UI, SSLVPN, EVENT, SSLLOG, APPFW, TCP, ROUTING, SNMP, ACL, TR
     <!--
     APPFW APPFW_STARTURL
     APPFW APPFW_DENYURL
+    APPFW APPFW_CONTENT_TYPE
     APPFW APPFW_REFERER_HEADER
     APPFW APPFW_CSRF_TAG
     APPFW APPFW_XSS
@@ -308,12 +297,15 @@ id (Decoder): AAA, UI, SSLVPN, EVENT, SSLLOG, APPFW, TCP, ROUTING, SNMP, ACL, TR
     APPFW APPFW_SAFECOMMERCE_XFORM
     APPFW APPFW_SAFEOBJECT
     APPFW APPFW_SIGNATURE_MATCH
+    
+    APPFW_RESP APPFW_XML_XSS
+    APPFW_RESP APPFW_XML_SQL
     -->
     <rule id="80127" level="2">
         <if_sid>80100</if_sid>
-        <match>APPFW APPFW_STARTURL|APPFW APPFW_DENYURL|APPFW APPFW_REFERER_HEADER|APPFW APPFW_CSRF_TAG|APPFW APPFW_XSS|APPFW APPFW_XML_XSS|APPFW APPFW_SQL|APPFW APPFW_XML_SQL|APPFW APPFW_COOKIE|APPFW APPFW_FIELDCONSISTENCY|APPFWAPPFW_BUFFEROVERFLOW_URL|APPFW APPFW_BUFFEROVER FLOW_COOKIE|APPFW APPFW_BUFFEROVERFLOW_HDR|APPFW APPFW_FIELDFORMAT|APPFW APPFW_SAFECOMMERCE|APPFW APPFW_SAFECOMMERCE_XFORM|APPFW APPFW_SAFEOBJECT|APPFW APPFW_SIGNATURE_MATCH</match>
+        <match>APPFW APPFW_STARTURL|APPFW APPFW_DENYURL|APPFW APPFW_CONTENT_TYPE|APPFW APPFW_REFERER_HEADER|APPFW APPFW_CSRF_TAG|APPFW APPFW_XSS|APPFW APPFW_XML_XSS|APPFW APPFW_SQL|APPFW APPFW_XML_SQL|APPFW APPFW_COOKIE|APPFW APPFW_FIELDCONSISTENCY|APPFWAPPFW_BUFFEROVERFLOW_URL|APPFW APPFW_BUFFEROVER FLOW_COOKIE|APPFW APPFW_BUFFEROVERFLOW_HDR|APPFW APPFW_FIELDFORMAT|APPFW APPFW_SAFECOMMERCE|APPFW APPFW_SAFECOMMERCE_XFORM|APPFW APPFW_SAFEOBJECT|APPFW APPFW_SIGNATURE_MATCH|APPFW_RESP APPFW_XML_XSS|APPFW_RESP APPFW_XML_SQL</match>
         <description>Netscaler: Firewall violation</description>
-        <group>netscaler-APPFW,pci_dss_1.4,pci_dss_6.5,pci_dss_6.6,</group> 
+        <group>netscaler-appfw,pci_dss_1.4,pci_dss_6.5,pci_dss_6.6,</group> 
     </rule>
     
     
@@ -324,39 +316,41 @@ id (Decoder): AAA, UI, SSLVPN, EVENT, SSLLOG, APPFW, TCP, ROUTING, SNMP, ACL, TR
         <if_sid>80100</if_sid>
         <match>APPFW AF_UTHREAD_STACK_ERR</match>
         <description>Netscaler: Firewall: Appsecure uthread at 0x%x had a stack error</description>
-        <group>netscaler-APPFW,pci_dss_1.4,pci_dss_6.5.2,</group> 
+        <group>netscaler-appfw,pci_dss_1.4,pci_dss_6.5.2,</group> 
     </rule>
     
     <!--
-        06/26/2010:11:41:06 GMT ns PPE-0 : APPFW APPFW_XML_ERR_DOS_TRIGGERED ...
-        06/26/2010:11:41:06 GMT ns PPE-0 : APPFW APPFW_XML_DDOS_ERR_MSG_SEND_FAIL ...
+        APPFW APPFW_XML_ERR_DOS_TRIGGERED
+        APPFW APPFW_XML_DDOS_ERR_MSG_SEND_FAIL
+        
+        APPFW_RESP APPFW_XML_DDOS_ERR_MSG_SEND_FAI
+        APPFW_RESP APPFW_XML_DOS_ERR_CHAR_DATA_LENGTH
     -->
     <rule id="80129" level="4">
         <if_sid>80100</if_sid>
-        <match>APPFW APPFW_XML_ERR_DOS|APPFW APPFW_XML_DDOS_ERR</match>
+        <match>APPFW APPFW_XML_ERR_DOS|APPFW APPFW_XML_DDOS_ERR|APPFW_RESP APPFW_XML_DDOS_ERR_MSG_SEND_FAI|APPFW_RESP APPFW_XML_DOS_ERR_CHAR_DATA_LENGTH</match>
         <description>Netscaler: Firewall: DOS\DDOS error</description>
-        <group>netscaler-APPFW,pci_dss_1.4,pci_dss_11.4,</group> 
+        <group>netscaler-appfw,pci_dss_1.4,pci_dss_11.4,</group> 
     </rule>
     
     <!--
         SNMP TRAP_SENT INFO Trap Sent Information
         SNMP TRAP_DROPPED INFO Trap Dropped information
         
-        06/26/2010:11:41:06 GMT ns PPE-0 : SNMP TRAP_SENT ...
-        06/26/2010:11:41:06 GMT ns PPE-0 : SNMP TRAP_DROPPED ...
+        Aug  9 14:35:19 aaaaa.com 08/09/2013:21:35:19 GMT aaaab PPE-0 : SNMP TRAP_SENT 2241021 :  netScalerLoginFailure (nsUserName = "nsroot", sysIpAddress = xx.xxxx.xxx.xx)
     -->
     <rule id="80130" level="2">
         <if_sid>80100</if_sid>
         <match>SNMP TRAP_SENT</match>
         <description>Netscaler: SNMP Trap Sent</description>
-        <group>netscaler-SNMP,</group> 
+        <group>netscaler-snmp,</group> 
     </rule>
     
     <rule id="80131" level="2">
         <if_sid>80100</if_sid>
         <match>SNMP TRAP_DROPPED</match>
         <description>Netscaler: SNMP Trap Dropped</description>
-        <group>netscaler-SNMP,</group> 
+        <group>netscaler-snmp,</group> 
     </rule>
 
     <!--
@@ -367,41 +361,88 @@ id (Decoder): AAA, UI, SSLVPN, EVENT, SSLLOG, APPFW, TCP, ROUTING, SNMP, ACL, TR
         <if_sid>80100</if_sid>
         <match>ACL ACL_PKT_LOG</match>
         <description>Netscaler: ACL Packet Log</description>
-        <group>netscaler-ACL,</group> 
+        <group>netscaler-acl,</group> 
     </rule>
 
     <!--
     TRANSFORM REQ_PARSE_ERROR
     TRANSFORM PCRE_ERROR
     TRANSFORM REQ_WRITE_ERROR
-    06/26/2010:11:41:06 GMT ns PPE-0 : TRANSFORM REQ_PARSE_ERROR ...
-    06/26/2010:11:41:06 GMT ns PPE-0 : TRANSFORM PCRE_ERROR ...
-    06/26/2010:11:41:06 GMT ns PPE-0 : TRANSFORM REQ_WRITE_ERROR ...
     -->
     <rule id="80133" level="2">
         <if_sid>80100</if_sid>
         <match>TRANSFORM REQ_PARSE_ERROR|TRANSFORM PCRE_ERROR|TRANSFORM REQ_WRITE_ERROR</match>
         <description>Netscaler: URL Transformation error</description>
-        <group>netscaler-TRANSFORM,</group> 
+        <group>netscaler-transform,</group> 
     </rule>
     
+    <!--
+    AAATM LOGIN
+    Jul 31 04:37:59 <local0.info> 127.0.0.2 07/31/2015:04:37:59 GMT  0-PPE-0 : default AAATM LOGIN 790 0 : Context user1@aaatm-test.com@10.102.229.222 - SessionId: 4- User user1@aaatm-test.com - Client_ip 10.102.229.222 - Nat_ip "Mapped Ip" - Vserver 10.102.42.32:443 - Browser_type "Mozilla/5.0 (Windows NT 6.0; rv:39.0) Gecko/20100101 Firefox/39.0" - Group(s) "N/A"
+    -->
+    <rule id="80134" level="3">
+        <if_sid>80100</if_sid>
+        <match>AAATM LOGIN</match>
+        <description>Netscaler: Login to AAA TM vserver succeeds</description>
+        <group>netscaler-aaatm,authentication_success,pci_dss_10.2.5,</group> 
+    </rule>
     
-<!--
-ToDo:
+    <!--
+    AAATM LOGOUT
+    Jan 13 23:22:25 <local0.info> 10.217.28.160 01/13/2015:23:22:25 GMT  0-PPE-0 : AAATM LOGOUT 3312 0 : Context _57007c730f84b76545378fd2e042fc95@10.252.112.245 - SessionId: 58- User _57007c730f84b76545378fd2e042fc95 - Client_ip 10.252.112.245 - Nat_ip "Mapped Ip" - Vserver 10.217.28.163:443 - Start_time "01/13/2015:23:22:17 GMT" - End_time "01/13/2015:23:22:25 GMT" - Duration 00:00:08  - Http_resources_accessed 0 - Total_TCP_connections 0 - Total_policies_allowed 0 - Total_policies_denied 0 - Total_bytes_send 0 - Total_bytes_recv 0 - Total_compressedbytes_send 0 - Total_compressedbytes_recv 0 - Compression_ratio_send 0.00% - Compression_ratio_recv 0.00% - LogoutMethod "FreedViaDHT" - Group(s) "N/A"
+    -->
+    <rule id="80135" level="2">
+        <if_sid>80100</if_sid>
+        <match>AAATM LOGOUT</match>
+        <description>Netscaler: AAA TM session logged out</description>
+        <group>netscaler-aaatm,pci_dss_10.2.5,</group> 
+    </rule>
+    
+    <!--
+    AAATM HTTP_RESOURCEACCESS_DENIED
+    -->
+    <rule id="80136" level="5">
+        <if_sid>80100</if_sid>
+        <match>AAATM HTTP_RESOURCEACCESS_DENIED</match>
+        <description>Netscaler: A AAATM http resource access is denied by policy engine</description>
+        <group>netscaler-aaatm,access_denied,pci_dss_10.2.4,</group> 
+    </rule>
+    
+    <rule id="80137" level="10" frequency="8" timeframe="120">
+        <if_matched_sid>80136</if_matched_sid>
+        <description>Netscaler: Multiple AAATM http resource access denied</description>
+        <group>netscaler-aaatm,access_denied,pci_dss_10.2.4,pci_dss_11.4,</group>
+    </rule>
+    
+    <!--
+    UI CMD_EXECUTED
+    Aug  9 13:39:56 aaaaa.com 08/09/2013:20:39:56 GMT a-nss-aa PPE-0 : UI CMD_EXECUTED 2649891 :  User nsroot - Remote_ip xx.xxx.xxx.xx - Command "login" - Status "Success"
+    Aug  9 13:39:56 aaaaa.com 08/09/2013:20:39:56 GMT a-nss-aa PPE-0 : UI CMD_EXECUTED 2649891 :  User nsroot - Remote_ip xx.xxx.xxx.xx - Command "login" - Status "ERROR: Invalid username or password"
+    -->
+    <rule id="80138" level="3">
+        <if_sid>80100</if_sid>
+        <match>UI CMD_EXECUTED</match>
+        <action>login</action>
+        <status>Success</status>
+        <description>Netscaler: UI login succeeds</description>
+        <group>netscaler-ui,authentication_success,pci_dss_10.2.5,</group> 
+    </rule>
+    
+    <rule id="80139" level="6">
+        <if_sid>80100</if_sid>
+        <match>UI CMD_EXECUTED</match>
+        <action>login</action>
+        <status>Error</status>
+        <description>Netscaler: UI login failed</description>
+        <group>authentication_failed,netscaler-ui,pci_dss_10.2.4,pci_dss_10.2.5,</group> 
+    </rule>
+    
+    <rule id="80140" level="10" frequency="6">
+        <if_matched_sid>80139</if_matched_sid>
+        <same_source_ip />
+        <description>Netscaler: Multiple UI login failed</description>
+        <group>authentication_failures,netscaler-ui,pci_dss_10.2.4,pci_dss_10.2.5,pci_dss_11.4,</group>
+    </rule> 
 
-APPFW_RESP APPFW_XML_XSS
-APPFW_RESP APPFW_XML_SQL
-APPFW_XML_ATTACHMENT_ERR_INVALIDHEADER
-APPFW_XML_ATTACHMENT_ERR_INVALID_HEADER
-APPFW_XML_DDOS_ERR_MSG_SEND_FAI
-APPFW_XML_DOS_ERR_CHAR_DATA_LENGTH
-APPFW_XML_ERR    ..y para el otro?
-
-AAATM LOGIN
-AAATM LOGOUT
-AAATM HTTP_RESOURCEACCESS_DENIED
-
-UI CMD action:login
--->
 </group>
 <!-- netscaler -->
