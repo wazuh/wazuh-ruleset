@@ -5,7 +5,8 @@
 # You need to run the script as root
 #   sudo ./autoinstall_rules.sh
 
-backup="backup_puppet"
+date=`date +%Y%m%d`
+backup="bk$date"
 x_decoder="puppet_decoders.xml"
 x_rules="puppet_rules.xml"
 
@@ -29,6 +30,7 @@ path_ossec=$ossec_path"etc/ossec.conf"
 # Decoders
 echo "1. Append $x_decoder to $path_decoder"
 cp $path_decoder  $path_decoder.$backup
+echo "Backup: $path_decoder.$backup"
 cat $x_decoder >> $path_decoder
 echo "[Done]"
 
@@ -40,6 +42,7 @@ echo "[Done]"
 # ossec.conf
 echo  "3. Add <include>$x_rules</include> to $path_ossec"
 cp $path_ossec  $path_ossec.$backup
+echo "Backup: $path_ossec.$backup"
 sed -i "s/.*<\/rules>.*/    <include>$x_rules<\/include>\n&/" $path_ossec
 echo "[Done]"
 

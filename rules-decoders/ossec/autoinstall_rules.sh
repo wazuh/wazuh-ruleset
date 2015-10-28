@@ -7,8 +7,6 @@
 
 date=`date +%Y%m%d`
 backup="bk$date"
-x_decoder="netscaler_decoders.xml"
-x_rules="netscaler_rules.xml"
 
 ossec_path="/var/ossec/"
 
@@ -25,26 +23,23 @@ fi
 
 path_decoder=$ossec_path"etc/decoder.xml"
 path_rules=$ossec_path"rules/"
-path_ossec=$ossec_path"etc/ossec.conf"
 
 # Decoders
-echo "1. Append $x_decoder to $path_decoder"
-cp $path_decoder  $path_decoder.$backup
+echo "1. Copy decoder.xml to $path_decoder"
+cp $path_decoder $path_decoder.$backup
 echo "Backup: $path_decoder.$backup"
-cat $x_decoder >> $path_decoder
+cp "decoder.xml" $path_decoder
 echo "[Done]"
 
 # Rules 
-echo "2. Copy $x_rules to $path_rules"
-cp $x_rules $path_rules
+echo "2. Copy all rules to $path_rules"
+filename="$ossec_path""rules_$backup.zip"
+zip -r $filename $path_rules >/dev/null
+echo "Backup: $filename"
+cp `ls | grep _rules.xml | egrep -v 'local_rules'` $path_rules
 echo "[Done]"
 
-# ossec.conf
-echo  "3. Add <include>$x_rules</include> to $path_ossec"
-cp $path_ossec  $path_ossec.$backup
-echo "Backup: $path_ossec.$backup"
-sed -i "s/.*<\/rules>.*/    <include>$x_rules<\/include>\n&/" $path_ossec
-echo "[Done]"
+
 
 # Wazuh
 echo -e "\nWazuh, Inc\n"
