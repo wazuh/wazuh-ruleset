@@ -1,7 +1,7 @@
 #Instructions for Puppet rules
 **Created by Wazuh, Inc. <ossec@wazuh.com>**
 
-You can run the script ***./autoinstall_rules.sh***, or follow the instructions:
+You can run the script ***install_rules.sh***, or follow the instructions:
 
  1. Append *puppet_decoders.xml* to */var/ossec/etc/decoders.xml*
  2. Copy *puppet_rules.xml* to */var/ossec/rules/*
