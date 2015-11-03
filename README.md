@@ -8,16 +8,15 @@ Directory structure:
     │   ├── ossec            # OSSEC Rootchecks updated by Wazuh
     │   ├── <new_rootcheck>  # New rootchecks
     |
-    │ ├── rules-decoders      
-    │   ├── ossec            # OSSEC Rules & Decoders updated by Wazuh
-    │     ├── decoder.xml
+    │ ├── rules-decoders 
+    │   ├── decoder.xml      # OSSEC Decoders updated by Wazuh
+    │   ├── install_rules.sh
+    │   ├── ossec            # OSSEC Rules updated by Wazuh
     │     ├── *_rules.xml
     │     ├── ossec_instructions.md
-    │     ├── autoinstall_rules.sh
     │   ├── <new_software>   # New rules & decoders
     |     ├── new_software_decoders.xml
     |     ├── new_software_rules.xml  
     |     ├── new_software_instructions.md  
-    |     ├── autoinstall_rules.sh  
     |
     │ ├── README.md  
