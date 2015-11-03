@@ -3,5 +3,5 @@
 
 You can run the script ***install_rules.sh***, or follow the instructions:
 
- 1. Copy *../decoder.xml* to */var/ossec/etc/*
- 2. Copy **_rules.xml* to */var/ossec/rules/*, except local_rules.xml
+ 1. Copy */rules-decoders/decoder.xml* to */var/ossec/etc/*
+ 2. Copy */rules-decoders/ossec/*_rules.xml* to */var/ossec/rules/*, except local_rules.xml

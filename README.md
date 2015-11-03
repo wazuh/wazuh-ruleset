@@ -9,8 +9,8 @@ Directory structure:
     │   ├── <new_rootcheck>  # New rootchecks
     |
     │ ├── rules-decoders 
-    │   ├── decoder.xml      # OSSEC Decoders updated by Wazuh
     │   ├── install_rules.sh
+    │   ├── decoder.xml      # OSSEC Decoders updated by Wazuh
     │   ├── ossec            # OSSEC Rules updated by Wazuh
     │     ├── *_rules.xml
     │     ├── ossec_instructions.md
