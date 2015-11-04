@@ -8,12 +8,13 @@
 new_rules=("puppet" "netscaler")
 
 date=`date +%Y%m%d`
-backup="$date""bk"
+backup="$date"".bk"
 
 ossec_path="/var/ossec/"
 path_decoder=$ossec_path"etc/decoder.xml"
 path_rules=$ossec_path"rules/"
 path_ossec_conf=$ossec_path"etc/ossec.conf"
+log_file=$ossec_path"install_log."$backup
 
 #Exit immediately if a command exits with a non-zero status
 set -e
@@ -30,6 +31,7 @@ if [[ $1 != "update" ]] ; then
         path_decoder=$ossec_path"etc/decoder.xml"
         path_rules=$ossec_path"rules/"
         path_ossec_conf=$ossec_path"etc/ossec.conf"
+        log_file=$ossec_path"install_log."$backup
     fi
     
     # ** Dialog **
@@ -72,12 +74,12 @@ else
 fi
 
 # ** Install **
-echo "The following rules will be installed: "
-printf '%s\n' "${install[@]}"
-echo
+echo "The following rules will be installed: " | tee $log_file
+printf '%s\n' "${install[@]}" | tee -a $log_file
+echo | tee -a $log_file
 
 
-echo "Installing..."
+echo "Installing..." | tee -a $log_file
 save_conf=true
 for item in ${install[@]}
 do
@@ -85,80 +87,80 @@ do
     then
         # Decoders
         path="decoder.xml"
-        echo "[Decoder] $item"
+        echo "[Decoder] $item" | tee -a $log_file
         cp $path_decoder $path_decoder.$backup
-        echo "  Backup: $path_decoder.$backup"
+        echo "  Backup: $path_decoder.$backup" | tee -a $log_file
         cp $path $path_decoder
-        echo "  Done"
+        echo "  Done" | tee -a $log_file
         
         # Rules
-        echo "[Rules] $item"
-        filename="$ossec_path""rules_$backup.zip"
-        zip -r $filename $path_rules >/dev/null
-        echo "  Backup: $filename"
+        echo "[Rules] $item" | tee -a $log_file
+        filename="$ossec_path""rules_$backup.tar"
+        #zip -r $filename $path_rules >/dev/null
+        tar -cf $filename $path_rules # Extract: tar -xvf $filename
+        echo "  Backup: $filename" | tee -a $log_file
         for rule in `ls ./ossec | grep _rules.xml | egrep -v 'local_rules'`
         do
             cp "./ossec/$rule" $path_rules
         done
-        echo "  Done"
+        echo "  Done" | tee -a $log_file
         
-        echo
+        echo | tee -a $log_file
     else
         # Decoders
-        echo "[Decoder] $item"
+        echo "[Decoder] $item" | tee -a $log_file
         
         if grep -iq "<decoder name=\"$item" $path_decoder # check if decoders exists
         then
-            echo "  Error: $item already exists in $path_decoder"
-            echo "  **MANUAL STEP** Install this decoder manually"
+            echo "  Error: $item already exists in $path_decoder" | tee -a $log_file
+            echo "  **MANUAL STEP** Install this decoder manually" | tee -a $log_file
             #ToDo: Automatically
         else
             path="./$item/$item""_decoders.xml"
             cat $path >> $path_decoder
-            echo "  Done"
+            echo "  Done" | tee -a $log_file
         fi
         
         # Rules
         path="./$item/$item""_rules.xml"
-        echo "[Rules] $item"
+        echo "[Rules] $item" | tee -a $log_file
         cp $path $path_rules
-        echo "  Done"
+        echo "  Done" | tee -a $log_file
         
         # ossec.conf
-        echo  "[ossec.conf] $item"
+        echo  "[ossec.conf] $item" | tee -a $log_file
         
         if [ "$save_conf" = true ] ; then
             cp $path_ossec_conf  $path_ossec_conf.$backup # Backup just first time
-            echo "  Backup: $path_ossec_conf.$backup"
+            echo "  Backup: $path_ossec_conf.$backup" | tee -a $log_file
             save_conf=false
         fi
 
         new_rule=$item"_rules.xml"
         if grep -iq "<include>$new_rule</include>" $path_ossec_conf # check if item exists
         then
-            echo "  $new_rule already exists in $path_ossec_conf"
+            echo "  $new_rule already exists in $path_ossec_conf" | tee -a $log_file
         else
             sed -i "s/.*<\/rules>.*/    <include>$new_rule<\/include>\n&/" $path_ossec_conf
         fi
-        echo "  Done"
+        echo "  Done" | tee -a $log_file
 
         # Info
         case $item in
             ("puppet") 
-            echo "[Info] $item"
-            echo "  **MANUAL STEP** Follow the last given instruction in the file instructions.md"
+            echo "[Info] $item" | tee -a $log_file
+            echo "  **MANUAL STEP** Follow the last given instruction in the file instructions.md" | tee -a $log_file
             ;;
         esac
         
-        echo
+        echo | tee -a $log_file
     fi
 done
 
-
 #Restart ossec
-echo "Restarting OSSEC..."
-/var/ossec/bin/ossec-control restart
+echo "Restarting OSSEC..." | tee -a $log_file
+/var/ossec/bin/ossec-control restart | tee -a $log_file
 
 
 # Wazuh
-echo -e "\nWazuh.com\n"
+echo -e "\nWazuh.com\n" | tee -a $log_file
