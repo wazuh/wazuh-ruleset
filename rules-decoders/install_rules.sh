@@ -14,11 +14,12 @@ ossec_path="/var/ossec/"
 path_decoder=$ossec_path"etc/decoder.xml"
 path_rules=$ossec_path"rules/"
 path_ossec_conf=$ossec_path"etc/ossec.conf"
-log_file=$ossec_path"install_log."$backup
+log_file=$ossec_path"logs/install_rules.log"
 
 #Exit immediately if a command exits with a non-zero status
 set -e
 
+echo "#### Installing rules: $date ####" >> $log_file
 
 if [[ $1 != "update" ]] ; then
     # ** Check OSSEC path **
@@ -34,27 +35,54 @@ if [[ $1 != "update" ]] ; then
         log_file=$ossec_path"install_log."$backup
     fi
     
-    # ** Dialog **
-    cmd=(dialog --separate-output --checklist "What rules do you want to install?:" 22 76 16)
-    options=(1 "ossec" on
-                   2 "puppet" off
-                   3 "netscaler" off)
-    choices=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty)
-    clear
-    for choice in $choices
+    choice () {
+        local choice=$1
+        if [[ ${opts[choice]} ]] # toggle
+        then
+            opts[choice]=
+        else
+            opts[choice]="X"
+        fi
+    }
+
+    all_rules=("ossec" "puppet" "netscaler")
+    PS3='What rules do you want to install?: '
+    while :
     do
-        case $choice in
-            1) #OSSEC = 1
-            install+=(${options[1]})
-            ;;
-            2) #Puppet = 4
-            install+=(${options[4]})
-            ;;
-            3) #Netscaler = 7
-             install+=(${options[7]})
-            ;;
-        esac
+        clear
+        options=("[${opts[0]}] ossec" "[${opts[1]}] puppet" "[${opts[2]}] netscaler" "Done")
+        select opt in "${options[@]}"
+        do
+            case $opt in
+                "[${opts[0]}] ossec")
+                    choice 0
+                    break
+                    ;;
+                "[${opts[1]}] puppet")
+                    choice 1
+                    break
+                    ;;
+                "[${opts[2]}] netscaler")
+                    choice 2
+                    break
+                    ;;
+                "Done")
+                    break 2
+                    ;;
+                *) printf '%s\n' 'invalid option';;
+            esac
+        done
     done
+    
+    for opt in "${!opts[@]}"
+    do
+        if [[ ${opts[opt]} ]]
+        then
+            install+=(${all_rules[$opt]})
+        fi
+    done
+    
+    echo
 else
     # Get all rules
     rules=`grep -Po "<include>\K.*?(?=_rules)" $path_ossec_conf`
@@ -74,10 +102,9 @@ else
 fi
 
 # ** Install **
-echo "The following rules will be installed: " | tee $log_file
+echo "The following rules will be installed: " | tee -a $log_file
 printf '%s\n' "${install[@]}" | tee -a $log_file
 echo | tee -a $log_file
-
 
 echo "Installing..." | tee -a $log_file
 save_conf=true
@@ -114,6 +141,7 @@ do
         then
             echo "  Error: $item already exists in $path_decoder" | tee -a $log_file
             echo "  **MANUAL STEP** Install this decoder manually" | tee -a $log_file
+            manual_steps+=("$item: Install this decoder manually (it already exists in $path_decoder)")
             #ToDo: Automatically
         else
             path="./$item/$item""_decoders.xml"
@@ -149,7 +177,8 @@ do
         case $item in
             ("puppet") 
             echo "[Info] $item" | tee -a $log_file
-            echo "  **MANUAL STEP** Follow the last given instruction in the file instructions.md" | tee -a $log_file
+            echo "  **MANUAL STEP** Follow the last given instruction in the file /ossec-rules/rules-decoders/puppet/instructions.md" | tee -a $log_file
+            manual_steps+=("$item: Follow the last given instruction in the file /ossec-rules/rules-decoders/puppet/instructions.md")
             ;;
         esac
         
@@ -161,6 +190,12 @@ done
 echo "Restarting OSSEC..." | tee -a $log_file
 /var/ossec/bin/ossec-control restart | tee -a $log_file
 
+echo -e "\nRules installed successfully\n" | tee -a $log_file
+
+echo "**Pending manual steps:**" | tee -a $log_file
+printf '  %s\n' "${manual_steps[@]}" | tee -a $log_file
 
 # Wazuh
 echo -e "\nWazuh.com\n" | tee -a $log_file
+
+echo -e "#########################\n\n" >> $log_file
