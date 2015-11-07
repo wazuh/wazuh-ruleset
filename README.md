@@ -1,6 +1,11 @@
 # ossec-rules
 OSSEC Free Open Source community rule set put together by WAZUH
 
+We are creating an automatic updating service, meantime you can install it througt a bash script. 
+
+Find more detailed information at [Ruleset Documentation](http://documentation.wazuh.com/en/latest/ossec_rule_set.html)
+
+
 Directory structure:
 
     ├── ossec-rules             
@@ -20,3 +25,4 @@ Directory structure:
     |     ├── new_software_instructions.md  
     |
     │ ├── README.md  
+
