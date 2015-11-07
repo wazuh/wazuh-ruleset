@@ -1,4 +1,5 @@
-# ossec-rules
+# OSSEC HIDS Ruleset
+
 OSSEC HIDS Open Source community rule set put together by WAZUH
 
 Includes compliance mapping with PCI DSS v3.1 or CIS and additional decoders and rules. Users can contribute to this rule set by submitting pull requests. Our team will continue to maintain and update it periodically.
