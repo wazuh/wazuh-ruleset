@@ -1,7 +1,9 @@
 # ossec-rules
-OSSEC Free Open Source community rule set put together by WAZUH
+OSSEC HIDS Open Source community rule set put together by WAZUH
 
-We are creating an automatic updating service, meantime you can install it througt a bash script. 
+Includes compliance mapping with PCI DSS v3.1 or CIS and additional decoders and rules. Users can contribute to this rule set by submitting pull requests. Our team will continue to maintain and update it periodically.
+
+We are creating an automatic updating service, meantime you can install the rules using a bash script. 
 
 Find more detailed information at [Ruleset Documentation](http://documentation.wazuh.com/en/latest/ossec_rule_set.html)
 
@@ -14,7 +16,7 @@ Directory structure:
     │   ├── <new_rootcheck>  # New rootchecks
     |
     │ ├── rules-decoders 
-    │   ├── install_rules.sh
+    │   ├── install_rules.sh # Rules script updater 
     │   ├── decoder.xml      # OSSEC Decoders updated by Wazuh
     │   ├── ossec            # OSSEC Rules updated by Wazuh
     │     ├── *_rules.xml
