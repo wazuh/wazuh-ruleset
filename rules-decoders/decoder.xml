@@ -175,8 +175,8 @@
 <decoder name="ssh-invfailed">
   <parent>sshd</parent>
   <prematch>^Failed \S+ for invalid user|^Failed \S+ for illegal user</prematch>
-  <regex offset="after_prematch">from (\S+) port \d+ \w+$</regex>
-  <order>srcip</order>
+  <regex offset="after_prematch">(\S+) from (\S+)</regex>
+  <order>srcuser,srcip</order>
 </decoder>
 
 <decoder name="ssh-failed">
@@ -203,8 +203,8 @@
 <decoder name="ssh-invalid-user">
   <parent>sshd</parent>
   <prematch>^Invalid user|^Illegal user</prematch>
-  <regex offset="after_prematch"> from (\S+)$</regex>
-  <order>srcip</order>
+  <regex offset="after_prematch">(\S+) from (\S+)$</regex>
+  <order>srcuser,srcip</order>
 </decoder>
 
 <decoder name="ssh-scan">
