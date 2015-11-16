@@ -1,6 +1,13 @@
 #!/usr/bin/env python
+
+# OSSEC Ruleset Updater
+
+# v1.0 2015/11/16
+# Created by Wazuh, Inc. <info@wazuh.com>.
+# This program is a free software; you can redistribute it and/or modify it under the terms of GPLv2
+
 # Instructions:
-#   cd ~ && mkdir ruleset_tmp
+#   cd ~ && mkdir ruleset_tmp && cd ruleset_tmp
 #   git clone https://github.com/wazuh/ossec-rules.git
 #   cd ossec-rules
 #   chmod +x ossec_ruleset.py
@@ -177,7 +184,7 @@ def get_ruleset_from_menu(type_ruleset):
         if "ossec" in menu_ruleset:
             menu_ruleset.remove("ossec")
 
-        title_str = "OSSEC Ruleset, {0}\n\nUse ENTER key to select/unselect {1}:".format(today_date, type_directory)
+        title_str = "OSSEC Wazuh Ruleset, {0}\n\nUse ENTER key to select/unselect {1}:\n".format(today_date, type_directory)
 
         if menu_ruleset:
             toggle = []
@@ -464,7 +471,7 @@ def setup_decoders(decoder):
                 sys.exit(2)
         else:
             # new_decoder.xml >> decoder.xml
-            logger.log("\t\tAppend decoders to decoder.xml ...")
+            logger.log("\t\tAppending decoders to decoder.xml ...")
             f_current_decoder = open(current_decoder, "a")
             f_current_decoder.write(f_new_decoder.read())
             f_current_decoder.close()
@@ -510,9 +517,9 @@ def setup_ossec_conf(item, type_item):
             else:
                 logger.log("\t\tIncluding \"{0}\" in ossec.conf ...".format(item))
                 write_before_line("</rules>", '    <include>{0}_rules.xml</include>'.format(item), ossec_conf)
-        else:
+        # else:
             # Note: ossec rules are included in ossec.conf by default
-            logger.log("\t\t**It is assumed that the default rules are included in ossec.conf**")
+            # logger.log("\t\t**It is assumed that the default rules are included in ossec.conf**")
     elif type_item == "rootcheck":
         if item != "ossec":
             types_rc = ["rootkit_files", "rootkit_trojans", "system_audit", "win_applications", "win_audit",
@@ -532,6 +539,9 @@ def setup_ossec_conf(item, type_item):
 
                 if not rc_include:
                     logger.log("\t\t\tError in file {0}: Wrong filename".format(new_rc))
+                    logger.log("\t\t\tFilename must start with:")
+                    for t_rc in types_rc:
+                        logger.log("\t\t\t\t{0}".format(t_rc))
                     sys.exit(2)
 
                 rc_include_search = "\s*{0}".format(rc_include)
@@ -542,9 +552,9 @@ def setup_ossec_conf(item, type_item):
                 else:
                     logger.log("\t\t\tIncluding \"{0}\" in ossec.conf ...".format(new_rc))
                     write_before_line("</rootcheck>", rc_include_new, ossec_conf)
-        else:
+        # else:
             # Note: ossec rootchecks are included in ossec.conf by default
-            logger.log("\t\t**It is assumed that the default rootchecks are included in ossec.conf**")
+            # logger.log("\t\t**It is assumed that the default rootchecks are included in ossec.conf**")
 
 
 def do_backups(bk_ossec_conf=False, bk_decoders=False, bk_rules=False, bk_rootchecks=False):
@@ -623,12 +633,16 @@ def get_ruleset(type_ruleset, r_action):
     return n_ruleset
 
 
-def setup_ruleset_r(target_rules):
+def setup_ruleset_r(target_rules, r_action):
     """
+    :param r_action: manual, file, update
     :param target_rules: rules to install
     :rtype: list
     """
-    logger.log("\nThe following rules will be installed:")
+
+    str_title = "updated" if r_action == "update" else "installed"
+
+    logger.log("\nThe following rules will be {0}:".format(str_title))
     for rule in target_rules:
         logger.log("\t{0}".format(rule))
     logger.log("")
@@ -654,16 +668,18 @@ def setup_ruleset_r(target_rules):
         logger.log("\t\t[Done]")
 
         # Info
-        if item == "puppet":
-            msg = "Follow the last given instruction in the file /ossec-rules/rules-decoders/puppet/puppet_instructions.md"
-            logger.log("\t**Manual steps**:\n\t\t{0}".format(msg))
-            instructions.append("{0}: {1}".format(item, msg))
+        if r_action != "update":
+            if item == "puppet":
+                msg = "Follow the last given instruction in the file /ossec-rules/rules-decoders/puppet/puppet_instructions.md"
+                logger.log("\t**Manual steps**:\n\t\t{0}".format(msg))
+                instructions.append("{0}: {1}".format(item, msg))
 
     return instructions
 
 
-def setup_ruleset_rc(target_rootchecks):
+def setup_ruleset_rc(target_rootchecks, r_action):
     """
+    :param r_action: manual, file, update
     :param target_rootchecks: rootchecks to install
     Important: Filenames must contain the following strings at the beginning:
         rootkit_files
@@ -676,7 +692,8 @@ def setup_ruleset_rc(target_rootchecks):
         *except for default ossec rootchecks
     """
 
-    logger.log("\nThe following rootchecks will be installed:")
+    str_title = "updated" if r_action == "update" else "installed"
+    logger.log("\nThe following rootchecks will be {0}:".format(str_title))
     for t_rootcheck in target_rootchecks:
         logger.log("\t{0}".format(t_rootcheck))
     logger.log("")
@@ -699,28 +716,35 @@ def setup_ruleset_rc(target_rootchecks):
 
 def usage():
     msg = """
-Usage: ./ossec_rulset.py -r [-u | -f conf.txt]
-       ./ossec_rulset.py -c [-u | -f conf.txt]
-       ./ossec_rulset.py -a [-u | -f conf.txt]
+OSSEC Wazuh Ruleset installer & updater
+https://github.com/wazuh/ossec-rules
 
-Select set:
+Usage: ./ossec_rulset.py -r [-u | -f conf.txt] [-s]
+       ./ossec_rulset.py -c [-u | -f conf.txt] [-s]
+       ./ossec_rulset.py -a [-u | -f conf.txt] [-s]
+
+Select ruleset:
 \t-r, --rules
 \t-c, --rootchecks
-\t-a, --all\tRules and rootchecks
+\t-a, --all
 
 Select action:
-\tno arguments\tSelect invidually rules and rootchecks
-\tf, --file\tInstall new ruleset from config file. *OSSEC is restarted automatically.
-\tu, --file\tUpdate existing ruleset
+\tno arguments\tChoose rules and rootchecks to install
+\tf, --file\tUse a configuration file to select rules and rootchecks to install.
+\tu, --update\tUpdate existing ruleset
 
-Config file syntax:
+Aditional params:
+\t-s, --silent\tForce OSSEC restart
+
+Configuration file syntax using option -f:
+\t# comment
 \trules:new_rule_name
 \trootchecks:new_rootcheck_name
 
 Examples:
-Select rules to install: ./ossec_rulset.py -r
-Install rules from file: ./ossec_rulset.py -r -f new_rules.conf
-\tnew_rules.conf:\n\t\trules:puppet\n\t\trules:netscaler
+Choose rules to install: ./ossec_rulset.py -r
+Use a configuration file to select rules to install: ./ossec_rulset.py -r -f new_rules.conf
+\tnew_rules.conf content example:\n\trules:puppet\n\trules:netscaler
 Update rules: ./ossec_rulset.py -r -u
 """
     print(msg)
@@ -732,8 +756,8 @@ if __name__ == "__main__":
 
     # Check arguments
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "rcauf:", ["rules", "rootchecks", "all", "update", "file="])
-        if not opts or not (1 <= len(opts) <= 2):
+        opts, args = getopt.getopt(sys.argv[1:], "rcauhsf:", ["rules", "rootchecks", "all", "update", "help", "silent", "file="])
+        if not opts or not (1 <= len(opts) <= 3):
             print("Incorrect number of arguments. Expected 1 or 2 arguments.")
             usage()
             sys.exit()
@@ -744,6 +768,7 @@ if __name__ == "__main__":
 
     ruleset_type = ""
     action = "manual"
+    silent = False
     mandatory_args = 0
     for o, a in opts:
         if o in ("-r", "--rules"):
@@ -757,6 +782,11 @@ if __name__ == "__main__":
             mandatory_args += 1
         elif o in ("-u", "--update"):
             action = "update"
+        elif o in ("-h", "--help"):
+            usage()
+            sys.exit()
+        elif o in ("-s", "--silent"):
+            silent = True
         elif o in ("-f", "--file"):
             action = "file:{0}".format(a)
         else:
@@ -768,18 +798,20 @@ if __name__ == "__main__":
         usage()
         sys.exit()
 
+    str_mode = "updated" if action == "update" else "installed"
+
     # Log
     logger = LogFile("log.txt")
 
     # Title
-    logger.log("\nOSSEC Ruleset, {0}\n".format(today_date))
+    logger.log("\nOSSEC Wazuh Ruleset, {0}\n".format(today_date))
 
     # Get new ruleset
     if ruleset_type != "all":
         ruleset = get_ruleset(ruleset_type, action)[ruleset_type]
 
         if not ruleset:
-            logger.log("No new {0}".format(ruleset_type))
+            logger.log("No new {0} to be {1}".format(ruleset_type, str_mode))
             sys.exit()
     else:
         ruleset = get_ruleset("all", action)
@@ -787,9 +819,9 @@ if __name__ == "__main__":
         rootchecks = ruleset["rootchecks"]
 
         if not rules:
-            logger.log("No new rules")
+            logger.log("No new rules to be {0}".format(str_mode))
         if not rootchecks:
-            logger.log("No new rootchecks")
+            logger.log("No new rootchecks to be {0}".format(str_mode))
 
         if not rules and not rootchecks:
             sys.exit()
@@ -803,16 +835,16 @@ if __name__ == "__main__":
     # Setup ruleset
     manual_steps = []
     if ruleset_type == "all":
-        manual_steps = setup_ruleset_r(rules)
-        setup_ruleset_rc(rootchecks)
+        manual_steps = setup_ruleset_r(rules, action)
+        setup_ruleset_rc(rootchecks, action)
     elif ruleset_type == "rules":
-        manual_steps = setup_ruleset_r(ruleset)
+        manual_steps = setup_ruleset_r(ruleset, action)
     elif ruleset_type == "rootchecks":
-        setup_ruleset_rc(ruleset)
+        setup_ruleset_rc(ruleset, action)
 
     # Restart ossec
-    if "file" not in action:
-        logger.log("\nOSSEC requires a restart after the ossec.conf has been updated")
+    if not silent:
+        logger.log("\nOSSEC requires a restart to apply changes")
         try:
             ans = raw_input("Do you want to restart OSSEC now? [y/N]: ")
         except:
@@ -830,10 +862,10 @@ if __name__ == "__main__":
             logger.log("Please check your config. logtest can be useful: {0}/bin/ossec-logtest".format(ossec_path))
             logger.log("\n\n**Ruleset error**")
         else:
-            logger.log("\n\n**Ruleset installed/updated successfully**")
+            logger.log("\n\n**Ruleset {0} successfully**".format(str_mode))
     else:
-        logger.log("Do not forget restart OSSEC")
-        logger.log("\n\n**Ruleset installed/updated successfully**")
+        logger.log("Do not forget restart OSSEC to apply changes")
+        logger.log("\n\n**Ruleset {0} successfully**".format(str_mode))
 
     if manual_steps:
         logger.log("\nDo not forget the manual steps:")
