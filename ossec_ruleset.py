@@ -36,7 +36,7 @@ import zipfile
 ossec_path = "/var/ossec"
 
 # Global
-url_ruleset = "http://192.168.2.200/downloads/ruleset.zip"
+url_ruleset = "http://ossec.wazuh.com/ruleset.zip"
 today_date = date.today().strftime('%Y%m%d')
 
 
@@ -730,8 +730,8 @@ Select ruleset:
 
 Select action:
 \tno arguments\tChoose rules and rootchecks to install
-\tf, --file\tUse a configuration file to select rules and rootchecks to install.
-\tu, --update\tUpdate existing ruleset
+\t-f, --file\tUse a configuration file to select rules and rootchecks to install.
+\t-u, --update\tUpdate existing ruleset
 
 Aditional params:
 \t-s, --silent\tForce OSSEC restart
