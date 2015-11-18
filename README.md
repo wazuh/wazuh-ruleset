@@ -6,9 +6,32 @@ It includes, among many others, compliance mapping with PCI DSS v3.1, CIS and ad
 
 OSSEC Rule set is fed with the effort of a dedicated team and the help of the community. We encourage users to contribute to the repository and/or request new rules and decoders.
 
-## How to use
+## Documentation
 
-Use ```ossec_ruleset.py ``` to install and update new rules, decoders and rootcheck. Some features:
+* Full documentation at [documentation.wazuh.com](http://documentation.wazuh.com/en/latest/ossec_rule_set.html)
+
+## Quick guide
+
+### Manual installation
+
+**Rules**
+
+1. Append ``new_rule_decoders.xml`` to ``/var/ossec/etc/decoder.xml``
+2. Copy ``.xml`` rule file into ``/var/ossec/rules`` folder
+3. Add ``<include>new_rule_filename.xml</include>`` between ``<rules></rules>`` tags at ``/var/ossec/etc/ossec.conf``
+
+**Rootchecks**
+
+1. Copy ``.txt`` rootcheck file into ``/var/ossec/etc/shared`` folder
+2. Add ``<rootcheck_type>new_rootcheck_filename.txt</rootcheck_type>`` between ``<rootcheck></rootcheck>`` tags at ``/var/ossec/etc/ossec.conf``
+
+Restart OSSEC Manager to apply changes
+
+### Automatic installation
+
+Run ```ossec_ruleset.py ``` for installing and updating rules, decoders and rootcheck. 
+
+Features:
 
 * Check current installation
 * Install new rules and rootchecks
@@ -16,19 +39,16 @@ Use ```ossec_ruleset.py ``` to install and update new rules, decoders and rootch
 * Automatic ```ossec.conf``` configuration
 * Update ruleset from Wazuh server
 * Silent mode
+* Backups
 
-**Some examples**
+**Usage examples**
 
-Menu to install new rules/rootchecks
+Prompt menu to choose new rules/rootchecks
 ``` bash
 ./ossec_ruleset.py -a
 ```
-Install new rules/rootchecks from config file
-``` bash
-./ossec_ruleset.py -a -f file.conf
-```
 
-Silent update
+Silent full ruleset update
 ``` bash
 ./ossec_ruleset.py -a -u -s
 ```
@@ -37,19 +57,7 @@ Don't hesitate to set up the script to fetch periodically new rules, decoders an
 Find out how to do it at [Script Documentation](http://documentation.wazuh.com/en/latest/ossec_rule_set.html)
 
 
-## Documentation
-
-* Full documentation at [documentation.wazuh.com](http://documentation.wazuh.com/en/latest/ossec_rule_set.html)
-
-## Contribute
-
-Users can contribute to this rule set by submitting pull requests. Our team will continue maintaining and updating it periodically.
-If you want to contribute to this ruleset or our projects please don't hesitate to send a pull request. You can also join our users [mailing list](https://groups.google.com/d/forum/wazuh), by sending an email to [wazuh+subscribe@googlegroups.com](mailto:wazuh+subscribe@googlegroups.com), to ask questions and participate in discussions.
-
-
-
-
-Directory structure:
+## Directory structure
 
     ├── ossec-rules             
     │ ├── rootcheck            
@@ -70,5 +78,10 @@ Directory structure:
     │ ├── README.md
     │ ├── VERSION
     │ ├── ossec_ruleset.py # Ruleset installer/updater
+    
+## Contribute
+
+Users can contribute to this rule set by submitting pull requests. Our team will continue maintaining and updating it periodically.
+If you want to contribute to this ruleset or our projects please don't hesitate to send a pull request. You can also join our users [mailing list](https://groups.google.com/d/forum/wazuh), by sending an email to [wazuh+subscribe@googlegroups.com](mailto:wazuh+subscribe@googlegroups.com), to ask questions and participate in discussions.
     
 
