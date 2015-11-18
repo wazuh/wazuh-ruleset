@@ -38,6 +38,8 @@ ossec_path = "/var/ossec"
 # Global
 url_ruleset = "http://wazuh.com/resources/ruleset.zip"
 today_date = date.today().strftime('%Y%m%d')
+ruleset_version = "0.100"
+msg_update_py = ""
 
 
 # Log class
@@ -67,36 +69,17 @@ class LogFile(object):
 
 
 # Aux functions
-def print_version():
-    try:
-        f = open("VERSION")
-    except:
-        return "0.100"
-        print("Error opening version file \"{0}".format(filepath))
-
-    version = f.read().rstrip('\n')
-    f.close()
-    return version
-
-def update_version():
-    try:
-        f_downloaded = open("./downloads/ossec-rules/VERSION")
-    except:
-        return "0.100"
-        print("Error opening version file")
+def get_ruleset_version():
 
     try:
-        f_root = open("VERSION", 'r+') 
+        f_version = open("VERSION")
+        rs_version = f_version.read().rstrip('\n')
+        f_version.close()
     except:
-        return "0.100"
-        print("Error opening version file")    
+        rs_version = "0.100"
 
-    version_download = f_downloaded.read()
-    f_downloaded.close()
+    return rs_version
 
-    f_root.truncate()
-    f_root.write(version_download)
-    f_root.close()
 
 def regex_in_file(regex, filepath):
     with open(filepath) as f:
@@ -351,16 +334,16 @@ def get_ruleset_from_update(type_ruleset):
     # Download new ruleset and extract all files
     downloads_directory = "./downloads"
     output = "{0}/ruleset.zip".format(downloads_directory)
-    output_sha = "{0}/last_update".format(downloads_directory)
+    last_update = "last_update"
 
     if not os.path.exists(downloads_directory):
         os.makedirs(downloads_directory)
 
     # Check sha
     try:
-        f_sha = open(output_sha)
-        type_r_old, zip_sha_old = f_sha.readlines()[0].split(":")
-        f_sha.close()
+        f_last_update = open(last_update)
+        type_r_old, zip_sha_old = f_last_update.readlines()[0].split(":")
+        f_last_update.close()
     except:
         type_r_old = ""
         zip_sha_old = ""
@@ -369,11 +352,15 @@ def get_ruleset_from_update(type_ruleset):
     download_file(url_ruleset, output)
 
     zip_sha = hashlib.sha256(open(output, 'rb').read()).hexdigest()
-    f_sha = open(output_sha, 'w')
-    f_sha.write("{0}:{1}".format(type_ruleset, zip_sha))
-    f_sha.close()
+    f_last_update = open(last_update, 'w')
+    f_last_update.write("{0}:{1}".format(type_ruleset, zip_sha))
+    f_last_update.close()
 
     if zip_sha != zip_sha_old or type_ruleset != type_r_old:
+        old_extracted_files = "{0}/ossec-rules/".format(downloads_directory)
+        if os.path.exists(old_extracted_files):
+            shutil.rmtree(old_extracted_files)
+
         with zipfile.ZipFile(output) as z:
             z.extractall(downloads_directory)
 
@@ -408,11 +395,29 @@ def get_ruleset_from_update(type_ruleset):
                         rootchecks_update.append(new_rc)
                         break
 
+        # Update main directory: Downloads/* -> main directory
+        move_dirs = ["rules-decoders", "rootcheck"]
+        for dest_dir in move_dirs:
+            src_dir = "{0}/ossec-rules/{1}".format(downloads_directory, dest_dir)
+            if os.path.exists(dest_dir):
+                shutil.rmtree(dest_dir)
+            shutil.copytree(src_dir, dest_dir)
+
+        shutil.copyfile("{0}/ossec-rules/VERSION".format(downloads_directory), "VERSION")
+
+        new_python_script = "{0}/ossec-rules/ossec_ruleset.py".format(downloads_directory)
+        if os.path.isfile(new_python_script):
+            global msg_update_py
+            msg_update_py += "*There is a new version of ossec_ruleset.py*\n"
+            msg_update_py += "\tIf you want to update it, just overwrite it with the new file {0}\n".format(new_python_script)
+            msg_update_py += "\tYou can use this command: 'cp {0} .'\n".format(new_python_script)
+
+        # Save ruleset
         ruleset_update["rules"] = rules_update
         ruleset_update["rootchecks"] = rootchecks_update
-        update_version()
+
     else:
-        msg = "\tRuleset({0}) up to date".format(print_version())
+        msg = "\tRuleset({0}) up to date".format(ruleset_version)
         logger.log(msg)
 
     logger.log("\t[Done]\n")
@@ -751,6 +756,7 @@ def usage():
 OSSEC Wazuh Ruleset installer & updater
 Github repository: https://github.com/wazuh/ossec-rules
 Full documentation: http://documentation.wazuh.com/en/latest/ossec_rule_set.html
+
 Usage: ./ossec_ruleset.py -r [-u | -f conf.txt] [-s]
        ./ossec_ruleset.py -c [-u | -f conf.txt] [-s]
        ./ossec_ruleset.py -a [-u | -f conf.txt] [-s]
@@ -766,7 +772,7 @@ Select action:
 \t-u, --update\tUpdate existing ruleset
 
 Aditional params:
-\t-s, --silent\t Force OSSEC restart
+\t-s, --silent\tForce OSSEC restart
 
 Configuration file syntax using option -f:
 \t# comment
@@ -838,6 +844,9 @@ if __name__ == "__main__":
     # Title
     logger.log("\nOSSEC Wazuh Ruleset, {0}\n".format(today_date))
 
+    # Get ruleset version from file VERSION
+    ruleset_version = get_ruleset_version()
+
     # Get new ruleset
     if ruleset_type != "all":
         ruleset = get_ruleset(ruleset_type, action)[ruleset_type]
@@ -894,14 +903,17 @@ if __name__ == "__main__":
             logger.log("Please check your config. logtest can be useful: {0}/bin/ossec-logtest".format(ossec_path))
             logger.log("\n\n**Ruleset error**")
         else:
-            logger.log("\n\n**Ruleset({0}) {1} successfully**".format(print_version(),str_mode))
+            logger.log("\n\n**Ruleset({0}) {1} successfully**".format(ruleset_version, str_mode))
     else:
         logger.log("Do not forget restart OSSEC to apply changes")
-        logger.log("\n\n**Ruleset({0}) {1} successfully**".format(print_version(),str_mode))
+        logger.log("\n\n**Ruleset({0}) {1} successfully**".format(ruleset_version, str_mode))
 
     if manual_steps:
         logger.log("\nDo not forget the manual steps:")
         for step in manual_steps:
             logger.log("\t{0}".format(step))
+
+    if msg_update_py:
+        print("\n{0}".format(msg_update_py))
 
     logger.log("\n\nWazuh.com")
