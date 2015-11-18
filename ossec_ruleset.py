@@ -36,7 +36,7 @@ import zipfile
 ossec_path = "/var/ossec"
 
 # Global
-url_ruleset = "http://ossec.wazuh.com/ruleset.zip"
+url_ruleset = "http://wazuh.com/resources/ruleset.zip"
 today_date = date.today().strftime('%Y%m%d')
 
 
@@ -67,6 +67,36 @@ class LogFile(object):
 
 
 # Aux functions
+def print_version():
+    try:
+        f = open("VERSION")
+    except:
+        return "0.100"
+        print("Error opening version file \"{0}".format(filepath))
+
+    version = f.read().rstrip('\n')
+    f.close()
+    return version
+
+def update_version():
+    try:
+        f_downloaded = open("./downloads/ossec-rules/VERSION")
+    except:
+        return "0.100"
+        print("Error opening version file")
+
+    try:
+        f_root = open("VERSION", 'r+') 
+    except:
+        return "0.100"
+        print("Error opening version file")    
+
+    version_download = f_downloaded.read()
+    f_downloaded.close()
+
+    f_root.truncate()
+    f_root.write(version_download)
+    f_root.close()
 
 def regex_in_file(regex, filepath):
     with open(filepath) as f:
@@ -321,7 +351,7 @@ def get_ruleset_from_update(type_ruleset):
     # Download new ruleset and extract all files
     downloads_directory = "./downloads"
     output = "{0}/ruleset.zip".format(downloads_directory)
-    output_sha = "{0}/last_update.txt".format(downloads_directory)
+    output_sha = "{0}/last_update".format(downloads_directory)
 
     if not os.path.exists(downloads_directory):
         os.makedirs(downloads_directory)
@@ -380,8 +410,10 @@ def get_ruleset_from_update(type_ruleset):
 
         ruleset_update["rules"] = rules_update
         ruleset_update["rootchecks"] = rootchecks_update
+        update_version()
     else:
-        logger.log("\tRuleset up to date")
+        msg = "\tRuleset({0}) up to date".format(print_version())
+        logger.log(msg)
 
     logger.log("\t[Done]\n")
     return ruleset_update
@@ -717,11 +749,11 @@ def setup_ruleset_rc(target_rootchecks, r_action):
 def usage():
     msg = """
 OSSEC Wazuh Ruleset installer & updater
-https://github.com/wazuh/ossec-rules
-
-Usage: ./ossec_rulset.py -r [-u | -f conf.txt] [-s]
-       ./ossec_rulset.py -c [-u | -f conf.txt] [-s]
-       ./ossec_rulset.py -a [-u | -f conf.txt] [-s]
+Github repository: https://github.com/wazuh/ossec-rules
+Full documentation: http://documentation.wazuh.com/en/latest/ossec_rule_set.html
+Usage: ./ossec_ruleset.py -r [-u | -f conf.txt] [-s]
+       ./ossec_ruleset.py -c [-u | -f conf.txt] [-s]
+       ./ossec_ruleset.py -a [-u | -f conf.txt] [-s]
 
 Select ruleset:
 \t-r, --rules
@@ -734,7 +766,7 @@ Select action:
 \t-u, --update\tUpdate existing ruleset
 
 Aditional params:
-\t-s, --silent\tForce OSSEC restart
+\t-s, --silent\t Force OSSEC restart
 
 Configuration file syntax using option -f:
 \t# comment
@@ -742,10 +774,10 @@ Configuration file syntax using option -f:
 \trootchecks:new_rootcheck_name
 
 Examples:
-Choose rules to install: ./ossec_rulset.py -r
-Use a configuration file to select rules to install: ./ossec_rulset.py -r -f new_rules.conf
+Choose rules to install: ./ossec_ruleset.py -r
+Use a configuration file to select rules to install: ./ossec_ruleset.py -r -f new_rules.conf
 \tnew_rules.conf content example:\n\trules:puppet\n\trules:netscaler
-Update rules: ./ossec_rulset.py -r -u
+Update rules: ./ossec_ruleset.py -r -u
 """
     print(msg)
 
@@ -801,7 +833,7 @@ if __name__ == "__main__":
     str_mode = "updated" if action == "update" else "installed"
 
     # Log
-    logger = LogFile("log.txt")
+    logger = LogFile("log")
 
     # Title
     logger.log("\nOSSEC Wazuh Ruleset, {0}\n".format(today_date))
@@ -862,10 +894,10 @@ if __name__ == "__main__":
             logger.log("Please check your config. logtest can be useful: {0}/bin/ossec-logtest".format(ossec_path))
             logger.log("\n\n**Ruleset error**")
         else:
-            logger.log("\n\n**Ruleset {0} successfully**".format(str_mode))
+            logger.log("\n\n**Ruleset({0}) {1} successfully**".format(print_version(),str_mode))
     else:
         logger.log("Do not forget restart OSSEC to apply changes")
-        logger.log("\n\n**Ruleset {0} successfully**".format(str_mode))
+        logger.log("\n\n**Ruleset({0}) {1} successfully**".format(print_version(),str_mode))
 
     if manual_steps:
         logger.log("\nDo not forget the manual steps:")
