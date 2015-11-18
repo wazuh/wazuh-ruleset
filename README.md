@@ -1,9 +1,12 @@
 # OSSEC HIDS Ruleset mantained by Wazuh
 
-This rule set updates OSSEC rules by modifying them or including new ones to increase detection capabilities, add functionality and expand OSSEC scope. It includes, among many others, compliance mapping with PCI DSS v3.1, CIS and additional decoders and rules.
+This rule set updates OSSEC rules by modifying them or including new ones to increase detection capabilities, add functionality and expand OSSEC scope. 
+
+It includes, among many others, compliance mapping with PCI DSS v3.1, CIS and additional decoders and rules.
+
 OSSEC Rule set is fed with the effort of a dedicated team and the help of the community. We encourage users to contribute to the repository and/or request new rules and decoders.
 
-## Script usage
+## How to use
 
 Use ```ossec_ruleset.py ``` to install and update new rules, decoders and rootcheck. Some features:
 
