@@ -24,13 +24,16 @@ import fileinput
 import signal
 from datetime import date
 import hashlib
+import zipfile
+import pwd
+import grp
 
 try:
     from urllib2 import urlopen, URLError, HTTPError
 except:
     # Python 3
     from urllib.request import urlopen
-import zipfile
+
 
 # OSSEC paths
 ossec_path = "/var/ossec"
@@ -408,6 +411,7 @@ def get_ruleset_from_update(type_ruleset):
         if os.path.isfile(new_python_script):
             logger.log("Updating ossec_ruleset.py...")
             shutil.copyfile(new_python_script, "ossec_ruleset.py")
+            os.chown("ossec_ruleset.py", uid, gid)
 
         if os.path.exists(downloads_directory):
             shutil.rmtree(downloads_directory)
@@ -515,6 +519,8 @@ def setup_decoders(decoder):
 
         f_new_decoder.close()
 
+    os.chown(current_decoder, uid, gid)
+
 
 def setup_rules(rule):
     if rule == "ossec":
@@ -528,11 +534,13 @@ def setup_rules(rule):
                 filename = split[len(split) - 1]
                 dest_file = "{0}/rules/{1}".format(ossec_path, filename)
                 shutil.copyfile(ossec_rule, dest_file)
+                os.chown(dest_file, uid, gid)
 
     else:
         src_file = "./rules-decoders/{0}/{0}_rules.xml".format(rule)
         dest_file = "{0}/rules/{1}_rules.xml".format(ossec_path, rule)
         shutil.copyfile(src_file, dest_file)
+        os.chown(dest_file, uid, gid)
 
 
 def setup_roochecks(rootcheck):
@@ -541,13 +549,16 @@ def setup_roochecks(rootcheck):
     if os.path.exists(dest_dir):
         shutil.rmtree(dest_dir)
     shutil.copytree(src_dir, dest_dir)
+    os.chown(dest_dir, uid, gid)
 
 
 def setup_ossec_conf(item, type_item):
+    ossec_conf = "{0}/etc/ossec.conf".format(ossec_path)
+
     if type_item == "rule":
         # Include new rules
         if item != "ossec":
-            ossec_conf = "{0}/etc/ossec.conf".format(ossec_path)
+
 
             if regex_in_file("\s*<include>{0}_rules.xml</include>".format(item), ossec_conf):
                 logger.log("\t\tRules \"{0}\" already exist in ossec.conf".format(item))
@@ -557,6 +568,7 @@ def setup_ossec_conf(item, type_item):
         # else:
             # Note: ossec rules are included in ossec.conf by default
             # logger.log("\t\t**It is assumed that the default rules are included in ossec.conf**")
+
     elif type_item == "rootcheck":
         if item != "ossec":
             types_rc = ["rootkit_files", "rootkit_trojans", "system_audit", "win_applications", "win_audit",
@@ -567,7 +579,6 @@ def setup_ossec_conf(item, type_item):
             for new_rc in os.listdir(dest_dir):
                 new_rc = "{0}/{1}".format(dest_dir, new_rc)
                 logger.log("\t\t{0}".format(new_rc))
-                ossec_conf = "{0}/etc/ossec.conf".format(ossec_path)
 
                 rc_include = None
                 for type_rc in types_rc:
@@ -592,6 +603,8 @@ def setup_ossec_conf(item, type_item):
         # else:
             # Note: ossec rootchecks are included in ossec.conf by default
             # logger.log("\t\t**It is assumed that the default rootchecks are included in ossec.conf**")
+
+    os.chown(ossec_conf, uid, gid)
 
 
 def do_backups(bk_ossec_conf=False, bk_decoders=False, bk_rules=False, bk_rootchecks=False):
@@ -841,6 +854,13 @@ if __name__ == "__main__":
 
     # Log
     logger = LogFile("log")
+
+    try:
+        uid = pwd.getpwnam("root").pw_uid
+        gid = grp.getgrnam("ossec").gr_gid
+    except:
+        logger.log("Error get uid - gid")
+        sys.exit(2)
 
     # Title
     logger.log("\nOSSEC Wazuh Ruleset, {0}\n".format(today_date))
