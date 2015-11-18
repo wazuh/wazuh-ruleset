@@ -14,7 +14,7 @@ Use ```ossec_ruleset.py ``` to install and update new rules, decoders and rootch
 * Install new rules and rootchecks
 * Decoders management
 * Automatic ```ossec.conf``` configuration
-* Update ruleset from Wazuh website
+* Update ruleset from Wazuh server
 * Silent mode
 
 **Some examples**
