@@ -707,7 +707,8 @@ def setup_ruleset_r(target_rules, r_action):
         # Info
         if r_action != "update":
             if item == "puppet":
-                msg = "Follow the last given instruction in the file /ossec-rules/rules-decoders/puppet/puppet_instructions.md"
+                msg = "The rules of Puppet are installed but some rules need to read the output of a command." \
+                " Follow the fourth step detailed in file \"./rules-decoders/puppet/puppet_instructions.md\" to allow OSSEC execute this command and read its output."
                 logger.log("\t**Manual steps**:\n\t\t{0}".format(msg))
                 instructions.append("{0}: {1}".format(item, msg))
 
