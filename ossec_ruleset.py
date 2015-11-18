@@ -39,7 +39,6 @@ ossec_path = "/var/ossec"
 url_ruleset = "http://wazuh.com/resources/ruleset.zip"
 today_date = date.today().strftime('%Y%m%d')
 ruleset_version = "0.100"
-msg_update_py = ""
 
 
 # Log class
@@ -395,7 +394,7 @@ def get_ruleset_from_update(type_ruleset):
                         rootchecks_update.append(new_rc)
                         break
 
-        # Update main directory: Downloads/* -> main directory
+        # Update main directory and remove Downloads
         move_dirs = ["rules-decoders", "rootcheck"]
         for dest_dir in move_dirs:
             src_dir = "{0}/ossec-rules/{1}".format(downloads_directory, dest_dir)
@@ -407,10 +406,11 @@ def get_ruleset_from_update(type_ruleset):
 
         new_python_script = "{0}/ossec-rules/ossec_ruleset.py".format(downloads_directory)
         if os.path.isfile(new_python_script):
-            global msg_update_py
-            msg_update_py += "*There is a new version of ossec_ruleset.py*\n"
-            msg_update_py += "\tIf you want to update it, just overwrite it with the new file {0}\n".format(new_python_script)
-            msg_update_py += "\tYou can use this command: 'cp {0} .'\n".format(new_python_script)
+            logger.log("Updating ossec_ruleset.py...")
+            shutil.copyfile(new_python_script, "ossec_ruleset.py")
+
+        if os.path.exists(downloads_directory):
+            shutil.rmtree(downloads_directory)
 
         # Save ruleset
         ruleset_update["rules"] = rules_update
@@ -707,7 +707,7 @@ def setup_ruleset_r(target_rules, r_action):
         # Info
         if r_action != "update":
             if item == "puppet":
-                msg = "The rules of Puppet are installed but some rules need to read the output of a command. Follow the fourth step detailed in file \"./rules-decoders/puppet/puppet_instructions.md\" to allow OSSEC execute this command and read its output."
+                msg = "Follow the last given instruction in the file /ossec-rules/rules-decoders/puppet/puppet_instructions.md"
                 logger.log("\t**Manual steps**:\n\t\t{0}".format(msg))
                 instructions.append("{0}: {1}".format(item, msg))
 
@@ -912,8 +912,5 @@ if __name__ == "__main__":
         logger.log("\nDo not forget the manual steps:")
         for step in manual_steps:
             logger.log("\t{0}".format(step))
-
-    if msg_update_py:
-        print("\n{0}".format(msg_update_py))
 
     logger.log("\n\nWazuh.com")
