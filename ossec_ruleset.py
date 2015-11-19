@@ -35,15 +35,6 @@ except:
     from urllib.request import urlopen
 
 
-# OSSEC paths
-ossec_path = "/var/ossec"
-
-# Global
-url_ruleset = "http://wazuh.com/resources/ruleset.zip"
-today_date = date.today().strftime('%Y%m%d')
-ruleset_version = "0.100"
-
-
 # Log class
 class LogFile(object):
     """Print to stdout and file"""
@@ -168,6 +159,17 @@ def download_file(url, output_file):
     except Exception as e:
         logger.log("Download error:{0}.\nExit.".format(e))
         sys.exit(2)
+
+
+def chown_r(path, uid, gid):
+    if os.path.isdir(path):
+        os.chown(path, uid, gid)
+        for item in os.listdir(path):
+            itempath = os.path.join(path, item)
+            if os.path.isfile(itempath):
+                os.chown(itempath, uid, gid)
+            elif os.path.isdir(itempath):
+                chown_r(itempath, uid, gid)
 
 
 # Ruleset functions
@@ -411,7 +413,6 @@ def get_ruleset_from_update(type_ruleset):
         if os.path.isfile(new_python_script):
             logger.log("Updating ossec_ruleset.py...")
             shutil.copyfile(new_python_script, "ossec_ruleset.py")
-            os.chown("ossec_ruleset.py", uid, gid)
 
         if os.path.exists(downloads_directory):
             shutil.rmtree(downloads_directory)
@@ -426,67 +427,6 @@ def get_ruleset_from_update(type_ruleset):
 
     logger.log("\t[Done]\n")
     return ruleset_update
-
-
-def merge_decoders_ossec():
-    """
-
-    :return: New decoder.xml
-    """
-    title = """<!-- @(#) $Id: decoder.xml,v 1.166 2010/06/15 12:52:01 dcid Exp $
-  -  OSSEC log decoder.
-  -  Author: Daniel B. Cid
-  -  License: http://www.ossec.net/en/licensing.html
-  -->
-
-
-<!--
-   - Allowed fields:
-   - location - where the log came from (only on FTS)
-   - srcuser  - extracts the source username
-   - dstuser  - extracts the destination (target) username
-   - user     - an alias to dstuser (only one of the two can be used)
-   - srcip    - source ip
-   - dstip    - dst ip
-   - srcport  - source port
-   - dstport  - destination port
-   - protocol - protocol
-   - id       - event id
-   - url      - url of the event
-   - action   - event action (deny, drop, accept, etc)
-   - status   - event status (success, failure, etc)
-   - extra_data     - Any extra data
-  -->
-
-
-"""
-
-    path_decoders = "./rules-decoders/ossec/decoders"
-    filter_files = "{0}/*_decoders.xml".format(path_decoders)
-    outfilename = "{0}/decoder.xml".format(path_decoders)
-
-    decoder_files = sorted(glob.glob(filter_files))
-
-    # switch iptables to the front: It is necessary for others decoders
-    item = "{0}/iptables_decoders.xml".format(path_decoders)
-    decoder_files.remove(item)
-    decoder_files.insert(0, item)
-
-    with open(outfilename, 'wb') as outfile:
-        try:
-            outfile.write(title)
-        except:
-            # python 3
-            outfile.write(bytes(title, 'UTF-8'))
-
-        for filename in decoder_files:
-            if filename == outfilename:
-                # Do not copy decoder.xml
-                continue
-            with open(filename, 'rb') as readfile:
-                shutil.copyfileobj(readfile, outfile)
-
-    return outfilename
 
 
 def setup_decoders(decoder):
@@ -519,7 +459,7 @@ def setup_decoders(decoder):
 
         f_new_decoder.close()
 
-    os.chown(current_decoder, uid, gid)
+    os.chown(current_decoder, root_uid, ossec_gid)
 
 
 def setup_rules(rule):
@@ -534,13 +474,13 @@ def setup_rules(rule):
                 filename = split[len(split) - 1]
                 dest_file = "{0}/rules/{1}".format(ossec_path, filename)
                 shutil.copyfile(ossec_rule, dest_file)
-                os.chown(dest_file, uid, gid)
+                os.chown(dest_file, root_uid, ossec_gid)
 
     else:
         src_file = "./rules-decoders/{0}/{0}_rules.xml".format(rule)
         dest_file = "{0}/rules/{1}_rules.xml".format(ossec_path, rule)
         shutil.copyfile(src_file, dest_file)
-        os.chown(dest_file, uid, gid)
+        os.chown(dest_file, root_uid, ossec_gid)
 
 
 def setup_roochecks(rootcheck):
@@ -549,7 +489,7 @@ def setup_roochecks(rootcheck):
     if os.path.exists(dest_dir):
         shutil.rmtree(dest_dir)
     shutil.copytree(src_dir, dest_dir)
-    os.chown(dest_dir, uid, gid)
+    chown_r(dest_dir, root_uid, ossec_gid)
 
 
 def setup_ossec_conf(item, type_item):
@@ -558,8 +498,6 @@ def setup_ossec_conf(item, type_item):
     if type_item == "rule":
         # Include new rules
         if item != "ossec":
-
-
             if regex_in_file("\s*<include>{0}_rules.xml</include>".format(item), ossec_conf):
                 logger.log("\t\tRules \"{0}\" already exist in ossec.conf".format(item))
             else:
@@ -604,7 +542,7 @@ def setup_ossec_conf(item, type_item):
             # Note: ossec rootchecks are included in ossec.conf by default
             # logger.log("\t\t**It is assumed that the default rootchecks are included in ossec.conf**")
 
-    os.chown(ossec_conf, uid, gid)
+    os.chown(ossec_conf, root_uid, ossec_gid)
 
 
 def do_backups(bk_ossec_conf=False, bk_decoders=False, bk_rules=False, bk_rootchecks=False):
@@ -803,6 +741,16 @@ Update rules: ./ossec_ruleset.py -r -u
 
 
 if __name__ == "__main__":
+    # Vars
+    ossec_path = "/var/ossec"
+    url_ruleset = "http://wazuh.com/resources/ruleset.zip"
+    today_date = date.today().strftime('%Y%m%d')
+    ruleset_version = "0.100"  # Default
+    ruleset_type = ""
+    action = "manual"
+    silent = False
+    mandatory_args = 0
+
     # Capture Cntrl + C
     signal.signal(signal.SIGINT, signal_handler)
 
@@ -818,10 +766,6 @@ if __name__ == "__main__":
         usage()
         sys.exit(2)
 
-    ruleset_type = ""
-    action = "manual"
-    silent = False
-    mandatory_args = 0
     for o, a in opts:
         if o in ("-r", "--rules"):
             ruleset_type = "rules"
@@ -855,9 +799,10 @@ if __name__ == "__main__":
     # Log
     logger = LogFile("log")
 
+    # Get uid:gid = root:ossec
     try:
-        uid = pwd.getpwnam("root").pw_uid
-        gid = grp.getgrnam("ossec").gr_gid
+        root_uid = pwd.getpwnam("root").pw_uid
+        ossec_gid = grp.getgrnam("ossec").gr_gid
     except:
         logger.log("Error get uid - gid")
         sys.exit(2)
