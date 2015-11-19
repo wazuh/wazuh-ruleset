@@ -2672,16 +2672,16 @@ Author and (c): Michael Starks, 2014 -->
   <order>srcuser</order>
 </decoder>
 
+<!-- sysmon decoder -->
 <!-- 
   - Decoder for Sysmon Event ID 1: Process Created
   
+  - Originally created by Josh Brower, Josh@DefensiveDepth.com 
   - Updated and maintained by Wazuh, 2015/11/19
   - New sysmon version has a different log:
         - OLD version:  "HashType: SHA1  Hash: 9FEF303BEDF8430403915951564E0D9888F6F365"
         - NEW version: "Hashes: SHA1=9FEF303BEDF8430403915951564E0D9888F6F365"
-  
-  - Originally created by Josh Brower, Josh@DefensiveDepth.com 
-  -
+
   -  OSSEC to Sysmon Fields Mapping:
   -  user = User
   -  status = Image
@@ -2708,6 +2708,97 @@ Author and (c): Michael Starks, 2014 -->
 <regex>Image: (\.*) \s*CommandLine: \.* \s*User: (\.*) \s*LogonGuid: \S* \s*LogonId: \S* \s*TerminalSessionId: \S* \s*IntegrityLevel: \.*Hashes: \S+=(\S*)\s*ParentProcessGuid: \S* \s*ParentProcessID: \S* \s*ParentImage: (\.*.\S+) \s*ParentCommandLine:</regex>
 <order>status,user,url,data</order>
 </decoder>
+
+
+<!--
+    - Event 2-5
+    -  v1.0 2015/11/19
+    -  Created by Wazuh, Inc. <ossec@wazuh.com>.
+    -  This program is a free software; you can redistribute it and/or modify it under the terms of GPLv2
+-->
+
+<!--
+Event ID 2: A process changed a file creation time
+
+    -  OSSEC to Sysmon Fields Mapping:
+
+    -  status = Image
+    -  url = TargetFilename
+    -  srcport = PreviousCreationUtcTime
+    -  dstport = CreationUtcTime
+
+Example:
+2015 Nov 19 18:32:16 (windows_2008) 192.168.2.201->WinEvtLog 2015 Nov 19 18:32:16 WinEvtLog: Microsoft-Windows-Sysmon/Operational: INFORMATION(2): Microsoft-Windows-Sysmon: SYSTEM: NT AUTHORITY: WIN-K3UD9R5LCEL: File creation time changed:  UtcTime: 2015-11-19 17:32:16.578  ProcessGuid: {0B364D7C-FE43-564D-0000-0010F1720200}  ProcessId: 576  Image: C:\Program Files\Internet Explorer\iexplore.exe  TargetFilename: C:\Users\Administrator.WIN-K3UD9R5LCEL\AppData\Roaming\Microsoft\Windows\Recent\CustomDestinations\QK9FKZ7I2DSU0MTCD160.temp  CreationUtcTime: 2015-11-19 03:28:08.281  PreviousCreationUtcTime: 2015-11-19 17:32:16.578
+-->
+<decoder name="Sysmon-EventID#2">
+    <type>windows</type>
+    <prematch>Microsoft-Windows-Sysmon/Operational: INFORMATION\(2\)</prematch>
+    <regex offset="after_prematch">Image: (\.*)\s+TargetFilename: (\.*)\s+CreationUtcTime: (\.*)\s+PreviousCreationUtcTime: (\.*)</regex>
+    <order>status, url, dstport, srcport</order>
+</decoder>
+
+<!--
+Event ID 3: Network connection
+
+    -  OSSEC to Sysmon Fields Mapping:
+
+    -  status = Image
+    -  user = user
+    -  extra_data= Protocol
+    -  srcip = SourceIp
+    -  srcport = SourcePort
+    -  dstip = DestinationIp
+    -  dstport = DestinationPort
+
+Example:
+2015 Nov 19 20:33:25 (windows_2008) 192.168.2.201->WinEvtLog 2015 Nov 19 20:33:25 WinEvtLog: Microsoft-Windows-Sysmon/Operational: INFORMATION(3): Microsoft-Windows-Sysmon: SYSTEM: NT AUTHORITY: WIN-K3UD9R5LCEL: Network connection detected:  UtcTime: 2015-11-19 19:33:23.824  ProcessGuid: {0B364D7C-23F6-564E-0000-00100D5A1100}  ProcessId: 2028  Image: C:\Program Files (x86)\Internet Explorer\iexplore.exe  User: WIN-K3UD9R5LCEL\Administrator  Protocol: tcp  Initiated: true  SourceIsIpv6: false  SourceIp: 192.168.2.201  SourceHostname: WIN-K3UD9R5LCEL.LinDomain  SourcePort: 49192  SourcePortName:   DestinationIsIpv6: false  DestinationIp: XXX.58.XXX.206  DestinationHostname: webdest  DestinationPort: 443  DestinationPortName: https
+-->
+<decoder name="Sysmon-EventID#3">
+    <type>windows</type>
+    <prematch>Microsoft-Windows-Sysmon/Operational: INFORMATION\(3\)</prematch>
+    <regex offset="after_prematch">Image: (\.*)\s+User: (\.*)\s+Protocol: (\S*)\s+Initiated\.+SourceIp: (\S*)\s+SourceHostname\.+SourcePort: (\S*)\s+SourcePortName:\.+DestinationIsIpv6\.+DestinationIp: (\S*)\s+DestinationHostname:\.+\s+DestinationPort: (\S+)</regex>
+    <order>status, user, extra_data, srcip, srcport, dstip, dstport</order>
+</decoder>
+
+<!--
+Event ID 4: Sysmon service state changed
+
+    -  OSSEC to Sysmon Fields Mapping:
+
+    -  status = State
+
+
+Example:
+2015 Nov 19 20:33:07 (windows_2008) 192.168.2.201->WinEvtLog 2015 Nov 19 20:27:42 WinEvtLog: Microsoft-Windows-Sysmon/Operational: INFORMATION(4): Microsoft-Windows-Sysmon: SYSTEM: NT AUTHORITY: WIN-K3UD9R5LCEL: Sysmon service state changed:  UtcTime: 2015-11-19 19:27:42.796  State: Started
+
+-->
+<decoder name="Sysmon-EventID#4">
+    <type>windows</type>
+    <prematch>Microsoft-Windows-Sysmon/Operational: INFORMATION\(4\)</prematch>
+    <regex offset="after_prematch">State: (\S+)</regex>
+    <order>status</order>
+</decoder>
+
+<!--
+Event ID 5: 
+
+    -  OSSEC to Sysmon Fields Mapping:
+
+    -  status = Image
+
+
+Example:
+2015 Nov 19 20:41:59 (windows_2008) 192.168.2.201->WinEvtLog 2015 Nov 19 20:41:57 WinEvtLog: Microsoft-Windows-Sysmon/Operational: INFORMATION(5): Microsoft-Windows-Sysmon: SYSTEM: NT AUTHORITY: WIN-K3UD9R5LCEL: Process terminated:  UtcTime: 2015-11-19 19:41:57.648  ProcessGuid: {0B364D7C-2353-564E-0000-001025511000}  ProcessId: 2196  Image: C:\Windows\System32\wbem\WmiPrvSE.exe
+-->
+<decoder name="Sysmon-EventID#5">
+    <type>windows</type>
+    <prematch>Microsoft-Windows-Sysmon/Operational: INFORMATION\(5\)</prematch>
+    <regex offset="after_prematch">Image: (\S+)</regex>
+    <order>status</order>
+</decoder>
+
+
+<!-- sysmon decoder END -->
 
 
 <!-- unbound
