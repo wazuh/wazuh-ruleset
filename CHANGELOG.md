@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
+## [Unreleased: v1.00]
 ### Added
 - Puppet Decoders & Rules.
 - Compliance mapping with PCI DSS v3.1.
@@ -19,8 +19,6 @@ All notable changes to this project will be documented in this file.
 - SSH Decoder modified to extract user name when invalid/illegal users trying to log in.
 - Sysmon Decoder for Event 1 modified (It allows use the new decoder added for this event).
 
-### Removed
 
-
-## [v1.0] - 2015-08-24
+## [v0.00] - 2015-08-24
 - Inital version: OSSEC out-of-the-box rules, decoders and rootchecks.
