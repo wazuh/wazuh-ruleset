@@ -15,11 +15,21 @@ OSSEC Rule set is fed with the effort of a dedicated team and the help of the co
 ### Manual installation
 
 **Rules**
+Configure decoders path adding the next lines after tag ``<rules>``at ``/var/ossec/etc/ossec.conf``:
+``<decoder>etc/decoder.xml</decoder>``
+``<decoder>etc/local_decoder.xml</decoder>``
+``<decoder_dir>etc/wazuh_decoders</decoder_dir>``
 
-1. Append ``new_rule_decoders.xml`` to ``/var/ossec/etc/decoder.xml``
-2. Copy ``.xml`` rule file into ``/var/ossec/rules`` folder
-3. Add ``<include>new_rule_filename.xml</include>`` between ``<rules></rules>`` tags at ``/var/ossec/etc/ossec.conf``
+- OSSEC out-of-the-box rules
+1. Copy ossec-rules/rules-decoders/decoder.xml to /var/ossec/etc/
+2. Copy all files *_rules.xml to /var/ossec/rules/, except for local_rules.xml
 
+- New rules
+1. Copy``new_rule_decoders.xml`` to ``/var/ossec/etc/wazuh_decoders/``
+2. Copy ``.xml`` rule file into ``/var/ossec/rules/`` folder
+3. Add ``<include>new_rule_filename.xml</include>`` before``</rules>`` tag at ``/var/ossec/etc/ossec.conf``
+
+    
 **Rootchecks**
 
 1. Copy ``.txt`` rootcheck file into ``/var/ossec/etc/shared`` folder
