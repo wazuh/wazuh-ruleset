@@ -116,6 +116,14 @@ def write_before_line(line_search, new_text, filepath):
     fileinput.close()
 
 
+def write_after_line(line_search, new_text, filepath):
+    for line in fileinput.input(filepath, inplace=True):
+        print(line.rstrip("\n"))
+        if line_search in line.strip():
+            print(new_text)
+    fileinput.close()
+
+
 def signal_handler(n_signal, frame):
     sys.exit(0)
 
@@ -417,6 +425,9 @@ def get_ruleset_from_update(type_ruleset):
         if os.path.exists(downloads_directory):
             shutil.rmtree(downloads_directory)
 
+        global ruleset_version
+        ruleset_version = get_ruleset_version()
+
         # Save ruleset
         ruleset_update["rules"] = rules_update
         ruleset_update["rootchecks"] = rootchecks_update
@@ -430,36 +441,26 @@ def get_ruleset_from_update(type_ruleset):
 
 
 def setup_decoders(decoder):
-    current_decoder = "{0}/etc/decoder.xml".format(ossec_path)
 
     if decoder == "ossec":
         # NOTE: When it is "ossec" decoder.xml is overwrite
+        current_decoder = "{0}/etc/decoder.xml".format(ossec_path)
         new_decoder = "./rules-decoders/decoder.xml"
+
         shutil.copyfile(new_decoder, current_decoder)
         logger.log("\t\t**Overwriting** decoder.xml")
+
+        os.chown(current_decoder, root_uid, ossec_gid)
     else:
+        decoders_wazuh_directory = "{0}/etc/wazuh_decoders".format(ossec_path)
+        if not os.path.exists(decoders_wazuh_directory):
+            os.makedirs(decoders_wazuh_directory)
+
         new_decoder = "./rules-decoders/{0}/{0}_decoders.xml".format(decoder)
-        f_new_decoder = open(new_decoder)
+        dest_new_decoder = "{0}/etc/wazuh_decoders/{1}_decoders.xml".format(ossec_path, decoder)
+        shutil.copyfile(new_decoder, dest_new_decoder)
 
-        if regex_in_file("<decoder name=\"{0}.+\">".format(decoder), current_decoder):
-            logger.log("\t\tDecoder already exists: Replace...")
-            str_init_decoder = "<!-- {0} decoder -->".format(decoder)
-            str_end_decoder = "<!-- {0} decoder END -->".format(decoder)
-            str_new_decoder = f_new_decoder.read()
-            replaced = replace_text_in_file(str_init_decoder, str_end_decoder, str_new_decoder, current_decoder)
-            if not replaced:
-                logger.log("\t\tError replacing decoder {0}.".format(decoder))
-                sys.exit(2)
-        else:
-            # new_decoder.xml >> decoder.xml
-            logger.log("\t\tAppending decoders to decoder.xml ...")
-            f_current_decoder = open(current_decoder, "a")
-            f_current_decoder.write(f_new_decoder.read())
-            f_current_decoder.close()
-
-        f_new_decoder.close()
-
-    os.chown(current_decoder, root_uid, ossec_gid)
+        chown_r(decoders_wazuh_directory, root_uid, ossec_gid)
 
 
 def setup_rules(rule):
@@ -495,6 +496,23 @@ def setup_roochecks(rootcheck):
 def setup_ossec_conf(item, type_item):
     ossec_conf = "{0}/etc/ossec.conf".format(ossec_path)
 
+    # Include decoders
+    str_decoder = "<decoder>etc/decoder.xml</decoder>"
+    if not regex_in_file(str_decoder, ossec_conf):
+        write_after_line("<rules>", "    {0}".format(str_decoder), ossec_conf)
+        logger.log("\t\t{0} added in ossec.conf".format(str_decoder))
+
+    str_decoder_local = "<decoder>etc/local_decoder.xml</decoder>"
+    if not regex_in_file(str_decoder_local, ossec_conf):
+        write_after_line(str_decoder, "    {0}".format(str_decoder_local), ossec_conf)
+        logger.log("\t\t{0} added in ossec.conf".format(str_decoder_local))
+
+    str_decoder_wazuh = "<decoder_dir>etc/wazuh_decoders</decoder_dir>"
+    if not regex_in_file(str_decoder_wazuh, ossec_conf):
+        write_after_line(str_decoder_local, "    {0}".format(str_decoder_wazuh), ossec_conf)
+        logger.log("\t\t{0} added in ossec.conf".format(str_decoder_wazuh))
+
+    # Include Rules & Rootchecks
     if type_item == "rule":
         # Include new rules
         if item != "ossec":
@@ -807,11 +825,11 @@ if __name__ == "__main__":
         logger.log("Error get uid - gid")
         sys.exit(2)
 
-    # Title
-    logger.log("\nOSSEC Wazuh Ruleset, {0}\n".format(today_date))
-
     # Get ruleset version from file VERSION
     ruleset_version = get_ruleset_version()
+
+    # Title
+    logger.log("\nOSSEC Wazuh Ruleset [{0}], {1}\n".format(ruleset_version, today_date))
 
     # Get new ruleset
     if ruleset_type != "all":
