@@ -725,7 +725,7 @@ def usage():
     msg = """
 OSSEC Wazuh Ruleset installer & updater
 Github repository: https://github.com/wazuh/ossec-rules
-Full documentation: http://documentation.wazuh.com/en/latest/ossec_rule_set.html
+Full documentation: http://documentation.wazuh.com/en/latest/ossec_ruleset.html
 
 Usage: ./ossec_ruleset.py -r [-u | -f conf.txt] [-s]
        ./ossec_ruleset.py -c [-u | -f conf.txt] [-s]
@@ -737,20 +737,20 @@ Select ruleset:
 \t-a, --all
 
 Select action:
-\tno arguments\tChoose rules and rootchecks to install
+\tno arguments\tInteractive menu for selection of rules and rootchecks to install.
 \t-f, --file\tUse a configuration file to select rules and rootchecks to install.
-\t-u, --update\tUpdate existing ruleset
+\t-u, --update\tUpdate existing ruleset.
 
 Aditional params:
 \t-s, --silent\tForce OSSEC restart
 
 Configuration file syntax using option -f:
-\t# comment
+\t# Commented line
 \trules:new_rule_name
 \trootchecks:new_rootcheck_name
 
 Examples:
-Choose rules to install: ./ossec_ruleset.py -r
+Manually choose rules to install: ./ossec_ruleset.py -r
 Use a configuration file to select rules to install: ./ossec_ruleset.py -r -f new_rules.conf
 \tnew_rules.conf content example:\n\trules:puppet\n\trules:netscaler
 Update rules: ./ossec_ruleset.py -r -u
@@ -889,7 +889,7 @@ if __name__ == "__main__":
         else:
             logger.log("\n\n**Ruleset({0}) {1} successfully**".format(ruleset_version, str_mode))
     else:
-        logger.log("Do not forget restart OSSEC to apply changes")
+        logger.log("Do not forget to restart OSSEC to apply changes.")
         logger.log("\n\n**Ruleset({0}) {1} successfully**".format(ruleset_version, str_mode))
 
     if manual_steps:
