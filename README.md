@@ -1,73 +1,13 @@
-# OSSEC HIDS Ruleset mantained by Wazuh
+# OSSEC Wazuh Ruleset mantained by Wazuh
 
-OSSEC rules are used by the system to detect attacks, intrusions, software misuse, configuration problems, application errors, malware, rootkits, system anomalies or security policy violations. OSSEC provides an out-of-the-box set of rules that we update by modifying them or including new ones, in order to increase OSSEC detection capabilities.
+OSSEC rules are used to detect attacks, intrusions, software misuse, configuration problems, application errors, malware, rootkits, system anomalies or security policy violations. OSSEC provides an out-of-the-box set of rules that we update by modifying them or including new ones, in order to increase OSSEC detection capabilities.
 
 The ruleset includes compliance mapping with PCI DSS v3.1, CIS and additional decoders and rules.
 
-OSSEC Wazuh Ruleset is fed with the effort of a dedicated team and the help of the community. We encourage users to contribute to the repository and/or request new rules and decoders.
+## Installation
 
-## Documentation
-
-* Full documentation at [documentation.wazuh.com](http://documentation.wazuh.com/en/latest/ossec_ruleset.html)
-
-### Manual installation
-
-**Rules**
-
-Configure decoders path adding the next lines after tag ``<rules>``at ``/var/ossec/etc/ossec.conf``:
-
- - ``<decoder>etc/decoder.xml</decoder>``
- - ``<decoder>etc/local_decoder.xml</decoder>``
- - ``<decoder_dir>etc/wazuh_decoders</decoder_dir>``
-
-OSSEC out-of-the-box rules:
-
- 1. Copy ossec-rules/rules-decoders/decoder.xml to /var/ossec/etc/ 
- 2. Copy all files *_rules.xml to /var/ossec/rules/, except for local_rules.xml
-
-New rules:
-
- 1. Copy``new_rule_decoders.xml`` to ``/var/ossec/etc/wazuh_decoders/``
- 2. Copy ``.xml`` rule file into ``/var/ossec/rules/`` folder
- 3. Add ``<include>new_rule_filename.xml</include>`` before``</rules>`` tag at ``/var/ossec/etc/ossec.conf``
-
-    
-**Rootchecks**
-
-1. Copy ``.txt`` rootcheck file into ``/var/ossec/etc/shared`` folder
-2. Add ``<rootcheck_type>new_rootcheck_filename.txt</rootcheck_type>`` between ``<rootcheck></rootcheck>`` tags at ``/var/ossec/etc/ossec.conf``
-
-Restart OSSEC Manager to apply changes
-
-### Automatic installation
-
-Run ```ossec_ruleset.py ``` for installing and updating rules, decoders and rootcheck. 
-
-Features:
-
-* Check current installation
-* Install new rules and rootchecks
-* Decoders management
-* Automatic ```ossec.conf``` configuration
-* Update ruleset from Wazuh server
-* Silent mode
-* Backups
-
-**Usage examples**
-
-Prompt menu to choose new rules/rootchecks
-``` bash
-./ossec_ruleset.py -a
-```
-
-Silent full ruleset update
-``` bash
-./ossec_ruleset.py -a -u -s
-```
-
-Don't hesitate to set up the script to fetch periodically new rules, decoders and rootcheck.
-Find out how to do it at [Script Documentation](http://documentation.wazuh.com/en/latest/ossec_rule_set.html)
-
+* [Manual installation instructions](http://documentation.wazuh.com/en/latest/ossec_ruleset.html#manual-installation)
+* [Automatic installation instructions](http://documentation.wazuh.com/en/latest/ossec_ruleset.html#automatic-installation): Using `ossec_ruleset.py`
 
 ## Directory structure
 
@@ -91,6 +31,10 @@ Find out how to do it at [Script Documentation](http://documentation.wazuh.com/e
     │ ├── VERSION
     │ ├── ossec_ruleset.py # Ruleset installer/updater
     
+## Full documentation
+
+Full documentation at [documentation.wazuh.com](http://documentation.wazuh.com/en/latest/ossec_ruleset.html)
+
 ## Contribute
 
 Users can contribute to this rule set by submitting pull requests. Our team will continue maintaining and updating it periodically.
