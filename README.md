@@ -1,4 +1,4 @@
-# OSSEC Wazuh Ruleset mantained by Wazuh
+# OSSEC Wazuh Ruleset
 
 OSSEC rules are used to detect attacks, intrusions, software misuse, configuration problems, application errors, malware, rootkits, system anomalies or security policy violations. OSSEC provides an out-of-the-box set of rules that we update by modifying them or including new ones, in order to increase OSSEC detection capabilities.
 
@@ -7,7 +7,7 @@ The ruleset includes compliance mapping with PCI DSS v3.1, CIS and additional de
 ## Installation
 
 * [Manual installation instructions](http://documentation.wazuh.com/en/latest/ossec_ruleset.html#manual-installation)
-* [Automatic installation instructions](http://documentation.wazuh.com/en/latest/ossec_ruleset.html#automatic-installation): Using `ossec_ruleset.py`
+* [Automatic installation instructions](http://documentation.wazuh.com/en/latest/ossec_ruleset.html#automatic-installation)
 
 ## Directory structure
 
@@ -37,7 +37,11 @@ Full documentation at [documentation.wazuh.com](http://documentation.wazuh.com/e
 
 ## Contribute
 
-Users can contribute to this rule set by submitting pull requests. Our team will continue maintaining and updating it periodically.
-If you want to contribute to this ruleset or our projects please don't hesitate to send a pull request. You can also join our users [mailing list](https://groups.google.com/d/forum/wazuh), by sending an email to [wazuh+subscribe@googlegroups.com](mailto:wazuh+subscribe@googlegroups.com), to ask questions and participate in discussions.
-    
+If you have created new rules, decoders or rootchecks and you would like to contribute to our repository, please fork our Github repository and submit a pull request.
 
+If you are not familiar with Github, you can also share them through [our users mailing list](https://groups.google.com/d/forum/wazuh), to which you can subscribe by sending an email to `wazuh+subscribe@googlegroups.com`. As well do not hesitate to request new rules or rootchecks that you would like to see running in OSSEC and our team will do our best to make it happen.
+
+## Web references
+
+* [Wazuh website](http://wazuh.com)
+* [OSSEC project website](http://ossec.github.io)
