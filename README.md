@@ -1,16 +1,14 @@
 # OSSEC HIDS Ruleset mantained by Wazuh
 
-This rule set updates OSSEC rules by modifying them or including new ones to increase detection capabilities, add functionality and expand OSSEC scope. 
+OSSEC rules are used by the system to detect attacks, intrusions, software misuse, configuration problems, application errors, malware, rootkits, system anomalies or security policy violations. OSSEC provides an out-of-the-box set of rules that we update by modifying them or including new ones, in order to increase OSSEC detection capabilities.
 
-It includes, among many others, compliance mapping with PCI DSS v3.1, CIS and additional decoders and rules.
+The ruleset includes compliance mapping with PCI DSS v3.1, CIS and additional decoders and rules.
 
-OSSEC Rule set is fed with the effort of a dedicated team and the help of the community. We encourage users to contribute to the repository and/or request new rules and decoders.
+OSSEC Wazuh Ruleset is fed with the effort of a dedicated team and the help of the community. We encourage users to contribute to the repository and/or request new rules and decoders.
 
 ## Documentation
 
-* Full documentation at [documentation.wazuh.com](http://documentation.wazuh.com/en/latest/ossec_rule_set.html)
-
-## Quick guide
+* Full documentation at [documentation.wazuh.com](http://documentation.wazuh.com/en/latest/ossec_ruleset.html)
 
 ### Manual installation
 
