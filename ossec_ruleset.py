@@ -761,7 +761,7 @@ Update rules: ./ossec_ruleset.py -r -u
 if __name__ == "__main__":
     # Vars
     ossec_path = "/var/ossec"
-    url_ruleset = "http://wazuh.com/resources/ruleset.zip"
+    url_ruleset = "http://ossec.wazuh.com/ruleset/ruleset.zip"
     today_date = date.today().strftime('%Y%m%d')
     ruleset_version = "0.100"  # Default
     ruleset_type = ""
