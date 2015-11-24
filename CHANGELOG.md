@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [v1.01] - 2015-11-24
+### Fixed
+- All sysmon decoders have *windows* as parent.
+
 ## [v1.00] - 2015-11-21
 ### Added
 - Puppet Decoders & Rules.
