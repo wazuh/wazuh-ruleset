@@ -1,0 +1,50 @@
+<!--
+  -  serv-u decoder 
+  -  v1.0 2015/11/26
+  -  Created by Wazuh, Inc. <ossec@wazuh.com>.
+  -  jesus@wazuh.com
+  -  This program is a free software; you can redistribute it and/or modify it under the terms of GPLv2
+-->
+
+<!--
+SERV-U
+[TypeMessage] DayWeek DayMonthYear Time - (SessionID) Message
+
+Examples:
+    [01] Thu 26Nov15 13:35:05 - Domain started
+    [02] Thu 26Nov15 14:26:45 - (000003) Connected to 192.168.2.200 (local address 192.168.2.201, port 22)
+    [02] Thu 26Nov15 14:27:14 - (000003) User "lin" logged in / [02] Thu 26Nov15 14:27:25 - (000003) User "lin" logged out
+    [02] Thu 26Nov15 14:03:16 - (000001) Message...
+-->
+<decoder name="serv-u">
+    <prematch>^[\d\d] \w\w\w \d\d\w\w\w\d\d \d\d:\d\d:\d\d - </prematch>
+</decoder>
+
+<decoder name="serv-u_id">
+    <parent>serv-u</parent>
+    <prematch offset="after_parent">^\w</prematch>
+    <regex>^[(\d\d)]</regex>
+    <order>id</order>
+</decoder>
+
+<decoder name="serv-u_id-session_ip">
+    <parent>serv-u</parent>
+    <prematch offset="after_parent">^\(\.+Connected to </prematch>
+    <regex>^[(\d\d)] \.+ - \((\d+)\) Connected to (\S+) \(\w* \w* (\S+), port (\d+)\)</regex>
+    <order>action, id,srcip,dstip, dstport</order>
+</decoder>
+
+<decoder name="serv-u_id-session_usr">
+    <parent>serv-u</parent>
+    <prematch offset="after_parent">^\(\.+User\.+logged</prematch>
+    <regex>^[(\d\d)] \.+ - \((\d+)\) User "(\S+)" logged</regex>
+    <order>action, id,srcuser</order>
+</decoder>
+
+<decoder name="serv-u_id-session">
+    <parent>serv-u</parent>
+    <prematch offset="after_parent">^\(\.+</prematch>
+    <regex>^[(\d\d)] \.+ - \((\d+)\) </regex>
+    <order>action, id</order>
+</decoder>
+<!-- serv-u decoder END -->
