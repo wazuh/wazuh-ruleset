@@ -3,7 +3,7 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 ### Added
-- Serv-U Decoders.
+- Serv-U Decoders & Rules
 
 # [v1.01] - 2015-11-24
 ### Fixed
