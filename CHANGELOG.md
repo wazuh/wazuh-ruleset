@@ -1,7 +1,11 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [v1.01] - 2015-11-24
+## [Unreleased]
+### Added
+- Serv-U Decoders.
+
+# [v1.01] - 2015-11-24
 ### Fixed
 - All sysmon decoders have *windows* as parent.
 
