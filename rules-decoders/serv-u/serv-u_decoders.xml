@@ -1,6 +1,6 @@
 <!--
   -  serv-u decoder 
-  -  v1.0 2015/11/26
+  -  v1.0 2015/11/27
   -  Created by Wazuh, Inc. <ossec@wazuh.com>.
   -  jesus@wazuh.com
   -  This program is a free software; you can redistribute it and/or modify it under the terms of GPLv2
@@ -18,6 +18,11 @@ Examples:
     [02] Thu 26Nov15 17:55:14 - (000002) Invalid login credentials; user: "lin"; password: "**********"
     [02] Thu 26Nov15 17:55:14 - (000002) Password wrong too many times for user "lin" - disconnecting
     [11] Thu 26Nov15 17:55:14 - (000002) Received file "D:\MyFolder\virus.exe" successfully (217.35 KB/sec - 14,022 Bytes)
+    [10] Thu 26Nov15 17:55:14 - (000002) Sent file "D:\Folder\file.txt" successfully (96.10 KB/sec - 10,825 Bytes)
+    [12] Thu 26Nov15 17:55:14 - (000002) File deleted: "D:\Folder\file.txt"
+    [13] Thu 26Nov15 17:55:14 - (000002) Renamed "D:\Folder\file.txt" to "D:\Folder\file2.txt"
+    [14] Thu 26Nov15 17:55:14 - (000002) Directory created: "C:\Folder"
+    [15] Thu 26Nov15 17:55:14 - (000002) Directory deleted: "C:\Folder"
     [02] Thu 26Nov15 17:55:14 - (000002) Message...
 -->
 <decoder name="serv-u">
@@ -70,6 +75,41 @@ Examples:
     <parent>serv-u</parent>
     <prematch offset="after_parent">^\(\d+\) Received file</prematch>
     <regex>^[(\d\d)] \.+ - \((\d+)\) Received file "(\.+)" </regex>
+    <order>action, id,url</order>
+</decoder>
+
+<decoder name="serv-u_type-session_download">
+    <parent>serv-u</parent>
+    <prematch offset="after_parent">^\(\d+\) Sent file</prematch>
+    <regex>^[(\d\d)] \.+ - \((\d+)\) Sent file "(\.+)" </regex>
+    <order>action, id,url</order>
+</decoder>
+
+<decoder name="serv-u_type-session_file_deleted">
+    <parent>serv-u</parent>
+    <prematch offset="after_parent">^\(\d+\) File deleted:</prematch>
+    <regex>^[(\d\d)] \.+ - \((\d+)\) File deleted: "(\.+)"</regex>
+    <order>action, id,url</order>
+</decoder>
+
+<decoder name="serv-u_type-session_renamed">
+    <parent>serv-u</parent>
+    <prematch offset="after_parent">^\(\d+\) Renamed</prematch>
+    <regex>^[(\d\d)] \.+ - \((\d+)\) Renamed "(\S+)" to "(\S+)"</regex>
+    <order>action, id,url,extra_data</order>
+</decoder>
+
+<decoder name="serv-u_type-session_dir_created">
+    <parent>serv-u</parent>
+    <prematch offset="after_parent">^\(\d+\) Directory created:</prematch>
+    <regex>^[(\d\d)] \.+ - \((\d+)\) Directory created: "(\.+)"</regex>
+    <order>action, id,url</order>
+</decoder>
+
+<decoder name="serv-u_type-session_dir_deleted">
+    <parent>serv-u</parent>
+    <prematch offset="after_parent">^\(\d+\) Directory deleted:</prematch>
+    <regex>^[(\d\d)] \.+ - \((\d+)\) Directory deleted: "(\.+)"</regex>
     <order>action, id,url</order>
 </decoder>
 
