@@ -4,7 +4,8 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 ### Added
 - Serv-U Decoders & Rules
-
+### Changed
+- Script *ossec_ruleset.py* bug fixes and python 2.6 compatibility
 # [v1.01] - 2015-11-24
 ### Fixed
 - All sysmon decoders have *windows* as parent.
