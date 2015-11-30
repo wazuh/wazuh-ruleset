@@ -1,7 +1,7 @@
-#!/usr/bin/env python2.7
+#!/usr/bin/env python
 # OSSEC Ruleset Updater
 
-# v1.0 2015/11/16
+# v1.1 2015/11/30
 # Created by Wazuh, Inc. <info@wazuh.com>.
 # This program is a free software; you can redistribute it and/or modify it under the terms of GPLv2
 
@@ -25,6 +25,7 @@ import hashlib
 import zipfile
 import pwd
 import grp
+import contextlib
 
 try:
     from urllib2 import urlopen, URLError, HTTPError
@@ -368,7 +369,7 @@ def get_ruleset_from_update(type_ruleset):
         if os.path.exists(old_extracted_files):
             shutil.rmtree(old_extracted_files)
 
-        with zipfile.ZipFile(output) as z:
+        with contextlib.closing(zipfile.ZipFile(output)) as z:
             z.extractall(downloads_directory)
 
         # Get ruleset to update
