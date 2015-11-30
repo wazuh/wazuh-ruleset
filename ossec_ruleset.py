@@ -1,5 +1,4 @@
-#!/usr/bin/env python
-
+#!/usr/bin/env python2.7
 # OSSEC Ruleset Updater
 
 # v1.0 2015/11/16
@@ -12,7 +11,6 @@
 #   cd ossec-rules
 #   chmod +x ossec_ruleset.py
 #   sudo ./ossec_ruleset.py
-
 
 import os
 import sys
@@ -63,7 +61,6 @@ class LogFile(object):
 
 # Aux functions
 def get_ruleset_version():
-
     try:
         f_version = open("VERSION")
         rs_version = f_version.read().rstrip('\n')
@@ -209,7 +206,8 @@ def get_ruleset_from_menu(type_ruleset):
         if "ossec" in menu_ruleset:
             menu_ruleset.remove("ossec")
 
-        title_str = "OSSEC Wazuh Ruleset, {0}\n\nUse ENTER key to select/unselect {1}:\n".format(today_date, type_directory)
+        title_str = "OSSEC Wazuh Ruleset, {0}\n\nUse ENTER key to select/unselect {1}:\n".format(today_date,
+                                                                                                 type_directory)
 
         if menu_ruleset:
             toggle = []
@@ -364,9 +362,6 @@ def get_ruleset_from_update(type_ruleset):
     download_file(url_ruleset, output)
 
     zip_sha = hashlib.sha256(open(output, 'rb').read()).hexdigest()
-    f_last_update = open(last_update, 'w')
-    f_last_update.write("{0}:{1}".format(type_ruleset, zip_sha))
-    f_last_update.close()
 
     if zip_sha != zip_sha_old or type_ruleset != type_r_old:
         old_extracted_files = "{0}/ossec-rules/".format(downloads_directory)
@@ -432,6 +427,9 @@ def get_ruleset_from_update(type_ruleset):
         ruleset_update["rules"] = rules_update
         ruleset_update["rootchecks"] = rootchecks_update
 
+        f_last_update = open(last_update, 'w')
+        f_last_update.write("{0}:{1}".format(type_ruleset, zip_sha))
+        f_last_update.close()
     else:
         msg = "\tRuleset({0}) up to date".format(ruleset_version)
         logger.log(msg)
@@ -441,7 +439,6 @@ def get_ruleset_from_update(type_ruleset):
 
 
 def setup_decoders(decoder):
-
     if decoder == "ossec":
         # NOTE: When it is "ossec" decoder.xml is overwrite
         current_decoder = "{0}/etc/decoder.xml".format(ossec_path)
@@ -502,6 +499,18 @@ def setup_ossec_conf(item, type_item):
         write_after_line("<rules>", "    {0}".format(str_decoder), ossec_conf)
         logger.log("\t\t{0} added in ossec.conf".format(str_decoder))
 
+    path_decoder_local = "{0}/etc/local_decoder.xml".format(ossec_path)
+    if not os.path.exists(path_decoder_local):
+        # Create local decoder
+        text = ("<!-- Local Decoders -->\n"
+                "<decoder name=\"local_decoder_example\">\n"
+                "    <program_name>local_decoder_example</program_name>\n"
+                "</decoder>\n")
+        f_local_decoder = open(path_decoder_local, 'a')
+        f_local_decoder.write(text)
+        f_local_decoder.close()
+        os.chown(path_decoder_local, root_uid, ossec_gid)
+
     str_decoder_local = "<decoder>etc/local_decoder.xml</decoder>"
     if not regex_in_file(str_decoder_local, ossec_conf):
         write_after_line(str_decoder, "    {0}".format(str_decoder_local), ossec_conf)
@@ -521,9 +530,9 @@ def setup_ossec_conf(item, type_item):
             else:
                 logger.log("\t\tIncluding \"{0}\" in ossec.conf ...".format(item))
                 write_before_line("</rules>", '    <include>{0}_rules.xml</include>'.format(item), ossec_conf)
-        # else:
-            # Note: ossec rules are included in ossec.conf by default
-            # logger.log("\t\t**It is assumed that the default rules are included in ossec.conf**")
+                # else:
+                # Note: ossec rules are included in ossec.conf by default
+                # logger.log("\t\t**It is assumed that the default rules are included in ossec.conf**")
 
     elif type_item == "rootcheck":
         if item != "ossec":
@@ -556,9 +565,9 @@ def setup_ossec_conf(item, type_item):
                 else:
                     logger.log("\t\t\tIncluding \"{0}\" in ossec.conf ...".format(new_rc))
                     write_before_line("</rootcheck>", rc_include_new, ossec_conf)
-        # else:
-            # Note: ossec rootchecks are included in ossec.conf by default
-            # logger.log("\t\t**It is assumed that the default rootchecks are included in ossec.conf**")
+                    # else:
+                    # Note: ossec rootchecks are included in ossec.conf by default
+                    # logger.log("\t\t**It is assumed that the default rootchecks are included in ossec.conf**")
 
     os.chown(ossec_conf, root_uid, ossec_gid)
 
@@ -677,7 +686,7 @@ def setup_ruleset_r(target_rules, r_action):
         if r_action != "update":
             if item == "puppet":
                 msg = "The rules of Puppet are installed but some rules need to read the output of a command." \
-                " Follow the fourth step detailed in file \"./rules-decoders/puppet/puppet_instructions.md\" to allow OSSEC execute this command and read its output."
+                      " Follow the fourth step detailed in file \"./rules-decoders/puppet/puppet_instructions.md\" to allow OSSEC execute this command and read its output."
                 logger.log("\t**Manual steps**:\n\t\t{0}".format(msg))
                 instructions.append("{0}: {1}".format(item, msg))
 
@@ -772,9 +781,14 @@ if __name__ == "__main__":
     # Capture Cntrl + C
     signal.signal(signal.SIGINT, signal_handler)
 
+    # Check sudo
+    if os.geteuid() != 0:
+        sys.exit("You need root privileges to run this script. Please try again, using 'sudo'. Exiting.")
+
     # Check arguments
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "rcauhsf:", ["rules", "rootchecks", "all", "update", "help", "silent", "file="])
+        opts, args = getopt.getopt(sys.argv[1:], "rcauhsf:",
+                                   ["rules", "rootchecks", "all", "update", "help", "silent", "file="])
         if not opts or not (1 <= len(opts) <= 3):
             print("Incorrect number of arguments. Expected 1 or 2 arguments.")
             usage()
@@ -871,15 +885,15 @@ if __name__ == "__main__":
     if not silent:
         logger.log("\nOSSEC requires a restart to apply changes")
         try:
-            ans = raw_input("Do you want to restart OSSEC now? [y/N]: ")
+            ans_restart = raw_input("Do you want to restart OSSEC now? [y/N]: ")
         except:
             # Python 3
-            ans = input("Do you want to restart OSSEC now? [y/N]: ")
+            ans_restart = input("Do you want to restart OSSEC now? [y/N]: ")
     else:
-        ans = "y"
+        ans_restart = "y"
 
     ret = 0
-    if ans == "y":
+    if ans_restart == "y":
         logger.log("\nRestarting OSSEC...")
         ret = os.system("{0}/bin/ossec-control restart".format(ossec_path))
         if ret != 0:
