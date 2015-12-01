@@ -176,18 +176,14 @@ def chown_r(path, uid, gid):
 # Ruleset functions
 
 def get_ossec_version():
-    # FixMe: This is a bad way to check the OSSEC version
     try:
+        ossec_v = "old"
         f_ossec = open("{0}/etc/ossec-init.conf".format(ossec_path))
-        version_line = f_ossec.readlines()[1].rstrip('\n')
 
-        if version_line == "VERSION=\"v2.8.3\"":
-            ossec_v = "old"
-        elif version_line == "VERSION=\"v2.8\"":
-            ossec_v = "new"
-        else:
-            ossec_v = "old"
-
+        for line in f_ossec.readlines():
+            if "WAZUH_VERSION" in line:
+                ossec_v = line
+                break
         f_ossec.close()
     except:
         ossec_v = "old"
