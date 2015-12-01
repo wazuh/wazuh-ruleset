@@ -334,6 +334,10 @@ def get_ruleset_from_update(type_ruleset):
 
     logger.log("Downloading new ruleset ...")
 
+    # FixMe: New structure
+    print("FixMe: New structure")
+    return ruleset_update
+
     # Get installed ruleset
     ossec_conf = "{0}/etc/ossec.conf".format(ossec_path)
     if type_ruleset == "rules" or type_ruleset == "all":
@@ -441,14 +445,16 @@ def get_ruleset_from_update(type_ruleset):
 
 def setup_decoders(decoder):
     if decoder == "ossec":
-        # NOTE: When it is "ossec" decoder.xml is overwrite
-        current_decoder = "{0}/etc/decoder.xml".format(ossec_path)
-        new_decoder = "./rules-decoders/decoder.xml"
+        src_dir = "./rules-decoders/ossec/decoders"
+        dest_dir = "{0}/etc/ossec_decoders".format(ossec_path)
 
-        shutil.copyfile(new_decoder, current_decoder)
-        logger.log("\t\t**Overwriting** decoder.xml")
+        if os.path.exists(dest_dir):
+            shutil.rmtree(dest_dir)
 
-        os.chown(current_decoder, root_uid, ossec_gid)
+        logger.log("\t\t**Overwriting** {0}".format(dest_dir))
+
+        shutil.copytree(src_dir, dest_dir)
+        chown_r(dest_dir, root_uid, ossec_gid)
     else:
         decoders_wazuh_directory = "{0}/etc/wazuh_decoders".format(ossec_path)
         if not os.path.exists(decoders_wazuh_directory):
@@ -463,7 +469,7 @@ def setup_decoders(decoder):
 
 def setup_rules(rule):
     if rule == "ossec":
-        new_rules_path = "./rules-decoders/ossec/*_rules.xml"
+        new_rules_path = "./rules-decoders/ossec/rules/*_rules.xml"
         ossec_rules = sorted(glob.glob(new_rules_path))
 
         for ossec_rule in ossec_rules:
@@ -494,12 +500,22 @@ def setup_roochecks(rootcheck):
 def setup_ossec_conf(item, type_item):
     ossec_conf = "{0}/etc/ossec.conf".format(ossec_path)
 
-    # Include decoders
-    str_decoder = "<decoder>etc/decoder.xml</decoder>"
+    # Check decoders
+    # OSSEC Decoders
+    old_decoder = "{0}/etc/decoder.xml".format(ossec_path)
+    try:
+        if os.path.exists(old_decoder):
+            os.remove(old_decoder)
+    except Exception as e:
+            logger.log("Error:{0}.\n".format(e))
+            logger.log("Please, remove {0} because it is no longer used".format(old_decoder))
+
+    str_decoder = "<decoder_dir>etc/ossec_decoders</decoder_dir>"
     if not regex_in_file(str_decoder, ossec_conf):
         write_after_line("<rules>", "    {0}".format(str_decoder), ossec_conf)
         logger.log("\t\t{0} added in ossec.conf".format(str_decoder))
 
+    # Local decoder
     path_decoder_local = "{0}/etc/local_decoder.xml".format(ossec_path)
     if not os.path.exists(path_decoder_local):
         # Create local decoder
@@ -517,6 +533,7 @@ def setup_ossec_conf(item, type_item):
         write_after_line(str_decoder, "    {0}".format(str_decoder_local), ossec_conf)
         logger.log("\t\t{0} added in ossec.conf".format(str_decoder_local))
 
+    # Wazuh decoders
     str_decoder_wazuh = "<decoder_dir>etc/wazuh_decoders</decoder_dir>"
     if not regex_in_file(str_decoder_wazuh, ossec_conf):
         write_after_line(str_decoder_local, "    {0}".format(str_decoder_wazuh), ossec_conf)
@@ -596,9 +613,18 @@ def do_backups(bk_ossec_conf=False, bk_decoders=False, bk_rules=False, bk_rootch
             shutil.copyfile(src_file, dest_file)
 
         if bk_decoders:
+            # decoder.xml
             src_file = "{0}/etc/decoder.xml".format(ossec_path)
-            dest_file = "{0}/decoder.xml".format(bk_subdirectory)
-            shutil.copyfile(src_file, dest_file)
+            if os.path.exists(src_file):
+                dest_file = "{0}/decoder.xml".format(bk_subdirectory)
+                shutil.copyfile(src_file, dest_file)
+            # ossec_decoders
+            src_dir = "{0}/etc/ossec_decoders".format(ossec_path)
+            if os.path.exists(src_dir):
+                dest_dir = "{0}/ossec_decoders".format(bk_subdirectory)
+                if os.path.exists(dest_dir):
+                    shutil.rmtree(dest_dir)
+                shutil.copytree(src_dir, dest_dir)
 
         if bk_rules:
             src_dir = "{0}/rules".format(ossec_path)
@@ -881,6 +907,11 @@ if __name__ == "__main__":
         manual_steps = setup_ruleset_r(ruleset, action)
     elif ruleset_type == "rootchecks":
         setup_ruleset_rc(ruleset, action)
+
+    # PATCH for OSSEC version 2.8
+    # If decoder.xml does not contain the tag accumulate it means is a old version of OSSEC
+    # if not regex_in_file("accumulate", "{0}/etc/ossec_decoders/openldap_decoders.xml".format(ossec_path)):
+    print("ToDo: Check OLD Version")
 
     # Restart ossec
     if not silent:
