@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 ### Added
 - Serv-U Decoders & Rules
 ### Changed
+- New directory structure: Decoders have been split
 - Script *ossec_ruleset.py* bug fixes and python 2.6 compatibility
 # [v1.01] - 2015-11-24
 ### Fixed
