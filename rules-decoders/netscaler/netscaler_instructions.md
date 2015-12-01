@@ -5,8 +5,8 @@ You can run the script ***ossec_ruleset.py***, or follow the next instructions:
 
  1. Configure decoders path adding the next lines after tag ``<rules>``at ``/var/ossec/etc/ossec.conf``:
  
-	 - ``<decoder>etc/decoder.xml</decoder>``
-	 - ``<decoder>etc/local_decoder.xml</decoder>``
+	 - ``<decoder_dir>etc/ossec_decoders</decoder_dir>``
+	 - ``<decoder>etc/local_decoder.xml</decoder>`` (when you are using local decoders)
 	 - ``<decoder_dir>etc/wazuh_decoders</decoder_dir>``
  2. Copy *netscaler_decoders.xml* to */var/ossec/etc/wazuh_decoders/*
  3. Copy *netscaler_rules.xml* to */var/ossec/rules/*
