@@ -1,9 +1,14 @@
 #!/usr/bin/env python
 # OSSEC Ruleset Updater
 
-# v1.1 2015/11/30
+# v1.1 2015/12/01
 # Created by Wazuh, Inc. <info@wazuh.com>.
 # This program is a free software; you can redistribute it and/or modify it under the terms of GPLv2
+
+# Requirements:
+#  Python 2.6 or later
+#  OSSEC 2.8 or later
+#  root privileges
 
 # Instructions:
 #   cd ~ && mkdir ruleset_tmp && cd ruleset_tmp
@@ -171,6 +176,7 @@ def chown_r(path, uid, gid):
 # Ruleset functions
 
 def get_ossec_version():
+    # FixMe: This is a bad way to check the OSSEC version
     try:
         f_ossec = open("{0}/etc/ossec-init.conf".format(ossec_path))
         version_line = f_ossec.readlines()[1].rstrip('\n')
@@ -380,9 +386,7 @@ def get_ruleset_from_update(type_ruleset):
         zip_sha_old = ""
 
     # Download file and create sha
-    #download_file(url_ruleset, output)
-    # FixMe: delete this line
-    output = "/home/lin/repos/test_py/ossec-rules.zip"
+    download_file(url_ruleset, output)
 
     zip_sha = hashlib.sha256(open(output, 'rb').read()).hexdigest()
 
@@ -524,47 +528,47 @@ def setup_roochecks(rootcheck):
 def setup_ossec_conf(item, type_item):
     ossec_conf = "{0}/etc/ossec.conf".format(ossec_path)
 
-    # Check decoders
-    # OSSEC Decoders
-    old_decoder = "{0}/etc/decoder.xml".format(ossec_path)
-    try:
-        if os.path.exists(old_decoder):
-            os.remove(old_decoder)
-    except Exception as e:
-            logger.log("Error:{0}.\n".format(e))
-            logger.log("Please, remove {0} because it is no longer used".format(old_decoder))
-
-    str_decoder = "<decoder_dir>etc/ossec_decoders</decoder_dir>"
-    if not regex_in_file(str_decoder, ossec_conf):
-        write_after_line("<rules>", "    {0}".format(str_decoder), ossec_conf)
-        logger.log("\t\t{0} added in ossec.conf".format(str_decoder))
-
-    # Local decoder
-    path_decoder_local = "{0}/etc/local_decoder.xml".format(ossec_path)
-    if not os.path.exists(path_decoder_local):
-        # Create local decoder
-        text = ("<!-- Local Decoders -->\n"
-                "<decoder name=\"local_decoder_example\">\n"
-                "    <program_name>local_decoder_example</program_name>\n"
-                "</decoder>\n")
-        f_local_decoder = open(path_decoder_local, 'a')
-        f_local_decoder.write(text)
-        f_local_decoder.close()
-        os.chown(path_decoder_local, root_uid, ossec_gid)
-
-    str_decoder_local = "<decoder>etc/local_decoder.xml</decoder>"
-    if not regex_in_file(str_decoder_local, ossec_conf):
-        write_after_line(str_decoder, "    {0}".format(str_decoder_local), ossec_conf)
-        logger.log("\t\t{0} added in ossec.conf".format(str_decoder_local))
-
-    # Wazuh decoders
-    str_decoder_wazuh = "<decoder_dir>etc/wazuh_decoders</decoder_dir>"
-    if not regex_in_file(str_decoder_wazuh, ossec_conf):
-        write_after_line(str_decoder_local, "    {0}".format(str_decoder_wazuh), ossec_conf)
-        logger.log("\t\t{0} added in ossec.conf".format(str_decoder_wazuh))
-
     # Include Rules & Rootchecks
     if type_item == "rule":
+        # Check if decoders in wazuh structure
+        # OSSEC Decoders
+        old_decoder = "{0}/etc/decoder.xml".format(ossec_path)
+        try:
+            if os.path.exists(old_decoder):
+                os.remove(old_decoder)
+        except Exception as e:
+                logger.log("Error:{0}.\n".format(e))
+                logger.log("Please, remove {0} because it is no longer used".format(old_decoder))
+
+        str_decoder = "<decoder_dir>etc/ossec_decoders</decoder_dir>"
+        if not regex_in_file(str_decoder, ossec_conf):
+            write_after_line("<rules>", "    {0}".format(str_decoder), ossec_conf)
+            logger.log("\t\t{0} added in ossec.conf".format(str_decoder))
+
+        # Local decoder
+        path_decoder_local = "{0}/etc/local_decoder.xml".format(ossec_path)
+        if not os.path.exists(path_decoder_local):
+            # Create local decoder
+            text = ("<!-- Local Decoders -->\n"
+                    "<decoder name=\"local_decoder_example\">\n"
+                    "    <program_name>local_decoder_example</program_name>\n"
+                    "</decoder>\n")
+            f_local_decoder = open(path_decoder_local, 'a')
+            f_local_decoder.write(text)
+            f_local_decoder.close()
+            os.chown(path_decoder_local, root_uid, ossec_gid)
+
+        str_decoder_local = "<decoder>etc/local_decoder.xml</decoder>"
+        if not regex_in_file(str_decoder_local, ossec_conf):
+            write_after_line(str_decoder, "    {0}".format(str_decoder_local), ossec_conf)
+            logger.log("\t\t{0} added in ossec.conf".format(str_decoder_local))
+
+        # Wazuh decoders
+        str_decoder_wazuh = "<decoder_dir>etc/wazuh_decoders</decoder_dir>"
+        if not regex_in_file(str_decoder_wazuh, ossec_conf):
+            write_after_line(str_decoder_local, "    {0}".format(str_decoder_wazuh), ossec_conf)
+            logger.log("\t\t{0} added in ossec.conf".format(str_decoder_wazuh))
+
         # Include new rules
         if item != "ossec":
             if regex_in_file("\s*<include>{0}_rules.xml</include>".format(item), ossec_conf):
@@ -830,7 +834,8 @@ Update rules: ./ossec_ruleset.py -r -u
 if __name__ == "__main__":
     # Vars
     ossec_path = "/var/ossec"
-    url_ruleset = "http://ossec.wazuh.com/ruleset/ruleset.zip"
+    # url_ruleset = "http://ossec.wazuh.com/ruleset/ruleset.zip"
+    url_ruleset = "http://ossec.wazuh.com/ruleset/ruleset_development.zip"
     today_date = date.today().strftime('%Y%m%d')
     ruleset_version = "0.100"  # Default
     ruleset_type = ""
