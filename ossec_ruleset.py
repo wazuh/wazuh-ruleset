@@ -61,16 +61,6 @@ class LogFile(object):
 
 
 # Aux functions
-def get_ruleset_version():
-    try:
-        f_version = open("VERSION")
-        rs_version = f_version.read().rstrip('\n')
-        f_version.close()
-    except:
-        rs_version = "0.100"
-
-    return rs_version
-
 
 def regex_in_file(regex, filepath):
     with open(filepath) as f:
@@ -179,6 +169,36 @@ def chown_r(path, uid, gid):
 
 
 # Ruleset functions
+
+def get_ossec_version():
+    try:
+        f_ossec = open("{0}/etc/ossec-init.conf".format(ossec_path))
+        version_line = f_ossec.readlines()[1].rstrip('\n')
+
+        if version_line == "VERSION=\"v2.8.3\"":
+            ossec_v = "old"
+        elif version_line == "VERSION=\"v2.8\"":
+            ossec_v = "new"
+        else:
+            ossec_v = "old"
+
+        f_ossec.close()
+    except:
+        ossec_v = "old"
+
+    return ossec_v
+
+
+def get_ruleset_version():
+    try:
+        f_version = open("VERSION")
+        rs_version = f_version.read().rstrip('\n')
+        f_version.close()
+    except:
+        rs_version = "0.100"
+
+    return rs_version
+
 
 def get_ruleset_from_menu(type_ruleset):
     """
@@ -334,10 +354,6 @@ def get_ruleset_from_update(type_ruleset):
 
     logger.log("Downloading new ruleset ...")
 
-    # FixMe: New structure
-    print("FixMe: New structure")
-    return ruleset_update
-
     # Get installed ruleset
     ossec_conf = "{0}/etc/ossec.conf".format(ossec_path)
     if type_ruleset == "rules" or type_ruleset == "all":
@@ -364,7 +380,9 @@ def get_ruleset_from_update(type_ruleset):
         zip_sha_old = ""
 
     # Download file and create sha
-    download_file(url_ruleset, output)
+    #download_file(url_ruleset, output)
+    # FixMe: delete this line
+    output = "/home/lin/repos/test_py/ossec-rules.zip"
 
     zip_sha = hashlib.sha256(open(output, 'rb').read()).hexdigest()
 
@@ -383,6 +401,7 @@ def get_ruleset_from_update(type_ruleset):
         rootchecks_update = []
         if type_ruleset == "rules" or type_ruleset == "all":
             new_rules_path = "{0}/ossec-rules/rules-decoders/".format(downloads_directory)
+
             rules_update.append("ossec")
             for new_rule in os.listdir(new_rules_path):
                 if new_rule == "ossec":
@@ -445,16 +464,21 @@ def get_ruleset_from_update(type_ruleset):
 
 def setup_decoders(decoder):
     if decoder == "ossec":
-        src_dir = "./rules-decoders/ossec/decoders"
-        dest_dir = "{0}/etc/ossec_decoders".format(ossec_path)
+        decoders_wazuh_directory = "{0}/etc/ossec_decoders".format(ossec_path)
+        if not os.path.exists(decoders_wazuh_directory):
+            os.makedirs(decoders_wazuh_directory)
 
-        if os.path.exists(dest_dir):
-            shutil.rmtree(dest_dir)
+        new_decoders_path = "./rules-decoders/ossec/decoders/*_decoders.xml"
+        ossec_decoders = sorted(glob.glob(new_decoders_path))
 
-        logger.log("\t\t**Overwriting** {0}".format(dest_dir))
+        for ossec_decoder in ossec_decoders:
+            if os.path.isfile(ossec_decoder):
+                split = ossec_decoder.split("/")
+                filename = split[len(split) - 1]
+                dest_file = "{0}/etc/ossec_decoders/{1}".format(ossec_path, filename)
+                shutil.copyfile(ossec_decoder, dest_file)
+                os.chown(dest_file, root_uid, ossec_gid)
 
-        shutil.copytree(src_dir, dest_dir)
-        chown_r(dest_dir, root_uid, ossec_gid)
     else:
         decoders_wazuh_directory = "{0}/etc/wazuh_decoders".format(ossec_path)
         if not os.path.exists(decoders_wazuh_directory):
@@ -755,6 +779,15 @@ def setup_ruleset_rc(target_rootchecks, r_action):
         logger.log("\t\t[Done]")
 
 
+def compatibility_with_old_versions():
+
+    # OpenLDAP
+    # Old decoders have not <accumulate> tag
+    src_file = "rules-decoders/ossec/decoders/compatibility/openldap_decoders.xml"
+    dest_file = "{0}/etc/ossec_decoders/openldap_decoders.xml".format(ossec_path)
+    shutil.copyfile(src_file, dest_file)
+
+
 # Main
 
 def usage():
@@ -869,6 +902,9 @@ if __name__ == "__main__":
     # Get ruleset version from file VERSION
     ruleset_version = get_ruleset_version()
 
+    # Get OSSEC Version
+    ossec_version = get_ossec_version()
+
     # Title
     logger.log("\nOSSEC Wazuh Ruleset [{0}], {1}\n".format(ruleset_version, today_date))
 
@@ -909,9 +945,10 @@ if __name__ == "__main__":
         setup_ruleset_rc(ruleset, action)
 
     # PATCH for OSSEC version 2.8
-    # If decoder.xml does not contain the tag accumulate it means is a old version of OSSEC
-    # if not regex_in_file("accumulate", "{0}/etc/ossec_decoders/openldap_decoders.xml".format(ossec_path)):
-    print("ToDo: Check OLD Version")
+    if ossec_version == "old" and ruleset_type != "rootchecks":
+        logger.log("Making some adjustments for compatibility")
+        compatibility_with_old_versions()
+        logger.log("\t[Done]")
 
     # Restart ossec
     if not silent:
