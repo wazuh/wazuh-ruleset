@@ -577,11 +577,19 @@ def setup_rules(rule):
 
 def setup_roochecks(rootcheck):
     src_dir = "./rootcheck/{0}".format(rootcheck)
-    dest_dir = "{0}/etc/shared/{1}".format(ossec_path, rootcheck)
-    if os.path.exists(dest_dir):
-        shutil.rmtree(dest_dir)
-    shutil.copytree(src_dir, dest_dir)
-    chown_r(dest_dir, root_uid, ossec_gid)
+
+    if rootcheck == "ossec":
+        for new_ossec_rc in os.listdir(src_dir):
+            src_file = "{0}/{1}".format(src_dir, new_ossec_rc)
+            dest_file = "{0}/etc/shared/{1}".format(ossec_path, new_ossec_rc)
+            shutil.copyfile(src_file, dest_file)
+            os.chown(dest_file, root_uid, ossec_gid)
+    else:
+        dest_dir = "{0}/etc/shared/{1}".format(ossec_path, rootcheck)
+        if os.path.exists(dest_dir):
+            shutil.rmtree(dest_dir)
+        shutil.copytree(src_dir, dest_dir)
+        chown_r(dest_dir, root_uid, ossec_gid)
 
 
 def setup_ossec_conf(item, type_item):
