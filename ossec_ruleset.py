@@ -607,6 +607,7 @@ def setup_decoders(decoder):
         new_decoder = "./rules-decoders/{0}/{0}_decoders.xml".format(decoder)
         dest_new_decoder = "{0}/etc/wazuh_decoders/{1}_decoders.xml".format(ossec_path, decoder)
         shutil.copyfile(new_decoder, dest_new_decoder)
+        os.chown(dest_new_decoder, root_uid, ossec_gid)
 
 
 def setup_rules(rule):
