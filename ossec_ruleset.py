@@ -222,7 +222,10 @@ def get_ruleset_from_menu(type_ruleset):
         ruleset_select = []
 
         # Get name of the new rules/rootchecks
-        menu_ruleset = [name for name in os.listdir(directory) if os.path.isdir(os.path.join(directory, name))]
+        menu_ruleset = ["Select ALL"]
+        for name in os.listdir(directory):
+            if os.path.isdir(os.path.join(directory, name)):
+                menu_ruleset.append(name)
 
         # OSSEC is already installed -> remove from menu_ruleset
         sorted(menu_ruleset)
@@ -258,17 +261,25 @@ def get_ruleset_from_menu(type_ruleset):
                 except Exception:
                     continue
 
-                if 0 <= option < len(menu_ruleset):  # Option 1 -> n
+                if 0 <= option < len(menu_ruleset):
                     if toggle[option] == "X":
                         toggle[option] = " "
+                        if option == 0:  # Unselect ALL
+                            for j in range(len(toggle)):
+                                toggle[j] = " "
                     else:
                         toggle[option] = "X"
+                        if option == 0:  # Select ALL
+                            for j in range(len(toggle)):
+                                toggle[j] = "X"
                 elif option == (i - 1):  # Option Done
                     read_input = False
 
             for i in range(len(toggle)):
                 if toggle[i] == "X":
                     ruleset_select.append(menu_ruleset[i])
+            if "Select ALL" in ruleset_select:
+                ruleset_select.remove("Select ALL")
 
             ruleset_menu[type_directory] = ruleset_select
 
@@ -462,6 +473,69 @@ def get_ruleset_from_update(type_ruleset):
     return ruleset_update
 
 
+def setup_wazuh_directory_structure():
+    ossec_conf = "{0}/etc/ossec.conf".format(ossec_path)
+
+    # Check if decoders in wazuh structure
+
+    # OSSEC Decoders
+    # If exists decoder.xml -> Move to /etc/ossec_decoders
+    old_decoder = "{0}/etc/decoder.xml".format(ossec_path)
+    des_folder = "{0}/etc/ossec_decoders".format(ossec_path)
+    if os.path.exists(old_decoder):
+        if not os.path.exists(des_folder):
+            os.makedirs(des_folder)
+
+        dest_file = "{0}/decoder.xml".format(des_folder)
+        shutil.move(old_decoder, dest_file)
+
+        chown_r(des_folder, root_uid, ossec_gid)
+
+        logger.log("\t{0} moved to {1}".format(old_decoder, dest_file))
+    elif not os.path.exists(des_folder):
+        logger.log("\tError: Unknown directory structure")
+        sys.exit()
+
+    str_decoder = "<decoder_dir>etc/ossec_decoders</decoder_dir>"
+    if not regex_in_file(str_decoder, ossec_conf):
+        write_after_line("<rules>", "    {0}".format(str_decoder), ossec_conf)
+        logger.log("\t{0} added in ossec.conf".format(str_decoder))
+
+    # Local decoder
+    path_decoder_local = "{0}/etc/local_decoder.xml".format(ossec_path)
+    if not os.path.exists(path_decoder_local):
+        # Create local decoder
+        text = ("<!-- Local Decoders -->\n"
+                "<decoder name=\"local_decoder_example\">\n"
+                "    <program_name>local_decoder_example</program_name>\n"
+                "</decoder>\n")
+        f_local_decoder = open(path_decoder_local, 'a')
+        f_local_decoder.write(text)
+        f_local_decoder.close()
+        logger.log("\t{0} created".format(path_decoder_local))
+        os.chown(path_decoder_local, root_uid, ossec_gid)
+
+    str_decoder_local = "<decoder>etc/local_decoder.xml</decoder>"
+    if not regex_in_file(str_decoder_local, ossec_conf):
+        write_after_line(str_decoder, "    {0}".format(str_decoder_local), ossec_conf)
+        logger.log("\t{0} added in ossec.conf".format(str_decoder_local))
+
+    # Wazuh decoders
+    # Create folder for wazuh decoders
+    wazuh_decoders = "{0}/etc/wazuh_decoders".format(ossec_path)
+    if not os.path.exists(wazuh_decoders):
+        os.makedirs(wazuh_decoders)
+        chown_r(wazuh_decoders, root_uid, ossec_gid)
+        logger.log("\t{0} created".format(wazuh_decoders))
+
+    str_decoder_wazuh = "<decoder_dir>etc/wazuh_decoders</decoder_dir>"
+    if not regex_in_file(str_decoder_wazuh, ossec_conf):
+        write_after_line(str_decoder_local, "    {0}".format(str_decoder_wazuh), ossec_conf)
+        logger.log("\t{0} added in ossec.conf".format(str_decoder_wazuh))
+
+    os.chown(ossec_conf, root_uid, ossec_gid)
+
+
 def setup_decoders(decoder):
     if decoder == "ossec":
         decoders_wazuh_directory = "{0}/etc/ossec_decoders".format(ossec_path)
@@ -478,6 +552,11 @@ def setup_decoders(decoder):
                 dest_file = "{0}/etc/ossec_decoders/{1}".format(ossec_path, filename)
                 shutil.copyfile(ossec_decoder, dest_file)
                 os.chown(dest_file, root_uid, ossec_gid)
+
+        # Remove decoder.xml inside /etc/ossec_decoders if exists
+        old_decoder = "{0}/etc/ossec_decoders/decoder.xml".format(ossec_path)
+        if os.path.exists(old_decoder):
+            os.remove(old_decoder)
 
     else:
         decoders_wazuh_directory = "{0}/etc/wazuh_decoders".format(ossec_path)
@@ -526,45 +605,6 @@ def setup_ossec_conf(item, type_item):
 
     # Include Rules & Rootchecks
     if type_item == "rule":
-        # Check if decoders in wazuh structure
-        # OSSEC Decoders
-        old_decoder = "{0}/etc/decoder.xml".format(ossec_path)
-        try:
-            if os.path.exists(old_decoder):
-                os.remove(old_decoder)
-        except Exception as e:
-                logger.log("Error:{0}.\n".format(e))
-                logger.log("Please, remove {0} because it is no longer used".format(old_decoder))
-
-        str_decoder = "<decoder_dir>etc/ossec_decoders</decoder_dir>"
-        if not regex_in_file(str_decoder, ossec_conf):
-            write_after_line("<rules>", "    {0}".format(str_decoder), ossec_conf)
-            logger.log("\t\t{0} added in ossec.conf".format(str_decoder))
-
-        # Local decoder
-        path_decoder_local = "{0}/etc/local_decoder.xml".format(ossec_path)
-        if not os.path.exists(path_decoder_local):
-            # Create local decoder
-            text = ("<!-- Local Decoders -->\n"
-                    "<decoder name=\"local_decoder_example\">\n"
-                    "    <program_name>local_decoder_example</program_name>\n"
-                    "</decoder>\n")
-            f_local_decoder = open(path_decoder_local, 'a')
-            f_local_decoder.write(text)
-            f_local_decoder.close()
-            os.chown(path_decoder_local, root_uid, ossec_gid)
-
-        str_decoder_local = "<decoder>etc/local_decoder.xml</decoder>"
-        if not regex_in_file(str_decoder_local, ossec_conf):
-            write_after_line(str_decoder, "    {0}".format(str_decoder_local), ossec_conf)
-            logger.log("\t\t{0} added in ossec.conf".format(str_decoder_local))
-
-        # Wazuh decoders
-        str_decoder_wazuh = "<decoder_dir>etc/wazuh_decoders</decoder_dir>"
-        if not regex_in_file(str_decoder_wazuh, ossec_conf):
-            write_after_line(str_decoder_local, "    {0}".format(str_decoder_wazuh), ossec_conf)
-            logger.log("\t\t{0} added in ossec.conf".format(str_decoder_wazuh))
-
         # Include new rules
         if item != "ossec":
             if regex_in_file("\s*<include>{0}_rules.xml</include>".format(item), ossec_conf):
@@ -909,6 +949,11 @@ if __name__ == "__main__":
     # Title
     logger.log("\nOSSEC Wazuh Ruleset [{0}], {1}\n".format(ruleset_version, today_date))
 
+    # Setup Wazuh structure: /etc/ossec_decoders/, /etc/wazuh_decoders/, /etc/local_decoders.xml
+    logger.log("Checking directory strucutre")
+    setup_wazuh_directory_structure()
+    logger.log("\t[Done]")
+
     # Get new ruleset
     if ruleset_type != "all":
         ruleset = get_ruleset(ruleset_type, action)[ruleset_type]
@@ -945,11 +990,9 @@ if __name__ == "__main__":
     elif ruleset_type == "rootchecks":
         setup_ruleset_rc(ruleset, action)
 
-    # PATCH for OSSEC version 2.8
-    if ossec_version == "old" and ruleset_type != "rootchecks":
-        logger.log("Making some adjustments for compatibility")
+    # PATCH for OSSEC != Wazuh
+    if ossec_version == "old" and action == "update" and ruleset_type != "rootchecks":
         compatibility_with_old_versions()
-        logger.log("\t[Done]")
 
     # Restart ossec
     if not silent:
