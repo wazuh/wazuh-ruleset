@@ -202,6 +202,26 @@ def get_ruleset_version():
     return rs_version
 
 
+def get_last_update():
+    last_update = "last_update"
+    try:
+        f_last_update = open(last_update)
+        type_r_old, zip_sha_old = f_last_update.readlines()[0].split(":")
+        f_last_update.close()
+    except:
+        type_r_old = ""
+        zip_sha_old = ""
+
+    return type_r_old, zip_sha_old
+
+
+def set_last_update(save_type_ruleset, save_zip_sha):
+    last_update = "last_update"
+    f_last_update = open(last_update, 'w')
+    f_last_update.write("{0}:{1}".format(save_type_ruleset, save_zip_sha))
+    f_last_update.close()
+
+
 def get_ruleset_from_menu(type_ruleset):
     """
     :param type_ruleset: rules, rootchecks, all
@@ -367,34 +387,20 @@ def get_ruleset_from_update(type_ruleset):
 
     logger.log("Downloading new ruleset ...")
 
-    # Get installed ruleset
-    ossec_conf = "{0}/etc/ossec.conf".format(ossec_path)
-    if type_ruleset == "rules" or type_ruleset == "all":
-        installed_rules = get_item_between_label("rules", ossec_conf)
-
-    if type_ruleset == "rootchecks" or type_ruleset == "all":
-        installed_rootchecks = get_item_between_label("rootcheck", ossec_conf)
-
     # Download new ruleset and extract all files
     downloads_directory = "./downloads"
     output = "{0}/ruleset.zip".format(downloads_directory)
-    last_update = "last_update"
 
     if not os.path.exists(downloads_directory):
         os.makedirs(downloads_directory)
 
     # Check sha
-    try:
-        f_last_update = open(last_update)
-        type_r_old, zip_sha_old = f_last_update.readlines()[0].split(":")
-        f_last_update.close()
-    except:
-        type_r_old = ""
-        zip_sha_old = ""
+    type_r_old, zip_sha_old = get_last_update()
 
     # Download file and create sha
     download_file(url_ruleset, output)
 
+    global zip_sha
     zip_sha = hashlib.sha256(open(output, 'rb').read()).hexdigest()
 
     if zip_sha != zip_sha_old or type_ruleset != type_r_old:
@@ -406,36 +412,18 @@ def get_ruleset_from_update(type_ruleset):
             z.extractall(downloads_directory)
 
         # Get ruleset to update
-        # FixMe:
-        # Update only those rules/rootchecks that have changed.
+        # FixMe: Update only those rules/rootchecks that have changed.
         rules_update = []
         rootchecks_update = []
         if type_ruleset == "rules" or type_ruleset == "all":
             new_rules_path = "{0}/ossec-rules/rules-decoders/".format(downloads_directory)
-
-            rules_update.append("ossec")
             for new_rule in os.listdir(new_rules_path):
-                if new_rule == "ossec":
-                    continue
-
-                new_rule_ossec_conf = "{0}_rules.xml".format(new_rule)
-                if new_rule_ossec_conf in installed_rules:
-                    rules_update.append(new_rule)
+                rules_update.append(new_rule)
 
         if type_ruleset == "rootchecks" or type_ruleset == "all":
             new_rootchecks_path = "{0}/ossec-rules/rootcheck/".format(downloads_directory)
-            rootchecks_update.append("ossec")
             for new_rc in os.listdir(new_rootchecks_path):
-                if new_rc == "ossec":
-                    continue
-
-                new_rc_ossec_conf = "{0}/etc/shared/{1}/.+\.txt".format(ossec_path, new_rc)
-
-                for ins_rc in installed_rootchecks:
-                    match = re.search(new_rc_ossec_conf, ins_rc)
-                    if match:
-                        rootchecks_update.append(new_rc)
-                        break
+                rootchecks_update.append(new_rc)
 
         # Update main directory and remove Downloads
         move_dirs = ["rules-decoders", "rootcheck"]
@@ -461,10 +449,6 @@ def get_ruleset_from_update(type_ruleset):
         # Save ruleset
         ruleset_update["rules"] = rules_update
         ruleset_update["rootchecks"] = rootchecks_update
-
-        f_last_update = open(last_update, 'w')
-        f_last_update.write("{0}:{1}".format(type_ruleset, zip_sha))
-        f_last_update.close()
     else:
         msg = "\tRuleset({0}) up to date".format(ruleset_version)
         logger.log(msg)
@@ -758,20 +742,20 @@ def setup_ruleset_r(target_rules, r_action):
         logger.log("{0}:".format(item))
 
         # Decoders
-        logger.log("\tDecoder:")
+        logger.log("\tDecoder:\n\t\tCopying decoders...")
         setup_decoders(item)
         logger.log("\t\t[Done]")
 
         # Rules
-        logger.log("\tRules:")
-        logger.log("\t\tCopying rules...")
+        logger.log("\tRules:\n\t\tCopying rules...")
         setup_rules(item)
         logger.log("\t\t[Done]")
 
         # ossec.conf
-        logger.log("\tossec.conf:")
-        setup_ossec_conf(item, "rule")
-        logger.log("\t\t[Done]")
+        if r_action != "update":
+            logger.log("\tossec.conf:\n\t\tActivating rules")
+            setup_ossec_conf(item, "rule")
+            logger.log("\t\t[Done]")
 
         # Info
         if r_action != "update":
@@ -809,14 +793,15 @@ def setup_ruleset_rc(target_rootchecks, r_action):
         logger.log("{0}:".format(item))
 
         # Rootchecks
-        logger.log("\tCopy rootcheck:")
+        logger.log("\tCopying rootchecks...")
         setup_roochecks(item)
         logger.log("\t\t[Done]")
 
         # ossec.conf
-        logger.log("\tossec.conf:")
-        setup_ossec_conf(item, "rootcheck")
-        logger.log("\t\t[Done]")
+        if r_action != "update":
+            logger.log("\tossec.conf:\n\t\tActivating rootchecks")
+            setup_ossec_conf(item, "rootcheck")
+            logger.log("\t\t[Done]")
 
 
 def compatibility_with_old_versions():
@@ -873,6 +858,7 @@ if __name__ == "__main__":
     # url_ruleset = "http://ossec.wazuh.com/ruleset/ruleset.zip"
     url_ruleset = "http://ossec.wazuh.com/ruleset/ruleset_development.zip"
     today_date = date.today().strftime('%Y%m%d')
+    zip_sha = None
     ruleset_version = "0.100"  # Default
     ruleset_type = ""
     action = "manual"
@@ -1015,9 +1001,13 @@ if __name__ == "__main__":
             logger.log("\n\n**Ruleset error**")
         else:
             logger.log("\n\n**Ruleset({0}) {1} successfully**".format(ruleset_version, str_mode))
+            if action == "update":
+                set_last_update(ruleset_type, zip_sha)
     else:
         logger.log("Do not forget to restart OSSEC to apply changes.")
         logger.log("\n\n**Ruleset({0}) {1} successfully**".format(ruleset_version, str_mode))
+        if action == "update":
+            set_last_update(ruleset_type, zip_sha)
 
     if manual_steps:
         logger.log("\nDo not forget the manual steps:")
