@@ -1,14 +1,7 @@
-#Instructions for Serv-u rules
+#Instructions for Serv-U rules
 **Created by Wazuh, Inc. <ossec@wazuh.com>**
 
-You can run the script ***ossec_ruleset.py***, or follow the next instructions:
 
- 1. Configure decoders path adding the next lines after tag ``<rules>``at ``/var/ossec/etc/ossec.conf``:
- 
-	 - ``<decoder_dir>etc/ossec_decoders</decoder_dir>``
-	 - ``<decoder>etc/local_decoder.xml</decoder>`` (when you are using local decoders)
-	 - ``<decoder_dir>etc/wazuh_decoders</decoder_dir>``
- 2. Copy *serv-u_decoders.xml* to */var/ossec/etc/wazuh_decoders/*
- 3. Copy *serv-u_rules.xml* to */var/ossec/rules/*
- 4. Add *```<include>serv-u_rules.xml</include>```* to */var/ossec/etc/ossec.conf* before tag *```</rules>```*
- 5. Restart your OSSEC Manager
+Run `ossec_ruleset.py -r` to install Serv-U rules. More information about automatic installation [here](http://documentation.wazuh.com/en/latest/ossec_ruleset.html#automatic-installation).
+
+If you prefer to install the rules manually follow the instructions listed [here](http://documentation.wazuh.com/en/latest/ossec_ruleset.html#manual-installation).
