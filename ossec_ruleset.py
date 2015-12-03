@@ -117,6 +117,15 @@ def write_after_line(line_search, new_text, filepath):
     fileinput.close()
 
 
+def remove_line(line_search, filepath):
+    for line in fileinput.input(filepath, inplace=True):
+        if line_search in line.strip():
+            continue
+        else:
+            print(line.rstrip("\n"))
+    fileinput.close()
+
+
 def signal_handler(n_signal, frame):
     sys.exit(0)
 
@@ -564,6 +573,12 @@ def setup_wazuh_directory_structure():
             chown_r(des_folder, root_uid, ossec_gid)
 
             logger.log("\t\t'{0}' moved to '{1}'".format(old_decoder, dest_file))
+
+            # Remove <decoder>etc/decoder.xml</decoder> from ossec.conf if exists
+            str_default_decoder = "<decoder>etc/decoder.xml</decoder>"
+            if regex_in_file(str_default_decoder, ossec_conf):
+                remove_line(str_default_decoder, ossec_conf)
+                logger.log("\tLine removed in ossec.conf: '{0}'".format(str_default_decoder))
         elif not os.path.exists(des_folder):
             logger.log("\tIt seems that we could not identify your installation. Install the ruleset manually or contact us for assistance.")
             sys.exit(1)
