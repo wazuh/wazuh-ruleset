@@ -152,13 +152,13 @@ def download_file(url, output_file):
             local_file.write(f.read())
 
     except HTTPError as e:
-        logger.log("HTTP Error {0}: {1}".format(e.code, url))
+        logger.log("\tHTTP Error {0}: {1}".format(e.code, url))
         sys.exit(2)
     except URLError as e:
-        logger.log("URL Error - {0}: {1}".format(e.reason, url))
+        logger.log("\tURL Error - {0}: {1}".format(e.reason, url))
         sys.exit(2)
     except Exception as e:
-        logger.log("Download error:{0}.\nExit.".format(e))
+        logger.log("\tDownload error:{0}.\nExit.".format(e))
         sys.exit(2)
 
 
@@ -174,7 +174,11 @@ def chown_r(path, uid, gid):
 
 
 def compare_files(file1, file2):
-
+    """
+    :param file1: File to be compared
+    :param file2: File to be compared
+    :return: Return true if file1 is equal to file2, and false otherwise. Also return false if file2 does not exist.
+    """
     if os.path.isfile(file1) and os.path.isfile(file2):
         same = filecmp.cmp(file1, file2)
     else:
@@ -186,6 +190,14 @@ def compare_files(file1, file2):
 
 
 def compare_folders(folder1, folder2, pattern_files):
+    """
+    :param folder1: Folder to be compared
+    :param folder2: Folder to be compared
+    :param pattern_files: Unix style pathname pattern
+    :return: True when all pattern_files in folder1 exist in folder2 and are equal, false otherwise.
+             Also return false if folder2 does not exist.
+    Note: This function use global variable 'ossec_version',
+    """
 
     if os.path.exists(folder1) and os.path.exists(folder2):
         pattern_folder1 = "{0}/{1}".format(folder1, pattern_files)
@@ -273,11 +285,12 @@ def get_ruleset_from_menu(type_ruleset):
         if "ossec" in menu_ruleset:
             menu_ruleset.remove("ossec")
 
+        str_msg_show = "\nPress any key to show the available {0}...".format(type_directory)
         try:
-            raw_input("\nPress any key to continue with the installation.")
+            raw_input(str_msg_show)
         except:
             # Python 3
-            input("\nPres any key to continue")
+            input(str_msg_show)
 
         title_str = "OSSEC Wazuh Ruleset, {0}\n\nUse ENTER key to select/unselect {1}:\n".format(today_date,
                                                                                                  type_directory)
@@ -298,11 +311,12 @@ def get_ruleset_from_menu(type_ruleset):
                     i += 1
                 print("{0}. Confirm and continue.".format(i))
 
+                str_option = "\nOption [1-{0}]: ".format(i)
                 try:
-                    ans = raw_input("\nOption: ")
+                    ans = raw_input(str_option)
                 except:
                     # Python 3
-                    ans = input("\nOption: ")
+                    ans = input(str_option)
                 try:
                     option = int(ans) - 1
                 except Exception:
@@ -345,7 +359,7 @@ def get_ruleset_from_file(filename, type_r):
     :return: ruleset to install
     """
 
-    logger.log("\nReading configuration file {0}".format(filename))
+    logger.log("\nReading configuration file '{0}'.".format(filename))
 
     ruleset_file = {"rules": [], "rootchecks": []}
     rules_file = []
@@ -362,48 +376,48 @@ def get_ruleset_from_file(filename, type_r):
             elif re.match("^#.*", line) is not None or re.match("^\s*\n", line) is not None:
                 continue
             else:
-                logger.log("Syntax error in line [{0}]: ->{1}<-".format(i, line))
+                logger.log("\tSyntax error in line [{0}]: ->{1}<-".format(i, line))
                 sys.exit(2)
             i += 1
         file_config.close()
     except Exception as e:
-        logger.log("Error reading config file:{0}.\nExit.".format(e))
+        logger.log("\tError reading config file: '{0}'.\nExit.".format(e))
         sys.exit(2)
 
     if rules_file:
         if "ossec" in rules_file:
-            logger.log("Error reading config file: \"ossec\" item found")
-            logger.log("\tIt is assumed that the default rootchecks are installed.")
-            logger.log("\tIf you want to update it, please use the option -u")
+            logger.log("\tError reading config file: \"ossec\" item found")
+            logger.log("\t\tIt is assumed that the default rootchecks are installed.")
+            logger.log("\t\tIf you want to update it, please use the option -u")
             sys.exit(2)
 
         directory = "rules-decoders"
         if not os.path.exists(directory):
-            logger.log("\nError: No folder {0}".format(directory))
+            logger.log("\tError: No folder '{0}' found".format(directory))
             sys.exit(2)
         new_ruleset = os.listdir(directory)
 
         for rs_f in rules_file:
             if rs_f not in new_ruleset:
-                logger.log("Error: {0} not in folder {1}".format(rs_f, directory))
+                logger.log("\tError: '{0}' not in folder '{1}'".format(rs_f, directory))
                 sys.exit(2)
 
     if rootchecks_file:
         if "ossec" in rootchecks_file:
-            logger.log("Error reading config file: \"ossec\" item found")
-            logger.log("\tIt is assumed that the default rootchecks are installed.")
-            logger.log("\tIf you want to update it, please use the option -u")
+            logger.log("\tError reading config file: \"ossec\" item found")
+            logger.log("\t\tIt is assumed that the default rootchecks are installed.")
+            logger.log("\t\tIf you want to update it, please use the option -u")
             sys.exit(2)
 
         directory = "rootcheck"
         if not os.path.exists(directory):
-            logger.log("\nError: No folder {0}".format(directory))
+            logger.log("\tError: No folder '{0}'".format(directory))
             sys.exit(2)
         new_ruleset = os.listdir(directory)
 
         for rs_f in rootchecks_file:
             if rs_f not in new_ruleset:
-                logger.log("Error: {0} not in folder {1}".format(rs_f, directory))
+                logger.log("\tError: '{0}' not in folder '{1}'".format(rs_f, directory))
                 sys.exit(2)
 
     if type_r == "rules" or type_r == "all":
@@ -411,7 +425,7 @@ def get_ruleset_from_file(filename, type_r):
     if type_r == "rootchecks" or type_r == "all":
         ruleset_file["rootchecks"] = rootchecks_file
 
-    logger.log("\t[Done]\n")
+    logger.log("\t[Done]")
     return ruleset_file
 
 
@@ -433,8 +447,12 @@ def get_ruleset_from_update(type_ruleset):
     if os.path.exists(old_extracted_files):
         shutil.rmtree(old_extracted_files)
 
-    with contextlib.closing(zipfile.ZipFile(output)) as z:
-        z.extractall(downloads_directory)
+    try:
+        with contextlib.closing(zipfile.ZipFile(output)) as z:
+            z.extractall(downloads_directory)
+    except Exception as e:
+        logger.log("\tError extracting file '{0}': {1}.".format(output, e))
+        sys.exit(2)
 
     # Get ruleset to update
     rules_update = []
@@ -530,7 +548,6 @@ def setup_wazuh_directory_structure():
     ossec_conf = "{0}/etc/ossec.conf".format(ossec_path)
 
     # Check if decoders in wazuh structure
-
     try:
         # OSSEC Decoders
         # If exists decoder.xml -> Move to /etc/ossec_decoders
@@ -539,21 +556,22 @@ def setup_wazuh_directory_structure():
         if os.path.exists(old_decoder):
             if not os.path.exists(des_folder):
                 os.makedirs(des_folder)
+                logger.log("\tNew directory created for OSSEC decoders: '{0}'".format(des_folder))
 
             dest_file = "{0}/decoder.xml".format(des_folder)
             shutil.move(old_decoder, dest_file)
 
             chown_r(des_folder, root_uid, ossec_gid)
 
-            logger.log("\t{0} moved to {1}".format(old_decoder, dest_file))
+            logger.log("\t\t'{0}' moved to '{1}'".format(old_decoder, dest_file))
         elif not os.path.exists(des_folder):
-            logger.log("\tError: Unknown directory structure")
-            sys.exit()
+            logger.log("\tIt seems that we could not identify your installation. Install the ruleset manually or contact us for assistance.")
+            sys.exit(1)
 
         str_decoder = "<decoder_dir>etc/ossec_decoders</decoder_dir>"
         if not regex_in_file(str_decoder, ossec_conf):
             write_after_line("<rules>", "    {0}".format(str_decoder), ossec_conf)
-            logger.log("\t{0} added in ossec.conf".format(str_decoder))
+            logger.log("\tNew line in ossec.conf: '{0}'".format(str_decoder))
 
         # Local decoder
         path_decoder_local = "{0}/etc/local_decoder.xml".format(ossec_path)
@@ -572,7 +590,7 @@ def setup_wazuh_directory_structure():
         str_decoder_local = "<decoder>etc/local_decoder.xml</decoder>"
         if not regex_in_file(str_decoder_local, ossec_conf):
             write_after_line(str_decoder, "    {0}".format(str_decoder_local), ossec_conf)
-            logger.log("\t{0} added in ossec.conf".format(str_decoder_local))
+            logger.log("\tNew line in ossec.conf: '{0}'".format(str_decoder_local))
 
         # Wazuh decoders
         # Create folder for wazuh decoders
@@ -580,17 +598,17 @@ def setup_wazuh_directory_structure():
         if not os.path.exists(wazuh_decoders):
             os.makedirs(wazuh_decoders)
             chown_r(wazuh_decoders, root_uid, ossec_gid)
-            logger.log("\t{0} created".format(wazuh_decoders))
+            logger.log("\tNew directory created for WAZUH decoders: '{0}'".format(wazuh_decoders))
 
         str_decoder_wazuh = "<decoder_dir>etc/wazuh_decoders</decoder_dir>"
         if not regex_in_file(str_decoder_wazuh, ossec_conf):
             write_after_line(str_decoder_local, "    {0}".format(str_decoder_wazuh), ossec_conf)
-            logger.log("\t{0} added in ossec.conf".format(str_decoder_wazuh))
+            logger.log("\tNew line in ossec.conf: '{0}'".format(str_decoder_wazuh))
 
         os.chown(ossec_conf, root_uid, ossec_gid)
 
     except Exception as e:
-        logger.log("\tError: Directory structure:{0}.\nExit.".format(e))
+        logger.log("\tError checking directory structure: {0}.\n".format(e))
         sys.exit(2)
 
 
@@ -670,7 +688,7 @@ def setup_ossec_conf(item, type_item):
 
     if type_item == "rule":
         if not regex_in_file("\s*<include>{0}_rules.xml</include>".format(item), ossec_conf):
-            logger.log("\t\tIncluding \"{0}\" in ossec.conf ...".format(item))
+            logger.log("\t\tNew rule in ossec.conf: '{0}'.".format(item))
             write_before_line("</rules>", '    <include>{0}_rules.xml</include>'.format(item), ossec_conf)
     elif type_item == "rootcheck":
         types_rc = ["rootkit_files", "rootkit_trojans", "system_audit", "win_applications", "win_audit",
@@ -680,7 +698,7 @@ def setup_ossec_conf(item, type_item):
 
         for new_rc in os.listdir(dest_dir):
             new_rc = "{0}/{1}".format(dest_dir, new_rc)
-            logger.log("\t\t{0}".format(new_rc))
+            # logger.log("\t\t{0}".format(new_rc))
 
             rc_include = None
             for type_rc in types_rc:
@@ -689,17 +707,17 @@ def setup_ossec_conf(item, type_item):
                     break
 
             if not rc_include:
-                logger.log("\t\t\tError in file {0}: Wrong filename".format(new_rc))
-                logger.log("\t\t\tFilename must start with:")
+                logger.log("\t\tError in file {0}: Wrong filename.".format(new_rc))
+                logger.log("\t\tFilename must start with:")
                 for t_rc in types_rc:
-                    logger.log("\t\t\t\t{0}".format(t_rc))
+                    logger.log("\t\t\t{0}".format(t_rc))
                 sys.exit(2)
 
             rc_include_search = "\s*{0}".format(rc_include)
             rc_include_new = "    {0}".format(rc_include)
 
             if not regex_in_file(rc_include_search, ossec_conf):
-                logger.log("\t\t\tIncluding \"{0}\" in ossec.conf ...".format(new_rc))
+                logger.log("\t\tNew rootcheck in ossec.conf: '{0}'.".format(new_rc))
                 write_before_line("</rootcheck>", rc_include_new, ossec_conf)
 
     os.chown(ossec_conf, root_uid, ossec_gid)
@@ -746,65 +764,70 @@ def restore_backups(backup_id):
     bk_directory = "backups"
 
     if not os.path.exists(bk_directory):
-        logger.log("\nNo backups to restore")
+        logger.log("\tNo backups to restore.")
         sys.exit()
 
     if backup_id == "0":
         all_backups = sorted(os.listdir(bk_directory))
 
         i = 0
+        print("\tList of current backups:")
         for subdir_bk in all_backups:
-            print("{0}: {1}".format(i, subdir_bk))
+            print("\t\t{0}: {1}".format(i, subdir_bk))
             i += 1
+        last_item = i-1
 
         get_input = True
+        str_ans = "\n\tPlease, choose which backup you want to restore [0 - {0}]: ".format(last_item)
+        str_error = "\t\tSelect an option between 0 and {0}.".format(last_item)
         while get_input:
             try:
-                ans = raw_input("\nSelect backup to restore: ")
+                ans = raw_input(str_ans)
             except:
                 # Python 3
-                ans = input("\nSelect backup to restore: ")
+                ans = input(str_ans)
 
             try:
                 option = int(ans)
-                if 0 <= option <= (i-1):
+                if 0 <= option <= last_item:
                     get_input = False
                 else:
-                    print("Select a option between 0 and {0}".format(i-1))
+                    print(str_error)
             except ValueError:
-                print("Select a option between 0 and {0}".format(i-1))
+                print(str_error)
 
         bk_restore = all_backups[option]
     else:
-        if not os.path.exists(backup_id):
-            logger.log("\nError: No backups with name: {0}".format(backup_id))
+        bk_restore_dir = "{0}/{1}".format(bk_directory, backup_id)
+        if not os.path.exists(bk_restore_dir):
+            logger.log("\tError: No backups with name '{0}'.".format(backup_id))
             sys.exit(2)
-        else:
-            bk_restore = backup_id
 
-    logger.log("\nRestore backup: {0}".format(bk_restore))
+        bk_restore = backup_id
+
+    logger.log("\n\tThe backup '{0}' will be restored.".format(bk_restore))
 
     etc_restore = "{0}/{1}/etc".format(bk_directory, bk_restore)
     rules_restore = "{0}/{1}/rules".format(bk_directory, bk_restore)
     if not os.path.exists(etc_restore) or not os.path.exists(rules_restore):
-        logger.log("Error: no folders found: '{0}' - '{1}'".format(etc_restore, rules_restore))
+        logger.log("\t\tError: Folder '{0}' or '{1}' not found.".format(etc_restore, rules_restore))
         sys.exit(2)
 
     etc_dest = "{0}/etc".format(ossec_path)
-    logger.log("\tRestore etc folder: '{0}' -> '{1}'".format(etc_restore, etc_dest))
+    logger.log("\t\tRestoring folder: '{0}' -> '{1}'".format(etc_restore, etc_dest))
     if os.path.exists(etc_dest):
         shutil.rmtree(etc_dest)
     shutil.copytree(etc_restore, etc_dest)
     chown_r(etc_dest, root_uid, ossec_gid)
-    logger.log("\t\t[Done]")
+    logger.log("\t\t\t[Done]")
 
     rules_dest = "{0}/rules".format(ossec_path)
-    logger.log("\tRestore rules folder: '{0}' -> '{1}'".format(rules_restore, rules_dest))
+    logger.log("\t\tRestoring folder: '{0}' -> '{1}'".format(rules_restore, rules_dest))
     if os.path.exists(rules_dest):
         shutil.rmtree(rules_dest)
     shutil.copytree(rules_restore, rules_dest)
     chown_r(rules_dest, root_uid, ossec_gid)
-    logger.log("\t\t[Done]")
+    logger.log("\t\t\t[Done]")
 
 
 def get_ruleset(type_ruleset, r_action):
@@ -845,26 +868,25 @@ def setup_ruleset_r(target_rules, r_action):
         logger.log("{0}:".format(item))
 
         # Decoders
-        logger.log("\tDecoder:\n\t\tCopying decoders...")
+        logger.log("\tCopying decoders.")
         setup_decoders(item)
         logger.log("\t\t[Done]")
 
         # Rules
-        logger.log("\tRules:\n\t\tCopying rules...")
+        logger.log("\tCopying rules.")
         setup_rules(item)
         logger.log("\t\t[Done]")
 
         # ossec.conf
         if r_action != "update":
-            logger.log("\tossec.conf:\n\t\tActivating rules...")
+            logger.log("\tActivating rules in ossec.conf.")
             setup_ossec_conf(item, "rule")
             logger.log("\t\t[Done]")
 
         # Info
         if r_action != "update":
             if item == "puppet":
-                msg = "The rules of Puppet are installed but some rules need to read the output of a command." \
-                      " Follow the fourth step detailed in file \"./rules-decoders/puppet/puppet_instructions.md\" to allow OSSEC execute this command and read its output."
+                msg = "The rules of Puppet are installed but you need to perform a manual step. You will find detailed information in file \"./rules-decoders/puppet/puppet_instructions.md\""
                 logger.log("\t**Manual steps**:\n\t\t{0}".format(msg))
                 instructions.append("{0}: {1}".format(item, msg))
 
@@ -902,7 +924,7 @@ def setup_ruleset_rc(target_rootchecks, r_action):
 
         # ossec.conf
         if r_action != "update":
-            logger.log("\tossec.conf:\n\t\tActivating rootchecks...")
+            logger.log("\tActivating rootchecks in ossec.conf.")
             setup_ossec_conf(item, "rootcheck")
             logger.log("\t\t[Done]")
 
@@ -924,11 +946,10 @@ OSSEC Wazuh Ruleset installer & updater
 Github repository: https://github.com/wazuh/ossec-rules
 Full documentation: http://documentation.wazuh.com/en/latest/ossec_ruleset.html
 
-Usage: ./ossec_ruleset.py -r [-u | -f conf.txt] [-s]
-       ./ossec_ruleset.py -c [-u | -f conf.txt] [-s]
-       ./ossec_ruleset.py -a [-u | -f conf.txt] [-s]
-       ./ossec_ruleset.py -b
-       ./ossec_ruleset.py -b backup_name
+Usage: ./ossec_ruleset.py -r [-u | -f conf.txt] [-s] # Rules
+       ./ossec_ruleset.py -c [-u | -f conf.txt] [-s] # Rootchecks
+       ./ossec_ruleset.py -a [-u | -f conf.txt] [-s] # All: Rules & Rootchecks
+       ./ossec_ruleset.py -b [list | backup_name]    # Restore backup
 
 Select ruleset:
 \t-r, --rules
@@ -941,24 +962,24 @@ Select action:
 \t-u, --update\tUpdate existing ruleset.
 
 Aditional params:
-\t-s, --silent\tForce OSSEC restart
+\t-s, --silent\tForce OSSEC restart when required.
+\t-b, --backups\tRestore backups. Use 'list' to show the backups list available.
 
 Configuration file syntax using option -f:
 \t# Commented line
 \trules:new_rule_name
 \trootchecks:new_rootcheck_name
 
-Restore backups:
-\t-b, --backups\tRestore backups.
-
+##############################################################################################
 Examples:
 Manually choose rules to install: ./ossec_ruleset.py -r
+Update rules: ./ossec_ruleset.py -r -u
 Use a configuration file to select rules to install: ./ossec_ruleset.py -r -f new_rules.conf
 \tnew_rules.conf content example:\n\trules:puppet\n\trules:netscaler
-Update rules: ./ossec_ruleset.py -r -u
 
-Show backups list and select backup to restore from menu: ./ossec_ruleset.py -b
-Restore backup: ./ossec_ruleset.py -b 20151203_00
+Show backups list and select backup to restore: ./ossec_ruleset.py -b list
+Restore a specific backup: ./ossec_ruleset.py -b 20151203_00
+##############################################################################################
 """
     print(msg)
 
@@ -986,15 +1007,14 @@ if __name__ == "__main__":
 
     # Check arguments
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "rcauhsbf:",
-                                   ["rules", "rootchecks", "all", "update", "help", "silent", "backups", "file="])
+        opts, args = getopt.getopt(sys.argv[1:], "rcauhsb:f:",
+                                   ["rules", "rootchecks", "all", "update", "help", "silent", "backups=", "file="])
         if not opts or not (1 <= len(opts) <= 3):
-            print("Incorrect number of arguments. Expected 1 or 2 arguments.")
-            usage()
+            print("Incorrect number of arguments. Expected 1 or 2 arguments.\nTry './ossec_ruleset.py --help' for more information.")
             sys.exit()
     except getopt.GetoptError as err:
         print(str(err))
-        usage()
+        print("Try './ossec_ruleset.py --help' for more information.")
         sys.exit(2)
 
     for o, a in opts:
@@ -1025,7 +1045,7 @@ if __name__ == "__main__":
             sys.exit()
 
     if backups and len(opts) != 1:
-        print("Try with: ./ossec_ruleset.py -b or ./ossec_ruleset.py -b backup_name")
+        print("Try with: ./ossec_ruleset.py -b list or ./ossec_ruleset.py -b backup_name")
         usage()
         sys.exit()
 
@@ -1044,18 +1064,8 @@ if __name__ == "__main__":
         root_uid = pwd.getpwnam("root").pw_uid
         ossec_gid = grp.getgrnam("ossec").gr_gid
     except:
-        logger.log("Error get uid - gid")
+        logger.log("Error: No user 'root' or group 'ossec' found.")
         sys.exit(2)
-
-    # Restore backups
-    if backups:
-        logger.log("Restore Backups")
-        if action:
-            restore_backups(action)
-        else:
-            restore_backups("0")
-        logger.log("\t[Done]")
-        sys.exit()
 
     # Get ruleset version from file VERSION
     ruleset_version = get_ruleset_version()
@@ -1072,13 +1082,23 @@ if __name__ == "__main__":
     logger.log("\nOSSEC Wazuh Ruleset [{0}], {1}\n".format(ruleset_version, today_date))
 
     # Backups
-    logger.log("Backup: ossec.conf, decoder.xml, rules, rootchecks")
+    logger.log("\nCreating a backup for folders '{0}/etc' and '{0}/rules'.".format(ossec_path))
     dir_bk = do_backups()
-    logger.log("\tBackups folder: {0}".format(dir_bk))
+    logger.log("\tBackup folder: {0}".format(dir_bk))
     logger.log("\t[Done]")
 
+    # Restore backups
+    if backups:
+        logger.log("\nRestore Tool:")
+        if action != "list":
+            restore_backups(action)
+        else:
+            restore_backups("0")
+        logger.log("\t[Done]")
+        sys.exit()
+
     # Setup Wazuh structure: /etc/ossec_decoders/, /etc/wazuh_decoders/, /etc/local_decoders.xml
-    logger.log("\nChecking directory strucutre")
+    logger.log("\nChecking directory strucutre.")
     setup_wazuh_directory_structure()
     logger.log("\t[Done]")
 
@@ -1087,7 +1107,7 @@ if __name__ == "__main__":
         ruleset = get_ruleset(ruleset_type, action)[ruleset_type]
 
         if not ruleset:
-            logger.log("No new {0} to be {1}".format(ruleset_type, str_mode))
+            logger.log("\nNo new {0} to be {1}.".format(ruleset_type, str_mode))
             sys.exit()
     else:
         ruleset = get_ruleset("all", action)
@@ -1095,9 +1115,9 @@ if __name__ == "__main__":
         rootchecks = ruleset["rootchecks"]
 
         if not rules:
-            logger.log("No new rules to be {0}".format(str_mode))
+            logger.log("\nNo new rules to be {0}.".format(str_mode))
         if not rootchecks:
-            logger.log("No new rootchecks to be {0}".format(str_mode))
+            logger.log("\nNo new rootchecks to be {0}.".format(str_mode))
 
         if not rules and not rootchecks:
             sys.exit()
@@ -1119,12 +1139,13 @@ if __name__ == "__main__":
     # Restart ossec
     if restart_ossec:
         if not silent:
-            logger.log("\nOSSEC requires a restart to apply changes")
+            logger.log("\nOSSEC requires a restart to apply changes.")
+            str_msg = "Do you want to restart OSSEC now? [y/N]: "
             try:
-                ans_restart = raw_input("Do you want to restart OSSEC now? [y/N]: ")
+                ans_restart = raw_input(str_msg)
             except:
                 # Python 3
-                ans_restart = input("Do you want to restart OSSEC now? [y/N]: ")
+                ans_restart = input(str_msg)
         else:
             ans_restart = "y"
     else:
@@ -1132,7 +1153,7 @@ if __name__ == "__main__":
 
     ret = 0
     if ans_restart == "y" or ans_restart == "Y":
-        logger.log("\nRestarting OSSEC...")
+        logger.log("\nRestarting OSSEC.")
         ret = os.system("{0}/bin/ossec-control restart".format(ossec_path))
         if ret != 0:
             logger.log("\n**Something went wrong**")
@@ -1142,7 +1163,7 @@ if __name__ == "__main__":
             logger.log("\n\n**Ruleset({0}) {1} successfully**".format(ruleset_version, str_mode))
     else:
         if restart_ossec:
-            logger.log("Do not forget to restart OSSEC to apply changes.")
+            logger.log("\nDo not forget to restart OSSEC to apply changes.")
         logger.log("\n\n**Ruleset({0}) {1} successfully**".format(ruleset_version, str_mode))
 
     if manual_steps:
