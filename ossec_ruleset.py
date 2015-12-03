@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # OSSEC Ruleset Updater
 
-# v2.0 2015/12/02
+# v2.0 2015/12/03
 # Created by Wazuh, Inc. <info@wazuh.com>.
 # This program is a free software; you can redistribute it and/or modify it under the terms of GPLv2
 
@@ -432,7 +432,7 @@ def get_ruleset_from_file(filename, type_r):
 def get_ruleset_from_update(type_ruleset):
     ruleset_update = {"rules": [], "rootchecks": []}
 
-    logger.log("\nDownloading new ruleset ...")
+    logger.log("\nDownloading new ruleset.")
 
     # Download new ruleset and extract all files
     downloads_directory = "./downloads"
@@ -584,7 +584,7 @@ def setup_wazuh_directory_structure():
             f_local_decoder = open(path_decoder_local, 'a')
             f_local_decoder.write(text)
             f_local_decoder.close()
-            logger.log("\t{0} created".format(path_decoder_local))
+            # logger.log("\t{0} created".format(path_decoder_local))
             os.chown(path_decoder_local, root_uid, ossec_gid)
 
         str_decoder_local = "<decoder>etc/local_decoder.xml</decoder>"
@@ -918,7 +918,7 @@ def setup_ruleset_rc(target_rootchecks, r_action):
         logger.log("{0}:".format(item))
 
         # Rootchecks
-        logger.log("\tCopying rootchecks...")
+        logger.log("\tCopying rootchecks.")
         setup_roochecks(item)
         logger.log("\t\t[Done]")
 
@@ -993,6 +993,7 @@ if __name__ == "__main__":
     ruleset_version = "0.100"  # Default
     ruleset_type = ""
     action = "manual"
+    manual_steps = []
     silent = False
     mandatory_args = 0
     restart_ossec = False
@@ -1044,9 +1045,9 @@ if __name__ == "__main__":
             usage()
             sys.exit()
 
-    if backups and len(opts) != 1:
+    if backups and not (len(opts) == 1 or silent):
         print("Try with: ./ossec_ruleset.py -b list or ./ossec_ruleset.py -b backup_name")
-        usage()
+        print("Try './ossec_ruleset.py --help' for more information.")
         sys.exit()
 
     if mandatory_args != 1:
@@ -1095,46 +1096,44 @@ if __name__ == "__main__":
         else:
             restore_backups("0")
         logger.log("\t[Done]")
-        sys.exit()
-
-    # Setup Wazuh structure: /etc/ossec_decoders/, /etc/wazuh_decoders/, /etc/local_decoders.xml
-    logger.log("\nChecking directory strucutre.")
-    setup_wazuh_directory_structure()
-    logger.log("\t[Done]")
-
-    # Get new ruleset
-    if ruleset_type != "all":
-        ruleset = get_ruleset(ruleset_type, action)[ruleset_type]
-
-        if not ruleset:
-            logger.log("\nNo new {0} to be {1}.".format(ruleset_type, str_mode))
-            sys.exit()
     else:
-        ruleset = get_ruleset("all", action)
-        rules = ruleset["rules"]
-        rootchecks = ruleset["rootchecks"]
+        # Setup Wazuh structure: /etc/ossec_decoders/, /etc/wazuh_decoders/, /etc/local_decoders.xml
+        logger.log("\nChecking directory structure.")
+        setup_wazuh_directory_structure()
+        logger.log("\t[Done]")
 
-        if not rules:
-            logger.log("\nNo new rules to be {0}.".format(str_mode))
-        if not rootchecks:
-            logger.log("\nNo new rootchecks to be {0}.".format(str_mode))
+        # Get new ruleset
+        if ruleset_type != "all":
+            ruleset = get_ruleset(ruleset_type, action)[ruleset_type]
 
-        if not rules and not rootchecks:
-            sys.exit()
+            if not ruleset:
+                logger.log("\nNo new {0} to be {1}.".format(ruleset_type, str_mode))
+                sys.exit()
+        else:
+            ruleset = get_ruleset("all", action)
+            rules = ruleset["rules"]
+            rootchecks = ruleset["rootchecks"]
 
-    # Setup ruleset
-    manual_steps = []
-    if ruleset_type == "all":
-        manual_steps = setup_ruleset_r(rules, action)
-        setup_ruleset_rc(rootchecks, action)
-    elif ruleset_type == "rules":
-        manual_steps = setup_ruleset_r(ruleset, action)
-    elif ruleset_type == "rootchecks":
-        setup_ruleset_rc(ruleset, action)
+            if not rules:
+                logger.log("\nNo new rules to be {0}.".format(str_mode))
+            if not rootchecks:
+                logger.log("\nNo new rootchecks to be {0}.".format(str_mode))
 
-    # PATCH for OSSEC != Wazuh
-    if ossec_version == "old" and action == "update" and ruleset_type != "rootchecks":
-        compatibility_with_old_versions()
+            if not rules and not rootchecks:
+                sys.exit()
+
+        # Setup ruleset
+        if ruleset_type == "all":
+            manual_steps = setup_ruleset_r(rules, action)
+            setup_ruleset_rc(rootchecks, action)
+        elif ruleset_type == "rules":
+            manual_steps = setup_ruleset_r(ruleset, action)
+        elif ruleset_type == "rootchecks":
+            setup_ruleset_rc(ruleset, action)
+
+        # PATCH for OSSEC != Wazuh
+        if ossec_version == "old" and action == "update" and ruleset_type != "rootchecks":
+            compatibility_with_old_versions()
 
     # Restart ossec
     if restart_ossec:
@@ -1151,7 +1150,13 @@ if __name__ == "__main__":
     else:
         ans_restart = "n"
 
+    # Messages
     ret = 0
+    if backups:
+        success_msg = "\n\n**Backup successfully**"
+    else:
+        success_msg = "\n\n**Ruleset({0}) {1} successfully**".format(ruleset_version, str_mode)
+
     if ans_restart == "y" or ans_restart == "Y":
         logger.log("\nRestarting OSSEC.")
         ret = os.system("{0}/bin/ossec-control restart".format(ossec_path))
@@ -1160,11 +1165,11 @@ if __name__ == "__main__":
             logger.log("Please check your config. logtest can be useful: {0}/bin/ossec-logtest".format(ossec_path))
             logger.log("\n\n**Ruleset error**")
         else:
-            logger.log("\n\n**Ruleset({0}) {1} successfully**".format(ruleset_version, str_mode))
+            logger.log(success_msg)
     else:
         if restart_ossec:
             logger.log("\nDo not forget to restart OSSEC to apply changes.")
-        logger.log("\n\n**Ruleset({0}) {1} successfully**".format(ruleset_version, str_mode))
+        logger.log(success_msg)
 
     if manual_steps:
         logger.log("\nDo not forget the manual steps:")
