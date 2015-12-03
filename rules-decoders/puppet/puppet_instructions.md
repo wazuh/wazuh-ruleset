@@ -1,17 +1,12 @@
 #Instructions for Puppet rules
 **Created by Wazuh, Inc. <ossec@wazuh.com>**
 
-You can run the script ***ossec_ruleset.py***, or follow the next instructions:
+Run `ossec_ruleset.py -r` to install Puppet rules. More information about automatic installation [here](http://documentation.wazuh.com/en/latest/ossec_ruleset.html#automatic-installation).
 
- 1. Configure decoders path adding the next lines after tag ``<rules>``at ``/var/ossec/etc/ossec.conf``:
- 
-	 - ``<decoder_dir>etc/ossec_decoders</decoder_dir>``
-	 - ``<decoder>etc/local_decoder.xml</decoder>`` (when you are using local decoders)
-	 - ``<decoder_dir>etc/wazuh_decoders</decoder_dir>``
- 2. Copy *puppet_decoders.xml* to */var/ossec/etc/wazuh_decoders/*
- 3. Copy *puppet_rules.xml* to */var/ossec/rules/*
- 4. Add *```<include>puppet_rules.xml</include>```* to */var/ossec/etc/ossec.conf* before tag *```</rules>```*
- 5. Some rules need to read the output of a command. Copy the code below to */var/ossec/etc/shared/agent.conf* in your **OSSEC Manager** to allow OSSEC execute this command and read its output:
+If you prefer to install the rules manually follow the instructions listed [here](http://documentation.wazuh.com/en/latest/ossec_ruleset.html#manual-installation).
+
+**Both the automatic and manual installation is necessary to perform the next step**:
+Some rules need to read the output of a command. Copy the code below to */var/ossec/etc/shared/agent.conf* in your **OSSEC Manager** to allow OSSEC execute this command and read its output:
 ```xml
 <agent_config>
 	<localfile>
@@ -25,4 +20,3 @@ You can run the script ***ossec_ruleset.py***, or follow the next instructions:
 
     # Logcollector - If it should accept remote commands from the manager
     logcollector.remote_commands=1
-6. Restart your OSSEC Manager

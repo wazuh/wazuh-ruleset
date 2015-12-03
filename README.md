@@ -26,7 +26,6 @@ The ruleset includes compliance mapping with PCI DSS v3.1, CIS and additional de
     |     ├── new_software_rules.xml  
     |     ├── new_software_instructions.md  
     |
-    │ ├── INSTRUCTIONS
     │ ├── README.md
     │ ├── VERSION
     │ ├── ossec_ruleset.py   # Ruleset installer/updater
