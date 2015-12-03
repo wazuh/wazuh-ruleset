@@ -254,6 +254,10 @@ def get_ruleset_from_menu(type_ruleset):
         directories.append("rootcheck")
 
     for directory in directories:
+        if not os.path.exists(directory):
+            logger.log("\nError: No folder {0}".format(directory))
+            sys.exit(2)
+
         type_directory = "rules" if "rules" in directory else "rootchecks"
 
         ruleset_select = []
@@ -374,6 +378,9 @@ def get_ruleset_from_file(filename, type_r):
             sys.exit(2)
 
         directory = "rules-decoders"
+        if not os.path.exists(directory):
+            logger.log("\nError: No folder {0}".format(directory))
+            sys.exit(2)
         new_ruleset = os.listdir(directory)
 
         for rs_f in rules_file:
@@ -389,6 +396,9 @@ def get_ruleset_from_file(filename, type_r):
             sys.exit(2)
 
         directory = "rootcheck"
+        if not os.path.exists(directory):
+            logger.log("\nError: No folder {0}".format(directory))
+            sys.exit(2)
         new_ruleset = os.listdir(directory)
 
         for rs_f in rootchecks_file:
@@ -732,6 +742,71 @@ def do_backups():
     return bk_subdirectory
 
 
+def restore_backups(backup_id):
+    bk_directory = "backups"
+
+    if not os.path.exists(bk_directory):
+        logger.log("\nNo backups to restore")
+        sys.exit()
+
+    if backup_id == "0":
+        all_backups = sorted(os.listdir(bk_directory))
+
+        i = 0
+        for subdir_bk in all_backups:
+            print("{0}: {1}".format(i, subdir_bk))
+            i += 1
+
+        get_input = True
+        while get_input:
+            try:
+                ans = raw_input("\nSelect backup to restore: ")
+            except:
+                # Python 3
+                ans = input("\nSelect backup to restore: ")
+
+            try:
+                option = int(ans)
+                if 0 <= option <= (i-1):
+                    get_input = False
+                else:
+                    print("Select a option between 0 and {0}".format(i-1))
+            except ValueError:
+                print("Select a option between 0 and {0}".format(i-1))
+
+        bk_restore = all_backups[option]
+    else:
+        if not os.path.exists(backup_id):
+            logger.log("\nError: No backups with name: {0}".format(backup_id))
+            sys.exit(2)
+        else:
+            bk_restore = backup_id
+
+    logger.log("\nRestore backup: {0}".format(bk_restore))
+
+    etc_restore = "{0}/{1}/etc".format(bk_directory, bk_restore)
+    rules_restore = "{0}/{1}/rules".format(bk_directory, bk_restore)
+    if not os.path.exists(etc_restore) or not os.path.exists(rules_restore):
+        logger.log("Error: no folders found: '{0}' - '{1}'".format(etc_restore, rules_restore))
+        sys.exit(2)
+
+    etc_dest = "{0}/etc".format(ossec_path)
+    logger.log("\tRestore etc folder: '{0}' -> '{1}'".format(etc_restore, etc_dest))
+    if os.path.exists(etc_dest):
+        shutil.rmtree(etc_dest)
+    shutil.copytree(etc_restore, etc_dest)
+    chown_r(etc_dest, root_uid, ossec_gid)
+    logger.log("\t\t[Done]")
+
+    rules_dest = "{0}/rules".format(ossec_path)
+    logger.log("\tRestore rules folder: '{0}' -> '{1}'".format(rules_restore, rules_dest))
+    if os.path.exists(rules_dest):
+        shutil.rmtree(rules_dest)
+    shutil.copytree(rules_restore, rules_dest)
+    chown_r(rules_dest, root_uid, ossec_gid)
+    logger.log("\t\t[Done]")
+
+
 def get_ruleset(type_ruleset, r_action):
     """
     :param type_ruleset: "rules" or "rootchecks"
@@ -852,6 +927,8 @@ Full documentation: http://documentation.wazuh.com/en/latest/ossec_ruleset.html
 Usage: ./ossec_ruleset.py -r [-u | -f conf.txt] [-s]
        ./ossec_ruleset.py -c [-u | -f conf.txt] [-s]
        ./ossec_ruleset.py -a [-u | -f conf.txt] [-s]
+       ./ossec_ruleset.py -b
+       ./ossec_ruleset.py -b backup_name
 
 Select ruleset:
 \t-r, --rules
@@ -871,11 +948,17 @@ Configuration file syntax using option -f:
 \trules:new_rule_name
 \trootchecks:new_rootcheck_name
 
+Restore backups:
+\t-b, --backups\tRestore backups.
+
 Examples:
 Manually choose rules to install: ./ossec_ruleset.py -r
 Use a configuration file to select rules to install: ./ossec_ruleset.py -r -f new_rules.conf
 \tnew_rules.conf content example:\n\trules:puppet\n\trules:netscaler
 Update rules: ./ossec_ruleset.py -r -u
+
+Show backups list and select backup to restore from menu: ./ossec_ruleset.py -b
+Restore backup: ./ossec_ruleset.py -b 20151203_00
 """
     print(msg)
 
@@ -892,6 +975,7 @@ if __name__ == "__main__":
     silent = False
     mandatory_args = 0
     restart_ossec = False
+    backups = False
 
     # Capture Cntrl + C
     signal.signal(signal.SIGINT, signal_handler)
@@ -902,8 +986,8 @@ if __name__ == "__main__":
 
     # Check arguments
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "rcauhsf:",
-                                   ["rules", "rootchecks", "all", "update", "help", "silent", "file="])
+        opts, args = getopt.getopt(sys.argv[1:], "rcauhsbf:",
+                                   ["rules", "rootchecks", "all", "update", "help", "silent", "backups", "file="])
         if not opts or not (1 <= len(opts) <= 3):
             print("Incorrect number of arguments. Expected 1 or 2 arguments.")
             usage()
@@ -930,14 +1014,23 @@ if __name__ == "__main__":
             sys.exit()
         elif o in ("-s", "--silent"):
             silent = True
+        elif o in ("-b", "--backups"):
+            backups = True
+            action = a
+            mandatory_args += 1
         elif o in ("-f", "--file"):
             action = "file:{0}".format(a)
         else:
             usage()
             sys.exit()
 
+    if backups and len(opts) != 1:
+        print("Try with: ./ossec_ruleset.py -b or ./ossec_ruleset.py -b backup_name")
+        usage()
+        sys.exit()
+
     if mandatory_args != 1:
-        print("Mandatory arguments: -r | -c | -a")
+        print("Mandatory arguments: -r | -c | -a | -b")
         usage()
         sys.exit()
 
@@ -953,6 +1046,16 @@ if __name__ == "__main__":
     except:
         logger.log("Error get uid - gid")
         sys.exit(2)
+
+    # Restore backups
+    if backups:
+        logger.log("Restore Backups")
+        if action:
+            restore_backups(action)
+        else:
+            restore_backups("0")
+        logger.log("\t[Done]")
+        sys.exit()
 
     # Get ruleset version from file VERSION
     ruleset_version = get_ruleset_version()
