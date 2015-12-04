@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
+## [Unreleased v1.02] - 2015-MM-DD
 ### Added
 - Serv-U Decoders & Rules.
 
@@ -12,6 +12,10 @@ All notable changes to this project will be documented in this file.
   - Python 2.6 compatibility.
   - OSSEC 2.8.x compatibility.
   - Restore backups automatically.
+ 
+ ### Fixed
+-  The previous *windows decoder* did not work properly.
+
 
 # [v1.01] - 2015-11-24
 ### Fixed
