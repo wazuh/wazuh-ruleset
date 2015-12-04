@@ -590,7 +590,15 @@ def setup_wazuh_directory_structure():
 
         # Local decoder
         path_decoder_local = "{0}/etc/local_decoder.xml".format(ossec_path)
-        if not os.path.exists(path_decoder_local):
+        # Create Local Decoder
+        if not os.path.exists(path_decoder_local):      # It does not exist
+            create_local_decoder = True
+        elif os.stat(path_decoder_local).st_size == 0:  # It exists but empty
+            create_local_decoder = True
+        else:
+            create_local_decoder = False                # It exists and not empty
+
+        if create_local_decoder:
             # Create local decoder
             text = ("<!-- Local Decoders -->\n"
                     "<decoder name=\"local_decoder_example\">\n"
@@ -599,7 +607,7 @@ def setup_wazuh_directory_structure():
             f_local_decoder = open(path_decoder_local, 'a')
             f_local_decoder.write(text)
             f_local_decoder.close()
-            # logger.log("\t{0} created".format(path_decoder_local))
+            logger.log("\t{0} created".format(path_decoder_local))
             os.chown(path_decoder_local, root_uid, ossec_gid)
 
         str_decoder_local = "<decoder>etc/local_decoder.xml</decoder>"
