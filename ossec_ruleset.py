@@ -755,11 +755,12 @@ def do_backups():
             os.makedirs(bk_directory)
 
         # Create folder /backups/YYYYMMDD_i
-        i = 0
+        last_bk = sorted(os.listdir(bk_directory))
+        if last_bk:
+            i = int(last_bk[-1].split("_")[-1]) + 1
+        else:
+            i = 0
         bk_subdirectory = "{0}/{1}_{2}".format(bk_directory, today_date, str(i).zfill(2))
-        while os.path.exists(bk_subdirectory):
-            i += 1
-            bk_subdirectory = "{0}/{1}_{2}".format(bk_directory, today_date, str(i).zfill(2))
         os.makedirs(bk_subdirectory)
 
         # Backup etc
@@ -775,6 +776,16 @@ def do_backups():
         if os.path.exists(dest_dir):
             shutil.rmtree(dest_dir)
         shutil.copytree(src_dir, dest_dir)
+
+        # Remove old backups
+        sub_bk_directories = sorted(os.listdir(bk_directory))
+        n_bk = len(sub_bk_directories)
+
+        if n_bk >= MAX_BACKUPS:
+            n_remove = n_bk - MAX_BACKUPS
+            for old_bk in sub_bk_directories[0:n_remove]:
+                path = os.path.join(bk_directory, old_bk)
+                shutil.rmtree(path)
 
     except Exception as e:
         logger.log("Backup error:{0}.\nExit.".format(e))
@@ -965,7 +976,7 @@ def compatibility_with_old_versions():
 
 def usage():
     msg = """
-OSSEC Wazuh Ruleset installer & updater
+OSSEC Wazuh Ruleset installer & updater v2.0
 Github repository: https://github.com/wazuh/ossec-rules
 Full documentation: http://documentation.wazuh.com/en/latest/ossec_ruleset.html
 
@@ -1008,10 +1019,13 @@ Restore a specific backup: ./ossec_ruleset.py -b 20151203_00
 
 
 if __name__ == "__main__":
-    # Vars
-    ossec_path = "/var/ossec"
+    # Config
+    MAX_BACKUPS = 50
     # url_ruleset = "http://ossec.wazuh.com/ruleset/ruleset.zip"
     url_ruleset = "http://ossec.wazuh.com/ruleset/ruleset_development.zip"
+
+    # Vars
+    ossec_path = "/var/ossec"
     today_date = date.today().strftime('%Y%m%d')
     ruleset_version = "0.100"  # Default
     ruleset_type = ""
