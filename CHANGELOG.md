@@ -1,7 +1,23 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [v1.01] - 2015-11-24
+## [v1.02] - 2015-12-09
+### Added
+- Serv-U Decoders & Rules.
+
+### Changed
+- Directory structure: Decoders have been split.
+- Script *ossec_ruleset.py* v2:
+  - Bug fixes.
+  - Python 2.6 compatibility.
+  - OSSEC 2.8.x compatibility.
+  - Restore backups automatically.
+ 
+### Fixed
+- Some issues with *windows decoder* have been solved.
+
+
+# [v1.01] - 2015-11-24
 ### Fixed
 - All sysmon decoders have *windows* as parent.
 
