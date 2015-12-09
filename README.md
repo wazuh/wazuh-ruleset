@@ -17,19 +17,18 @@ The ruleset includes compliance mapping with PCI DSS v3.1, CIS and additional de
     │   ├── <new_rootcheck>  # New rootchecks
     |
     │ ├── rules-decoders 
-    │   ├── decoder.xml      # OSSEC Decoders updated by Wazuh
-    │   ├── ossec            # OSSEC Rules updated by Wazuh
-    │     ├── *_rules.xml
+    │   ├── ossec            # OSSEC Decoders & Rules updated by Wazuh
+    │     ├── decoders
+    │     ├── rules
     │     ├── ossec_instructions.md
     │   ├── <new_software>   # New rules & decoders
     |     ├── new_software_decoders.xml
     |     ├── new_software_rules.xml  
     |     ├── new_software_instructions.md  
     |
-    │ ├── INSTRUCTIONS
     │ ├── README.md
     │ ├── VERSION
-    │ ├── ossec_ruleset.py # Ruleset installer/updater
+    │ ├── ossec_ruleset.py   # Ruleset installer/updater
     
 ## Full documentation
 
