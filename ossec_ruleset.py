@@ -1,7 +1,7 @@
 #!/usr/bin/env python
-# OSSEC Ruleset Updater
+# OSSEC Ruleset Installer and Updater
 
-# v2.0 2015/12/03
+# v2.0 2015/12/09
 # Created by Wazuh, Inc. <info@wazuh.com>.
 # This program is a free software; you can redistribute it and/or modify it under the terms of GPLv2
 
@@ -663,7 +663,7 @@ def setup_decoders(decoder):
 
 def setup_rules(rule):
     if rule == "ossec":
-        new_rules_path = "./rules-decoders/ossec/rules/*_rules.xml"
+        new_rules_path = "./rules-decoders/ossec/rules/*rules*.xml"
         ossec_rules = sorted(glob.glob(new_rules_path))
 
         for ossec_rule in ossec_rules:
@@ -1021,8 +1021,8 @@ Restore a specific backup: ./ossec_ruleset.py -b 20151203_00
 if __name__ == "__main__":
     # Config
     MAX_BACKUPS = 50
-    # url_ruleset = "http://ossec.wazuh.com/ruleset/ruleset.zip"
-    url_ruleset = "http://ossec.wazuh.com/ruleset/ruleset_development.zip"
+    url_ruleset = "http://ossec.wazuh.com/ruleset/ruleset.zip"
+    # url_ruleset = "http://ossec.wazuh.com/ruleset/ruleset_development.zip"
 
     # Vars
     ossec_path = "/var/ossec"
