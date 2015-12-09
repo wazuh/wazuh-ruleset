@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [Unreleased v1.02] - 2015-MM-DD
+## [v1.02] - 2015-12-09
 ### Added
 - Serv-U Decoders & Rules.
 
@@ -13,8 +13,8 @@ All notable changes to this project will be documented in this file.
   - OSSEC 2.8.x compatibility.
   - Restore backups automatically.
  
- ### Fixed
--  The previous *windows decoder* did not work properly.
+### Fixed
+- Some issues with *windows decoder* have been solved.
 
 
 # [v1.01] - 2015-11-24

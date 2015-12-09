@@ -5,8 +5,10 @@ Run `ossec_ruleset.py -r` to install Puppet rules. More information about automa
 
 If you prefer to install the rules manually follow the instructions listed [here](http://documentation.wazuh.com/en/latest/ossec_ruleset.html#manual-installation).
 
-**Both the automatic and manual installation is necessary to perform the next step**:
-Some rules need to read the output of a command. Copy the code below to */var/ossec/etc/shared/agent.conf* in your **OSSEC Manager** to allow OSSEC execute this command and read its output:
+### Last step
+Some rules need to read the output of a command. **To complete the installation you must perform the following step**:
+
+Copy the code below to */var/ossec/etc/shared/agent.conf* in your **OSSEC Manager** to allow OSSEC execute this command and read its output:
 ```xml
 <agent_config>
 	<localfile>
