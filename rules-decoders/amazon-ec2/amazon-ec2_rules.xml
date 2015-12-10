@@ -4,6 +4,8 @@
         <description>Amazon ec2 alerts.</description>
     </rule>
 
+<!-- instances section -->
+
     <rule id="80301" level="2">
         <if_sid>80300</if_sid>
         <action>RunInstances</action>
@@ -181,4 +183,97 @@
                     <group>amazon</group>
                </rule>
 
+    <rule id="80326" level="2">
+        <if_sid>80300</if_sid>
+        <action>RebootInstances</action>
+        <description>Amazon-ec2:Reboot Instances</description>
+        <group>amazon</group>
+    </rule>
+
+                <rule id="80327" level="5">
+                    <if_sid>80326</if_sid>
+                    <match>"errorCode":"Client.UnauthorizedOperation"</match>
+                    <description>Amazon-ec2:Reboot Instances Unauthorized</description>
+                    <group>amazon</group>
+               </rule>
+<!-- images section -->
+
+    <rule id="80328" level="2">
+        <if_sid>80300</if_sid>
+        <action>CreateImage</action>
+        <description>Amazon-ec2:Create AMI</description>
+        <group>amazon</group>
+    </rule>
+
+                <rule id="80329" level="5">
+                    <if_sid>80328</if_sid>
+                    <match>"errorCode":"Client.UnauthorizedOperation"</match>
+                    <description>Amazon-ec2:Create AMI Unauthorized</description>
+                    <group>amazon</group>
+               </rule>
+
+    <rule id="80330" level="2">
+        <if_sid>80300</if_sid>
+        <action>DeregisterImage</action>
+        <description>Amazon-ec2:Deregister AMI</description>
+        <group>amazon</group>
+    </rule>
+
+                <rule id="80331" level="5">
+                    <if_sid>80330</if_sid>
+                    <match>"errorCode":"Client.UnauthorizedOperation"</match>
+                    <description>Amazon-ec2:Deregister AMI Unauthorized</description>
+                    <group>amazon</group>
+               </rule>
+
+    <rule id="80332" level="2">
+        <if_sid>80300</if_sid>
+        <action>ModifyImageAttribute</action>
+        <description>Amazon-ec2:Modify Image Attribute</description>
+        <group>amazon</group>
+    </rule>
+
+                <rule id="80333" level="5">
+                    <if_sid>80332</if_sid>
+                    <match>"errorCode":"Client.UnauthorizedOperation"</match>
+                    <description>Amazon-ec2:Modify Image Attribute Unauthorized</description>
+                    <group>amazon</group>
+               </rule>
+
+    <rule id="80334" level="2">
+        <if_sid>80300</if_sid>
+        <action>RegisterImage</action>
+        <description>Amazon-ec2:Register Image</description>
+        <group>amazon</group>
+    </rule>
+
+                <rule id="80335" level="5">
+                    <if_sid>80333</if_sid>
+                    <match>"errorCode":"Client.InvalidManifest"</match>
+                    <description>Amazon-ec2:Register Image Invalid Manifest</description>
+                    <group>amazon</group>
+               </rule>
+
+                <rule id="80336" level="5">
+                    <if_sid>80333</if_sid>
+                    <match>"errorCode":"Client.UnauthorizedOperation"</match>
+                    <description>Amazon-ec2:Register Image Unauthorized</description>
+                    <group>amazon</group>
+               </rule>
+
+<!-- volumes section -->
+
+    <rule id="80337" level="2">
+        <if_sid>80300</if_sid>
+        <action>CreateVolume</action>
+        <description>Amazon-ec2:Create Volume</description>
+        <group>amazon</group>
+    </rule>
+
+                <rule id="80338" level="5">
+                    <if_sid>80337</if_sid>
+                    <match>"errorCode":"Client.UnauthorizedOperation"</match>
+                    <description>Amazon-ec2:Create Volume Unauthorized</description>
+                    <group>amazon</group>
+               </rule>
 </group>
