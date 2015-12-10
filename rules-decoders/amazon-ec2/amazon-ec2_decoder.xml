@@ -1,0 +1,9 @@
+<decoder name="AmazonAWS-ec2">
+  <prematch>^"AmazonAWS"\.+"eventSource":"ec2.amazonaws.com"</prematch>
+</decoder>
+
+<decoder name="AmazonAWS-ec2-decoder">
+    <parent>AmazonAWS-ec2</parent>
+    <regex>"eventName":"(\S+)"\.+"userIdentity":"{u'userName': u'(\S+)'\.+'accessKeyId': u'(\S+)'</regex>
+    <order>action,user,id</order>
+</decoder>
