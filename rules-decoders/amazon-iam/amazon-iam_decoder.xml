@@ -1,0 +1,20 @@
+<decoder name="AmazonAWS-signin">
+  <prematch>^"AmazonAWS"\.+"eventSource":"signin.amazonaws.com"</prematch>
+</decoder>
+
+<decoder name="AmazonAWS-ConsoleLogin">
+    <parent>AmazonAWS-signin</parent>
+    <prematch>"eventName":"ConsoleLogin"</prematch>
+    <regex>"eventName":"(\S+)"\.+"userIdentity":"{u'\.+': u'(\S+)'</regex>
+    <order>action,user</order>
+</decoder>
+
+<decoder name="AmazonAWS-iam">
+  <prematch>^"AmazonAWS"\.+"eventSource":"iam.amazonaws.com"</prematch>
+</decoder>
+
+<decoder name="AmazonAWS-iam-decoder">
+    <parent>AmazonAWS-iam</parent>
+    <regex>"eventName":"(\S+)"\.+"userIdentity":"{u'\.+': u'(\S+)'\.+'accessKeyId': u'(\S+)'</regex>
+    <order>action,user,id</order>
+</decoder>
