@@ -283,4 +283,144 @@
                     <description>Amazon-ec2:Create Volume Unauthorized</description>
                     <group>amazon</group>
                </rule>
+
+    <rule id="80340" level="2">
+        <if_sid>80300</if_sid>
+        <action>AttachVolume</action>
+        <description>Amazon-ec2:Attach Volume</description>
+        <group>amazon</group>
+    </rule>
+
+                <rule id="80341" level="5">
+                    <if_sid>80340</if_sid>
+                    <match>"errorCode":"Client.UnauthorizedOperation"</match>
+                    <description>Amazon-ec2:Attach Volume Unauthorized</description>
+                    <group>amazon</group>
+               </rule>
+
+    <rule id="80342" level="2">
+        <if_sid>80300</if_sid>
+        <action>DetachVolume</action>
+        <description>Amazon-ec2:Detach Volume</description>
+        <group>amazon</group>
+    </rule>
+
+                <rule id="80343" level="5">
+                    <if_sid>80342</if_sid>
+                    <match>"errorCode":"Client.UnauthorizedOperation"</match>
+                    <description>Amazon-ec2:Detach Volume Unauthorized</description>
+                    <group>amazon</group>
+               </rule>
+
+    <rule id="80344" level="2">
+        <if_sid>80300</if_sid>
+        <action>CreateSnapshot</action>
+        <description>Amazon-ec2:Create Snapshot</description>
+        <group>amazon</group>
+    </rule>
+
+                <rule id="80345" level="5">
+                    <if_sid>80344</if_sid>
+                    <match>"errorCode":"Client.UnauthorizedOperation"</match>
+                    <description>Amazon-ec2:Create Snapshot Unauthorized</description>
+                    <group>amazon</group>
+               </rule>
+
+    <rule id="80346" level="2">
+        <if_sid>80300</if_sid>
+        <action>ModifyVolumeAttribute</action>
+        <description>Amazon-ec2:Modify Volume Attribute</description>
+        <group>amazon</group>
+    </rule>
+
+                <rule id="80347" level="5">
+                    <if_sid>80346</if_sid>
+                    <match>"errorCode":"Client.UnauthorizedOperation"</match>
+                    <description>Amazon-ec2:Modify Volume Attribute Unauthorized</description>
+                    <group>amazon</group>
+               </rule>
+
+    <rule id="80348" level="2">
+        <if_sid>80300</if_sid>
+        <action>CreateTags</action>
+        <description>Amazon-ec2:Create Tags</description>
+        <group>amazon</group>
+    </rule>
+
+                <rule id="80349" level="5">
+                    <if_sid>80348</if_sid>
+                    <match>"errorCode":"Client.UnauthorizedOperation"</match>
+                    <description>Amazon-ec2:Create Tags Unauthorized</description>
+                    <group>amazon</group>
+               </rule>
+
+    <rule id="80350" level="2">
+        <if_sid>80300</if_sid>
+        <action>DeleteTags</action>
+        <description>Amazon-ec2:Delete Tags</description>
+        <group>amazon</group>
+    </rule>
+
+                <rule id="80351" level="5">
+                    <if_sid>80350</if_sid>
+                    <match>"errorCode":"Client.UnauthorizedOperation"</match>
+                    <description>Amazon-ec2:Delete Tags Unauthorized</description>
+                    <group>amazon</group>
+               </rule>
+
+    <rule id="80352" level="2">
+        <if_sid>80300</if_sid>
+        <action>DeleteVolume</action>
+        <description>Amazon-ec2:Delete Volume</description>
+        <group>amazon</group>
+    </rule>
+
+                <rule id="80353" level="5">
+                    <if_sid>80352</if_sid>
+                    <match>"errorCode":"Client.UnauthorizedOperation"</match>
+                    <description>Amazon-ec2:Delete Volume Unauthorized</description>
+                    <group>amazon</group>
+               </rule>
+
+    <rule id="80354" level="2">
+        <if_sid>80300</if_sid>
+        <action>ModifySnapshotAttribute</action>
+        <description>Amazon-ec2:Modify Snapshot Attribute</description>
+        <group>amazon</group>
+    </rule>
+
+                <rule id="80355" level="5">
+                    <if_sid>80354</if_sid>
+                    <match>"errorCode":"Client.UnauthorizedOperation"</match>
+                    <description>Amazon-ec2:Modify Snapshot Attribute Unauthorized</description>
+                    <group>amazon</group>
+               </rule>
+
+    <rule id="80356" level="2">
+        <if_sid>80300</if_sid>
+        <action>CopySnapshot</action>
+        <description>Amazon-ec2:Copy Snapshot</description>
+        <group>amazon</group>
+    </rule>
+
+                <rule id="80357" level="5">
+                    <if_sid>80356</if_sid>
+                    <match>"errorCode":"Client.UnauthorizedOperation"</match>
+                    <description>Amazon-ec2:Copy Snapshot Unauthorized</description>
+                    <group>amazon</group>
+               </rule>
+
+    <rule id="80358" level="2">
+        <if_sid>80300</if_sid>
+        <action>DeleteSnapshot</action>
+        <description>Amazon-ec2:Delete Snapshot</description>
+        <group>amazon</group>
+    </rule>
+
+                <rule id="80359" level="5">
+                    <if_sid>80358</if_sid>
+                    <match>"errorCode":"Client.UnauthorizedOperation"</match>
+                    <description>Amazon-ec2:Delete Snapshot Unauthorized</description>
+                    <group>amazon</group>
+               </rule>
 </group>
