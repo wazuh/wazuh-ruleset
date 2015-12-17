@@ -1,6 +1,17 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+### Added
+- Amazon Decoders & Rules:
+  - EC2
+  - IAM
+- web-accesslog-iis-default decoder
+- New rules for sudo
+
+### Changed
+- Minor changes in some decoders and rules.
+
 ## [v1.02] - 2015-12-09
 ### Added
 - Serv-U Decoders & Rules.
