@@ -1,0 +1,247 @@
+<!--
+  -  auditd rules
+  -  v1.0 2015/12/23
+  -  Created by Wazuh, Inc. <ossec@wazuh.com>.
+  -  jesus@wazuh.com
+  -  This program is a free software; you can redistribute it and/or modify it under the terms of GPLv2
+-->
+
+<!-- AUDITD -->
+<group name="auditd,">
+
+    <rule id="80700" level="0">
+        <decoded_as>auditd</decoded_as>
+        <description>auditd messages grouped.</description>
+    </rule>
+
+    <!--
+    type=DAEMON_RESUME msg=audit(1300385209.456:8846): auditd resuming logging, sending auid=? pid=? subj=? res=success
+    type=DAEMON_START msg=audit(1450875964.131:8728): auditd start, ver=2.4 format=raw kernel=3.16.0-4-amd64 auid=4294967295 pid=1437 res=failed
+    -->
+    <rule id="80701" level="1">
+        <if_sid>80700</if_sid>
+        <regex>DAEMON_RESUME|DAEMON_START</regex>
+        <status>success</status>
+        <description>Auditd: Start / Resume</description>
+    </rule>
+
+    <rule id="80702" level="10">
+        <if_sid>80700</if_sid>
+        <regex>DAEMON_RESUME|DAEMON_START</regex>
+        <status>failed</status>
+        <description>Auditd: Start / Resume FAILED</description>
+    </rule>
+
+    <!--
+    type=DAEMON_END msg=audit(1450876093.165:8729): auditd normal halt, sending auid=0 pid=1 subj= res=success
+    -->
+    <rule id="80703" level="10">
+        <if_sid>80700</if_sid>
+        <action>DAEMON_END</action>
+        <status>success</status>
+        <description>Auditd: End</description>
+    </rule>
+
+    <!--
+    type=DAEMON_ABORT msg=audit(1339336882.189:9206): auditd error halt, auid=4294967295 pid=3095 res=failed
+    -->
+    <rule id="80704" level="10">
+        <if_sid>80700</if_sid>
+        <action>DAEMON_ABORT</action>
+        <description>Auditd: Abort</description>
+    </rule>
+
+    <!--
+        type=CONFIG_CHANGE msg=audit(1368831799.081:466947): auid=4294967295 ses=4294967295 op="remove rule" path="/path/to/my/bin0" key=(null) list=4 res=1
+        type=DAEMON_CONFIG msg=audit(1264985324.554:4915): auditd error getting hup info - no change, sending auid=? pid=? subj=? res=failed
+    -->
+    <rule id="80705" level="3">
+        <if_sid>80700</if_sid>
+        <regex>CONFIG_CHANGE|DAEMON_CONFIG</regex>
+        <description>Auditd: Configuration changed</description>
+    </rule>
+
+    <!--
+        type=ANOM_PROMISCUOUS msg=audit(1390181243.575:738): dev=vethDvSeyL prom=256 old_prom=256 auid=4294967295 uid=0 gid=0 ses=4294967295
+    -->
+    <rule id="80706" level="10">
+        <if_sid>80700</if_sid>
+        <action>ANOM_PROMISCUOUS</action>
+        <match>prom=256</match>
+        <description>Auditd: device enables promiscuous mode</description>
+    </rule>
+
+    <!--
+        type=AVC msg=audit(1226270358.848:238): avc:  denied  { write } for  pid=13349 comm="certwatch" name="cache" dev=dm-0 ino=218171 scontext=system_u:system_r:certwatch_t:s0 tcontext=system_u:object_r:var_t:s0 tclass=dir
+    -->
+    <rule id="80707" level="2">
+        <if_sid>80700</if_sid>
+        <action>AVC</action>
+        <description>Auditd: SELinux permission check</description>
+    </rule>
+
+    <!--
+        type=MAC_STATUS msg=audit(1336836093.835:406): enforcing=1 old_enforcing=0 auid=0 ses=2
+    -->
+    <rule id="80708" level="5">
+        <if_sid>80700</if_sid>
+        <action>MAC_STATUS</action>
+        <description>Auditd: SELinux mode (enforcing, permissive, off) is changed</description>
+    </rule>
+    
+    <!--
+        type=SELINUX_ERR msg=audit(1311948547.151:138): op=security_compute_av reason=bounds scontext=system_u:system_r:anon_webapp_t:s0-s0:c0,c100,c200 tcontext=system_u:object_r:security_t:s0 tclass=dir perms=ioctl,read,lock
+        type=USER_SELINUX_ERR msg=audit(1311948547.151:138): 
+    -->
+    <rule id="80709" level="10">
+        <if_sid>80700</if_sid>
+        <regex>SELINUX_ERR|USER_SELINUX_ERR</regex>
+        <description>Auditd: SELinux error</description>
+    </rule>
+
+    <!--
+    type=SYSCALL msg=audit(1450888625.635:645): arch=c000003e syscall=16 success=yes exit=0 a0=4 a1=8914 a2=7ffed81e8cc0 a3=11 items=0 ppid=5599 pid=13693 auid=0 uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0 fsgid=0 tty=pts0 ses=2 comm="ifconfig" exe="/sbin/ifconfig" key=(null)
+    -->
+    <rule id="80710" level="4">
+        <if_sid>80700</if_sid>
+        <action>SYSCALL</action>
+        <description>Auditd: system call to the kernel</description>
+    </rule>
+    
+    <!--
+    type=EXECVE msg=audit(1419386181.134:340876): argc=3 a0="sudo" a1="echo" a2="test"
+    -->
+    <rule id="80711" level="4">
+        <if_sid>80700</if_sid>
+        <match>EXECVE</match>
+        <description>Auditd: arguments of the execve(2) system call</description>
+    </rule>
+
+    <!--
+    type=CRED_ACQ msg=audit(1450894634.199:1276): pid=1956 uid=0 auid=4294967295 ses=4294967295 msg='op=PAM:setcred acct="root" exe="/usr/sbin/sshd" hostname=192.168.2.100 addr=192.168.2.100 terminal=ssh res=success'
+    -->
+    <rule id="80712" level="2">
+        <if_sid>80700</if_sid>
+        <action>CRED_ACQ</action>
+        <description>Auditd: user acquires user-space credentials</description>
+    </rule>
+
+    <!--
+    type=CRED_REFR msg=audit(1450894634.211:1279): pid=1958 uid=0 auid=0 ses=213 msg='op=PAM:setcred acct="root" exe="/usr/sbin/sshd" hostname=192.168.2.100 addr=192.168.2.100 terminal=ssh res=success'
+    -->
+    <rule id="80713" level="2">
+        <if_sid>80700</if_sid>
+        <action>CRED_REFR</action>
+        <description>Auditd: user refreshes their user-space credentials</description>
+    </rule>
+
+    <!--
+    type=CRED_DISP msg=audit(1450894635.111:1281): pid=1956 uid=0 auid=0 ses=213 msg='op=PAM:setcred acct="root" exe="/usr/sbin/sshd" hostname=192.168.2.100 addr=192.168.2.100 terminal=ssh res=success'
+    -->
+    <rule id="80714" level="2">
+        <if_sid>80700</if_sid>
+        <action>CRED_DISP</action>
+        <description>Auditd: user disposes of user-space credentials</description>
+    </rule>
+
+    <!--
+    type=CRYPTO_SESSION msg=audit(1150750972.008:3281471): user pid=1111 uid=0 auid=1111 msg='op=start direction=from-server cipher=aes128-ctr ksize=128 rport=40791 laddr=192.168.22.22 lport=22 id=4294967295 exe="/usr/sbin/sshd" (hostname=?, addr=205.22.22.22, terminal=? res=success)'
+    -->
+    <rule id="80715" level="2">
+        <if_sid>80700</if_sid>
+        <action>CRYPTO_SESSION</action>
+        <description>Auditd: TLS session establishment.</description>
+    </rule>
+    
+    <!--
+     type=CWD msg=audit(1450767416.248:3295858):  cwd="/"
+    -->
+    <rule id="80716" level="0">
+        <if_sid>80700</if_sid>
+        <action>CWD</action>
+        <description>Auditd: Current working directory</description>
+    </rule>
+    
+    <!--
+    type=LOGIN msg=audit(1450767601.778:3296208): login pid=15763 uid=0 old auid=4294967295 new auid=0 old ses=4294967295 new ses=2260
+    -->
+    <rule id="80717" level="2">
+        <if_sid>80700</if_sid>
+        <match>LOGIN</match>
+        <description>Auditd: user log in</description>
+    </rule>
+    
+    <!--
+    type=PATH msg=audit(1450767601.784:3296210): item=0 name="/bin/sh" inode=110821498 dev=fd:00 mode=0100755 ouid=0 ogid=0 rdev=00:00
+    -->
+    <rule id="80718" level="0">
+        <if_sid>80700</if_sid>
+        <match>PATH</match>
+        <description>Auditd: path information</description>
+    </rule>
+    
+    <!--
+    type=USER_ACCT msg=audit(1450767661.820:3296328): user pid=15789 uid=0 auid=4294967295 msg='PAM: accounting acct="root" : exe="/usr/sbin/crond" (hostname=?, addr=?, terminal=cron res=success)'
+    -->
+    <rule id="80719" level="2">
+        <if_sid>80700</if_sid>
+        <match>USER_ACCT</match>
+        <description>Auditd: user account modified</description>
+    </rule>
+    
+    <!--
+    type=USER_AUTH msg=audit(1450767663.900:3296351): user pid=15787 uid=0 auid=4294967295 msg='PAM: authentication acct="root" : exe="/usr/sbin/sshd" (hostname=11.229.11.58, addr=22.22.53.58, terminal=ssh res=failed)'
+    -->
+    <rule id="80720" level="2">
+        <if_sid>80700</if_sid>
+        <match>USER_AUTH</match>
+        <description>Auditd: authentication attempt detected</description>
+    </rule>
+    
+    <!--
+    type=USER_CMD msg=audit(1450785575.705:3316357): user pid=21619 uid=0 auid=526 msg='cwd="/home/hi" cmd="/bin/bash" (terminal=pts/0 res=success)'
+    -->
+    <rule id="80721" level="2">
+        <if_sid>80700</if_sid>
+        <match>USER_CMD</match>
+        <description>Auditd: shell command executed</description>
+    </rule>
+    
+    <!--
+    type=USER_END msg=audit(1450767601.813:3296218): user pid=15764 uid=0 auid=0 msg='PAM: session close acct="root" : exe="/usr/sbin/crond" (hostname=?, addr=?, terminal=cron res=success)'
+    -->
+    <rule id="80722" level="2">
+        <if_sid>80700</if_sid>
+        <match>USER_END</match>
+        <description>Auditd: session terminated</description>
+    </rule>
+    
+    <!--
+    type=USER_ERR msg=audit(1450770602.157:3300444): user pid=16643 uid=0 auid=4294967295 msg='PAM: bad_ident acct="?" : exe="/usr/sbin/sshd" (hostname=111.111.211.38, addr=111.111.211.38, terminal=ssh res=failed)'
+    -->
+    <rule id="80723" level="5">
+        <if_sid>80700</if_sid>
+        <match>USER_ERR</match>
+        <description>Auditd: account state error detected</description>
+    </rule>
+    
+    <!--
+    type=USER_LOGIN msg=audit(1450770603.209:3300446): user pid=16649 uid=0 auid=4294967295 msg='acct="root": exe="/usr/sbin/sshd" (hostname=?, addr=11.111.53.58, terminal=sshd res=failed)'
+    -->
+    <rule id="80724" level="2">
+        <if_sid>80700</if_sid>
+        <match>USER_LOGIN</match>
+        <description>Auditd: user logs in</description>
+    </rule>
+    
+    <!--
+    type=USER_START msg=audit(1450771201.437:3301540): user pid=16878 uid=0 auid=0 msg='PAM: session open acct="root" : exe="/usr/sbin/crond" (hostname=?, addr=?, terminal=cron res=success)'
+    -->
+    <rule id="80725" level="2">
+        <if_sid>80700</if_sid>
+        <match>USER_START</match>
+        <description>Auditd: session started</description>
+    </rule>
+
+</group>
+<!-- AUDITD -->
