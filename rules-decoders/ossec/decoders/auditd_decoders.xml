@@ -206,29 +206,82 @@ CRED_
     status       = res
 
     *url, dstuser just in events with "acct" or "ses"
+    
+    FixMe: hostname-addir-terminal-res: with , and with ' '.
  -->
 
 <decoder name="auditd-user_ses_acct">
     <parent>auditd</parent>
     <prematch offset="after_parent">^USER_\.+ses=\.+acct=|^CRED_\.+ses=\.+acct=</prematch>
-    <regex offset="after_parent">^(\S+) msg=audit\(\d\d\d\d\d\d\d\d\d\d.\d\d\d:(\d+)\): \.*uid=(\d+) auid=\d+ ses=(\d+) \.+acct="(\S+)" exe="(\.+)"\.+hostname=\S+, addr=(\S+), terminal=\S+ res=(\w+)</regex>
+    <regex offset="after_parent">^(\S+) msg=audit\(\d\d\d\d\d\d\d\d\d\d.\d\d\d:(\d+)\): \.*uid=(\d+) auid=\d+ ses=(\d+) \.+acct="(\S+)" exe="(\.+)"\.+hostname=\S+, addr=(\S+), terminal=\S+ res=(\w+)|^(\S+) msg=audit\(\d\d\d\d\d\d\d\d\d\d.\d\d\d:(\d+)\): </regex>
     <order>action,id,srcuser,url,dstuser,extra_data,srcip,status</order>
 </decoder>
 
 <decoder name="auditd-user_acct">
     <parent>auditd</parent>
     <prematch offset="after_parent">^USER_\.+acct=|^CRED_\.+acct=</prematch>
-    <regex offset="after_parent">^(\S+) msg=audit\(\d\d\d\d\d\d\d\d\d\d.\d\d\d:(\d+)\): \.*uid=(\d+) auid\.+acct="(\S+)"\.+exe="(\.+)"\.+hostname=\S+, addr=(\S+), terminal=\S+ res=(\w+)</regex>
+    <regex offset="after_parent">^(\S+) msg=audit\(\d\d\d\d\d\d\d\d\d\d.\d\d\d:(\d+)\): \.*uid=(\d+) auid\.+acct="(\S+)"\.+exe="(\.+)"\.+hostname=\S+, addr=(\S+), terminal=\S+ res=(\w+)|^(\S+) msg=audit\(\d\d\d\d\d\d\d\d\d\d.\d\d\d:(\d+)\): </regex>
     <order>action,id,srcuser,dstuser,extra_data,srcip,status</order>
 </decoder>
 
 <decoder name="auditd-user">
     <parent>auditd</parent>
     <prematch offset="after_parent">^USER_|^CRED_</prematch>
-    <regex offset="after_parent">^(\S+) msg=audit\(\d\d\d\d\d\d\d\d\d\d.\d\d\d:(\d+)\): \.*uid=(\d+) auid\.+exe="(\.+)"\.+hostname=\S+, addr=(\S+), terminal=\S+ res=(\w+)</regex>
+    <regex offset="after_parent">^(\S+) msg=audit\(\d\d\d\d\d\d\d\d\d\d.\d\d\d:(\d+)\): \.*uid=(\d+) auid\.+exe="(\.+)"\.+hostname=\S+, addr=(\S+), terminal=\S+ res=(\w+)|^(\S+) msg=audit\(\d\d\d\d\d\d\d\d\d\d.\d\d\d:(\d+)\): </regex>
     <order>action,id,srcuser,extra_data,srcip,status</order>
 </decoder>
 
+
+<!--
+ANOM
+type=ANOM_ABEND msg=audit(1222174623.498:608): auid=4294967295 uid=0 gid=7 ses=4294967295 subj=system_u:system_r:cupsd_t:s0-s0:c0.c1023 pid=7192 comm="ipp" sig=11
+
+    action        = Event Type
+    id              = ID Audit Event
+    user           = uid
+    url             = session
+    extra_data  = comm
+-->
+<decoder name="auditd-anom">
+  <parent>auditd</parent>
+  <prematch offset="after_parent">^ANOM_ABEND</prematch>
+  <regex offset="after_parent">^(ANOM_ABEND) msg=audit\(\d\d\d\d\d\d\d\d\d\d.\d\d\d:(\d+)\):\.+uid=(\d+) gid\.+ses=(\d+) \.+comm="(\S+)"</regex>
+  <order>action,id,user,url,extra_data</order>
+</decoder>
+
+<!--
+type=ANOM_EXEC msg=audit(1222174623.498:608): user pid=12965 uid=1 auid=2 ses=1 msg='op=PAM:unix_chkpwd acct="snap" exe="/sbin/unix_chkpwd" (hostname=?, addr=?, terminal=pts/0 res=failed)'
+
+    action       = Event Type
+    id             = ID Audit Event
+    srcuser      = uid
+    *url            = session ID
+    *dstuser      = acct
+    extra_data = exe
+    srcip         = addr
+    status       = res
+
+    *url, dstuser just in events with "acct" or "ses"
+ -->
+
+<decoder name="auditd-anom_exec">
+    <parent>auditd</parent>
+    <prematch offset="after_parent">^ANOM_EXEC</prematch>
+    <regex offset="after_parent">^(ANOM_EXEC) msg=audit\(\d\d\d\d\d\d\d\d\d\d.\d\d\d:(\d+)\): \.*uid=(\d+) auid=\.+ ses=(\d+) \.+acct="(\S+)" exe="(\.+)"\.+hostname=\S+, addr=(\S+), terminal=\S+ res=(\w+)</regex>
+    <order>action,id,srcuser,url,dstuser,extra_data,srcip,status</order>
+</decoder>
+
+<!--
+    type=SERVICE_START msg=audit(1450876900.115:30): pid=1 uid=0 auid=4294967295 ses=4294967295 msg=' comm="Serv-U" exe="/lib/systemd/systemd" hostname=example.com addr=12.12.12.12, terminal=? res=success'
+    type=SERVICE_STOP msg=audit(1450876900.115:31): pid=1 uid=0 auid=4294967295 ses=4294967295 msg=' comm="Serv-U" exe="/lib/systemd/systemd" hostname=example.com addr=12.12.12.12 res=success'
+    FixMe: hostname-addir-terminal-res: with , and with ' '.
+-->
+<decoder name="auditd-service">
+    <parent>auditd</parent>
+    <prematch offset="after_parent">^SERVICE_START|^SERVICE_STOP</prematch>
+    <regex offset="after_parent">^(SERVICE_\S+) msg=audit\(\d\d\d\d\d\d\d\d\d\d.\d\d\d:(\d+)\):\.+uid=(\d+) auid=\.+ses=(\d+) msg=' comm="(\S+)" exe="(\S+)"</regex>
+    <order>action,id,srcuser,url,dstuser,extra_data,srcip,status</order>
+</decoder>
 
 <!--
 GENERAL
