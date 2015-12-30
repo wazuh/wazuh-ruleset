@@ -1,6 +1,6 @@
 <!--
   -  auditd rules
-  -  v1.0 2015/12/29
+  -  v1.0 2015/12/30
   -  Created by Wazuh, Inc. <ossec@wazuh.com>.
   -  jesus@wazuh.com
   -  This program is a free software; you can redistribute it and/or modify it under the terms of GPLv2
@@ -86,6 +86,7 @@
         <if_sid>80700</if_sid>
         <action>CRYPTO_REPLAY_USER</action>
         <description>Auditd: replay attack detected</description>
+        <group>pci_dss_11.4,</group>
     </rule>
 
     <!--
@@ -105,6 +106,7 @@
         <action>ANOM_PROMISCUOUS</action>
         <match>prom=256</match>
         <description>Auditd: device enables promiscuous mode</description>
+        <group>pci_dss_11.4,pci_dss_10.6.1,</group>
     </rule>
 
     <!--
@@ -141,6 +143,7 @@
         <if_sid>80700</if_sid>
         <action>AVC</action>
         <description>Auditd: SELinux permission check</description>
+        <group>pci_dss_10.6.1,</group>
     </rule>
 
     <!--
@@ -150,6 +153,7 @@
         <if_sid>80700</if_sid>
         <action>MAC_STATUS</action>
         <description>Auditd: SELinux mode (enforcing, permissive, off) is changed</description>
+        <group>pci_dss_10.6.1,</group>
     </rule>
 
     <!--
@@ -160,6 +164,7 @@
         <if_sid>80700</if_sid>
         <regex>SELINUX_ERR|USER_SELINUX_ERR</regex>
         <description>Auditd: SELinux error</description>
+        <group>pci_dss_10.6.1,</group>
     </rule>
 
     <!--
@@ -270,6 +275,7 @@
         <if_sid>80700</if_sid>
         <action>USER_AUTH</action>
         <description>Auditd: authentication attempt detected</description>
+        <group>pci_dss_10.2.5,</group>
     </rule>
 
     <!--
@@ -297,6 +303,7 @@
         <if_sid>80700</if_sid>
         <action>USER_START</action>
         <description>Auditd: session started</description>
+        <group>pci_dss_10.2.5,</group>
     </rule>
 
     <!--
@@ -306,6 +313,7 @@
         <if_sid>80700</if_sid>
         <action>USER_END</action>
         <description>Auditd: session terminated</description>
+        <group>pci_dss_10.2.5,</group>
     </rule>
 
     <!--
@@ -315,6 +323,7 @@
         <if_sid>80700</if_sid>
         <action>USER_LOGIN</action>
         <description>Auditd: user logged in</description>
+        <group>pci_dss_10.2.5,</group>
     </rule>
 
     <!--
@@ -324,6 +333,7 @@
         <if_sid>80700</if_sid>
         <action>USER_LOGOUT</action>
         <description>Auditd: user logged out</description>
+        <group>pci_dss_10.2.5,</group>
     </rule>
 
     <!--
@@ -369,6 +379,7 @@
         <if_sid>80700</if_sid>
         <match>USER_ERR</match>
         <description>Auditd: account state error detected</description>
+        <group>pci_dss_10.6.1,</group>
     </rule>
 
     <!--
@@ -405,6 +416,7 @@
         <if_sid>80700</if_sid>
         <action>DEL_GROUP</action>
         <description>Auditd: group deleted</description>
+        <group>pci_dss_10.2.5,</group>
     </rule>
 
     <!--
@@ -414,6 +426,7 @@
         <if_sid>80700</if_sid>
         <action>DEL_USER</action>
         <description>Auditd: user deleted</description>
+        <group>pci_dss_10.2.5,</group>
     </rule>
 
     <!--
@@ -423,6 +436,7 @@
         <if_sid>80700</if_sid>
         <action>ANOM_ADD_ACCT</action>
         <description>Auditd: user-space account addition ended abnormally.</description>
+        <group>pci_dss_10.6.1,</group>
     </rule>
 
     <!--
@@ -432,6 +446,7 @@
         <if_sid>80700</if_sid>
         <action>ANOM_DEL_ACCT</action>
         <description>Auditd: user-space account deletion ended abnormally.</description>
+        <group>pci_dss_10.6.1,</group>
     </rule>
 
     <!--
@@ -441,6 +456,7 @@
         <if_sid>80700</if_sid>
         <action>ANOM_MOD_ACCT</action>
         <description>Auditd: user-space account modification ended abnormally.</description>
+        <group>pci_dss_10.6.1,</group>
     </rule>
 
     <!--
@@ -450,6 +466,7 @@
         <if_sid>80700</if_sid>
         <action>ANOM_ROOT_TRANS</action>
         <description>Auditd: user becomes root</description>
+        <group>pci_dss_10.6.1,</group>
     </rule>
 
     <!--
@@ -459,6 +476,7 @@
         <if_sid>80700</if_sid>
         <action>ANOM_LOGIN_ACCT</action>
         <description>Auditd: account login attempt ended abnormally.</description>
+        <group>pci_dss_10.2.4,pci_dss_10.2.5,pci_dss_10.6.1,</group>
     </rule>
 
     <!--
@@ -468,6 +486,7 @@
         <if_sid>80700</if_sid>
         <action>ANOM_LOGIN_FAILURES</action>
         <description>Auditd: limit of failed login attempts reached.</description>
+        <group>pci_dss_10.2.4,pci_dss_10.2.5,pci_dss_10.6.1,</group>
     </rule>
 
     <!--
@@ -477,6 +496,7 @@
         <if_sid>80700</if_sid>
         <action>ANOM_LOGIN_LOCATION</action>
         <description>Auditd: login attempt from a forbidden location.</description>
+        <group>pci_dss_10.2.4,pci_dss_10.2.5,pci_dss_10.6.1,</group>
     </rule>
 
     <!--
@@ -486,6 +506,7 @@
         <if_sid>80700</if_sid>
         <action>ANOM_LOGIN_SESSIONS</action>
         <description>Auditd: login attempt reached the maximum amount of concurrent sessions.</description>
+        <group>pci_dss_10.2.4,pci_dss_10.2.5,pci_dss_10.6.1,</group>
     </rule>
 
     <!--
@@ -495,7 +516,47 @@
         <if_sid>80700</if_sid>
         <action>ANOM_LOGIN_TIME</action>
         <description>Auditd: login attempt is made at a time when it is prevented by, for example, pam_time.</description>
+        <group>pci_dss_10.2.4,pci_dss_10.2.5,pci_dss_10.6.1,</group>
     </rule>
+    
+    <!--
+    SYSCALL with KEY
+    auditctl -w /var/log/audit/tmp_directory -p w -k monitor-tmp-w
+    auditctl -w /var/log/audit/tmp_directory -p a -k monitor-tmp-a
+    auditctl -w /var/log/audit/tmp_directory -p r -k monitor-tmp-r
+    auditctl -w /var/log/audit/tmp_directory -p x -k monitor-tmp-x
+    
+    type=SYSCALL msg=audit(1451490775.722:538): arch=c000003e syscall=2 success=yes exit=3 a0=1944728 a1=241 a2=1b6 a3=0 items=2 ppid=964 pid=972 auid=0 uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0 fsgid=0 tty=pts0 ses=2 comm="bash" exe="/bin/bash" key="monitor-tmp-w"
+    type=SYSCALL msg=audit(1451490797.466:539): arch=c000003e syscall=2 success=yes exit=3 a0=7837e0 a1=0 a2=8000 a3=7ffecf096050 items=1 ppid=972 pid=2335 auid=0 uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0 fsgid=0 tty=pts0 ses=2 comm="nano" exe="/bin/nano" key="monitor-tmp-r"
+    type=SYSCALL msg=audit(1451490808.162:542): arch=c000003e syscall=268 success=yes exit=0 a0=ffffffffffffff9c a1=18f90f0 a2=1ff a3=7ffd06c1ae90 items=1 ppid=972 pid=2336 auid=0 uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0 fsgid=0 tty=pts0 ses=2 comm="chmod" exe="/bin/chmod" key="monitor-tmp-a"
+    type=SYSCALL msg=audit(1451491421.598:557): arch=c000003e syscall=59 success=no exit=-8 a0=1929d28 a1=19b14c8 a2=1a0e008 a3=7ffc26692f10 items=1 ppid=972 pid=2369 auid=0 uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0 fsgid=0 tty=pts0 ses=2 comm="bash" exe="/bin/bash" key="monitor-tmp-x"
+    -->
+
+    <!--
+    <rule id="80754" level="8">
+        <if_sid>80720</if_sid>
+        <match>key="monitor-tmp-w"</match>
+        <description>Auditd: Syscall W</description>
+    </rule>
+    
+    <rule id="80755" level="8">
+        <if_sid>80720</if_sid>
+        <match>key="monitor-tmp-r"</match>
+        <description>Auditd: Syscall R</description>
+    </rule>
+    
+    <rule id="80756" level="8">
+        <if_sid>80720</if_sid>
+        <match>key="monitor-tmp-a"</match>
+        <description>Auditd: Syscall A</description>
+    </rule>
+    
+    <rule id="80757" level="8">
+        <if_sid>80720</if_sid>
+        <match>key="monitor-tmp-x"</match>
+        <description>Auditd: Syscall X</description>
+    </rule>
+    -->
 
 </group>
 <!-- AUDITD -->
