@@ -1,6 +1,6 @@
 <!-- Auditd
   -  auditd decoder 
-  -  v1.0 2015/12/29
+  -  v1.0 2015/12/30
   -  Updated by Wazuh, Inc. <ossec@wazuh.com>.
   -  jesus@wazuh.com
   -  This program is a free software; you can redistribute it and/or modify it under the terms of GPLv2
@@ -298,10 +298,20 @@ type=ANOM_EXEC msg=audit(1222174623.498:608): user pid=12965 uid=1 auid=2 ses=1 
 <!--
 GENERAL
 type=NEW_EVENT msg=audit(1234567890.123:1234): Text
+type=NEW_EVENT msg=audit(1234567890.123:1234): Text ses=4294967295 Text
 
     action       = Event Type
     id             = ID Audit Event
+    url            = session ID
 -->
+
+<decoder name="auditd-general-session">
+    <parent>auditd</parent>
+    <prematch offset="after_parent">^\S+ msg=audit\.+ses=</prematch>
+    <regex offset="after_parent">^(\S+) msg=audit\(\d\d\d\d\d\d\d\d\d\d.\d\d\d:(\d+)\): \.+ses=(\d+) </regex>
+    <order>action,id,url</order>
+</decoder>
+
 <decoder name="auditd-general">
     <parent>auditd</parent>
     <prematch offset="after_parent">^\S+ msg=audit</prematch>
