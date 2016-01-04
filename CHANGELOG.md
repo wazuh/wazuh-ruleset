@@ -8,9 +8,12 @@ All notable changes to this project will be documented in this file.
   - IAM
 - web-accesslog-iis-default decoder
 - New rules for sudo
+- Auditd Rules
 
 ### Changed
 - Minor changes in some decoders and rules.
+- Auditd Decoders
+- Script fixes
 
 ## [v1.02] - 2015-12-09
 ### Added

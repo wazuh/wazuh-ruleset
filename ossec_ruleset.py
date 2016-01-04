@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 # OSSEC Ruleset Installer and Updater
 
-# v2.0 2015/12/09
+# v2.1 2016/01/04
 # Created by Wazuh, Inc. <info@wazuh.com>.
+# jesus@wazuh.com
 # This program is a free software; you can redistribute it and/or modify it under the terms of GPLv2
 
 # Requirements:
@@ -115,6 +116,45 @@ def write_after_line(line_search, new_text, filepath):
         if line_search in line.strip():
             print(new_text)
     fileinput.close()
+
+
+def swap_lines(line_search_1, line_search_2, filepath):
+    """
+    Swap lines in file, if line_search1 before line_search2
+    :param filepath:
+    :param line_search_2:
+    :param line_search_1:
+    """
+    count = 0
+    count1 = 0
+    count2 = 0
+    for line in fileinput.input(filepath):
+        count += 1
+        if line_search_1.strip() in line.strip():
+            count1 = count
+        elif line_search_2.strip() in line.strip():
+            count2 = count
+    fileinput.close()
+
+    if 0 < count1 < count2:
+        for line in fileinput.input(filepath, inplace=True):
+            if line_search_1.strip() in line.strip():
+                print(line_search_2)
+            elif line_search_2.strip() in line.strip():
+                print(line_search_1)
+            else:
+                print(line.rstrip("\n"))
+        fileinput.close()
+
+
+def get_previous_line(line_search, filepath):
+    previous_line = None
+    for line in fileinput.input(filepath):
+        if line_search in line.strip():
+            break
+        previous_line = line
+    fileinput.close()
+    return previous_line
 
 
 def remove_line(line_search, filepath):
@@ -508,7 +548,7 @@ def get_ruleset_from_update(type_ruleset):
                 rootchecks_dir = "{0}/etc/shared".format(ossec_path)
                 rootchecks_equal = compare_folders(download_rootchecks_dir, rootchecks_dir, "*.txt")
 
-                # print("{0}: rc {1} ".format(new_rc, rootchecks_equal))
+                # print("{0}: rc ossec {1} ".format(new_rc, rootchecks_equal))
                 if not rootchecks_equal:
                     rootchecks_update.append(new_rc)
                     restart_ossec = True
@@ -554,6 +594,20 @@ def get_ruleset_from_update(type_ruleset):
 
 
 def setup_wazuh_directory_structure():
+    """
+    Wazuh Directory Structure:
+        <rules>
+            <decoder_dir>etc/ossec_decoders</decoder_dir>
+            <decoder_dir>etc/wazuh_decoders</decoder_dir>
+            <decoder>etc/local_decoder.xml</decoder>
+            <!--OSSEC Rules -->
+            <include>*_rules.xml</include>
+            <!--Wazuh Rules -->
+            <include>*_rules.xml</include>
+            <!--Local Rules -->
+            <include>local_rules.xml</include>
+        </rules>
+    """
     ossec_conf = "{0}/etc/ossec.conf".format(ossec_path)
 
     # Check if decoders in wazuh structure
@@ -588,6 +642,19 @@ def setup_wazuh_directory_structure():
             write_after_line("<rules>", "    {0}".format(str_decoder), ossec_conf)
             logger.log("\tNew line in ossec.conf: '{0}'".format(str_decoder))
 
+        # Wazuh decoders
+        # Create folder for wazuh decoders
+        wazuh_decoders = "{0}/etc/wazuh_decoders".format(ossec_path)
+        if not os.path.exists(wazuh_decoders):
+            os.makedirs(wazuh_decoders)
+            chown_r(wazuh_decoders, root_uid, ossec_gid)
+            logger.log("\tNew directory created for WAZUH decoders: '{0}'".format(wazuh_decoders))
+
+        str_decoder_wazuh = "<decoder_dir>etc/wazuh_decoders</decoder_dir>"
+        if not regex_in_file(str_decoder_wazuh, ossec_conf):
+            write_after_line(str_decoder, "    {0}".format(str_decoder_wazuh), ossec_conf)
+            logger.log("\tNew line in ossec.conf: '{0}'".format(str_decoder_wazuh))
+
         # Local decoder
         path_decoder_local = "{0}/etc/local_decoder.xml".format(ossec_path)
         # Create Local Decoder
@@ -612,22 +679,51 @@ def setup_wazuh_directory_structure():
 
         str_decoder_local = "<decoder>etc/local_decoder.xml</decoder>"
         if not regex_in_file(str_decoder_local, ossec_conf):
-            write_after_line(str_decoder, "    {0}".format(str_decoder_local), ossec_conf)
+            write_after_line(str_decoder_wazuh, "    {0}".format(str_decoder_local), ossec_conf)
             logger.log("\tNew line in ossec.conf: '{0}'".format(str_decoder_local))
 
-        # Wazuh decoders
-        # Create folder for wazuh decoders
-        wazuh_decoders = "{0}/etc/wazuh_decoders".format(ossec_path)
-        if not os.path.exists(wazuh_decoders):
-            os.makedirs(wazuh_decoders)
-            chown_r(wazuh_decoders, root_uid, ossec_gid)
-            logger.log("\tNew directory created for WAZUH decoders: '{0}'".format(wazuh_decoders))
+        # Order check: Local decoder -> decoder_local after decoder_wazuh
+        swap_lines("    {0}".format(str_decoder_local), "    {0}".format(str_decoder_wazuh), ossec_conf)
 
-        str_decoder_wazuh = "<decoder_dir>etc/wazuh_decoders</decoder_dir>"
-        if not regex_in_file(str_decoder_wazuh, ossec_conf):
-            write_after_line(str_decoder_local, "    {0}".format(str_decoder_wazuh), ossec_conf)
-            logger.log("\tNew line in ossec.conf: '{0}'".format(str_decoder_wazuh))
+        # Order check: Local rules
+        previous_end_rules = get_previous_line("</rules>", ossec_conf)
+        local_rules = "<include>local_rules.xml</include>"
 
+        if regex_in_file(local_rules, ossec_conf):
+            # local_rules.xml always before "</rules>"
+            if local_rules not in previous_end_rules:
+                remove_line(local_rules, ossec_conf)
+                write_before_line("</rules>", "    {0}".format(local_rules), ossec_conf)
+                logger.log("\tChanged line in ossec.conf: '{0}'".format(local_rules))
+        else:  # Include local_rules and create local_rules.xml (if necessary)
+            text = ("\n"
+                    "<group name=\"local,syslog,\">\n"
+                    "\n"
+                    "    <!--\n"
+                    "    Example\n"
+                    "    -->\n"
+                    "    <rule id=\"100020\" level=\"0\">\n"
+                    "        <if_sid>5711</if_sid>\n"
+                    "        <user>falSe_User_xyzabc_123987</user>\n"
+                    "        <description>Ignore sshd failed logins for this user.</description>\n"
+                    "    </rule>\n"
+                    "\n"
+                    "</group>\n"
+                    "\n")
+            path_local_rules = "{0}/rules/local_rules.xml".format(ossec_path)
+
+            if not os.path.isfile(path_local_rules):
+                f_local_rules = open(path_local_rules, 'a')
+                f_local_rules.write(text)
+                f_local_rules.close()
+                logger.log("\t{0} created".format(path_local_rules))
+
+                os.chown(path_local_rules, root_uid, ossec_gid)
+
+            write_before_line("</rules>", "    {0}".format(local_rules), ossec_conf)
+            logger.log("\tNew line in ossec.conf: '{0}'".format(local_rules))
+
+        # OSSEC.CONF
         os.chown(ossec_conf, root_uid, ossec_gid)
 
     except Exception as e:
@@ -687,7 +783,7 @@ def setup_roochecks(rootcheck):
 
     if rootcheck == "ossec":
         for new_ossec_rc in os.listdir(src_dir):
-            if os.path.isfile(new_ossec_rc):
+            if os.path.isfile("{0}/{1}".format(src_dir, new_ossec_rc)):
                 src_file = "{0}/{1}".format(src_dir, new_ossec_rc)
                 dest_file = "{0}/etc/shared/{1}".format(ossec_path, new_ossec_rc)
                 shutil.copyfile(src_file, dest_file)
@@ -710,9 +806,10 @@ def setup_ossec_conf(item, type_item):
     ossec_conf = "{0}/etc/ossec.conf".format(ossec_path)
 
     if type_item == "rule":
+        # General
         if not regex_in_file("\s*<include>{0}_rules.xml</include>".format(item), ossec_conf):
             logger.log("\t\tNew rule in ossec.conf: '{0}'.".format(item))
-            write_before_line("</rules>", '    <include>{0}_rules.xml</include>'.format(item), ossec_conf)
+            write_before_line("<include>local_rules.xml</include>", '    <include>{0}_rules.xml</include>'.format(item), ossec_conf)
     elif type_item == "rootcheck":
         types_rc = ["rootkit_files", "rootkit_trojans", "system_audit", "win_applications", "win_audit",
                     "win_malware"]
@@ -916,6 +1013,12 @@ def setup_ruleset_r(target_rules, r_action):
             logger.log("\tActivating rules in ossec.conf.")
             setup_ossec_conf(item, "rule")
             logger.log("\t\t[Done]")
+        # special case: update auditd
+        if r_action == "update" and item == "ossec":
+            if not regex_in_file("\s*<include>auditd_rules.xml</include>", "{0}/etc/ossec.conf".format(ossec_path)):
+                logger.log("\tActivating rules in ossec.conf.")
+                setup_ossec_conf("auditd", "rule")
+                logger.log("\t\t[Done]")
 
         # Info
         if r_action != "update":
@@ -1021,8 +1124,8 @@ Restore a specific backup: ./ossec_ruleset.py -b 20151203_00
 if __name__ == "__main__":
     # Config
     MAX_BACKUPS = 50
-    url_ruleset = "http://ossec.wazuh.com/ruleset/ruleset.zip"
-    # url_ruleset = "http://ossec.wazuh.com/ruleset/ruleset_development.zip"
+    # url_ruleset = "http://ossec.wazuh.com/ruleset/ruleset.zip"
+    url_ruleset = "http://ossec.wazuh.com/ruleset/ruleset_development.zip"
 
     # Vars
     ossec_path = "/var/ossec"
