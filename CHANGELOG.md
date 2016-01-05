@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file.
   - IAM
 - web-accesslog-iis-default decoder
 - New rules for sudo
+- New rules for systemd
 - Auditd Rules
 
 ### Changed
