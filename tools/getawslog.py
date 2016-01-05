@@ -9,8 +9,8 @@
 # Install: boto is required to connect to S3 (http://code.google.com/p/boto/)
 #
 
+
 import os
-os.environ["HOME"] = "/root"
 import argparse
 import ConfigParser
 import boto
@@ -21,6 +21,8 @@ import signal
 import json
 from optparse import OptionParser
 
+
+os.environ["HOME"] = "/root"
 def handler(signal, frame):
     print "SIGINT received, bye!"
     sys.exit(1)
