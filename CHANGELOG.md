@@ -10,10 +10,12 @@ All notable changes to this project will be documented in this file.
 - New rules for sudo
 - New rules for systemd
 - Auditd Rules
+- Folder tools
 
 ### Changed
 - Minor changes in some decoders and rules.
 - Auditd Decoders
+- Netscaler updated
 - Script fixes
 
 ## [v1.02] - 2015-12-09
