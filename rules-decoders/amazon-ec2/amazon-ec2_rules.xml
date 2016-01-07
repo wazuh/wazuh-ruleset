@@ -443,6 +443,120 @@
         <group>amazon</group>
     </rule>
 
+    <rule id="80361" level="2">
+        <if_sid>80300</if_sid>
+        <action>CreateSecurityGroup</action>
+        <description>Amazon-ec2: Create Security Group</description>
+        <group>amazon</group>
+    </rule>
+
+    <rule id="80362" level="5">
+        <if_sid>80361</if_sid>
+        <match>"errorCode":"Client.UnauthorizedOperation"</match>
+        <description>Amazon-ec2: Create Security Group Snapshot Unauthorized</description>
+        <group>amazon</group>
+    </rule>
+
+    <rule id="80363" level="5">
+        <if_sid>80361</if_sid>
+        <match>"errorCode":"Client.InvalidParameterValue"</match>
+        <description>Amazon-ec2: Create Security Group Invalid Parameter Value</description>
+        <group>amazon</group>
+    </rule>
+
+    <rule id="80364" level="2">
+        <if_sid>80300</if_sid>
+        <action>DeleteSecurityGroup</action>
+        <description>Amazon-ec2: Delete Security Group</description>
+        <group>amazon</group>
+    </rule>
+
+    <rule id="80365" level="5">
+        <if_sid>80364</if_sid>
+        <match>"errorCode":"Client.UnauthorizedOperation"</match>
+        <description>Amazon-ec2: Delete Security Group Snapshot Unauthorized</description>
+        <group>amazon</group>
+    </rule>
+
+
+    <rule id="80366" level="2">
+        <if_sid>80300</if_sid>
+        <action>AllocateAddress</action>
+        <description>Amazon-ec2: Allocate Address</description>
+        <group>amazon</group>
+    </rule>
+
+    <rule id="80367" level="5">
+        <if_sid>80366</if_sid>
+        <match>"errorCode":"Client.UnauthorizedOperation"</match>
+        <description>Amazon-ec2: Allocate Address Unauthorized</description>
+        <group>amazon</group>
+    </rule>
+
+    <rule id="80368" level="5">
+        <if_sid>80366</if_sid>
+        <match>"errorCode":"Client.AddressLimitExceeded"</match>
+        <description>Amazon-ec2: Allocate Address Limit Exceeded</description>
+        <group>amazon</group>
+    </rule>
+
+    <rule id="80369" level="2">
+        <if_sid>80300</if_sid>
+        <action>DisassociateAddress</action>
+        <description>Amazon-ec2: Disassociate Address</description>
+        <group>amazon</group>
+    </rule>
+
+    <rule id="80370" level="5">
+        <if_sid>80369</if_sid>
+        <match>"errorCode":"Client.MissingParameter"</match>
+        <description>Amazon-ec2: Disassociate Address Missing Parameter</description>
+        <group>amazon</group>
+    </rule>
+
+    <rule id="80371" level="5">
+        <if_sid>80369</if_sid>
+        <match>"errorCode":"Client.InvalidAssociationID.NotFound"</match>
+        <description>Amazon-ec2: Disassociate Address Invalid Association ID Not Found</description>
+        <group>amazon</group>
+    </rule>
+
+    <rule id="80372" level="5">
+        <if_sid>80369</if_sid>
+        <match>"errorCode":"Client.InvalidParameterValue"</match>
+        <description>Amazon-ec2: Disassociate Address Invalid Parameter Value</description>
+        <group>amazon</group>
+    </rule>
+
+    <rule id="80373" level="2">
+        <if_sid>80300</if_sid>
+        <action>CreatePlacementGroup</action>
+        <description>Amazon-ec2: Create Placement Group</description>
+        <group>amazon</group>
+    </rule>
+
+    <rule id="80374" level="5">
+        <if_sid>80373</if_sid>
+        <match>"errorCode":"Client.UnauthorizedOperation"</match>
+        <description>Amazon-ec2: Create Plazament Group Unauthorized Operation</description>
+        <group>amazon</group>
+    </rule>
+
+    <rule id="80375" level="2">
+        <if_sid>80300</if_sid>
+        <action>DeletePlacementGroup</action>
+        <description>Amazon-ec2: Delete Placement Group</description>
+        <group>amazon</group>
+    </rule>
+
+    <rule id="80376" level="5">
+        <if_sid>80375</if_sid>
+        <match>"errorCode":"Client.UnauthorizedOperation"</match>
+        <description>Amazon-ec2: Delete Plazament Group Unauthorized Operation</description>
+        <group>amazon</group>
+    </rule>
+
+
 </group>
 
 <!-- amazon-ec2 -->
