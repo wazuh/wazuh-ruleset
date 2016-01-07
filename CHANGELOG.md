@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file.
 - New rules for systemd
 - Auditd Rules
 - Folder tools
+- Shellshock rules
 
 ### Changed
 - Minor changes in some decoders and rules.

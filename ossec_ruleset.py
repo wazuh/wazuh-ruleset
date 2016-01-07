@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # OSSEC Ruleset Installer and Updater
 
-# v2.1 2016/01/04
+# v2.1 2016/01/07
 # Created by Wazuh, Inc. <info@wazuh.com>.
 # jesus@wazuh.com
 # This program is a free software; you can redistribute it and/or modify it under the terms of GPLv2
@@ -1264,8 +1264,10 @@ if __name__ == "__main__":
 
         # Setup ruleset
         if ruleset_type == "all":
-            manual_steps = setup_ruleset_r(rules, action)
-            setup_ruleset_rc(rootchecks, action)
+            if rules:
+                manual_steps = setup_ruleset_r(rules, action)
+            if rootchecks:
+                setup_ruleset_rc(rootchecks, action)
         elif ruleset_type == "rules":
             manual_steps = setup_ruleset_r(ruleset, action)
         elif ruleset_type == "rootchecks":
