@@ -1,22 +1,24 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
+## [v1.03] - 2016-01-08
 ### Added
 - Amazon Decoders & Rules:
   - EC2
   - IAM
-- web-accesslog-iis-default decoder
-- New rules for sudo
-- New rules for systemd
 - Auditd Rules
-- Folder tools
 - Shellshock rules
-- Script File Testing
+- New rules for sudo
+- New rules for system
+- New decoder: web-accesslog-iis-default decoder
+- Folder tools:
+  - amazon: Script getawslog.py to download the JSON file from S3 Bucket.
+  - file-testing: Script file_test.py to check if a log file generates alerts
+  - rules-testing: Script runtests.py to run unitary tests. Created by OSSEC.
 
 ### Changed
-- Minor changes in some decoders and rules.
 - Auditd Decoders
+- Minor changes in some decoders and rules.
 - Netscaler updated
 - Script fixes
 
@@ -46,12 +48,12 @@ All notable changes to this project will be documented in this file.
 - Compliance mapping with PCI DSS v3.1.
 - Netscaler Decoders & Rules.
 - ClamAV:
-	- New decoder: Extract main fields (path, virus name, hash) when a virus is detected.
-	- New rule: ClamAV Stopped.
-	- New rule: Virus detected multiple times.
+    - New decoder: Extract main fields (path, virus name, hash) when a virus is detected.
+    - New rule: ClamAV Stopped.
+    - New rule: Virus detected multiple times.
 - Sysmon decoders: 
-	- Decoder for the new log format of Event 1
-	- Decoders for Events 2 - 8.
+    - Decoder for the new log format of Event 1
+    - Decoders for Events 2 - 8.
 - Script *ossec_ruleset.py* for installing and updating rules, decoders and rootcheck.
 
 ### Changed
