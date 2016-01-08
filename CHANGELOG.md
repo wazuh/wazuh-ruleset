@@ -12,6 +12,7 @@ All notable changes to this project will be documented in this file.
 - Auditd Rules
 - Folder tools
 - Shellshock rules
+- Script File Testing
 
 ### Changed
 - Minor changes in some decoders and rules.
