@@ -1124,8 +1124,8 @@ Restore a specific backup: ./ossec_ruleset.py -b 20151203_00
 if __name__ == "__main__":
     # Config
     MAX_BACKUPS = 50
-    # url_ruleset = "http://ossec.wazuh.com/ruleset/ruleset.zip"
-    url_ruleset = "http://ossec.wazuh.com/ruleset/ruleset_development.zip"
+    url_ruleset = "http://ossec.wazuh.com/ruleset/ruleset.zip"
+    # url_ruleset = "http://ossec.wazuh.com/ruleset/ruleset_development.zip"
 
     # Vars
     ossec_path = "/var/ossec"
