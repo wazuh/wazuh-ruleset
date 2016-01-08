@@ -20,7 +20,7 @@ All notable changes to this project will be documented in this file.
 - Auditd Decoders
 - Minor changes in some decoders and rules.
 - Netscaler updated
-- Script fixes
+- *ossec_ruleset.py* fixes
 
 ## [v1.02] - 2015-12-09
 ### Added
