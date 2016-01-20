@@ -1,6 +1,11 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [Unreleased - v1.04] - 2016-01-??
+### Added
+- New Rootcheck: SSH Hardening
+
+
 ## [v1.03] - 2016-01-08
 ### Added
 - Amazon Decoders & Rules:
