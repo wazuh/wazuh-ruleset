@@ -32,6 +32,8 @@ import pwd
 import grp
 import contextlib
 import filecmp
+import time
+import datetime
 
 try:
     from urllib2 import urlopen, URLError, HTTPError
@@ -44,26 +46,43 @@ except:
 class LogFile(object):
     """Print to stdout and file"""
 
-    def __init__(self, name=None):
-        self.stdout = True
-        self.log_out = True
+    def __init__(self, name=None, tag="my_log"):
+        self.__stdout = True
+        self.__log_file = True
+        self.__tag = tag
         try:
-            self.logger = open(name, 'a')
+            self.__logger = open(name, 'a')
         except:
-            print("Error opening log \"{0}".format(name))
+            print("Error opening log '{0}'".format(name))
+            sys.exit(2)
 
-    def set_ouput(self, stdout=True, log=True):
-        self.stdout = stdout
-        self.log_out = log
+    def set_ouput(self, stdout=True, log_file=True):
+        self.__stdout = stdout
+        self.__log_file = log_file
 
-    def log(self, str_output):
-        if self.stdout:
-            print(str_output)
-        if self.log_out:
-            self.logger.write("{0}\n".format(str_output))
+    def log(self, message):
+        self.__write_stdout(message)
+        self.__write_log(message)
+
+    def logfile(self, message):
+        self.__write_log(message)
+
+    def logstdout(self, message):
+        self.__write_stdout(message)
+
+    def __write_stdout(self, message):
+        if self.__stdout:
+            print(message)
+
+    def __write_log(self, message):
+        if self.__log_file:
+            timestamp = datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S')
+            new_msg = re.sub('[\n\t]', '', message)
+            log = "{0}:{1}={2}".format(self.__tag, timestamp, new_msg)
+            self.__logger.write("{0}\n".format(log))
 
     def __del__(self):
-        self.logger.close()
+        self.__logger.close()
 
 
 # Aux functions
@@ -207,7 +226,7 @@ def download_file(url, output_file):
         logger.log("\tURL Error - {0}: {1}".format(e.reason, url))
         sys.exit(2)
     except Exception as e:
-        logger.log("\tDownload error:{0}.\nExit.".format(e))
+        logger.log("\tDownload Error:{0}.\nExit.".format(e))
         sys.exit(2)
 
 
@@ -330,7 +349,6 @@ def get_ruleset_from_menu(type_ruleset):
                 menu_ruleset.append(name)
 
         # OSSEC is already installed -> remove from menu_ruleset
-        sorted(menu_ruleset)
         if "ossec" in menu_ruleset:
             menu_ruleset.remove("ossec")
 
@@ -355,7 +373,7 @@ def get_ruleset_from_menu(type_ruleset):
                 print(title_str)
 
                 i = 1
-                for rule in menu_ruleset:
+                for rule in sorted(menu_ruleset):
                     print("{0}. [{1}] {2}".format(i, toggle[i - 1], rule))
                     i += 1
                 print("{0}. Confirm and continue.".format(i))
@@ -425,7 +443,7 @@ def get_ruleset_from_file(filename, type_r):
             elif re.match("^#.*", line) is not None or re.match("^\s*\n", line) is not None:
                 continue
             else:
-                logger.log("\tSyntax error in line [{0}]: ->{1}<-".format(i, line))
+                logger.log("\tSyntax Error in line [{0}]: ->{1}<-".format(i, line))
                 sys.exit(2)
             i += 1
         file_config.close()
@@ -435,9 +453,7 @@ def get_ruleset_from_file(filename, type_r):
 
     if rules_file:
         if "ossec" in rules_file:
-            logger.log("\tError reading config file: \"ossec\" item found")
-            logger.log("\t\tIt is assumed that the default rootchecks are installed.")
-            logger.log("\t\tIf you want to update it, please use the option -u")
+            logger.log("\tError reading config file: \"ossec\" item found. \t\tIt is assumed that the default rootchecks are installed.\t\tIf you want to update it, please use the option -u")
             sys.exit(2)
 
         directory = "rules-decoders"
@@ -453,9 +469,7 @@ def get_ruleset_from_file(filename, type_r):
 
     if rootchecks_file:
         if "ossec" in rootchecks_file:
-            logger.log("\tError reading config file: \"ossec\" item found")
-            logger.log("\t\tIt is assumed that the default rootchecks are installed.")
-            logger.log("\t\tIf you want to update it, please use the option -u")
+            logger.log("\tError reading config file: \"ossec\" item found. \t\tIt is assumed that the default rootchecks are installed. \t\tIf you want to update it, please use the option -u")
             sys.exit(2)
 
         directory = "rootcheck"
@@ -634,7 +648,7 @@ def setup_wazuh_directory_structure():
                 remove_line(str_default_decoder, ossec_conf)
                 logger.log("\tLine removed in ossec.conf: '{0}'".format(str_default_decoder))
         elif not os.path.exists(des_folder):
-            logger.log("\tIt seems that we could not identify your installation. Install the ruleset manually or contact us for assistance.")
+            logger.log("\tError: It seems that we could not identify your installation. Install the ruleset manually or contact us for assistance.")
             sys.exit(1)
 
         str_decoder = "<decoder_dir>etc/ossec_decoders</decoder_dir>"
@@ -885,7 +899,7 @@ def do_backups():
                 shutil.rmtree(path)
 
     except Exception as e:
-        logger.log("Backup error:{0}.\nExit.".format(e))
+        logger.log("Error - Backup:{0}.\nExit.".format(e))
         sys.exit(2)
 
     return bk_subdirectory
@@ -896,6 +910,7 @@ def restore_backups(backup_id):
 
     if not os.path.exists(bk_directory):
         logger.log("\tNo backups to restore.")
+        logger.logfile("Ending ossec_ruleset.py")
         sys.exit()
 
     if backup_id == "0":
@@ -992,7 +1007,7 @@ def setup_ruleset_r(target_rules, r_action):
     logger.log("\nThe following rules will be {0}:".format(str_title))
     for rule in target_rules:
         logger.log("\t{0}".format(rule))
-    logger.log("")
+    logger.logstdout("")
 
     instructions = []
     for item in target_rules:
@@ -1049,7 +1064,7 @@ def setup_ruleset_rc(target_rootchecks, r_action):
     logger.log("\nThe following rootchecks will be {0}:".format(str_title))
     for t_rootcheck in target_rootchecks:
         logger.log("\t{0}".format(t_rootcheck))
-    logger.log("")
+    logger.logstdout("")
 
     for item in target_rootchecks:
         logger.log("{0}:".format(item))
@@ -1144,7 +1159,8 @@ if __name__ == "__main__":
 
     # Check sudo
     if os.geteuid() != 0:
-        sys.exit("You need root privileges to run this script. Please try again, using 'sudo'. Exiting.")
+        print("You need root privileges to run this script. Please try again, using 'sudo'. Exiting.")
+        sys.exit()
 
     # Check arguments
     try:
@@ -1198,7 +1214,9 @@ if __name__ == "__main__":
     str_mode = "updated" if action == "update" else "installed"
 
     # Log
-    logger = LogFile("log")
+    logger = LogFile("log", "wazuh_ossec_ruleset")
+
+    logger.logfile("Starting ossec_ruleset.py")
 
     # Get uid:gid = root:ossec
     try:
@@ -1225,8 +1243,7 @@ if __name__ == "__main__":
     # Backups
     logger.log("\nCreating a backup for folders '{0}/etc' and '{0}/rules'.".format(ossec_path))
     dir_bk = do_backups()
-    logger.log("\tBackup folder: {0}".format(dir_bk))
-    logger.log("\t[Done]")
+    logger.log("\tBackup folder: {0}\n\t[Done]".format(dir_bk))
 
     # Restore backups
     if backups:
@@ -1248,6 +1265,7 @@ if __name__ == "__main__":
 
             if not ruleset:
                 logger.log("\nNo new {0} to be {1}.".format(ruleset_type, str_mode))
+                logger.logfile("Ending ossec_ruleset.py")
                 sys.exit()
         else:
             ruleset = get_ruleset("all", action)
@@ -1260,6 +1278,7 @@ if __name__ == "__main__":
                 logger.log("\nNo new rootchecks to be {0}.".format(str_mode))
 
             if not rules and not rootchecks:
+                logger.logfile("Ending ossec_ruleset.py")
                 sys.exit()
 
         # Setup ruleset
@@ -1319,3 +1338,4 @@ if __name__ == "__main__":
             logger.log("\t{0}".format(step))
 
     logger.log("\n\nWazuh.com")
+    logger.logfile("Ending ossec_ruleset.py")
