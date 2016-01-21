@@ -7,7 +7,9 @@ All notable changes to this project will be documented in this file.
 - New rules: ossec_ruleset.py rules -> Alerts when OSSEC ruleset is updated using ossec_ruleset.py
 
 ### Changed
-- *ossec_ruleset.py*: Log file format
+- *ossec_ruleset.py*: 
+  - Log file format
+  - New path: /var/ossec/updater
 
 
 ## [v1.03] - 2016-01-08
