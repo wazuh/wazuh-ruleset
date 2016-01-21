@@ -343,14 +343,14 @@ def get_ruleset_from_menu(type_ruleset):
         ruleset_select = []
 
         # Get name of the new rules/rootchecks
-        menu_ruleset = ["Select ALL"]
+        menu_ruleset_dir = ["Select ALL"]
         for name in os.listdir(directory):
             if os.path.isdir(os.path.join(directory, name)):
-                menu_ruleset.append(name)
+                menu_ruleset_dir.append(name)
 
         # OSSEC is already installed -> remove from menu_ruleset
-        if "ossec" in menu_ruleset:
-            menu_ruleset.remove("ossec")
+        if "ossec" in menu_ruleset_dir:
+            menu_ruleset_dir.remove("ossec")
 
         str_msg_show = "\nPress any key to show the available {0}...".format(type_directory)
         try:
@@ -362,6 +362,7 @@ def get_ruleset_from_menu(type_ruleset):
         title_str = "OSSEC Wazuh Ruleset, {0}\n\nUse ENTER key to select/unselect {1}:\n".format(today_date,
                                                                                                  type_directory)
 
+        menu_ruleset = sorted(menu_ruleset_dir)
         if menu_ruleset:
             toggle = []
             for i in range(len(menu_ruleset)):
