@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased - v1.04] - 2016-01-??
 ### Added
 - New Rootcheck: SSH Hardening
+- New rules: ossec_ruleset.py rules -> Alerts when OSSEC ruleset is updated using ossec_ruleset.py
+
+### Changed
+- *ossec_ruleset.py*: Log file format
 
 
 ## [v1.03] - 2016-01-08
