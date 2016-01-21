@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # OSSEC Ruleset Installer and Updater
 
-# v2.1 2016/01/07
+# v2.2 2016/01/21
 # Created by Wazuh, Inc. <info@wazuh.com>.
 # jesus@wazuh.com
 # This program is a free software; you can redistribute it and/or modify it under the terms of GPLv2
@@ -12,11 +12,10 @@
 #  root privileges
 
 # Instructions:
-#   cd ~ && mkdir ruleset_tmp && cd ruleset_tmp
-#   git clone https://github.com/wazuh/ossec-rules.git
-#   cd ossec-rules
-#   chmod +x ossec_ruleset.py
-#   sudo ./ossec_ruleset.py
+#  sudo mkdir /var/ossec/updater && cd /var/ossec/updater
+#  sudo wget https://raw.githubusercontent.com/wazuh/ossec-rules/master/ossec_ruleset.py
+#  sudo chmod +x ossec_ruleset.py
+#  sudo ./ossec_ruleset.py --help
 
 import os
 import sys
@@ -310,7 +309,7 @@ def get_ossec_version():
 
 def get_ruleset_version():
     try:
-        f_version = open("VERSION")
+        f_version = open(version_path)
         rs_version = f_version.read().rstrip('\n')
         f_version.close()
     except:
@@ -329,9 +328,9 @@ def get_ruleset_from_menu(type_ruleset):
     ruleset_menu = {"rules": [], "rootchecks": []}
 
     if type_ruleset == "rules" or type_ruleset == "all":
-        directories.append("rules-decoders")
+        directories.append(new_rules_path)
     if type_ruleset == "rootchecks" or type_ruleset == "all":
-        directories.append("rootcheck")
+        directories.append(new_rootchecks_path)
 
     for directory in directories:
         if not os.path.exists(directory):
@@ -457,15 +456,14 @@ def get_ruleset_from_file(filename, type_r):
             logger.log("\tError reading config file: \"ossec\" item found. \t\tIt is assumed that the default rootchecks are installed.\t\tIf you want to update it, please use the option -u")
             sys.exit(2)
 
-        directory = "rules-decoders"
-        if not os.path.exists(directory):
-            logger.log("\tError: No folder '{0}' found".format(directory))
+        if not os.path.exists(new_rules_path):
+            logger.log("\tError: No folder '{0}' found".format(new_rules_path))
             sys.exit(2)
-        new_ruleset = os.listdir(directory)
+        new_ruleset = os.listdir(new_rules_path)
 
         for rs_f in rules_file:
             if rs_f not in new_ruleset:
-                logger.log("\tError: '{0}' not in folder '{1}'".format(rs_f, directory))
+                logger.log("\tError: '{0}' not in folder '{1}'".format(rs_f, new_rules_path))
                 sys.exit(2)
 
     if rootchecks_file:
@@ -473,15 +471,14 @@ def get_ruleset_from_file(filename, type_r):
             logger.log("\tError reading config file: \"ossec\" item found. \t\tIt is assumed that the default rootchecks are installed. \t\tIf you want to update it, please use the option -u")
             sys.exit(2)
 
-        directory = "rootcheck"
-        if not os.path.exists(directory):
-            logger.log("\tError: No folder '{0}'".format(directory))
+        if not os.path.exists(new_rootchecks_path):
+            logger.log("\tError: No folder '{0}'".format(new_rootchecks_path))
             sys.exit(2)
-        new_ruleset = os.listdir(directory)
+        new_ruleset = os.listdir(new_rootchecks_path)
 
         for rs_f in rootchecks_file:
             if rs_f not in new_ruleset:
-                logger.log("\tError: '{0}' not in folder '{1}'".format(rs_f, directory))
+                logger.log("\tError: '{0}' not in folder '{1}'".format(rs_f, new_rootchecks_path))
                 sys.exit(2)
 
     if type_r == "rules" or type_r == "all":
@@ -499,7 +496,7 @@ def get_ruleset_from_update(type_ruleset):
     logger.log("\nDownloading new ruleset.")
 
     # Download new ruleset and extract all files
-    downloads_directory = "./downloads"
+
     output = "{0}/ruleset.zip".format(downloads_directory)
 
     if not os.path.exists(downloads_directory):
@@ -524,14 +521,14 @@ def get_ruleset_from_update(type_ruleset):
     global restart_ossec
 
     if type_ruleset == "rules" or type_ruleset == "all":
-        new_rules_path = "{0}/ossec-rules/rules-decoders".format(downloads_directory)
-        for new_rule in os.listdir(new_rules_path):
+        download_rules_path = "{0}/ossec-rules/rules-decoders".format(downloads_directory)
+        for new_rule in os.listdir(download_rules_path):
             if new_rule == "ossec":
-                download_decoders_dir = "{0}/{1}/decoders".format(new_rules_path, new_rule)
+                download_decoders_dir = "{0}/{1}/decoders".format(download_rules_path, new_rule)
                 decoders_dir = "{0}/etc/ossec_decoders".format(ossec_path)
                 decoders_equal = compare_folders(download_decoders_dir, decoders_dir, "*_decoders.xml")
 
-                download_rules_dir = "{0}/{1}/rules".format(new_rules_path, new_rule)
+                download_rules_dir = "{0}/{1}/rules".format(download_rules_path, new_rule)
                 rules_dir = "{0}/rules".format(ossec_path)
                 rules_equal = compare_folders(download_rules_dir, rules_dir, "*_rules.xml")
 
@@ -540,26 +537,25 @@ def get_ruleset_from_update(type_ruleset):
                     rules_update.append(new_rule)
                     restart_ossec = True
             else:
-                download_decoders_dir = "{0}/{1}/{1}_decoders.xml".format(new_rules_path, new_rule)
+                download_decoders_dir = "{0}/{1}/{1}_decoders.xml".format(download_rules_path, new_rule)
                 decoders_dir = "{0}/etc/wazuh_decoders/{1}_decoders.xml".format(ossec_path, new_rule)
                 decoders_equal = compare_files(download_decoders_dir, decoders_dir)
 
-                download_rules_dir = "{0}/{1}/{1}_rules.xml".format(new_rules_path, new_rule)
+                download_rules_dir = "{0}/{1}/{1}_rules.xml".format(download_rules_path, new_rule)
                 rules_dir = "{0}/rules/{1}_rules.xml".format(ossec_path, new_rule)
                 rules_equal = compare_files(download_rules_dir, rules_dir)
 
                 # print("{0}: d {1} r {2}".format(new_rule, decoders_equal, rules_equal))
                 if not decoders_equal or not rules_equal:
                     rules_update.append(new_rule)
-                    ossec_conf = "{0}/etc/ossec.conf".format(ossec_path)
                     if regex_in_file("\s*<include>{0}_rules.xml</include>".format(new_rule), ossec_conf):
                         restart_ossec = True
 
     if type_ruleset == "rootchecks" or type_ruleset == "all":
-        new_rootchecks_path = "{0}/ossec-rules/rootcheck".format(downloads_directory)
-        for new_rc in os.listdir(new_rootchecks_path):
+        download_rootchecks_path = "{0}/ossec-rules/rootcheck".format(downloads_directory)
+        for new_rc in os.listdir(download_rootchecks_path):
             if new_rc == "ossec":
-                download_rootchecks_dir = "{0}/{1}".format(new_rootchecks_path, new_rc)
+                download_rootchecks_dir = "{0}/{1}".format(download_rootchecks_path, new_rc)
                 rootchecks_dir = "{0}/etc/shared".format(ossec_path)
                 rootchecks_equal = compare_folders(download_rootchecks_dir, rootchecks_dir, "*.txt")
 
@@ -568,14 +564,13 @@ def get_ruleset_from_update(type_ruleset):
                     rootchecks_update.append(new_rc)
                     restart_ossec = True
             else:
-                download_rootchecks_dir = "{0}/{1}".format(new_rootchecks_path, new_rc)
+                download_rootchecks_dir = "{0}/{1}".format(download_rootchecks_path, new_rc)
                 rootchecks_dir = "{0}/etc/shared/{1}".format(ossec_path, new_rc)
                 rootchecks_equal = compare_folders(download_rootchecks_dir, rootchecks_dir, "*.*")
 
                 # print("{0}: rc {1} ".format(new_rc, rootchecks_equal))
                 if not rootchecks_equal:
                     rootchecks_update.append(new_rc)
-                    ossec_conf = "{0}/etc/ossec.conf".format(ossec_path)
 
                     if regex_in_file("\s*<.+>{0}/.+</.+>".format(rootchecks_dir), ossec_conf):
                         restart_ossec = True
@@ -585,18 +580,21 @@ def get_ruleset_from_update(type_ruleset):
     ruleset_update["rootchecks"] = rootchecks_update
 
     # Update main directory and remove Downloads
-    move_dirs = ["rules-decoders", "rootcheck"]
-    for dest_dir in move_dirs:
-        src_dir = "{0}/ossec-rules/{1}".format(downloads_directory, dest_dir)
-        if os.path.exists(dest_dir):
-            shutil.rmtree(dest_dir)
-        shutil.copytree(src_dir, dest_dir)
+    src_dir = "{0}/ossec-rules/rules-decoders".format(downloads_directory)
+    if os.path.exists(new_rules_path):
+        shutil.rmtree(new_rules_path)
+    shutil.copytree(src_dir, new_rules_path)
 
-    shutil.copyfile("{0}/ossec-rules/VERSION".format(downloads_directory), "VERSION")
+    src_dir = "{0}/ossec-rules/rootcheck".format(downloads_directory)
+    if os.path.exists(new_rootchecks_path):
+        shutil.rmtree(new_rootchecks_path)
+    shutil.copytree(src_dir, new_rootchecks_path)
+
+    shutil.copyfile("{0}/ossec-rules/VERSION".format(downloads_directory), version_path)
 
     new_python_script = "{0}/ossec-rules/ossec_ruleset.py".format(downloads_directory)
     if os.path.isfile(new_python_script):
-        shutil.copyfile(new_python_script, "ossec_ruleset.py")
+        shutil.copyfile(new_python_script, script_path)
 
     if os.path.exists(downloads_directory):
         shutil.rmtree(downloads_directory)
@@ -623,7 +621,6 @@ def setup_wazuh_directory_structure():
             <include>local_rules.xml</include>
         </rules>
     """
-    ossec_conf = "{0}/etc/ossec.conf".format(ossec_path)
 
     # Check if decoders in wazuh structure
     try:
@@ -748,7 +745,7 @@ def setup_wazuh_directory_structure():
 
 def setup_decoders(decoder):
     if decoder == "ossec":
-        new_decoders_path = "./rules-decoders/ossec/decoders/*_decoders.xml"
+        new_decoders_path = "{0}/ossec/decoders/*_decoders.xml".format(new_rules_path)
         ossec_decoders = sorted(glob.glob(new_decoders_path))
 
         for ossec_decoder in ossec_decoders:
@@ -766,7 +763,7 @@ def setup_decoders(decoder):
             os.remove(old_decoder)
 
     else:
-        new_decoder = "./rules-decoders/{0}/{0}_decoders.xml".format(decoder)
+        new_decoder = "{0}/{1}/{1}_decoders.xml".format(new_rules_path, decoder)
         dest_new_decoder = "{0}/etc/wazuh_decoders/{1}_decoders.xml".format(ossec_path, decoder)
         shutil.copyfile(new_decoder, dest_new_decoder)
         os.chown(dest_new_decoder, root_uid, ossec_gid)
@@ -774,8 +771,8 @@ def setup_decoders(decoder):
 
 def setup_rules(rule):
     if rule == "ossec":
-        new_rules_path = "./rules-decoders/ossec/rules/*rules*.xml"
-        ossec_rules = sorted(glob.glob(new_rules_path))
+        new_ossec_rules_path = "{0}/ossec/rules/*rules*.xml".format(new_rules_path)
+        ossec_rules = sorted(glob.glob(new_ossec_rules_path))
 
         for ossec_rule in ossec_rules:
             # Do not copy folders or local_rules.xml
@@ -787,14 +784,14 @@ def setup_rules(rule):
                 os.chown(dest_file, root_uid, ossec_gid)
 
     else:
-        src_file = "./rules-decoders/{0}/{0}_rules.xml".format(rule)
+        src_file = "{0}/{1}/{1}_rules.xml".format(new_rules_path, rule)
         dest_file = "{0}/rules/{1}_rules.xml".format(ossec_path, rule)
         shutil.copyfile(src_file, dest_file)
         os.chown(dest_file, root_uid, ossec_gid)
 
 
 def setup_roochecks(rootcheck):
-    src_dir = "./rootcheck/{0}".format(rootcheck)
+    src_dir = "{0}/{1}".format(new_rootchecks_path, rootcheck)
 
     if rootcheck == "ossec":
         for new_ossec_rc in os.listdir(src_dir):
@@ -817,8 +814,6 @@ def setup_ossec_conf(item, type_item):
     # Note: It is assumed that the default rules/rootchecks are included in ossec.conf
     if item == "ossec":
         return
-
-    ossec_conf = "{0}/etc/ossec.conf".format(ossec_path)
 
     if type_item == "rule":
         # General
@@ -859,7 +854,6 @@ def setup_ossec_conf(item, type_item):
 
 
 def do_backups():
-    bk_directory = "backups"
 
     try:
         # Create folder backups
@@ -907,7 +901,6 @@ def do_backups():
 
 
 def restore_backups(backup_id):
-    bk_directory = "backups"
 
     if not os.path.exists(bk_directory):
         logger.log("\tNo backups to restore.")
@@ -1086,7 +1079,7 @@ def compatibility_with_old_versions():
 
     # OpenLDAP
     # Old decoders have not <accumulate> tag
-    src_file = "rules-decoders/ossec/decoders/compatibility/openldap_decoders.xml"
+    src_file = "{0}/ossec/decoders/compatibility/openldap_decoders.xml".format(new_rules_path)
     dest_file = "{0}/etc/ossec_decoders/openldap_decoders.xml".format(ossec_path)
     shutil.copyfile(src_file, dest_file)
 
@@ -1140,11 +1133,21 @@ Restore a specific backup: ./ossec_ruleset.py -b 20151203_00
 if __name__ == "__main__":
     # Config
     MAX_BACKUPS = 50
-    url_ruleset = "http://ossec.wazuh.com/ruleset/ruleset.zip"
-    # url_ruleset = "http://ossec.wazuh.com/ruleset/ruleset_development.zip"
+    # url_ruleset = "http://ossec.wazuh.com/ruleset/ruleset.zip"
+    url_ruleset = "http://ossec.wazuh.com/ruleset/ruleset_development.zip"
 
     # Vars
     ossec_path = "/var/ossec"
+    ossec_conf = "{0}/etc/ossec.conf".format(ossec_path)
+    updater_path = "{0}/updater".format(ossec_path)
+    # updater_path = "."
+    bk_directory = "{0}/backups".format(updater_path)
+    log_path = "{0}/ossec_ruleset.log".format(updater_path)
+    version_path = "{0}/VERSION".format(updater_path)
+    script_path = "{0}/ossec_ruleset.py".format(updater_path)
+    new_rules_path = "{0}/rules-decoders".format(updater_path)
+    new_rootchecks_path = "{0}/rootcheck".format(updater_path)
+    downloads_directory = "{0}/downloads".format(updater_path)
     today_date = date.today().strftime('%Y%m%d')
     ruleset_version = "0.100"  # Default
     ruleset_type = ""
@@ -1214,8 +1217,12 @@ if __name__ == "__main__":
 
     str_mode = "updated" if action == "update" else "installed"
 
+    # Create folder updater_path
+    if not os.path.exists(updater_path):
+        os.makedirs(updater_path)
+
     # Log
-    logger = LogFile("log", "wazuh_ossec_ruleset")
+    logger = LogFile(log_path, "wazuh_ossec_ruleset")
 
     logger.logfile("Starting ossec_ruleset.py")
 
@@ -1240,6 +1247,7 @@ if __name__ == "__main__":
 
     # Title
     logger.log("\nOSSEC Wazuh Ruleset [{0}], {1}\n".format(ruleset_version, today_date))
+    logger.log("Note: All necessary files will be saved at '{0}'".format(updater_path))
 
     # Backups
     logger.log("\nCreating a backup for folders '{0}/etc' and '{0}/rules'.".format(ossec_path))
