@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 ### Added
 - New Rootcheck: SSH Hardening
 - New rules: ossec_ruleset.py rules -> Alerts when OSSEC ruleset is updated using ossec_ruleset.py
+- Amazon IAM: PCI Tagging
 
 ### Changed
 - *ossec_ruleset.py*: 
