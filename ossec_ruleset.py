@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # OSSEC Ruleset Installer and Updater
 
-# v2.2 2016/01/21
+# v2.2 2016/01/25
 # Created by Wazuh, Inc. <info@wazuh.com>.
 # jesus@wazuh.com
 # This program is a free software; you can redistribute it and/or modify it under the terms of GPLv2
@@ -12,7 +12,7 @@
 #  root privileges
 
 # Instructions:
-#  sudo mkdir /var/ossec/updater && cd /var/ossec/updater
+#  sudo mkdir /var/ossec/updater/ruleset && cd /var/ossec/updater/ruleset
 #  sudo wget https://raw.githubusercontent.com/wazuh/ossec-rules/master/ossec_ruleset.py
 #  sudo chmod +x ossec_ruleset.py
 #  sudo ./ossec_ruleset.py --help
@@ -1088,7 +1088,7 @@ def compatibility_with_old_versions():
 
 def usage():
     msg = """
-OSSEC Wazuh Ruleset installer & updater v2.0
+OSSEC Wazuh Ruleset installer & updater v2.2
 Github repository: https://github.com/wazuh/ossec-rules
 Full documentation: http://documentation.wazuh.com/en/latest/ossec_ruleset.html
 
@@ -1133,13 +1133,13 @@ Restore a specific backup: ./ossec_ruleset.py -b 20151203_00
 if __name__ == "__main__":
     # Config
     MAX_BACKUPS = 50
-    # url_ruleset = "http://ossec.wazuh.com/ruleset/ruleset.zip"
-    url_ruleset = "http://ossec.wazuh.com/ruleset/ruleset_development.zip"
+    url_ruleset = "http://ossec.wazuh.com/ruleset/ruleset.zip"
+    # url_ruleset = "http://ossec.wazuh.com/ruleset/ruleset_development.zip"
 
     # Vars
     ossec_path = "/var/ossec"
     ossec_conf = "{0}/etc/ossec.conf".format(ossec_path)
-    updater_path = "{0}/updater".format(ossec_path)
+    updater_path = "{0}/updater/ruleset".format(ossec_path)
     # updater_path = "."
     bk_directory = "{0}/backups".format(updater_path)
     log_path = "{0}/ossec_ruleset.log".format(updater_path)
