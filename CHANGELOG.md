@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 - *ossec_ruleset.py*:
   - Problem with installation path
-  - New path: /var/ossec/*update*/ruleset/ossec_ruleset.py
+  - New path: /var/ossec/**update/ruleset/**ossec_ruleset.py
 
 
 ## [v1.04] - 2016-01-25
