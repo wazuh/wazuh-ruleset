@@ -337,7 +337,11 @@ def get_ruleset_from_menu(type_ruleset):
             logger.log("\nError: No folder {0}".format(directory))
             sys.exit(2)
 
-        type_directory = "rules" if "rules" in directory else "rootchecks"
+        last_path = directory.split("/")[-1]
+        if last_path == "rootcheck":
+            type_directory = "rootchecks"
+        else:
+            type_directory = "rules"
 
         ruleset_select = []
 
