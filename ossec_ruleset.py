@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # OSSEC Ruleset Installer and Updater
 
-# v2.2 2016/01/25
+# v2.2 2016/01/27
 # Created by Wazuh, Inc. <info@wazuh.com>.
 # jesus@wazuh.com
 # This program is a free software; you can redistribute it and/or modify it under the terms of GPLv2
@@ -1143,7 +1143,7 @@ if __name__ == "__main__":
     # Vars
     ossec_path = "/var/ossec"
     ossec_conf = "{0}/etc/ossec.conf".format(ossec_path)
-    updater_path = "{0}/updater/ruleset".format(ossec_path)
+    updater_path = "{0}/update/ruleset".format(ossec_path)
     # updater_path = "."
     bk_directory = "{0}/backups".format(updater_path)
     log_path = "{0}/ossec_ruleset.log".format(updater_path)

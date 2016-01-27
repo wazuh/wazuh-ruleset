@@ -1,6 +1,13 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [v1.05] - 2016-01-27
+### Fixed
+- *ossec_ruleset.py*:
+  - Problem with installation path
+  - New path: /var/ossec/*update*/ruleset/ossec_ruleset.py
+
+
 ## [v1.04] - 2016-01-25
 ### Added
 - New Rootcheck: SSH Hardening
