@@ -1348,7 +1348,10 @@ if __name__ == "__main__":
             logger.log(success_msg)
     else:
         if restart_ossec:
-            logger.log("\nDo not forget to restart OSSEC to apply changes.")
+            if no_restart:
+                logger.log("\nRequested no restart. Do not forget to restart OSSEC to apply changes.")
+            else
+                logger.log("\nDo not forget to restart OSSEC to apply changes.")
         logger.log(success_msg)
 
     if manual_steps:
