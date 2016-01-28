@@ -1350,7 +1350,7 @@ if __name__ == "__main__":
         if restart_ossec:
             if no_restart:
                 logger.log("\nRequested no restart. Do not forget to restart OSSEC to apply changes.")
-            else
+            else:
                 logger.log("\nDo not forget to restart OSSEC to apply changes.")
         logger.log(success_msg)
 
