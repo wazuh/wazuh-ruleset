@@ -1,6 +1,15 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [Unreleased - v1.06] - 2016-02-??
+### Added
+- *ossec_ruleset.py*:
+  - New interface.
+
+### Fixed
+- Minor changes in decoders and rootchecks.
+
+
 ## [v1.05] - 2016-01-27
 ### Fixed
 - *ossec_ruleset.py*:
