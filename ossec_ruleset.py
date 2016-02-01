@@ -1096,9 +1096,9 @@ OSSEC Wazuh Ruleset installer & updater v2.2
 Github repository: https://github.com/wazuh/ossec-rules
 Full documentation: http://documentation.wazuh.com/en/latest/ossec_ruleset.html
 
-Usage: ./ossec_ruleset.py -r [-u | -f conf.txt] [-s] # Rules
-       ./ossec_ruleset.py -c [-u | -f conf.txt] [-s] # Rootchecks
-       ./ossec_ruleset.py -a [-u | -f conf.txt] [-s] # All: Rules & Rootchecks
+Usage: ./ossec_ruleset.py -r [-u | -f conf.txt] [-s|-n] # Rules
+       ./ossec_ruleset.py -c [-u | -f conf.txt] [-s|-n] # Rootchecks
+       ./ossec_ruleset.py -a [-u | -f conf.txt] [-s|-n] # All: Rules & Rootchecks
        ./ossec_ruleset.py -b [list | backup_name]    # Restore backup
 
 Select ruleset:
@@ -1113,6 +1113,7 @@ Select action:
 
 Aditional params:
 \t-s, --silent\tForce OSSEC restart when required.
+\t-n, --no-restart\tDo not restart OSSEC when required.
 \t-b, --backups\tRestore backups. Use 'list' to show the backups list available.
 
 Configuration file syntax using option -f:
@@ -1158,6 +1159,7 @@ if __name__ == "__main__":
     action = "manual"
     manual_steps = []
     silent = False
+    no_restart = False
     mandatory_args = 0
     restart_ossec = False
     backups = False
@@ -1172,8 +1174,8 @@ if __name__ == "__main__":
 
     # Check arguments
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "rcauhsb:f:",
-                                   ["rules", "rootchecks", "all", "update", "help", "silent", "backups=", "file="])
+        opts, args = getopt.getopt(sys.argv[1:], "rcauhsnb:f:",
+                                   ["rules", "rootchecks", "all", "update", "help", "silent", "no-restart", "backups=", "file="])
         if not opts or not (1 <= len(opts) <= 3):
             print("Incorrect number of arguments. Expected 1 or 2 arguments.\nTry './ossec_ruleset.py --help' for more information.")
             sys.exit()
@@ -1199,6 +1201,8 @@ if __name__ == "__main__":
             sys.exit()
         elif o in ("-s", "--silent"):
             silent = True
+        elif o in ("-n", "--no-restart"):
+            no_restart = True
         elif o in ("-b", "--backups"):
             backups = True
             action = a
@@ -1209,7 +1213,7 @@ if __name__ == "__main__":
             usage()
             sys.exit()
 
-    if backups and not (len(opts) == 1 or silent):
+    if backups and not (len(opts) == 1 or silent or no_restart ):
         print("Try with: ./ossec_ruleset.py -b list or ./ossec_ruleset.py -b backup_name")
         print("Try './ossec_ruleset.py --help' for more information.")
         sys.exit()
@@ -1311,7 +1315,7 @@ if __name__ == "__main__":
 
     # Restart ossec
     if restart_ossec:
-        if not silent:
+        if not (silent or no_restart):
             logger.log("\nOSSEC requires a restart to apply changes.")
             str_msg = "Do you want to restart OSSEC now? [y/N]: "
             try:
@@ -1319,8 +1323,10 @@ if __name__ == "__main__":
             except:
                 # Python 3
                 ans_restart = input(str_msg)
-        else:
+        elif silent:
             ans_restart = "y"
+        elif no_restart:
+            ans_restart = "n"
     else:
         ans_restart = "n"
 
@@ -1342,7 +1348,10 @@ if __name__ == "__main__":
             logger.log(success_msg)
     else:
         if restart_ossec:
-            logger.log("\nDo not forget to restart OSSEC to apply changes.")
+            if no_restart:
+                logger.log("\nRequested no restart. Do not forget to restart OSSEC to apply changes.")
+            else:
+                logger.log("\nDo not forget to restart OSSEC to apply changes.")
         logger.log(success_msg)
 
     if manual_steps:
