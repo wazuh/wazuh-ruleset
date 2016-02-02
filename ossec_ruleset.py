@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 # OSSEC Ruleset Update
 
-# ** This is not the FINAL VERSION 2.3 **
-
 # v2.3 2016/02/02
 # Created by Wazuh, Inc. <info@wazuh.com>.
 # jesus@wazuh.com
@@ -82,15 +80,18 @@ class LogFile(object):
             count_init = 0
             char_init = ""
 
-            if message[0] == '\t' or message[0] == '\n':
-                special_char = message[0]
+            try:
+                if message[0] == '\t' or message[0] == '\n':
+                    special_char = message[0]
 
-                for c in message:
-                    if c == special_char:
-                        count_init += 1
-                    else:
-                        break
-                char_init = special_char * count_init
+                    for c in message:
+                        if c == special_char:
+                            count_init += 1
+                        else:
+                            break
+                    char_init = special_char * count_init
+            except:
+                char_init = ""
 
             print("{0}Debug: {1}".format(char_init, message[count_init:]))
 
@@ -309,7 +310,7 @@ def do_backups():
             i = int(last_bk[-1].split("_")[-1]) + 1
         else:
             i = 0
-        bk_subdirectory = "{0}/{1}_{2}".format(bk_directory, today_date, str(i).zfill(2))
+        bk_subdirectory = "{0}/{1}_{2}".format(bk_directory, today_date, str(i).zfill(3))
         os.makedirs(bk_subdirectory)
 
         # Backup etc
@@ -672,16 +673,18 @@ def activate_from_menu(ruleset_show):
         if ruleset_show[type_r] and (type_ruleset == type_r or type_ruleset == "all"):
 
             menu = sorted(ruleset_show[type_r])
+            if "ossec" in menu:
+                menu.remove("ossec")
             menu.insert(0, "Select ALL")
 
-            str_msg_show = "\nPress any key to show the available {0}...".format(type_r)
+            str_msg_show = "\nPress any key to show the {0} to activate...".format(type_r)
             try:
                 raw_input(str_msg_show)
             except:
                 # Python 3
                 input(str_msg_show)
 
-            title_str = "OSSEC Wazuh Ruleset, {0}\n\nUse ENTER key to select/unselect {1}:\n".format(today_date, type_r)
+            title_str = "OSSEC Wazuh Ruleset, {0}\n\nSelect {1} to activate.\nUse ENTER key to select/unselect {1}:\n".format(today_date, type_r)
 
             toggle = []
             for i in range(len(menu)):
@@ -770,7 +773,6 @@ def activate_from_file(new_ruleset):
                 if rootcheck_file == rootcheck:
                     update_ruleset['rootchecks'].append(rootcheck_file)
 
-        logger.debug(update_ruleset)
         logger.log("\t[Done]")
 
     return update_ruleset
@@ -911,8 +913,7 @@ def setup_ruleset_r(target_rules, activated_rules):
         logger.log("\t\t[Done]")
 
         # ossec.conf
-        logger.debug("{0} - {1}".format(item, activated_rules))
-        if activated_rules and item in activated_rules['rules']:
+        if item in activated_rules:
             logger.log("\tActivating rules in ossec.conf.")
             setup_ossec_conf(item, "rule")
             logger.log("\t\t[Done]")
@@ -949,7 +950,7 @@ def setup_ruleset_rc(target_rootchecks, activated_rootchecks):
         logger.log("\t\t[Done]")
 
         # ossec.conf
-        if activated_rootchecks and activated_rootchecks['rootchecks']:
+        if item in activated_rootchecks:
             logger.log("\tActivating rootchecks in ossec.conf.")
             setup_ossec_conf(item, "rootcheck")
             logger.log("\t\t[Done]")
@@ -988,8 +989,8 @@ Select ruleset:
 \t*If not -r or -c indicated, rules and rootchecks will be updated.
 
 Activate:
-\t-a, --activate\tPrompt a interactive menu for selection of rules and rootchecks to activate
-\t-A, --activate-file\tUse a configuration file to select rules and rootchecks to activate
+\t-a, --activate\tPrompt a interactive menu for selection of rules and rootchecks to activate.
+\t-A, --activate-file\tUse a configuration file to select rules and rootchecks to activate.
 \t*If not -a or -A indicated, NEW rules and rootchecks will NOT activated.
 
 Restart:
@@ -1104,7 +1105,7 @@ if __name__ == "__main__":
 
     # Log
     logger = LogFile(log_path, "wazuh_ossec_ruleset")
-    # logger.set_debug(True)
+    logger.set_debug(True)
     logger.debug("Args:")
     logger.debug("\ttype_ruleset: '{0}'\n\taction_backups: '{1}'\n\tbackup_name: '{2}'\n\tmandatory_args: '{3}'\n\taction_activate: '{4}'\n\tactivate_file: '{5}'\n\tactivate_args: '{6}'\n\taction_restart: '{7}'\n\trestart_args: '{8}'\n\taction_force: '{9}'".format(type_ruleset, action_backups, backup_name, mandatory_args, action_activate, activate_file, activate_args, action_restart, restart_args, action_force))
     logger.file("Starting ossec_ruleset.py")
@@ -1153,14 +1154,16 @@ if __name__ == "__main__":
         download_ruleset()
         logger.log("\t[Done]")
 
-        # Check new/changed files
+        # Checks
         logger.log("\nChecking new ruleset.")
         ruleset_to_update = get_ruleset_to_update(action_force)
+        if action_force:
+            restart_ossec = True
         logger.debug("\t*Ruleset to update*: {0}".format(ruleset_to_update))
         logger.log("\t[Done]")
 
         if not ruleset_to_update['rules'] and not ruleset_to_update['rootchecks']:
-            logger.log("\nNo rules/rootchecks to be updated.")
+            logger.log("\n*Your ruleset is up to date.*")
             logger.file("Ending ossec_ruleset.py")
 
             # Clean directory
@@ -1168,9 +1171,11 @@ if __name__ == "__main__":
             clean_directory()
             logger.log("\t[Done]")
 
+            logger.log("\n\nWazuh.com")
+            logger.file("Ending ossec_ruleset.py")
             sys.exit()
         if not ruleset_to_update['rules'] and type_ruleset != "rootchecks":
-            logger.log("\nNo rules to be updated.")
+            logger.log("\n*Your rules are up to date.*")
         if not ruleset_to_update['rootchecks'] and type_ruleset != "rules":
             logger.log("\nNo rootchecks to be updated.")
 
@@ -1180,14 +1185,14 @@ if __name__ == "__main__":
         elif action_activate == "file":
             activated_ruleset = activate_from_file(ruleset_to_update)
         else:  # no-activate
-            activated_ruleset = []
+            activated_ruleset = {'rules': [], 'rootchecks': []}
 
         # Update
         logger.debug("\tActivated ruleset: {0}".format(activated_ruleset))
         if ruleset_to_update['rules']:
-            setup_ruleset_r(ruleset_to_update['rules'], activated_ruleset)
+            setup_ruleset_r(ruleset_to_update['rules'], activated_ruleset['rules'])
         if ruleset_to_update['rootchecks']:
-            setup_ruleset_rc(ruleset_to_update['rootchecks'], activated_ruleset)
+            setup_ruleset_rc(ruleset_to_update['rootchecks'], activated_ruleset['rootchecks'])
 
         # PATCH for OSSEC != Wazuh
         if ossec_version == "old" and type_ruleset != "rootchecks":
@@ -1231,7 +1236,7 @@ if __name__ == "__main__":
             logger.log("\n\n**Ruleset error**")
         else:
             logger.log(success_msg)
-    else:
+    else:  # n
         if restart_ossec:
             logger.log("\nDo not forget to restart OSSEC to apply changes.")
         logger.log(success_msg)
