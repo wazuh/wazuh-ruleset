@@ -1105,7 +1105,7 @@ if __name__ == "__main__":
 
     # Log
     logger = LogFile(log_path, "wazuh_ossec_ruleset")
-    logger.set_debug(True)
+    # logger.set_debug(True)
     logger.debug("Args:")
     logger.debug("\ttype_ruleset: '{0}'\n\taction_backups: '{1}'\n\tbackup_name: '{2}'\n\tmandatory_args: '{3}'\n\taction_activate: '{4}'\n\tactivate_file: '{5}'\n\tactivate_args: '{6}'\n\taction_restart: '{7}'\n\trestart_args: '{8}'\n\taction_force: '{9}'".format(type_ruleset, action_backups, backup_name, mandatory_args, action_activate, activate_file, activate_args, action_restart, restart_args, action_force))
     logger.file("Starting ossec_ruleset.py")
@@ -1177,7 +1177,7 @@ if __name__ == "__main__":
         if not ruleset_to_update['rules'] and type_ruleset != "rootchecks":
             logger.log("\n*Your rules are up to date.*")
         if not ruleset_to_update['rootchecks'] and type_ruleset != "rules":
-            logger.log("\nNo rootchecks to be updated.")
+            logger.log("\n*Your rootchecks are up to date.*")
 
         # Activate ruleset (no-activate, menu, file)
         if action_activate == "menu":
