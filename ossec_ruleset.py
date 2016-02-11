@@ -1111,7 +1111,7 @@ Select action:
 \t-f, --file\tUse a configuration file to select rules and rootchecks to install.
 \t-u, --update\tUpdate existing ruleset.
 
-Aditional params:
+Additional params:
 \t-s, --silent\tForce OSSEC restart when required.
 \t-b, --backups\tRestore backups. Use 'list' to show the backups list available.
 
