@@ -543,6 +543,11 @@ def setup_wazuh_directory_structure():
             write_before_line("</rules>", "    {0}".format(local_rules), ossec_conf)
             logger.log("\tNew line in ossec.conf: '{0}'".format(local_rules))
 
+        # Remove etc/shared/ssh (old version of ssh rootcheck)
+        old_ssh_rootcheck = "{0}/etc/shared/ssh".format(ossec_path)
+        if os.path.exists(old_ssh_rootcheck):
+            shutil.rmtree(old_ssh_rootcheck)
+
         # OSSEC.CONF
         os.chown(ossec_conf, root_uid, ossec_gid)
 
@@ -876,7 +881,6 @@ def setup_ossec_conf(item, type_item):
 
 
 def setup_ruleset_r(target_rules, activated_rules):
-
     logger.log("\nThe following rules will be updated:")
     for rule in target_rules:
         logger.log("\t{0}".format(rule))
@@ -884,6 +888,7 @@ def setup_ruleset_r(target_rules, activated_rules):
 
     instructions = []
     for item in target_rules:
+        activating_shown = False
         logger.log("{0}:".format(item))
 
         # Decoders
@@ -899,15 +904,21 @@ def setup_ruleset_r(target_rules, activated_rules):
         # ossec.conf
         if item in activated_rules:
             logger.log("\tActivating rules in ossec.conf.")
+            activating_shown = True
             setup_ossec_conf(item, "rule")
-            logger.log("\t\t[Done]")
 
-        # special case: update auditd
+        # special case: auditd, usb
         if item == "ossec":
-            if not regex_in_file("\s*<include>auditd_rules.xml</include>", "{0}/etc/ossec.conf".format(ossec_path)):
-                logger.log("\tActivating rules in ossec.conf.")
-                setup_ossec_conf("auditd", "rule")
-                logger.log("\t\t[Done]")
+            special_cases = ["auditd", "usb"]
+            for special_case in special_cases:
+                if not regex_in_file("\s*<include>{0}_rules.xml</include>".format(special_case), "{0}/etc/ossec.conf".format(ossec_path)):
+                    if not activating_shown:
+                        logger.log("\tActivating rules in ossec.conf.")
+                        activating_shown = True
+                    setup_ossec_conf(special_case, "rule")
+
+        if activating_shown:
+            logger.log("\t\t[Done]")
 
         # Info
         if item == "puppet":
