@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # OSSEC Ruleset Update
 
-# v2.3 2016/02/02
+# v2.3 2016/02/11
 # Created by Wazuh, Inc. <info@wazuh.com>.
 # jesus@wazuh.com
 # This program is a free software; you can redistribute it and/or modify it under the terms of GPLv2
@@ -630,38 +630,26 @@ def get_ruleset_to_update(no_checks=False):
     if type_ruleset == "rootchecks" or type_ruleset == "all":
 
         if not os.path.exists(new_rootchecks_path):
-            logger.log("\tError: No rules found. Maybe failed download.")
+            logger.log("\tError: No rootchecks found. Maybe failed download.")
             sys.exit(2)
 
         for new_rc in os.listdir(new_rootchecks_path):
             if no_checks:
                 rootchecks_update.append(new_rc)
             else:  # Compare: New / Changed files
-                if new_rc == "ossec":
-                    new_rootchecks_dir = "{0}/{1}".format(new_rootchecks_path, new_rc)
-                    rootchecks_dir = "{0}/etc/shared".format(ossec_path)
-                    rootchecks_equal = compare_folders(new_rootchecks_dir, rootchecks_dir, "*.txt")
+                new_rootchecks_file = "{0}/{1}".format(new_rootchecks_path, new_rc)
+                rootchecks_file = "{0}/etc/shared/{1}".format(ossec_path, new_rc)
+                rootchecks_equal = compare_files(new_rootchecks_file, rootchecks_file)
 
-                    logger.debug("\tRootcheck '{0}': OK: {1}".format(new_rc, rootchecks_equal))
-                    if not rootchecks_equal:
-                        rootchecks_update.append(new_rc)
+                if not rootchecks_equal:
+                    rootchecks_update.append(new_rc)
+                    if regex_in_file("\s*<.+>{0}</.+>".format(rootchecks_file), ossec_conf):
                         restart_ossec = True
                         logger.debug("\t\tAdding rootcheck '{0}'. *Restart OSSEC*".format(new_rc))
-                else:
-                    new_rootchecks_dir = "{0}/{1}".format(new_rootchecks_path, new_rc)
-                    rootchecks_dir = "{0}/etc/shared/{1}".format(ossec_path, new_rc)
-                    rootchecks_equal = compare_folders(new_rootchecks_dir, rootchecks_dir, "*.*")
-
-                    logger.debug("\tRootcheck '{0}': OK: {1}".format(new_rc, rootchecks_equal))
-                    if not rootchecks_equal:
-                        rootchecks_update.append(new_rc)
-                        if regex_in_file("\s*<.+>{0}/.+</.+>".format(rootchecks_dir), ossec_conf):
-                            restart_ossec = True
-                            logger.debug("\t\tAdding rootcheck '{0}'. *Restart OSSEC*".format(new_rc))
 
     # Save ruleset
-    ruleset_update["rules"] = rules_update
-    ruleset_update["rootchecks"] = rootchecks_update
+    ruleset_update["rules"] = sorted(rules_update)
+    ruleset_update["rootchecks"] = sorted(rootchecks_update)
 
     return ruleset_update
 
@@ -826,21 +814,10 @@ def setup_rules(rule):
 
 
 def setup_roochecks(rootcheck):
-    src_dir = "{0}/{1}".format(new_rootchecks_path, rootcheck)
-
-    if rootcheck == "ossec":
-        for new_ossec_rc in os.listdir(src_dir):
-            if os.path.isfile("{0}/{1}".format(src_dir, new_ossec_rc)):
-                src_file = "{0}/{1}".format(src_dir, new_ossec_rc)
-                dest_file = "{0}/etc/shared/{1}".format(ossec_path, new_ossec_rc)
-                shutil.copyfile(src_file, dest_file)
-                os.chown(dest_file, root_uid, ossec_gid)
-    else:
-        dest_dir = "{0}/etc/shared/{1}".format(ossec_path, rootcheck)
-        if os.path.exists(dest_dir):
-            shutil.rmtree(dest_dir)
-        shutil.copytree(src_dir, dest_dir)
-        chown_r(dest_dir, root_uid, ossec_gid)
+    new_rootcheck = "{0}/{1}".format(new_rootchecks_path, rootcheck)
+    old_rootcheck = "{0}/etc/shared/{1}".format(ossec_path, rootcheck)
+    shutil.copyfile(new_rootcheck, old_rootcheck)
+    os.chown(old_rootcheck, root_uid, ossec_gid)
 
 
 def setup_ossec_conf(item, type_item):
@@ -859,34 +836,41 @@ def setup_ossec_conf(item, type_item):
             logger.log("\t\tRootchecks disabled in ossec.conf -> no activate rootchecks.")
             return
 
-        types_rc = ["rootkit_files", "rootkit_trojans", "system_audit", "win_applications", "win_audit",
-                    "win_malware"]
+        types_rc = ["rootkit_files", "rootkit_trojans", "system_audit", "windows_malware", "windows_audit", "windows_apps"]
+        types_rc_files = ["win_malware_", "win_audit_", "win_applications_", "cis_"]
+        types_all = types_rc + types_rc_files
 
-        dest_dir = "{0}/etc/shared/{1}".format(ossec_path, item)
+        new_rc = "{0}/etc/shared/{1}".format(ossec_path, item)
 
-        for new_rc in os.listdir(dest_dir):
-            new_rc = "{0}/{1}".format(dest_dir, new_rc)
-            # logger.log("\t\t{0}".format(new_rc))
+        rc_include = None
+        for type_rc in types_all:
+            if item.startswith(type_rc):
+                # special case (default rootcheck files)
+                if type_rc == "win_malware_":
+                    type_rc = "windows_malware"
+                elif type_rc == "win_audit_":
+                    type_rc = "windows_audit"
+                elif type_rc == "win_applications_":
+                    type_rc = "windows_apps"
+                elif type_rc == "cis_":
+                    type_rc = "system_audit"
 
-            rc_include = None
-            for type_rc in types_rc:
-                if type_rc in new_rc:
-                    rc_include = "<{0}>{1}</{0}>".format(type_rc, new_rc)
-                    break
+                rc_include = "<{0}>{1}</{0}>".format(type_rc, new_rc)
+                break
 
-            if not rc_include:
-                logger.log("\t\tError in file {0}: Wrong filename.".format(new_rc))
-                logger.log("\t\tFilename must start with:")
-                for t_rc in types_rc:
-                    logger.log("\t\t\t{0}".format(t_rc))
-                sys.exit(2)
+        if not rc_include:
+            logger.log("\t\tError in file {0}: Wrong filename.".format(new_rc))
+            logger.log("\t\tFilename must start with:")
+            for t_rc in types_rc:
+                logger.log("\t\t\t{0}".format(t_rc))
+            sys.exit(2)
 
-            rc_include_search = "\s*{0}".format(rc_include)
-            rc_include_new = "    {0}".format(rc_include)
+        rc_include_search = "\s*{0}".format(rc_include)
+        rc_include_new = "    {0}".format(rc_include)
 
-            if not regex_in_file(rc_include_search, ossec_conf):
-                logger.log("\t\tNew rootcheck in ossec.conf: '{0}'.".format(new_rc))
-                write_before_line("</rootcheck>", rc_include_new, ossec_conf)
+        if not regex_in_file(rc_include_search, ossec_conf):
+            logger.log("\t\tNew rootcheck in ossec.conf: '{0}'.".format(new_rc))
+            write_before_line("</rootcheck>", rc_include_new, ossec_conf)
 
     os.chown(ossec_conf, root_uid, ossec_gid)
 
@@ -1014,8 +998,8 @@ Configuration file syntax using option -A:
 if __name__ == "__main__":
     # Config
     MAX_BACKUPS = 50
-    url_ruleset = "http://ossec.wazuh.com/ruleset/ruleset.zip"
-    # url_ruleset = "http://ossec.wazuh.com/ruleset/ruleset_development.zip"
+    # url_ruleset = "http://ossec.wazuh.com/ruleset/ruleset.zip"
+    url_ruleset = "http://ossec.wazuh.com/ruleset/ruleset_development.zip"
     ossec_path = "/var/ossec"
     ossec_conf = "{0}/etc/ossec.conf".format(ossec_path)
     updater_path = "{0}/update/ruleset".format(ossec_path)
@@ -1105,7 +1089,8 @@ if __name__ == "__main__":
 
     # Log
     logger = LogFile(log_path, "wazuh_ossec_ruleset")
-    # logger.set_debug(True)
+    logger.set_debug(True)
+
     logger.debug("Args:")
     logger.debug("\ttype_ruleset: '{0}'\n\taction_backups: '{1}'\n\tbackup_name: '{2}'\n\tmandatory_args: '{3}'\n\taction_activate: '{4}'\n\tactivate_file: '{5}'\n\tactivate_args: '{6}'\n\taction_restart: '{7}'\n\trestart_args: '{8}'\n\taction_force: '{9}'".format(type_ruleset, action_backups, backup_name, mandatory_args, action_activate, activate_file, activate_args, action_restart, restart_args, action_force))
     logger.file("Starting ossec_ruleset.py")
@@ -1186,6 +1171,9 @@ if __name__ == "__main__":
             activated_ruleset = activate_from_file(ruleset_to_update)
         else:  # no-activate
             activated_ruleset = {'rules': [], 'rootchecks': []}
+
+        if ruleset_to_update['rules'] or activated_ruleset['rootchecks']:
+            restart_ossec = True
 
         # Update
         logger.debug("\tActivated ruleset: {0}".format(activated_ruleset))
