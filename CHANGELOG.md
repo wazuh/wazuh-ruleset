@@ -5,9 +5,12 @@ All notable changes to this project will be documented in this file.
 ### Added
 - *ossec_ruleset.py*:
   - New interface.
+- Amazon EC2-VPC
+- USB
 
 ### Fixed
 - Minor changes in decoders and rootchecks.
+- Syntax error in Rootchecks.
 
 
 ## [v1.05] - 2016-01-27
