@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # OSSEC Ruleset Update
 
-# v2.3 2016/02/11
+# v2.3 2016/02/12
 # Created by Wazuh, Inc. <info@wazuh.com>.
 # jesus@wazuh.com
 # This program is a free software; you can redistribute it and/or modify it under the terms of GPLv2
@@ -263,6 +263,15 @@ def compare_folders(folder1, folder2, pattern_files):
     return same
 
 
+def get_stdin(msg):
+    try:
+        stdin = raw_input(msg)
+    except:
+        # Python 3
+        stdin = input(msg)
+    return stdin
+
+
 # Ruleset functions
 
 
@@ -377,12 +386,7 @@ def restore_backups(backup_id):
         str_ans = "\n\tPlease, choose which backup you want to restore [0 - {0}]: ".format(last_item)
         str_error = "\t\tSelect an option between 0 and {0}.".format(last_item)
         while get_input:
-            try:
-                ans = raw_input(str_ans)
-            except:
-                # Python 3
-                ans = input(str_ans)
-
+            ans = get_stdin(str_ans)
             try:
                 option = int(ans)
                 if 0 <= option <= last_item:
@@ -682,12 +686,7 @@ def activate_from_menu(ruleset_show):
                 menu.remove("ossec")
             menu.insert(0, "Select ALL")
 
-            str_msg_show = "\nPress any key to show the {0} to activate...".format(type_r)
-            try:
-                raw_input(str_msg_show)
-            except:
-                # Python 3
-                input(str_msg_show)
+            get_stdin("\nPress any key to show the {0} to activate...".format(type_r))
 
             title_str = "OSSEC Wazuh Ruleset, {0}\n\nSelect {1} to activate.\nUse ENTER key to select/unselect {1}:\n".format(today_date, type_r)
 
@@ -706,12 +705,8 @@ def activate_from_menu(ruleset_show):
                     i += 1
                 print("{0}. Confirm and continue.".format(i))
 
-                str_option = "\nOption [1-{0}]: ".format(i)
-                try:
-                    ans = raw_input(str_option)
-                except:
-                    # Python 3
-                    ans = input(str_option)
+                ans = get_stdin("\nOption [1-{0}]: ".format(i))
+
                 try:
                     option = int(ans) - 1
                 except Exception:
@@ -1172,7 +1167,7 @@ if __name__ == "__main__":
         if not ruleset_to_update['rules'] and not ruleset_to_update['rootchecks']:
             # Clean directory
             logger.log("\nCleaning directory.")
-            #clean_directory()
+            clean_directory()
             logger.log("\t[Done]")
 
             logger.log("\n*Your ruleset is up to date.*")
@@ -1208,19 +1203,14 @@ if __name__ == "__main__":
 
         # Clean directory
         logger.log("\nCleaning directory.")
-        #clean_directory()
+        clean_directory()
         logger.log("\t[Done]")
 
     # Restart ossec
     if restart_ossec:
         if action_restart == "ask-restart":
             logger.log("\nOSSEC requires a restart to apply changes.")
-            str_msg = "Do you want to restart OSSEC now? [y/N]: "
-            try:
-                ans_restart = raw_input(str_msg)
-            except:
-                # Python 3
-                ans_restart = input(str_msg)
+            ans_restart = get_stdin("Do you want to restart OSSEC now? [y/N]: ")
         elif action_restart == "restart":
             ans_restart = "y"
         elif action_restart == "no-restart":
