@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [Unreleased - v1.06] - 2016-02-??
+## [v1.06] - 2016-02-12
 ### Added
 - Rules for Amazon VPC
 - USB Decoder and Rules
