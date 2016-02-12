@@ -8,13 +8,12 @@ All notable changes to this project will be documented in this file.
 - PCI Tagging for SSH rootchecks
 
 ### Changed
-- *ossec_ruleset.py*:
-  - New interface.
+- *ossec_ruleset.py*: New interface.
 - Directory structure of Rootcheck
 - Netscreen Firewall decoder
 
 ### Fixed
-- Syntax error in rootchecks and rules.
+- Syntax error in rootchecks.
 
 
 ## [v1.05] - 2016-01-27
