@@ -1158,7 +1158,7 @@ if __name__ == "__main__":
 
         # Download ruleset
         logger.log("\nDownloading new ruleset.")
-        #download_ruleset()
+        download_ruleset()
         logger.log("\t[Done]")
 
         # Checks
