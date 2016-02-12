@@ -304,12 +304,34 @@ def do_backups():
         if not os.path.exists(bk_directory):
             os.makedirs(bk_directory)
 
-        # Create folder /backups/YYYYMMDD_i
-        last_bk = sorted(os.listdir(bk_directory))
-        if last_bk:
-            i = int(last_bk[-1].split("_")[-1]) + 1
+        # # Create folder /backups/YYYYMMDD_i
+        sub_bk_directories = sorted(os.listdir(bk_directory))
+        if "old" in sub_bk_directories:
+            sub_bk_directories.remove("old")
+
+        if len(sub_bk_directories) >= MAX_BACKUPS:
+            logger.log("\tLimit of backups ({0}) reached. Removing old backups.".format(MAX_BACKUPS))
+            for old_bk in sub_bk_directories[0:-1]:
+                path = os.path.join(bk_directory, old_bk)
+                shutil.rmtree(path)
+
+            bk_old = "{0}/{1}".format(bk_directory, "old")
+            if os.path.exists(bk_old):
+                shutil.rmtree(bk_old)
+            os.makedirs(bk_old)
+
+            path_last_bk = "{0}/{1}".format(bk_directory, sub_bk_directories[-1])
+            new_path_lat_bk = "{0}/{1}".format(bk_old, sub_bk_directories[-1])
+            logger.log("\tMoving last backup: {0} -> old/{0}".format(sub_bk_directories[-1]))
+            shutil.move(path_last_bk, new_path_lat_bk)
+
+            i = 1  # Reset
         else:
-            i = 0
+            if sub_bk_directories:
+                i = int(sub_bk_directories[-1].split("_")[-1]) + 1  # Next
+            else:
+                i = 1  # First
+
         bk_subdirectory = "{0}/{1}_{2}".format(bk_directory, today_date, str(i).zfill(3))
         os.makedirs(bk_subdirectory)
 
@@ -326,16 +348,6 @@ def do_backups():
         if os.path.exists(dest_dir):
             shutil.rmtree(dest_dir)
         shutil.copytree(src_dir, dest_dir)
-
-        # Remove old backups
-        sub_bk_directories = sorted(os.listdir(bk_directory))
-        n_bk = len(sub_bk_directories)
-
-        if n_bk >= MAX_BACKUPS:
-            n_remove = n_bk - MAX_BACKUPS
-            for old_bk in sub_bk_directories[0:n_remove]:
-                path = os.path.join(bk_directory, old_bk)
-                shutil.rmtree(path)
 
     except Exception as e:
         logger.log("Error - Backup:{0}.\nExit.".format(e))
@@ -973,10 +985,10 @@ OSSEC Wazuh Ruleset Update v2.3
 Github repository: https://github.com/wazuh/ossec-rules
 Full documentation: http://documentation.wazuh.com/en/latest/ossec_ruleset.html
 
-Usage: ./ossec_ruleset.py                # Update Rules & Rootchecks
-       ./ossec_ruleset.py -a             # Update and prompt menu to activate new Rules & Rootchecks
-       ./ossec_ruleset.py -s             # Update Rules & Rootchecks - Silent Mode
-       ./ossec_ruleset.py -b 20160201_00 # Restore specific backup
+Usage: ./ossec_ruleset.py                 # Update Rules & Rootchecks
+       ./ossec_ruleset.py -a              # Update and prompt menu to activate new Rules & Rootchecks
+       ./ossec_ruleset.py -s              # Update Rules & Rootchecks - Silent Mode
+       ./ossec_ruleset.py -b 20160201_000 # Restore specific backup
 
 Select ruleset:
 \t-r, --rules\tUpdate rules
@@ -1123,8 +1135,7 @@ if __name__ == "__main__":
     logger.debug("\nRuleset version: '{0}'\tOSSEC Version: '{1}'".format(ruleset_version, ossec_version))
 
     # Title
-    logger.log("\nOSSEC Wazuh Ruleset [{0}], {1}\n".format(ruleset_version, today_date))
-    logger.log("Note: All necessary files will be saved at '{0}'".format(updater_path))
+    logger.log("\nOSSEC Wazuh Ruleset [{0}], {1}".format(ruleset_version, today_date))
 
     # Backups
     logger.log("\nCreating a backup for folders '{0}/etc' and '{0}/rules'.".format(ossec_path))
@@ -1147,7 +1158,7 @@ if __name__ == "__main__":
 
         # Download ruleset
         logger.log("\nDownloading new ruleset.")
-        download_ruleset()
+        #download_ruleset()
         logger.log("\t[Done]")
 
         # Checks
@@ -1159,14 +1170,12 @@ if __name__ == "__main__":
         logger.log("\t[Done]")
 
         if not ruleset_to_update['rules'] and not ruleset_to_update['rootchecks']:
-            logger.log("\n*Your ruleset is up to date.*")
-            logger.file("Ending ossec_ruleset.py")
-
             # Clean directory
             logger.log("\nCleaning directory.")
-            clean_directory()
+            #clean_directory()
             logger.log("\t[Done]")
 
+            logger.log("\n*Your ruleset is up to date.*")
             logger.log("\n\nWazuh.com")
             logger.file("Ending ossec_ruleset.py")
             sys.exit()
@@ -1199,7 +1208,7 @@ if __name__ == "__main__":
 
         # Clean directory
         logger.log("\nCleaning directory.")
-        clean_directory()
+        #clean_directory()
         logger.log("\t[Done]")
 
     # Restart ossec
