@@ -12,9 +12,7 @@ The ruleset includes compliance mapping with PCI DSS v3.1, CIS and additional de
 ## Directory structure
 
     ├── ossec-rules             
-    │ ├── rootcheck            
-    │   ├── ossec            # OSSEC Rootchecks updated by Wazuh
-    │   ├── <new_rootcheck>  # New rootchecks
+    │ ├── rootcheck        # OSSEC Rootchecks created/updated by Wazuh
     |
     │ ├── rules-decoders 
     │   ├── ossec            # OSSEC Decoders & Rules updated by Wazuh

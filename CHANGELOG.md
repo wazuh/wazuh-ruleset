@@ -1,6 +1,21 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [v1.06] - 2016-02-12
+### Added
+- Rules for Amazon VPC
+- USB Decoder and Rules
+- PCI Tagging for SSH rootchecks
+
+### Changed
+- *ossec_ruleset.py*: New interface.
+- Directory structure of Rootcheck
+- Netscreen Firewall decoder
+
+### Fixed
+- Syntax error in rootchecks.
+
+
 ## [v1.05] - 2016-01-27
 ### Fixed
 - *ossec_ruleset.py*:
