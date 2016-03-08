@@ -22,7 +22,6 @@ import json
 from optparse import OptionParser
 
 
-os.environ["HOME"] = "/root"
 def handler(signal, frame):
     print "SIGINT received, bye!"
     sys.exit(1)
@@ -54,50 +53,48 @@ def main(argv):
 
     if options.debug: print '+++ Connecting to Amazon S3'
     s3 = boto.connect_s3()
-    buckets = s3.get_all_buckets()
-    found = 0
-    for bucket in buckets:
-        if bucket.name == options.logBucket:
-            found = 1
-            c = s3.get_bucket(bucket.name)
-            for f in c.list():
-                newFile = os.path.basename(str(f.key))
-                if newFile != "":
-                    if options.debug:
-                        print "+++ Found new log: ", newFile
-                    f.get_contents_to_filename(newFile)
-                    data = gzip.open(newFile, 'rb')
-                    try:
-                        log = open(options.logFile, 'ab')
-                    except IOError as e:
-                        print "ERROR: Cannot open %s (%s)" % (options.logFile, e.strerror)
-                        sys.exit(1)
+    c = s3.get_bucket(options.logBucket)
+    try:
+        c = s3.get_bucket(options.logBucket)
+    except boto.exception.S3ResponseError as e:
+        print "Bucket %s access error: %s" % (options.logBucket, e)
+        sys.exit(3)
+    for f in c.list():
+        newFile = os.path.basename(str(f.key))
+        if newFile != "":
+            if options.debug:
+                print "+++ Found new log: ", newFile
+            f.get_contents_to_filename(newFile)
+            data = gzip.open(newFile, 'rb')
+            try:
+                log = open(options.logFile, 'ab')
+            except IOError as e:
+                print "ERROR: Cannot open %s (%s)" % (options.logFile, e.strerror)
+                sys.exit(1)
 
-                    if options.dumpJson == None:
-                        log.write(data.read())
-                        log.write("\n")
-                    else:
-                        j = json.load(data)
-                        records = j["Records"]
-                        for item in records:
-                            newline = 0
-                            for field in item:
-                                if newline > 0:
-                                    log.write(",")
-                                newline = 1
-                                log.write("\"%s\":\"%s\"" % (field, item[field]))
-                            log.write("\n\"AmazonAWS\":")
-                    log.close()
+            if options.dumpJson == None:
+                log.write(data.read())
+                log.write("\n")
+            else:
+                j = json.load(data)
+                records = j["Records"]
+                for item in records:
+                    newline = 0
+                    for field in item:
+                        if newline > 0:
+                            log.write(",")
+                        newline = 1
+                        log.write("\"%s\":\"%s\"" % (field, item[field]))
+                    log.write("\n\"AmazonAWS\":")
+            log.close()
 
-                    try:
-                        os.remove(newFile)
-                    except IOError as e:
-                        print "ERROR: Cannot delete %s (%s)" % (newFile, e.strerror)
+            try:
+                os.remove(newFile)
+            except IOError as e:
+                print "ERROR: Cannot delete %s (%s)" % (newFile, e.strerror)
 
-                    if options.deleteFile:
-                        c.delete_key(f.key)
-    if found == 0:
-        print "ERROR: Bucket %s not found in S3!" % options.logBucket
+            if options.deleteFile:
+                c.delete_key(f.key)
 
 if __name__ == '__main__':
     signal.signal(signal.SIGINT, handler)
