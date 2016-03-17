@@ -1,6 +1,14 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [UNRELEASED - v1.07] - 2016-04-??
+### Added
+- ossec Rule: Duplicated IP...
+
+### Changed
+- Apache Decoders
+- getawslogs.py
+
 ## [v1.06] - 2016-02-12
 ### Added
 - Rules for Amazon VPC
