@@ -4,9 +4,11 @@ All notable changes to this project will be documented in this file.
 ## [UNRELEASED - v1.07] - 2016-04-??
 ### Added
 - ossec Rule: Duplicated IP...
+- opensmtpd
 
 ### Changed
 - Apache Decoders
+- SSH Decoders
 - getawslogs.py
 
 ## [v1.06] - 2016-02-12
