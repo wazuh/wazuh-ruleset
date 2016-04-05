@@ -1,6 +1,20 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [v1.07] - 2016-04-05
+### Added
+- Decoders and rules:
+ - ossec-auth
+ - OpenBSD SMTP
+ - SSH
+ - Postfix
+- ossec_ruleset.py: Option -d to update the ruleset from local files.
+
+### Changed
+- Apache Decoders
+- getawslogs.py: Executing with standard users.
+
+
 ## [v1.06] - 2016-02-12
 ### Added
 - Rules for Amazon VPC
