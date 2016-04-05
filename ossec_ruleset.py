@@ -618,7 +618,7 @@ def copy_ruleset(directory):
 
     shutil.copytree(directory, "{0}/ossec-rules".format(downloads_directory))
 
-    # Rename
+    # Check new ruleset
     check_files = ["rootcheck", "rules-decoders", "VERSION"]
     for cf in check_files:
         if not os.path.exists("{0}/ossec-rules/{1}".format(downloads_directory, cf)):
@@ -1038,7 +1038,7 @@ Backups:
 
 Additional Params:
 \t-f, --force-update\tForce to update all rules and rootchecks. By default, only it is updated the new/changed rules/rootchecks.
-\t-d, --directory\tUse the ruleset specified at 'directory'.
+\t-d, --directory\tUse the ruleset specified at 'directory'. Directory structure should be the same that ossec-rules repository.
 
 Configuration file syntax using option -A:
 \t# Commented line
@@ -1092,7 +1092,7 @@ if __name__ == "__main__":
     try:
         opts, args = getopt.getopt(sys.argv[1:], "rcb:aA:sSfd:h",
                                    ["rules", "rootchecks", "backups=", "activate", "activate-file=", "restart", "no-restart", "force-update", "directory", "help"])
-        if len(opts) > 4:
+        if len(opts) > 5:
             print("Incorrect number of arguments.\nTry './ossec_ruleset.py --help' for more information.")
             sys.exit()
     except getopt.GetoptError as err:
