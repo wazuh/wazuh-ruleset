@@ -1,6 +1,17 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [v1.08] - 2016-05-05
+### Added
+- Redis decoders and rules.
+- Rootchecks for RedHat 7.
+- SUDO and SSH decoders.
+
+### Changed
+- SSH and OSSEC rules.
+- Minor changes in ossec_ruleset.py.
+
+
 ## [v1.07] - 2016-04-05
 ### Added
 - Decoders and rules:
