@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # OSSEC Ruleset Update
 
-# v2.3.1 2016/04/05
+# v2.3.2 2016/05/05
 # Created by Wazuh, Inc. <info@wazuh.com>.
 # jesus@wazuh.com
 # This program is a free software; you can redistribute it and/or modify it under the terms of GPLv2
@@ -174,6 +174,12 @@ def get_previous_line(line_search, filepath):
         previous_line = line
     fileinput.close()
     return previous_line
+
+
+def get_number_lines(filepath):
+    with open(filepath) as f:
+        n = sum(1 for _ in f)
+    return n
 
 
 def remove_line(line_search, filepath):
@@ -448,6 +454,11 @@ def setup_wazuh_directory_structure():
 
     # Check if decoders in wazuh structure
     try:
+        # ossec.conf must be formatted
+        if get_number_lines(ossec_conf) < 2:
+            logger.log("\tError checking directory structure: Invalid ossec.conf.\n")
+            sys.exit(2)
+
         # OSSEC Decoders
         # If exists decoder.xml -> Move to /etc/ossec_decoders
         old_decoder = "{0}/etc/decoder.xml".format(ossec_path)
@@ -1010,7 +1021,7 @@ def clean_directory():
 
 def usage():
     msg = """
-OSSEC Wazuh Ruleset Update v2.3.1
+OSSEC Wazuh Ruleset Update v2.3.2
 Github repository: https://github.com/wazuh/ossec-rules
 Full documentation: http://documentation.wazuh.com/en/latest/ossec_ruleset.html
 
@@ -1182,6 +1193,7 @@ if __name__ == "__main__":
             restore_backups(backup_name)
         else:
             restore_backups("0")
+        restart_ossec = True
         logger.log("\t[Done]")
     else:
         # Setup Wazuh structure: /etc/ossec_decoders/, /etc/wazuh_decoders/, /etc/local_decoders.xml
