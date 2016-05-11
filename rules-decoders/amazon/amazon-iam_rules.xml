@@ -407,6 +407,27 @@
         <description>Amazon-iam: List group error</description>
         <group>amazon,pci_dss_10.2.5,</group>
     </rule>
+    
+    <rule id="80915" level="2">
+        <if_sid>80202</if_sid>
+        <action>ListUsers</action>
+        <description>Amazon-iam: List Users</description>
+        <group>amazon,pci_dss_10.2.5,</group>
+    </rule>
+
+    <rule id="80916" level="5">
+        <if_sid>80915</if_sid>
+        <match>"errorCode":"NoSuchEntityException"</match>
+        <description>Amazon-iam: The users cant be listed</description>
+        <group>amazon,pci_dss_10.2.5,</group>
+    </rule>
+
+    <rule id="80917" level="5">
+        <if_sid>80915</if_sid>
+        <match>"errorCode":"</match>
+        <description>Amazon-iam: List users error</description>
+        <group>amazon,pci_dss_10.2.5,</group>
+    </rule>
 </group>
 
 <!-- amazon-iam -->
