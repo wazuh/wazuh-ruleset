@@ -1,6 +1,16 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [v1.09] - 2016-05-12
+### Added
+- Decoders and rules for Amazon
+
+### Changed
+- Amazon directory structure.
+- Minor changes:
+ - Apache and Nginx rules.
+ - RH7 rootchecks.
+
 ## [v1.08] - 2016-05-05
 ### Added
 - Redis decoders and rules.
