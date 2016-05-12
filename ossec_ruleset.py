@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # OSSEC Ruleset Update
 
-# v2.3.2 2016/05/05
+# v2.3.3 2016/06/11
 # Created by Wazuh, Inc. <info@wazuh.com>.
 # jesus@wazuh.com
 # This program is a free software; you can redistribute it and/or modify it under the terms of GPLv2
@@ -851,23 +851,20 @@ def setup_decoders(decoder):
 
 def setup_rules(rule):
     if rule == "ossec":
-        new_ossec_rules_path = "{0}/ossec/rules/*rules*.xml".format(new_rules_path)
-        ossec_rules = sorted(glob.glob(new_ossec_rules_path))
-
-        for ossec_rule in ossec_rules:
-            # Do not copy folders or local_rules.xml
-            if os.path.isfile(ossec_rule) and "local_rules.xml" not in ossec_rule:
-                split = ossec_rule.split("/")
-                filename = split[len(split) - 1]
-                dest_file = "{0}/rules/{1}".format(ossec_path, filename)
-                shutil.copyfile(ossec_rule, dest_file)
-                os.chown(dest_file, root_uid, ossec_gid)
-
+        rules_path = "{0}/ossec/rules/*_rules.xml".format(new_rules_path)
     else:
-        src_file = "{0}/{1}/{1}_rules.xml".format(new_rules_path, rule)
-        dest_file = "{0}/rules/{1}_rules.xml".format(ossec_path, rule)
-        shutil.copyfile(src_file, dest_file)
-        os.chown(dest_file, root_uid, ossec_gid)
+        rules_path = "{0}/{1}/*_rules.xml".format(new_rules_path, rule)
+
+    new_rules = sorted(glob.glob(rules_path))
+
+    for new_rule in new_rules:
+        # Do not copy folders or local_rules.xml
+        if os.path.isfile(new_rule) and "local_rules.xml" not in new_rule:
+            split = new_rule.split("/")
+            filename = split[len(split) - 1]
+            dest_file = "{0}/rules/{1}".format(ossec_path, filename)
+            shutil.copyfile(new_rule, dest_file)
+            os.chown(dest_file, root_uid, ossec_gid)
 
 
 def setup_roochecks(rootcheck):
@@ -885,9 +882,17 @@ def setup_ossec_conf(item, type_item):
         return
 
     if type_item == "rule":
-        if not regex_in_file("\s*<include>{0}_rules.xml</include>".format(item), ossec_conf):
-            logger.log("\t\tNew rule in ossec.conf: '{0}'.".format(item))
-            write_before_line("<include>local_rules.xml</include>", '    <include>{0}_rules.xml</include>'.format(item), ossec_conf)
+
+        if item == "amazon":  # Special case
+            new_items = ["amazon", "amazon-ec2", "amazon-iam"]
+        else:
+            new_items = [item]
+
+        for new_item in new_items:
+            if not regex_in_file("\s*<include>{0}_rules.xml</include>".format(new_item), ossec_conf):
+                logger.log("\t\tNew rule in ossec.conf: '{0}'.".format(new_item))
+                write_before_line("<include>local_rules.xml</include>", '    <include>{0}_rules.xml</include>'.format(new_item), ossec_conf)
+
     elif type_item == "rootcheck":
         if not regex_in_file("<rootcheck>", ossec_conf) or regex_in_file("\s*<rootcheck>\s*\n\s*<disabled>\s*yes", ossec_conf):
             logger.log("\t\tRootchecks disabled in ossec.conf -> no activate rootchecks.")
@@ -1021,7 +1026,7 @@ def clean_directory():
 
 def usage():
     msg = """
-OSSEC Wazuh Ruleset Update v2.3.2
+OSSEC Wazuh Ruleset Update v2.3.3
 Github repository: https://github.com/wazuh/ossec-rules
 Full documentation: http://documentation.wazuh.com/en/latest/ossec_ruleset.html
 
