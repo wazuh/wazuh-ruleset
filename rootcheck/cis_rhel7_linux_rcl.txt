@@ -30,7 +30,7 @@
 
 # RC scripts location
 $rc_dirs=/etc/rc.d/rc2.d,/etc/rc.d/rc3.d,/etc/rc.d/rc4.d,/etc/rc.d/rc5.d;
-
+$sshd_file=/etc/ssh/sshd_config;
 
 [CIS - Testing against the CIS Red Hat Enterprise Linux 7 Benchmark v1.1.0] [any required] [http://www.ossec.net/]
 f:/etc/redhat-release -> r:^Red Hat Enterprise Linux \S+ release 6;
@@ -76,7 +76,7 @@ f:/etc/fstab -> ^# && !r:/var/log/audit;
 f:/etc/fstab -> ^# && !r:/home;
 
 # 1.1.10 /home: nodev
-[CIS - RHEL7 - 1.1.10 -  Partition /home without 'nodev' set {CIS: 1.1.10 RHEL7} {PCI_DSS: 2.2.4}] [any] [http://www.ossec.net/wiki/index.php/CIS_RHEL7 -]
+[CIS - RHEL7 - 1.1.10 - Partition /home without 'nodev' set {CIS: 1.1.10 RHEL7} {PCI_DSS: 2.2.4}] [any] [http://www.ossec.net/wiki/index.php/CIS_RHEL7 -]
 f:/etc/fstab -> !r:^# && r:/home && !r:nodev;
 
 # 1.1.11 nodev on removable media partitons (not scored)
@@ -273,36 +273,35 @@ f:/etc/xinetd.d/talk -> !r:^# && r:disable && r:no;
 f:/usr/lib/systemd/system/ntalk.service -> r:Exec;
 
 # 2.1.11 Remove xinetd (Scored)
-[CIS - RHEL7 - 2.1.11 -  xinetd detected {CIS: 2.1.11 RHEL7}]  [any] [http://www.ossec.net/wiki/index.php/CIS_RHEL7 -]
+[CIS - RHEL7 - 2.1.11 - xinetd detected {CIS: 2.1.11 RHEL7}] [any] [http://www.ossec.net/wiki/index.php/CIS_RHEL7 -]
 f:/usr/lib/systemd/system/xinetd.service -> r:Exec;
 
 # 2.1.12 Disable chargen-dgram (Scored)
-[CIS - RHEL7 - 2.1.12 -  chargen-dgram enabled on xinetd {CIS: 2.1.12 RHEL7}]  [any] [http://www.ossec.net/wiki/index.php/CIS_RHEL7 -]
+[CIS - RHEL7 - 2.1.12 - chargen-dgram enabled on xinetd {CIS: 2.1.12 RHEL7}] [any] [http://www.ossec.net/wiki/index.php/CIS_RHEL7 -]
 f:/etc/xinetd.d/chargen-dgram -> !r:^# && r:disable && r:no;
 
 # 2.1.13 Disable chargen-stream (Scored)
-[CIS - RHEL7 - 2.1.13 -  chargen-stream enabled on xinetd {CIS: 2.1.13 RHEL7}]  [any] [http://www.ossec.net/wiki/index.php/CIS_RHEL7 -]
+[CIS - RHEL7 - 2.1.13 - chargen-stream enabled on xinetd {CIS: 2.1.13 RHEL7}] [any] [http://www.ossec.net/wiki/index.php/CIS_RHEL7 -]
 f:/etc/xinetd.d/chargen-stream -> !r:^# && r:disable && r:no;
 
 # 2.1.14 Disable daytime-dgram (Scored)
-[CIS - RHEL7 - 2.1.14 -  daytime-dgram enabled on xinetd {CIS: 2.1.14 RHEL7}]  [any] [http://www.ossec.net/wiki/index.php/CIS_RHEL7 -]
+[CIS - RHEL7 - 2.1.14 - daytime-dgram enabled on xinetd {CIS: 2.1.14 RHEL7}] [any] [http://www.ossec.net/wiki/index.php/CIS_RHEL7 -]
 f:/etc/xinetd.d/daytime-dgram -> !r:^# && r:disable && r:no;
 
 # 2.1.15 Disable daytime-stream (Scored)
-[CIS - RHEL7 - 2.1.15 -  daytime-stream enabled on xinetd {CIS: 2.1.15 RHEL7}]  [any] [http://www.ossec.net/wiki/index.php/CIS_RHEL7 -]
+[CIS - RHEL7 - 2.1.15 - daytime-stream enabled on xinetd {CIS: 2.1.15 RHEL7}] [any] [http://www.ossec.net/wiki/index.php/CIS_RHEL7 -]
 f:/etc/xinetd.d/daytime-stream -> !r:^# && r:disable && r:no;
 
-
 # 2.1.16 Disable echo-dgram (Scored)
-[CIS - RHEL7 - 2.1.16 -  echo-dgram enabled on xinetd {CIS: 2.1.16 RHEL7}] [any] [http://www.ossec.net/wiki/index.php/CIS_RHEL7 -]
+[CIS - RHEL7 - 2.1.16 - echo-dgram enabled on xinetd {CIS: 2.1.16 RHEL7}] [any] [http://www.ossec.net/wiki/index.php/CIS_RHEL7 -]
 f:/etc/xinetd.d/echo-dgram -> !r:^# && r:disable && r:no;
 
 # 2.1.17 Disable echo-stream (Scored)
-[CIS - RHEL7 - 2.1.17 -  echo-stream enabled on xinetd {CIS: 2.1.17 RHEL7}]  [any] [http://www.ossec.net/wiki/index.php/CIS_RHEL7 -]
+[CIS - RHEL7 - 2.1.17 - echo-stream enabled on xinetd {CIS: 2.1.17 RHEL7}] [any] [http://www.ossec.net/wiki/index.php/CIS_RHEL7 -]
 f:/etc/xinetd.d/echo-stream -> !r:^# && r:disable && r:no;
 
 # 2.1.18 Disable tcpmux-server (Scored)
-[CIS - RHEL7 - 2.1.18 -  tcpmux-server enabled on xinetd {CIS: 2.1.18 RHEL7}]  [any] [http://www.ossec.net/wiki/index.php/CIS_RHEL7 -]
+[CIS - RHEL7 - 2.1.18 - tcpmux-server enabled on xinetd {CIS: 2.1.18 RHEL7}] [any] [http://www.ossec.net/wiki/index.php/CIS_RHEL7 -]
 f:/etc/xinetd.d/tcpmux-server -> !r:^# && r:disable && r:no;
 
 
@@ -601,11 +600,11 @@ f:/proc/sys/net/ipv4/tcp_syncookies -> 0;
 
 # 6.2.1 Set SSH Protocol to 2 (Scored)
 [CIS - RHEL7 - 6.2.1 - SSH Configuration - Protocol version 1 enabled {CIS: 6.2.1 RHEL7} {PCI_DSS: 4.1}] [any] [http://www.ossec.net/wiki/index.php/CIS_RHEL7 -]
-f:/etc/ssh/sshd_config -> !r:^# && r:Protocol\.+1;
+f:$sshd_file -> !r:^# && r:Protocol\.+1;
 
 # 6.2.2 Set LogLevel to INFO (Scored)
 [CIS - RHEL7 - 6.2.1 - SSH Configuration - Protocol version 1 enabled {CIS: 6.2.1 RHEL7} {PCI_DSS: 4.1}] [any] [http://www.ossec.net/wiki/index.php/CIS_RHEL7 -]
-f:/etc/ssh/sshd_config -> !r:^# && !r:LogLevel\.+INFO;
+f:$sshd_file -> !r:^# && !r:LogLevel\.+INFO;
 
 # 6.2.3 Set Permissions on /etc/ssh/sshd_config (Scored)
 # TODO
@@ -621,21 +620,21 @@ f:$sshd_file -> !r:MaxAuthTries;
 
 # 6.2.6 Set SSH IgnoreRhosts to Yes (Scored)
 [CIS - RHEL7 - 6.2.6 - SSH Configuration - IgnoreRHosts disabled {CIS: 6.2.6 RHEL7} {PCI_DSS: 4.1}] [any] [http://www.ossec.net/wiki/index.php/CIS_RHEL7 -]
-f:/etc/ssh/sshd_config -> !r:^# && r:IgnoreRhosts\.+no;
+f:$sshd_file -> !r:^# && r:IgnoreRhosts\.+no;
 
 # 6.2.7 Set SSH HostbasedAuthentication to No (Scored)
 [CIS - RHEL7 - 6.2.7 - SSH Configuration - Host based authentication enabled {CIS: 6.2.7 RHEL7} {PCI_DSS: 4.1}] [any] [http://www.ossec.net/wiki/index.php/CIS_RHEL7 -]
-f:/etc/ssh/sshd_config -> !r:^# && r:HostbasedAuthentication\.+yes;
+f:$sshd_file -> !r:^# && r:HostbasedAuthentication\.+yes;
 
 # 6.2.8 Disable SSH Root Login (Scored)
 [CIS - RHEL7 - 6.2.8 - SSH Configuration - Root login allowed {CIS: 6.2.8 RHEL7} {PCI_DSS: 4.1}] [any] [http://www.ossec.net/wiki/index.php/CIS_RHEL7 -]
-f:/etc/ssh/sshd_config -> !r:^# && r:PermitRootLogin\.+yes;
-f:/etc/ssh/sshd_config -> r:^#\s*PermitRootLogin;
+f:$sshd_file -> !r:^# && r:PermitRootLogin\.+yes;
+f:$sshd_file -> r:^#\s*PermitRootLogin;
 
 # 6.2.9 Set SSH PermitEmptyPasswords to No (Scored)
 [CIS - RHEL7 - 6.2.9 - SSH Configuration - Empty passwords permitted {CIS: 6.2.9 RHEL7} {PCI_DSS: 4.1}] [any] [http://www.ossec.net/wiki/index.php/CIS_RHEL7 -]
-f:/etc/ssh/sshd_config -> !r:^# && r:^PermitEmptyPasswords\.+yes;
-f:/etc/ssh/sshd_config -> r:^#\s*PermitEmptyPasswords;
+f:$sshd_file -> !r:^# && r:^PermitEmptyPasswords\.+yes;
+f:$sshd_file -> r:^#\s*PermitEmptyPasswords;
 
 # 6.2.10 Do Not Allow Users to Set Environment Options (Scored)
 
