@@ -1067,8 +1067,7 @@ Configuration file syntax using option -A:
 if __name__ == "__main__":
     # Config
     MAX_BACKUPS = 50
-    url_ruleset = "http://ossec.wazuh.com/ruleset/ruleset.zip"
-    # url_ruleset = "http://ossec.wazuh.com/ruleset/ruleset_development.zip"
+    url_ruleset = "https://github.com/chrisdpa-tvx/ossec-rules/archive/master.zip"
     ossec_path = "/var/ossec"
     ossec_conf = "{0}/etc/ossec.conf".format(ossec_path)
     updater_path = "{0}/update/ruleset".format(ossec_path)
@@ -1187,9 +1186,9 @@ if __name__ == "__main__":
     logger.log("\nOSSEC Wazuh Ruleset [{0}], {1}".format(ruleset_version, today_date))
 
     # Backups
-    logger.log("\nCreating a backup for folders '{0}/etc' and '{0}/rules'.".format(ossec_path))
-    dir_bk = do_backups()
-    logger.log("\tBackup folder: {0}\n\t[Done]".format(dir_bk))
+    # logger.log("\nCreating a backup for folders '{0}/etc' and '{0}/rules'.".format(ossec_path))
+    # dir_bk = do_backups()
+    # logger.log("\tBackup folder: {0}\n\t[Done]".format(dir_bk))
 
     # Restore backups
     if action_backups:
