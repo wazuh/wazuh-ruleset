@@ -34,6 +34,13 @@ The ruleset includes compliance mapping with PCI DSS v3.1, CIS and additional de
 
 Full documentation at [documentation.wazuh.com](http://documentation.wazuh.com/en/latest/ossec_ruleset.html)
 
+## Branches
+
+* `stable` branch on correspond to the last OSSEC Ruleset stable version.
+* `master` branch contains the latest code, be aware of possible bugs on this branch.
+* `development` branch includes all the new features we are adding and testing.
+
+
 ## Contribute
 
 If you have created new rules, decoders or rootchecks and you would like to contribute to our repository, please fork our Github repository and submit a pull request.
