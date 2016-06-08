@@ -615,7 +615,9 @@ f:/etc/ssh/sshd_config -> !r:^# && !r:LogLevel\.+INFO;
 
 # 6.2.5 Set SSH MaxAuthTries to 4 or Less (Scored)
 [ CIS - RHEL7 - 6.2.5 - SSH Configuration - Set SSH MaxAuthTries to 4 or Less  {CIS - RHEL7 - 6.2.5} {PCI_DSS: 2.2.4}] [any] [http://www.ossec.net/wiki/index.php/CIS_RHEL7 -]
-f:$sshd_file -> !r:^MaxAuthTries\s*3$;
+f:$sshd_file -> !r:^# && r:MaxAuthTries && !r:3\s*$;
+f:$sshd_file -> r:^#\s*MaxAuthTries;
+f:$sshd_file -> !r:MaxAuthTries;
 
 # 6.2.6 Set SSH IgnoreRhosts to Yes (Scored)
 [CIS - RHEL7 - 6.2.6 - SSH Configuration - IgnoreRHosts disabled {CIS: 6.2.6 RHEL7} {PCI_DSS: 4.1}] [any] [http://www.ossec.net/wiki/index.php/CIS_RHEL7 -]
