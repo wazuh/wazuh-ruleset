@@ -312,6 +312,26 @@ def get_ruleset_version():
     return rs_version
 
 
+def backup_item(type_item, item, dest, pattern=None):
+    if not os.path.exists(item):
+        return -1
+
+    if type_item == "folder":
+        if not pattern:
+            if os.path.exists(dest):
+                shutil.rmtree(dest)
+            shutil.copytree(item, dest)
+        else:
+            folder_files = sorted(glob.glob("{0}/{1}".format(item, pattern)))
+            for folder_file in folder_files:
+                dest_filename = folder_file.split("/")[-1]
+                shutil.copyfile(folder_file, "{0}/{1}".format(dest, dest_filename))
+        chown_r(dest, root_uid, ossec_gid)
+    else:
+        shutil.copyfile(item, dest)
+        os.chown(dest, root_uid, ossec_gid)
+
+
 def do_backups():
 
     try:
@@ -350,25 +370,43 @@ def do_backups():
         bk_subdirectory = "{0}/{1}_{2}".format(bk_directory, today_date, str(i).zfill(3))
         os.makedirs(bk_subdirectory)
 
-        # Backup etc
-        src_dir = "{0}/etc".format(ossec_path)
-        dest_dir = "{0}/etc".format(bk_subdirectory)
-        if os.path.exists(dest_dir):
-            shutil.rmtree(dest_dir)
-        shutil.copytree(src_dir, dest_dir)
+        os.makedirs("{0}/etc/shared".format(bk_subdirectory))
 
-        # Backup rules
-        src_dir = "{0}/rules".format(ossec_path)
-        dest_dir = "{0}/rules".format(bk_subdirectory)
-        if os.path.exists(dest_dir):
-            shutil.rmtree(dest_dir)
-        shutil.copytree(src_dir, dest_dir)
+        # Backups
+        # ossec_decoders
+        backup_item("folder", "{0}/etc/ossec_decoders".format(ossec_path), "{0}/etc/ossec_decoders".format(bk_subdirectory))
+
+        # wazuh_decoders
+        backup_item("folder", "{0}/etc/wazuh_decoders".format(ossec_path), "{0}/etc/wazuh_decoders".format(bk_subdirectory))
+
+        # rules
+        backup_item("folder", "{0}/rules".format(ossec_path), "{0}/rules".format(bk_subdirectory))
+
+        # decoder.xml
+        backup_item("file", "{0}/etc/decoder.xml".format(ossec_path), "{0}/etc/decoder.xml".format(bk_subdirectory))
+
+        # ossec.conf
+        backup_item("file", "{0}/etc/ossec.conf".format(ossec_path), "{0}/etc/ossec.conf".format(bk_subdirectory))
+
+        # shared/*txt
+        backup_item("folder", "{0}/etc/shared".format(ossec_path), "{0}/etc/shared".format(bk_subdirectory), "*.txt")
 
     except Exception as e:
         logger.log("Error - Backup:{0}.\nExit.".format(e))
         sys.exit(2)
 
     return bk_subdirectory
+
+
+def copy_files_folder(src, dst):
+    for item in os.listdir(src):
+        s = os.path.join(src, item)
+        d = os.path.join(dst, item)
+        if os.path.isdir(s):
+            copy_files_folder(s, d)
+        else:
+            shutil.copyfile(s, d)
+            os.chown(d, root_uid, ossec_gid)
 
 
 def restore_backups(backup_id):
@@ -379,12 +417,17 @@ def restore_backups(backup_id):
         sys.exit()
 
     if backup_id == "0":
-        all_backups = sorted(os.listdir(bk_directory))
+        all_backups = sorted(os.listdir(bk_directory), reverse=True)
 
         i = 0
         print("\tList of current backups:")
         for subdir_bk in all_backups:
-            print("\t\t{0}: {1}".format(i, subdir_bk))
+            if i == 0:
+                print("\t\t{0}: {1} (Current backup)".format(i, subdir_bk))
+            elif i == 1:
+                print("\t\t{0}: {1} (*Last backup)".format(i, subdir_bk))
+            else:
+                print("\t\t{0}: {1}".format(i, subdir_bk))
             i += 1
         last_item = i - 1
 
@@ -420,11 +463,8 @@ def restore_backups(backup_id):
         sys.exit(2)
 
     etc_dest = "{0}/etc".format(ossec_path)
-    logger.log("\t\tRestoring folder: '{0}' -> '{1}'".format(etc_restore, etc_dest))
-    if os.path.exists(etc_dest):
-        shutil.rmtree(etc_dest)
-    shutil.copytree(etc_restore, etc_dest)
-    chown_r(etc_dest, root_uid, ossec_gid)
+    logger.log("\t\tRestoring files in '{0}' -> '{1}'".format(etc_restore, etc_dest))
+    copy_files_folder(etc_restore, etc_dest)
     logger.log("\t\t\t[Done]")
 
     rules_dest = "{0}/rules".format(ossec_path)
