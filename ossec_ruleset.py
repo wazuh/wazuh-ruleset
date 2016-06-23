@@ -1332,7 +1332,7 @@ if __name__ == "__main__":
         success_msg = "\n*Your ruleset is up to date.*"
     else:
         success_msg = "\n\n**Ruleset({0}) updated successfully**".format(ruleset_version)
-    json_data['msg'] = success_msg
+    json_data['msg'] = success_msg.replace("\n","").replace("*", "")
 
     if restart_ossec:
         json_data['need_restart'] = "yes"
