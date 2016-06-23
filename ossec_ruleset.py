@@ -430,6 +430,14 @@ def copy_files_folder(src, dst):
             os.chown(d, root_uid, ossec_gid)
 
 
+def get_backup_list():
+    if not os.path.exists(bk_directory):
+        exit(0, "\tNo backups to restore.")
+    list_bk = sorted(os.listdir(bk_directory), reverse=True)
+    if "old" in list_bk:
+        list_bk.remove("old")
+    return list_bk
+
 def restore_backups(backup_id):
 
     if not os.path.exists(bk_directory):
@@ -437,6 +445,8 @@ def restore_backups(backup_id):
 
     if backup_id == "0":
         all_backups = sorted(os.listdir(bk_directory), reverse=True)
+        if "old" in all_backups:
+            all_backups.remove("old")
 
         i = 0
         print("\tList of current backups:")
@@ -1145,6 +1155,7 @@ if __name__ == "__main__":
     action_force = False
     action_download = "download"  # download, path
     json_output = False
+    json_data = {}
 
     # Capture Cntrl + C
     signal.signal(signal.SIGINT, signal_handler)
@@ -1246,11 +1257,19 @@ if __name__ == "__main__":
     # Restore backups
     if action_backups:
         logger.log("\nRestore Tool:")
+        restart_ossec = True
+        success_msg = "\n\n**Backup successfully**"
+
         if backup_name != "list":
             restore_backups(backup_name)
         else:
-            restore_backups("0")
-        restart_ossec = True
+            if not json_output:
+                restore_backups("0")
+            else:
+                json_data['list'] = get_backup_list()
+                restart_ossec = False
+                success_msg = "\n\n**Backup list**"
+
         logger.log("\t[Done]")
     else:
         # Setup Wazuh structure: /etc/ossec_decoders/, /etc/wazuh_decoders/, /etc/local_decoders.xml
@@ -1325,12 +1344,10 @@ if __name__ == "__main__":
     # Messages
 
     ret = 0
-    json_data = {}
-    if action_backups == "backups":
-        success_msg = "\n\n**Backup successfully**"
-    elif ruleset_is_uptodate:
+
+    if ruleset_is_uptodate:
         success_msg = "\n*Your ruleset is up to date.*"
-    else:
+    elif not action_backups:
         success_msg = "\n\n**Ruleset({0}) updated successfully**".format(ruleset_version)
     json_data['msg'] = success_msg.replace("\n","").replace("*", "")
 
