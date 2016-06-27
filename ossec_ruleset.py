@@ -1250,9 +1250,10 @@ if __name__ == "__main__":
     logger.log("\nOSSEC Wazuh Ruleset [{0}], {1}".format(ruleset_version, today_date))
 
     # Backups
-    logger.log("\nCreating a backup for folders '{0}/etc' and '{0}/rules'.".format(ossec_path))
-    dir_bk = do_backups()
-    logger.log("\tBackup folder: {0}\n\t[Done]".format(dir_bk))
+    if backup_name != "list" or not json_output:  # No backup when "list and json_output"
+        logger.log("\nCreating a backup for folders '{0}/etc' and '{0}/rules'.".format(ossec_path))
+        dir_bk = do_backups()
+        logger.log("\tBackup folder: {0}\n\t[Done]".format(dir_bk))
 
     # Restore backups
     if action_backups:
