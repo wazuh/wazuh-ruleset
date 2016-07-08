@@ -306,6 +306,9 @@ def exit(code, msg=None, location="logger"):
             msg_res = msg.replace('\t', '').replace('\n', '')
             if code == 0:
                 json_res['data'] = msg_res
+            elif code == 10:
+                json_res['error'] = 0
+                json_res['data'] = {'list': []}
             else:
                 json_res['message'] = msg_res
             print(json.dumps(json_res))
@@ -438,7 +441,7 @@ def copy_files_folder(src, dst):
 
 def get_backup_list():
     if not os.path.exists(bk_directory):
-        exit(0, "\tNo backups to restore.")
+        exit(10, "\tNo backups to restore.")
     list_bk = sorted(os.listdir(bk_directory), reverse=True)
     if "old" in list_bk:
         list_bk.remove("old")
@@ -447,7 +450,7 @@ def get_backup_list():
 def restore_backups(backup_id):
 
     if not os.path.exists(bk_directory):
-        exit(0, "\tNo backups to restore.")
+        exit(1, "\tNo backups to restore.")
 
     if backup_id == "0":
         all_backups = sorted(os.listdir(bk_directory), reverse=True)
