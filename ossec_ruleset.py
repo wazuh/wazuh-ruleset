@@ -302,7 +302,13 @@ def exit(code, msg=None, location="logger"):
                 print(msg)
 
         if json_output:
-            print(json.dumps({'error': 1, 'message': msg.replace('\t', '').replace('\n', '')}))
+            json_res = {'error': code}
+            msg_res = msg.replace('\t', '').replace('\n', '')
+            if code == 0:
+                json_res['data'] = msg_res
+            else:
+                json_res['message'] = msg_res
+            print(json.dumps(json_res))
 
     sys.exit(code)
 
