@@ -1,6 +1,22 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+
+## [v1.10] - 2016-??-??
+### Added
+- ossec_ruleset.py. JSON output
+- HP 5500 rules and decoders
+- syslog: useradd rule
+- Chrome Remote Desktop rules
+
+### Changed
+- ossec_ruleset.py backups
+
+### Fixed
+- msauth_rules rules.
+- RH7 rootchecks.
+- nginx rules
+ 
 ## [v1.09] - 2016-05-12
 ### Added
 - Decoders and rules for Amazon
