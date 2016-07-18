@@ -986,4 +986,165 @@
 
 </group>
 
+<!--
+Microsoft Security Essentials rules
+created by Brent Morris.
+updated by Wazuh.
+
+see https://technet.microsoft.com/en-us/library/hh144989.aspx
+
+-->
+<group name="windows,mse,">
+    <rule id="18500" level="0">
+        <category>windows</category>
+        <if_sid>18101,18102,18103</if_sid>
+        <extra_data>^Microsoft Antimalware</extra_data>
+        <description>Grouping of Microsoft Security Essentials rules.</description>
+    </rule>
+
+    <rule id="18501" level="12">
+        <if_sid>18500</if_sid>
+        <id>^1118$|^1119$</id>
+        <group>virus,</group>
+        <description>Microsoft Security Essentials - Virus detected, but unable to remove.</description>
+    </rule>
+
+    <rule id="18502" level="7">
+        <if_sid>18500</if_sid>
+        <id>^1117$</id>
+        <group>virus,</group>
+        <description>Microsoft Security Essentials - Virus detected and properly removed.</description>
+    </rule>
+
+    <rule id="18503" level="7">
+        <if_sid>18500</if_sid>
+        <id>^1119$|^1118$|^1117$|^1116$</id>
+        <group>virus,</group>
+        <description>Microsoft Security Essentials - Virus detected.</description>
+    </rule>
+
+    <rule id="18504" level="7">
+        <if_sid>18500</if_sid>
+        <id>^1015$</id>
+        <group>virus,</group>
+        <description>Microsoft Security Essentials - Suspicious activity detected.</description>
+    </rule>
+
+    <!-- Service conditions and errors -->
+    <rule id="18600" level="3">
+        <if_sid>18500</if_sid>
+        <id>^5007$</id>
+        <description>Microsoft Security Essentials - Configuration changed.</description>
+        <group>policy_changed,</group>
+    </rule>
+
+    <rule id="18601" level="9">
+        <if_sid>18500</if_sid>
+        <id>^5008$</id>
+        <description>Microsoft Security Essentials - Service failed.</description>
+    </rule>
+
+    <rule id="18602" level="9">
+        <if_sid>18500</if_sid>
+        <id>^3002$</id>
+        <description>Microsoft Security Essentials - Real time protection failed.</description>
+    </rule>
+
+    <rule id="18603" level="8">
+        <if_sid>18500</if_sid>
+        <id>^2012$</id>
+        <description>Microsoft Security Essentials - Cannot use Dynamic Signature Service.</description>
+    </rule>
+
+    <rule id="18604" level="8">
+        <if_sid>18500</if_sid>
+        <id>^2004$</id>
+        <description>Microsoft Security Essentials - Loading definitions failed. Using last good set.</description>
+    </rule>
+
+    <rule id="18605" level="8">
+        <if_sid>18500</if_sid>
+        <id>^2003$</id>
+        <description>Microsoft Security Essentials - Engine update failed.</description>
+    </rule>
+
+    <rule id="18606" level="8">
+        <if_sid>18500</if_sid>
+        <id>^2001$</id>
+        <description>Microsoft Security Essentials - Definitions update failed.</description>
+    </rule>
+
+    <rule id="18607" level="7">
+        <if_sid>18500</if_sid>
+        <id>^1005$</id>
+        <description>Microsoft Security Essentials - Scan error. Scan has stopped.</description>
+    </rule>
+
+    <rule id="18608" level="5">
+        <if_sid>18500</if_sid>
+        <id>^1002$</id>
+        <description>Microsoft Security Essentials - Scan stopped before completion.</description>
+    </rule>
+
+    <!-- EICAR test file special case -->
+    <!-- www.eicar.org/86-0-Intended-use.html -->
+    <rule id="18690" level="5">
+        <if_sid>18503</if_sid>
+        <match>Virus:DOS/EICAR_Test_File</match>
+        <options>alert_by_email</options>
+        <description>Microsoft Security Essentials - EICAR test file detected.</description>
+    </rule>
+
+    <rule id="18691" level="3">
+        <if_sid>18502</if_sid>
+        <match>Virus:DOS/EICAR_Test_File</match>
+        <options>alert_by_email</options>
+        <description>Microsoft Security Essentials - EICAR test file removed.</description>
+    </rule>
+
+    <rule id="18692" level="8">
+        <if_sid>18501</if_sid>
+        <match>Virus:DOS/EICAR_Test_File</match>
+        <options>alert_by_email</options>
+        <description>Microsoft Security Essentials - EICAR test file detected, but removal failed.</description>
+    </rule>
+
+    <!-- Status messages -->
+    <rule id="18700" level="3">
+        <if_sid>18500</if_sid>
+        <id>^2000$</id>
+        <description>Microsoft Security Essentials - Signature database updated.</description>
+    </rule>
+
+    <rule id="18701" level="3">
+        <if_sid>18500</if_sid>
+        <id>^2002$</id>
+        <description>Microsoft Security Essentials - Scan engine updated.</description>
+    </rule>
+
+    <rule id="18702" level="3">
+        <if_sid>18500</if_sid>
+        <id>^1000$|^1001$</id>
+        <description>Microsoft Security Essentials - Scan started or stopped.</description>
+    </rule>
+
+    <rule id="18703" level="4">
+        <if_sid>18500</if_sid>
+        <id>^1013$</id>
+        <description>Microsoft Security Essentials - History cleared.</description>
+    </rule>
+
+    <!-- Time based alerts -->
+    <rule id="18750" level="10" frequency="4" timeframe="240">
+        <if_matched_sid>18502</if_matched_sid>
+        <description>Multiple Microsoft Security Essentials AV warnings detected.</description>
+    </rule>
+
+    <rule id="18751" level="10" frequency="4" timeframe="240">
+        <if_matched_sid>18503</if_matched_sid>
+        <description>Multiple Microsoft Security Essentials AV warnings detected.</description>
+    </rule>
+</group> 
+<!-- mse -->
+
 <!-- EOF -->
