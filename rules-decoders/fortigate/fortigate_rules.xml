@@ -1,0 +1,216 @@
+<!-- @(#) $Id: ./etc/rules/foritgate_firewall_rules.xml, 2016/07/15 $
+
+  -  Firewall rules for OSSEC.
+  -
+  -  Copyright (C) 2009 Trend Micro Inc.
+  -  All rights reserved.
+  -
+  -  This program is a free software; you can redistribute it
+  -  and/or modify it under the terms of the GNU General Public
+  -  License (version 2) as published by the FSF - Free Software
+  -  Foundation.
+  -
+  -  PCI Tagging by Tom <t.m.h.a.ncoc.k+wazuh@gmail.com>.
+  -
+  -  License details: http://www.ossec.net/en/licensing.html
+  -->
+  
+
+<group name="syslog,">
+  <rule id="4102" level="0">
+    <category>syslog</category>
+    <description>Firewall rules grouped.</description>
+  </rule>
+
+  <!-- We don't log firewall events, because they go
+    -  to their own log file.
+    -->
+  <rule id="4103" level="4">
+    <if_sid>4102</if_sid>
+    <action>error</action>
+    <status>dpd_failure</status>
+    <options>alert_by_email</options>
+    <description>IP Sec DPD Failed.</description>
+    <group>firewall_drop,pci_dss_1.4,</group>
+  </rule>
+
+  <rule id="4152" level="10" frequency="16" timeframe="45" ignore="240">
+    <if_matched_sid>4102</if_matched_sid>
+    <same_source_ip />
+    <description>Multiple Firewall drop events from same source.</description>
+    <group>multiple_drops,pci_dss_1.4,pci_dss_10.6.1,</group>
+  </rule>
+	
+	
+  <rule id="4104" level="4">
+    <if_sid>4102</if_sid>
+    <action>login</action>
+    <status>failed</status>
+    <options>alert_by_email</options>
+    <description>Login disabled.</description>
+    <group>authentication_failed,invalid_login,attacks,pci_dss_6.6,pci_dss_10.2.4,</group>
+  </rule>
+
+  <rule id="4153" level="10" frequency="16" timeframe="45" ignore="240">
+    <if_matched_sid>4104</if_matched_sid>
+    <same_source_ip />
+    <description>Multiple Firewall login events from same source.</description>
+    <group>multiple_drops,pci_dss_6.6,pci_dss_10.6.1,pci_dss_10.2.4,</group>
+  </rule>
+	
+  <rule id="4105" level="11">
+    <if_sid>4102</if_sid>
+    <extra_data>"Configuration is changed in the admin session"</extra_data>
+    <options>alert_by_email</options>
+    <description>Configuration changed.</description>
+    <group>firewall_drop,pci_dss_10.5.5,pci_dss_10.6.1,</group>
+  </rule>
+
+  <rule id="4155" level="10" frequency="16" timeframe="45" ignore="240">
+    <if_matched_sid>4105</if_matched_sid>
+    <same_source_ip />
+    <description>Multiple Firewall login events from same source.</description>
+    <group>multiple_drops,pci_dss_10.5.5,pci_dss_10.6.1,</group>
+  </rule>
+	
+  <rule id="4106" level="0">
+    <if_sid>4102</if_sid>
+    <extra_data>"http_decoder: HTTP.Unknown.Tunnelling,"</extra_data>
+    <options>alert_by_email</options>
+    <description>Default tunneling setting. Could be IPS.</description>
+    <group>firewall_drop,pci_dss_10.5.5,pci_dss_10.6.1,</group>
+  </rule>
+
+  <rule id="4156" level="10" frequency="16" timeframe="45" ignore="240">
+    <if_matched_sid>4106</if_matched_sid>
+    <same_source_ip />
+    <description>Multiple Firewall login events from same source.</description>
+    <group>multiple_drops,pci_dss_10.5.5,pci_dss_10.6.1,</group>
+  </rule>
+	
+  <rule id="4107" level="4">
+    <if_sid>4102</if_sid>
+	<action>Edit</action>
+    <options>alert_by_email</options>
+    <description>Firewall configuration changes</description>
+    <group>firewall_drop,pci_dss_10.5.5,pci_dss_10.6.1,</group>
+  </rule>
+
+  <rule id="4157" level="10" frequency="16" timeframe="45" ignore="240">
+    <if_matched_sid>4107</if_matched_sid>
+    <same_source_ip />
+    <description>Multiple Firewall login events from same source.</description>
+    <group>multiple_drops,pci_dss_10.5.5,pci_dss_10.6.1,</group>
+  </rule>
+	
+  <rule id="4108" level="5">
+    <if_sid>4102</if_sid>
+	<action>"ssl-login-fail"</action>
+	  <status>alert</status>
+    <options>alert_by_email</options>
+    <description>SSL VPN User failed login attempt</description>
+    <group>firewall_drop,pci_dss_10.5.5,pci_dss_10.6.1,</group>
+  </rule>
+
+  <rule id="4158" level="10" frequency="16" timeframe="45" ignore="240">
+    <if_matched_sid>4108</if_matched_sid>
+    <same_source_ip />
+    <description>Multiple Firewall login events from same source.</description>
+    <group>multiple_drops,pci_dss_10.5.5,pci_dss_10.6.1,</group>
+  </rule>
+	
+  <rule id="4109" level="4">
+    <if_sid>4102</if_sid>
+	<action>logout</action>
+	  <status>success</status>
+    <options>alert_by_email</options>
+    <description>User logout successful</description>
+    <group>firewall_drop,pci_dss_10.5.5,pci_dss_10.6.1,</group>
+  </rule>
+
+  <rule id="4159" level="10" frequency="16" timeframe="45" ignore="240">
+    <if_matched_sid>4109</if_matched_sid>
+    <same_source_ip />
+    <description>Multiple Firewall login events from same source.</description>
+    <group>multiple_drops,pci_dss_10.5.5,pci_dss_10.6.1,</group>
+  </rule>
+	
+  <rule id="4110" level="1">
+    <if_sid>4102</if_sid>
+	<status>high</status>
+    <options>alert_by_email</options>
+    <description>Traffic to be aware of.</description>
+    <group>firewall_drop,pci_dss_10.5.5,pci_dss_10.6.1,</group>
+  </rule>
+
+  <rule id="4160" level="1" frequency="16" timeframe="45" ignore="240">
+    <if_matched_sid>4110</if_matched_sid>
+    <same_source_ip />
+    <description>Multiple Firewall login events from same source.</description>
+    <group>multiple_drops,pci_dss_10.5.5,pci_dss_10.6.1,</group>
+  </rule>
+	
+  <rule id="4111" level="0">
+    <if_sid>4102</if_sid>
+	<status>warning</status>
+	<action>blocked</action>
+    <options>alert_by_email</options>
+    <description>URL Blocked by Firewall.</description>
+    <group>firewall_drop,pci_dss_10.5.5,pci_dss_10.6.1,</group>
+  </rule>
+
+  <rule id="4161" level="1" frequency="16" timeframe="45" ignore="240">
+    <if_matched_sid>4111</if_matched_sid>
+    <same_source_ip />
+    <description>Multiple Firewall login events from same source.</description>
+    <group>multiple_drops,pci_dss_10.5.5,pci_dss_10.6.1,</group>
+  </rule>
+	
+  <rule id="4112" level="4">
+    <if_sid>4102</if_sid>
+	<status>information</status>
+	<action>"tunnel-up"</action>
+    <options>alert_by_email</options>
+    <description>VPN User connected.</description>
+    <group>firewall_drop,pci_dss_10.5.5,pci_dss_10.6.1,</group>
+  </rule>
+
+  <rule id="4162" level="4" frequency="16" timeframe="45" ignore="240">
+    <if_matched_sid>4112</if_matched_sid>
+    <same_source_ip />
+    <description>Multiple Firewall login events from same source.</description>
+    <group>multiple_drops,pci_dss_10.5.5,pci_dss_10.6.1,</group>
+  </rule>
+	
+  <rule id="4113" level="4">
+    <if_sid>4102</if_sid>
+	<status>information</status>
+	<action>"tunnel-down"</action>
+    <options>alert_by_email</options>
+    <description>VPN User disconnected.</description>
+    <group>firewall_drop,pci_dss_10.5.5,pci_dss_10.6.1,</group>
+  </rule>
+
+  <rule id="4163" level="4" frequency="16" timeframe="45" ignore="240">
+    <if_matched_sid>4113</if_matched_sid>
+    <same_source_ip />
+    <description>Multiple Firewall login events from same source.</description>
+    <group>multiple_drops,pci_dss_10.5.5,pci_dss_10.6.1,</group>
+  </rule>
+	
+  <rule id="4114" level="4">
+    <if_sid>4102</if_sid>
+	<status>success</status>
+	<action>login</action>
+    <options>alert_by_email</options>
+    <description>User successfully logged into firewall interface.</description>
+    <group>firewall_drop,pci_dss_10.5.5,pci_dss_10.6.1,</group>
+  </rule>
+
+  <rule id="4164" level="4" frequency="16" timeframe="45" ignore="240">
+    <if_matched_sid>4114</if_matched_sid>
+    <same_source_ip />
+    <description>Multiple Firewall login events from same source.</description>
+    <group>multiple_drops,pci_dss_10.5.5,pci_dss_10.6.1,</group>
+  </rule>
+</group>
