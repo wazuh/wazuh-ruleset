@@ -8,8 +8,8 @@ All notable changes to this project will be documented in this file.
 - HP 5500 rules and decoders
 - syslog: useradd rule
 - Chrome Remote Desktop rules
-- Microsoft Security Essentials rules
 - Fortigate decoders and rules (draft)
+- OpenVPN decoders and rules (draft)
 
 ### Changed
 - ossec_ruleset.py backups
