@@ -121,7 +121,7 @@
 <group name="syslog,xinetd,">
   <rule id="2301" level="10">
     <match>^Deactivating service </match>
-    <description>Excessive number connections to a service.</description>
+    <description>xinetd: Excessive number connections to a service.</description>
     <group>pci_dss_10.6.1,</group>
   </rule>
 </group> <!-- SYSLOG,XINETD -->
@@ -138,12 +138,12 @@
     <match>Wrong password given for|login failed|Auth: Login incorrect|</match>
     <match>Failed to authenticate user</match>
     <group>authentication_failed,pci_dss_10.2.4,pci_dss_10.2.5,</group>
-    <description>User authentication failure.</description>
+    <description>syslog: User authentication failure.</description>
   </rule>
 
   <rule id="2502" level="10">
     <match>more authentication failures;|REPEATED login failures</match>
-    <description>User missed the password more than one time</description>
+    <description>syslog: User missed the password more than one time</description>
     <group>authentication_failed,pci_dss_10.2.4,pci_dss_10.2.5,</group>
   </rule>
 
@@ -151,25 +151,25 @@
     <regex>^refused connect from|</regex>
     <regex>^libwrap refused connection|</regex>
     <regex>Connection from \S+ denied</regex>
-    <description>Connection blocked by Tcp Wrappers.</description>
+    <description>syslog: Connection blocked by Tcp Wrappers.</description>
     <group>access_denied,pci_dss_10.2.4,</group>
   </rule>
 
   <rule id="2504" level="9">
     <match>ILLEGAL ROOT LOGIN|ROOT LOGIN REFUSED</match>
-    <description>Illegal root login. </description>
+    <description>syslog: Illegal root login. </description>
     <group>invalid_login,pci_dss_10.2.4,pci_dss_10.2.5,pci_dss_10.2.2,</group>
   </rule>
 
   <rule id="2505" level="3">
     <match>^ROOT LOGIN  on</match>
-    <description>Physical root login.</description>
+    <description>syslog: Physical root login.</description>
     <group>pci_dss_10.2.2,</group>
   </rule>
 
   <rule id="2506" level="3">
     <match>^Authentication passed</match>
-    <description>Pop3 Authentication passed.</description>
+    <description>syslog: Pop3 Authentication passed.</description>
     <group>pci_dss_10.2.5,</group>
   </rule>
 
