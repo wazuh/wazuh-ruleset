@@ -77,15 +77,16 @@ def main(argv):
                 log.write("\n")
             else:
                 j = json.load(data)
-                records = j["Records"]
-                for item in records:
-                    newline = 0
-                    for field in item:
-                        if newline > 0:
-                            log.write(",")
-                        newline = 1
-                        log.write("\"%s\":\"%s\"" % (field, item[field]))
-                    log.write("\n\"AmazonAWS\":")
+                if "Records" in j:
+                    records = j["Records"]
+                    for item in records:
+                        newline = 0
+                        for field in item:
+                            if newline > 0:
+                                log.write(",")
+                            newline = 1
+                            log.write("\"%s\":\"%s\"" % (field, item[field]))
+                        log.write("\n\"AmazonAWS\":")
             log.close()
 
             try:
