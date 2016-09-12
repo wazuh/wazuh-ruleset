@@ -49,7 +49,7 @@ class RulesetLogger:
             self.logger = open(filename, 'a')
         except:
             print("Error opening log '{0}'".format(filename))
-            sys.exit(2)
+            sys.exit(1)
 
     def log(self, msg):
         if self.flag == RulesetLogger.O_ALL or self.flag == RulesetLogger.O_STDOUT:
@@ -180,7 +180,7 @@ def get_ossec_version():
 
         return ossec_v
     except:
-        exit(3, "Reading '{0}'.".format(init_file))
+        exit(2, "Reading '{0}'.".format(init_file))
 
 
 def previous_checks():
@@ -191,14 +191,14 @@ def previous_checks():
         root_uid = getpwnam("root").pw_uid
         ossec_gid = getgrnam("ossec").gr_gid
     except:
-        exit(3, "No user 'root' or group 'ossec' found.")
+        exit(2, "No user 'root' or group 'ossec' found.")
 
     # Check if wazuh is installed
     global ossec_version
     ossec_version = get_ossec_version()
 
     if ossec_version == "old":
-        exit(3, "OSSEC version detected. This script only supports Wazuh.")
+        exit(2, "OSSEC version detected. This script only supports Wazuh.")
 
 
 def edit_ossec_conf():
@@ -274,103 +274,6 @@ def edit_ossec_conf():
         conf_file.write("</ossec_config>  <!-- rules global entry -->\n")
 
     os.chown(ossec_conf, root_uid, ossec_gid)
-
-
-def setup_wazuh_directory_structure():
-    """
-    Wazuh Directory Structure:
-        <rules>
-            <decoder_dir>etc/decoders</decoder_dir>
-            <decoder>etc/local_decoder.xml</decoder>
-            <include>*_rules.xml</include>
-            <include>local_rules.xml</include>
-        </rules>
-    """
-
-    try:
-        edit_ossec_conf_required = False
-
-        # Create folder update_path
-        if not os.path.exists(update_path):
-            os.makedirs(update_path)
-
-        # Decoders
-        wazuh_decoders = "{0}/etc/decoders".format(ossec_path)
-
-        if not os.path.exists(wazuh_decoders):
-            edit_ossec_conf_required = True
-
-            os.makedirs(wazuh_decoders)
-            logger.log("\tNew directory created for OSSEC decoders: '{0}'".format(wazuh_decoders))
-
-            # If exists /etc/ossec_decoders -> Move to /etc/decoders
-            old_decoders = "{0}/etc/ossec_decoders".format(ossec_path)
-            if os.path.exists(old_decoders):
-                copy_files_folder(old_decoders, wazuh_decoders)
-                shutil.rmtree(old_decoders)
-            # If exists /etc/wazuh_decoders -> Move to /etc/decoders
-            old_decoders = "{0}/etc/wazuh_decoders".format(ossec_path)
-            if os.path.exists(old_decoders):
-                copy_files_folder(old_decoders, wazuh_decoders)
-                shutil.rmtree(old_decoders)
-
-            chown_r(wazuh_decoders, root_uid, ossec_gid)
-
-        # Local decoder
-        path_decoder_local = "{0}/etc/local_decoder.xml".format(ossec_path)
-        if not os.path.exists(path_decoder_local):      # It does not exist
-            create_local_decoder = True
-        elif os.stat(path_decoder_local).st_size == 0:  # It exists but empty
-            create_local_decoder = True
-        else:
-            create_local_decoder = False                # It exists and not empty
-
-        if create_local_decoder:
-            edit_ossec_conf_required = True
-
-            # Create local decoder
-            text = ("<!-- Local Decoders -->\n"
-                    "<decoder name=\"local_decoder_example\">\n"
-                    "    <program_name>local_decoder_example</program_name>\n"
-                    "</decoder>\n")
-            f_local_decoder = open(path_decoder_local, 'a')
-            f_local_decoder.write(text)
-            f_local_decoder.close()
-            logger.log("\t{0} created".format(path_decoder_local))
-            os.chown(path_decoder_local, root_uid, ossec_gid)
-
-        # Local rules
-        path_local_rules = "{0}/rules/local_rules.xml".format(ossec_path)
-        if not os.path.isfile(path_local_rules):
-            edit_ossec_conf_required = True
-
-            text = ("\n"
-                    "<group name=\"local,syslog,\">\n"
-                    "\n"
-                    "    <!--\n"
-                    "    Example\n"
-                    "    -->\n"
-                    "    <rule id=\"100020\" level=\"0\">\n"
-                    "        <if_sid>5711</if_sid>\n"
-                    "        <user>falSe_User_xyzabc_123987</user>\n"
-                    "        <description>Ignore sshd failed logins for this user.</description>\n"
-                    "    </rule>\n"
-                    "\n"
-                    "</group>\n"
-                    "\n")
-
-            f_local_rules = open(path_local_rules, 'a')
-            f_local_rules.write(text)
-            f_local_rules.close()
-            logger.log("\t{0} created".format(path_local_rules))
-
-            os.chown(path_local_rules, root_uid, ossec_gid)
-
-        # OSSEC.CONF
-        if edit_ossec_conf_required:
-            print("\t*****ToDo: edit_ossec_conf()")
-    except Exception as e:
-        exit(3, "Checking directory structure: {0}.\n".format(e))
 
 
 def get_ruleset_version():
@@ -473,24 +376,24 @@ def do_backups():
         return bk_subdirectory
 
     except Exception as e:
-        exit(3, "Creating Backup: {0}.".format(e))
+        exit(2, "Creating Backup: {0}.".format(e))
 
 
 def restore_backups(backup_id):
 
     if not os.path.exists(bk_directory):
-        exit(3, "\tNo backups to restore.")
+        exit(2, "\tNo backups to restore.")
 
     bk_restore_dir = "{0}/{1}".format(bk_directory, backup_id)
     if not os.path.exists(bk_restore_dir):
-        exit(3, "\tNo backups with name '{0}'.".format(backup_id))
+        exit(2, "\tNo backups with name '{0}'.".format(backup_id))
 
     logger.log("\tThe backup '{0}' will be restored.".format(backup_id))
 
     etc_restore = "{0}/{1}/etc".format(bk_directory, backup_id)
     rules_restore = "{0}/{1}/rules".format(bk_directory, backup_id)
     if not os.path.exists(etc_restore) or not os.path.exists(rules_restore):
-        exit(3, "\t\tFolder '{0}' or '{1}' not found.".format(etc_restore, rules_restore))
+        exit(2, "\t\tFolder '{0}' or '{1}' not found.".format(etc_restore, rules_restore))
 
     etc_dest = "{0}/etc".format(ossec_path)
     logger.log("\t\tRestoring files in '{0}' -> '{1}'".format(etc_restore, etc_dest))
@@ -520,7 +423,7 @@ def download_ruleset():
         with contextlib.closing(ZipFile(output)) as z:
             z.extractall(downloads_directory)
     except Exception as e:
-        exit(3, "\tError extracting file '{0}': {1}.".format(output, e))
+        exit(2, "\tError extracting file '{0}': {1}.".format(output, e))
 
     # Update main directory
     shutil.copyfile("{0}/ossec-rules/VERSION".format(downloads_directory), ruleset_version_path)
@@ -732,105 +635,17 @@ def usage():
     \t-d, --debug         Debug mode.
     """
     print(msg)
-# END functions
 
-if __name__ == "__main__":
-    # Sudo / Root
-    if os.geteuid() != 0:
-        print("You need root privileges to run this script. Please try again, using 'sudo'. Exiting.")
-        sys.exit(1)
 
-    # Config
-    MAX_BACKUPS = 50
-    #url_ruleset = "http://ossec.wazuh.com/ruleset/ruleset.zip"
-    url_ruleset = "http://54.171.119.114:89/ruleset.zip"
-
-    # Vars
-    today_date = date.today().strftime('%Y%m%d')
-    restart_ossec = False
-    json_data = {'msg': "", 'restarted': "", 'restart_status': "N/A", 'need_restart': "", 'status': "success"}
-    ossec_path = "/var/ossec"
-    json_output = False
-    action_backup = "no-backup"
-    action_restart = "ask-restart"  # ask-restart, restart, no-restart
-    action_force = False
-    action_download = "download"  # download, path
-    restart_args = 0
-    debug_mode = False
-
-    # Arguments
-    try:
-        opts, args = getopt(sys.argv[1:], "b:p:o:sSfdjh", ["backups=", "path=", "ossec-path=", "restart", "no-restart", "force-update", "debug", "json", "help"])
-        if len(opts) > 6:
-            print("Incorrect number of arguments.\nTry './ossec_ruleset.py --help' for more information.")
-            sys.exit(1)
-    except GetoptError as err:
-        print("str(err)" + "\n" + "Try './ossec_ruleset.py --help' for more information.")
-        sys.exit(1)
-
-    for o, a in opts:
-        if o in ("-b", "--backups"):
-            action_backup = a
-        elif o in ("-p", "--path"):
-            action_download = a
-        elif o in ("-o", "--ossec-path"):
-            ossec_path = a
-            if not os.path.exists(ossec_path):
-                print("ERROR: '{0}' does not exist.".format(ossec_path))
-                sys.exit(1)
-        elif o in ("-s", "--restart"):
-            action_restart = "restart"
-            restart_args += 1
-        elif o in ("-S", "--no-restart"):
-            action_restart = "no-restart"
-            restart_args += 1
-        elif o in ("-f", "--force-update"):
-            action_force = True
-        elif o in ("-d", "--debug"):
-            debug_mode = True
-        elif o in ("-j", "--json"):
-            json_output = True
-        elif o in ("-h", "--help"):
-            usage()
-            sys.exit(0)
-        else:
-            usage()
-            sys.exit(1)
-
-    if restart_args > 1:
-        print("Bad arguments combination.\nTry './ossec_ruleset.py --help' for more information.")
-        sys.exit(1)
-
-    # Paths
-    update_path = "{0}/update/ruleset".format(ossec_path)
-    ruleset_log = "{0}/logs/ruleset.log".format(ossec_path)
-    ossec_conf = "{0}/etc/ossec.conf".format(ossec_path)
-    ruleset_version_path = "{0}/VERSION".format(update_path)
-    bk_directory = "{0}/backups".format(update_path)
-    script_path = "{0}/ossec_ruleset.py".format(update_path)
-    downloads_directory = "{0}/downloads".format(update_path)
-    source_rules_path = "{0}/ossec-rules/rules".format(downloads_directory)
-    source_decoders_path = "{0}/ossec-rules/decoders".format(downloads_directory)
-    source_rootchecks_path = "{0}/ossec-rules/rootchecks".format(downloads_directory)
-
-    # Logger
-    if json_output:
-        logger = RulesetLogger(tag="Wazuh-Ruleset", filename=ruleset_log, flag=RulesetLogger.O_FILE, debug=debug_mode)
-    else:
-        logger = RulesetLogger(tag="Wazuh-Ruleset", filename=ruleset_log, flag=RulesetLogger.O_ALL, debug=debug_mode)
+def main():
+    global restart_ossec
+    global json_data
 
     logger.log("### Wazuh Ruleset ###\n")
-
-    # Capture Cntrl + C
-    signal(SIGINT, signal_handler)
 
     # Checks
     previous_checks()
     logger.log("Wazuh Version: {0}".format(ossec_version))
-
-    # Setup wazuh directory structure if needed
-    logger.log("\nChecking directory structure")
-    setup_wazuh_directory_structure()
 
     # Backups actions
     if action_backup != "no-backup":
@@ -942,3 +757,99 @@ if __name__ == "__main__":
         print(dumps({'error': 0, 'data': json_data}))
 
     logger.log("\n### END ###")
+
+
+# END functions
+
+if __name__ == "__main__":
+    # Sudo / Root
+    if os.geteuid() != 0:
+        print("You need root privileges to run this script. Please try again, using 'sudo'. Exiting.")
+        sys.exit(1)
+
+    # Config
+    MAX_BACKUPS = 50
+    #url_ruleset = "http://ossec.wazuh.com/ruleset/ruleset.zip"
+    url_ruleset = "http://54.171.119.114:89/ruleset.zip"
+
+    # Paths
+    ossec_path = "/var/ossec"
+    update_path = "{0}/update/ruleset".format(ossec_path)
+    ruleset_log = "{0}/logs/ruleset.log".format(ossec_path)
+    ossec_conf = "{0}/etc/ossec.conf".format(ossec_path)
+    ruleset_version_path = "{0}/VERSION".format(update_path)
+    bk_directory = "{0}/backups".format(update_path)
+    script_path = "{0}/ossec_ruleset.py".format(update_path)
+    downloads_directory = "{0}/downloads".format(update_path)
+    source_rules_path = "{0}/ossec-rules/rules".format(downloads_directory)
+    source_decoders_path = "{0}/ossec-rules/decoders".format(downloads_directory)
+    source_rootchecks_path = "{0}/ossec-rules/rootchecks".format(downloads_directory)
+
+    # Vars
+    today_date = date.today().strftime('%Y%m%d')
+    restart_ossec = False
+    json_data = {'msg': "", 'restarted': "", 'restart_status': "N/A", 'need_restart': "", 'status': "success"}
+    json_output = False
+    action_backup = "no-backup"
+    action_restart = "ask-restart"  # ask-restart, restart, no-restart
+    action_force = False
+    action_download = "download"  # download, path
+    restart_args = 0
+    debug_mode = False
+
+    # Arguments
+    try:
+        opts, args = getopt(sys.argv[1:], "b:p:o:sSfdjh", ["backups=", "path=", "ossec-path=", "restart", "no-restart", "force-update", "debug", "json", "help"])
+        if len(opts) > 6:
+            print("Incorrect number of arguments.\nTry './ossec_ruleset.py --help' for more information.")
+            sys.exit(1)
+    except GetoptError as err:
+        print("str(err)" + "\n" + "Try './ossec_ruleset.py --help' for more information.")
+        sys.exit(1)
+
+    for o, a in opts:
+        if o in ("-b", "--backups"):
+            action_backup = a
+        elif o in ("-p", "--path"):
+            action_download = a
+        elif o in ("-o", "--ossec-path"):
+            ossec_path = a
+            if not os.path.exists(ossec_path):
+                print("ERROR: '{0}' does not exist.".format(ossec_path))
+                sys.exit(1)
+        elif o in ("-s", "--restart"):
+            action_restart = "restart"
+            restart_args += 1
+        elif o in ("-S", "--no-restart"):
+            action_restart = "no-restart"
+            restart_args += 1
+        elif o in ("-f", "--force-update"):
+            action_force = True
+        elif o in ("-d", "--debug"):
+            debug_mode = True
+        elif o in ("-j", "--json"):
+            json_output = True
+        elif o in ("-h", "--help"):
+            usage()
+            sys.exit(0)
+        else:
+            usage()
+            sys.exit(1)
+
+    if restart_args > 1:
+        print("Bad arguments combination.\nTry './ossec_ruleset.py --help' for more information.")
+        sys.exit(1)
+
+    # Logger
+    if json_output:
+        logger = RulesetLogger(tag="Wazuh-Ruleset", filename=ruleset_log, flag=RulesetLogger.O_FILE, debug=debug_mode)
+    else:
+        logger = RulesetLogger(tag="Wazuh-Ruleset", filename=ruleset_log, flag=RulesetLogger.O_ALL, debug=debug_mode)
+
+    # Capture Cntrl + C
+    signal(SIGINT, signal_handler)
+
+    try:
+        main()
+    except Exception as e:
+        exit(2, "Unkown: {0}.\nExiting.".format(e))
