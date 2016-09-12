@@ -198,7 +198,9 @@ def previous_checks():
     ossec_version = get_ossec_version()
 
     if ossec_version == "old":
-        exit(2, "OSSEC version detected. This script only supports Wazuh.")
+        exit(2, "OSSEC version detected. This script only supports Wazuh v1.2 or newer.")
+    elif 'v1.2' not in ossec_version:
+        exit(2, "This script only supports Wazuh v1.2 or newer.")
 
 
 def edit_ossec_conf():
