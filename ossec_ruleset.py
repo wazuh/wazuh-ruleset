@@ -210,8 +210,9 @@ def edit_ossec_conf():
     ignore_elements = ['<!--', '<decoder>etc/decoder.xml', '<decoder>etc/local_decoder.xml', '<decoder_dir>etc/decoders', '<decoder_dir>etc/ossec_decoders', '<decoder_dir>etc/wazuh_decoders', '<include>local_rules.xml']
 
     # Template
-    template_file = open("{0}/include_all.txt".format(source_rules_path), 'r')
-    include_template = template_file.read()
+    template_file = open("{0}/rules.template".format(source_rules_path), 'r')
+    include_template = template_file.readlines()
+    include_template = include_template[2:-2]  # Remove 2 first lines and 2 last lines
     template_file.close()
 
     # Remove "<rules>*</rules>" and "...ossec_config>  <!-- rules global entry -->"
@@ -252,7 +253,9 @@ def edit_ossec_conf():
             m = search('<include>(.+_rules.xml)', rule_element)
             if m:
                 rule = m.group(1)
-                if rule not in include_template:
+                if any(rule in include_r for include_r in include_template):
+                    continue
+                else:
                     custom_include.append(rule_element)
 
     # Write file
