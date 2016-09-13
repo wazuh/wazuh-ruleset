@@ -212,7 +212,7 @@ def edit_ossec_conf():
     # Template
     template_file = open("{0}/rules.template".format(source_rules_path), 'r')
     include_template = template_file.readlines()
-    include_template = include_template[2:-2]  # Remove 2 first lines and 2 last lines
+    include_template = include_template[3:-2]  # Remove 3 first lines and 2 last lines
     template_file.close()
 
     # Remove "<rules>*</rules>" and "...ossec_config>  <!-- rules global entry -->"
