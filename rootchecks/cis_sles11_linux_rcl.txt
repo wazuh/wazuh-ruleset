@@ -32,7 +32,7 @@
 $rc_dirs=/etc/rc.d/rc2.d,/etc/rc.d/rc3.d,/etc/rc.d/rc4.d,/etc/rc.d/rc5.d;
 
 
-[CIS - Testing against the CIS SUSE Linux Enterprise Server 11 Benchmark v1.1.0] [any required] [http://www.ossec.net/]
+[CIS - Testing against the CIS SUSE Linux Enterprise Server 11 Benchmark v1.1.0] [any required] [https://benchmarks.cisecurity.org/tools2/linux/CIS_SUSE_Linux_Enterprise_Server_11_Benchmark_v1.1.0.pdf]
 f:/etc/os-release -> r:^PRETTY_NAME="SUSE Linux Enterprise Server 11";
 f:/etc/os-release -> r:^PRETTY_NAME="SUSE Linux Enterprise Server 11 SP1";
 f:/etc/os-release -> r:^PRETTY_NAME="SUSE Linux Enterprise Server 11 SP2";
@@ -40,67 +40,67 @@ f:/etc/os-release -> r:^PRETTY_NAME="SUSE Linux Enterprise Server 11 SP3";
 f:/etc/os-release -> r:^PRETTY_NAME="SUSE Linux Enterprise Server 11 SP4";
 
 # 2.1 /tmp: partition
-[CIS - SLES11 - 2.1 - Build considerations - Robust partition scheme - /tmp is not on its own partition {CIS: 2.2 SLES11}] [any] [http://www.ossec.net/wiki/index.php -]
+[CIS - SLES11 - 2.1 - Build considerations - Robust partition scheme - /tmp is not on its own partition {CIS: 2.2 SLES11}] [any] [https://benchmarks.cisecurity.org/tools2/linux/CIS_SUSE_Linux_Enterprise_Server_11_Benchmark_v1.1.0.pdf]
 f:/etc/fstab -> !r:/tmp;
 
 # 2.2 /tmp: nodev
-[CIS - SLES11 - 2.2 - Partition /tmp without 'nodev' set {CIS: 2.2 SLES11} {PCI_DSS: 2.2.4}] [any] [http://www.ossec.net/wiki/index.php -]
+[CIS - SLES11 - 2.2 - Partition /tmp without 'nodev' set {CIS: 2.2 SLES11} {PCI_DSS: 2.2.4}] [any] [https://benchmarks.cisecurity.org/tools2/linux/CIS_SUSE_Linux_Enterprise_Server_11_Benchmark_v1.1.0.pdf]
 f:/etc/fstab -> !r:^# && r:/tmp && !r:nodev;
 
 # 2.3 /tmp: nosuid
-[CIS - SLES11 - 2.3 - Partition /tmp without 'nosuid' set {CIS: 2.3 SLES11} {PCI_DSS: 2.2.4}] [any] [http://www.ossec.net/wiki/index.php -]
+[CIS - SLES11 - 2.3 - Partition /tmp without 'nosuid' set {CIS: 2.3 SLES11} {PCI_DSS: 2.2.4}] [any] [https://benchmarks.cisecurity.org/tools2/linux/CIS_SUSE_Linux_Enterprise_Server_11_Benchmark_v1.1.0.pdf]
 f:/etc/fstab -> !r:^# && r:/tmp && !r:nosuid;
 
 # 2.4 /tmp: noexec
-[CIS - SLES11 - 2.4 - Partition /tmp without 'noexec' set {CIS: 2.4 SLES11} {PCI_DSS: 2.2.4}] [any] [http://www.ossec.net/wiki/index.php -]
+[CIS - SLES11 - 2.4 - Partition /tmp without 'noexec' set {CIS: 2.4 SLES11} {PCI_DSS: 2.2.4}] [any] [https://benchmarks.cisecurity.org/tools2/linux/CIS_SUSE_Linux_Enterprise_Server_11_Benchmark_v1.1.0.pdf]
 f:/etc/fstab -> !r:^# && r:/tmp && !r:nodev;
 
 # 2.5 Build considerations - Partition scheme.
-[CIS - SLES11 - Build considerations - Robust partition scheme - /var is not on its own partition {CIS: 2.5 SLES11}] [any] [http://www.ossec.net/wiki/index.php -]
+[CIS - SLES11 - Build considerations - Robust partition scheme - /var is not on its own partition {CIS: 2.5 SLES11}] [any] [https://benchmarks.cisecurity.org/tools2/linux/CIS_SUSE_Linux_Enterprise_Server_11_Benchmark_v1.1.0.pdf]
 f:/etc/fstab -> !r^# && !r:/var;
 
 # 2.6 bind mount /var/tmp to /tmp
-[CIS - SLES11 - Build considerations - Robust partition scheme - /var/tmp is bound to /tmp {CIS: 2.6 SLES11}] [any] [http://www.ossec.net/wiki/index.php -]
+[CIS - SLES11 - Build considerations - Robust partition scheme - /var/tmp is bound to /tmp {CIS: 2.6 SLES11}] [any] [https://benchmarks.cisecurity.org/tools2/linux/CIS_SUSE_Linux_Enterprise_Server_11_Benchmark_v1.1.0.pdf]
 f:/etc/fstab -> r:^# && !r:/var/tmp && !r:bind;
 
 # 2.7 /var/log: partition
-[CIS - SLES11 - Build considerations - Robust partition scheme - /var/log is not on its own partition {CIS: 2.7 SLES11}] [any] [http://www.ossec.net/wiki/index.php -]
+[CIS - SLES11 - Build considerations - Robust partition scheme - /var/log is not on its own partition {CIS: 2.7 SLES11}] [any] [https://benchmarks.cisecurity.org/tools2/linux/CIS_SUSE_Linux_Enterprise_Server_11_Benchmark_v1.1.0.pdf]
 f:/etc/fstab -> ^# && !r:/var/log;
 
 # 2.8 /var/log/audit: partition
-[CIS - SLES11 - Build considerations - Robust partition scheme - /var/log/audit is not on its own partition {CIS: 2.8 SLES11}] [any] [http://www.ossec.net/wiki/index.php -]
+[CIS - SLES11 - Build considerations - Robust partition scheme - /var/log/audit is not on its own partition {CIS: 2.8 SLES11}] [any] [https://benchmarks.cisecurity.org/tools2/linux/CIS_SUSE_Linux_Enterprise_Server_11_Benchmark_v1.1.0.pdf]
 f:/etc/fstab -> ^# && !r:/var/log/audit;
 
 # 2.9 /home: partition
-[CIS - SLES11 - Build considerations - Robust partition scheme - /home is not on its own partition {CIS: 2.9 SLES11}] [any] [http://www.ossec.net/wiki/index.php -]
+[CIS - SLES11 - Build considerations - Robust partition scheme - /home is not on its own partition {CIS: 2.9 SLES11}] [any] [https://benchmarks.cisecurity.org/tools2/linux/CIS_SUSE_Linux_Enterprise_Server_11_Benchmark_v1.1.0.pdf]
 f:/etc/fstab -> ^# && !r:/home;
 
 # 2.10 /home: nodev
-[CIS - SLES11 - 2.10 -  Partition /home without 'nodev' set {CIS: 2.10 SLES11} {PCI_DSS: 2.2.4}] [any] [http://www.ossec.net/wiki/index.php -]
+[CIS - SLES11 - 2.10 -  Partition /home without 'nodev' set {CIS: 2.10 SLES11} {PCI_DSS: 2.2.4}] [any] [https://benchmarks.cisecurity.org/tools2/linux/CIS_SUSE_Linux_Enterprise_Server_11_Benchmark_v1.1.0.pdf]
 f:/etc/fstab -> !r:^# && r:/home && !r:nodev;
 
 # 2.11 nodev on removable media partitons (not scored)
-[CIS - SLES11 - 2.11 - Removable partition /media without 'nodev' set {CIS: 2.11 SLES11} {PCI_DSS: 2.2.4}] [any] [http://www.ossec.net/wiki/index.php -]
+[CIS - SLES11 - 2.11 - Removable partition /media without 'nodev' set {CIS: 2.11 SLES11} {PCI_DSS: 2.2.4}] [any] [https://benchmarks.cisecurity.org/tools2/linux/CIS_SUSE_Linux_Enterprise_Server_11_Benchmark_v1.1.0.pdf]
 f:/etc/fstab -> !r:^# && r:/media && !r:nodev;
 
 # 2.12 noexec on removable media partitions (not scored)
-[CIS - SLES11 - 2.12 - Removable partition /media without 'noexec' set {CIS: 2.12 SLES11} {PCI_DSS: 2.2.4}] [any] [http://www.ossec.net/wiki/index.php -]
+[CIS - SLES11 - 2.12 - Removable partition /media without 'noexec' set {CIS: 2.12 SLES11} {PCI_DSS: 2.2.4}] [any] [https://benchmarks.cisecurity.org/tools2/linux/CIS_SUSE_Linux_Enterprise_Server_11_Benchmark_v1.1.0.pdf]
 f:/etc/fstab -> !r:^# && r:/media && !r:noexec;
 
 # 2.13 nosuid on removale media partitions (not scored)
-[CIS - SLES11 - 2.13 - Removable partition /media without 'nosuid' set {CIS: 2.13 SLES11} {PCI_DSS: 2.2.4}] [any] [http://www.ossec.net/wiki/index.php -]
+[CIS - SLES11 - 2.13 - Removable partition /media without 'nosuid' set {CIS: 2.13 SLES11} {PCI_DSS: 2.2.4}] [any] [https://benchmarks.cisecurity.org/tools2/linux/CIS_SUSE_Linux_Enterprise_Server_11_Benchmark_v1.1.0.pdf]
 f:/etc/fstab -> !r:^# && r:/media && !r:nosuid;
 
 # 2.14 /dev/shm: nodev
-[CIS - SLES11 - 2.14 - /dev/shm without 'nodev' set {CIS: 2.14 SLES11} {PCI_DSS: 2.2.4}] [any] [http://www.ossec.net/wiki/index.php -]
+[CIS - SLES11 - 2.14 - /dev/shm without 'nodev' set {CIS: 2.14 SLES11} {PCI_DSS: 2.2.4}] [any] [https://benchmarks.cisecurity.org/tools2/linux/CIS_SUSE_Linux_Enterprise_Server_11_Benchmark_v1.1.0.pdf]
 f:/etc/fstab -> !r:^# && r:/dev/shm && !r:nodev;
 
 # 2.15 /dev/shm: nosuid
-[CIS - SLES11 - 2.15 - /dev/shm without 'nosuid' set {CIS: 2.15 SLES11} {PCI_DSS: 2.2.4}] [any] [http://www.ossec.net/wiki/index.php -]
+[CIS - SLES11 - 2.15 - /dev/shm without 'nosuid' set {CIS: 2.15 SLES11} {PCI_DSS: 2.2.4}] [any] [https://benchmarks.cisecurity.org/tools2/linux/CIS_SUSE_Linux_Enterprise_Server_11_Benchmark_v1.1.0.pdf]
 f:/etc/fstab -> !r:^# && r:/dev/shm && !r:nosuid;
 
 # 2.16 /dev/shm: noexec
-[CIS - SLES11 - 2.16 - /dev/shm without 'noexec' set {CIS: 2.16 SLES11} {PCI_DSS: 2.2.4}] [any] [http://www.ossec.net/wiki/index.php -]
+[CIS - SLES11 - 2.16 - /dev/shm without 'noexec' set {CIS: 2.16 SLES11} {PCI_DSS: 2.2.4}] [any] [https://benchmarks.cisecurity.org/tools2/linux/CIS_SUSE_Linux_Enterprise_Server_11_Benchmark_v1.1.0.pdf]
 f:/etc/fstab -> !r:^# && r:/dev/shm && !r:noexec;
 
 # 2.17 sticky bit on world writable directories (Scored)
@@ -129,14 +129,14 @@ f:/etc/fstab -> !r:^# && r:/dev/shm && !r:noexec;
 
 # 3.1 Set User/Group Owner on /etc/grub.conf
 # TODO (no mode tests)
-# stat -L -c "%u %g" /boot/grub2/grub.cfg | egrep "0 0" 
+# stat -L -c "%u %g" /boot/grub2/grub.cfg | egrep "0 0"
 
 # 3.2 Set Permissions on /etc/grub.conf (Scored)
 # TODO (no mode tests)
 #  stat -L -c "%a" /boot/grub2/grub.cfg | egrep ".00"
 
 # 3.3 Set Boot Loader Password (Scored)
-[CIS - SLES11 - 3.3 - GRUB Password not set {CIS: 3.3 SLES11} {PCI_DSS: 2.2.4}] [any] [http://www.ossec.net/wiki/index.php -]
+[CIS - SLES11 - 3.3 - GRUB Password not set {CIS: 3.3 SLES11} {PCI_DSS: 2.2.4}] [any] [https://benchmarks.cisecurity.org/tools2/linux/CIS_SUSE_Linux_Enterprise_Server_11_Benchmark_v1.1.0.pdf]
 f:/boot/grub2/grub.cfg -> !r:^# && !r:password;
 
 # 3.4 Require Authentication for Single-User Mode (Scored)
@@ -148,14 +148,14 @@ f:/boot/grub2/grub.cfg -> !r:^# && !r:password;
 ###############################################
 
 # 4.1 Restrict Core Dumps (Scored)
-[CIS - SLES11 - 4.1 - Interactive Boot not disabled {CIS: 4.1 SLES11}] [any] [http://www.ossec.net/wiki/index.php -]
+[CIS - SLES11 - 4.1 - Interactive Boot not disabled {CIS: 4.1 SLES11}] [any] [https://benchmarks.cisecurity.org/tools2/linux/CIS_SUSE_Linux_Enterprise_Server_11_Benchmark_v1.1.0.pdf]
 f:/etc/security/limits.conf -> !r:^# && !r:hard\.+core\.+0;
 
 # 4.2 Enable XD/NX Support on 32-bit x86 Systems (Not Scored)
 # TODO
 
 # 4.3 Enable Randomized Virtual Memory Region Placement (Scored)
-[CIS - SLES11 - 4.3 - Randomized Virtual Memory Region Placement not enabled  {CIS: 4.3 SLES11}] [any] [http://www.ossec.net/wiki/index.php -]
+[CIS - SLES11 - 4.3 - Randomized Virtual Memory Region Placement not enabled  {CIS: 4.3 SLES11}] [any] [https://benchmarks.cisecurity.org/tools2/linux/CIS_SUSE_Linux_Enterprise_Server_11_Benchmark_v1.1.0.pdf]
 f:/proc/sys/kernel/randomize_va_space -> 2;
 
 # 4.4 Disable Prelink (Scored)
@@ -173,15 +173,15 @@ f:/proc/sys/kernel/randomize_va_space -> 2;
 ###############################################
 
 # 5.1.1 Remove NIS Server (Scored)
-[CIS - SLES11 - 5.1.1 - Disable standard boot services - NIS (server) Enabled {CIS: 5.1.1 SLES11} {PCI_DSS: 2.2.3}] [any] [http://www.ossec.net/wiki/index.php -]
+[CIS - SLES11 - 5.1.1 - Disable standard boot services - NIS (server) Enabled {CIS: 5.1.1 SLES11} {PCI_DSS: 2.2.3}] [any] [https://benchmarks.cisecurity.org/tools2/linux/CIS_SUSE_Linux_Enterprise_Server_11_Benchmark_v1.1.0.pdf]
 d:$rc_dirs -> ^S\d\dypserv$;
 
 # 5.1.2 Remove NIS Client (Scored)
-[CIS - SLES11 - 5.1.2 - Disable standard boot services - NIS (client) Enabled {CIS: 51.2 SLES11} {PCI_DSS: 2.2.3}] [any] [http://www.ossec.net/wiki/index.php -]
+[CIS - SLES11 - 5.1.2 - Disable standard boot services - NIS (client) Enabled {CIS: 51.2 SLES11} {PCI_DSS: 2.2.3}] [any] [https://benchmarks.cisecurity.org/tools2/linux/CIS_SUSE_Linux_Enterprise_Server_11_Benchmark_v1.1.0.pdf]
 d:$rc_dirs -> ^S\d\dypbind$;
 
 # 5.1.3 Remove rsh-server (Scored)
-[CIS - SLES11 - 5.1.3 - rsh/rlogin/rcp enabled on xinetd {CIS: 5.1.3 SLES11} {PCI_DSS: 2.2.3}] [any] [http://www.ossec.net/wiki/index.php -]
+[CIS - SLES11 - 5.1.3 - rsh/rlogin/rcp enabled on xinetd {CIS: 5.1.3 SLES11} {PCI_DSS: 2.2.3}] [any] [https://benchmarks.cisecurity.org/tools2/linux/CIS_SUSE_Linux_Enterprise_Server_11_Benchmark_v1.1.0.pdf]
 f:/etc/xinetd.d/rlogin -> !r:^# && r:disable && r:no;
 f:/etc/xinetd.d/rsh -> !r:^# && r:disable && r:no;
 f:/etc/xinetd.d/shell -> !r:^# && r:disable && r:no;
@@ -190,7 +190,7 @@ f:/etc/xinetd.d/shell -> !r:^# && r:disable && r:no;
 # TODO
 
 # 5.1.5 Remove talk-server (Scored)
-[CIS - SLES11 - 5.1.5 - talk enabled on xinetd {CIS: 5.1.5 SLES11} {PCI_DSS: 2.2.3}] [any] [http://www.ossec.net/wiki/index.php -]
+[CIS - SLES11 - 5.1.5 - talk enabled on xinetd {CIS: 5.1.5 SLES11} {PCI_DSS: 2.2.3}] [any] [https://benchmarks.cisecurity.org/tools2/linux/CIS_SUSE_Linux_Enterprise_Server_11_Benchmark_v1.1.0.pdf]
 f:/etc/xinetd.d/talk -> !r:^# && r:disable && r:no;
 
 # 5.1.6 Remove talk client (Scored)
@@ -198,55 +198,55 @@ f:/etc/xinetd.d/talk -> !r:^# && r:disable && r:no;
 
 # 5.1.7 Remove telnet-server (Scored)
 # TODO: detect it is installed at all
-[CIS - SLES11 - 5.1.7 - Telnet enabled on xinetd {CIS: 5.1.7 SLES11} {PCI_DSS: 2.2.3}] [any] [http://www.ossec.net/wiki/index.php -]
+[CIS - SLES11 - 5.1.7 - Telnet enabled on xinetd {CIS: 5.1.7 SLES11} {PCI_DSS: 2.2.3}] [any] [https://benchmarks.cisecurity.org/tools2/linux/CIS_SUSE_Linux_Enterprise_Server_11_Benchmark_v1.1.0.pdf]
 f:/etc/xinetd.d/telnet -> !r:^# && r:disable && r:no;
 
 # 5.1.8 Remove tftp-server (Scored)
-[CIS - SLES11 - 5.1.8 - tftpd enabled on xinetd {CIS: 5.1.8 SLES11} {PCI_DSS: 2.2.3}] [any] [http://www.ossec.net/wiki/index.php -]
+[CIS - SLES11 - 5.1.8 - tftpd enabled on xinetd {CIS: 5.1.8 SLES11} {PCI_DSS: 2.2.3}] [any] [https://benchmarks.cisecurity.org/tools2/linux/CIS_SUSE_Linux_Enterprise_Server_11_Benchmark_v1.1.0.pdf]
 f:/etc/xinetd.d/tftpd -> !r:^# && r:disable && r:no;
 
 # 5.1.9 Remove xinetd (Scored)
-[CIS - SLES11 - 5.1.9 -  xinetd detected {CIS: 5.1.9 SLES11}] [any] [http://www.ossec.net/wiki/index.php -]
+[CIS - SLES11 - 5.1.9 -  xinetd detected {CIS: 5.1.9 SLES11}] [any] [https://benchmarks.cisecurity.org/tools2/linux/CIS_SUSE_Linux_Enterprise_Server_11_Benchmark_v1.1.0.pdf]
 
 # 5.2 Disable chargen-udp (Scored)
-[CIS - SLES11 - 5.2 -  chargen-udp enabled on xinetd {CIS: 5.2 SLES11}] [any] [http://www.ossec.net/wiki/index.php -]
+[CIS - SLES11 - 5.2 -  chargen-udp enabled on xinetd {CIS: 5.2 SLES11}] [any] [https://benchmarks.cisecurity.org/tools2/linux/CIS_SUSE_Linux_Enterprise_Server_11_Benchmark_v1.1.0.pdf]
 f:/etc/xinetd.d/chargen-udp -> !r:^# && r:disable && r:no;
 
 # 5.3 Disable chargen (Scored)
-[CIS - SLES11 - 5.3 -  chargen enabled on xinetd {CIS: 5.3 SLES11}] [any] [http://www.ossec.net/wiki/index.php -]
+[CIS - SLES11 - 5.3 -  chargen enabled on xinetd {CIS: 5.3 SLES11}] [any] [https://benchmarks.cisecurity.org/tools2/linux/CIS_SUSE_Linux_Enterprise_Server_11_Benchmark_v1.1.0.pdf]
 f:/etc/xinetd.d/chargen -> !r:^# && r:disable && r:no;
 
 # 5.4 Disable daytime-udp (Scored)
-[CIS - SLES11 - 5.4 -  daytime-udp enabled on xinetd {CIS: 5.4 SLES11}] [any] [http://www.ossec.net/wiki/index.php -]
+[CIS - SLES11 - 5.4 -  daytime-udp enabled on xinetd {CIS: 5.4 SLES11}] [any] [https://benchmarks.cisecurity.org/tools2/linux/CIS_SUSE_Linux_Enterprise_Server_11_Benchmark_v1.1.0.pdf]
 f:/etc/xinetd.d/daytime-udp -> !r:^# && r:disable && r:no;
 
 # 5.5 Disable daytime (Scored)
-[CIS - SLES11 - 5.5 -  daytime enabled on xinetd {CIS: 5.5 SLES11}] [any] [http://www.ossec.net/wiki/index.php -]
+[CIS - SLES11 - 5.5 -  daytime enabled on xinetd {CIS: 5.5 SLES11}] [any] [https://benchmarks.cisecurity.org/tools2/linux/CIS_SUSE_Linux_Enterprise_Server_11_Benchmark_v1.1.0.pdf]
 f:/etc/xinetd.d/daytime -> !r:^# && r:disable && r:no;
 
 
 # 5.6 Disable echo-udp (Scored)
-[CIS - SLES11 - 5.6 -  echo-udp enabled on xinetd {CIS: 5.6 SLES11}] [any] [http://www.ossec.net/wiki/index.php -]
+[CIS - SLES11 - 5.6 -  echo-udp enabled on xinetd {CIS: 5.6 SLES11}] [any] [https://benchmarks.cisecurity.org/tools2/linux/CIS_SUSE_Linux_Enterprise_Server_11_Benchmark_v1.1.0.pdf]
 f:/etc/xinetd.d/echo-udp -> !r:^# && r:disable && r:no;
 
 # 5.7 Disable echo (Scored)
-[CIS - SLES11 - 5.7 -  echo enabled on xinetd {CIS: 5.7 SLES11}] [any] [http://www.ossec.net/wiki/index.php -]
+[CIS - SLES11 - 5.7 -  echo enabled on xinetd {CIS: 5.7 SLES11}] [any] [https://benchmarks.cisecurity.org/tools2/linux/CIS_SUSE_Linux_Enterprise_Server_11_Benchmark_v1.1.0.pdf]
 f:/etc/xinetd.d/echo -> !r:^# && r:disable && r:no;
 
 # 5.8 Disable discard-udp (Scored)
-[CIS - SLES11 - 5.8 -  discard-udp enabled on xinetd {CIS: 5.8 SLES11}] [any] [http://www.ossec.net/wiki/index.php -]
+[CIS - SLES11 - 5.8 -  discard-udp enabled on xinetd {CIS: 5.8 SLES11}] [any] [https://benchmarks.cisecurity.org/tools2/linux/CIS_SUSE_Linux_Enterprise_Server_11_Benchmark_v1.1.0.pdf]
 f:/etc/xinetd.d/discard-udp -> !r:^# && r:disable && r:no;
 
 # 5.9 Disable discard (Scored)
-[CIS - SLES11 - 5.9 -  discard enabled on xinetd {CIS: 5.9 SLES11}] [any] [http://www.ossec.net/wiki/index.php -]
+[CIS - SLES11 - 5.9 -  discard enabled on xinetd {CIS: 5.9 SLES11}] [any] [https://benchmarks.cisecurity.org/tools2/linux/CIS_SUSE_Linux_Enterprise_Server_11_Benchmark_v1.1.0.pdf]
 f:/etc/xinetd.d/discard -> !r:^# && r:disable && r:no;
 
 # 5.10 Disable time-udp (Scored)
-[CIS - SLES11 - 5.10 -  time-udp enabled on xinetd {CIS: 5.10 SLES11}] [any] [http://www.ossec.net/wiki/index.php -]
+[CIS - SLES11 - 5.10 -  time-udp enabled on xinetd {CIS: 5.10 SLES11}] [any] [https://benchmarks.cisecurity.org/tools2/linux/CIS_SUSE_Linux_Enterprise_Server_11_Benchmark_v1.1.0.pdf]
 f:/etc/xinetd.d/time-udp -> !r:^# && r:disable && r:no;
 
 # 5.11 Disable time (Scored)
-[CIS - SLES11 - 5.11 -  time enabled on xinetd {CIS: 5.11 SLES11}] [any] [http://www.ossec.net/wiki/index.php -]
+[CIS - SLES11 - 5.11 -  time enabled on xinetd {CIS: 5.11 SLES11}] [any] [https://benchmarks.cisecurity.org/tools2/linux/CIS_SUSE_Linux_Enterprise_Server_11_Benchmark_v1.1.0.pdf]
 f:/etc/xinetd.d/time -> !r:^# && r:disable && r:no;
 
 ###############################################
@@ -254,24 +254,24 @@ f:/etc/xinetd.d/time -> !r:^# && r:disable && r:no;
 ###############################################
 
 # 6.1 Remove X Windows (Scored)
-[CIS - SLES11 - 6.1 - X11 not disabled {CIS: 6.1 SLES11} {PCI_DSS: 2.2.2}] [any] [http://www.ossec.net/wiki/index.php -]
+[CIS - SLES11 - 6.1 - X11 not disabled {CIS: 6.1 SLES11} {PCI_DSS: 2.2.2}] [any] [https://benchmarks.cisecurity.org/tools2/linux/CIS_SUSE_Linux_Enterprise_Server_11_Benchmark_v1.1.0.pdf]
 f:/etc/inittab -> !r:^# && r:id:5;
 
 # 6.2 Disable Avahi Server (Scored)
-[CIS - SLES11 - 6.2 - Avahi daemon not disabled {CIS: 6.2 SLES11} {PCI_DSS: 2.2.2}] [any] [http://www.ossec.net/wiki/index.php -]
+[CIS - SLES11 - 6.2 - Avahi daemon not disabled {CIS: 6.2 SLES11} {PCI_DSS: 2.2.2}] [any] [https://benchmarks.cisecurity.org/tools2/linux/CIS_SUSE_Linux_Enterprise_Server_11_Benchmark_v1.1.0.pdf]
 p:avahi-daemon;
 
 # 6.3 Disable Print Server - CUPS (Not Scored)
 #TODO
 
 # 6.4 Remove DHCP Server (Scored)
-#[CIS - SLES11 - 6.4 - DHCPnot disabled {CIS: 6.4 SLES11}] [any] [http://www.ossec.net/wiki/index.php -]
+#[CIS - SLES11 - 6.4 - DHCPnot disabled {CIS: 6.4 SLES11}] [any] [https://benchmarks.cisecurity.org/tools2/linux/CIS_SUSE_Linux_Enterprise_Server_11_Benchmark_v1.1.0.pdf]
 d:$rc_dirs -> ^S\d\dhcpd$;
 d:$rc_dirs -> ^S\d\dhcpd6$;
 
 # 6.5 Configure Network Time Protocol (NTP) (Scored)
 #TODO Chrony
-[CIS - SLES11 - 6.5 - NTPD not Configured {CIS: 6.5 SLES11} {PCI_DSS: 2.2.2}] [any] [http://www.ossec.net/wiki/index.php -]
+[CIS - SLES11 - 6.5 - NTPD not Configured {CIS: 6.5 SLES11} {PCI_DSS: 2.2.2}] [any] [https://benchmarks.cisecurity.org/tools2/linux/CIS_SUSE_Linux_Enterprise_Server_11_Benchmark_v1.1.0.pdf]
 f:/etc/ntp.conf -> r:restrict default kod nomodify notrap nopeer noquery && r:^server;
 f:/etc/sysconfig/ntpd -> r:OPTIONS="-u ntp:ntp -p /var/run/ntpd.pid";
 
@@ -279,7 +279,7 @@ f:/etc/sysconfig/ntpd -> r:OPTIONS="-u ntp:ntp -p /var/run/ntpd.pid";
 #TODO
 
 # 6.7 Disable NFS and RPC (Not Scored)
-[CIS - SLES11 - 6.7 - Disable standard boot services - NFS Enabled {CIS: 6.7 SLES11} {PCI_DSS: 2.2.2}] [any] [http://www.ossec.net/wiki/index.php -]
+[CIS - SLES11 - 6.7 - Disable standard boot services - NFS Enabled {CIS: 6.7 SLES11} {PCI_DSS: 2.2.2}] [any] [https://benchmarks.cisecurity.org/tools2/linux/CIS_SUSE_Linux_Enterprise_Server_11_Benchmark_v1.1.0.pdf]
 d:$rc_dirs -> ^S\d\dnfs$;
 d:$rc_dirs -> ^S\d\dnfslock$;
 
@@ -287,38 +287,38 @@ d:$rc_dirs -> ^S\d\dnfslock$;
 # TODO
 
 # 6.9 Remove FTP Server (Not Scored)
-[CIS - SLES11 - 6.9 - VSFTP enabled on xinetd {CIS: 6.9 SLES11} {PCI_DSS: 2.2.2}] [any] [http://www.ossec.net/wiki/index.php -]
+[CIS - SLES11 - 6.9 - VSFTP enabled on xinetd {CIS: 6.9 SLES11} {PCI_DSS: 2.2.2}] [any] [https://benchmarks.cisecurity.org/tools2/linux/CIS_SUSE_Linux_Enterprise_Server_11_Benchmark_v1.1.0.pdf]
 f:/etc/xinetd.d/vsftpd -> !r:^# && r:disable && r:no;
 
 # 6.10 Remove HTTP Server (Not Scored)
-[CIS - SLES11 - 6.10 - Disable standard boot services - Apache web server Enabled {CIS: 6.10 SLES11}] [any] [http://www.ossec.net/wiki/index.php -]
+[CIS - SLES11 - 6.10 - Disable standard boot services - Apache web server Enabled {CIS: 6.10 SLES11}] [any] [https://benchmarks.cisecurity.org/tools2/linux/CIS_SUSE_Linux_Enterprise_Server_11_Benchmark_v1.1.0.pdf]
 d:$rc_dirs -> ^S\d\dapache2$;
 
 # 6.11 Remove Dovecot (IMAP and POP3 services) (Not Scored)
-[CIS - SLES11 - 6.11 - imap enabled on xinetd {CIS: 6.11 SLES11} {PCI_DSS: 2.2.2}] [any] [http://www.ossec.net/wiki/index.php -]
+[CIS - SLES11 - 6.11 - imap enabled on xinetd {CIS: 6.11 SLES11} {PCI_DSS: 2.2.2}] [any] [https://benchmarks.cisecurity.org/tools2/linux/CIS_SUSE_Linux_Enterprise_Server_11_Benchmark_v1.1.0.pdf]
 f:/etc/xinetd.d/cyrus-imapd -> !r:^# && r:disable && r:no;
 
-[CIS - SLES11 - 6.11 - pop3 enabled on xinetd {CIS: 6.11 SLES11} {PCI_DSS: 2.2.2}] [any] [http://www.ossec.net/wiki/index.php -]
+[CIS - SLES11 - 6.11 - pop3 enabled on xinetd {CIS: 6.11 SLES11} {PCI_DSS: 2.2.2}] [any] [https://benchmarks.cisecurity.org/tools2/linux/CIS_SUSE_Linux_Enterprise_Server_11_Benchmark_v1.1.0.pdf]
 f:/etc/xinetd.d/dovecot -> !r:^# && r:disable && r:no;
 
 # 6.12 Remove Samba (Not Scored)
-[CIS - SLES11 - 6.12 - Disable standard boot services - Samba Enabled {CIS: 6.12 SLES11} {PCI_DSS: 2.2.2}] [any] [http://www.ossec.net/wiki/index.php -]
+[CIS - SLES11 - 6.12 - Disable standard boot services - Samba Enabled {CIS: 6.12 SLES11} {PCI_DSS: 2.2.2}] [any] [https://benchmarks.cisecurity.org/tools2/linux/CIS_SUSE_Linux_Enterprise_Server_11_Benchmark_v1.1.0.pdf]
 d:$rc_dirs -> ^S\d\dsamba$;
 d:$rc_dirs -> ^S\d\dsmb$;
 
 # 6.13 Remove HTTP Proxy Server (Not Scored)
-[CIS - SLES11 - 6.13 - Disable standard boot services - Squid Enabled {CIS: 6.13 SLES11} {PCI_DSS: 2.2.2}] [any] [http://www.ossec.net/wiki/index.php -]
+[CIS - SLES11 - 6.13 - Disable standard boot services - Squid Enabled {CIS: 6.13 SLES11} {PCI_DSS: 2.2.2}] [any] [https://benchmarks.cisecurity.org/tools2/linux/CIS_SUSE_Linux_Enterprise_Server_11_Benchmark_v1.1.0.pdf]
 d:$rc_dirs -> ^S\d\dsquid$;
 
 # 6.14 Remove SNMP Server (Not Scored)
-[CIS - SLES11 - 6.14 - Disable standard boot services - SNMPD process Enabled {CIS: 6.14 SLES11} {PCI_DSS: 2.2.2}] [any] [http://www.ossec.net/wiki/index.php -]
+[CIS - SLES11 - 6.14 - Disable standard boot services - SNMPD process Enabled {CIS: 6.14 SLES11} {PCI_DSS: 2.2.2}] [any] [https://benchmarks.cisecurity.org/tools2/linux/CIS_SUSE_Linux_Enterprise_Server_11_Benchmark_v1.1.0.pdf]
 d:$rc_dirs -> ^S\d\dsnmpd$;
 
 # 6.15 Configure Mail Transfer Agent for Local-Only Mode (Scored)
 # TODO
 
 # 6.16 Ensure rsync service is not enabled (Scored)
-[CIS - SLES11 - 6.16 - Disable standard boot services - rsyncd process Enabled {CIS: 6.16 SLES11} {PCI_DSS: 2.2.2}] [any] [http://www.ossec.net/wiki/index.php -]
+[CIS - SLES11 - 6.16 - Disable standard boot services - rsyncd process Enabled {CIS: 6.16 SLES11} {PCI_DSS: 2.2.2}] [any] [https://benchmarks.cisecurity.org/tools2/linux/CIS_SUSE_Linux_Enterprise_Server_11_Benchmark_v1.1.0.pdf]
 d:$rc_dirs -> ^S\d\drsyncd$;
 
 # 6.17 Ensure Biosdevname is not enabled (Scored)
@@ -333,12 +333,12 @@ d:$rc_dirs -> ^S\d\drsyncd$;
 ###############################################
 
 # 7.1.1 Disable IP Forwarding (Scored)
-[CIS - SLES11 - 7.1.1 - Network parameters - IP Forwarding enabled {CIS: 7.1.1 SLES11} {PCI_DSS: 2.2.4}] [any] [http://www.ossec.net/wiki/index.php -]
+[CIS - SLES11 - 7.1.1 - Network parameters - IP Forwarding enabled {CIS: 7.1.1 SLES11} {PCI_DSS: 2.2.4}] [any] [https://benchmarks.cisecurity.org/tools2/linux/CIS_SUSE_Linux_Enterprise_Server_11_Benchmark_v1.1.0.pdf]
 f:/proc/sys/net/ipv4/ip_forward -> 1;
 f:/proc/sys/net/ipv6/ip_forward -> 1;
 
 # 7.1.2 Disable Send Packet Redirects (Scored)
-[CIS - SLES11 - 7.1.2 - Network parameters - IP send redirects enabled {CIS: 7.1.2 SLES11} {PCI_DSS: 2.2.4}] [any] [http://www.ossec.net/wiki/index.php -]
+[CIS - SLES11 - 7.1.2 - Network parameters - IP send redirects enabled {CIS: 7.1.2 SLES11} {PCI_DSS: 2.2.4}] [any] [https://benchmarks.cisecurity.org/tools2/linux/CIS_SUSE_Linux_Enterprise_Server_11_Benchmark_v1.1.0.pdf]
 f:/proc/sys/net/ipv4/conf/all/send_redirects -> 0;
 f:/proc/sys/net/ipv4/conf/default/send_redirects -> 0;
 
@@ -347,38 +347,38 @@ f:/proc/sys/net/ipv4/conf/default/send_redirects -> 0;
 ###############################################
 
 # 7.2.1 Disable Source Routed Packet Acceptance (Scored)
-[CIS - SLES11 - 7.2.1 - Network parameters - Source routing accepted {CIS: 7.2.1 SLES11} {PCI_DSS: 2.2.4}] [any] [http://www.ossec.net/wiki/index.php -]
+[CIS - SLES11 - 7.2.1 - Network parameters - Source routing accepted {CIS: 7.2.1 SLES11} {PCI_DSS: 2.2.4}] [any] [https://benchmarks.cisecurity.org/tools2/linux/CIS_SUSE_Linux_Enterprise_Server_11_Benchmark_v1.1.0.pdf]
 f:/proc/sys/net/ipv4/conf/all/accept_source_route -> 1;
 
 # 7.2.2 Disable ICMP Redirect Acceptance (Scored)
-[CIS - SLES11 - 7.2.2 - Network parameters - ICMP redirects accepted {CIS: 7.2.2 SLES11} {PCI_DSS: 2.2.4}] [any] [http://www.ossec.net/wiki/index.php -]
+[CIS - SLES11 - 7.2.2 - Network parameters - ICMP redirects accepted {CIS: 7.2.2 SLES11} {PCI_DSS: 2.2.4}] [any] [https://benchmarks.cisecurity.org/tools2/linux/CIS_SUSE_Linux_Enterprise_Server_11_Benchmark_v1.1.0.pdf]
 f:/proc/sys/net/ipv4/conf/all/accept_redirects -> 1;
 f:/proc/sys/net/ipv4/conf/default/accept_redirects -> 1;
 
 # 7.2.3 Disable Secure ICMP Redirect Acceptance (Scored)
-[CIS - SLES11 - 7.2.3 - Network parameters - ICMP secure redirects accepted {CIS: 7.2.3 SLES11} {PCI_DSS: 2.2.4}] [any] [http://www.ossec.net/wiki/index.php -]
+[CIS - SLES11 - 7.2.3 - Network parameters - ICMP secure redirects accepted {CIS: 7.2.3 SLES11} {PCI_DSS: 2.2.4}] [any] [https://benchmarks.cisecurity.org/tools2/linux/CIS_SUSE_Linux_Enterprise_Server_11_Benchmark_v1.1.0.pdf]
 f:/proc/sys/net/ipv4/conf/all/secure_redirects -> 1;
 f:/proc/sys/net/ipv4/conf/default/secure_redirects -> 1;
 
 # 7.2.4 Log Suspicious Packets (Scored)
-[CIS - SLES11 - 7.2.4 - Network parameters - martians not logged {CIS: 7.2.4 SLES11} {PCI_DSS: 2.2.4}] [any] [http://www.ossec.net/wiki/index.php -]
+[CIS - SLES11 - 7.2.4 - Network parameters - martians not logged {CIS: 7.2.4 SLES11} {PCI_DSS: 2.2.4}] [any] [https://benchmarks.cisecurity.org/tools2/linux/CIS_SUSE_Linux_Enterprise_Server_11_Benchmark_v1.1.0.pdf]
 f:/proc/sys/net/ipv4/conf/all/log_martians -> 0;
 
 # 7.2.5 Enable Ignore Broadcast Requests (Scored)
-[CIS - SLES11 - 7.2.5 - Network parameters - ICMP broadcasts accepted {CIS: 7.2.5 SLES11} {PCI_DSS: 2.2.4}] [any] [http://www.ossec.net/wiki/index.php -]
+[CIS - SLES11 - 7.2.5 - Network parameters - ICMP broadcasts accepted {CIS: 7.2.5 SLES11} {PCI_DSS: 2.2.4}] [any] [https://benchmarks.cisecurity.org/tools2/linux/CIS_SUSE_Linux_Enterprise_Server_11_Benchmark_v1.1.0.pdf]
 f:/proc/sys/net/ipv4/icmp_echo_ignore_broadcasts -> 0;
 
 # 7.2.6 Enable Bad Error Message Protection (Scored)
-[CIS - SLES11 - 7.2.6 - Network parameters - Bad error message protection not enabled {CIS: 7.2.6 SLES11} {PCI_DSS: 2.2.4}] [any] [http://www.ossec.net/wiki/index.php -]
+[CIS - SLES11 - 7.2.6 - Network parameters - Bad error message protection not enabled {CIS: 7.2.6 SLES11} {PCI_DSS: 2.2.4}] [any] [https://benchmarks.cisecurity.org/tools2/linux/CIS_SUSE_Linux_Enterprise_Server_11_Benchmark_v1.1.0.pdf]
 f:/proc/sys/net/ipv4/icmp_ignore_bogus_error_responses -> 0;
 
 # 7.2.7 Enable RFC-recommended Source Route Validation (Scored)
-[CIS - SLES11 - 7.2.7 - Network parameters - RFC Source route validation not enabled  {CIS: 7.2.7 SLES11} {PCI_DSS: 2.2.4}] [any] [http://www.ossec.net/wiki/index.php -]
+[CIS - SLES11 - 7.2.7 - Network parameters - RFC Source route validation not enabled  {CIS: 7.2.7 SLES11} {PCI_DSS: 2.2.4}] [any] [https://benchmarks.cisecurity.org/tools2/linux/CIS_SUSE_Linux_Enterprise_Server_11_Benchmark_v1.1.0.pdf]
 f:/proc/sys/net/ipv4/conf/all/rp_filter -> 0;
 f:/proc/sys/net/ipv4/conf/default/rp_filter -> 0;
 
 # 7.2.8 Enable TCP SYN Cookies (Scored)
-[CIS - SLES11 - 7.2.8 - Network parameters - SYN Cookies not enabled {CIS: 7.2.8 SLES11} {PCI_DSS: 2.2.4}] [any] [http://www.ossec.net/wiki/index.php -]
+[CIS - SLES11 - 7.2.8 - Network parameters - SYN Cookies not enabled {CIS: 7.2.8 SLES11} {PCI_DSS: 2.2.4}] [any] [https://benchmarks.cisecurity.org/tools2/linux/CIS_SUSE_Linux_Enterprise_Server_11_Benchmark_v1.1.0.pdf]
 f:/proc/sys/net/ipv4/tcp_syncookies -> 0;
 
 ###############################################
@@ -534,11 +534,11 @@ f:/proc/sys/net/ipv4/tcp_syncookies -> 0;
 ###############################################
 
 # 9.2.1 Set SSH Protocol to 2 (Scored)
-[CIS - SLES11 - 9.2.1 - SSH Configuration - Protocol version 1 enabled {CIS: 9.2.1 SLES11} {PCI_DSS: 4.1}] [any] [http://www.ossec.net/wiki/index.php -]
+[CIS - SLES11 - 9.2.1 - SSH Configuration - Protocol version 1 enabled {CIS: 9.2.1 SLES11} {PCI_DSS: 4.1}] [any] [https://benchmarks.cisecurity.org/tools2/linux/CIS_SUSE_Linux_Enterprise_Server_11_Benchmark_v1.1.0.pdf]
 f:/etc/ssh/sshd_config -> !r:^# && r:Protocol\.+1;
 
 # 9.2.2 Set LogLevel to INFO (Scored)
-[CIS - SLES11 - 9.2.1 - SSH Configuration - Loglevel not INFO {CIS: 9.2.1 SLES11} {PCI_DSS: 4.1}] [any] [http://www.ossec.net/wiki/index.php -]
+[CIS - SLES11 - 9.2.1 - SSH Configuration - Loglevel not INFO {CIS: 9.2.1 SLES11} {PCI_DSS: 4.1}] [any] [https://benchmarks.cisecurity.org/tools2/linux/CIS_SUSE_Linux_Enterprise_Server_11_Benchmark_v1.1.0.pdf]
 f:/etc/ssh/sshd_config -> !r:^# && !r:LogLevel\.+INFO;
 
 # 9.2.3 Set Permissions on /etc/ssh/sshd_config (Scored)
@@ -548,26 +548,26 @@ f:/etc/ssh/sshd_config -> !r:^# && !r:LogLevel\.+INFO;
 # TODO
 
 # 9.2.5 Set SSH MaxAuthTries to 4 or Less (Scored)
-[ CIS - SLES11 - 9.2.5 - SSH Configuration - Set SSH MaxAuthTries to 4 or Less  {CIS - SLES11 - 9.2.5} {PCI_DSS: 2.2.4}] [any] [http://www.ossec.net/wiki/index.php -]
+[ CIS - SLES11 - 9.2.5 - SSH Configuration - Set SSH MaxAuthTries to 4 or Less  {CIS - SLES11 - 9.2.5} {PCI_DSS: 2.2.4}] [any] [https://benchmarks.cisecurity.org/tools2/linux/CIS_SUSE_Linux_Enterprise_Server_11_Benchmark_v1.1.0.pdf]
 f:/etc/ssh/sshd_config -> !r:^# && r:MaxAuthTries && !r:3\s*$;
 f:/etc/ssh/sshd_config -> r:^#\s*MaxAuthTries;
 f:/etc/ssh/sshd_config -> !r:MaxAuthTries;
 
 # 9.2.6 Set SSH IgnoreRhosts to Yes (Scored)
-[CIS - SLES11 - 9.2.6 - SSH Configuration - IgnoreRHosts disabled {CIS: 9.2.6 SLES11} {PCI_DSS: 4.1}] [any] [http://www.ossec.net/wiki/index.php -]
+[CIS - SLES11 - 9.2.6 - SSH Configuration - IgnoreRHosts disabled {CIS: 9.2.6 SLES11} {PCI_DSS: 4.1}] [any] [https://benchmarks.cisecurity.org/tools2/linux/CIS_SUSE_Linux_Enterprise_Server_11_Benchmark_v1.1.0.pdf]
 f:/etc/ssh/sshd_config -> !r:^# && r:IgnoreRhosts\.+no;
 
 # 9.2.7 Set SSH HostbasedAuthentication to No (Scored)
-[CIS - SLES11 - 9.2.7 - SSH Configuration - Host based authentication enabled {CIS: 9.2.7 SLES11} {PCI_DSS: 4.1}] [any] [http://www.ossec.net/wiki/index.php -]
+[CIS - SLES11 - 9.2.7 - SSH Configuration - Host based authentication enabled {CIS: 9.2.7 SLES11} {PCI_DSS: 4.1}] [any] [https://benchmarks.cisecurity.org/tools2/linux/CIS_SUSE_Linux_Enterprise_Server_11_Benchmark_v1.1.0.pdf]
 f:/etc/ssh/sshd_config -> !r:^# && r:HostbasedAuthentication\.+yes;
 
 # 9.2.8 Disable SSH Root Login (Scored)
-[CIS - SLES11 - 9.2.8 - SSH Configuration - Root login allowed {CIS: 9.2.8 SLES11} {PCI_DSS: 4.1}] [any] [http://www.ossec.net/wiki/index.php -]
+[CIS - SLES11 - 9.2.8 - SSH Configuration - Root login allowed {CIS: 9.2.8 SLES11} {PCI_DSS: 4.1}] [any] [https://benchmarks.cisecurity.org/tools2/linux/CIS_SUSE_Linux_Enterprise_Server_11_Benchmark_v1.1.0.pdf]
 f:/etc/ssh/sshd_config -> !r:^# && r:PermitRootLogin\.+yes;
 f:/etc/ssh/sshd_config -> r:^#\s*PermitRootLogin;
 
 # 9.2.9 Set SSH PermitEmptyPasswords to No (Scored)
-[CIS - SLES11 - 9.2.9 - SSH Configuration - Empty passwords permitted {CIS: 9.2.9 SLES11} {PCI_DSS: 4.1}] [any] [http://www.ossec.net/wiki/index.php -]
+[CIS - SLES11 - 9.2.9 - SSH Configuration - Empty passwords permitted {CIS: 9.2.9 SLES11} {PCI_DSS: 4.1}] [any] [https://benchmarks.cisecurity.org/tools2/linux/CIS_SUSE_Linux_Enterprise_Server_11_Benchmark_v1.1.0.pdf]
 f:/etc/ssh/sshd_config -> !r:^# && r:^PermitEmptyPasswords\.+yes;
 f:/etc/ssh/sshd_config -> r:^#\s*PermitEmptyPasswords;
 
@@ -669,7 +669,7 @@ f:/etc/ssh/sshd_config -> r:^#\s*PermitEmptyPasswords;
 # 13.4 Verify No Legacy "+" Entries Exist in /etc/group File (Scored)
 
 # 13.5 Verify No UID 0 Accounts Exist Other Than root (Scored)
-[CIS - SLES11 - 13.5 - Non-root account with uid 0 {CIS: 13.5 SLES11} {PCI_DSS: 10.2.5}] [any] [http://www.ossec.net/wiki/index.php -]
+[CIS - SLES11 - 13.5 - Non-root account with uid 0 {CIS: 13.5 SLES11} {PCI_DSS: 10.2.5}] [any] [https://benchmarks.cisecurity.org/tools2/linux/CIS_SUSE_Linux_Enterprise_Server_11_Benchmark_v1.1.0.pdf]
 f:/etc/passwd -> !r:^# && !r:^root: && r:^\w+:\w+:0:;
 
 # 13.6 Ensure root PATH Integrity (Scored)
@@ -704,24 +704,24 @@ f:/etc/passwd -> !r:^# && !r:^root: && r:^\w+:\w+:0:;
 
 
 # Other/Legacy Tests
-[CIS - SLES11 - X.X.X - Account with empty password present {PCI_DSS: 10.2.5}] [any] [http://www.ossec.net/wiki/index.php -]
+[CIS - SLES11 - X.X.X - Account with empty password present {PCI_DSS: 10.2.5}] [any] [https://benchmarks.cisecurity.org/tools2/linux/CIS_SUSE_Linux_Enterprise_Server_11_Benchmark_v1.1.0.pdf]
 f:/etc/shadow -> r:^\w+::;
 
-[CIS - SLES11 - X.X.X - User-mounted removable partition allowed on the console] [any] [http://www.ossec.net/wiki/index.php -]
+[CIS - SLES11 - X.X.X - User-mounted removable partition allowed on the console] [any] [https://benchmarks.cisecurity.org/tools2/linux/CIS_SUSE_Linux_Enterprise_Server_11_Benchmark_v1.1.0.pdf]
 f:/etc/security/console.perms -> r:^<console>  \d+ <cdrom>;
 f:/etc/security/console.perms -> r:^<console>  \d+ <floppy>;
 
-[CIS - SLES11 - X.X.X - Disable standard boot services - Kudzu hardware detection Enabled] [any] [http://www.ossec.net/wiki/index.php -]
+[CIS - SLES11 - X.X.X - Disable standard boot services - Kudzu hardware detection Enabled] [any] [https://benchmarks.cisecurity.org/tools2/linux/CIS_SUSE_Linux_Enterprise_Server_11_Benchmark_v1.1.0.pdf]
 d:$rc_dirs -> ^S\d\dkudzu$;
 
-[CIS - SLES11 - X.X.X - Disable standard boot services - PostgreSQL server Enabled {PCI_DSS: 2.2.2}] [any] [http://www.ossec.net/wiki/index.php -]
+[CIS - SLES11 - X.X.X - Disable standard boot services - PostgreSQL server Enabled {PCI_DSS: 2.2.2}] [any] [https://benchmarks.cisecurity.org/tools2/linux/CIS_SUSE_Linux_Enterprise_Server_11_Benchmark_v1.1.0.pdf]
 d:$rc_dirs -> ^S\d\dpostgresql$;
 
-[CIS - SLES11 - X.X.X - Disable standard boot services - MySQL server Enabled {PCI_DSS: 2.2.2}] [any] [http://www.ossec.net/wiki/index.php -]
+[CIS - SLES11 - X.X.X - Disable standard boot services - MySQL server Enabled {PCI_DSS: 2.2.2}] [any] [https://benchmarks.cisecurity.org/tools2/linux/CIS_SUSE_Linux_Enterprise_Server_11_Benchmark_v1.1.0.pdf]
 d:$rc_dirs -> ^S\d\dmysqld$;
 
-[CIS - SLES11 - X.X.X - Disable standard boot services - DNS server Enabled {PCI_DSS: 2.2.2}] [any] [http://www.ossec.net/wiki/index.php -]
+[CIS - SLES11 - X.X.X - Disable standard boot services - DNS server Enabled {PCI_DSS: 2.2.2}] [any] [https://benchmarks.cisecurity.org/tools2/linux/CIS_SUSE_Linux_Enterprise_Server_11_Benchmark_v1.1.0.pdf]
 d:$rc_dirs -> ^S\d\dnamed$;
 
-[CIS - SLES11 - X.X.X - Disable standard boot services - NetFS Enabled {PCI_DSS: 2.2.2}] [any] [http://www.ossec.net/wiki/index.php -]
+[CIS - SLES11 - X.X.X - Disable standard boot services - NetFS Enabled {PCI_DSS: 2.2.2}] [any] [https://benchmarks.cisecurity.org/tools2/linux/CIS_SUSE_Linux_Enterprise_Server_11_Benchmark_v1.1.0.pdf]
 d:$rc_dirs -> ^S\d\dnetfs$;
