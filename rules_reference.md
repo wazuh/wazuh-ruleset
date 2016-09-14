@@ -70,17 +70,20 @@
 | firewalld_rules.xml        | FirewallD provides a managed firewall with support for network/firewall zones to define the trust level of network connections or interfaces. |
 | systemd_rules.xml          | Systemd is a software suite for central management and configuration of the GNU/Linux operating system. |
 | unbound_rules.xml          | Unbound is a validating, recursive, and caching DNS server software. |
+| puppet_rules.xml           | Puppet is an open-source configuration management utility. |
 | netscaler_rules.xml        | NetScaler is a hardware device (or network appliance) manufactured by Citrix, which primary role is to provide Level 4 Load Balancing. |
+| serv-u_rules.xml           | FTP Server software (FTP, FTPS, SFTP, Web & mobile) for secure file transfer and file sharing on Windows & Linux. |
+| usb_rules.xml              | USB rules |
 | amazon_rules.xml           | Amazon main rules. |
 | amazon-ec2_rules.xml       | Amazon Elastic Compute Cloud (Amazon EC2) provides scalable computing capacity in the Amazon Web Services (AWS) cloud. |
 | amazon-iam_rules.xml       | AWS Identity and Access Management (IAM) is a web service that helps you securely control access to AWS resources for your users. |
-| puppet_rules.xml           | Puppet is an open-source configuration management utility. |
-| serv-u_rules.xml           | FTP Server software (FTP, FTPS, SFTP, Web & mobile) for secure file transfer and file sharing on Windows & Linux. |
 | redis_rules.xml            | Redis is an open source (BSD licensed), in-memory data structure store, used as database, cache and message broker. |
-| usb_rules.xml              | USB rules |
-| hp_rules.xml               | HP Switch rules |
-| ossec_ruleset_rules.xml    | This script allow to install and update OSSEC Wazuh Ruleset automatically. |
-| fortigate_rules.xml        | Fortigate (Fortinet) firewalls. |
-| openvpn_rules.xml          | OpenVPN is an open-source software application that implements virtual private network (VPN) techniques. |
 | oscap_rules.xml            | OpenSCAP is an open-source software that provides assessment, measurement and enforcement of security baselines. |
+| fortigate_rules.xml        | Fortigate (Fortinet) firewalls. |
+| hp_rules.xml               | HP Switch rules |
+| openvpn_rules.xml          | OpenVPN is an open-source software application that implements virtual private network (VPN) techniques. |
+| rsa-auth-manager_rules.xml | RSA Authentication Manager is a platform behind RSA SecurID that allows for centralized management of the RSA SecurID environment. |
+| imperva_rules.xml          | Cyber security software and services to protect companies' sensitive data and application software from attacks. |
+| sophos_rules.xml           | Sophos Anti-Virus. |
+| freeipa_rules.xml          | Open source project for identity management. |
 

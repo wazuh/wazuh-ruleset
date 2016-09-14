@@ -4,21 +4,26 @@ All notable changes to this project will be documented in this file.
 
 ## [v1.10] - 2016-??-??
 ### Added
-- ossec_ruleset.py. JSON output
-- HP 5500 rules and decoders
-- syslog: useradd rule
-- Chrome Remote Desktop rules
-- Fortigate decoders and rules (draft)
-- OpenVPN decoders and rules (draft)
+- Rules/decoders:
+ - Switch HP 5500.
+ - Chrome Remote Desktop.
+ - Fortigate.
+ - OpenVPN.
+ - ModSecurity for Nginx.
+ - OpenSCAP.
+- Rootchecks:
+ - CIS SLES 11 and 12.
+- ossec_ruleset.py. JSON output.
 
 ### Changed
-- ossec_ruleset.py backups
+- ossec_ruleset.py.
 
 ### Fixed
-- msauth_rules rules.
+- Minor fixs in decoders/rules.
 - RH7 rootchecks.
-- nginx rules
- 
+- Improved getgetawslog.py.
+
+
 ## [v1.09] - 2016-05-12
 ### Added
 - Decoders and rules for Amazon
@@ -125,7 +130,7 @@ All notable changes to this project will be documented in this file.
   - Python 2.6 compatibility.
   - OSSEC 2.8.x compatibility.
   - Restore backups automatically.
- 
+
 ### Fixed
 - Some issues with *windows decoder* have been solved.
 
@@ -143,7 +148,7 @@ All notable changes to this project will be documented in this file.
     - New decoder: Extract main fields (path, virus name, hash) when a virus is detected.
     - New rule: ClamAV Stopped.
     - New rule: Virus detected multiple times.
-- Sysmon decoders: 
+- Sysmon decoders:
     - Decoder for the new log format of Event 1
     - Decoders for Events 2 - 8.
 - Script *ossec_ruleset.py* for installing and updating rules, decoders and rootcheck.
