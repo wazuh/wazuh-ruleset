@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # OSSEC Ruleset Update
 
-# v3.0.0 2016/09/01
+# v3.0.0 2016/09/14
 # Created by Wazuh, Inc. <info@wazuh.com>.
 # jesus@wazuh.com
 # This program is a free software; you can redistribute it and/or modify it under the terms of GPLv2
@@ -199,8 +199,9 @@ def previous_checks():
 
     if ossec_version == "old":
         exit(2, "OSSEC version detected. This script only supports Wazuh v1.2 or newer.")
-    elif 'v1.2' not in ossec_version:
-        exit(2, "This script only supports Wazuh v1.2 or newer.")
+    else:
+        if float(ossec_version[2:5]) < 1.2:
+            exit(2, "This script only supports Wazuh v1.2 or newer.")
 
 
 def edit_ossec_conf():
