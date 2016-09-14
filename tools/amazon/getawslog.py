@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 #
 # Import AWS CloudTrail data to a local flat file
 #
@@ -9,22 +9,35 @@
 # Install: boto is required to connect to S3 (http://code.google.com/p/boto/)
 #
 
-
-import os
-import argparse
 import ConfigParser
+import argparse
 import boto
 import gzip
-import os
-import sys
-import signal
 import json
+import os
+import os
+import signal
+import sys
 from optparse import OptionParser
 
 
 def handler(signal, frame):
     print "SIGINT received, bye!"
     sys.exit(1)
+
+def already_processed(newFile, state_tracker):
+    if state_tracker:
+        cursor = state_tracker.execute('select count(*) from log_progress where log_name="{log_name}"'.format(log_name=newFile))
+        if cursor.fetchall()[0][0]:
+            return True
+    return False
+
+def mark_complete(newFile, state_tracker):
+    if state_tracker:
+        state_tracker.execute("insert into log_progress (log_name, processed_date) values ('{log_name}', DATE('now'))".format(log_name=newFile))
+        state_tracker.commit()
+
+
 
 def main(argv):
 
@@ -37,9 +50,13 @@ def main(argv):
             help='Local log file')
     parser.add_option('-j', '--json', action='store_true', dest='dumpJson', \
             help='Reformat JSON message (default: raw)')
+    #Beware, once you delete history it's gone.
     parser.add_option('-D', '--delete', action='store_true', dest='deleteFile', \
             help='Delete processed files from the AWS S3 bucket')
+    parser.add_option('-s', '--state', dest='state', type='string', \
+            help="State file for keeping track of what logs you already processed.")
     (options, args) = parser.parse_args()
+    state_tracker = None
 
     if options.debug:
         print '+++ Debug mode on'
@@ -50,6 +67,14 @@ def main(argv):
     if options.logFile == None:
         print 'ERROR: Missing a local log file! (-l flag)'
         sys.exit(1)
+    if options.state:
+        import sqlite3
+        try:
+            state_tracker = sqlite3.connect(options.state)
+            state_tracker.execute("select count(*) from log_progress")
+        except sqlite3.OperationalError:
+            state_tracker.execute("create table log_progress  (log_name 'text' primary key, processed_date 'TEXT')")
+
 
     if options.debug: print '+++ Connecting to Amazon S3'
     s3 = boto.connect_s3()
@@ -60,8 +85,13 @@ def main(argv):
         print "Bucket %s access error: %s" % (options.logBucket, e)
         sys.exit(3)
     for f in c.list():
+
         newFile = os.path.basename(str(f.key))
         if newFile != "":
+            if already_processed(newFile, state_tracker):
+                if options.debug:
+                    print "Skipping previously seen file {file}".format(file=newFile)
+                continue
             if options.debug:
                 print "+++ Found new log: ", newFile
             f.get_contents_to_filename(newFile)
@@ -93,9 +123,9 @@ def main(argv):
                 os.remove(newFile)
             except IOError as e:
                 print "ERROR: Cannot delete %s (%s)" % (newFile, e.strerror)
-
             if options.deleteFile:
                 c.delete_key(f.key)
+            mark_complete(newFile, state_tracker)
 
 if __name__ == '__main__':
     signal.signal(signal.SIGINT, handler)
