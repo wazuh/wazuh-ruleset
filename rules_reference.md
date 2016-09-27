@@ -86,4 +86,5 @@
 | imperva_rules.xml          | Cyber security software and services to protect companies' sensitive data and application software from attacks. |
 | sophos_rules.xml           | Sophos Anti-Virus. |
 | freeipa_rules.xml          | Open source project for identity management. |
+| cisco-estreamer_rules.xml  | Cisco Event Streamer (eStreamer) allows you to stream FireSIGHT System intrusion, discovery, and connection data from the Cisco to external client applications. |
 
