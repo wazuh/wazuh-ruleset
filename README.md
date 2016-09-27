@@ -12,24 +12,17 @@ The ruleset includes compliance mapping with PCI DSS v3.1, CIS and additional de
 ## Directory structure
 
     ├── ossec-rules             
-    │ ├── rootcheck        # OSSEC Rootchecks created/updated by Wazuh
-    |
-    │ ├── rules-decoders 
-    │   ├── ossec            # OSSEC Decoders & Rules updated by Wazuh
-    │     ├── decoders
-    │     ├── rules
-    │     ├── ossec_instructions.md
-    │   ├── <new_software>   # New rules & decoders
-    |     ├── new_software_decoders.xml
-    |     ├── new_software_rules.xml  
-    |     ├── new_software_instructions.md  
+    │ ├── decoders         # OSSEC decoders created/updated by Wazuh
+    │ ├── rules            # OSSEC rules created/updated by Wazuh
+    │ ├── rootchecks       # OSSEC rootchecks created/updated by Wazuh
+    │ ├── scap_content     # OVAL, XCCDF, DS created/updated by Wazuh
     |
     │ ├── tools
     |
     │ ├── README.md
     │ ├── VERSION
     │ ├── ossec_ruleset.py   # Ruleset installer/updater
-    
+
 ## Full documentation
 
 Full documentation at [documentation.wazuh.com](http://documentation.wazuh.com/en/latest/ossec_ruleset.html)
