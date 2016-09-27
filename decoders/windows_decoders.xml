@@ -187,11 +187,12 @@
     Package: Negotiate       Workstation Name:   ad
   - WinEvtLog: Security: AUDIT_SUCCESS(538): Security: lac: OSSEC-HM: OSSEC-HM: User Logoff:        User Name:      lac     Domain:         OSSEC-HM        Logon ID:               (0x0,0x7C966E)          Logon Type:     2
   - 2013 Oct 09 17:09:04 WinEvtLog: Application: INFORMATION(1): My Script: (no user): no domain: demo1.foo.example.com: test
+  - 2016 Sep 27 10:48:30 WinEvtLog: Security: AUDIT_SUCCESS(4624): Microsoft-Windows-Security-Auditing: AAAABCC: KKKKK: 01.KKKKK.com: An account was successfully logged on. Subject:  Security ID:  S-1-0-0  Account Name:  -  Account Domain:  -  Logon ID:  0x0  Logon Type:   3  New Logon:  Security ID:  S-1-5-21-1119803419-263072742-1537874043-22758  Account Name:  AAAABCC  Account Domain:  KKKKK  Logon ID:  0x2b111bcc  Logon GUID:  {C609F1DB-667E-654F-AC26-48E1A2C6FA5F}  Process Information:  Process ID:  0x0  Process Name:  -  Network Information:  Workstation Name:   Source Network Address: 192.168.12.123  Source Port:  54200  Detailed Authentication Information:  Logon Process:  Kerberos  Authentication Package: Kerberos  Transited Services: -  Package Name (NTLM only): -  Key Length:  0  This event is generated when a logon session is created. It is generated on the computer that was accessed.
+  - 2016 Sep 27 07:51:56 WinEvtLog: Application: AUDIT_FAILURE(18456): MSSQLSERVER: (no user): no domain: BBBB.AAAA.com: Login failed for user ''. Reason: An attempt to login using SQL authentication failed. Server is configured for Windows authentication only. [CLIENT: 10.1.4.21]
   -->
 <decoder name="windows">
   <type>windows</type>
-  <program_name>WinEvtLog</program_name>
-  <!--<prematch>^\d\d\d\d \w\w\w \d\d \d\d:\d\d:\d\d WinEvtLog: |^WinEvtLog: </prematch>-->
+  <program_name>^WinEvtLog</program_name>
 </decoder>
 
 <!-- WinEvtLog: sysmon decoder -->
@@ -405,19 +406,29 @@ Example:
 </decoder>
 <!-- sysmon decoder END -->
 
-
-<!-- WinEvtLog Generic -->
-<decoder name="windows-EvtLog">
+<!-- Windows generic -->
+<decoder name="windows1">
   <type>windows</type>
   <parent>windows</parent>
   <regex offset="after_parent">^\.+: (\w+)\((\d+)\): (\.+): </regex>
   <regex>(\.+): \.+: (\S+): </regex>
   <order>status, id, extra_data, user, system_name</order>
-  <fts>name, location, user, system_name</fts>
+  <fts>name, location, system_name</fts>
 </decoder>
 
+<decoder name="windows1">
+  <type>windows</type>
+  <parent>windows</parent>
+  <regex> Source Network Address: (\S+)</regex>
+  <order>srcip</order>
+</decoder>
 
-
+<decoder name="windows1">
+  <type>windows</type>
+  <parent>windows</parent>
+  <regex> Account Name: (\S+) Account</regex>
+  <order>user</order>
+</decoder>
 
 <!-- Windows decoder -NTsyslog format
   - Will extract extra_data (as win source),action (as win category), id,
