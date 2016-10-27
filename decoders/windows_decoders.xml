@@ -410,6 +410,9 @@ Example:
 
 <!--
 2013 Oct 09 17:09:04 WinEvtLog: Application: INFORMATION(1): My Script: (no user): no domain: demo1.foo.example.com: test
+fts:
+2016 Oct 14 11:44:25 WinEvtLog: Security: AUDIT_SUCCESS(528): Microsoft-Windows-Security-Auditing: homer: no domain: my.domain.com: A handle
+2016 Oct 14 11:44:25 WinEvtLog: Security: AUDIT_SUCCESS(528): Microsoft-Windows-Security-Auditing: bart: no domain: my.domain.com: A handle
 -->
 <decoder name="windows_fields">
   <type>windows</type>
@@ -418,7 +421,7 @@ Example:
   <regex offset="after_parent">^\.+: (\w+)\((\d+)\): (\.+): </regex>
   <regex>(\.+): \.+: (\S+): </regex>
   <order>status, id, extra_data, user, system_name</order>
-  <fts>name, location, system_name</fts>
+  <fts>name, location, user, system_name</fts>
 </decoder>
 
 <!--
