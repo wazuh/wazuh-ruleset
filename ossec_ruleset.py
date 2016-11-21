@@ -174,9 +174,9 @@ def get_ossec_version():
 
         f_ossec = open(init_file)
         for line in f_ossec.readlines():
-            if "OSSEC Wazuh" in line:
+            if "version=\"ossec wazuh\"" in line.lower() or "version=\"wazuh\"" in line.lower():
                 is_wazuh = True
-            elif "VERSION" in line:
+            elif "version" in line.lower():
                 ossec_v = line.strip("\n").split("=")[1]
                 break
         f_ossec.close()
@@ -787,9 +787,9 @@ if __name__ == "__main__":
 
     # Config
     MAX_BACKUPS = 50
-    url_ruleset = "https://github.com/wazuh/ossec-rules/archive/stable.zip"
+    #url_ruleset = "https://github.com/wazuh/ossec-rules/archive/stable.zip"
     #url_ruleset = "https://github.com/wazuh/ossec-rules/archive/development.zip"
-    #url_ruleset = "https://github.com/wazuh/ossec-rules/archive/master.zip"
+    url_ruleset = "https://github.com/wazuh/ossec-rules/archive/master.zip"
 
     # Paths
     ossec_path = "/var/ossec"
