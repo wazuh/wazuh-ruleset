@@ -13,8 +13,8 @@
 
 # Instructions:
 #   cd ~ && mkdir ruleset_tmp && cd ruleset_tmp
-#   git clone https://github.com/wazuh/ossec-rules.git
-#   cd ossec-rules/tools/file-testing
+#   git clone https://github.com/wazuh/wazuh-ruleset.git
+#   cd wazuh-ruleset/tools/file-testing
 #   chmod +x file_test.py
 #   sudo ./file_test.py
 
@@ -33,7 +33,7 @@ def signal_handler(n_signal, frame):
 def usage():
     msg = """
 OSSEC Wazuh Ruleset Tools: File Test
-Github repository: https://github.com/wazuh/ossec-rules
+Github repository: https://github.com/wazuh/wazuh-ruleset
 Full documentation: http://documentation.wazuh.com/en/latest/ossec_ruleset.html
 
 Usage: ./file_test.py -d decoder1,decoder2,decoderN -r [ruleID_Min:ruleID_Max|ruleID1,ruleID2,ruleIDN|ruleID] -f file.log [-v]
