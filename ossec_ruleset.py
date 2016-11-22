@@ -174,7 +174,7 @@ def get_ossec_version():
 
         f_ossec = open(init_file)
         for line in f_ossec.readlines():
-            if "version=\"ossec wazuh\"" in line.lower() or "version=\"wazuh\"" in line.lower():
+            if "name=\"wazuh\"" in line.lower():
                 is_wazuh = True
             elif "version" in line.lower():
                 ossec_v = line.strip("\n").split("=")[1]
