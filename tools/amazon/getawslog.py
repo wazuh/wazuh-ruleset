@@ -78,7 +78,6 @@ def main(argv):
 
     if options.debug: print '+++ Connecting to Amazon S3'
     s3 = boto.connect_s3()
-    c = s3.get_bucket(options.logBucket)
     try:
         c = s3.get_bucket(options.logBucket)
     except boto.exception.S3ResponseError as e:
@@ -106,8 +105,10 @@ def main(argv):
                 log.write(data.read())
                 log.write("\n")
             else:
-                j = json.load(data)
-                if "Records" in j:
+                try:
+
+                    j = json.load(data)
+                    print(j)
                     records = j["Records"]
                     for item in records:
                         newline = 0
@@ -117,6 +118,10 @@ def main(argv):
                             newline = 1
                             log.write("\"%s\":\"%s\"" % (field, item[field]))
                         log.write("\n\"AmazonAWS\":")
+                except Exception as e:
+                    msg="ERROR: could not parse CloudTrail json record.\n filepath={0}; Ex Type={1}; Ex={2}".format(str(f.key), type(e), str(e))
+                    print(e)
+                    log.write("\n{0}\n".format(msg))
             log.close()
 
             try:
@@ -131,3 +136,4 @@ if __name__ == '__main__':
     signal.signal(signal.SIGINT, handler)
     main(sys.argv[1:])
     sys.exit(0)
+
