@@ -73,3 +73,20 @@
   <regex offset="after_prematch">^rip=(\S+), lip=(\S+)</regex>
   <order>srcip, dstip</order>
 </decoder>
+
+<decoder name="dovecot-info">
+  <program_name>^Info$|^Warn$</program_name>
+</decoder>
+
+<decoder name="imap-login-login">
+  <parent>dovecot-info</parent>
+  <prematch>imap-login</prematch>
+  <regex offset="after_parent">Login: user=(\S+), method=\.+, rip=(\S+), lip=(\S+) </regex>
+  <order>user, srcip, dstip</order>
+</decoder>
+
+<decoder name="dovecot-info-auth">
+  <parent>dovecot-info</parent>
+  <regex offset="after_parent">auth\(\.+\): \S+\((\S+),(\S+)\):</regex>
+  <order>user, srcip</order>
+</decoder>
