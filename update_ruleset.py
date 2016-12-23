@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # Wazuh Ruleset Update
 
-# v3.0.0 2016/12/21
+# v3.0.0 2016/12/23
 # Created by Wazuh, Inc. <info@wazuh.com>.
 # jesus@wazuh.com
 # This program is a free software; you can redistribute it and/or modify it under the terms of GPLv2
@@ -181,7 +181,6 @@ def exit(code, msg=None):
 
 # Functions
 def get_branch():
-    current_branch = 'stable'  # standalone script
     git_wazuh_ruleset = "./.git/HEAD"
     git_wazuh = "../../../.git/HEAD"
     branch_file = None
@@ -197,7 +196,7 @@ def get_branch():
 
         current_branch = lines[0].split('/')[-1].strip()
     except:
-        exit(2, "Reading '{0}'.".format(branch_file))
+        current_branch = 'stable'  # standalone script
 
     return current_branch
 
