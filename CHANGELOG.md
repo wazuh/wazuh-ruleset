@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 
 
-## [v1.10] - 2016-??-??
+## [v2.0] - 2017-??-??
 ### Added
 - Rules/decoders:
  - Switch HP 5500.
