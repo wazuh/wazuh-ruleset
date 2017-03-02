@@ -2,26 +2,45 @@
 All notable changes to this project will be documented in this file.
 
 
-## [v2.0] - 2017-??-??
+## [v2.0] - 2017-03-??
 ### Added
 - Rules/decoders:
- - Switch HP 5500.
- - Chrome Remote Desktop.
- - Fortigate.
- - OpenVPN.
- - ModSecurity for Nginx.
- - OpenSCAP.
+ - OpenSCAP
+ - Switch HP 5500
+ - Chrome Remote Desktop
+ - Fortigate
+ - OpenVPN
+ - ModSecurity for Nginx
+ - Barracuda
+ - OpenWRT
+ - RSA Authentication Manager
+ - Imperva
+ - Sophos
+ - FreeIPA
+ - Cisco eStreamer
 - Rootchecks:
- - CIS SLES 11 and 12.
-- ossec_ruleset.py. JSON output.
+ - CIS SLES 11 and 12
+- SCAP content
+ - cve-debian-oval.xml
+ - cve-redhat-6-ds.xml
+ - cve-redhat-7-ds.xml
+ - ssg-centos-6-ds.xml
+ - ssg-centos-7-ds.xml
+ - ssg-debian-8-ds.xml
+ - ssg-fedora-ds.xml
+ - ssg-rhel-6-ds.xml
+ - ssg-rhel-7-ds.xml
+ - ssg-ubuntu-1604-ds.xml
 
 ### Changed
-- ossec_ruleset.py.
+- ossec_ruleset.py renamed to update_ruleset.py with new features.
+- New directory structure.
 
 ### Fixed
-- Minor fixs in decoders/rules.
+- Improvements in several decoders/rules.
 - RH7 rootchecks.
 - Improved getgetawslog.py.
+- IP version-independent regexs.
 
 
 ## [v1.09] - 2016-05-12
