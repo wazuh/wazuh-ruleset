@@ -16,6 +16,7 @@ import gzip
 import json
 import os
 import os
+import re
 import signal
 import sys
 from optparse import OptionParser
@@ -85,8 +86,10 @@ def main(argv):
         print "Bucket %s access error: %s" % (options.logBucket, e)
         sys.exit(3)
     for f in c.list():
-
         newFile = os.path.basename(str(f.key))
+        if re.match('.+_CloudTrail-Digest_.+', newFile):
+            if options.debug: print "Skipping digest file: %s" % newFile
+            continue
         if newFile != "":
             if already_processed(newFile, state_tracker):
                 if options.debug:
