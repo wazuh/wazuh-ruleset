@@ -20,7 +20,7 @@
 
     <rule id="80202" level="0">
         <if_sid>80200</if_sid>
-        <match>"eventSource":"iam.amazonaws.com"|"eventSource":"signin.amazonaws.com"</match>
+        <match>"eventSource":"iam.amazonaws.com"|"eventSource":"signin.amazonaws.com"|"eventSource":"kms.amazonaws.com"</match>
         <description>Amazon IAM alerts.</description>
         <group>amazon-iam,</group>
     </rule>
@@ -32,13 +32,6 @@
         <group>amazon-s3,</group>
     </rule>
   
-  
-     <rule id="80204" level="0">
-        <if_sid>80200</if_sid>
-        <match>"eventSource":"kms.amazonaws.com"</match>
-        <description>Amazon mks alerts.</description>
-        <group>amazon-kms,</group>
-    </rule>
 
     <!-- ID for amazon events 80200-80300 -->
 
