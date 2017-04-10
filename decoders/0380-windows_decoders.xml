@@ -387,6 +387,82 @@ Example:
     <regex offset="after_prematch">SourceImage: (\S*)\s+\.+TargetImage: (\S*)\s+\.+StartModule: (\S*)\s+StartFunction: (\.*)</regex>
     <order>status, id, url, extra_data</order>
 </decoder>
+
+
+<!--
+Event ID 9
+-->
+
+
+<!--
+Event ID 10: ProcessAccess
+
+2017 Mar 29 13:26:05 WinEvtLog: Microsoft-Windows-Sysmon/Operational: INFORMATION(10): Microsoft-Windows-Sysmon: SYSTEM: NT AUTHORITY: WIN-P57C9KN929H: Process accessed:  UtcTime: 2017-03-29 11:26:05.493  SourceProcessGUID: {DB577E3B-99C4-58DB-0000-0010E0A83700}  SourceProcessId: 3048  SourceThreadId: 980  SourceImage: C:\Windows\System32\cmd.exe  TargetProcessGUID: {DB577E3B-99CD-58DB-0000-001006AF3700}  TargetProcessId: 3044  TargetImage: C:\Windows\System32\PING.EXE  GrantedAccess: 0x1fffff  CallTrace: C:\Windows\SYSTEM32\ntdll.dll+44bcc|C:\Windows\system32\kernel32.dll+54a0b|C:\Windows\system32\kernel32.dll+2059|C:\Windows\System32\cmd.exe+4090|C:\Windows\System32\cmd.exe+3e5c|C:\Windows\System32\cmd.exe+3ef0|C:\Windows\System32\cmd.exe+15ae|C:\Windows\System32\cmd.exe+23c0|C:\Windows\System32\cmd.exe+178d3|C:\Windows\System32\cmd.exe+61a0|C:\Windows\system32\kernel32.dll+51174|C:\Windows\SYSTEM32\ntdll.dll+5b3f5|C:\Windows\SYSTEM32\ntdll.dll+5b3c8
+-->
+
+
+<!--
+Event ID 11:
+
+2017 Mar 30 15:09:02 WinEvtLog: Microsoft-Windows-Sysmon/Operational: INFORMATION(11): Microsoft-Windows-Sysmon: SYSTEM: NT AUTHORITY: WIN-KND6QGDH48O: File created:  UtcTime: 2017-03-30 15:09:02.934  ProcessGuid: {FE5A418C-1C6B-58DD-0000-001023A40B00}  ProcessId: 3064  Image: C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe  TargetFilename: C:\Windows\System32\drivers\malware.txt  CreationUtcTime: 2017-03-30 15:09:02.934
+-->
+<decoder name="Sysmon-EventID#11">
+    <parent>windows</parent>
+    <type>windows</type>
+    <prematch>Microsoft-Windows-Sysmon/Operational: INFORMATION\(11\)</prematch>
+    <regex>Microsoft-Windows-Sysmon/Operational: \S+\((\d+)\)</regex>
+    <order>id</order>
+</decoder>
+
+<decoder name="Sysmon-EventID#11">
+    <parent>windows</parent>
+    <type>windows</type>
+    <regex offset="after_regex">File created: (\.*)\s+UtcTime: (\.*)\s+ProcessGuid: (\.*)\s+ProcessId: (\.*)\s+Image: (\.*)\s+TargetFilename: (\.*)\s+CreationUtcTime: (\.*)</regex>
+    <order>sysmon.filecreated, sysmon.utctime, sysmon.processguid, sysmon.processid, sysmon.image, sysmon.targetfilename, sysmon.creationutctime </order>
+</decoder>
+
+<!--
+
+Event ID 12: RegistryEvent (Object create and delete)
+
+2017 Mar 27 10:38:48 WinEvtLog: Microsoft-Windows-Sysmon/Operational: INFORMATION(12): Microsoft-Windows-Sysmon: SYSTEM: NT AUTHORITY: WIN-P57C9KN929H: Registry object added or deleted:  EventType: CreateKey  UtcTime: 2017-03-27 08:38:48.108  ProcessGuid: {DB577E3B-C979-58D8-0000-001049540100}  ProcessId: 1288  Image: C:\Windows\Explorer.EXE  TargetObject: HKU\S-1-5-21-2895701376-138392475-4243184240-1000\Software\Microsoft\Windows\CurrentVersion\Explorer\FileExts\.com
+-->
+
+
+<!--
+Event ID 13: RegistryEvent (Value Set)
+
+2017 Mar 27 10:57:57 WinEvtLog: Microsoft-Windows-Sysmon/Operational: INFORMATION(13): Microsoft-Windows-Sysmon: SYSTEM: NT AUTHORITY: WIN-P57C9KN929H: Registry value set:  EventType: SetValue  UtcTime: 2017-03-27 08:57:57.885  ProcessGuid: {DB577E3B-D415-58D8-0000-00108ED53500}  ProcessId: 2040  Image: C:\Windows\system32\winsat.exe  TargetObject: HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce\WinSATRestorePower  Details: powercfg -setactive 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c
+-->
+
+
+<!--
+Event ID 14: RegistryEvent (Key and Value Rename)
+
+2017 Mar 29 13:20:37 WinEvtLog: Microsoft-Windows-Sysmon/Operational: INFORMATION(14): Microsoft-Windows-Sysmon: SYSTEM: NT AUTHORITY: WIN-P57C9KN929H: Registry object renamed:  EventType: RenameKey  UtcTime: 2017-03-29 11:20:37.159  ProcessGuid: {DB577E3B-97E1-58DB-0000-0010272E3300}  ProcessId: 2684  Image: C:\Windows\regedit.exe  TargetObject: HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\WINEVT\Channels\Microsoft-Windows-Sysmon/Operational  NewName: \REGISTRY\MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\WINEVT\Channels\Microsoft-Windows-Sysmon/Operational2
+-->
+
+
+<!--
+Event ID 15: FileCreateStreamHash
+
+2017 Mar 22 20:58:52 WinEvtLog: Microsoft-Windows-Sysmon/Operational: INFORMATION(15): Microsoft-Windows-Sysmon: SYSTEM: NT AUTHORITY: WIN-M0OTMBFUNGN: File stream created:  UtcTime: 2017-03-22 19:58:52.021  ProcessGuid: {514DFA4C-D745-58D2-0000-00107ECE2501}  ProcessId: 2476  Image: C:\Program Files\Internet Explorer\iexplore.exe  TargetFilename: C:\Users\Alberto\Desktop\setupssh381-20040709.zip  CreationUtcTime: 2017-03-22 19:58:42.380  Hash: MD5=9F82020D0494ED2E38B201C1948DD146
+-->
+<decoder name="Sysmon-EventID#15">
+    <parent>windows</parent>
+    <type>windows</type>
+    <prematch>Microsoft-Windows-Sysmon/Operational: INFORMATION\(15\)</prematch>
+    <regex>Microsoft-Windows-Sysmon/Operational: \S+\((\d+)\)</regex>
+    <order>id</order>
+</decoder>
+
+<decoder name="Sysmon-EventID#15">
+    <parent>windows</parent>
+    <type>windows</type>
+	<regex offset="after_regex">ProcessId: (\.*)\s+Image: (\.*)\s+TargetFilename: (\.*)\s+CreationUtcTime: (\.*)\s+Hash: \S+=(\S*)</regex>
+    <order>sysmon.processId, sysmon.image, sysmon.targetfilename, sysmon.creationUtcTime, sysmon.hash</order>
+</decoder>
+
 <!-- sysmon decoder END -->
 
 <!-- Windows Defender -->
