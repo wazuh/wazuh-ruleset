@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 
 
-## [v2.0] - 2017-03-??
+## [v2.0] - 2017-04-24
 ### Added
 - Rules/decoders:
  - OpenSCAP
