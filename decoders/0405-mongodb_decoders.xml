@@ -4,44 +4,54 @@
   -  This program is a free software; you can redistribute it and/or modify it under the terms of GPLv2.
 -->
 
-
+<!--
+<timestamp> <severity> <component> [<context>] <message>
+-->
 <decoder name="mongodb">
-    <prematch>^\d+-\d+-\d+T\d+:\d+:\d+.\d++\d+ \w \S+\s+[</prematch>
+    <prematch>^\d+-\d+-\d+T\d+:\d+:\d+.\d+\p\d+ \w \S+\s+[\w+] </prematch>
 </decoder>
 
 
 <!--
-2017-03-27T19:32:31.916+0200 I ACCESS   [conn10000] Successfully authenticated as principal snapshots on andfrankly
+2017-03-27T19:32:31.916+0200 I ACCESS   [conn10000] Successfully authenticated as principal snapshots on myUser
 -->
 <decoder name="mongodb-successauth">
     <parent>mongodb</parent>
-    <prematch>^\d+-\d+-\d+T\d+:\d+:\d+.\d++\d+ \w \w+   [\w+] Successfully</prematch>
-    <regex>^\d+-\d+-\d+T\d+:\d+:\d+.\d++\d+ (\w) (\w+)   [(\w+)] Successfully authenticated as principal snapshots on (\w+)</regex>
-    <order>mongodb.type,mongodb.desc,mongodb.context,mongodb.user</order>
+    <prematch offset="after_parent">^Successfully authenticated</prematch>
+    <regex>^\d+-\d+-\d+T\d+:\d+:\d+.\d+\p\d+ (\w) (\S+)\s+[(\w+)] Successfully authenticated as principal snapshots on (\w+)</regex>
+    <order>mongodb.severity,mongodb.component,mongodb.context,srcuser</order>
 </decoder>
 
 
 <!--
-2017-03-27T19:32:33.916+0200 I NETWORK  [conn10000] end connection 172.31.27.128:33658 (15 connections now open)
-2017-03-27T19:32:34.916+0200 I NETWORK  [conn10157] end connection 172.31.27.128:60864 (1 connection now open)
+2017-03-27T19:32:33.916+0200 I NETWORK  [conn10000] end connection 10.10.10.10:33658 (15 connections now open)
 -->
 <decoder name="mongodb-endconnection">
     <parent>mongodb</parent>
-    <prematch>^\d+-\d+-\d+T\d+:\d+:\d+.\d++\d+ \w \w+  [\w+] end connection</prematch>
-    <regex>^\d+-\d+-\d+T\d+:\d+:\d+.\d++\d+ (\w) (\w+)  [(\w+)] end connection (\d+.\d+.\d+.\d+):(\d+) \((\d+)</regex>
-    <order>mongodb.type,mongodb.desc,mongodb.context,srcip,srcport,mongodb.connections</order>
+    <prematch offset="after_parent">^end connection</prematch>
+    <regex>^\d+-\d+-\d+T\d+:\d+:\d+.\d+\p\d+ (\w) (\S+)\s+[(\w+)] end connection (\S+):(\d+) \((\d+)</regex>
+    <order>mongodb.severity,mongodb.component,mongodb.context,srcip,srcport,mongodb.connections</order>
 </decoder>
 
 <!--
-2017-03-27T19:32:35.916+0200 I NETWORK  [initandlisten] connection accepted from 172.31.2.27:32768 #19309 (10 connections now open)
-2017-03-27T19:32:36.916+0200 I NETWORK  [initandlisten] connection accepted from 172.31.2.27:32768 #19309 (1 connection now open)
+2017-03-27T19:32:35.916+0200 I NETWORK  [initandlisten] connection accepted from 10.10.10.10:32768 #19309 (10 connections now open)
 -->
 
 <decoder name="mongodb-connectionaccepted">
     <parent>mongodb</parent>
-    <prematch>^\d+-\d+-\d+T\d+:\d+:\d+.\d++\d+ \w \w+  [\w+] connection accepted</prematch>
-    <regex>^\d+-\d+-\d+T\d+:\d+:\d+.\d++\d+ (\w) (\w+)  [(\w+)] connection accepted from (\d+.\d+.\d+.\d+):(\d+) #(\d+) \((\d+)</regex>
-    <order>mongodb.type,mongodb.desc,mongodb.context,srcip,srcport,mongodb.nconnection,mongodb.connections</order>
+    <prematch offset="after_parent">^connection accepted</prematch>
+    <regex>^\d+-\d+-\d+T\d+:\d+:\d+.\d+\p\d+ (\w) (\S+)\s+[(\w+)] connection accepted from (\S+):(\d+) #(\d+) \((\d+)</regex>
+    <order>mongodb.severity,mongodb.component,mongodb.context,srcip,srcport,mongodb.nconnection,mongodb.connections</order>
+</decoder>
+
+<!--
+2016-03-31T15:07:04.807-0500 I ACCESS [conn3] SCRAM-SHA-1 authentication failed for newdbUser on newdb from client 127.0.0.1 ; AuthenticationFailed SCRAM-SHA-1  authentication failed, storedKey mismatch
+-->
+<decoder name="mongodb-authfailed">
+    <parent>mongodb</parent>
+    <prematch offset="after_parent">^\S+ authentication failed</prematch>
+    <regex>^\d+-\d+-\d+T\d+:\d+:\d+.\d+\p\d+ (\w) (\S+)\s+[(\w+)] \S+ authentication failed for (\S+) on (\S+) from client (\S+) ;</regex>
+    <order>mongodb.severity,mongodb.component,mongodb.context,srcuser,mongodb.database,srcip</order>
 </decoder>
 
 <!--
@@ -49,6 +59,6 @@
 -->
 <decoder name="mongodb-generic">
     <parent>mongodb</parent>
-    <regex>^\d+-\d+-\d+T\d+:\d+:\d+.\d++\d+ (\w) (\w+)  [(\w+)] </regex>
-    <order>mongodb.type,mongodb.desc,mongodb.context</order>
+    <regex>^\d+-\d+-\d+T\d+:\d+:\d+.\d+\p\d+ (\w) (\S+)\s+[(\w+)] </regex>
+    <order>mongodb.severity,mongodb.component,mongodb.context</order>
 </decoder>
