@@ -1,0 +1,50 @@
+<!--
+  -  MongoDB rules
+  -  Created by Wazuh, Inc. <support@wazuh.com>.
+  -  This program is a free software; you can redistribute it and/or modify it under the terms of GPLv2.
+-->
+
+<!--
+2017-03-27T19:32:31.916+0200 I ACCESS   [conn10000] Successfully authenticated as principal snapshots on andfrankly
+2017-03-27T19:32:32.916+0200 I COMMAND  [conn13388] killcursors: found 0 of 1
+2017-03-27T19:32:33.916+0200 I NETWORK  [conn10000] end connection 172.31.27.128:33658 (15 connections now open)
+2017-03-27T19:32:34.916+0200 I NETWORK  [conn10157] end connection 172.31.27.128:60864 (1 connection now open)
+2017-03-27T19:32:35.916+0200 I NETWORK  [initandlisten] connection accepted from 172.31.2.27:32768 #19309 (10 connections now open)
+2017-03-27T19:32:36.916+0200 I NETWORK  [initandlisten] connection accepted from 172.31.2.27:32768 #19309 (1 connection now open)
+-->
+
+<!-- ID: 85750 - 85999 -->
+
+<group name="mongodb,">
+
+	<rule id="85750" level="0">
+        <decoded_as>mongodb</decoded_as>
+        <description>MongoDB messages</description>
+    </rule>
+
+
+	<rule id="85751" level="0">
+		<if_sid>85750</if_sid>
+        <match>Successfully authenticated</match>
+        <description>MongoDB - Successfully authentication</description>
+    </rule>
+
+	<rule id="85752" level="0">
+		<if_sid>85750</if_sid>
+        <match>killcursors</match>
+        <description>MongoDB - killcursors</description>
+    </rule>
+
+	<rule id="85753" level="0">
+        <if_sid>85750</if_sid>
+		<match>end connection</match>
+        <description>MongoDB - End connection</description>
+    </rule>
+
+	<rule id="85754" level="0">
+		<if_sid>85750</if_sid>
+        <match>connection accepted</match>
+        <description>MongoDB - Connection accepted</description>
+    </rule>
+
+</group>
