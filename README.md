@@ -1,6 +1,6 @@
-# OSSEC Wazuh Ruleset
+# Wazuh Ruleset
 
-OSSEC rules are used to detect attacks, intrusions, software misuse, configuration problems, application errors, malware, rootkits, system anomalies or security policy violations. OSSEC provides an out-of-the-box set of rules that we update by modifying them or including new ones, in order to increase OSSEC detection capabilities.
+Wazuh ruleset is used to detect attacks, intrusions, software misuse, configuration problems, application errors, malware, rootkits, system anomalies or security policy violations. OSSEC provides an out-of-the-box set of rules that we update by modifying them or including new ones, in order to increase OSSEC detection capabilities.
 
 The ruleset includes compliance mapping with PCI DSS v3.1, CIS and additional decoders and rules.
 
