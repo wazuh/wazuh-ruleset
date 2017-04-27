@@ -87,4 +87,10 @@
 | sophos_rules.xml           | Sophos Anti-Virus. |
 | freeipa_rules.xml          | Open source project for identity management. |
 | cisco-estreamer_rules.xml  | Cisco Event Streamer (eStreamer) allows you to stream FireSIGHT System intrusion, discovery, and connection data from the Cisco to external client applications. |
-
+| ms_wdefender_rules.xml     | Windows Defender is an anti-malware component of Microsoft Windows. |
+| ms_logs_rules.xml          | Microsoft Windows logs rules. |
+| ms_sqlserver_rules.xml     | Microsoft SQL Server is a relational database management system developed by Microsoft. |
+| identity_guard_rules.xml   | Identity Guard is a proactive privacy and identity theft protection service. |
+| mongodb_rules.xml          | MongoDB is a free and open-source cross-platform document-oriented database program. |
+| docker_rules.xml           | Docker is an open-source project that automates the deployment of applications inside software containers. |
+| jenkins_rules.xml          | Jenkins is an open source automation server written in Java. The project was forked from Hudson. |
