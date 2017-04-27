@@ -1,0 +1,33 @@
+<!--
+  -  Docker rules
+  -  Created by Wazuh, Inc. <support@wazuh.com>.
+  -  This program is a free software; you can redistribute it and/or modify it under the terms of GPLv2.
+-->
+
+<!--
+time="2017-02-18T17:24:05.929666988Z" level=error msg="Handler for GET /v1.24/containers/7915369aa2ab/json returned error: No such container: 7915369aa2ab"
+-->
+
+<!-- ID: 86000 - 86249 -->
+
+
+<group name="docker,">
+
+	<rule id="86000" level="0">
+        <decoded_as>docker</decoded_as>
+        <description>Docker messages</description>
+    </rule>
+
+	<rule id="86001" level="0">
+		<if_sid>86000</if_sid>
+        <status>info</status>
+        <description>Docker - Information message</description>
+    </rule>
+
+	<rule id="86002" level="3">
+        <if_sid>86000</if_sid>
+		<status>error</status>
+		<description>Docker - Error event</description>
+    </rule>
+
+</group>
