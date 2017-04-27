@@ -5,11 +5,11 @@
 -->
 
 <!--
-time="2017-02-18T17:24:05.929666988Z" level=error msg="Handler for GET /v1.24/containers/7915369aa2ab/json returned error: No such container: 7915369aa2ab"
+time="2017-02-18T17:24:05.929666988Z" level=error msg="Handler for GET /vx.yy/containers/abcd/json returned error: No such container: abcd"
 -->
 
 <decoder name="docker">
-	<prematch>^time="\d+-\d+-\d+T\d+:\d+:\d+.\d+\w" level=</prematch>
-	<regex offset="after_prematch">(\w+) msg="(\.+)"</regex>
+	<prematch>^time="\d+-\d+-\d+T\d+:\d+:\d+.\d+\w" level=\S+ msg="</prematch>
+	<regex>level=(\S+) msg="(\.+)"</regex>
 	<order>docker.level,docker.message</order>
 </decoder>
