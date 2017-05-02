@@ -447,4 +447,19 @@
         <description>Amazon-iam: Delete user error</description>
         <group>amazon,pci_dss_10.2.5,</group>
     </rule>
+
+    <rule id="80921" level="5">
+        <if_sid>80202</if_sid>
+        <match>"eventName":"DisableKey"</match>
+        <description>Attempts to delete the KMS keys/users.</description>
+        <group>amazon-kms,pci_dss_10.2.5,</group>
+    </rule>
+
+    <rule id="80922" level="5">
+       <if_sid>80202</if_sid>
+       <match>"eventName":"ListAliases"</match>
+       <description>Access to KMS keys/users.</description>
+       <group>amazon-kms,pci_dss_10.2.5,</group>
+   </rule>
+
 </group>
