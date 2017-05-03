@@ -1,31 +1,30 @@
-# OSSEC Wazuh Ruleset
+# Wazuh Ruleset
 
-OSSEC rules are used to detect attacks, intrusions, software misuse, configuration problems, application errors, malware, rootkits, system anomalies or security policy violations. OSSEC provides an out-of-the-box set of rules that we update by modifying them or including new ones, in order to increase OSSEC detection capabilities.
+Wazuh ruleset is used to detect attacks, intrusions, software misuse, configuration problems, application errors, malware, rootkits, system anomalies or security policy violations.
 
-The ruleset includes compliance mapping with PCI DSS v3.1, CIS and additional decoders and rules.
+The ruleset includes compliance mapping with PCI DSS v3.1 and CIS.
 
 ## Installation
 
-* [Manual installation instructions](http://documentation.wazuh.com/en/latest/ossec_ruleset.html#manual-installation)
-* [Automatic installation instructions](http://documentation.wazuh.com/en/latest/ossec_ruleset.html#automatic-installation)
+* [Installation instructions](https://documentation.wazuh.com/current/user-manual/ruleset/update.html)
 
 ## Directory structure
 
-    ├── wazuh-ruleset             
-    │ ├── decoders         # OSSEC decoders created/updated by Wazuh
-    │ ├── rules            # OSSEC rules created/updated by Wazuh
-    │ ├── rootchecks       # OSSEC rootchecks created/updated by Wazuh
-    │ ├── scap_content     # OVAL, XCCDF, DS created/updated by Wazuh
+    ├── wazuh-ruleset
+    │ ├── decoders            # OSSEC decoders created/updated by Wazuh
+    │ ├── rules               # OSSEC rules created/updated by Wazuh
+    │ ├── rootchecks          # OSSEC rootchecks created/updated by Wazuh
+    │ ├── scap_content        # OVAL, XCCDF, DS created/updated by Wazuh
     |
     │ ├── tools
     |
     │ ├── README.md
     │ ├── VERSION
-    │ ├── ossec_ruleset.py   # Ruleset installer/updater
+    │ ├── update_ruleset.py   # Install/update ruleset
 
 ## Full documentation
 
-Full documentation at [documentation.wazuh.com](http://documentation.wazuh.com/en/latest/ossec_ruleset.html)
+Full documentation at [documentation.wazuh.com](https://documentation.wazuh.com/current/user-manual/ruleset/index.html)
 
 ## Branches
 
@@ -38,7 +37,7 @@ Full documentation at [documentation.wazuh.com](http://documentation.wazuh.com/e
 
 If you have created new rules, decoders or rootchecks and you would like to contribute to our repository, please fork our Github repository and submit a pull request.
 
-If you are not familiar with Github, you can also share them through [our users mailing list](https://groups.google.com/d/forum/wazuh), to which you can subscribe by sending an email to `wazuh+subscribe@googlegroups.com`. As well do not hesitate to request new rules or rootchecks that you would like to see running in OSSEC and our team will do our best to make it happen.
+If you are not familiar with Github, you can also share them through [our users mailing list](https://groups.google.com/d/forum/wazuh), to which you can subscribe by sending an email to `wazuh+subscribe@googlegroups.com`. As well do not hesitate to request new rules or rootchecks that you would like to see running in Wazuh and our team will do our best to make it happen.
 
 ## Web references
 
