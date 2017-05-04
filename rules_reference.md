@@ -94,3 +94,4 @@
 | mongodb_rules.xml          | MongoDB is a free and open-source cross-platform document-oriented database program. |
 | docker_rules.xml           | Docker is an open-source project that automates the deployment of applications inside software containers. |
 | jenkins_rules.xml          | Jenkins is an open source automation server written in Java. The project was forked from Hudson. |
+| amazon-s3_rules.xml       | Amazon Simple Storage Service (Amazon S3) is object storage with a simple web service interface to store and retrieve any amount of data from anywhere on the web. |

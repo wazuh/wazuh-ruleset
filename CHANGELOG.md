@@ -13,6 +13,7 @@ All notable changes to this project will be documented in this file.
  - MongoDB
  - Docker
  - Jenkins
+ - AWS S3
 
 ### Changed
  - web-accesslog_decoders.xml
