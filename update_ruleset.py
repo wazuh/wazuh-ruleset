@@ -1,9 +1,7 @@
 #!/usr/bin/env python
 # Wazuh Ruleset Update
 
-# v3.0.0 2016/12/23
 # Created by Wazuh, Inc. <info@wazuh.com>.
-# jesus@wazuh.com
 # This program is a free software; you can redistribute it and/or modify it under the terms of GPLv2
 
 # Requirements:
