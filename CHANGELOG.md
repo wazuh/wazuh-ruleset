@@ -14,6 +14,7 @@ All notable changes to this project will be documented in this file.
  - Docker
  - Jenkins
  - AWS S3
+ - Suricata
 
 ### Changed
  - web-accesslog_decoders.xml
