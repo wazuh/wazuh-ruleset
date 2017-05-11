@@ -52,9 +52,15 @@ ID: 80200 - 80499
     </rule>
 
     <!-- Events with no errors -->
-    <rule id="80251" level="10" frequency="20" timeframe="600">
-        <if_matched_sid>80202</if_matched_sid>
+    <rule id="80251" level="3">
+        <if_sid>80201</if_sid>
         <field name="aws.eventName">DeleteObjects</field>
+        <description>Amazon: $(aws.eventSource) - $(aws.eventName).</description>
+        <group>pci_dss_10.6.1,</group>
+    </rule>
+
+    <rule id="80252" level="10" frequency="20" timeframe="600">
+        <if_matched_sid>80251</if_matched_sid>
         <description>Amazon: $(aws.eventSource) - $(aws.eventName) - high number of deleted object.</description>
         <group>pci_dss_10.6.1,</group>
     </rule>
