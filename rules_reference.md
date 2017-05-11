@@ -74,9 +74,7 @@
 | netscaler_rules.xml        | NetScaler is a hardware device (or network appliance) manufactured by Citrix, which primary role is to provide Level 4 Load Balancing. |
 | serv-u_rules.xml           | FTP Server software (FTP, FTPS, SFTP, Web & mobile) for secure file transfer and file sharing on Windows & Linux. |
 | usb_rules.xml              | USB rules |
-| amazon_rules.xml           | Amazon main rules. |
-| amazon-ec2_rules.xml       | Amazon Elastic Compute Cloud (Amazon EC2) provides scalable computing capacity in the Amazon Web Services (AWS) cloud. |
-| amazon-iam_rules.xml       | AWS Identity and Access Management (IAM) is a web service that helps you securely control access to AWS resources for your users. |
+| amazon_rules.xml           | Amazon rules: EC2, IAM, S3, etc. |
 | redis_rules.xml            | Redis is an open source (BSD licensed), in-memory data structure store, used as database, cache and message broker. |
 | oscap_rules.xml            | OpenSCAP is an open-source software that provides assessment, measurement and enforcement of security baselines. |
 | fortigate_rules.xml        | Fortigate (Fortinet) firewalls. |
@@ -94,5 +92,4 @@
 | mongodb_rules.xml          | MongoDB is a free and open-source cross-platform document-oriented database program. |
 | docker_rules.xml           | Docker is an open-source project that automates the deployment of applications inside software containers. |
 | jenkins_rules.xml          | Jenkins is an open source automation server written in Java. The project was forked from Hudson. |
-| amazon-s3_rules.xml       | Amazon Simple Storage Service (Amazon S3) is object storage with a simple web service interface to store and retrieve any amount of data from anywhere on the web. |
 | suricata_rules.xml       | Suricata is an open source network threat detection engine. It is capable of real time intrusion detection (IDS), intrusion prevention (IPS) and network security monitoring (NSM). |
