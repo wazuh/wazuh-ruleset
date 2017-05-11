@@ -110,17 +110,11 @@ def main(argv):
                 log.write("\n")
             else:
                 j = json.load(data)
-                if "Records" in j:
-                    records = j["Records"]
-                    for item in records:
-                        log.write("\"AmazonAWS\":")
-                        newline = 0
-                        for field in item:
-                            if newline > 0:
-                                log.write(",")
-                            newline = 1
-                            log.write("\"%s\":\"%s\"" % (field, item[field]))
-                        log.write("\n")
+                if "Records" not in j:
+                    continue
+                for item in j["Records"]:
+					aws_log = {'aws': item}
+					log.write("{0}\n".format(json.dumps(aws_log)))
             log.close()
 
             try:
