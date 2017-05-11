@@ -15,6 +15,7 @@ The ruleset includes compliance mapping with PCI DSS v3.1 and CIS.
     │ ├── rules               # OSSEC rules created/updated by Wazuh
     │ ├── rootchecks          # OSSEC rootchecks created/updated by Wazuh
     │ ├── scap_content        # OVAL, XCCDF, DS created/updated by Wazuh
+    │ ├── lists               # CDB lists created/updated by Wazuh
     |
     │ ├── tools
     |
