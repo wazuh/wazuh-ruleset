@@ -113,8 +113,8 @@ def main(argv):
                 if "Records" not in j:
                     continue
                 for item in j["Records"]:
-					aws_log = {'aws': item}
-					log.write("{0}\n".format(json.dumps(aws_log)))
+                    aws_log = {'aws': item}
+                    log.write("{0}\n".format(json.dumps(aws_log)))
             log.close()
 
             try:
