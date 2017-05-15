@@ -41,3 +41,13 @@ Jul 21 18:32:24 fw01 openvpn: user 'chapolin' authenticated
   <regex offset="after_prematch">^(\S+)'</regex>
   <order>srcuser</order>
 </decoder>
+
+<!--
+May 14 17:49:12 auth openvpn: Sun May 14 17:49:12 2017 71.179.27.222:53230 [mac] Peer Connection Initiated with [AF_INET]200.200.200.200:53230
+-->
+<decoder name="openvpn24-ip-user">
+  <parent>openvpn</parent>
+  <prematch>^\S+\s\S+\s\d+\s\d+:\d+:\d+\s\d+</prematch>
+  <regex offset="after_prematch">^(\S+):(\d+) [(\S+)]</regex>
+  <order>srcip,srcport,srcuser</order>
+</decoder>
