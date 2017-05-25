@@ -2,6 +2,30 @@
 All notable changes to this project will be documented in this file.
 
 
+## [v2.0.1] - 2017-??-??
+### Added
+- Rules/decoders:
+ - Microsoft Windows Defender
+ - Microsoft log related events
+ - Microsoft SQL Server
+ - Identity guard
+ - Sysmon events 11 and 15
+ - MongoDB
+ - Docker
+ - Jenkins
+ - AWS S3
+
+### Changed
+ - web-accesslog_decoders.xml
+ - Amazon rules
+ - Rootcheck references
+ - Sysmon uses dynamic fields
+ - getawslog.py: Ignore digest files
+
+### Fixed
+ - Bug in update_ruleset.py
+
+
 ## [v2.0] - 2017-04-24
 ### Added
 - Rules/decoders:
