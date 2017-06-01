@@ -575,7 +575,7 @@ if __name__ == "__main__":
     ossec_path = arguments['ossec_path']
     ossec_ruleset_log = "{0}/logs/ruleset.log".format(ossec_path)
     ossec_conf = "{0}/etc/ossec.conf".format(ossec_path)
-    ossec_rootchecks = "{0}/etc/shared".format(ossec_path)
+    ossec_rootchecks = "{0}/etc/rootcheck".format(ossec_path)
     ossec_update_script = "{0}/bin/update_ruleset.py".format(ossec_path)
     ossec_ruleset = "{0}/ruleset".format(ossec_path)
     ossec_rules = "{0}/rules".format(ossec_ruleset)
