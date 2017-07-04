@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 
 
-## [v2.0.1] - 2017-??-??
+## [v2.0.1]
 ### Added
 - Rules/decoders:
  - Microsoft Windows Defender
