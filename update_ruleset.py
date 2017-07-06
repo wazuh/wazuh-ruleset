@@ -45,6 +45,8 @@ class RulesetLogger:
         self.debug_mode = debug
         try:
             self.logger = open(filename, 'a')
+            chown(filename, root_uid, ossec_gid)
+            chmod(filename, 0o660)
         except:
             print("Error opening log '{0}'".format(filename))
             sys.exit(1)
@@ -114,10 +116,11 @@ def copy(src, dst, executable=False):
     else:
         copytree(src, dst)
 
-    chown(dst, root_uid, ossec_gid)
     if executable:
+        chown(dst, root_uid, root_uid)
         chmod(dst, file_permissions_x)
     else:
+        chown(dst, root_uid, ossec_gid)
         chmod(dst, file_permissions)
 
 
@@ -504,7 +507,8 @@ if __name__ == "__main__":
         sys.exit(1)
 
     file_permissions = 0o640
-    file_permissions_x = 0o740
+    file_permissions_x = 0o750
+
     try:
         root_uid = getpwnam("root").pw_uid
         ossec_gid = getgrnam("ossec").gr_gid
