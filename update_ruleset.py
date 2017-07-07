@@ -43,6 +43,8 @@ class RulesetLogger:
         self.debug_mode = debug
         try:
             self.logger = open(filename, 'a')
+            chown(filename, root_uid, ossec_gid)
+            chmod(filename, 0o660)
         except:
             print("Error opening log '{0}'".format(filename))
             sys.exit(1)
@@ -93,30 +95,31 @@ def chmod(path, mode):
                 chmod(itempath, mode)
 
 
-def mkdir(path):
+def mkdir(path, perm=0o640):
     if not os.path.exists(path):
         os.makedirs(path)
         chown(path, root_uid, ossec_gid)
-        chmod(path, file_permissions)
+        chmod(path, perm)
 
 
-def rename(src, dst):
+def rename(src, dst, perm=0o640):
     os.rename(src, dst)
     chown(dst, root_uid, ossec_gid)
-    chmod(dst, file_permissions)
+    chmod(dst, perm)
 
 
-def copy(src, dst, executable=False):
+def copy(src, dst, perm=0o640):
     if os.path.isfile(src):
         copyfile(src, dst)
     else:
         copytree(src, dst)
 
-    chown(dst, root_uid, ossec_gid)
-    if executable:
-        chmod(dst, file_permissions_x)
+    if perm == 0o750:
+        chown(dst, root_uid, root_uid)
+        chmod(dst, perm)
     else:
-        chmod(dst, file_permissions)
+        chown(dst, root_uid, ossec_gid)
+        chmod(dst, perm)
 
 
 def rm(path):
@@ -289,7 +292,7 @@ def get_new_ruleset(source, url):
 
     # Update main directory
     copy("{0}/VERSION".format(update_ruleset), ossec_ruleset_version_path)
-    copy("{0}/update_ruleset.py".format(update_ruleset), ossec_update_script, executable=True)
+    copy("{0}/update_ruleset.py".format(update_ruleset), ossec_update_script, 0o750)
 
     return get_ruleset_version()
 
@@ -353,6 +356,7 @@ def upgrade_ruleset(ruleset):
             logger.log("You already have the latest version of {0}.".format(item))
             continue
 
+        perm = 0o640
         if item == 'rules':
             src = update_rules
             dst = ossec_rules
@@ -365,6 +369,7 @@ def upgrade_ruleset(ruleset):
             src = update_rootchecks
             dst = ossec_rootchecks
             backup = update_backups_rootchecks
+            perm = 0o660
 
         logger.log("\nThe following {0} will be updated:".format(item))
         for filename in ruleset[item]:
@@ -373,8 +378,8 @@ def upgrade_ruleset(ruleset):
             dst_file = "{0}/{1}".format(dst, filename)
             dst_backup = "{0}/{1}".format(backup, filename)
             if os.path.exists(dst_file):
-                copy(dst_file, dst_backup)
-            copy(src_file, dst_file)
+                copy(dst_file, dst_backup, perm)
+            copy(src_file, dst_file, perm)
 
 
     msg = ""
@@ -522,8 +527,6 @@ if __name__ == "__main__":
         print("You need root privileges to run this script. Please try again, using 'sudo'. Exiting.")
         sys.exit(1)
 
-    file_permissions = 0o640
-    file_permissions_x = 0o740
     try:
         root_uid = getpwnam("root").pw_uid
         ossec_gid = getgrnam("ossec").gr_gid
