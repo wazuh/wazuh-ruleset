@@ -14,6 +14,7 @@ All notable changes to this project will be documented in this file.
  - Docker
  - Jenkins
  - AWS S3
+ - update_ruleset.py accepts a custom download URL
 
 ### Changed
  - web-accesslog_decoders.xml
@@ -21,9 +22,13 @@ All notable changes to this project will be documented in this file.
  - Rootcheck references
  - Sysmon uses dynamic fields
  - getawslog.py: Ignore digest files
+ - Fortigate decoders
+ - Apache decoders
 
 ### Fixed
  - Bug in update_ruleset.py
+ - Netstat command
+ - SSH rootchecks
 
 
 ## [v2.0] - 2017-04-24
