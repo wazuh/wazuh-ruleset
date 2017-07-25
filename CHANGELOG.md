@@ -1,20 +1,23 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [v2.1.0]
+### Added
+- Decoders and rules for anti-flooding mechanism
 
 ## [v2.0.1]
 ### Added
 - Rules/decoders:
- - Microsoft Windows Defender
- - Microsoft log related events
- - Microsoft SQL Server
- - Identity guard
- - Sysmon events 11 and 15
- - MongoDB
- - Docker
- - Jenkins
- - AWS S3
- - update_ruleset.py accepts a custom download URL
+  - Microsoft Windows Defender
+  - Microsoft log related events
+  - Microsoft SQL Server
+  - Identity guard
+  - Sysmon events 11 and 15
+  - MongoDB
+  - Docker
+  - Jenkins
+  - AWS S3
+- update_ruleset.py accepts a custom download URL
 
 ### Changed
  - web-accesslog_decoders.xml
