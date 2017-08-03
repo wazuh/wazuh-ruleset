@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 ## [v2.1.0]
 ### Added
 - Decoders and rules for anti-flooding mechanism
+### Fixed
+ - Fixed Windows decoders to extract the proper fields
 
 ## [v2.0.1]
 ### Added
