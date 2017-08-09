@@ -231,9 +231,9 @@ def get_ossec_version():
 
 def get_ruleset_version():
     try:
-        f_version = open(ossec_ruleset_version_path)
-        rs_version = f_version.read().strip("\n").split("=")[1][2:-1]
-        f_version.close()
+        with open(ossec_ruleset_version_path) as version_file:
+            lines = version_file.readlines()
+        rs_version = lines[0].split("=")[1].strip("\n\"")
     except:
         rs_version = "N/A"
 
