@@ -595,4 +595,4 @@ if __name__ == "__main__":
     try:
         main()
     except Exception as e:
-        exit(2, "Unkown: {0}.\nExiting.".format(e))
+        exit(2, "Unknown: {0}.\nExiting.".format(e))
