@@ -271,12 +271,13 @@ def get_new_ruleset(source, url):
         # Extract
         try:
             with contextlib.closing(ZipFile(ruleset_zip)) as z:
+                zip_dir = search('^wazuh-ruleset-{0}([0-9a-z-]+)?$'.format(branch), z.namelist()[0].strip('/')).group(0)
                 z.extractall(update_downloads)
         except Exception as e:
             exit(2, "\tError extracting file '{0}': {1}.".format(ruleset_zip, e))
 
         # Rename
-        rename("{0}/wazuh-ruleset-{1}".format(update_downloads, branch), update_ruleset)
+        rename("{0}/{1}".format(update_downloads, zip_dir), update_ruleset)
 
     else:
         # New ruleset
