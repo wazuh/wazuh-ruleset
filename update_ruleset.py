@@ -523,6 +523,7 @@ def usage():
     \t-j, --json          JSON output. It should be used with '-s' or '-S' argument.
     \t-d, --debug         Debug mode.
     \t-u, --url           URL of ruleset zip (default: https://github.com/wazuh/wazuh-ruleset/archive/$BRANCH-NAME.zip)
+    \t                    It requires -n parameter.
     \t-n, --branch-name   Branch name (default: stable)
     """.format(branch)
     print(msg)
@@ -553,6 +554,9 @@ if __name__ == "__main__":
         print(str(err) + "\n" + "Try './update_ruleset.py --help' for more information.")
         sys.exit(1)
 
+    branch_found = False
+    url_found = False
+
     for o, a in opts:
         if o in ("-b", "--backups"):
             arguments['backups'] = True
@@ -577,14 +581,20 @@ if __name__ == "__main__":
             arguments['json'] = True
         elif o in ("-n", "--branch-name"):
             arguments['branch-name'] = a
+            branch_found = True
         elif o in ("-u", "--url"):
             arguments['url'] = a
+            url_found = True
         elif o in ("-h", "--help"):
             usage()
             sys.exit(0)
         else:
             usage()
             sys.exit(1)
+
+    if url_found and not branch_found:
+        print("Bad arguments combination.\nURL parameter should be specified with a Branch name.")
+        sys.exit(1)
 
     if restart_args > 1:
         print("Bad arguments combination.\nTry './update_ruleset.py --help' for more information.")
