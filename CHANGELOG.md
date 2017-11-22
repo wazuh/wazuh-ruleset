@@ -1,6 +1,21 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [v3.0.0]
+### Added
+  - New features for "update_ruleset.py": custom URL and branch name
+  - New users added to list of known malicious user agents
+  - OwnCloud (Rules and decoders)
+  - Updated scap content from https://github.com/OpenSCAP/scap-security-guide
+  - Rules for VirusTotal integration
+  - Add GPG13 mappings to rules (gpg13.com)
+
+### Changed
+  - Removed "MJ12bot" from list of known malicious user agents
+  - SSH decoders
+  - OpenVPN decoders
+  - RoundCube (Rules and decoders)
+
 ## [v2.1.0]
 ### Added
 - Decoders and rules for anti-flooding mechanism
