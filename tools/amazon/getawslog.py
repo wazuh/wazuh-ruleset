@@ -117,7 +117,7 @@ def main(argv):
                     for key in json_event:
                         if json_event[key]:
                             new_dict[key] = json_event[key]
-                    new_dict['source_log'] = newFile
+                    new_dict['log_file'] = newFile
                     aws_log = {'aws': new_dict}
                     log.write("{0}\n".format(json.dumps(aws_log)))
             log.close()
