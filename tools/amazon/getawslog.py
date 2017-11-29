@@ -112,8 +112,13 @@ def main(argv):
                 j = json.load(data)
                 if "Records" not in j:
                     continue
-                for item in j["Records"]:
-                    aws_log = {'aws': item}
+                for json_event in j["Records"]:
+                    new_dict = {}
+                    for key in json_event:
+                        if json_event[key]:
+                            new_dict[key] = json_event[key]
+                    new_dict['source_log'] = newFile
+                    aws_log = {'aws': new_dict}
                     log.write("{0}\n".format(json.dumps(aws_log)))
             log.close()
 
