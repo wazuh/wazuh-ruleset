@@ -1,6 +1,11 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [v3.1.0]
+### Added
+  - New rules for VULS integration
+  - New rules for CIS-CAT integration
+
 ## [v3.0.0]
 ### Added
   - New features for "update_ruleset.py": custom URL and branch name
