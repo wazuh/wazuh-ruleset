@@ -16,6 +16,7 @@ All notable changes to this project will be documented in this file.
   - OpenVPN decoders
   - RoundCube (Rules and decoders)
 
+
 ## [v2.1.0]
 ### Added
 - Decoders and rules for anti-flooding mechanism
