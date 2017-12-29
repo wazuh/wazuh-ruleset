@@ -28,8 +28,8 @@
 <decoder name="openldap-connect">
     <parent>openldap</parent>
     <prematch>ACCEPT</prematch>
-    <regex>^conn=(\d+) fd=\d+ ACCEPT from IP=(\S+):</regex>
-    <order>id, srcip</order>
+    <regex>^conn=(\d+) fd=\d+ ACCEPT from IP=(\S+):\d+ \(IP=(\S+):</regex>
+    <order>id, srcip, dstip</order>
     <accumulate/>
 </decoder>
 
