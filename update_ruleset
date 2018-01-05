@@ -298,7 +298,7 @@ def get_new_ruleset(source, url, branch_name=None):
 
     # Update main directory
     copy("{0}/VERSION".format(update_ruleset), ossec_ruleset_version_path)
-    copy("{0}/update_ruleset.py".format(update_ruleset), ossec_update_script, 0o750)
+    copy("{0}/update_ruleset".format(update_ruleset), ossec_update_script, 0o750)
 
     return get_ruleset_version()
 
@@ -506,8 +506,8 @@ def usage():
     Github repository: https://github.com/wazuh/wazuh-ruleset
     Full documentation: http://documentation.wazuh.com/en/latest/wazuh_ruleset.html
 
-    Usage: ./update_ruleset.py                  # Update Decoders, Rules and Rootchecks
-           ./update_ruleset.py -b               # Restore last backup
+    Usage: ./update_ruleset                  # Update Decoders, Rules and Rootchecks
+           ./update_ruleset -b               # Restore last backup
 
     Restart:
     \t-r, --restart       Restart OSSEC when required.
@@ -548,10 +548,10 @@ if __name__ == "__main__":
     try:
         opts, args = getopt(sys.argv[1:], "s:o:n:u:brRfdjh", ["backups", "source=", "ossec_path=", "restart", "no-restart", "force-update", "debug", "json", "help", "branch-name=", "url="])
         if len(opts) > 6:
-            print("Incorrect number of arguments.\nTry './update_ruleset.py --help' for more information.")
+            print("Incorrect number of arguments.\nTry './update_ruleset --help' for more information.")
             sys.exit(1)
     except GetoptError as err:
-        print(str(err) + "\n" + "Try './update_ruleset.py --help' for more information.")
+        print(str(err) + "\n" + "Try './update_ruleset --help' for more information.")
         sys.exit(1)
 
     branch_found = False
@@ -597,7 +597,7 @@ if __name__ == "__main__":
         sys.exit(1)
 
     if restart_args > 1:
-        print("Bad arguments combination.\nTry './update_ruleset.py --help' for more information.")
+        print("Bad arguments combination.\nTry './update_ruleset --help' for more information.")
         sys.exit(1)
 
     # Capture Cntrl + C
@@ -607,7 +607,7 @@ if __name__ == "__main__":
     ossec_ruleset_log = "{0}/logs/ruleset.log".format(ossec_path)
     ossec_conf = "{0}/etc/ossec.conf".format(ossec_path)
     ossec_rootchecks = "{0}/etc/rootcheck".format(ossec_path)
-    ossec_update_script = "{0}/bin/update_ruleset.py".format(ossec_path)
+    ossec_update_script = "{0}/bin/update_ruleset".format(ossec_path)
     ossec_ruleset = "{0}/ruleset".format(ossec_path)
     ossec_rules = "{0}/rules".format(ossec_ruleset)
     ossec_decoders = "{0}/decoders".format(ossec_ruleset)
