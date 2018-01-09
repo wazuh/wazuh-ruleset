@@ -208,7 +208,6 @@ def get_ossec_version():
     try:
         ossec_v = "old"
         is_wazuh = False
-
         f_ossec = open(init_file)
         for line in f_ossec.readlines():
             line_lower = line.lower()
@@ -297,8 +296,8 @@ def get_new_ruleset(source, url, branch_name=None):
                 exit(2, "'{0}' doest not exist at '{1}'.\nExit.".format(cf, source))
 
     # Update main directory
-    copy("{0}/VERSION".format(update_ruleset), ossec_ruleset_version_path)
     copy("{0}/update_ruleset.py".format(update_ruleset), ossec_update_script, 0o750)
+    copy("{0}/VERSION".format(update_ruleset), ossec_ruleset_version_path)
 
     return get_ruleset_version()
 
@@ -434,8 +433,8 @@ def restore_backups():
 
 
 def main():
-    status = {'restart_required': False, 'restarted': False, 'success': False, 'msg': ""}
 
+    status = {'restart_required': False, 'restarted': False, 'success': False, 'msg': ""}
     # Previous checks
     is_wazuh, ossec_version = get_ossec_version()
 
@@ -454,9 +453,22 @@ def main():
         status['restart_required'] = True
         status['msg'] = "\nBackup restored successfully"
     else:
+        # version temporary backup
+
+        copy(ossec_ruleset_version_path, ossec_ruleset_version_path+'-old', 0o750)
+        copy(ossec_update_script, ossec_update_script+'-old', 0o750)
         # Get ruleset
         status['old_version'] = get_ruleset_version()
         status['new_version'] = get_new_ruleset(arguments['source'], arguments['url'], arguments['branch-name'])
+        #Compare major
+        if same_major(ossec_version.replace('"',''),status['new_version']) == False:
+            copy(ossec_ruleset_version_path+'-old', ossec_ruleset_version_path, 0o750)
+            copy(ossec_update_script+'-old', ossec_update_script, 0o750)
+            exit(2,"Upgrade is only available between same major.")
+        # remove temporary files
+        os.system('rm -f '+ossec_update_script+'-old')
+        os.system('rm -f '+ossec_ruleset_version_path+'-old')
+
         ruleset_to_update, status['restart_required'] = get_ruleset_to_update(arguments['force'])
 
         # Update
@@ -498,6 +510,9 @@ def main():
     if arguments['json']:
         print(dumps({'error': 0, 'data': status}))
 
+
+def same_major(old_version, new_version):
+    return old_version.split(".")[0] == new_version.split(".")[0]
 
 def usage():
     branch = get_branch()  # 'stable' 'master' 'development'
@@ -602,7 +617,6 @@ if __name__ == "__main__":
 
     # Capture Cntrl + C
     signal(SIGINT, signal_handler)
-
     ossec_path = arguments['ossec_path']
     ossec_ruleset_log = "{0}/logs/ruleset.log".format(ossec_path)
     ossec_conf = "{0}/etc/ossec.conf".format(ossec_path)
