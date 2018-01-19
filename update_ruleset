@@ -466,10 +466,12 @@ def main():
         if same_major(ossec_version.replace('"',''),status['new_version']) == False:
             copy(ossec_ruleset_version_path+'-old', ossec_ruleset_version_path, 0o750)
             copy(ossec_update_script+'-old', ossec_update_script, 0o750)
+            os.remove(ossec_update_script+'-old')
+            os.remove(ossec_ruleset_version_path+'-old')
             exit(2,"Upgrade is only available between same major.")
         # remove temporary files
-        os.system('rm -f '+ossec_update_script+'-old')
-        os.system('rm -f '+ossec_ruleset_version_path+'-old')
+        os.remove(ossec_update_script+'-old')
+        os.remove(ossec_ruleset_version_path+'-old')
 
 
         ruleset_to_update, status['restart_required'] = get_ruleset_to_update(arguments['force'])
