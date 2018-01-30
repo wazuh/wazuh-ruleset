@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [v3.2.0]
+### Removed
+  - Removed svchost.exe and inetsrv.exe processes checking outside SysNative due to false positive.
+
 ## [v3.1.0]
 ### Added
   - New rules for VULS integration
