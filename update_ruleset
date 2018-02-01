@@ -458,7 +458,10 @@ def main():
         # version temporary backup
 
         copy(ossec_ruleset_version_path, ossec_ruleset_version_path+'-old', 0o750)
-        copy(ossec_update_script, ossec_update_script+'-old', 0o750)
+        try:
+            copy(ossec_update_script, ossec_update_script+'-old', 0o750)
+        except:
+            copy(ossec_update_script + ".py", ossec_update_script+'-old', 0o750)
         # Get ruleset
         status['old_version'] = get_ruleset_version()
         status['new_version'] = get_new_ruleset(arguments['source'], arguments['url'], arguments['branch-name'])
