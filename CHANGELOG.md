@@ -2,8 +2,15 @@
 All notable changes to this project will be documented in this file.
 
 ## [v3.2.0]
+### Added
+  - Added new rules for _Vulnerability detector_.
+  
 ### Removed
   - Removed svchost.exe and inetsrv.exe processes checking outside SysNative due to false positive.
+
+### Fixed
+  - Fixed `update_ruleset` script.
+  
 
 ## [v3.1.0]
 ### Added
