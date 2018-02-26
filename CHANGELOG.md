@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 ### Fixed
   - Silence rules about OpenSCAP and CIS-CAT scan status.
   - Add compatibility between versions for CIS-CAT rules.
+  - Sudo decoders extract commands with spaces.
 
 
 ## [v3.2.0]
