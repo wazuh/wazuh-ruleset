@@ -34,12 +34,12 @@ MariaDB Table events
 -->
 
 <decoder name="mariadb-syslog">
-    <prematch>^\d*\s+\.*,ip-\.*,\.*,\.*,\.*,\.*,\.*,\.*</prematch>
+    <prematch>^\d+\s+\S+,ip-</prematch>
 </decoder>
 
 <decoder name="mariadb-syslog-fields-2">
     <parent>mariadb-syslog</parent>
-    <regex>^\d* \.*,ip-(\.*),(\.*),(\.*),\.*,\.*,(\.*),(\.*)</regex>
+    <regex>ip-(\.*),(\.*),(\.*),\.*,\.*,(\.*),(\.*)</regex>
     <order>mariadb.ip,mariadb.username,mariadb.host,mariadb.action,mariadb.resource</order>
 </decoder>
 
@@ -52,20 +52,20 @@ MariaDB log_error
 2017-09-25 10:25:05 139665896770304 [Note] Event Scheduler: Purging the queue. 0 events
 -->
 <decoder name="mariadb-syslog">
-    <prematch>^\d+-\d+-\d+\s+\d+:\d+:\d+\s+\d+\s+[\w+]\s+InnoDB: \.*</prematch>
+    <prematch>^\S+\s+\S+\s+\d+\s+[\w+]\s+InnoDB:</prematch>
 </decoder>
 
 <decoder name="mariadb-syslog">
-    <prematch>^\d+-\d+-\d+\s+\d+:\d+:\d+\s+\d+\s+[\w+]\s+mysqld: \.*</prematch>
+    <prematch>^\S+\s+\S+\s+\d+\s+[\w+]\s+mysqld:</prematch>
 </decoder>
 
 <decoder name="mariadb-syslog">
-    <prematch>^\d+-\d+-\d+\s+\d+:\d+:\d+\s+\d+\s+[\w+]\s+Event Scheduler: \.*</prematch>
+    <prematch>^\S+\s+\S+\s+\d+\s+[\w+]\s+Event Scheduler:</prematch>
 </decoder>
 
 <decoder name="mariadb-errors">
     <parent>mariadb-syslog</parent>
-    <regex>^\d+-\d+-\d+\s+\d+:\d+:\d+\s+\d+\s+([\w+])\s+(\.*)$</regex>
+    <regex>([\w+])\s+(\.*)$</regex>
     <order>mariadb.type,mariadb.log</order>
 </decoder>
 
