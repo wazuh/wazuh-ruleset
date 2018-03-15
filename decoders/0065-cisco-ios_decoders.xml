@@ -10,8 +10,8 @@
 <!--
   - Group for Cisco IOS messages.
  -->
- 
- 
+
+
 <decoder name="cisco-ios">
   <prematch>^%\w+-\d-\w+: </prematch>
 </decoder>
@@ -34,7 +34,7 @@
 </decoder>
 
 <!--
-  - Date and hour (preceded by * or nothing), no sequence number 
+  - Date and hour (preceded by * or nothing), no sequence number
   - *Mar  1 18:46:11: %SYS-5-CONFIG_I: Configured from console by vty2 (10.34.195.36)
   - Mar  1 18:46:11: %SYS-5-CONFIG_I: Configured from console by vty2 (10.34.195.36)
 -->
@@ -43,8 +43,8 @@
 </decoder>
 
 <!--
-  - Date and hour (preceded by * or nothing) with ms and timezone, no sequence number 
-  - *Mar  1 18:48:50.483 UTC: %SYS-5-CONFIG_I: Configured from console by vty2 (10.34.195.36) 
+  - Date and hour (preceded by * or nothing) with ms and timezone, no sequence number
+  - *Mar  1 18:48:50.483 UTC: %SYS-5-CONFIG_I: Configured from console by vty2 (10.34.195.36)
 -->
 <decoder name="cisco-ios">
   <prematch>^\p*\w+\s+\d*\s+\d+:\d+:\d+.\d+\s+\w+:\s+%</prematch>
@@ -53,7 +53,7 @@
 
 <!--
   - Sequence number, no date or time
-  - 000019: %SYS-5-CONFIG_I: Configured from console by vty2 (10.34.195.36) 
+  - 000019: %SYS-5-CONFIG_I: Configured from console by vty2 (10.34.195.36)
 -->
 
 <decoder name="cisco-ios">
@@ -64,11 +64,12 @@
   - Sequence number, date (preceded by * or . or nothing) and hour
   - 1348: .Jun 12 18:22:22 UTC: %SYS-5-CONFIG_I:
   - 1348: *Jun 12 18:22:22 UTC: %SYS-5-CONFIG_I:
-  - 1348: Jun 12 18:22:22 UTC: %SYS-5-CONFIG_I: 
+  - 1348: Jun 12 18:22:22 UTC: %SYS-5-CONFIG_I:
+  - 681: Aug 17 17:41:24.776 AEST: %SEC-6-IPACCESSLOGS:
 -->
 
 <decoder name="cisco-ios">
-  <prematch>^\d+:\s+\p*\w+\s+\d*\s+\d+:\d+:\d+\s+\w+:\s+%</prematch>
+  <prematch>^\d+:\s+\p*\w+\s+\d+\s+\S+\s+\w+:\s+%</prematch>
 </decoder>
 
 
@@ -79,7 +80,7 @@
   - %SEC-6-IPACCESSLOGP: list 102 denied tcp 10.0.6.56(3067) -> 172.36.4.7(139), 1 packet
   - %SEC-6-IPACCESSLOGP: list 199 denied tcp 10.0.61.108(1477) -> 10.0.127.20(445), 1 packet
   -->
-  
+
 <decoder name="cisco-ios-acl">
   <parent>cisco-ios</parent>
   <type>firewall</type>
