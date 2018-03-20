@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [v3.3.0]
+### Added
+  - Added rootcheck file for apache 2.2/2.4 (by @Bob-Andrews).
+
 ## [v3.2.1]
 ### Fixed
   - Silence rules about OpenSCAP and CIS-CAT scan status.
