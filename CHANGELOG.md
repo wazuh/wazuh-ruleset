@@ -1,6 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+
 ## [v3.2.2]
 ### Fixed
   - Syntax error in cis_rhel7_linux_rcl.txt.
@@ -15,6 +16,7 @@ All notable changes to this project will be documented in this file.
   - Pfsense decoders.
   - Mysql rules for Percona and Mcafee.
   - MariaDB decoders and rules.
+  - Added rootcheck file for apache 2.2/2.4 (by @Bob-Andrews).
 
 
 ## [v3.2.1]
