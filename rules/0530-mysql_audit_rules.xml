@@ -4,6 +4,8 @@
   -  This program is a free software; you can redistribute it and/or modify it under the terms of GPLv2.
 -->
 
+<!-- ID: 88000 - 88099 -->
+
 <!--
 logcollector must be configured with the following labels
 
@@ -83,60 +85,59 @@ logcollector must be configured with the following labels
       <group>pci_dss_8.7,gpg13_7.1</group>
     </rule>
 
-    <rule id="89000" level="0">
+    <rule id="89050" level="0">
       <decoded_as>json</decoded_as>
       <field name="mysql_audit_log">mcafee</field>
       <description>McAfee AUDIT Plugin for MySQL events grouped.</description>
     </rule>
 
-    <rule id="89001" level="3">
-      <if_sid>89000</if_sid>
+    <rule id="89051" level="3">
+      <if_sid>89050</if_sid>
       <field name="cmd">^Connect$</field>
       <description>McAfee MySQL audit: authentication attempt.</description>
       <group>pci_dss_10.2.5,pci_dss_8.7,gpg13_7.1,gpg13_7.2,</group>
     </rule>
 
-    <rule id="89002" level="3">
-      <if_sid>89000</if_sid>
+    <rule id="89052" level="3">
+      <if_sid>89050</if_sid>
       <field name="cmd">^Quit$</field>
       <description>McAfee MySQL audit: user logout.</description>
       <group>pci_dss_10.2.5,pci_dss_8.7,gpg13_7.1,gpg13_7.2,</group>
     </rule>
 
-    <rule id="89003" level="9">
-      <if_sid>89000</if_sid>
+    <rule id="89053" level="9">
+      <if_sid>89050</if_sid>
       <field name="cmd">^Failed Login$</field>
       <description>McAfee MySQL audit: authentication failure.</description>
       <group>authentication_failed,pci_dss_10.2.4,pci_dss_10.2.5,pci_dss_8.7,gpg13_7.1,</group>
     </rule>
 
-    <rule id="89004" level="3">
-      <if_sid>89000</if_sid>
+    <rule id="89054" level="3">
+      <if_sid>89050</if_sid>
       <status>^0$</status>
       <description>McAfee MySQL audit success: $(cmd) statement.</description>
       <group>pci_dss_8.7,gpg13_7.1</group>
     </rule>
 
-    <rule id="89005" level="5">
-      <if_sid>89004</if_sid>
+    <rule id="89055" level="5">
+      <if_sid>89054</if_sid>
       <field name="cmd">^drop|^alter|^insert|^update|^grant|^delete</field>
       <description>McAfee MySQL audit success: $(cmd) statement.</description>
       <group>pci_dss_8.7,gpg13_7.1</group>
     </rule>
 
-    <rule id="89006" level="3">
-      <if_sid>89000</if_sid>
+    <rule id="89056" level="3">
+      <if_sid>89050</if_sid>
       <status>^1</status>
       <description>McAfee MySQL audit failed: $(cmd) statement.</description>
       <group>pci_dss_8.7,gpg13_7.1</group>
     </rule>
 
-    <rule id="89007" level="5">
-      <if_sid>89006</if_sid>
+    <rule id="89057" level="5">
+      <if_sid>89056</if_sid>
       <field name="cmd">^drop|^alter|^insert|^update|^grant|^delete</field>
       <description>McAfee MySQL audit failed: $(cmd) statement.</description>
       <group>pci_dss_8.7,gpg13_7.1</group>
     </rule>
 
 </group>
-
