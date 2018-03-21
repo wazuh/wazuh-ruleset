@@ -2,8 +2,24 @@
 All notable changes to this project will be documented in this file.
 
 ## [v3.3.0]
+
+
+## [v3.2.2]
+### Fixed
+  - Syntax error in cis_rhel7_linux_rcl.txt.
+  - OpenLDAP decoders to extract the IP address properly.
+  - Owncloud rules compatible with JSON logs.
+
+### Removed
+  - Removed alert_by_email for rule 1002 and 9704.
+
 ### Added
+  - OpenVAS decoders and rules.
+  - Pfsense decoders.
+  - Mysql rules for Percona and Mcafee.
+  - MariaDB decoders and rules.
   - Added rootcheck file for apache 2.2/2.4 (by @Bob-Andrews).
+
 
 ## [v3.2.1]
 ### Fixed
@@ -15,13 +31,13 @@ All notable changes to this project will be documented in this file.
 ## [v3.2.0]
 ### Added
   - Added new rules for _Vulnerability detector_.
-  
+
 ### Removed
   - Removed svchost.exe and inetsrv.exe processes checking outside SysNative due to false positive.
 
 ### Fixed
   - Fixed `update_ruleset` script.
-  
+
 
 ## [v3.1.0]
 ### Added
