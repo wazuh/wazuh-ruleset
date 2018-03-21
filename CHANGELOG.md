@@ -1,6 +1,22 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [v3.2.2]
+### Fixed
+  - Syntax error in cis_rhel7_linux_rcl.txt.
+  - OpenLDAP decoders to extract the IP address properly.
+  - Owncloud rules compatible with JSON logs.
+
+### Removed
+  - Removed alert_by_email for rule 1002 and 9704.
+
+### Added
+  - OpenVAS decoders and rules.
+  - Pfsense decoders.
+  - Mysql rules for Percona and Mcafee.
+  - MariaDB decoders and rules.
+
+
 ## [v3.2.1]
 ### Fixed
   - Silence rules about OpenSCAP and CIS-CAT scan status.
@@ -11,13 +27,13 @@ All notable changes to this project will be documented in this file.
 ## [v3.2.0]
 ### Added
   - Added new rules for _Vulnerability detector_.
-  
+
 ### Removed
   - Removed svchost.exe and inetsrv.exe processes checking outside SysNative due to false positive.
 
 ### Fixed
   - Fixed `update_ruleset` script.
-  
+
 
 ## [v3.1.0]
 ### Added
