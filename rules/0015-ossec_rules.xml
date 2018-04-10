@@ -19,7 +19,7 @@
     <options>alert_by_email</options>
     <match>Agent started</match>
     <description>New ossec agent connected.</description>
-    <group>pci_dss_10.6.1,gpg13_10.1,</group>
+    <group>pci_dss_10.6.1,gpg13_10.1,gdpr_2.3,</group>
   </rule>
 
   <rule id="502" level="3">
@@ -27,7 +27,7 @@
     <options>alert_by_email</options>
     <match>Ossec started</match>
     <description>Ossec server started.</description>
-    <group>pci_dss_10.6.1,gpg13_10.1,</group>
+    <group>pci_dss_10.6.1,gpg13_10.1,gdpr_2.3,</group>
   </rule>
 
   <rule id="503" level="3">
@@ -35,7 +35,7 @@
     <options>alert_by_email</options>
     <match>Agent started</match>
     <description>Ossec agent started.</description>
-    <group>pci_dss_10.6.1,pci_dss_10.2.6,gpg13_10.1,</group>
+    <group>pci_dss_10.6.1,pci_dss_10.2.6,gpg13_10.1,gdpr_2.3,gdpr_5,</group>
   </rule>
 
   <rule id="504" level="3">
@@ -43,7 +43,7 @@
     <options>alert_by_email</options>
     <match>Agent disconnected</match>
     <description>Ossec agent disconnected.</description>
-    <group>pci_dss_10.6.1,pci_dss_10.2.6,gpg13_10.1,</group>
+    <group>pci_dss_10.6.1,pci_dss_10.2.6,gpg13_10.1,gdpr_2.3,gdpr_5,</group>
   </rule>
 
   <rule id="509" level="0">
@@ -97,7 +97,7 @@
     <match>^Starting OpenSCAP scan|^Ending OpenSCAP scan.|</match>
     <match>^Starting CIS-CAT scan|^Ending CIS-CAT scan.</match>
     <description>Ignoring scan messages.</description>
-    <group>rootcheck,syscheck,pci_dss_10.6.1,</group>
+    <group>rootcheck,syscheck,pci_dss_10.6.1,gdpr_2.3,</group>
   </rule>
 
   <rule id="516" level="3">
@@ -125,7 +125,7 @@
     <if_sid>500</if_sid>
     <match>Duplicated IP</match>
     <description>Trying to add an agent with duplicated IP.</description>
-    <group>pci_dss_10.6.1,gpg13_10.1,</group>
+    <group>pci_dss_10.6.1,gpg13_10.1,gdpr_2.3,</group>
   </rule>
 
 
@@ -142,7 +142,7 @@
     <match>ossec: output: 'df -P': /dev/</match>
     <regex>100%</regex>
     <description>Partition usage reached 100% (disk space monitor).</description>
-    <group>low_diskspace,pci_dss_10.6.1,gpg13_10.1,</group>
+    <group>low_diskspace,pci_dss_10.6.1,gpg13_10.1,gdpr_2.3,</group>
   </rule>
 
  <rule id="532" level="0">
@@ -156,7 +156,7 @@
     <match>ossec: output: 'netstat listening ports</match>
     <check_diff />
     <description>Listened ports status (netstat) changed (new port opened or closed).</description>
-    <group>pci_dss_10.2.7,pci_dss_10.6.1,gpg13_10.1,</group>
+    <group>pci_dss_10.2.7,pci_dss_10.6.1,gpg13_10.1,gdpr_2.3,gdpr_5,</group>
   </rule>
 
   <rule id="534" level="1">
@@ -214,7 +214,7 @@
     <if_sid>500</if_sid>
     <match>^ossec: agentless: </match>
     <description>Integrity checksum for agentless device changed.</description>
-    <group>syscheck,agentless,pci_dss_11.5,pci_dss_10.6.1,gpg13_4.11,gdpr_2.1,</group>
+    <group>syscheck,agentless,pci_dss_11.5,pci_dss_10.6.1,gpg13_4.11,gdpr_2.1,gdpr_2.3,</group>
   </rule>
 
   <!-- Hostinfo rules -->
@@ -222,14 +222,14 @@
     <category>ossec</category>
     <decoded_as>hostinfo_modified</decoded_as>
     <description>Host information changed.</description>
-    <group>hostinfo,pci_dss_10.2.7,gpg13_4.13,</group>
+    <group>hostinfo,pci_dss_10.2.7,gpg13_4.13,gdpr_2.3,gdpr_5,</group>
   </rule>
 
   <rule id="581" level="8">
     <category>ossec</category>
     <decoded_as>hostinfo_new</decoded_as>
     <description>Host information added.</description>
-    <group>hostinfo,pci_dss_10.2.7,gpg13_4.13,</group>
+    <group>hostinfo,pci_dss_10.2.7,gpg13_4.13,gdpr_5,</group>
   </rule>
 
 
@@ -238,21 +238,21 @@
     <if_sid>500</if_sid>
     <match>^ossec: File rotated </match>
     <description>Log file rotated.</description>
-    <group>pci_dss_10.5.2,pci_dss_10.5.5,gpg13_10.1,</group>
+    <group>pci_dss_10.5.2,pci_dss_10.5.5,gpg13_10.1,gdpr_2.1,gdpr_2.3,</group>
   </rule>
 
   <rule id="592" level="8">
     <if_sid>500</if_sid>
     <match>^ossec: File size reduced</match>
     <description>Log file size reduced.</description>
-    <group>attacks,pci_dss_10.5.2,pci_dss_11.4,gpg13_10.1,</group>
+    <group>attacks,pci_dss_10.5.2,pci_dss_11.4,gpg13_10.1,gdpr_2.3,gdpr_2.4,</group>
   </rule>
 
   <rule id="593" level="9">
     <if_sid>500</if_sid>
     <match>^ossec: Event log cleared</match>
     <description>Microsoft Event log cleared.</description>
-    <group>logs_cleared,pci_dss_10.5.2,gpg13_10.1,</group>
+    <group>logs_cleared,pci_dss_10.5.2,gpg13_10.1,gdpr_2.3,</group>
   </rule>
 
   <rule id="594" level="5">
@@ -311,7 +311,7 @@
     <field name="script">firewall-drop.sh</field>
     <field name="type">add</field>
     <description>Host Blocked by firewall-drop.sh Active Response</description>
-    <group>active_response,pci_dss_11.4,gpg13_4.13,</group>
+    <group>active_response,pci_dss_11.4,gpg13_4.13,gdpr_2.4,</group>
   </rule>
 
   <rule id="602" level="3">
@@ -319,7 +319,7 @@
     <field name="script">firewall-drop.sh</field>
     <field name="type">delete</field>
     <description>Host Unblocked by firewall-drop.sh Active Response</description>
-    <group>active_response,pci_dss_11.4,gpg13_4.13,</group>
+    <group>active_response,pci_dss_11.4,gpg13_4.13,gdpr_2.4,</group>
   </rule>
 
   <rule id="603" level="3">
@@ -327,7 +327,7 @@
     <field name="script">host-deny.sh</field>
     <field name="type">add</field>
     <description>Host Blocked by host-deny.sh Active Response</description>
-    <group>active_response,pci_dss_11.4,gpg13_4.13,</group>
+    <group>active_response,pci_dss_11.4,gpg13_4.13,gdpr_2.4,</group>
   </rule>
 
   <rule id="604" level="3">
@@ -335,7 +335,7 @@
     <field name="script">host-deny.sh</field>
     <field name="type">delete</field>
     <description>Host Unblocked by host-deny.sh Active Response</description>
-    <group>active_response,pci_dss_11.4,gpg13_4.13,</group>
+    <group>active_response,pci_dss_11.4,gpg13_4.13,gdpr_2.4,</group>
   </rule>
 
   <rule id="605" level="3">
@@ -343,7 +343,7 @@
     <field name="script">route-null</field>
     <field name="type">add</field>
     <description>Host Blocked by $(script) Active Response</description>
-    <group>active_response,pci_dss_11.4,gpg13_4.13,</group>
+    <group>active_response,pci_dss_11.4,gpg13_4.13,gdpr_2.4,</group>
   </rule>
 
   <rule id="606" level="3">
@@ -351,13 +351,13 @@
     <field name="script">route-null</field>
     <field name="type">delete</field>
     <description>Host Unblocked by $(script) Active Response</description>
-    <group>active_response,pci_dss_11.4,gpg13_4.13,</group>
+    <group>active_response,pci_dss_11.4,gpg13_4.13,gdpr_2.4,</group>
   </rule>
 
   <rule id="607" level="3">
     <if_sid>600</if_sid>
     <description>Active response: $(script) - $(type)</description>
-    <group>active_response,pci_dss_11.4,</group>
+    <group>active_response,pci_dss_11.4,gdpr_2.4,</group>
   </rule>
 
   <rule id="700" level="0">
