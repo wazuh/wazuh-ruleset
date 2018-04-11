@@ -73,7 +73,7 @@
   <rule id="1010" level="5">
     <match>segfault at </match>
     <description>Process segfaulted.</description>
-    <group>service_availability,</group>
+    <group>service_availability,gdpr_2.6,</group>
   </rule>
 
 </group> <!-- SYSLOG,ERRORS -->
@@ -179,6 +179,7 @@
     <if_sid>2507</if_sid>
     <match>ACCEPT from</match>
     <description>OpenLDAP connection open.</description>
+    <group>gdpr_2.7,gdpr_5,</group>
   </rule>
 
   <rule id="2509" level="5" timeframe="10" frequency="0">
@@ -273,6 +274,7 @@
     <match>Oversized packet received from</match>
     <description>Error message from the kernel. </description>
     <description>Ping of death attack.</description>
+    <group>gdpr_2.3,</group>
   </rule>
 
   <rule id="5104" level="8">
@@ -738,14 +740,14 @@
     <decoded_as>gpasswd</decoded_as>
     <match>added by</match>
     <description>User added to group.</description>
-    <group>gpg13_7.9,gpg13_4.13,</group>
+    <group>gpg13_7.9,gpg13_4.13,gdpr_2.7,gdpr_5,</group>
   </rule>
 
   <rule id="2961" level="5">
     <if_sid>2960</if_sid>
     <field name="group">sudo</field>
     <description>User added to group sudo.</description>
-    <group>gpg13_7.9,gpg13_4.13,</group>
+    <group>gpg13_7.9,gpg13_4.13,gdpr_2.7,gdpr_5,</group>
   </rule>
 
 </group>

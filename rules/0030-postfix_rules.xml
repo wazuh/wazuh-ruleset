@@ -93,6 +93,7 @@
     <if_sid>3320</if_sid>
     <match>^daemon started </match>
     <description>Postfix started.</description>
+    <group>gdpr_3,</group>
   </rule>
 
   <rule id="3335" level="6">
@@ -106,7 +107,7 @@
     <if_sid>3320</if_sid>
     <match>^terminating on signal</match>
     <description>Postfix stopped.</description>
-    <group>service_availability,pci_dss_10.6.1,gdpr_2.3,gdpr_2.4,</group>
+    <group>service_availability,pci_dss_10.6.1,gdpr_2.3,gdpr_2.4,gdpr_3,</group>
   </rule>
 
   <rule id="3351" level="6" frequency="$POSTFIX_FREQ" timeframe="90">
