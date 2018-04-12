@@ -17,7 +17,6 @@
     <if_sid>51500</if_sid>
     <match>ichiic0: abort failed, status 0x40</match>
     <description>A timeout occurred waiting for a transfer.</description>
-    <group>gdpr_2.6,</group>
   </rule>
 
   <rule id="51502" level="0">
@@ -30,7 +29,6 @@
     <if_sid>51500</if_sid>
     <match>BBB bulk-in clear stall failed</match>
     <description>A disk has timed out.</description>
-    <group>gdpr_2.6,</group>
   </rule>
 
   <rule id="51504" level="1">
@@ -57,7 +55,6 @@
     <if_sid>51500</if_sid>
     <match>Michael MIC failure</match>
     <description>Michael MIC failure: Checksum failure in the tkip protocol.</description>
-    <group>gdpr_2.6,</group>
   </rule>
 
   <rule id="51508" level="2">
@@ -72,7 +69,6 @@
     <regex>acpithinkpad\d:</regex>
     <match>unknown event</match>
     <description>Unknown acpithinkpad event</description>
-    <group>gdpr_2.6,</group>
   </rule>
 
   <rule id="51510" level="5">
@@ -99,49 +95,47 @@
     <if_sid>51500</if_sid>
     <match>ichiic0: abort failed, status 0x0</match>
     <description>Possible APM or ACPI event.</description>
-    <group>gdpr_2.6,</group>
   </rule>
 
   <rule id="51514" level="3">
     <if_sid>51500</if_sid>
     <match>Filesystem is not clean - run fsck</match>
     <description>Unclean filesystem, run fsck.</description>
-    <group>gpg13_4.3,gdpr_2.3,</group>
+    <group>gpg13_4.3,</group>
   </rule>
 
   <rule id="51515" level="0">
     <if_sid>51500</if_sid>
     <match>atascsi_passthru_done, timeout</match>
     <description>Timeout in atascsi_passthru_done.</description>
-    <group>gdpr_2.6,</group>
   </rule>
 
   <rule id="51516" level="0">
     <if_sid>51500</if_sid>
     <regex>RTC BIOS diagnostic error 80\pclock_battery\p</regex>
     <description>Clock battery error 80</description>
-    <group>gpg13_4.3,gdpr_2.3,</group>
+    <group>gpg13_4.3,</group>
   </rule>
 
   <rule id="51518" level="3">
     <if_sid>51500</if_sid>
     <match>i/o error on block</match>
     <description>I/O error on a storage device</description>
-    <group>gpg13_4.3,gdpr_2.6,</group>
+    <group>gpg13_4.3,</group>
   </rule>
 
   <rule id="51519" level="1">
     <if_sid>51500</if_sid>
     <match>kbc: cmd word write error</match>
     <description>kbc error.</description>
-    <group>gpg13_4.3,gdpr_2.6,</group>
+    <group>gpg13_4.3,</group>
   </rule>
 
   <rule id="51520" level="1">
     <if_sid>51500</if_sid>
     <match>BBB reset failed, IOERROR</match>
     <description>USB reset failed, IOERROR.</description>
-    <group>gpg13_4.3,gdpr_2.6,</group>
+    <group>gpg13_4.3,</group>
   </rule>
 
   <rule id="51521" level="0" noalert="1">
@@ -179,7 +173,7 @@
     <decoded_as>bsd_kernel</decoded_as>
     <match>uncorrectable data error reading fsbn</match>
     <description>Hard drive is dying.</description>
-    <group>pci_dss_10.2.7,gpg13_4.3,gdpr_2.3,gdpr_2.6,gdpr_5,</group>
+    <group>pci_dss_10.2.7,gpg13_4.3,gdpr_2.3,gdpr_5,</group>
   </rule>
 
   <rule id="51527" level="0">
@@ -269,14 +263,14 @@
     <if_sid>51551</if_sid>
     <match>: Permission denied$</match>
     <description>doas cannot stat a file due to permissions.</description>
-    <group>gdpr_2.3,gdpr_2.7,</group>
+    <group>gdpr_2.6,gdpr_2.7,gdpr_5,</group>
   </rule>
 
   <rule id="51553" level="5">
     <if_sid>51550</if_sid>
     <match>path not secure$</match>
     <description>A critical path for doas does not have secure permissions.</description>
-    <group>gdpr_2.3,gdpr_2.7,</group>
+    <group>gdpr_2.6,gdpr_2.7,gdpr_5,</group>
   </rule>
 
   <rule id="51554" level="5">
@@ -295,13 +289,14 @@
     <if_sid>51555</if_sid>
     <match> as root </match>
     <description>A doas command was run as root.</description>
+    <group>gdpr_2.7,</group>
   </rule>
 
   <rule id="51557" level="5">
     <if_sid>51550</if_sid>
     <match>failed auth for</match>
     <description>doas authentication failed.</description>
-    <group>gdpr_2.6,gdpr_2.7,</group>
+    <group>gdpr_2.6,gdpr_2.7,gdpr_5,</group>
   </rule>
 
 </group> <!-- SYSLOG,LOCAL -->
