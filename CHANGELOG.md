@@ -3,6 +3,8 @@ All notable changes to this project will be documented in this file.
 
 ## [v3.3.0]
 
+### Added
+  - CIS rootchecks for Windows 2012 R2 (by @Bob-Andrews)
 
 ## [v3.2.2]
 ### Fixed
