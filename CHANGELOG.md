@@ -1,10 +1,23 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+
 ## [v3.3.0]
 
 ### Added
   - CIS rootchecks for Windows 2012 R2 (by @Bob-Andrews)
+
+
+## [v3.2.3]
+
+### Added
+  - GDPR (General Data Protection Regulation) mapping.
+  - Improve GeoIP and composite rule support for AWS events.
+  - Pfsense rules.
+
+### Fixed
+  - Error handling in update ruleset script using python3.
+
 
 ## [v3.2.2]
 ### Fixed

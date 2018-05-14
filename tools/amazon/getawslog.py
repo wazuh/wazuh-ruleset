@@ -119,6 +119,11 @@ def main(argv):
                             new_dict[key] = json_event[key]
                     new_dict['log_file'] = newFile
                     aws_log = {'aws': new_dict}
+                    # Copy 'aws.sourceIPAddress' and 'aws.userIdentity.userName' to standard fields 'srcip' and 'user' so 'srcip' can be used in Wazuh GeoIP lookups and <same_user /> and <same_source_ip /> can be used in composite rules.
+                    if 'sourceIPAddress' in aws_log["aws"]:
+                        aws_log["srcip"]=aws_log["aws"]["sourceIPAddress"]
+                    if 'userIdentity' in aws_log["aws"] and 'userName' in aws_log["aws"]["userIdentity"]:
+                        aws_log["user"]=aws_log["aws"]["userIdentity"]["userName"]
                     log.write("{0}\n".format(json.dumps(aws_log)))
             log.close()
 
