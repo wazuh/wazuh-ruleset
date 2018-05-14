@@ -271,8 +271,8 @@ Event ID 3: Network connection
 <decoder name="Sysmon-EventID#3">
     <parent>windows</parent>
     <type>windows</type>
-    <regex offset="after_regex">ProcessGuid: (\.*) \s*ProcessId: (\.*) \s*Image: (\.*)\s+User: (\.*)\s+Protocol: (\S*)\s+Initiated: (\.*) \s*SourceIsIpv6: (\.*) \s*SourceIp: (\S*)\s+SourceHostname: (\.*) \s*SourcePort: (\S*)\s+SourcePortName:\.+DestinationIsIpv6: (\.*) \s*DestinationIp: (\S*)\s+DestinationHostname: (\.*) \s*DestinationPort: (\S*)</regex>
-    <order>sysmon.processGuid, sysmon.processId, sysmon.image, srcuser, protocol, sysmon.initiated, sysmon.sourceIsIpv6, srcip, sysmon.sourceHostname, srcport, sysmon.destinationIsIpv6, dstip, sysmon.destinationHostname, dstport</order>
+    <regex offset="after_regex">ProcessGuid: (\.*) \s*ProcessId: (\.*) \s*Image: (\.*)\s+User: (\.*)\s+Protocol: (\S*)\s+Initiated: (\.*) \s*SourceIsIpv6: (\.*) \s*SourceIp: (\S*)\s+SourceHostname: (\.*) \s*SourcePort: (\S*)\s+SourcePortName: (\.*)\s*DestinationIsIpv6: (\.*) \s*DestinationIp: (\S*)\s+DestinationHostname: (\.*) \s*DestinationPort: (\S*)\s*DestinationPortName: (\S*)\s*$</regex>
+    <order>sysmon.processGuid, sysmon.processId, sysmon.image, srcuser, protocol, sysmon.initiated, sysmon.sourceIsIpv6, srcip, sysmon.sourceHostname, srcport, sysmon.srcPortName, sysmon.destinationIsIpv6, dstip, sysmon.destinationHostname, dstport, sysmon.dstPortName</order>
 </decoder>
 
 <!--
