@@ -1,7 +1,22 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+
 ## [v3.3.0]
+
+### Added
+  - CIS rootchecks for Windows 2012 R2 (by @Bob-Andrews)
+
+
+## [v3.2.3]
+
+### Added
+  - GDPR (General Data Protection Regulation) mapping.
+  - Improve GeoIP and composite rule support for AWS events.
+  - Pfsense rules.
+
+### Fixed
+  - Error handling in update ruleset script using python3.
 
 
 ## [v3.2.2]
@@ -9,6 +24,9 @@ All notable changes to this project will be documented in this file.
   - Syntax error in cis_rhel7_linux_rcl.txt.
   - OpenLDAP decoders to extract the IP address properly.
   - Owncloud rules compatible with JSON logs.
+  - Postfix decoders and rules.
+  - Sendmail decoders to extract the IP address properly.
+  - False positives in SLES 11 rootchecks.
 
 ### Removed
   - Removed alert_by_email for rule 1002 and 9704.
@@ -19,6 +37,7 @@ All notable changes to this project will be documented in this file.
   - Mysql rules for Percona and Mcafee.
   - MariaDB decoders and rules.
   - Added rootcheck file for apache 2.2/2.4 (by @Bob-Andrews).
+  - Rules to detect USB devices disconnected.
 
 
 ## [v3.2.1]
