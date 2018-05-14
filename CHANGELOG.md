@@ -5,7 +5,13 @@ All notable changes to this project will be documented in this file.
 ## [v3.3.0]
 
 ### Added
-  - CIS rootchecks for Windows 2012 R2 (by @Bob-Andrews)
+  - CIS rootchecks for Windows 2012 R2 (by @Bob-Andrews).
+  - Extract port name for Sysmon event 3. ([#127](https://github.com/wazuh/wazuh-ruleset/pull/127))
+  - Improve Shellshock detection. ([#115](https://github.com/wazuh/wazuh-ruleset/pull/115))
+
+### Fixed
+  - Windows rules: Fix SID syntax for group membership changes. ([#125](https://github.com/wazuh/wazuh-ruleset/pull/125)).
+  - Windows decoders: Match "Subject :" format ([#128](https://github.com/wazuh/wazuh-ruleset/pull/128)).
 
 
 ## [v3.2.3]
