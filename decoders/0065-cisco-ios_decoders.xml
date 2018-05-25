@@ -43,11 +43,11 @@
 </decoder>
 
 <!--
-  - Date and hour (preceded by * or nothing) with ms and timezone, no sequence number
+  - Date and hour (preceded by * or nothing) with ms and optional timezone, no sequence number
   - *Mar  1 18:48:50.483 UTC: %SYS-5-CONFIG_I: Configured from console by vty2 (10.34.195.36)
 -->
 <decoder name="cisco-ios">
-  <prematch>^\p*\w+\s+\d*\s+\d+:\d+:\d+.\d+\s+\w+:\s+%</prematch>
+  <prematch>^\p*\w+\s+\d*\s+\d+:\d+:\d+.\d+\s*\w*:\s+%</prematch>
 </decoder>
 
 
