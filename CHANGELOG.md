@@ -1,7 +1,6 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-
 ## [v3.4.0]
 
 ### Added
@@ -12,6 +11,11 @@ All notable changes to this project will be documented in this file.
 ### Fixed
   - Windows rules: Fix SID syntax for group membership changes. ([#125](https://github.com/wazuh/wazuh-ruleset/pull/125)).
   - Windows decoders: Match "Subject :" format ([#128](https://github.com/wazuh/wazuh-ruleset/pull/128)).
+
+
+## [v3.3.0]
+
+There are no changes for Wazuh Ruleset in this version.
 
 
 ## [v3.2.4]
