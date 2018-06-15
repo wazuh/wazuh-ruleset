@@ -12,6 +12,11 @@ All notable changes to this project will be documented in this file.
   - Windows rules: Fix SID syntax for group membership changes. ([#125](https://github.com/wazuh/wazuh-ruleset/pull/125)).
   - Windows decoders: Match "Subject :" format ([#128](https://github.com/wazuh/wazuh-ruleset/pull/128)).
 
+## [v3.3.1]
+
+### Added
+
+  - Rule to detect when agents are unable to unmerge shared files. ([#143](https://github.com/wazuh/wazuh-ruleset/pull/143))
 
 ## [v3.3.0]
 
