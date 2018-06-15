@@ -1,6 +1,12 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [v3.3.1]
+
+### Added
+
+  - Rule to detect when agents are unable to unmerge shared files. ([#143](https://github.com/wazuh/wazuh-ruleset/pull/143))
+
 ## [v3.3.0]
 
 There are no changes for Wazuh Ruleset in this version.
