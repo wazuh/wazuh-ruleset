@@ -54,7 +54,7 @@ Feb 20 12:31:11 date=2011-02-20 time=12: 31:09 devname=Name_of_Device device_id=
 
 <!-- FortiOS 5.0 via syslog -->
 <decoder name="fortigate-firewall-v5">
-    <prematch>date=\S+ time=\.+ devname=\S+ devid=FG\w+ logid=\d+ </prematch>
+    <prematch>date=\S+ time=\.+ devname=\S+ devid=FG\w+ logid=\d+ |date=\S+ time=\.+ devname="\S+" devid="FG\w+" logid="\d+" </prematch>
     <type>syslog</type>
 </decoder>
 
@@ -108,8 +108,8 @@ date=2016-06-16 time=16:22:34 devname=Mobipay_Firewall devid=FGTXXXX9999999999 l
 -->
 <decoder name="fortigate-firewall-v5-event-system-information">
     <parent>fortigate-firewall-v5</parent>
-    <prematch offset="after_parent">type=event subtype=system level=information</prematch>
-    <regex offset="after_parent">user="(\S+)" ui=\p*\w+\((\S+)\)\p* action=(\S+) </regex>
+    <prematch offset="after_parent">type=event subtype=system level=information|type="event" subtype="system" level="information"</prematch>
+    <regex offset="after_parent">user="(\S+)" ui=\p*\w+\((\S+)\)\p* action=(\S+) |user="(\S+)" ui=\p*\w+\((\S+)\)\p* \.*action="(\S+)" </regex>
     <order>srcuser,srcip,action</order>
 </decoder>
 
@@ -121,7 +121,7 @@ date=2016-06-16 time=16:22:34 devname=Mobipay_Firewall devid=FGTXXXX9999999999 l
 
 <decoder name="fortigate-firewall-v5-event-system-information">
     <parent>fortigate-firewall-v5</parent>
-    <regex offset="after_regex">status=(\S+) \.*msg=(\.*)</regex>
+    <regex offset="after_regex">status=(\S+) \.*msg=(\.*)|status="(\S+)" \.*msg=(\.*)</regex>
     <order>status,extra_data</order>
 </decoder>
 
