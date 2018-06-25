@@ -304,7 +304,7 @@ ID: 81600 - 80799
         <match>subtype="app-ctrl"|subtype=app-ctrl</match>
         <action>pass</action>
         <description>Fortigate: App passed by firewall.</description>
-        <group>pci_dss_10.6.1,ggdpr_IV_35.7.d,</group>
+        <group>pci_dss_10.6.1,gdpr_IV_35.7.d,</group>
     </rule>
 
     <rule id="81634" level="3">
@@ -312,14 +312,14 @@ ID: 81600 - 80799
         <match>subtype="app-ctrl"|subtype=app-ctrl</match>
         <action>block</action>
         <description>Fortigate: App blocked by firewall.</description>
-        <group>firewall_drop,pci_dss_10.6.1,dpr_IV_35.7.d,</group>
+        <group>firewall_drop,pci_dss_10.6.1,gdpr_IV_35.7.d,</group>
     </rule>
 
     <rule id="81635" level="3" frequency="16" timeframe="45" ignore="240">
         <if_matched_sid>81620</if_matched_sid>
         <same_source_ip />
         <description>Fortigate: Multiple URL blocked from same source.</description>
-        <group>multiple_drops,pci_dss_10.6.1,dpr_IV_35.7.d,</group>
+        <group>multiple_drops,pci_dss_10.6.1,gdpr_IV_35.7.d,</group>
     </rule>
 
     <!--
