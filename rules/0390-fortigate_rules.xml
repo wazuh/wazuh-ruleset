@@ -354,6 +354,20 @@ May 31 08:58:56 172.0.0.1 date=2018-05-31 time=08:58:56 devname="BA-BEBI" devid=
         <group>firewall_drop,pci_dss_10.6.1,gdpr_IV_35.7.d,</group>
     </rule>
 
+<!--
+2018 Jun 21 00:00:35 XXX->127.0.0.1 date=2018-06-21 time=03:00:35 devname="xxx" devid="FG123341414414" logid="111111111" type="utm" subtype="webfilter" eventtype="ftgd_allow" level="notice" vd="xxx" eventtime=111111111 policyid=111 sessionid=111111111 srcip=127.0.0.1 srcport=11111 srcintf="port1" srcintfrole="undefined" dstip=127.0.0.1 dstport=111 dstintf="port111" dstintfrole="undefined" proto=1 service="XXX" hostname="xxxxx.com" profile="xx" action="passthrough" reqtype="direct" url="/xxxxxxxxxxxx" sentbyte=11 rcvdbyte=111 direction="outgoing" msg="URL belongs to an allowed category in policy" method="domain" cat=50 catdesc="Information and Computer Security"
+
+NOTE: Since this rule can be noisy is set to level 0 by default.
+-->
+
+    <rule id="81640" level="1">
+        <if_sid>81603</if_sid>
+        <status>notice</status>
+        <action>passthrough</action>
+        <description>Fortigate: URL belongs to an allowed category.</description>
+        <group>pci_dss_10.6.1,</group>
+    </rule>
+
 
 
 </group>
