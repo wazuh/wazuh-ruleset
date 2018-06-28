@@ -606,28 +606,28 @@
 <group name="syslog,dpkg,">
   <rule id="2900" level="0">
     <decoded_as>windows-date-format</decoded_as>
-    <regex offet="after_parent">^startup |^status |^remove |^configure |^install |^purge |^trigproc </regex>
+    <regex>^\S+ \S+ startup |^\S+ \S+ status |^\S+ \S+ remove |^\S+ \S+ configure |^\S+ \S+ install |^\S+ \S+ purge |^\S+ \S+ trigproc |^\S+ \S+ conffile |^\S+ \S+ upgrade </regex>
     <description>Dpkg (Debian Package) log.</description>
   </rule>
 
   <rule id="2901" level="3">
     <if_sid>2900</if_sid>
-    <regex>^\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d install</regex>
+    <regex>install</regex>
     <description>New dpkg (Debian Package) requested to install.</description>
     <group>pci_dss_10.6.1,gpg13_4.10,gdpr_IV_35.7.d,</group>
   </rule>
 
  <rule id="2902" level="7">
     <if_sid>2900</if_sid>
-    <regex>^\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d status installed</regex>
+    <regex>status installed</regex>
     <description>New dpkg (Debian Package) installed.</description>
     <group>config_changed,pci_dss_10.6.1,pci_dss_10.2.7,gpg13_4.10,gdpr_IV_35.7.d,</group>
   </rule>
 
   <rule id="2903" level="7">
     <if_sid>2900</if_sid>
-    <regex>^\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d remove|</regex>
-    <regex>^\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d purge</regex>
+    <regex>remove|</regex>
+    <regex>purge</regex>
     <description>Dpkg (Debian Package) removed.</description>
     <group>config_changed,pci_dss_10.6.1,pci_dss_10.2.7,gpg13_4.10,gdpr_IV_35.7.d,</group>
   </rule>
