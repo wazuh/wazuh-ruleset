@@ -20,9 +20,15 @@
 
 <decoder name="nginx-errorlog-user-ip">
   <parent>nginx-errorlog</parent>
-  <prematch offset="after_parent"> user "\.+"\.+, client: \S+, server: \S+, request: "\S+ </prematch>
-  <regex offset="after_parent"> user "(\.+)"\.+, client: (\S+), </regex>
-  <order>dstuser, srcip</order>
+  <prematch offset="after_parent"> user "\.+"</prematch>
+  <regex offset="after_parent"> user "(\.+)"</regex>
+  <order>dstuser</order>
+</decoder>
+
+<decoder name="nginx-errorlog-user-ip">
+  <parent>nginx-errorlog</parent>
+  <regex offset="after_regex">client: (\S+),</regex>
+  <order>srcip</order>
 </decoder>
 
 <decoder name="nginx-errorlog-ip">
