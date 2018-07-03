@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [v3.4.0]
+## [v3.5.0]
 
 ### Added
   - CIS rootchecks for Windows 2012 R2 (by @Bob-Andrews).
@@ -11,6 +11,14 @@ All notable changes to this project will be documented in this file.
 ### Fixed
   - Windows rules: Fix SID syntax for group membership changes. ([#125](https://github.com/wazuh/wazuh-ruleset/pull/125)).
   - Windows decoders: Match "Subject :" format ([#128](https://github.com/wazuh/wazuh-ruleset/pull/128)).
+
+
+## [v3.4.0]
+
+### Changed
+
+  - Removed offset of the `frequency` attribute in rules. ([#145](https://github.com/wazuh/wazuh-ruleset/pull/145))
+
 
 ## [v3.3.1]
 
