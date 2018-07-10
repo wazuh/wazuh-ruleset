@@ -48,12 +48,15 @@ FireWall-1;
   - Checkpoint:  3Apr2008 15:02:15 monitor 10.10.10.3 >eth2 Attack Info: Line
 in HTTP request too long; attack: Malformed HTTP; src: 10.10.10.4; dst:
 10.10.10.5; proto: tcp; product: SmartDefense; service: 111; s_port: 222;
+  -
+  - Apr 10 20:43:34 ngman Checkpoint: 10Apr2018 20:43:33 monitor 10.10.1.12  <bond0 Protection Name:Header Rejection;Severity:4;Confidence Level:4;protection_id:HttpHeaderRejection;SmartDefense Profile:SU2_Protection;Performance Impact:2;Industry Reference:CVE-2002-0032, CAN-2003-0237, CAN-2002-0254, CVE-2002-0155, CAN-2003-0397, CAN-2002-0314;Protection Type:protection;Signature Info:^User-Agent[^I ]*:[^I ]*.*esb|ESB;Update Version:634182243;rule:26;rule_uid:{405CB782-3274-4D7F-8AAA-4FB24CE726A0};resource:http://dnl-02.geo.kaspersky.com/bases/av/kdb/i386/kdb-i386-1211g.xml.klz;reject_id:5accf7c4-10053-c00080a-c0000003;web_client_type:Other: *BcfBAAAAgCCAAEFBAAwQfKXVzrzGvyfPESboPxow0mHhxRLAXAQAAIAAKAA=;Attack Info:WSE0100001 header rejection pattern found in request;attack:Header Rejection;src:10.36.52.125;dst:94.75.236.122;proto:6;proxy_src_ip:10.36.52.125;product:SmartDefense;service:80;s_port:51642;FollowUp:Not Followed;product_family:Network
   -->
+
 
 <!-- \s+\S+ \d\d:\d\d:\d\d (\w+) \d+.\d+.\d+.\d+ \p\S+ rule: -->
 <decoder name="checkpoint-syslog">
   <program_name>^Checkpoint</program_name>
-  <prematch>^\s+\S+ \d\d:\d\d:\d\d </prematch>
+  <prematch>^\s*\S+ \d\d:\d\d:\d\d </prematch>
 </decoder>
 
 <decoder name="checkpoint-syslog-fw">
@@ -76,9 +79,9 @@ in HTTP request too long; attack: Malformed HTTP; src: 10.10.10.4; dst:
   <parent>checkpoint-syslog</parent>
   <type>ids</type>
   <prematch offset="after_parent">^monitor|^drop</prematch>
-  <regex offset="after_prematch">attack: (\.+); </regex>
-  <regex>src: (\S+); dst: (\S+); </regex>
-  <regex>proto: (\S+);</regex>
+  <regex offset="after_prematch">attack:\s*(\.+);\s*</regex>
+  <regex>src:\s*(\S+);\s*dst:\s*(\S+);\s*</regex>
+  <regex>proto:\s*(\S+);</regex>
   <order>extra_data, srcip, dstip, protocol</order>
   <fts>name, extra_data, srcip, dstip</fts>
   <ftscomment>First time Checkpoint rule fired.</ftscomment>
