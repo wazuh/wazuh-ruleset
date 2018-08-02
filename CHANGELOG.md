@@ -9,6 +9,10 @@ All notable changes to this project will be documented in this file.
   - Rule to ignore syscollector events.
   - CIS-CAT rules improved.
 
+### Changed
+
+  - Decreased agent upgrade failure rules level.
+
 ## [v3.4.0]
 
 ### Added
