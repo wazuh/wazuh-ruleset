@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file.
   - Rules for the new osquery integration.
   - Rule to ignore syscollector events.
   - CIS-CAT rules improved.
+  - Rules and decoders for the new Kaspersky integration.
 
 ### Changed
 
