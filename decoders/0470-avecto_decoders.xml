@@ -1,0 +1,586 @@
+<!-- Avecto Decoder
+Log Examples:
+Nov 28 13:00:07 192.168.0.50 {: "Source": "Avecto", "Data": {"TimeGenerated": "2095-10-30 15:28:07","ProcessGUID": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxx","EventNumber": "100","ProcessID": "1234","TimeReceived": "2017-11-11 09:20:58.763000","EventGUID": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxy","PID": "5678","ParentPID": "5566","CommandLine": "\"cscript.exe\" \"c:\\xxx\\xxx\\xxx\\xxxx\" xxx","FileName": "cscript.exe","ProcessStartTime": "2095-10-30 15:28:07","Reason": "<None>","ClientIPV4": "<None>","ClientName": "<None>","UACTriggered": "True","ParentProcessUniqueID": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxyy","COMCLSID": "","COMAppID": "","COMDisplayName": "<None>","ApplicationType": "exe","TokenGUID": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxyyy","Executed": "True","Elevated": "True","Blocked": "","Passive": "","Cancelled": "","DropAdmin": "","EnforceUsersDefault": "","Custom": "","SourceURL": "<None>","AuthorizationChallenge": "<None>","WindowsStoreAppName": "<None>","WindowsStoreAppPublisher": "<None>","WindowsStoreAppVersion": "<None>","DeviceType": "Unknown Drive","ServiceName": "","ServiceDisplayName": "","PowerShellCommand": "<None>","ApplicationPolicyDescription": "Any Executable Requiring Elevation","ApplicationHash": "DBE...E4B","ProductCode": "<None>","UpgradeCode": "<None>","FileVersion": "5.8","MD5": "ECB...32C","TokenAssignmentGUID": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxyyyy","TokenAssignmentIsShell": "","UserSID": "S-1xxx865","UserName": "springs.g.1","UserDomainSID": "S-1...928","UserDomainName": "PF0...-X7","UserDomainNameNETBIOS": "<None>","ChassisType": "Notebook","HostSID": "S-1...823","HostName": "PF0...-X7","HostNameNETBIOS": "PF0...-X7","OS": "6.1","OSProductType": "1","HostDomainSID": "S-1...055","HostDomainName": "NA","HostDomainNameNETBIOS": "NA","AuthUserSID": "<None>","AuthUserName": "<None>","AuthUserDomainSID": "<None>","AuthUserDomainName": "<None>","AuthUserDomainNameNETBIOS": "<None>","FileOwnerUserSID": "S-1...464","FileOwnerUserName": "TrustedInstaller","FileOwnerDomainSID": "S-1-5-80","FileOwnerDomainName": "NT SERVICE","FileOwnerDomainNameNETBIOS": "NT SERVICE","ApplicationURI": "<None>","ApplicationDescription": "Microsoft  Console Based Script Host","FirstDiscovered": "2017-06-20 15:34:40.363000","FirstExecuted": "2017-06-06 15:35:31","PlatformType": "Windows","ProductName": "Microsoft  Windows Script Host","ProductVersion": "5.8","Publisher": "<None>","TrustedOwner": "True","MessageGUID": "00000000-0000-0000-0000-000000000000","MessageName": "<None>","MessageType": "<None>","AppGroupGUID": "xxxxxxxx-xxxx-xxxx-xxxx-xxyyyyyyyy","AppGroupName": "Policy.General - Any UAC Prompt","PolicyID": "2","PolicyGUID": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxyyyyy","PolicyName": "Policy","WorkstyleName": "Standard Users","ContentFileName": "","ContentFileDescription": "","ContentFileVersion": "","ContentOwnerSID": "","ContentOwnerName": "","ContentOwnerDomainSID": "","ContentOwnerDomainName": "","ContentOwnerDomainNameNetBIOS": ""} }
+-->
+
+<decoder name="avecto_decoder">
+   <prematch>{: "Source": "Avecto", </prematch>
+</decoder>
+
+
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_parent">"Data": {(\.*),</regex>
+  <order>data</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"ProcessGUID": "(\.*)",</regex>
+  <order>process_guid</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"EventNumber": "(\.*)",</regex>
+  <order>event_number</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"ProcessID": "(\.*)",</regex>
+  <order>process_id</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"TimeReceived": "(\.*)",</regex>
+  <order>time_received</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"EventGUID": "(\.*)",</regex>
+  <order>event_guid</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"PID": "(\.*)",</regex>
+  <order>pid</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"ParentPID": "(\.*)",</regex>
+  <order>parent_pid</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"CommandLine": "(\.*)",</regex>
+  <order>command_line</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"FileName": "(\.*)",</regex>
+  <order>file_name</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"ProcessStartTime": "(\.*)",</regex>
+  <order>process_start_time</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"Reason": "(\.*)",</regex>
+  <order>reason</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"ClientIPV4": "(\.*)",</regex>
+  <order>client_ipv4</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"ClientName": "(\.*)",</regex>
+  <order>client_name</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"UACTriggered": "(\.*)",</regex>
+  <order>uac_triggered</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"ParentProcessUniqueID": "(\.*)",</regex>
+  <order>parent_process_unique_id</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"COMCLSID": "(\.*)",</regex>
+  <order>comclsid</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"COMAppID": "(\.*)",</regex>
+  <order>com_ap_id</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"COMDisplayName": "(\.*)",</regex>
+  <order>com_display_name</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"ApplicationType": "(\.*)",</regex>
+  <order>application_type</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"TokenGUID": "(\.*)",</regex>
+  <order>token_guid</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"Executed": "(\.*)",</regex>
+  <order>executed</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"Elevated": "(\.*)",</regex>
+  <order>elevated</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"Blocked": "(\.*)",</regex>
+  <order>blocked</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"Passive": "(\.*)",</regex>
+  <order>passive</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"Cancelled": "(\.*)",</regex>
+  <order>cancelled</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"DropAdmin": "(\.*)",</regex>
+  <order>drop_admin</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"EnforceUsersDefault": "(\.*)",</regex>
+  <order>enforce_users_default</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"Custom": "(\.*)",</regex>
+  <order>custom</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"SourceURL": "(\.*)",</regex>
+  <order>source_url</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"AuthorizationChallenge": "(\.*)",</regex>
+  <order>authorization_challenge</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"WindowsStoreAppName": "(\.*)",</regex>
+  <order>windows_store_app_name</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"WindowsStoreAppPublisher": "(\.*)",</regex>
+  <order>windows_store_app_publisher</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"WindowsStoreAppVersion": "(\.*)",</regex>
+  <order>windows_store_app_version</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"DeviceType": "(\.*)",</regex>
+  <order>device_type</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"ServiceName": "(\.*)",</regex>
+  <order>service_name</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"ServiceDisplayName": "(\.*)",</regex>
+  <order>service_display_name</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"PowerShellCommand": "(\.*)",</regex>
+  <order>pwer_shell_command</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"ApplicationPolicyDescription": "(\.*)",</regex>
+  <order>application_policy_description</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"ApplicationHash": "(\.*)",</regex>
+  <order>application_hash</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"ProductCode": "(\.*)",</regex>
+  <order>product_code</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"UpgradeCode": "(\.*)",</regex>
+  <order>upgrade_code</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"FileVersion": "(\.*)",</regex>
+  <order>file_version</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"MD5": "(\.*)",</regex>
+  <order>md5</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"TokenAssignmentGUID": "(\.*)",</regex>
+  <order>token_assignment_guid</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"TokenAssignmentIsShell": "(\.*)",</regex>
+  <order>token_assignment_is_shell</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"UserSID": "(\.*)",</regex>
+  <order>user_sid</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"UserName": "(\.*)",</regex>
+  <order>user_name</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"UserDomainSID": "(\.*)",</regex>
+  <order>user_domain_sid</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"UserDomainName": "(\.*)",</regex>
+  <order>user_domain_name</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"UserDomainNameNETBIOS": "(\.*)",</regex>
+  <order>user_domain_name_netbios</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"ChassisType": "(\.*)",</regex>
+  <order>chassis_type</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"HostSID": "(\.*)",</regex>
+  <order>host_sid</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"HostName": "(\.*)",</regex>
+  <order>hostname</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"HostNameNETBIOS": "(\.*)",</regex>
+  <order>hostname_netbios</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"OS": "(\.*)",</regex>
+  <order>os</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"OSProductType": "(\.*)",</regex>
+  <order>os_product_type</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"HostDomainSID": "(\.*)",</regex>
+  <order>host_domain_sid</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"HostDomainName": "(\.*)",</regex>
+  <order>host_domain_name</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"HostDomainNameNETBIOS": "(\.*)",</regex>
+  <order>host_domain_name_netbios</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"AuthUserSID": "(\.*)",</regex>
+  <order>auth_user_sid</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"AuthUserName": "(\.*)",</regex>
+  <order>auth_user_name</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"AuthUserDomainSID": "(\.*)",</regex>
+  <order>auth_user_domain_sid</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"AuthUserDomainName": "(\.*)",</regex>
+  <order>auth_user_domain_name</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"AuthUserDomainNameNETBIOS": "(\.*)",</regex>
+  <order>auth_user_domain_name_netbios</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"FileOwnerUserSID": "(\.*)",</regex>
+  <order>file_owner_user_sid</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"FileOwnerUserName": "(\.*)",</regex>
+  <order>file_owner_user_name</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"FileOwnerDomainSID": "(\.*)",</regex>
+  <order>file_owner_domain_name_sid</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"FileOwnerDomainName": "(\.*)",</regex>
+  <order>file_owner_domain_name</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"FileOwnerDomainNameNETBIOS": "(\.*)",</regex>
+  <order>file_owner_domain_name_netbios</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"ApplicationURI": "(\.*)",</regex>
+  <order>application_uri</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"ApplicationDescription": "(\.*)",</regex>
+  <order>application_description</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"FirstDiscovered": "(\.*)",</regex>
+  <order>first_discovered</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"FirstExecuted": "(\.*)",</regex>
+  <order>first_executed</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"PlatformType": "(\.*)",</regex>
+  <order>platform_type</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"ProductName": "(\.*)",</regex>
+  <order>product_name</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"ProductVersion": "(\.*)",</regex>
+  <order>product_version</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"Publisher": "(\.*)",</regex>
+  <order>publisher</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"TrustedOwner": "(\.*)",</regex>
+  <order>trusted_owner</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"MessageGUID": "(\.*)",</regex>
+  <order>message_guid</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"MessageName": "(\.*)",</regex>
+  <order>message_name</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"MessageType": "(\.*)",</regex>
+  <order>message_type</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"AppGroupGUID": "(\.*)",</regex>
+  <order>app_group_guid</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"AppGroupName": "(\.*)",</regex>
+  <order>app_group_name</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"PolicyID": "(\.*)",</regex>
+  <order>policy_id</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"PolicyGUID": "(\.*)",</regex>
+  <order>policy_guid</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"PolicyName": "(\.*)",</regex>
+  <order>policy_name</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"WorkstyleName": "(\.*)",</regex>
+  <order>workstyle_name</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"ContentFileName": "(\.*)",</regex>
+  <order>content_file_name</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"ContentFileDescription": "(\.*)",</regex>
+  <order>content_file_description</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"ContentFileVersion": "(\.*)",</regex>
+  <order>content_file_version</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"ContentOwnerSID": "(\.*)",</regex>
+  <order>content_owner_sid</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"ContentOwnerName": "(\.*)",</regex>
+  <order>content_owner_name</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"ContentOwnerDomainSID": "(\.*)",</regex>
+  <order>content_owner_domain_sid</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"ContentOwnerDomainName": "(\.*)",</regex>
+  <order>content_owner_domain_name</order>
+</decoder>
+
+<decoder name="avecto_decoder_child">
+  <parent>avecto_decoder</parent>
+  <regex offset="after_regex">"ContentOwnerDomainNameNetBIOS": "(\.*)"</regex>
+  <order>content_owner_domain_name_netbios</order>
+</decoder>
