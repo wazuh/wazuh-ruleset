@@ -111,4 +111,39 @@ ID: 80200 - 80499
         <field name="aws.guardduty.event.severity">7|8|9</field>
         <description>Guard Duty Finding with a high level: $(aws.guardduty.event.description)</description>
     </rule>
+
+    <!-- Macie Alerts -->
+    <!-- Documentation: https://docs.aws.amazon.com/macie/latest/userguide/macie-alerts.html#macie-alert-severity -->
+    <rule id="80400" level="0">
+        <decoded_as>json</decoded_as>
+        <field name="aws.macie.event.severity">\.+</field>
+        <description>Macie Alerts.</description>
+    </rule>
+
+    <rule id="80401" level="3">
+        <if_sid>80400</if_sid>
+        <field name="aws.macie.event.severity">INFORMATIONAL</field>
+        <description>Macie informational alert: $(aws.macie.event.name) - $(aws.macie.event.summary.description)</description>
+    </rule>
+    <rule id="80402" level="4">
+        <if_sid>80400</if_sid>
+        <field name="aws.macie.event.severity">LOW</field>
+        <description>Macie low alert: $(aws.macie.event.name) - $(aws.macie.event.summary.description)</description>
+    </rule>
+    <rule id="80403" level="6">
+        <if_sid>80400</if_sid>
+        <field name="aws.macie.event.severity">MEDIUM</field>
+        <description>Macie medium alert: $(aws.macie.event.name) - $(aws.macie.event.summary.description)</description>
+    </rule>
+    <rule id="80404" level="8">
+        <if_sid>80400</if_sid>
+        <field name="aws.macie.event.severity">HIGH</field>
+        <description>Macie high alert: $(aws.macie.event.name) - $(aws.macie.event.summary.description)</description>
+    </rule>
+    <rule id="80405" level="10">
+        <if_sid>80400</if_sid>
+        <field name="aws.macie.event.severity">CRITICAL</field>
+        <description>Macie critical alert: $(aws.macie.event.name) - $(aws.macie.event.summary.description)</description>
+    </rule>
+
 </group>
