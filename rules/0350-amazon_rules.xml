@@ -114,36 +114,55 @@ ID: 80200 - 80499
 
     <!-- Macie Alerts -->
     <!-- Documentation: https://docs.aws.amazon.com/macie/latest/userguide/macie-alerts.html#macie-alert-severity -->
-    <rule id="80400" level="0">
+    <rule id="80350" level="0">
         <decoded_as>json</decoded_as>
         <field name="aws.macie.event.severity">\.+</field>
         <description>Macie Alerts.</description>
     </rule>
 
-    <rule id="80401" level="3">
-        <if_sid>80400</if_sid>
+    <rule id="80351" level="3">
+        <if_sid>80350</if_sid>
         <field name="aws.macie.event.severity">INFORMATIONAL</field>
         <description>Macie informational alert: $(aws.macie.event.name) - $(aws.macie.event.summary.description)</description>
     </rule>
-    <rule id="80402" level="4">
-        <if_sid>80400</if_sid>
+    <rule id="80352" level="4">
+        <if_sid>80350</if_sid>
         <field name="aws.macie.event.severity">LOW</field>
         <description>Macie low alert: $(aws.macie.event.name) - $(aws.macie.event.summary.description)</description>
     </rule>
-    <rule id="80403" level="6">
-        <if_sid>80400</if_sid>
+    <rule id="80353" level="6">
+        <if_sid>80350</if_sid>
         <field name="aws.macie.event.severity">MEDIUM</field>
         <description>Macie medium alert: $(aws.macie.event.name) - $(aws.macie.event.summary.description)</description>
     </rule>
-    <rule id="80404" level="8">
-        <if_sid>80400</if_sid>
+    <rule id="80354" level="8">
+        <if_sid>80350</if_sid>
         <field name="aws.macie.event.severity">HIGH</field>
         <description>Macie high alert: $(aws.macie.event.name) - $(aws.macie.event.summary.description)</description>
     </rule>
-    <rule id="80405" level="10">
-        <if_sid>80400</if_sid>
+    <rule id="80355" level="10">
+        <if_sid>80350</if_sid>
         <field name="aws.macie.event.severity">CRITICAL</field>
         <description>Macie critical alert: $(aws.macie.event.name) - $(aws.macie.event.summary.description)</description>
+    </rule>
+
+    <!-- VPC Flow -->
+    <!-- Documentation: https://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/flow-logs.html -->
+    <rule id="80400" level="0">
+        <decoded_as>json</decoded_as>
+        <field name="aws.vpc.event.source">vpc</field>
+        <description>VPC Flow</description>
+    </rule>
+
+    <rule id="80401" level="3">
+        <if_sid>80400</if_sid>
+        <field name="aws.vpc.event.action">ACCEPT</field>
+        <description>VPC Flow accepted connection: Interface: $(aws.vpc.event.interface-id) - Protocol: $(aws.vpc.event.protocol)</description>
+    </rule>
+    <rule id="80402" level="4">
+        <if_sid>80400</if_sid>
+        <field name="aws.vpc.event.action">REJECT</field>
+        <description>VPC Flow rejected connection: Interface: $(aws.vpc.event.interface-id) - Protocol: $(aws.vpc.event.protocol)</description>
     </rule>
 
 </group>
