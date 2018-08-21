@@ -1,6 +1,13 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [v3.5.1]
+
+### Fixed
+
+ - Fixed login abortion log mismatch in Dovecot decoder when optional parameter didn't appear. ([#171](https://github.com/wazuh/wazuh-ruleset/pull/171))
+
+
 ## [v3.5.0]
 
 ### Added
