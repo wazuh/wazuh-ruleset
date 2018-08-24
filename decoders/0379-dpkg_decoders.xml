@@ -1,0 +1,11 @@
+<!--
+  -  Package decoders
+  -  Created by Wazuh, Inc. <support@wazuh.com>.
+  -  This program is a free software; you can redistribute it and/or modify it under the terms of GPLv2.
+-->
+
+<decoder name="dpkg-decoder">
+    <prematch>^\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d </prematch>
+    <regex offset="after_prematch">^(\S+\s\S+)\s+(\S+):(\S+)\s+(\S+)|^(\S+)\s+(\S+):(\S+)\s+(\S+)</regex>
+    <order>dpkg_status, package, arch, version</order>
+</decoder>
