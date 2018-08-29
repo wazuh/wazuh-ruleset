@@ -7,11 +7,12 @@ All notable changes to this project will be documented in this file.
 
  - Fixed login abortion log mismatch in Dovecot decoder when optional parameter didn't appear. ([#171](https://github.com/wazuh/wazuh-ruleset/pull/171))
  - Fixed decoder for Debian packages. ([#172](https://github.com/wazuh/wazuh-ruleset/pull/172))
+ - Fixed active response decoder. ([#179](https://github.com/wazuh/wazuh-ruleset/pull/179))
 
 ### Added
 
- - Compatibility with TerminalServices-Gateway event type ([#175](https://github.com/wazuh/wazuh-ruleset/pull/175))
- - New AWS rules ([#174](https://github.com/wazuh/wazuh-ruleset/pull/174))
+ - Compatibility with TerminalServices-Gateway event type. ([#175](https://github.com/wazuh/wazuh-ruleset/pull/175))
+ - New AWS rules. ([#174](https://github.com/wazuh/wazuh-ruleset/pull/174))
 
 
 ## [v3.5.0]
