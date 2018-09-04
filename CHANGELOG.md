@@ -1,6 +1,13 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [v3.6.1]
+
+### Fixed
+
+- Silence rule about full disk for SNAP partitions. ([#183](https://github.com/wazuh/wazuh-ruleset/pull/183))
+
+
 ## [v3.6.0]
 
 ### Fixed
