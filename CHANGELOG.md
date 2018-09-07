@@ -3,12 +3,15 @@ All notable changes to this project will be documented in this file.
 
 ## [v3.6.1]
 
+
+## [v3.6.1] 2018-09-07
+
 ### Fixed
 
 - Silence rule about full disk for SNAP partitions. ([#183](https://github.com/wazuh/wazuh-ruleset/pull/183))
 
 
-## [v3.6.0]
+## [v3.6.0] 2018-08-29
 
 ### Fixed
 
@@ -22,7 +25,7 @@ All notable changes to this project will be documented in this file.
  - New AWS rules. ([#174](https://github.com/wazuh/wazuh-ruleset/pull/174))
 
 
-## [v3.5.0]
+## [v3.5.0] 2018-08-10
 
 ### Added
 
