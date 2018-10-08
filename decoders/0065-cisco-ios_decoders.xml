@@ -72,6 +72,17 @@
   <prematch>^\d+:\s+\p*\w+\s+\d+\s+\S+\s+\w+:\s+%</prematch>
 </decoder>
 
+<!--
+  - Sequence number, date (preceded by * or . or nothing) and hour without timezone
+  - 25439: .Oct 11 19:32:10: %SEC-6-IPACCESSLOGS:
+  - 25439: *Oct 11 19:32:10: %SEC-6-IPACCESSLOGS:
+  - 25439: Oct 11 19:32:10: %SEC-6-IPACCESSLOGS:
+-->
+
+<decoder name="cisco-ios">
+  <prematch>^\d+:\s+\p*\w+\s+\d+\s+\S+:\s+%</prematch>
+</decoder>
+
 
 <!-- Cisco IOS
   - Will extract the action, srcip, srcport, dstip and dstport
