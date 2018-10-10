@@ -1,0 +1,76 @@
+<!--
+  -  Aruba rules
+  -  Created by Wazuh, Inc. <support@wazuh.com>.
+  -  This program is a free software; you can redistribute it and/or modify it under the terms of GPLv2.
+
+  ID: 88200--88299
+-->
+
+
+
+<!--General rule for grouping Aruba logs-->
+<group name="aruba,hp">
+  <rule id="88200" level="3">
+    <decoded_as>aruba</decoded_as>
+    <description>Aruba device log received (No rule defined for this specific event).</description>
+    <group></group>
+  </rule>
+
+<!--General rule for grouping Aruba SNTP logs-->
+  <rule id="88201" level="3">
+    <if_sid>700000</if_sid>
+    <field name="event_type">SNTP</field>
+    <description>Aruba device SNTP log received (No rule defined for this specific SNTP event).</description>
+    <group></group>
+  </rule>
+
+<!--General rule for grouping Aruba ports logs-->
+  <rule id="88202" level="3">
+    <if_sid>700000</if_sid>
+    <field name="event_type">ports</field>
+    <description>Aruba device ports log received (No rule defined for this specific ports event).</description>
+    <group></group>
+  </rule>
+
+<!--Particular rules-->
+  <rule id="88203" level="3">
+    <if_sid>700001</if_sid>
+    <field name="event_type">SNTP</field>
+    <match>Server not found at</match>
+    <description>Aruba SNTP log: Server not found.</description>
+    <group></group>
+  </rule>
+
+  <rule id="88204" level="3">
+    <if_sid>700001</if_sid>
+    <field name="event_type">SNTP</field>
+    <match>Unable to reach configured SNTP</match>
+    <description>Aruba SNTP log: Unable to reach configured SNTP servers.</description>
+    <group></group>
+  </rule>
+
+  <rule id="88205" level="3">
+    <if_sid>700002</if_sid>
+    <field name="event_type">ports</field>
+    <match>is Blocked by STP</match>
+    <description>Aruba ports log: Port blocked by STP.</description>
+    <group></group>
+  </rule>
+
+  <rule id="88206" level="3">
+    <if_sid>700002</if_sid>
+    <field name="event_type">ports</field>
+    <match>is now on-line</match>
+    <description>Aruba ports log: Port now on-line.</description>
+    <group></group>
+  </rule>
+
+  <rule id="88207" level="3">
+    <if_sid>700002</if_sid>
+    <field name="event_type">ports</field>
+    <match>is now off-line</match>
+    <description>Aruba ports log: Port now off-line.</description>
+    <group></group>
+  </rule>
+
+</group>
