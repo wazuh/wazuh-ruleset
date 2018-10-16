@@ -1,7 +1,20 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [v3.6.1]
+## [v3.7.0]
+
+### Added
+
+- osuqery: specific alerts for default packs. ([#196](https://github.com/wazuh/wazuh-ruleset/pull/196))
+- Azure integration: Decoders and rules. ([#189](https://github.com/wazuh/wazuh-ruleset/pull/189))
+
+### Changed
+
+- osquery: Rename alerts fields reference. ([#196](https://github.com/wazuh/wazuh-ruleset/pull/196))
+
+### Removed
+
+- Removed deprecated rules for Syscheck.
 
 
 ## [v3.6.1] 2018-09-07
