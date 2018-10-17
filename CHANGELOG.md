@@ -1,6 +1,76 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [v3.7.0]
+
+### Added
+
+- osuqery: specific alerts for default packs. ([#196](https://github.com/wazuh/wazuh-ruleset/pull/196))
+- Azure integration: Decoders and rules. ([#189](https://github.com/wazuh/wazuh-ruleset/pull/189))
+
+### Changed
+
+- osquery: Rename alerts fields reference. ([#196](https://github.com/wazuh/wazuh-ruleset/pull/196))
+
+### Removed
+
+- Removed deprecated rules for Syscheck.
+
+
+## [v3.6.1] 2018-09-07
+
+### Fixed
+
+- Silence rule about full disk for SNAP partitions. ([#183](https://github.com/wazuh/wazuh-ruleset/pull/183))
+
+
+## [v3.6.0] 2018-08-29
+
+### Fixed
+
+ - Fixed login abortion log mismatch in Dovecot decoder when optional parameter didn't appear. ([#171](https://github.com/wazuh/wazuh-ruleset/pull/171))
+ - Fixed decoder for Debian packages. ([#172](https://github.com/wazuh/wazuh-ruleset/pull/172))
+ - Fixed active response decoder. ([#179](https://github.com/wazuh/wazuh-ruleset/pull/179))
+
+### Added
+
+ - Compatibility with TerminalServices-Gateway event type. ([#175](https://github.com/wazuh/wazuh-ruleset/pull/175))
+ - New AWS rules. ([#174](https://github.com/wazuh/wazuh-ruleset/pull/174))
+
+
+## [v3.5.0] 2018-08-10
+
+### Added
+
+  - Rules for the new osquery integration.
+  - Rule to ignore syscollector events.
+  - CIS-CAT rules improved.
+  - Rules and decoders for the new Kaspersky integration.
+  - CIS rootchecks for Windows 2012 R2 (by @Bob-Andrews).
+  - Extract port name for Sysmon event 3. ([#127](https://github.com/wazuh/wazuh-ruleset/pull/127))
+  - Improve Shellshock detection. ([#115](https://github.com/wazuh/wazuh-ruleset/pull/115))
+
+### Changed
+
+  - Decreased agent upgrade failure rules level.
+
+### Fixed
+
+  - Windows rules: Fix SID syntax for group membership changes. ([#125](https://github.com/wazuh/wazuh-ruleset/pull/125)).
+  - Windows decoders: Match "Subject :" format ([#128](https://github.com/wazuh/wazuh-ruleset/pull/128)).
+
+
+## [v3.4.0]
+
+### Added
+
+  - Decoder for syscheck integration with audit.
+
+### Changed
+
+  - Removed offset of the `frequency` attribute in rules. ([#145](https://github.com/wazuh/wazuh-ruleset/pull/145))
+
+
 ## [v3.3.1]
 
 ### Added
@@ -11,9 +81,11 @@ All notable changes to this project will be documented in this file.
 
 There are no changes for Wazuh Ruleset in this version.
 
+
 ## [v3.2.4]
 
 There are no changes for Wazuh Ruleset in this version.
+
 
 ## [v3.2.3]
 
