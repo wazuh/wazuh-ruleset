@@ -586,8 +586,8 @@ def usage():
 if __name__ == "__main__":
 
     if read_config()['node_type'] != 'master':
-        print("This script only works on master nodes.")
-        sys.exit()
+        print("This script only works on master nodes. Exiting.")
+        sys.exit(1)
 
     if os.geteuid() != 0:
         print("You need root privileges to run this script. Please try again, using 'sudo'. Exiting.")
