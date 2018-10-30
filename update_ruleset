@@ -26,6 +26,10 @@ from filecmp import cmp
 from time import time
 from json import dumps
 
+# Set framework path
+sys.path.append(os.path.dirname(sys.argv[0]) + '/../framework')  # It is necessary to import Wazuh package
+from wazuh.cluster.cluster import read_config
+
 try:
     from urllib2 import urlopen, URLError, HTTPError
 except:
@@ -580,6 +584,10 @@ def usage():
 
 
 if __name__ == "__main__":
+
+    if read_config()['node_type'] != 'master':
+        print("This script only works on master nodes.")
+        sys.exit()
 
     if os.geteuid() != 0:
         print("You need root privileges to run this script. Please try again, using 'sudo'. Exiting.")
