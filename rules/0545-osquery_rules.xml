@@ -56,280 +56,280 @@
   <rule id="24020" level="4">
     <if_sid>24010</if_sid>
     <field name="osquery.pack">^osquery-monitoring$</field>
-    <description>osquery: $(osquery.name) query result</description>
+    <description>osquery: $(osquery.pack) query result</description>
     <group>osquery_monitoring,</group>
   </rule>
 
             <rule id="24021" level="4">
               <if_sid>24020</if_sid>
               <field name="osquery.name">schedule</field>
-              <description>osquery: $(osquery.name): The pack executed is $(osquery.columns.name) and the interval is $(osquery.columns.interval) </description>
+              <description>osquery: $(osquery.pack) $(osquery.subquery): The pack executed is $(osquery.columns.name) and the interval is $(osquery.columns.interval) </description>
               <group>osquery_monitoring,</group>
             </rule>
 
             <rule id="24022" level="4">
               <if_sid>24020</if_sid>
               <field name="osquery.name">events</field>
-              <description>osquery: $(osquery.name): The event executed is $(osquery.columns.name) and the publisher is $(osquery.columns.publisher) </description>
+              <description>osquery: $(osquery.pack) $(osquery.subquery): The event executed is $(osquery.columns.name) and the publisher is $(osquery.columns.publisher) </description>
               <group>osquery_monitoring,</group>
             </rule>
 
             <rule id="24023" level="4">
               <if_sid>24020</if_sid>
               <field name="osquery.name">osquery_info</field>
-              <description>osquery: $(osquery.name): Osquery version is $(osquery.columns.version) build on $(osquery.columns.build_platform) $(osquery.columns.build_distro)</description>
+              <description>osquery: $(osquery.pack) $(osquery.subquery): Osquery version is $(osquery.columns.version) build on $(osquery.columns.build_platform) $(osquery.columns.build_distro)</description>
               <group>osquery_monitoring,</group>
             </rule>
 
   <rule id="24030" level="4">
     <if_sid>24010</if_sid>
     <field name="osquery.pack">^incident-response$</field>
-    <description>osquery: $(osquery.name) query result</description>
+    <description>osquery: $(osquery.pack) query result</description>
     <group>incident_response,</group>
   </rule>
 
           <rule id="24031" level="4">
             <if_sid>24030</if_sid>
             <field name="osquery.name">launchd</field>
-            <description>osquery: $(osquery.name): Running daemon is $(osquery.columns.label) with path $(osquery.columns.program) and username $(osquery.columns.username)</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): Running daemon is $(osquery.columns.label) with path $(osquery.columns.program) and username $(osquery.columns.username)</description>
             <group>incident_response,</group>
           </rule>
 
           <rule id="24032" level="4">
             <if_sid>24030</if_sid>
             <field name="osquery.name">startup_items</field>
-            <description>osquery: $(osquery.name): Program $(osquery.columns.name) is launched at system startup</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): Program $(osquery.columns.name) is launched at system startup</description>
             <group>incident_response,</group>
           </rule> 
 
            <rule id="24033" level="4">
             <if_sid>24030</if_sid>
             <field name="osquery.name">crontab</field>
-            <description>osquery: $(osquery.name): Command launched $(osquery.columns.command) at $(osquery.columns.hour):$(osquery.columns.minute) $(osquery.columns.day_of_month) $(osquery.columns.month) </description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): Command launched $(osquery.columns.command) at $(osquery.columns.hour):$(osquery.columns.minute) $(osquery.columns.day_of_month) $(osquery.columns.month) </description>
             <group>incident_response,</group>
           </rule> 
 
           <rule id="24034" level="4">
             <if_sid>24030</if_sid>
             <field name="osquery.name">loginwindow1</field>
-            <description>osquery: $(osquery.name): Key $(osquery.columns.key), Value $(osquery.columns.value)</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): Key $(osquery.columns.key), Value $(osquery.columns.value)</description>
             <group>incident_response,</group>
           </rule>
 
           <rule id="24035" level="4">
             <if_sid>24030</if_sid>
             <field name="osquery.name">loginwindow2</field>
-            <description>osquery: $(osquery.name): Key $(osquery.columns.key), Value $(osquery.columns.value)</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): Key $(osquery.columns.key), Value $(osquery.columns.value)</description>
             <group>incident_response,</group>
           </rule>
 
           <rule id="24036" level="4">
             <if_sid>24030</if_sid>
             <field name="osquery.name">loginwindow3</field>
-            <description>osquery: $(osquery.name): Username $(osquery.columns.username), Key $(osquery.columns.key)</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): Username $(osquery.columns.username), Key $(osquery.columns.key)</description>
             <group>incident_response,</group>
           </rule>
 
           <rule id="24037" level="4">
             <if_sid>24030</if_sid>
             <field name="osquery.name">loginwindow4</field>
-            <description>osquery: $(osquery.name): Username $(osquery.columns.username), Key $(osquery.columns.key)</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): Username $(osquery.columns.username), Key $(osquery.columns.key)</description>
             <group>incident_response,</group>
           </rule>
 
           <rule id="24038" level="4">
             <if_sid>24030</if_sid>
             <field name="osquery.name">alf</field>
-            <description>osquery: $(osquery.name): Application Layer Firewall for OSX version $(osquery.columns.version)</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): Application Layer Firewall for OSX version $(osquery.columns.version)</description>
             <group>incident_response,</group>
           </rule>
 
           <rule id="24039" level="4">
             <if_sid>24030</if_sid>
             <field name="osquery.name">alf</field>
-            <description>osquery: $(osquery.name): Application Layer Firewall for OSX version $(osquery.columns.version)</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): Application Layer Firewall for OSX version $(osquery.columns.version)</description>
             <group>incident_response,</group>
           </rule>
 
           <rule id="24040" level="4">
             <if_sid>24030</if_sid>
             <field name="osquery.name">alf_exceptions</field>
-            <description>osquery: $(osquery.name): Application Layer Firewall for OSX service exceptions path $(osquery.columns.path)</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): Application Layer Firewall for OSX service exceptions path $(osquery.columns.path)</description>
             <group>incident_response,</group>
           </rule>
 
            <rule id="24041" level="4">
             <if_sid>24030</if_sid>
             <field name="osquery.name">alf_services</field>
-            <description>osquery: $(osquery.name): Application Layer Firewall for OSX service $(osquery.columns.service) state $(osquery.columns.state)</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): Application Layer Firewall for OSX service $(osquery.columns.service) state $(osquery.columns.state)</description>
             <group>incident_response,</group>
           </rule>
 
           <rule id="24042" level="4">
             <if_sid>24030</if_sid>
             <field name="osquery.name">alf_explicit_auths</field>
-            <description>osquery: $(osquery.name): Process $(osquery.columns.process) has explicit authorization for Application Layer Firewall OSX</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): Process $(osquery.columns.process) has explicit authorization for Application Layer Firewall OSX</description>
             <group>incident_response,</group>
           </rule>
 
           <rule id="24043" level="4">
             <if_sid>24030</if_sid>
             <field name="osquery.name">etc_hosts</field>
-            <description>osquery: $(osquery.name): Address $(osquery.columns.address) Hostnames $(osquery.columns.hostnames)</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): Address $(osquery.columns.address) Hostnames $(osquery.columns.hostnames)</description>
             <group>incident_response,</group>
           </rule>
 
           <rule id="24044" level="4">
             <if_sid>24030</if_sid>
             <field name="osquery.name">kextstat</field>
-            <description>osquery: $(osquery.name): Kernel module $(osquery.columns.name) version $(osquery.columns.version)</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): Kernel module $(osquery.columns.name) version $(osquery.columns.version)</description>
             <group>incident_response,</group>
           </rule>
 
           <rule id="24045" level="4">
             <if_sid>24030</if_sid>
             <field name="osquery.name">kernel_modules</field>
-            <description>osquery: $(osquery.name): Kernel module $(osquery.columns.name) used by $(osquery.columns.used_by) status $(osquery.columns.status)</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): Kernel module $(osquery.columns.name) used by $(osquery.columns.used_by) status $(osquery.columns.status)</description>
             <group>incident_response,</group>
           </rule>
 
           <rule id="24046" level="4">
             <if_sid>24030</if_sid>
             <field name="osquery.name">last</field>
-            <description>osquery: $(osquery.name): User $(osquery.columns.username) host $(osquery.columns.host)</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): User $(osquery.columns.username) host $(osquery.columns.host)</description>
             <group>incident_response,</group>
           </rule> 
 
           <rule id="24047" level="4">
             <if_sid>24030</if_sid>
             <field name="osquery.name">installed_applications</field>
-            <description>osquery: $(osquery.name): OS X Application $(osquery.columns.name) version $(osquery.columns.bundle_version) is installed</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): OS X Application $(osquery.columns.name) version $(osquery.columns.bundle_version) is installed</description>
             <group>incident_response,</group>
           </rule>
           
           <rule id="24048" level="4">
             <if_sid>24030</if_sid>
             <field name="osquery.name">open_sockets</field>
-            <description>osquery: $(osquery.name): Process $(osquery.columns.pid) has local port $(osquery.columns.local_port) opened</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): Process $(osquery.columns.pid) has local port $(osquery.columns.local_port) opened</description>
             <group>incident_response,</group>
           </rule>
 
           <rule id="24049" level="4">
             <if_sid>24030</if_sid>
             <field name="osquery.name">open_files</field>
-            <description>osquery: $(osquery.name): Process $(osquery.columns.pid) has file $(osquery.columns.path) opened</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): Process $(osquery.columns.pid) has file $(osquery.columns.path) opened</description>
             <group>incident_response,</group>
           </rule>
 
           <rule id="24050" level="4">
             <if_sid>24030</if_sid>
             <field name="osquery.name">logged_in_users</field>
-            <description>osquery: $(osquery.name): User $(osquery.columns.user) is logged from host $(osquery.columns.host) </description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): User $(osquery.columns.user) is logged from host $(osquery.columns.host) </description>
             <group>incident_response,</group>
           </rule>
 
           <rule id="24051" level="4">
             <if_sid>24030</if_sid>
             <field name="osquery.name">ip_forwarding</field>
-            <description>osquery: $(osquery.name): Status of IP/IPv6 forwarding $(osquery.columns.name) value $(osquery.columns.current_value)</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): Status of IP/IPv6 forwarding $(osquery.columns.name) value $(osquery.columns.current_value)</description>
             <group>incident_response,</group>
           </rule>
 
           <rule id="24052" level="4">
             <if_sid>24030</if_sid>
             <field name="osquery.name">process_env</field>
-            <description>osquery: $(osquery.name): Process $(osquery.columns.pid) Environment variable $(osquery.columns.key) value $(osquery.columns.value)</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): Process $(osquery.columns.pid) Environment variable $(osquery.columns.key) value $(osquery.columns.value)</description>
             <group>incident_response,</group>
           </rule>
 
           <rule id="24053" level="4">
             <if_sid>24030</if_sid>
             <field name="osquery.name">mounts</field>
-            <description>osquery: $(osquery.name): Mount point at $(osquery.columns.device) with $(osquery.columns.blocks_free) free blocks</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): Mount point at $(osquery.columns.device) with $(osquery.columns.blocks_free) free blocks</description>
             <group>incident_response,</group>
           </rule>
 
           <rule id="24054" level="4">
             <if_sid>24030</if_sid>
             <field name="osquery.name">nfs_shares</field>
-            <description>osquery: $(osquery.name): Shared NFS $(osquery.columns.share) options $(osquery.columns.options) </description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): Shared NFS $(osquery.columns.share) options $(osquery.columns.options) </description>
             <group>incident_response,</group>
           </rule>
 
           <rule id="24055" level="4">
             <if_sid>24030</if_sid>
             <field name="osquery.name">shell_history</field>
-            <description>osquery: $(osquery.name): User $(osquery.columns.username) history file $(osquery.columns.history_file) executed command $(osquery.columns.command)</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): User $(osquery.columns.username) history file $(osquery.columns.history_file) executed command $(osquery.columns.command)</description>
             <group>incident_response,</group>
           </rule>
 
           <rule id="24056" level="4">
             <if_sid>24030</if_sid>
             <field name="osquery.name">recent_items</field>
-            <description>osquery: $(osquery.name): User $(osquery.columns.username) opened recent item $(osquery.columns.value)</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): User $(osquery.columns.username) opened recent item $(osquery.columns.value)</description>
             <group>incident_response,</group>
           </rule>
 
           <rule id="24057" level="4">
             <if_sid>24030</if_sid>
             <field name="osquery.name">ramdisk</field>
-            <description>osquery: $(osquery.name): Virtual interface $(osquery.columns.name) with uuid $(osquery.columns.uuid) is on the system</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): Virtual interface $(osquery.columns.name) with uuid $(osquery.columns.uuid) is on the system</description>
             <group>incident_response,</group>
           </rule>
 
           <rule id="24058" level="4">
             <if_sid>24030</if_sid>
             <field name="osquery.name">listening_ports</field>
-            <description>osquery: $(osquery.name): Process $(osquery.columns.pid) has opened port $(osquery.columns.port) address $(osquery.columns.address) </description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): Process $(osquery.columns.pid) has opened port $(osquery.columns.port) address $(osquery.columns.address) </description>
             <group>incident_response,</group>
           </rule>
 
           <rule id="24059" level="4">
             <if_sid>24030</if_sid>
             <field name="osquery.name">suid_bin</field>
-            <description>osquery: $(osquery.name): File $(osquery.columns.path) has setuid enabled</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): File $(osquery.columns.path) has setuid enabled</description>
             <group>incident_response,</group>
           </rule>
 
           <rule id="24060" level="4">
             <if_sid>24030</if_sid>
             <field name="osquery.name">process_memory</field>
-            <description>osquery: $(osquery.name): Process $(osquery.columns.pid) $(osquery.columns.path) memory start $(osquery.columns.start), memory end $(osquery.columns.end)</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): Process $(osquery.columns.pid) $(osquery.columns.path) memory start $(osquery.columns.start), memory end $(osquery.columns.end)</description>
             <group>incident_response,</group>
           </rule>
 
           <rule id="24061" level="4">
             <if_sid>24030</if_sid>
             <field name="osquery.name">arp_cache</field>
-            <description>osquery: $(osquery.name): ARP cache: Address $(osquery.columns.address) MAC $(osquery.columns.mac) Interface $(osquery.columns.interface)</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): ARP cache: Address $(osquery.columns.address) MAC $(osquery.columns.mac) Interface $(osquery.columns.interface)</description>
             <group>incident_response,</group>
           </rule>
 
           <rule id="24062" level="4">
             <if_sid>24030</if_sid>
             <field name="osquery.name">wireless_networks</field>
-            <description>osquery: $(osquery.name): Wireless network $(osquery.columns.network_name) is on remembered list</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): Wireless network $(osquery.columns.network_name) is on remembered list</description>
             <group>incident_response,</group>
           </rule>
 
           <rule id="24063" level="4">
             <if_sid>24030</if_sid>
             <field name="osquery.name">disk_encryption</field>
-            <description>osquery: $(osquery.name): Device $(osquery.columns.name) encryption status is $(osquery.columns.encryption_status)</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): Device $(osquery.columns.name) encryption status is $(osquery.columns.encryption_status)</description>
             <group>incident_response,</group>
           </rule>
 
           <rule id="24064" level="4">
             <if_sid>24030</if_sid>
             <field name="osquery.name">iptables</field>
-            <description>osquery: $(osquery.name): Iptable source ip $(osquery.columns.src_ip) with policy $(osquery.columns.policy) and target $(osquery.columns.target) has a packet count of $(osquery.columns.packets)</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): Iptable source ip $(osquery.columns.src_ip) with policy $(osquery.columns.policy) and target $(osquery.columns.target) has a packet count of $(osquery.columns.packets)</description>
             <group>incident_response,</group>
           </rule>
 
           <rule id="24065" level="4">
             <if_sid>24030</if_sid>
             <field name="osquery.name">app_schemes</field>
-            <description>osquery: $(osquery.name): App scheme $(osquery.columns.scheme) handler is $(osquery.columns.handler)</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): App scheme $(osquery.columns.scheme) handler is $(osquery.columns.handler)</description>
             <group>incident_response,</group>
           </rule>
 
@@ -337,98 +337,98 @@
             <if_sid>24030</if_sid>
             <field name="osquery.name">sandboxes</field>
             <field name="osquery.columns.enabled">1</field>
-            <description>osquery: $(osquery.name): Sandbox $(osquery.columns.label) with user $(osquery.columns.user) is enabled</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): Sandbox $(osquery.columns.label) with user $(osquery.columns.user) is enabled</description>
             <group>incident_response,</group>
           </rule>
 
   <rule id="240100" level="4">
     <if_sid>24010</if_sid>
     <field name="osquery.pack">^it-compliance$</field>
-    <description>osquery: $(osquery.name) query result</description>
+    <description>osquery: $(osquery.pack) query result</description>
     <group>it_compliance,</group>
   </rule>
 
           <rule id="240101" level="4">
             <if_sid>240100</if_sid>
             <field name="osquery.name">osquery_info</field>
-            <description>osquery: $(osquery.name): Osquery version is $(osquery.columns.version) build on $(osquery.columns.build_platform) $(osquery.columns.build_distro)</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): Osquery version is $(osquery.columns.version) build on $(osquery.columns.build_platform) $(osquery.columns.build_distro)</description>
             <group>it_compliance,</group>
           </rule>
 
           <rule id="240102" level="4">
             <if_sid>240100</if_sid>
             <field name="osquery.name">ad_config</field>
-            <description>osquery: $(osquery.name): Active Directory name $(osquery.columns.name) with domain $(osquery.columns.domain) has a value of $(osquery.columns.value)</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): Active Directory name $(osquery.columns.name) with domain $(osquery.columns.domain) has a value of $(osquery.columns.value)</description>
             <group>it_compliance,</group>
           </rule>
 
           <rule id="240103" level="4">
             <if_sid>240100</if_sid>
             <field name="osquery.name">kernel_info</field>
-            <description>osquery: $(osquery.name): OS kernel version $(osquery.columns.version), path $(osquery.columns.path)</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): OS kernel version $(osquery.columns.version), path $(osquery.columns.path)</description>
             <group>it_compliance,</group>
           </rule>
 
           <rule id="240104" level="4">
             <if_sid>240100</if_sid>
             <field name="osquery.name">os_version</field>
-            <description>osquery: $(osquery.name): OS $(osquery.columns.name) $(osquery.columns.version) $(osquery.columns.major).$(osquery.columns.minor) $(osquery.columns.codename)</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): OS $(osquery.columns.name) $(osquery.columns.version) $(osquery.columns.major).$(osquery.columns.minor) $(osquery.columns.codename)</description>
             <group>it_compliance,</group>
           </rule>
 
           <rule id="240105" level="4">
             <if_sid>240100</if_sid>
             <field name="osquery.name">alf</field>
-            <description>osquery: $(osquery.name): Application Layer Firewall for OSX version $(osquery.columns.version)</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): Application Layer Firewall for OSX version $(osquery.columns.version)</description>
             <group>it_compliance,</group>
           </rule>
 
           <rule id="240106" level="4">
             <if_sid>240100</if_sid>
             <field name="osquery.name">alf</field>
-            <description>osquery: $(osquery.name): Application Layer Firewall for OSX version $(osquery.columns.version)</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): Application Layer Firewall for OSX version $(osquery.columns.version)</description>
             <group>it_compliance,</group>
           </rule>
 
           <rule id="240107" level="4">
             <if_sid>240100</if_sid>
             <field name="osquery.name">alf_exceptions</field>
-            <description>osquery: $(osquery.name): Application Layer Firewall for OSX service exceptions path $(osquery.columns.path)</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): Application Layer Firewall for OSX service exceptions path $(osquery.columns.path)</description>
             <group>it_compliance,</group>
           </rule>
 
           <rule id="240108" level="4">
             <if_sid>240100</if_sid>
             <field name="osquery.name">alf_services</field>
-            <description>osquery: $(osquery.name): Application Layer Firewall for OSX service $(osquery.columns.service) state $(osquery.columns.state)</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): Application Layer Firewall for OSX service $(osquery.columns.service) state $(osquery.columns.state)</description>
             <group>it_compliance,</group>
           </rule>
 
           <rule id="240109" level="4">
             <if_sid>240100</if_sid>
             <field name="osquery.name">alf_explicit_auths</field>
-            <description>osquery: $(osquery.name): Process $(osquery.columns.process) has explicit authorization for Application Layer Firewall OSX</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): Process $(osquery.columns.process) has explicit authorization for Application Layer Firewall OSX</description>
             <group>it_compliance,</group>
           </rule>
 
           <rule id="240110" level="4">
             <if_sid>240100</if_sid>
             <field name="osquery.name">mounts</field>
-            <description>osquery: $(osquery.name): Mount point $(osquery.columns.path) at with $(osquery.columns.blocks_free) free blocks</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): Mount point $(osquery.columns.path) at with $(osquery.columns.blocks_free) free blocks</description>
             <group>it_compliance,</group>
           </rule>
 
           <rule id="240111" level="4">
             <if_sid>240100</if_sid>
             <field name="osquery.name">nfs_shares</field>
-            <description>osquery: $(osquery.name): Shared NFS $(osquery.columns.share) options $(osquery.columns.options)</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): Shared NFS $(osquery.columns.share) options $(osquery.columns.options)</description>
             <group>it_compliance,</group>
           </rule>
 
           <rule id="240112" level="4">
             <if_sid>240100</if_sid>
             <field name="osquery.name">windows_shared_resources</field>
-            <description>osquery: $(osquery.name): Windows shared resource $(osquery.columns.name) with path $(osquery.columns.path) status is $(osquery.columns.status)</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): Windows shared resource $(osquery.columns.name) with path $(osquery.columns.path) status is $(osquery.columns.status)</description>
             <group>it_compliance,</group>
           </rule>
 
@@ -436,7 +436,7 @@
             <if_sid>240100</if_sid>
             <field name="osquery.name">browser_plugins</field>
             <field name="osquery.columns.disabled">0</field>
-            <description>osquery: $(osquery.name): Browser plugin $(osquery.columns.name) is enabled</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): Browser plugin $(osquery.columns.name) is enabled</description>
             <group>it_compliance,</group>
           </rule>
 
@@ -444,105 +444,105 @@
             <if_sid>240100</if_sid>
             <field name="osquery.name">browser_plugins</field>
             <field name="osquery.columns.disabled">1</field>
-            <description>osquery: $(osquery.name): Browser plugin $(osquery.columns.name) is disabled</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): Browser plugin $(osquery.columns.name) is disabled</description>
             <group>it_compliance,</group>
           </rule>
 
           <rule id="240115" level="4">
             <if_sid>240100</if_sid>
             <field name="osquery.name">safari_extensions</field>
-            <description>osquery: $(osquery.name): Safari extension $(osquery.columns.name) version is $(osquery.columns.version) and the user that owns it is $(osquery.columns.uid)</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): Safari extension $(osquery.columns.name) version is $(osquery.columns.version) and the user that owns it is $(osquery.columns.uid)</description>
             <group>it_compliance,</group>
           </rule>
 
           <rule id="240116" level="4">
             <if_sid>240100</if_sid>
             <field name="osquery.name">chrome_extensions</field>
-            <description>osquery: $(osquery.name): Chrome extension $(osquery.columns.name) version is $(osquery.columns.version) and the user that owns it is $(osquery.columns.uid)</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): Chrome extension $(osquery.columns.name) version is $(osquery.columns.version) and the user that owns it is $(osquery.columns.uid)</description>
             <group>it_compliance,</group>
           </rule>
 
           <rule id="240117" level="4">
             <if_sid>240100</if_sid>
             <field name="osquery.name">firefox_addons</field>
-            <description>osquery: $(osquery.name): Firefox addon $(osquery.columns.name) type is $(osquery.columns.type) and the user that owns it is $(osquery.columns.uid)</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): Firefox addon $(osquery.columns.name) type is $(osquery.columns.type) and the user that owns it is $(osquery.columns.uid)</description>
             <group>it_compliance,</group>
           </rule>
 
           <rule id="240118" level="4">
             <if_sid>240100</if_sid>
             <field name="osquery.name">homebrew_packages</field>
-            <description>osquery: $(osquery.name): Homebrew package $(osquery.columns.name) version is $(osquery.columns.version)</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): Homebrew package $(osquery.columns.name) version is $(osquery.columns.version)</description>
             <group>it_compliance,</group>
           </rule>
 
           <rule id="240119" level="4">
             <if_sid>240100</if_sid>
             <field name="osquery.name">windows_programs</field>
-            <description>osquery: $(osquery.name): Windows program $(osquery.columns.name) $(osquery.columns.version) is installed on the system</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): Windows program $(osquery.columns.name) $(osquery.columns.version) is installed on the system</description>
             <group>it_compliance,</group>
           </rule>
 
           <rule id="240120" level="4">
             <if_sid>240100</if_sid>
             <field name="osquery.name">windows_patches</field>
-            <description>osquery: $(osquery.name): Windows patch $(osquery.columns.hotfix_id) is installed on the system</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): Windows patch $(osquery.columns.hotfix_id) is installed on the system</description>
             <group>it_compliance,</group>
           </rule>
 
           <rule id="240121" level="4">
             <if_sid>240100</if_sid>
             <field name="osquery.name">package_receipts</field>
-            <description>osquery: $(osquery.name): OSX package recepit $(osquery.columns.package_id) $(osquery.columns.version) is installed on the system</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): OSX package recepit $(osquery.columns.package_id) $(osquery.columns.version) is installed on the system</description>
             <group>it_compliance,</group>
           </rule>
 
           <rule id="240122" level="4">
             <if_sid>240100</if_sid>
             <field name="osquery.name">usb_devices</field>
-            <description>osquery: $(osquery.name): USB device with vendor $(osquery.columns.vendor_id) is attached to port $(osquery.columns.usb_port)</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): USB device with vendor $(osquery.columns.vendor_id) is attached to port $(osquery.columns.usb_port)</description>
             <group>it_compliance,</group>
           </rule>
 
           <rule id="240123" level="4">
             <if_sid>240100</if_sid>
             <field name="osquery.name">keychain_items</field>
-            <description>osquery: $(osquery.name): Keychain $(osquery.columns.label) path is $(osquery.columns.path)</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): Keychain $(osquery.columns.label) path is $(osquery.columns.path)</description>
             <group>it_compliance,</group>
           </rule>
 
           <rule id="240124" level="4">
             <if_sid>240100</if_sid>
             <field name="osquery.name">keychain_items</field>
-            <description>osquery: $(osquery.name): Keychain $(osquery.columns.label) path is $(osquery.columns.path)</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): Keychain $(osquery.columns.label) path is $(osquery.columns.path)</description>
             <group>it_compliance,</group>
           </rule>
 
           <rule id="240125" level="4">
             <if_sid>240100</if_sid>
             <field name="osquery.name">deb_packages</field>
-            <description>osquery: $(osquery.name): Package name $(osquery.columns.name), version $(osquery.columns.version), revision $(osquery.columns.revision),size $(osquery.columns.size) bytes</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): Package name $(osquery.columns.name), version $(osquery.columns.version), revision $(osquery.columns.revision),size $(osquery.columns.size) bytes</description>
             <group>it_compliance,</group>
           </rule>
 
           <rule id="240126" level="4">
             <if_sid>240100</if_sid>
             <field name="osquery.name">apt_sources</field>
-            <description>osquery: $(osquery.name): Repository name $(osquery.columns.name), version $(osquery.columns.version), source $(osquery.columns.source),release name $(osquery.columns.release)</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): Repository name $(osquery.columns.name), version $(osquery.columns.version), source $(osquery.columns.source),release name $(osquery.columns.release)</description>
             <group>it_compliance,</group>
           </rule>
 
           <rule id="240127" level="4">
             <if_sid>240100</if_sid>
             <field name="osquery.name">portage_packages</field>
-            <description>osquery: $(osquery.name): Portage package $(osquery.columns.package) $(osquery.columns.version) USE flags $(osquery.columns.flags)</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): Portage package $(osquery.columns.package) $(osquery.columns.version) USE flags $(osquery.columns.flags)</description>
             <group>it_compliance,</group>
           </rule>
 
           <rule id="240128" level="4">
             <if_sid>240100</if_sid>
             <field name="osquery.name">portage_packages</field>
-            <description>osquery: $(osquery.name): Portage package $(osquery.columns.package) $(osquery.columns.version) USE flags $(osquery.columns.flags)</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): Portage package $(osquery.columns.package) $(osquery.columns.version) USE flags $(osquery.columns.flags)</description>
             <group>it_compliance,</group>
           </rule>
 
@@ -550,56 +550,56 @@
             <if_sid>240100</if_sid>
             <field name="osquery.name">kernel_modules</field>
             <field name="osquery.columns.type">LIVE</field>
-            <description>osquery: $(osquery.name): OS kernel module $(osquery.columns.name) is used by $(osquery.columns.used_by) and is enabled</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): OS kernel module $(osquery.columns.name) is used by $(osquery.columns.used_by) and is enabled</description>
             <group>it_compliance,</group>
           </rule>
 
           <rule id="240130" level="4">
             <if_sid>240100</if_sid>
             <field name="osquery.name">windows_drivers</field>
-            <description>osquery: $(osquery.name): Windows device $(osquery.columns.device_name) driver is being used</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): Windows device $(osquery.columns.device_name) driver is being used</description>
             <group>it_compliance,</group>
           </rule>
 
           <rule id="240131" level="4">
             <if_sid>240100</if_sid>
             <field name="osquery.name">rpm_packages</field>
-            <description>osquery: $(osquery.name): RPM package $(osquery.columns.name) version $(osquery.columns.version) is installed on the system</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): RPM package $(osquery.columns.name) version $(osquery.columns.version) is installed on the system</description>
             <group>it_compliance,</group>
           </rule>
 
           <rule id="240132" level="4">
             <if_sid>240100</if_sid>
             <field name="osquery.name">rpm_packages</field>
-            <description>osquery: $(osquery.name): RPM package $(osquery.columns.name) version $(osquery.columns.version) is installed on the system</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): RPM package $(osquery.columns.name) version $(osquery.columns.version) is installed on the system</description>
             <group>it_compliance,</group>
           </rule>
 
           <rule id="240133" level="4">
             <if_sid>240100</if_sid>
             <field name="osquery.name">installed_applications</field>
-            <description>osquery: $(osquery.name): OS X Application $(osquery.columns.name) version $(osquery.columns.bundle_version) is installed</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): OS X Application $(osquery.columns.name) version $(osquery.columns.bundle_version) is installed</description>
             <group>it_compliance,</group>
           </rule>
 
           <rule id="240134" level="4">
             <if_sid>240100</if_sid>
             <field name="osquery.name">disk_encryption</field>
-            <description>osquery: $(osquery.name): Device $(osquery.columns.name) encryption status is $(osquery.columns.encryption_status)</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): Device $(osquery.columns.name) encryption status is $(osquery.columns.encryption_status)</description>
             <group>it_compliance,</group>
           </rule>
 
           <rule id="240135" level="4">
             <if_sid>240100</if_sid>
             <field name="osquery.name">launchd</field>
-            <description>osquery: $(osquery.name): Running daemon is $(osquery.columns.label) with path $(osquery.columns.program) and username $(osquery.columns.username)</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): Running daemon is $(osquery.columns.label) with path $(osquery.columns.program) and username $(osquery.columns.username)</description>
             <group>it_compliance,</group>
           </rule>
 
           <rule id="240136" level="4">
             <if_sid>240100</if_sid>
             <field name="osquery.name">iptables</field>
-            <description>osquery: $(osquery.name): Iptable source ip $(osquery.columns.src_ip) with policy $(osquery.columns.policy) and target $(osquery.columns.target) has a packet count of $(osquery.columns.packets)</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): Iptable source ip $(osquery.columns.src_ip) with policy $(osquery.columns.policy) and target $(osquery.columns.target) has a packet count of $(osquery.columns.packets)</description>
             <group>it_compliance,</group>
           </rule>
 
@@ -607,7 +607,7 @@
             <if_sid>240100</if_sid>
             <field name="osquery.name">sip_config</field>
             <field name="osquery.columns.enabled">1</field>
-            <description>osquery: $(osquery.name): Integrity protection flag $(osquery.columns.config_flag) is enabled</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): Integrity protection flag $(osquery.columns.config_flag) is enabled</description>
             <group>it_compliance,</group>
           </rule>
 
@@ -615,182 +615,182 @@
             <if_sid>240100</if_sid>
             <field name="osquery.name">sip_config</field>
             <field name="osquery.columns.enabled">0</field>
-            <description>osquery: $(osquery.name): Integrity protection flag $(osquery.columns.config_flag) is disabled</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): Integrity protection flag $(osquery.columns.config_flag) is disabled</description>
             <group>it_compliance,</group>
           </rule>
 
   <rule id="240200" level="4">
     <if_sid>24010</if_sid>
     <field name="osquery.pack">^osx-attacks$</field>
-    <description>osquery: $(osquery.name): $(osquery.columns.name) malware process detected</description>
+    <description>osquery: $(osquery.pack) $(osquery.subquery): $(osquery.columns.name) malware process detected</description>
     <group>osx_attacks,</group>
   </rule>
 
           <rule id="240201" level="4">
             <if_sid>240200</if_sid>
             <field name="osquery.name">Leverage-A_2</field>
-            <description>osquery: $(osquery.name): Leverage-A_2 malware detected on path $(osquery.columns.path)</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): Leverage-A_2 malware detected on path $(osquery.columns.path)</description>
             <group>osx_attacks,</group>
           </rule>
 
           <rule id="240202" level="4">
             <if_sid>240200</if_sid>
             <field name="osquery.name">iWorkServ</field>
-            <description>osquery: $(osquery.name): OSX iWorkServ malware detected on path $(osquery.columns.path)</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): OSX iWorkServ malware detected on path $(osquery.columns.path)</description>
             <group>osx_attacks,</group>
           </rule>
 
           <rule id="240203" level="4">
             <if_sid>240200</if_sid>
             <field name="osquery.name">iWorm_1</field>
-            <description>osquery: $(osquery.name): iWorm_1 malware detected on path $(osquery.columns.path)</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): iWorm_1 malware detected on path $(osquery.columns.path)</description>
             <group>osx_attacks,</group>
           </rule>
 
           <rule id="240204" level="4">
             <if_sid>240200</if_sid>
             <field name="osquery.name">HackingTeam_Mac_RAT1</field>
-            <description>osquery: $(osquery.name): HackingTeam Mac RAT1 malware detected on path $(osquery.columns.path)</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): HackingTeam Mac RAT1 malware detected on path $(osquery.columns.path)</description>
             <group>osx_attacks,</group>
           </rule>
 
           <rule id="240205" level="4">
             <if_sid>240200</if_sid>
             <field name="osquery.name">HackingTeam_Mac_RAT2</field>
-            <description>osquery: $(osquery.name): HackingTeam Mac RAT2 malware detected on path $(osquery.columns.path)</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): HackingTeam Mac RAT2 malware detected on path $(osquery.columns.path)</description>
             <group>osx_attacks,</group>
           </rule>
 
           <rule id="240206" level="4">
             <if_sid>240200</if_sid>
             <field name="osquery.name">HackingTeam_Mac_Persistence</field>
-            <description>osquery: $(osquery.name): HackingTeam Mac Persistence malware detected on path $(osquery.columns.path)</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): HackingTeam Mac Persistence malware detected on path $(osquery.columns.path)</description>
             <group>osx_attacks,</group>
           </rule>
 
           <rule id="240207" level="4">
             <if_sid>240200</if_sid>
             <field name="osquery.name">Keranger_2</field>
-            <description>osquery: $(osquery.name): Keranger malware detected on path $(osquery.columns.path)</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): Keranger malware detected on path $(osquery.columns.path)</description>
             <group>osx_attacks,</group>
           </rule>
 
           <rule id="240208" level="4">
             <if_sid>240200</if_sid>
             <field name="osquery.name">OSX_Backdoor_Mokes</field>
-            <description>osquery: $(osquery.name): OSX Backdoor Mokes malware detected on path $(osquery.columns.path)</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): OSX Backdoor Mokes malware detected on path $(osquery.columns.path)</description>
             <group>osx_attacks,</group>
           </rule>
 
           <rule id="240209" level="4">
             <if_sid>240200</if_sid>
             <field name="osquery.name">OSX_Komplex</field>
-            <description>osquery: $(osquery.name): Komplex malware detected on path $(osquery.columns.path)</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): Komplex malware detected on path $(osquery.columns.path)</description>
             <group>osx_attacks,</group>
           </rule>
 
           <rule id="240210" level="4">
             <if_sid>240200</if_sid>
             <field name="osquery.name">OceanLotus_dropped_file_1</field>
-            <description>osquery: $(osquery.name): OceanLotus malware detected on path $(osquery.columns.path)</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): OceanLotus malware detected on path $(osquery.columns.path)</description>
             <group>osx_attacks,</group>
           </rule>
 
           <rule id="240211" level="4">
             <if_sid>240200</if_sid>
             <field name="osquery.name">OSX_DOK_2</field>
-            <description>osquery: $(osquery.name): OSX/Dok malware detected in certificate $(osquery.columns.common_name)</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): OSX/Dok malware detected in certificate $(osquery.columns.common_name)</description>
             <group>osx_attacks,</group>
           </rule>
 
           <rule id="240212" level="4">
             <if_sid>240200</if_sid>
             <field name="osquery.name">OSX_DOK_3</field>
-            <description>osquery: $(osquery.name): OSX/Dok malware detected on path $(osquery.columns.path)</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): OSX/Dok malware detected on path $(osquery.columns.path)</description>
             <group>osx_attacks,</group>
           </rule>
 
           <rule id="240213" level="4">
             <if_sid>240200</if_sid>
             <field name="osquery.name">OSX_Snake</field>
-            <description>osquery: $(osquery.name): Snake malware detected on path $(osquery.columns.path)</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): Snake malware detected on path $(osquery.columns.path)</description>
             <group>osx_attacks,</group>
           </rule>
 
           <rule id="240214" level="4">
             <if_sid>240200</if_sid>
             <field name="osquery.name">OSX_Proton_Files</field>
-            <description>osquery: $(osquery.name): Proton malware detected on path $(osquery.columns.path)</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): Proton malware detected on path $(osquery.columns.path)</description>
             <group>osx_attacks,</group>
           </rule>
 
           <rule id="240215" level="4">
             <if_sid>240200</if_sid>
             <field name="osquery.name">OSX_MaMi_DNS_Servers</field>
-            <description>osquery: $(osquery.name): MaMi malware detected, infected DNS address $(osquery.columns.address)</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): MaMi malware detected, infected DNS address $(osquery.columns.address)</description>
             <group>osx_attacks,</group>
           </rule>
 
           <rule id="240216" level="4">
             <if_sid>240200</if_sid>
             <field name="osquery.name">OSX_MaMi_Certificate</field>
-            <description>osquery: $(osquery.name): MaMi malware detected in certificate $(osquery.columns.common_name)</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): MaMi malware detected in certificate $(osquery.columns.common_name)</description>
             <group>osx_attacks,</group>
           </rule>
 
           <rule id="240217" level="4">
             <if_sid>240200</if_sid>
             <field name="osquery.name">OSX_ColdRoot_RAT_Files</field>
-            <description>osquery: $(osquery.name): Coldroot RAT malware detected on path $(osquery.columns.path)</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): Coldroot RAT malware detected on path $(osquery.columns.path)</description>
             <group>osx_attacks,</group>
           </rule>
 
           <rule id="240218" level="4">
             <if_sid>240200</if_sid>
             <field name="osquery.name">OSX_Dummy_Files</field>
-            <description>osquery: $(osquery.name): OSX Dummy malware detected on path $(osquery.columns.path)</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): OSX Dummy malware detected on path $(osquery.columns.path)</description>
             <group>osx_attacks,</group>
           </rule>
 
   <rule id="240300" level="4">
     <if_sid>24010</if_sid>
     <field name="osquery.pack">^vuln-management$</field>
-    <description>osquery: $(osquery.name) query result</description>
+    <description>osquery: $(osquery.pack) query result</description>
     <group>vuln_management,</group>
   </rule>
 
           <rule id="240301" level="4">
             <if_sid>240300</if_sid>
             <field name="osquery.name">kernel_info</field>
-            <description>osquery: $(osquery.name): Kernel version is $(osquery.columns.version) with path $(osquery.columns.path) and kernel device identifier $(osquery.columns.device) </description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): Kernel version is $(osquery.columns.version) with path $(osquery.columns.path) and kernel device identifier $(osquery.columns.device) </description>
             <group>vuln_management,</group>
           </rule>
 
           <rule id="240302" level="4">
             <if_sid>240300</if_sid>
             <field name="osquery.name">os_version</field>
-            <description>osquery: $(osquery.name): OS $(osquery.columns.name) $(osquery.columns.version) with minor $(osquery.columns.minor) and major $(osquery.columns.major)</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): OS $(osquery.columns.name) $(osquery.columns.version) with minor $(osquery.columns.minor) and major $(osquery.columns.major)</description>
             <group>vuln_management,</group>
           </rule>
 
           <rule id="240303" level="4">
             <if_sid>240300</if_sid>
             <field name="osquery.name">kextstat</field>
-            <description>osquery: $(osquery.name): Kernel module $(osquery.columns.name) version $(osquery.columns.version)</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): Kernel module $(osquery.columns.name) version $(osquery.columns.version)</description>
             <group>vuln_management,</group>
           </rule>
 
           <rule id="240304" level="4">
             <if_sid>240300</if_sid>
             <field name="osquery.name">kernel_modules</field>
-            <description>osquery: $(osquery.name): OS kernel module $(osquery.columns.name) is used by $(osquery.columns.used_by) and it's status is $(osquery.columns.status)</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): OS kernel module $(osquery.columns.name) is used by $(osquery.columns.used_by) and it's status is $(osquery.columns.status)</description>
             <group>vuln_management,</group>
           </rule>
 
           <rule id="240305" level="4">
             <if_sid>240300</if_sid>
             <field name="osquery.name">installed_applications</field>
-            <description>osquery: $(osquery.name): OS X Application $(osquery.columns.name) version $(osquery.columns.bundle_version) is installed</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): OS X Application $(osquery.columns.name) version $(osquery.columns.bundle_version) is installed</description>
             <group>vuln_management,</group>
           </rule>
 
@@ -798,7 +798,7 @@
             <if_sid>240300</if_sid>
             <field name="osquery.name">browser_plugins</field>
             <field name="osquery.columns.disabled">0</field>
-            <description>osquery: $(osquery.name): Browser plugin $(osquery.columns.name) is enabled</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): Browser plugin $(osquery.columns.name) is enabled</description>
             <group>vuln_management,</group>
           </rule>
 
@@ -806,412 +806,412 @@
             <if_sid>240300</if_sid>
             <field name="osquery.name">browser_plugins</field>
             <field name="osquery.columns.disabled">1</field>
-            <description>osquery: $(osquery.name): Browser plugin $(osquery.columns.name) is disabled</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): Browser plugin $(osquery.columns.name) is disabled</description>
             <group>vuln_management,</group>
           </rule>
 
           <rule id="240308" level="4">
             <if_sid>240300</if_sid>
             <field name="osquery.name">safari_extensions</field>
-            <description>osquery: $(osquery.name): Safari extension $(osquery.columns.name) version is $(osquery.columns.version) and the user that owns it is $(osquery.columns.uid)</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): Safari extension $(osquery.columns.name) version is $(osquery.columns.version) and the user that owns it is $(osquery.columns.uid)</description>
             <group>vuln_management,</group>
           </rule>
 
           <rule id="240309" level="4">
             <if_sid>240300</if_sid>
             <field name="osquery.name">opera_extensions</field>
-            <description>osquery: $(osquery.name): Opera extension $(osquery.columns.name) version is $(osquery.columns.version) and the user that owns it is $(osquery.columns.uid)</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): Opera extension $(osquery.columns.name) version is $(osquery.columns.version) and the user that owns it is $(osquery.columns.uid)</description>
             <group>vuln_management,</group>
           </rule>
 
           <rule id="240310" level="4">
             <if_sid>240300</if_sid>
             <field name="osquery.name">chrome_extensions</field>
-            <description>osquery: $(osquery.name): Chrome extension $(osquery.columns.name) version is $(osquery.columns.version) and the user that owns it is $(osquery.columns.uid)</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): Chrome extension $(osquery.columns.name) version is $(osquery.columns.version) and the user that owns it is $(osquery.columns.uid)</description>
             <group>vuln_management,</group>
           </rule>
 
           <rule id="240311" level="4">
             <if_sid>240300</if_sid>
             <field name="osquery.name">firefox_addons</field>
-            <description>osquery: $(osquery.name): Firefox addon $(osquery.columns.name) type is $(osquery.columns.type) and the user that owns it is $(osquery.columns.uid)</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): Firefox addon $(osquery.columns.name) type is $(osquery.columns.type) and the user that owns it is $(osquery.columns.uid)</description>
             <group>vuln_management,</group>
           </rule>
 
           <rule id="240312" level="4">
             <if_sid>240300</if_sid>
             <field name="osquery.name">homebrew_packages</field>
-            <description>osquery: $(osquery.name): Homebrew package $(osquery.columns.name) version is $(osquery.columns.version)</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): Homebrew package $(osquery.columns.name) version is $(osquery.columns.version)</description>
             <group>vuln_management,</group>
           </rule>
 
           <rule id="240313" level="4">
             <if_sid>240300</if_sid>
             <field name="osquery.name">package_receipts</field>
-            <description>osquery: $(osquery.name): OSX package recepit $(osquery.columns.package_id) $(osquery.columns.version) is installed on the system</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): OSX package recepit $(osquery.columns.package_id) $(osquery.columns.version) is installed on the system</description>
             <group>vuln_management,</group>
           </rule>
 
           <rule id="240314" level="4">
             <if_sid>240300</if_sid>
             <field name="osquery.name">deb_packages</field>
-            <description>osquery: $(osquery.name): Package name $(osquery.columns.name), version $(osquery.columns.version), revision $(osquery.columns.revision),size $(osquery.columns.size) bytes</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): Package name $(osquery.columns.name), version $(osquery.columns.version), revision $(osquery.columns.revision),size $(osquery.columns.size) bytes</description>
             <group>vuln_management,</group>
           </rule>
 
           <rule id="240315" level="4">
             <if_sid>240300</if_sid>
             <field name="osquery.name">apt_sources</field>
-            <description>osquery: $(osquery.name): Repository name $(osquery.columns.name), version $(osquery.columns.version), source $(osquery.columns.source),release name $(osquery.columns.release)</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): Repository name $(osquery.columns.name), version $(osquery.columns.version), source $(osquery.columns.source),release name $(osquery.columns.release)</description>
             <group>vuln_management,</group>
           </rule>
 
           <rule id="240316" level="4">
             <if_sid>240300</if_sid>
             <field name="osquery.name">portage_packages</field>
-            <description>osquery: $(osquery.name): Portage package $(osquery.columns.package) $(osquery.columns.version) USE flags $(osquery.columns.flags)</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): Portage package $(osquery.columns.package) $(osquery.columns.version) USE flags $(osquery.columns.flags)</description>
             <group>vuln_management,</group>
           </rule>
 
           <rule id="240317" level="4">
             <if_sid>240300</if_sid>
             <field name="osquery.name">rpm_packages</field>
-            <description>osquery: $(osquery.name): RPM package $(osquery.columns.name) version $(osquery.columns.version) is installed on the system</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): RPM package $(osquery.columns.name) version $(osquery.columns.version) is installed on the system</description>
             <group>vuln_management,</group>
           </rule>
 
           <rule id="240319" level="4">
             <if_sid>240300</if_sid>
             <field name="osquery.name">unauthenticated_sparkle_feeds</field>
-            <description>osquery: $(osquery.name): Sparkle bundle $(osquery.columns.name) is unauthenticated</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): Sparkle bundle $(osquery.columns.name) is unauthenticated</description>
             <group>vuln_management,</group>
           </rule>
 
           <rule id="240320" level="4">
             <if_sid>240300</if_sid>
             <field name="osquery.name">backdoored_python_packages</field>
-            <description>osquery: $(osquery.name): Python package $(osquery.columns.package_name) is backdoored</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): Python package $(osquery.columns.package_name) is backdoored</description>
             <group>vuln_management,</group>
           </rule>
 
   <rule id="240400" level="4">
     <if_sid>24010</if_sid>
     <field name="osquery.pack">^hardware-monitoring$</field>
-    <description>osquery: $(osquery.name) query result</description>
+    <description>osquery: $(osquery.pack) query result</description>
     <group>hardware_monitoring,</group>
   </rule>
 
           <rule id="240401" level="4">
             <if_sid>240400</if_sid>
             <field name="osquery.name">acpi_tables</field>
-            <description>osquery: $(osquery.name): ACPI table $(osquery.columns.name) size is $(osquery.columns.size)</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): ACPI table $(osquery.columns.name) size is $(osquery.columns.size)</description>
             <group>hardware_monitoring,</group>
           </rule>
 
           <rule id="240402" level="4">
             <if_sid>240400</if_sid>
             <field name="osquery.name">cpuid</field>
-            <description>osquery: $(osquery.name): CPU feature $(osquery.columns.feature) and value $(osquery.columns.value)</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): CPU feature $(osquery.columns.feature) and value $(osquery.columns.value)</description>
             <group>hardware_monitoring,</group>
           </rule>
 
           <rule id="240403" level="4">
             <if_sid>240400</if_sid>
             <field name="osquery.name">smbios_tables</field>
-            <description>osquery: $(osquery.name): ACPI table $(osquery.columns.name) size is $(osquery.columns.size)</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): ACPI table $(osquery.columns.name) size is $(osquery.columns.size)</description>
             <group>hardware_monitoring,</group>
           </rule>
 
           <rule id="240404" level="4">
             <if_sid>240400</if_sid>
             <field name="osquery.name">nvram</field>
-            <description>osquery: $(osquery.name): NVRAM variable $(osquery.columns.name) value $(osquery.columns.value)</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): NVRAM variable $(osquery.columns.name) value $(osquery.columns.value)</description>
             <group>hardware_monitoring,</group>
           </rule>
 
           <rule id="240405" level="4">
             <if_sid>240400</if_sid>
             <field name="osquery.name">pci_devices</field>
-            <description>osquery: $(osquery.name): PCI device $(osquery.columns.model) with vendor $(osquery.columns.vendor) is active</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): PCI device $(osquery.columns.model) with vendor $(osquery.columns.vendor) is active</description>
             <group>hardware_monitoring,</group>
           </rule>
 
           <rule id="240406" level="4">
             <if_sid>240400</if_sid>
             <field name="osquery.name">fan_speeds</field>
-            <description>osquery: $(osquery.name): Fan $(osquery.columns.name) actual speed is $(osquery.columns.actual) rpm</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): Fan $(osquery.columns.name) actual speed is $(osquery.columns.actual) rpm</description>
             <group>hardware_monitoring,</group>
           </rule>
 
           <rule id="240407" level="4">
             <if_sid>240400</if_sid>
             <field name="osquery.name">temperatures</field>
-            <description>osquery: $(osquery.name): Temperature sensor $(osquery.columns.name) is at $(osquery.columns.celsius) celsius</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): Temperature sensor $(osquery.columns.name) is at $(osquery.columns.celsius) celsius</description>
             <group>hardware_monitoring,</group>
           </rule>
 
           <rule id="240408" level="4">
             <if_sid>240400</if_sid>
             <field name="osquery.name">usb_devices</field>
-            <description>osquery: $(osquery.name): USB device with vendor $(osquery.columns.vendor_id) is attached to port $(osquery.columns.usb_port)</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): USB device with vendor $(osquery.columns.vendor_id) is attached to port $(osquery.columns.usb_port)</description>
             <group>hardware_monitoring,</group>
           </rule>
 
           <rule id="240409" level="4">
             <if_sid>240400</if_sid>
             <field name="osquery.name">hardware_events</field>
-            <description>osquery: $(osquery.name): Hardware device $(osquery.columns.model) triggered action $(osquery.columns.action)</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): Hardware device $(osquery.columns.model) triggered action $(osquery.columns.action)</description>
             <group>hardware_monitoring,</group>
           </rule>
 
           <rule id="240410" level="4">
             <if_sid>240400</if_sid>
             <field name="osquery.name">darwin_kernel_system_controls</field>
-            <description>osquery: $(osquery.name): System control $(osquery.columns.name) oid is $(osquery.columns.oid)</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): System control $(osquery.columns.name) oid is $(osquery.columns.oid)</description>
             <group>hardware_monitoring,</group>
           </rule>
 
           <rule id="240411" level="4">
             <if_sid>240400</if_sid>
             <field name="osquery.name">iokit_devicetree</field>
-            <description>osquery: $(osquery.name): IOKit device $(osquery.columns.name) busy state is $(osquery.columns.busy_state)</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): IOKit device $(osquery.columns.name) busy state is $(osquery.columns.busy_state)</description>
             <group>hardware_monitoring,</group>
           </rule>
 
           <rule id="240412" level="4">
             <if_sid>240400</if_sid>
             <field name="osquery.name">efi_file_hashes</field>
-            <description>osquery: $(osquery.name): EFI file $(osquery.columns.path) sha256 $(osquery.columns.sha256)</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): EFI file $(osquery.columns.path) sha256 $(osquery.columns.sha256)</description>
             <group>hardware_monitoring,</group>
           </rule>
 
           <rule id="240413" level="4">
             <if_sid>240400</if_sid>
             <field name="osquery.name">kernel_extensions</field>
-            <description>osquery: $(osquery.name): OS X Kernel extension $(osquery.columns.name) with version $(osquery.columns.version) is loaded</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): OS X Kernel extension $(osquery.columns.name) with version $(osquery.columns.version) is loaded</description>
             <group>hardware_monitoring,</group>
           </rule>
 
           <rule id="240414" level="4">
             <if_sid>240400</if_sid>
             <field name="osquery.name">kernel_modules</field>
-            <description>osquery: $(osquery.name): OS kernel module $(osquery.columns.name) is used by $(osquery.columns.used_by) and it's status is $(osquery.columns.status)</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): OS kernel module $(osquery.columns.name) is used by $(osquery.columns.used_by) and it's status is $(osquery.columns.status)</description>
             <group>hardware_monitoring,</group>
           </rule>
 
           <rule id="240415" level="4">
             <if_sid>240400</if_sid>
             <field name="osquery.name">windows_drivers</field>
-            <description>osquery: $(osquery.name): Windows device $(osquery.columns.device_name) driver is being used</description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): Windows device $(osquery.columns.device_name) driver is being used</description>
             <group>hardware_monitoring,</group>
           </rule>
 
           <rule id="240416" level="4">
             <if_sid>240400</if_sid>
             <field name="osquery.name">device_nodes</field>
-            <description>osquery: $(osquery.name): Device $(osquery.columns.path), UID $(osquery.columns.uid), GID $(osquery.columns.gid), type $(osquery.columns.type) </description>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): Device $(osquery.columns.path), UID $(osquery.columns.uid), GID $(osquery.columns.gid), type $(osquery.columns.type) </description>
             <group>hardware_monitoring,</group>
           </rule>
 
   <rule id="240500" level="4">
     <if_sid>24010</if_sid>
     <field name="osquery.pack">^ossec-rootkit$</field>
-    <description>osquery: $(osquery.name): Ossec rootkit file $(osquery.columns.path) detected</description>
+    <description>osquery: $(osquery.pack) $(osquery.subquery): Ossec rootkit file $(osquery.columns.path) detected</description>
     <group>ossec_rootkit,</group>
   </rule>
 
   <rule id="240600" level="4">
     <if_sid>24010</if_sid>
     <field name="osquery.pack">^windows-hardening$</field>
-    <description>osquery: $(osquery.name): Windows Registry key $(osquery.columns.key) value is $(osquery.columns.data)</description>
+    <description>osquery: $(osquery.pack) $(osquery.subquery): Windows Registry key $(osquery.columns.key) value is $(osquery.columns.data)</description>
     <group>windows_hardening,</group>
   </rule>
 
   <rule id="240700" level="4">
     <if_sid>24010</if_sid>
     <field name="osquery.pack">^windows-attacks$</field>
-    <description>osquery: $(osquery.name) query result</description>
+    <description>osquery: $(osquery.pack) query result</description>
     <group>windows_attacks,</group>
   </rule>
 
       <rule id="240701" level="4">
         <if_sid>240700</if_sid>
         <field name="osquery.name">CCleaner_Trojan.Floxif</field>
-        <description>osquery: $(osquery.name): CCleaner Trojan Floxif detected on registry path $(osquery.columns.path)</description>
+        <description>osquery: $(osquery.pack) $(osquery.subquery): CCleaner Trojan Floxif detected on registry path $(osquery.columns.path)</description>
         <group>windows_attacks,</group>
       </rule>
 
       <rule id="240702" level="4">
         <if_sid>240700</if_sid>
         <field name="osquery.name">CCleaner_Trojan_stage2.Floxif</field>
-        <description>osquery: $(osquery.name): CCleaner Trojan Floxif detected on service $(osquery.columns.name) for user $(osquery.columns.user_account)</description>
+        <description>osquery: $(osquery.pack) $(osquery.subquery): CCleaner Trojan Floxif detected on service $(osquery.columns.name) for user $(osquery.columns.user_account)</description>
         <group>windows_attacks,</group>
       </rule>
 
       <rule id="240703" level="4">
         <if_sid>240700</if_sid>
         <field name="osquery.name">Winsecurity_info_1</field>
-        <description>osquery: $(osquery.name): Winsecurity.info Scam detected on path $(osquery.columns.install_location)</description>
+        <description>osquery: $(osquery.pack) $(osquery.subquery): Winsecurity.info Scam detected on path $(osquery.columns.install_location)</description>
         <group>windows_attacks,</group>
       </rule>
 
       <rule id="240704" level="4">
         <if_sid>240700</if_sid>
         <field name="osquery.name">Winsecurity_info_2</field>
-        <description>osquery: $(osquery.name): Winsecurity.info Scam detected on Chrome extension $(osquery.columns.name)</description>
+        <description>osquery: $(osquery.pack) $(osquery.subquery): Winsecurity.info Scam detected on Chrome extension $(osquery.columns.name)</description>
         <group>windows_attacks,</group>
       </rule>
 
       <rule id="240705" level="4">
         <if_sid>240700</if_sid>
         <field name="osquery.name">unTabs_1</field>
-        <description>osquery: $(osquery.name): unTabs Browser extension malware detected on path $(osquery.columns.install_location)</description>
+        <description>osquery: $(osquery.pack) $(osquery.subquery): unTabs Browser extension malware detected on path $(osquery.columns.install_location)</description>
         <group>windows_attacks,</group>
       </rule>
 
       <rule id="240706" level="4">
         <if_sid>240700</if_sid>
         <field name="osquery.name">unTabs_2</field>
-        <description>osquery: $(osquery.name): unTabs Chrome extension malware detected $(osquery.columns.name)</description>
+        <description>osquery: $(osquery.pack) $(osquery.subquery): unTabs Chrome extension malware detected $(osquery.columns.name)</description>
         <group>windows_attacks,</group>
       </rule>
 
       <rule id="240707" level="4">
         <if_sid>240700</if_sid>
         <field name="osquery.name">StickyKeys_File_Replace_Backdoor</field>
-        <description>osquery: $(osquery.name): Sticky file key backdoor detected for program $(osquery.columns.path)</description>
+        <description>osquery: $(osquery.pack) $(osquery.subquery): Sticky file key backdoor detected for program $(osquery.columns.path)</description>
         <group>windows_attacks,</group>
       </rule>
 
       <rule id="240708" level="4">
         <if_sid>240700</if_sid>
         <field name="osquery.name">StickyKeys_Registry_Backdoor</field>
-        <description>osquery: $(osquery.name): Sticky registry key backdoor detected for key $(osquery.columns.path)</description>
+        <description>osquery: $(osquery.pack) $(osquery.subquery): Sticky registry key backdoor detected for key $(osquery.columns.path)</description>
         <group>windows_attacks,</group>
       </rule>
 
       <rule id="240709" level="4">
         <if_sid>240700</if_sid>
         <field name="osquery.name">conhost.exe_incorrect_path</field>
-        <description>osquery: $(osquery.name): conhost.exe process masquerading detected, path is $(osquery.columns.path)</description>
+        <description>osquery: $(osquery.pack) $(osquery.subquery): conhost.exe process masquerading detected, path is $(osquery.columns.path)</description>
         <group>windows_attacks,</group>
       </rule>
 
       <rule id="240710" level="4">
         <if_sid>240700</if_sid>
         <field name="osquery.name">dllhost.exe_incorrect_path</field>
-        <description>osquery: $(osquery.name): dllhost.exe process masquerading detected, path is $(osquery.columns.path)</description>
+        <description>osquery: $(osquery.pack) $(osquery.subquery): dllhost.exe process masquerading detected, path is $(osquery.columns.path)</description>
         <group>windows_attacks,</group>
       </rule>
 
       <rule id="240711" level="4">
         <if_sid>240700</if_sid>
         <field name="osquery.name">lsass.exe_incorrect_path</field>
-        <description>osquery: $(osquery.name): lsass.exe process masquerading detected, path is $(osquery.columns.path)</description>
+        <description>osquery: $(osquery.pack) $(osquery.subquery): lsass.exe process masquerading detected, path is $(osquery.columns.path)</description>
         <group>windows_attacks,</group>
       </rule>
 
       <rule id="240712" level="4">
         <if_sid>240700</if_sid>
         <field name="osquery.name">services.exe_incorrect_parent_process</field>
-        <description>osquery: $(osquery.name): services.exe process masquerading detected, the parent process is incorrect</description>
+        <description>osquery: $(osquery.pack) $(osquery.subquery): services.exe process masquerading detected, the parent process is incorrect</description>
         <group>windows_attacks,</group>
       </rule>
 
       <rule id="240713" level="4">
         <if_sid>240700</if_sid>
         <field name="osquery.name">svchost.exe_incorrect_path</field>
-        <description>osquery: $(osquery.name): svchost.exe process masquerading detected, path $(osquery.columns.path) is incorrect</description>
+        <description>osquery: $(osquery.pack) $(osquery.subquery): svchost.exe process masquerading detected, path $(osquery.columns.path) is incorrect</description>
         <group>windows_attacks,</group>
       </rule>
 
       <rule id="240714" level="4">
         <if_sid>240700</if_sid>
         <field name="osquery.name">svchost.exe_incorrect_parent_process</field>
-        <description>osquery: $(osquery.name): svchost.exe process masquerading detected, the parent process is incorrect</description>
+        <description>osquery: $(osquery.pack) $(osquery.subquery): svchost.exe process masquerading detected, the parent process is incorrect</description>
         <group>windows_attacks,</group>
       </rule>
 
   <rule id="240800" level="4">
     <if_sid>24010</if_sid>
     <field name="osquery.pack">^unwanted-chrome-extensions$</field>
-    <description>osquery: $(osquery.name) query result</description>
+    <description>osquery: $(osquery.pack) query result</description>
   </rule>
 
       <rule id="240801" level="4">
         <if_sid>240800</if_sid>
         <field name="osquery.name">BetternetVPN</field>
-        <description>osquery: $(osquery.name): BetternetVPN Chrome extension malware detected</description>
+        <description>osquery: $(osquery.pack) $(osquery.subquery): BetternetVPN Chrome extension malware detected</description>
         <group>unwanted_chrome,</group>
       </rule>
 
       <rule id="240802" level="4">
         <if_sid>240800</if_sid>
         <field name="osquery.name">Chrometana</field>
-        <description>osquery: $(osquery.name): Chrometana Chrome extension malware detected</description>
+        <description>osquery: $(osquery.pack) $(osquery.subquery): Chrometana Chrome extension malware detected</description>
         <group>unwanted_chrome,</group>
       </rule>
 
       <rule id="240803" level="4">
         <if_sid>240800</if_sid>
         <field name="osquery.name">CopyFish</field>
-        <description>osquery: $(osquery.name): CopyFish Chrome extension malware detected</description>
+        <description>osquery: $(osquery.pack) $(osquery.subquery): CopyFish Chrome extension malware detected</description>
         <group>unwanted_chrome,</group>
       </rule>
 
       <rule id="240804" level="4">
         <if_sid>240800</if_sid>
         <field name="osquery.name">Giphy</field>
-        <description>osquery: $(osquery.name): Giphy Chrome extension malware detected</description>
+        <description>osquery: $(osquery.pack) $(osquery.subquery): Giphy Chrome extension malware detected</description>
         <group>unwanted_chrome,</group>
       </rule>
 
       <rule id="240805" level="4">
         <if_sid>240800</if_sid>
         <field name="osquery.name">HolaVPN</field>
-        <description>osquery: $(osquery.name): HolaVPN Chrome extension malware detected</description>
+        <description>osquery: $(osquery.pack) $(osquery.subquery): HolaVPN Chrome extension malware detected</description>
         <group>unwanted_chrome,</group>
       </rule>
 
       <rule id="240806" level="4">
         <if_sid>240800</if_sid>
         <field name="osquery.name">InfinityNewTab</field>
-        <description>osquery: $(osquery.name): InfinityNewTab Chrome extension malware detected</description>
+        <description>osquery: $(osquery.pack) $(osquery.subquery): InfinityNewTab Chrome extension malware detected</description>
         <group>unwanted_chrome,</group>
       </rule>
 
       <rule id="240807" level="4">
         <if_sid>240800</if_sid>
         <field name="osquery.name">SocialFixer</field>
-        <description>osquery: $(osquery.name): SocialFixer Chrome extension malware detected</description>
+        <description>osquery: $(osquery.pack) $(osquery.subquery): SocialFixer Chrome extension malware detected</description>
         <group>unwanted_chrome,</group>
       </rule>
 
       <rule id="240808" level="4">
         <if_sid>240800</if_sid>
         <field name="osquery.name">TouchVPN</field>
-        <description>osquery: $(osquery.name): TouchVPN Chrome extension malware detected</description>
+        <description>osquery: $(osquery.pack) $(osquery.subquery): TouchVPN Chrome extension malware detected</description>
         <group>unwanted_chrome,</group>
       </rule>
 
       <rule id="240809" level="4">
         <if_sid>240800</if_sid>
         <field name="osquery.name">WebDeveloper</field>
-        <description>osquery: $(osquery.name): WebDeveloper Chrome extension malware detected</description>
+        <description>osquery: $(osquery.pack) $(osquery.subquery): WebDeveloper Chrome extension malware detected</description>
         <group>unwanted_chrome,</group>
       </rule>
 
       <rule id="240810" level="4">
         <if_sid>240800</if_sid>
         <field name="osquery.name">WebPaint</field>
-        <description>osquery: $(osquery.name): WebPaint Chrome extension malware detected</description>
+        <description>osquery: $(osquery.pack) $(osquery.subquery): WebPaint Chrome extension malware detected</description>
         <group>unwanted_chrome,</group>
       </rule>
 
       <rule id="240811" level="4">
         <if_sid>240800</if_sid>
         <field name="osquery.name">MacOSInstallCore</field>
-        <description>osquery: $(osquery.name): MacOSInstallCore Chrome extension malware detected</description>
+        <description>osquery: $(osquery.pack) $(osquery.subquery): MacOSInstallCore Chrome extension malware detected</description>
         <group>unwanted_chrome,</group>
       </rule>
 
