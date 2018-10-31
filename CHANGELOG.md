@@ -5,12 +5,17 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
-- osuqery: specific alerts for default packs. ([#196](https://github.com/wazuh/wazuh-ruleset/pull/196))
+- osquery: specific alerts for default packs. ([#196](https://github.com/wazuh/wazuh-ruleset/pull/196))
 - Azure integration: Decoders and rules. ([#189](https://github.com/wazuh/wazuh-ruleset/pull/189))
 
 ### Changed
 
 - osquery: Rename alerts fields reference. ([#196](https://github.com/wazuh/wazuh-ruleset/pull/196))
+- update_ruleset is not available in worker nodes. ([#225](https://github.com/wazuh/wazuh-ruleset/pull/225))
+
+### Fixed
+
+- Fixed active response decoder in order to match with different dates. ([#223](https://github.com/wazuh/wazuh-ruleset/pull/223))
 
 ### Removed
 
