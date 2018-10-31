@@ -167,4 +167,28 @@ ID: 80200 - 80499
         <description>VPC Flow rejected connection: Interface: $(aws.interface-id) - Protocol: $(aws.protocol)</description>
     </rule>
 
+    <!-- AWS Config -->
+    <!-- Documentation: https://docs.aws.amazon.com/config/latest/developerguide/WhatIsConfig.html -->
+    <rule id="80450" level="0">
+        <decoded_as>json</decoded_as>
+        <field name="aws.source"></field>
+        <description>AWS Config alerts.</description>
+    </rule>
+
+    <!-- AWS Trusted Advisor -->
+    <!-- Documentation: https://docs.aws.amazon.com/awssupport/latest/user/trustedadvisor.html?id=docs_gateway -->
+    <rule id="80500" level="0">
+        <decoded_as>json</decoded_as>
+        <field name="aws.source">aws.trustedadvisor</field>
+        <description>AWS Trusted advisor alerts.</description>
+    </rule>
+
+    <!-- AWS KSM -->
+    <!-- Documentation: https://docs.aws.amazon.com/kms/latest/developerguide/overview.html -->
+    <rule id="80550" level="0">
+        <decoded_as>json</decoded_as>
+        <field name="aws.source"></field>
+        <description>AWS KSM alerts.</description>
+    </rule>
+
 </group>
