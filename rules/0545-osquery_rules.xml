@@ -189,7 +189,8 @@
           <rule id="24045" level="4">
             <if_sid>24030</if_sid>
             <field name="osquery.name">kernel_modules</field>
-            <description>osquery: $(osquery.pack) $(osquery.subquery): Kernel module $(osquery.columns.name) used by $(osquery.columns.used_by) status $(osquery.columns.status)</description>
+            <field name="osquery.columns.status">Live</field>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): Kernel module $(osquery.columns.name) used by $(osquery.columns.used_by) is enabled</description>
             <group>incident_response,</group>
           </rule>
 
@@ -549,8 +550,8 @@
           <rule id="24129" level="4">
             <if_sid>24100</if_sid>
             <field name="osquery.name">kernel_modules</field>
-            <field name="osquery.columns.type">LIVE</field>
-            <description>osquery: $(osquery.pack) $(osquery.subquery): OS kernel module $(osquery.columns.name) is used by $(osquery.columns.used_by) and is enabled</description>
+            <field name="osquery.columns.status">Live</field>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): OS kernel module $(osquery.columns.name) is used by $(osquery.columns.used_by) is enabled</description>
             <group>it_compliance,</group>
           </rule>
 
@@ -783,7 +784,8 @@
           <rule id="24304" level="4">
             <if_sid>24300</if_sid>
             <field name="osquery.name">kernel_modules</field>
-            <description>osquery: $(osquery.pack) $(osquery.subquery): OS kernel module $(osquery.columns.name) is used by $(osquery.columns.used_by) and it's status is $(osquery.columns.status)</description>
+            <field name="osquery.columns.status">Live</field>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): OS kernel module $(osquery.columns.name) is used by $(osquery.columns.used_by) is enabled</description>
             <group>vuln_management,</group>
           </rule>
 
@@ -995,7 +997,8 @@
           <rule id="24414" level="4">
             <if_sid>24400</if_sid>
             <field name="osquery.name">kernel_modules</field>
-            <description>osquery: $(osquery.pack) $(osquery.subquery): OS kernel module $(osquery.columns.name) is used by $(osquery.columns.used_by) and it's status is $(osquery.columns.status)</description>
+            <field name="osquery.columns.status">Live</field>
+            <description>osquery: $(osquery.pack) $(osquery.subquery): OS kernel module $(osquery.columns.name) is used by $(osquery.columns.used_by) is enabled</description>
             <group>hardware_monitoring,</group>
           </rule>
 
