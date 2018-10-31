@@ -132,7 +132,7 @@
 
           <rule id="24037" level="4">
             <if_sid>24030</if_sid>
-            <field name="osquery.name">loginwindow4/field>
+            <field name="osquery.name">loginwindow4</field>
             <description>osquery: $(osquery.name): Username $(osquery.columns.username), Key $(osquery.columns.key)</description>
             <group>incident_response,</group>
           </rule>
@@ -231,7 +231,7 @@
           <rule id="24051" level="4">
             <if_sid>24030</if_sid>
             <field name="osquery.name">ip_forwarding</field>
-            <description>osquery: $(osquery.name): REVISAR! </description>
+            <description>osquery: $(osquery.name): Status of IP/IPv6 forwarding $(osquery.columns.name) value $(osquery.columns.current_value)</description>
             <group>incident_response,</group>
           </rule>
 
@@ -622,9 +622,135 @@
   <rule id="240200" level="4">
     <if_sid>24010</if_sid>
     <field name="osquery.pack">^osx-attacks$</field>
-    <description>osquery: $(osquery.name): Malware process $(osquery.columns.name) detected</description>
+    <description>osquery: $(osquery.name): $(osquery.columns.name) malware process detected</description>
     <group>osx_attacks,</group>
   </rule>
+
+          <rule id="240201" level="4">
+            <if_sid>240200</if_sid>
+            <field name="osquery.name">Leverage-A_2</field>
+            <description>osquery: $(osquery.name): Leverage-A_2 malware detected on path $(osquery.columns.path)</description>
+            <group>osx_attacks,</group>
+          </rule>
+
+          <rule id="240202" level="4">
+            <if_sid>240200</if_sid>
+            <field name="osquery.name">iWorkServ</field>
+            <description>osquery: $(osquery.name): OSX iWorkServ malware detected on path $(osquery.columns.path)</description>
+            <group>osx_attacks,</group>
+          </rule>
+
+          <rule id="240203" level="4">
+            <if_sid>240200</if_sid>
+            <field name="osquery.name">iWorm_1</field>
+            <description>osquery: $(osquery.name): iWorm_1 malware detected on path $(osquery.columns.path)</description>
+            <group>osx_attacks,</group>
+          </rule>
+
+          <rule id="240204" level="4">
+            <if_sid>240200</if_sid>
+            <field name="osquery.name">HackingTeam_Mac_RAT1</field>
+            <description>osquery: $(osquery.name): HackingTeam Mac RAT1 malware detected on path $(osquery.columns.path)</description>
+            <group>osx_attacks,</group>
+          </rule>
+
+          <rule id="240205" level="4">
+            <if_sid>240200</if_sid>
+            <field name="osquery.name">HackingTeam_Mac_RAT2</field>
+            <description>osquery: $(osquery.name): HackingTeam Mac RAT2 malware detected on path $(osquery.columns.path)</description>
+            <group>osx_attacks,</group>
+          </rule>
+
+          <rule id="240206" level="4">
+            <if_sid>240200</if_sid>
+            <field name="osquery.name">HackingTeam_Mac_Persistence</field>
+            <description>osquery: $(osquery.name): HackingTeam Mac Persistence malware detected on path $(osquery.columns.path)</description>
+            <group>osx_attacks,</group>
+          </rule>
+
+          <rule id="240207" level="4">
+            <if_sid>240200</if_sid>
+            <field name="osquery.name">Keranger_2</field>
+            <description>osquery: $(osquery.name): Keranger malware detected on path $(osquery.columns.path)</description>
+            <group>osx_attacks,</group>
+          </rule>
+
+          <rule id="240208" level="4">
+            <if_sid>240200</if_sid>
+            <field name="osquery.name">OSX_Backdoor_Mokes</field>
+            <description>osquery: $(osquery.name): OSX Backdoor Mokes malware detected on path $(osquery.columns.path)</description>
+            <group>osx_attacks,</group>
+          </rule>
+
+          <rule id="240209" level="4">
+            <if_sid>240200</if_sid>
+            <field name="osquery.name">OSX_Komplex</field>
+            <description>osquery: $(osquery.name): Komplex malware detected on path $(osquery.columns.path)</description>
+            <group>osx_attacks,</group>
+          </rule>
+
+          <rule id="240210" level="4">
+            <if_sid>240200</if_sid>
+            <field name="osquery.name">OceanLotus_dropped_file_1</field>
+            <description>osquery: $(osquery.name): OceanLotus malware detected on path $(osquery.columns.path)</description>
+            <group>osx_attacks,</group>
+          </rule>
+
+          <rule id="240211" level="4">
+            <if_sid>240200</if_sid>
+            <field name="osquery.name">OSX_DOK_2</field>
+            <description>osquery: $(osquery.name): OSX/Dok malware detected in certificate $(osquery.columns.common_name)</description>
+            <group>osx_attacks,</group>
+          </rule>
+
+          <rule id="240212" level="4">
+            <if_sid>240200</if_sid>
+            <field name="osquery.name">OSX_DOK_3</field>
+            <description>osquery: $(osquery.name): OSX/Dok malware detected on path $(osquery.columns.path)</description>
+            <group>osx_attacks,</group>
+          </rule>
+
+          <rule id="240213" level="4">
+            <if_sid>240200</if_sid>
+            <field name="osquery.name">OSX_Snake</field>
+            <description>osquery: $(osquery.name): Snake malware detected on path $(osquery.columns.path)</description>
+            <group>osx_attacks,</group>
+          </rule>
+
+          <rule id="240214" level="4">
+            <if_sid>240200</if_sid>
+            <field name="osquery.name">OSX_Proton_Files</field>
+            <description>osquery: $(osquery.name): Proton malware detected on path $(osquery.columns.path)</description>
+            <group>osx_attacks,</group>
+          </rule>
+
+          <rule id="240215" level="4">
+            <if_sid>240200</if_sid>
+            <field name="osquery.name">OSX_MaMi_DNS_Servers</field>
+            <description>osquery: $(osquery.name): MaMi malware detected, infected DNS address $(osquery.columns.address)</description>
+            <group>osx_attacks,</group>
+          </rule>
+
+          <rule id="240216" level="4">
+            <if_sid>240200</if_sid>
+            <field name="osquery.name">OSX_MaMi_Certificate</field>
+            <description>osquery: $(osquery.name): MaMi malware detected in certificate $(osquery.columns.common_name)</description>
+            <group>osx_attacks,</group>
+          </rule>
+
+          <rule id="240217" level="4">
+            <if_sid>240200</if_sid>
+            <field name="osquery.name">OSX_ColdRoot_RAT_Files</field>
+            <description>osquery: $(osquery.name): Coldroot RAT malware detected on path $(osquery.columns.path)</description>
+            <group>osx_attacks,</group>
+          </rule>
+
+          <rule id="240218" level="4">
+            <if_sid>240200</if_sid>
+            <field name="osquery.name">OSX_Dummy_Files</field>
+            <description>osquery: $(osquery.name): OSX Dummy malware detected on path $(osquery.columns.path)</description>
+            <group>osx_attacks,</group>
+          </rule>
 
   <rule id="240300" level="4">
     <if_sid>24010</if_sid>
@@ -894,24 +1020,199 @@
     <group>ossec_rootkit,</group>
   </rule>
 
-  <rule id="24090" level="4">
+  <rule id="240600" level="4">
     <if_sid>24010</if_sid>
     <field name="osquery.pack">^windows-hardening$</field>
-    <description>osquery: $(osquery.name): Windows Registry key $(osquery.columns.path)</description>
+    <description>osquery: $(osquery.name): Windows Registry key $(osquery.columns.key) value is $(osquery.columns.data)</description>
     <group>windows_hardening,</group>
   </rule>
 
-  <rule id="24100" level="4">
+  <rule id="240700" level="4">
     <if_sid>24010</if_sid>
     <field name="osquery.pack">^windows-attacks$</field>
     <description>osquery: $(osquery.name) query result</description>
     <group>windows_attacks,</group>
   </rule>
 
-  <rule id="24110" level="4">
+      <rule id="240701" level="4">
+        <if_sid>240700</if_sid>
+        <field name="osquery.name">CCleaner_Trojan.Floxif</field>
+        <description>osquery: $(osquery.name): CCleaner Trojan Floxif detected on registry path $(osquery.columns.path)</description>
+        <group>windows_attacks,</group>
+      </rule>
+
+      <rule id="240702" level="4">
+        <if_sid>240700</if_sid>
+        <field name="osquery.name">CCleaner_Trojan_stage2.Floxif</field>
+        <description>osquery: $(osquery.name): CCleaner Trojan Floxif detected on service $(osquery.columns.name) for user $(osquery.columns.user_account)</description>
+        <group>windows_attacks,</group>
+      </rule>
+
+      <rule id="240703" level="4">
+        <if_sid>240700</if_sid>
+        <field name="osquery.name">Winsecurity_info_1</field>
+        <description>osquery: $(osquery.name): Winsecurity.info Scam detected on path $(osquery.columns.install_location)</description>
+        <group>windows_attacks,</group>
+      </rule>
+
+      <rule id="240704" level="4">
+        <if_sid>240700</if_sid>
+        <field name="osquery.name">Winsecurity_info_2</field>
+        <description>osquery: $(osquery.name): Winsecurity.info Scam detected on Chrome extension $(osquery.columns.name)</description>
+        <group>windows_attacks,</group>
+      </rule>
+
+      <rule id="240705" level="4">
+        <if_sid>240700</if_sid>
+        <field name="osquery.name">unTabs_1</field>
+        <description>osquery: $(osquery.name): unTabs Browser extension malware detected on path $(osquery.columns.install_location)</description>
+        <group>windows_attacks,</group>
+      </rule>
+
+      <rule id="240706" level="4">
+        <if_sid>240700</if_sid>
+        <field name="osquery.name">unTabs_2</field>
+        <description>osquery: $(osquery.name): unTabs Chrome extension malware detected $(osquery.columns.name)</description>
+        <group>windows_attacks,</group>
+      </rule>
+
+      <rule id="240707" level="4">
+        <if_sid>240700</if_sid>
+        <field name="osquery.name">StickyKeys_File_Replace_Backdoor</field>
+        <description>osquery: $(osquery.name): Sticky file key backdoor detected for program $(osquery.columns.path)</description>
+        <group>windows_attacks,</group>
+      </rule>
+
+      <rule id="240708" level="4">
+        <if_sid>240700</if_sid>
+        <field name="osquery.name">StickyKeys_Registry_Backdoor</field>
+        <description>osquery: $(osquery.name): Sticky registry key backdoor detected for key $(osquery.columns.path)</description>
+        <group>windows_attacks,</group>
+      </rule>
+
+      <rule id="240709" level="4">
+        <if_sid>240700</if_sid>
+        <field name="osquery.name">conhost.exe_incorrect_path</field>
+        <description>osquery: $(osquery.name): conhost.exe process masquerading detected, path is $(osquery.columns.path)</description>
+        <group>windows_attacks,</group>
+      </rule>
+
+      <rule id="240710" level="4">
+        <if_sid>240700</if_sid>
+        <field name="osquery.name">dllhost.exe_incorrect_path</field>
+        <description>osquery: $(osquery.name): dllhost.exe process masquerading detected, path is $(osquery.columns.path)</description>
+        <group>windows_attacks,</group>
+      </rule>
+
+      <rule id="240711" level="4">
+        <if_sid>240700</if_sid>
+        <field name="osquery.name">lsass.exe_incorrect_path</field>
+        <description>osquery: $(osquery.name): lsass.exe process masquerading detected, path is $(osquery.columns.path)</description>
+        <group>windows_attacks,</group>
+      </rule>
+
+      <rule id="240712" level="4">
+        <if_sid>240700</if_sid>
+        <field name="osquery.name">services.exe_incorrect_parent_process</field>
+        <description>osquery: $(osquery.name): services.exe process masquerading detected, the parent process is incorrect</description>
+        <group>windows_attacks,</group>
+      </rule>
+
+      <rule id="240713" level="4">
+        <if_sid>240700</if_sid>
+        <field name="osquery.name">svchost.exe_incorrect_path</field>
+        <description>osquery: $(osquery.name): svchost.exe process masquerading detected, path $(osquery.columns.path) is incorrect</description>
+        <group>windows_attacks,</group>
+      </rule>
+
+      <rule id="240714" level="4">
+        <if_sid>240700</if_sid>
+        <field name="osquery.name">svchost.exe_incorrect_parent_process</field>
+        <description>osquery: $(osquery.name): svchost.exe process masquerading detected, the parent process is incorrect</description>
+        <group>windows_attacks,</group>
+      </rule>
+
+  <rule id="240800" level="4">
     <if_sid>24010</if_sid>
     <field name="osquery.pack">^unwanted-chrome-extensions$</field>
     <description>osquery: $(osquery.name) query result</description>
   </rule>
+
+      <rule id="240801" level="4">
+        <if_sid>240800</if_sid>
+        <field name="osquery.name">BetternetVPN</field>
+        <description>osquery: $(osquery.name): BetternetVPN Chrome extension malware detected</description>
+        <group>unwanted_chrome,</group>
+      </rule>
+
+      <rule id="240802" level="4">
+        <if_sid>240800</if_sid>
+        <field name="osquery.name">Chrometana</field>
+        <description>osquery: $(osquery.name): Chrometana Chrome extension malware detected</description>
+        <group>unwanted_chrome,</group>
+      </rule>
+
+      <rule id="240803" level="4">
+        <if_sid>240800</if_sid>
+        <field name="osquery.name">CopyFish</field>
+        <description>osquery: $(osquery.name): CopyFish Chrome extension malware detected</description>
+        <group>unwanted_chrome,</group>
+      </rule>
+
+      <rule id="240804" level="4">
+        <if_sid>240800</if_sid>
+        <field name="osquery.name">Giphy</field>
+        <description>osquery: $(osquery.name): Giphy Chrome extension malware detected</description>
+        <group>unwanted_chrome,</group>
+      </rule>
+
+      <rule id="240805" level="4">
+        <if_sid>240800</if_sid>
+        <field name="osquery.name">HolaVPN</field>
+        <description>osquery: $(osquery.name): HolaVPN Chrome extension malware detected</description>
+        <group>unwanted_chrome,</group>
+      </rule>
+
+      <rule id="240806" level="4">
+        <if_sid>240800</if_sid>
+        <field name="osquery.name">InfinityNewTab</field>
+        <description>osquery: $(osquery.name): InfinityNewTab Chrome extension malware detected</description>
+        <group>unwanted_chrome,</group>
+      </rule>
+
+      <rule id="240807" level="4">
+        <if_sid>240800</if_sid>
+        <field name="osquery.name">SocialFixer</field>
+        <description>osquery: $(osquery.name): SocialFixer Chrome extension malware detected</description>
+        <group>unwanted_chrome,</group>
+      </rule>
+
+      <rule id="240808" level="4">
+        <if_sid>240800</if_sid>
+        <field name="osquery.name">TouchVPN</field>
+        <description>osquery: $(osquery.name): TouchVPN Chrome extension malware detected</description>
+        <group>unwanted_chrome,</group>
+      </rule>
+
+      <rule id="240809" level="4">
+        <if_sid>240800</if_sid>
+        <field name="osquery.name">WebDeveloper</field>
+        <description>osquery: $(osquery.name): WebDeveloper Chrome extension malware detected</description>
+        <group>unwanted_chrome,</group>
+      </rule>
+
+      <rule id="240810" level="4">
+        <if_sid>240800</if_sid>
+        <field name="osquery.name">WebPaint</field>
+        <description>osquery: $(osquery.name): WebPaint Chrome extension malware detected</description>
+        <group>unwanted_chrome,</group>
+      </rule>
+
+      <rule id="240811" level="4">
+        <if_sid>240800</if_sid>
+        <field name="osquery.name">MacOSInstallCore</field>
+        <description>osquery: $(osquery.name): MacOSInstallCore Chrome extension malware detected</description>
+        <group>unwanted_chrome,</group>
+      </rule>
 
 </group>
