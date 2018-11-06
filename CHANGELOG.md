@@ -12,6 +12,7 @@ All notable changes to this project will be documented in this file.
 
 - osquery: Rename alerts fields reference. ([#196](https://github.com/wazuh/wazuh-ruleset/pull/196))
 - update_ruleset is not available in worker nodes. ([#225](https://github.com/wazuh/wazuh-ruleset/pull/225))
+- Update composite rules to match only same_source_ip events. ([#161](https://github.com/wazuh/wazuh-ruleset/pull/161))
 
 ### Fixed
 
