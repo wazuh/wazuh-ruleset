@@ -167,4 +167,25 @@ ID: 80200 - 80499
         <description>VPC Flow rejected connection: Interface: $(aws.interface-id) - Protocol: $(aws.protocol)</description>
     </rule>
 
+    <!-- AWS Config -->
+    <!-- Documentation: https://docs.aws.amazon.com/config/latest/developerguide/WhatIsConfig.html -->
+    <rule id="80450" level="3">
+        <decoded_as>json</decoded_as>
+        <field name="aws.source">config</field>
+        <description>AWS Config alert</description>
+    </rule>
+
+	<rule id="80451" level="4">
+        <decoded_as>json</decoded_as>
+        <if_sid>80450</if_sid>
+		<field name="aws.configuration.complianceType">NON_COMPLIANT</field>
+		<description>AWS Config: $(aws.configuration.complianceType) - $(aws.resourceId) - $(aws.configuration.configRuleList.configRuleId) - $(aws.configuration.configRuleList.configRuleName)</description>
+	</rule>
+
+    <rule id="80452" level="4">
+        <decoded_as>json</decoded_as>
+        <if_sid>80450</if_sid>
+		<description>AWS Config: COMPLIANT - $(aws.ARN) </description>
+	</rule>
+
 </group>
