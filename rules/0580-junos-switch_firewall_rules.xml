@@ -5,11 +5,11 @@
 -->
 
 <!--
-ID: 88000 - 88099
+ID: 88500 - 88599
 -->
 <group name="junos,rsyslog">
 
-  <rule id="88000" level="0">
+  <rule id="88500" level="0">
     <decoded_as>cisco-asa</decoded_as>
     <description> Firewall infos</description>
   </rule>
@@ -34,38 +34,39 @@ ID: 88000 - 88099
     <description>alarm  actions infos.</description>
   </rule>
 
- <rule id="88001" level="2">
-    <if_sid>80000</if_sid>
+ <rule id="88501" level="2">
+    <if_sid>88500</if_sid>
     <match>CREATE</match>
     <description> Firewall session created</description>
   </rule>
 
- <rule id="88002" level="2">
-    <if_sid>80000</if_sid>
+ <rule id="88502" level="2">
+    <if_sid>88500</if_sid>
     <match>CLOSE</match>
     <description> Firewall session closed info</description>
   </rule>
 
 
-  <rule id="88010" level="0">
+  <rule id="88510" level="0">
     <decoded_as>Junos-switch-Info</decoded_as>
     <description>access switch/router juniper infos</description>
   </rule>
 
-  <rule id="88011" level="4">
-    <if_sid>88010</if_sid>
+  <rule id="88511" level="4">
+    <if_sid>88510</if_sid>
     <match>trap</match>
     <description>trap genrated Juniper </description>
   </rule>
 
- <rule id="88012" level="0">
+ <rule id="88512" level="0">
     <decoded_as>Junos-switch-FPC-Info</decoded_as>
     <description>access switch/router juniper infos</description>
   </rule>
   
-  <rule id="88013" level="0">
+  <rule id="88513" level="0">
     <decoded_as>Junos-switch-Cron-Info</decoded_as>
     <description>access switch/router juniper infos</description>
   </rule>
 
 </group>
+
