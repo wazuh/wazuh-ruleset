@@ -1,6 +1,13 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [v3.7.1]
+
+### Added
+
+- New Vulnerability detector rules to warn about version comparison issues. ([#237](https://github.com/wazuh/wazuh-ruleset/pull/237))
+
+
 ## [v3.7.0]
 
 ### Added
