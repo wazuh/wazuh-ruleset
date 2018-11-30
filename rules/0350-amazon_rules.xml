@@ -167,4 +167,127 @@ ID: 80200 - 80499
         <description>VPC Flow rejected connection: Interface: $(aws.interface-id) - Protocol: $(aws.protocol)</description>
     </rule>
 
+    <!-- CIS Amazon Web Services Foundations Benchmark, Section 3 -->
+    <!-- CIS Benchmark: 3.1 -->
+    <rule id="80256" level="4">
+        <if_sid>80203</if_sid>
+        <field name="aws.errorCode">^AccessDenied|UnauthorizedOperation$</field>
+        <description>Unauthorized API call: $(aws.eventSource) - $(aws.eventName).</description>
+    </rule>
+
+    <!-- CIS Benchmark: 3.2 -->
+    <rule id="80257" level="4">
+        <if_sid>80200</if_sid>
+        <field name="aws.eventName">^ConsoleLogin$</field>
+        <description>Console Login without MFA: $(aws.eventSource) - $(aws.userIdentity.userName)</description>
+    </rule>
+
+    <rule id="80258" level="0">
+        <if_sid>80257</if_sid>
+        <field name="aws.eventName">^ConsoleLogin$</field>
+        <field name="aws.additionalEventData.MFAUsed">Yes</field>
+        <description>Console Login with MFA: $(aws.eventSource) - $(aws.eventName)</description>
+    </rule>
+
+    <!-- CIS Benchmark: 3.3 -->
+    <rule id="80259" level="4">
+        <if_sid>80200</if_sid>
+        <field name="aws.userIdentity.type">^Root$</field>
+        <description>Operation performed as root user: $(aws.eventSource) - $(aws.eventName)</description>
+    </rule>
+
+    <rule id="80260" level="0">
+        <if_sid>80259</if_sid>
+        <field name="aws.eventType">^AwsServiceEvent$</field>
+        <description>Operation performed as root user (AWS service event): $(aws.eventSource) - $(aws.eventName)</description>
+    </rule>
+
+    <rule id="80261" level="0">
+        <if_sid>80259</if_sid>
+        <field name="aws.userIdentity.invokedBy">\.+</field>
+        <description>Operation performed as root user (invoked by $(aws.userIdentity.invokedBy)): $(aws.eventSource) - $(aws.eventName)</description>
+    </rule>
+
+    <!-- CIS Benchmark: 3.4 -->
+    <rule id="80262" level="3">
+        <if_sid>80200</if_sid>
+        <field name="aws.eventName">GroupPolicy$|RolePolicy$|UserPolicy$|^CreatePolicy|^DeletePolicy</field>
+        <description>IAM Policy Change: $(aws.eventSource) - $(aws.eventName)</description>
+    </rule>
+
+    <!-- CIS Benchmark: 3.5 -->
+    <rule id="80263" level="3">
+        <if_sid>80200</if_sid>
+        <field name="aws.eventName">Trail$|^StartLogging$|^StopLogging$</field>
+        <description>CloudTrail Configuration Change: $(aws.eventSource) - $(aws.errorCode)</description>
+    </rule>
+
+    <!-- CIS Benchmark: 3.6 -->
+    <rule id="80264" level="4">
+        <if_sid>80200</if_sid>
+        <field name="aws.eventName">^ConsoleLogin$</field>
+        <field name="aws.errorMessage">^Failed authentication$</field>
+        <description>Console Login Failure: $(aws.eventSource) - $(aws.errorCode) - $(aws.errorMessage)</description>
+    </rule>
+
+    <!-- CIS Benchmark: 3.7 -->
+    <rule id="80265" level="3">
+        <if_sid>80200</if_sid>
+        <field name="aws.eventSource">^kms.amazonaws.com$</field>
+        <field name="aws.eventName">^DisableKey$|^ScheduleKeyDeletion$</field>
+        <description>CMK disabled or scheduled for deletion: $(aws.eventName)</description>
+    </rule>
+
+    <!-- CIS Benchmark: 3.8 -->
+    <rule id="80266" level="3">
+        <if_sid>80200</if_sid>
+        <field name="aws.eventSource">s3.amazonaws.com</field>
+        <field name="aws.eventName">^PutBucketAcl$|^PutBucketPolicy$|^PutBucketCors$|^PutBucketLifecycle$|^PutBucketReplication$|^DeleteBucketAcl$|^DeleteBucketPolicy$|^DeleteBucketCors$|^DeleteBucketLifecycle$|^DeleteBucketReplication$</field>
+        <description>s3 Policy Change: $(aws.eventSource) - $(aws.eventName)</description>
+    </rule>
+
+    <!-- CIS Benchmark: 3.9 -->
+    <rule id="80267" level="3">
+        <if_sid>80200</if_sid>
+        <field name="aws.eventSource"></field>
+        <field name="aws.eventName">^PutConfigurationRecorder$|^PutDeliveryChannel$|^StopConfigurationRecorder$|^DeleteDeliveryChannel$</field>
+        <description>AWS Config Change: $(aws.eventSource) - $(aws.eventName)</description>
+    </rule>
+
+    <!-- CIS Benchmark: 3.10 -->
+    <rule id="80268" level="3">
+        <if_sid>80200</if_sid>
+        <field name="aws.eventName">^AuthorizeSecurityGroup|^RevokeSecurityGroup|^CreateSecurityGroup$|^DeleteSecurityGroup$</field>
+        <description>Security group changed: $(aws.eventSource) - $(aws.eventName)</description>
+    </rule>
+
+    <!-- CIS Benchmark: 3.11 -->
+    <rule id="80269" level="3">
+        <if_sid>80200</if_sid>
+        <field name="aws.eventName">NetworkAcl$|NetworkAclEntry$|^ReplaceNetworkAclAssociation$</field>
+        <description>Network ACL Change: $(aws.eventSource) - $(aws.eventName)</description>
+    </rule>
+
+    <!-- CIS Benchmark: 3.12 -->
+    <rule id="80270" level="3">
+        <if_sid>80200</if_sid>
+        <field name="aws.eventName">^CreateCustomerGateway$|^DeleteCustomerGateway$|^AttachInternetGateway$|^CreateInternetGateway$|^DeleteInternetGateway$|^DetachInternetGateway$</field>
+        <description>Network Gateway Change: $(aws.eventSource) - $(aws.eventName)</description>
+    </rule>
+
+    <!-- CIS Benchmark: 3.13 -->
+    <rule id="80271" level="3">
+        <if_sid>80200</if_sid>
+        <field name="aws.eventName">^CreateRoute$|^CreateRouteTable$|^ReplaceRoute$|^ReplaceRouteTableAssociation$|^DeleteRoute$|^DeleteRouteTable$|^DisassociateRouteTable</field>
+        <description>Route Table Change: $(aws.eventSource) - $(aws.eventName)</description>
+    </rule>
+
+    <!-- CIS Benchmark: 3.14 -->
+    <rule id="80272" level="3">
+        <if_sid>80200</if_sid>
+        <field name="aws.eventName">^CreateVpc$|^DeleteVpc$|^ModifyVpcAttribute$|^AcceptVpcPeeringConnection$|^CreateVpcPeeringConnection$|^DeleteVpcPeeringConnection$|^RejectVpcPeeringConnection$|^AttachClassicLinkVpc$|^DetachClassicLinkVpc$|^EnableVpcClassicLink$|^DisableVpcClassicLink$</field>
+        <description>VPC Change: $(aws.eventSource) - $(aws.eventName)</description>
+    </rule>
+
+    <!-- Insert frequency-based escalation rules here -->
 </group>
