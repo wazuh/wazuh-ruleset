@@ -176,7 +176,7 @@ ID: 80200 - 80499
     <!-- CIS Benchmark: 3.10 -->
     <rule id="80268" level="3">
         <if_sid>80200</if_sid>
-        <field name="aws.eventName">SecurityGroup</field>
+        <field name="aws.eventName">^AuthorizeSecurityGroup|^RevokeSecurityGroup|^CreateSecurityGroup$|^DeleteSecurityGroup$</field>
         <description>Security group changed: $(aws.eventSource) - $(aws.eventName)</description>
     </rule>
 
