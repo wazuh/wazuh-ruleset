@@ -20,9 +20,9 @@
   <rule id="200001" level="0">
     <if_sid>200000</if_sid>
     <field name="WinEvtChannel.System.Channel">System</field>
-    <field name="WinEvtChannel.System.EventID">^1$|^6$|^12$|^16$|^18$|^20$|^27$|^32$|^36$|^41$|^55$|^98$|
-                ^508$|^1101$|^1501$|^2505$|^4321$|^6005$|^6008$|^6009$|^6013$|^7001$|^7002$|^7026$|^7034$|
-                ^7040$|^7045$|^10010$|^10016$|^16962$|^36887$|^36888$|^50036$|^51046$</field>
+    <field name="WinEvtChannel.System.EventID">^1$|^6$|^12$|^16$|^18$|^20$|^27$|^32$|^36$|^41$|^55$|^98$|^104$|
+                |^508$|^1101$|^1102$|^1501$|^2505$|^4321$|^6005$|^6008$|^6009$|^6013$|^7001$|^7002$|^7026$|^7034$|
+                |^7040$|^7045$|^10010$|^10016$|^16962$|^36887$|^36888$|^50036$|^51046$</field>
     <description>Windows System event.</description>
     <options>no_full_log</options>
   </rule>
@@ -30,7 +30,7 @@
   <rule id="200002" level="0">
     <if_sid>200001</if_sid>
     <field name="WinEvtChannel.System.SeverityValue">^INFORMATION</field>
-    <description>[System][Information] Windows event.</description>
+    <description>[System][INFORMATION] Windows event.</description>
     <options>no_full_log</options>
     <group>pci_dss_10.6.1,gdpr_IV_35.7.d,</group>
   </rule>
@@ -38,7 +38,7 @@
   <rule id="200003" level="0">
     <if_sid>200001</if_sid>
     <field name="WinEvtChannel.System.SeverityValue">^WARNING</field>
-    <description>[System][Warning] Windows event.</description>
+    <description>[System][WARNING] Windows event.</description>
     <options>no_full_log</options>
     <group>gpg13_4.12,</group>
   </rule>
@@ -51,19 +51,12 @@
     <group>system_error,gpg13_4.3,gdpr_IV_35.7.d,</group>
   </rule>
 
-  <rule id="200005" level="0">
+  <rule id="200005" level="5">
     <if_sid>200001</if_sid>
-    <field name="WinEvtChannel.System.SeverityValue">^AUDIT_SUCCESS|^success</field>
-    <description>[System][AUDIT_SUCCESS] Windows event.</description>
+    <field name="WinEvtChannel.System.SeverityValue">^UNKNOWN</field>
+    <description>[System][UNKNOWN] Windows event.</description>
     <options>no_full_log</options>
-  </rule>
-
-  <rule id="200006" level="4">
-    <if_sid>200001</if_sid>
-    <field name="WinEvtChannel.System.SeverityValue">^AUDIT_FAILURE|^failure</field>
-    <description>[System][AUDIT_FAILURE] Windows event.</description>
-    <options>no_full_log</options>
-    <group>pci_dss_10.6.1,gdpr_IV_35.7.d,</group>
+    <group>system_error,gpg13_4.3,gdpr_IV_35.7.d,</group>
   </rule>
 
   <rule id="200007" level="0">
@@ -77,7 +70,7 @@
   <rule id="200008" level="0">
     <if_sid>200007</if_sid>
     <field name="WinEvtChannel.System.SeverityValue">^INFORMATION</field>
-    <description>[Security][Information] Windows event.</description>
+    <description>[Security][INFORMATION] Windows event.</description>
     <options>no_full_log</options>
     <group>pci_dss_10.6.1,gdpr_IV_35.7.d,</group>
   </rule>
@@ -85,7 +78,7 @@
   <rule id="200009" level="0">
     <if_sid>200007</if_sid>
     <field name="WinEvtChannel.System.SeverityValue">^WARNING</field>
-    <description>[Security][Warning] Windows event.</description>
+    <description>[Security][WARNING] Windows event.</description>
     <options>no_full_log</options>
     <group>gpg13_4.12,</group>
   </rule>
@@ -115,8 +108,8 @@
 
   <rule id="200013" level="3">
     <if_sid>200007</if_sid>
-    <field name="WinEvtChannel.System.SeverityValue">^Unknown</field>
-    <description>[Security][Unknown] Windows event.</description>
+    <field name="WinEvtChannel.System.SeverityValue">^UNKNOWN</field>
+    <description>[Security][UNKNOWN] Windows event.</description>
     <options>no_full_log</options>
     <group>pci_dss_10.6.1,gdpr_IV_35.7.d,</group>
   </rule>
@@ -127,15 +120,15 @@
     <options>no_full_log</options>
     <field name="WinEvtChannel.System.Channel">Application</field>
     <field name="WinEvtChannel.System.EventID">^1$|^2$|^3$|^4$|^5$|^6$|^102$|^103$|^105$|^258$|^300$|^301$|^302$|
-                  ^326$|^327$|^900$|^902$|^903$|^1001$|^1003$|^1005$|^1066$|^1530$|^1531$|^1534$|
-                  ^2001$|^2003$|^4097$|^4321$|^4625$|^4690$|^5611$|^5615$|^5617$|^6000$|^6003$|^8197$|
-                  ^8225$|^9009$|^10000$|^10001$|^16384$</field>
+    |^326$|^327$|^900$|^902$|^903$|^1001$|^1003$|^1004$|^1005$|^1066$|^1530$|^1531$|^1534$|^2001$|
+    |^2003$|^3036$|^4097$|^4321$|^4625$|^4690$|^5611$|^5615$|^5617$|^6000$|^6003$|^8197$|
+    |^8224$|^8225$|^9009$|^10000$|^10001$|^16384$</field>
   </rule>
 
   <rule id="200015" level="0">
     <if_sid>200014</if_sid>
     <field name="WinEvtChannel.System.SeverityValue">^INFORMATION</field>
-    <description>[Application][Information] Windows event.</description>
+    <description>[Application][INFORMATION] Windows event.</description>
     <options>no_full_log</options>
     <group>pci_dss_10.6.1,gdpr_IV_35.7.d,</group>
   </rule>
@@ -143,7 +136,7 @@
   <rule id="200016" level="0">
     <if_sid>200014</if_sid>
     <field name="WinEvtChannel.System.SeverityValue">^WARNING</field>
-    <description>[Application][Warning] Windows event.</description>
+    <description>[Application][WARNING] Windows event.</description>
     <options>no_full_log</options>
     <group>gpg13_4.12,</group>
   </rule>
@@ -156,25 +149,10 @@
     <group>system_error,gpg13_4.3,gdpr_IV_35.7.d,</group>
   </rule>
 
-  <rule id="200018" level="0">
+  <rule id="200018" level="3">
     <if_sid>200014</if_sid>
-    <field name="WinEvtChannel.System.SeverityValue">^AUDIT_SUCCESS|^success</field>
-    <description>[Application][AUDIT_SUCCESS] Windows event.</description>
-    <options>no_full_log</options>
-  </rule>
-
-  <rule id="200019" level="4">
-    <if_sid>200014</if_sid>
-    <field name="WinEvtChannel.System.SeverityValue">^AUDIT_FAILURE|^failure</field>
-    <description>[Application][AUDIT_FAILURE] Windows event.</description>
-    <options>no_full_log</options>
-    <group>pci_dss_10.6.1,gdpr_IV_35.7.d,</group>
-  </rule>
-
-  <rule id="200020" level="3">
-    <if_sid>200014</if_sid>
-    <field name="WinEvtChannel.System.SeverityValue">^Unknown</field>
-    <description>[Application][Unknown] Windows event.</description>
+    <field name="WinEvtChannel.System.SeverityValue">^UNKNOWN</field>
+    <description>[Application][UNKNOWN] Windows event.</description>
     <options>no_full_log</options>
     <group>pci_dss_10.6.1,gdpr_IV_35.7.d,</group>
   </rule>
@@ -191,7 +169,7 @@
   <rule id="200022" level="0">
     <if_sid>200021</if_sid>
     <field name="WinEvtChannel.System.SeverityValue">^INFORMATION</field>
-    <description>[Sysmon][Information] Windows event.</description>
+    <description>[Sysmon][INFORMATION] Windows event.</description>
     <options>no_full_log</options>
     <group>pci_dss_10.6.1,gdpr_IV_35.7.d,</group>
   </rule>
@@ -199,7 +177,7 @@
   <rule id="200023" level="0">
     <if_sid>200021</if_sid>
     <field name="WinEvtChannel.System.SeverityValue">^WARNING</field>
-    <description>[Sysmon][Warning] Windows event.</description>
+    <description>[Sysmon][WARNING] Windows event.</description>
     <options>no_full_log</options>
     <group>gpg13_4.12,</group>
   </rule>
@@ -212,25 +190,10 @@
     <group>system_error,gpg13_4.3,gdpr_IV_35.7.d,</group>
   </rule>
 
-  <rule id="200025" level="0">
+  <rule id="200025" level="3">
     <if_sid>200021</if_sid>
-    <field name="WinEvtChannel.System.SeverityValue">^AUDIT_SUCCESS|^success</field>
-    <description>[Sysmon][AUDIT_SUCCESS] Windows event.</description>
-    <options>no_full_log</options>
-  </rule>
-
-  <rule id="200026" level="4">
-    <if_sid>200021</if_sid>
-    <field name="WinEvtChannel.System.SeverityValue">^AUDIT_FAILURE|^failure</field>
-    <description>[Sysmon][AUDIT_FAILURE] Windows event.</description>
-    <options>no_full_log</options>
-    <group>pci_dss_10.6.1,gdpr_IV_35.7.d,</group>
-  </rule>
-
-  <rule id="200027" level="3">
-    <if_sid>200021</if_sid>
-    <field name="WinEvtChannel.System.SeverityValue">^Unknown</field>
-    <description>[Sysmon][Unknown] Windows event.</description>
+    <field name="WinEvtChannel.System.SeverityValue">^UNKNOWN</field>
+    <description>[Sysmon][UNKNOWN] Windows event.</description>
     <options>no_full_log</options>
     <group>pci_dss_10.6.1,gdpr_IV_35.7.d,</group>
   </rule>
@@ -245,7 +208,7 @@
   <rule id="200029" level="0">
     <if_sid>200028</if_sid>
     <field name="WinEvtChannel.System.SeverityValue">^INFORMATION</field>
-    <description>[Security Essentials][Information] Windows event.</description>
+    <description>[Security Essentials][INFORMATION] Windows event.</description>
     <options>no_full_log</options>
     <group>pci_dss_10.6.1,gdpr_IV_35.7.d,</group>
   </rule>
@@ -253,7 +216,7 @@
   <rule id="200030" level="0">
     <if_sid>200028</if_sid>
     <field name="WinEvtChannel.System.SeverityValue">^WARNING</field>
-    <description>[Security Essentials][Warning] Windows event.</description>
+    <description>[Security Essentials][WARNING] Windows event.</description>
     <options>no_full_log</options>
     <group>gpg13_4.12,</group>
   </rule>
@@ -266,25 +229,10 @@
     <group>system_error,gpg13_4.3,gdpr_IV_35.7.d,</group>
   </rule>
 
-  <rule id="200032" level="0">
+  <rule id="200032" level="3">
     <if_sid>200028</if_sid>
-    <field name="WinEvtChannel.System.SeverityValue">^AUDIT_SUCCESS|^success</field>
-    <description>[Security Essentials][AUDIT_SUCCESS] Windows event.</description>
-    <options>no_full_log</options>
-  </rule>
-
-  <rule id="200033" level="4">
-    <if_sid>200028</if_sid>
-    <field name="WinEvtChannel.System.SeverityValue">^AUDIT_FAILURE|^failure</field>
-    <description>[Security Essentials][AUDIT_FAILURE] Windows event.</description>
-    <options>no_full_log</options>
-    <group>pci_dss_10.6.1,gdpr_IV_35.7.d,</group>
-  </rule>
-
-  <rule id="200034" level="3">
-    <if_sid>200028</if_sid>
-    <field name="WinEvtChannel.System.SeverityValue">^Unknown</field>
-    <description>[Security Essentials][Unknown] Windows event.</description>
+    <field name="WinEvtChannel.System.SeverityValue">^UNKNOWN</field>
+    <description>[Security Essentials][UNKNOWN] Windows event.</description>
     <options>no_full_log</options>
     <group>pci_dss_10.6.1,gdpr_IV_35.7.d,</group>
   </rule>
@@ -294,12 +242,13 @@
     <description>Windows Defender event.</description>
     <options>no_full_log</options>
     <field name="WinEvtChannel.System.Channel">Microsoft-Windows-Windows Defender/Operational</field>
+    <field name="WinEvtChannel.System.EventID">^1116$|^1117$</field>
   </rule>
 
   <rule id="200036" level="0">
     <if_sid>200035</if_sid>
     <field name="WinEvtChannel.System.SeverityValue">^INFORMATION</field>
-    <description>[Security Essentials][Information] Windows event.</description>
+    <description>[Security Essentials][INFORMATION] Windows event.</description>
     <options>no_full_log</options>
     <group>pci_dss_10.6.1,gdpr_IV_35.7.d,</group>
   </rule>
@@ -307,7 +256,7 @@
   <rule id="200037" level="0">
     <if_sid>200035</if_sid>
     <field name="WinEvtChannel.System.SeverityValue">^WARNING</field>
-    <description>[Security Essentials][Warning] Windows event.</description>
+    <description>[Security Essentials][WARNING] Windows event.</description>
     <options>no_full_log</options>
     <group>gpg13_4.12,</group>
   </rule>
@@ -320,25 +269,10 @@
     <group>system_error,gpg13_4.3,gdpr_IV_35.7.d,</group>
   </rule>
 
-  <rule id="200039" level="0">
+  <rule id="200039" level="3">
     <if_sid>200035</if_sid>
-    <field name="WinEvtChannel.System.SeverityValue">^AUDIT_SUCCESS|^success</field>
-    <description>[Security Essentials][AUDIT_SUCCESS] Windows event.</description>
-    <options>no_full_log</options>
-  </rule>
-
-  <rule id="200040" level="4">
-    <if_sid>200035</if_sid>
-    <field name="WinEvtChannel.System.SeverityValue">^AUDIT_FAILURE|^failure</field>
-    <description>[Security Essentials][AUDIT_FAILURE] Windows event.</description>
-    <options>no_full_log</options>
-    <group>pci_dss_10.6.1,gdpr_IV_35.7.d,</group>
-  </rule>
-
-  <rule id="200041" level="3">
-    <if_sid>200035</if_sid>
-    <field name="WinEvtChannel.System.SeverityValue">^Unknown</field>
-    <description>[Security Essentials][Unknown] Windows event.</description>
+    <field name="WinEvtChannel.System.SeverityValue">^UNKNOWN</field>
+    <description>[Security Essentials][UNKNOWN] Windows event.</description>
     <options>no_full_log</options>
     <group>pci_dss_10.6.1,gdpr_IV_35.7.d,</group>
   </rule>
@@ -353,7 +287,7 @@
   <rule id="200043" level="0">
     <if_sid>200042</if_sid>
     <field name="WinEvtChannel.System.SeverityValue">^INFORMATION</field>
-    <description>[Eventlog][Information] Windows event.</description>
+    <description>[Eventlog][INFORMATION] Windows event.</description>
     <options>no_full_log</options>
     <group>pci_dss_10.6.1,gdpr_IV_35.7.d,</group>
   </rule>
@@ -361,7 +295,7 @@
   <rule id="200044" level="0">
     <if_sid>200042</if_sid>
     <field name="WinEvtChannel.System.SeverityValue">^WARNING</field>
-    <description>[Eventlog][Warning] Windows event.</description>
+    <description>[Eventlog][WARNING] Windows event.</description>
     <options>no_full_log</options>
     <group>gpg13_4.12,</group>
   </rule>
@@ -374,25 +308,10 @@
     <group>system_error,gpg13_4.3,gdpr_IV_35.7.d,</group>
   </rule>
 
-  <rule id="200046" level="0">
+  <rule id="200046" level="3">
     <if_sid>200042</if_sid>
-    <field name="WinEvtChannel.System.SeverityValue">^AUDIT_SUCCESS|^success</field>
-    <description>[Eventlog][AUDIT_SUCCESS] Windows event.</description>
-    <options>no_full_log</options>
-  </rule>
-
-  <rule id="200047" level="4">
-    <if_sid>200042</if_sid>
-    <field name="WinEvtChannel.System.SeverityValue">^AUDIT_FAILURE|^failure</field>
-    <description>[Eventlog][AUDIT_FAILURE] Windows event.</description>
-    <options>no_full_log</options>
-    <group>pci_dss_10.6.1,gdpr_IV_35.7.d,</group>
-  </rule>
-
-  <rule id="200048" level="3">
-    <if_sid>200042</if_sid>
-    <field name="WinEvtChannel.System.SeverityValue">^Unknown</field>
-    <description>[Eventlog][Unknown] Windows event.</description>
+    <field name="WinEvtChannel.System.SeverityValue">^UNKNOWN</field>
+    <description>[Eventlog][UNKNOWN] Windows event.</description>
     <options>no_full_log</options>
     <group>pci_dss_10.6.1,gdpr_IV_35.7.d,</group>
   </rule>
@@ -400,7 +319,7 @@
   <rule id="200300" level="0">
     <if_sid>200000</if_sid>
     <field name="WinEvtChannel.System.SeverityValue">^INFORMATION</field>
-    <description>[Unknown][Information] Windows event.</description>
+    <description>[UNKNOWN][INFORMATION] Windows event.</description>
     <options>no_full_log</options>
     <group>pci_dss_10.6.1,gdpr_IV_35.7.d,</group>
   </rule>
@@ -408,7 +327,7 @@
   <rule id="200301" level="0">
     <if_sid>200000</if_sid>
     <field name="WinEvtChannel.System.SeverityValue">^WARNING</field>
-    <description>[Unknown][Warning] Windows event.</description>
+    <description>[UNKNOWN][WARNING] Windows event.</description>
     <options>no_full_log</options>
     <group>gpg13_4.12,</group>
   </rule>
@@ -416,7 +335,7 @@
   <rule id="200302" level="5">
     <if_sid>18100</if_sid>
     <field name="WinEvtChannel.System.SeverityValue">^ERROR</field>
-    <description>[Unknown][ERROR] Windows event.</description>
+    <description>[UNKNOWN][ERROR] Windows event.</description>
     <options>no_full_log</options>
     <group>system_error,gpg13_4.3,gdpr_IV_35.7.d,</group>
   </rule>
@@ -424,22 +343,22 @@
   <rule id="200303" level="0">
     <if_sid>18100</if_sid>
     <field name="WinEvtChannel.System.SeverityValue">^AUDIT_SUCCESS|^success</field>
-    <description>[Unknown][AUDIT_SUCCESS] Windows event.</description>
+    <description>[UNKNOWN][AUDIT_SUCCESS] Windows event.</description>
     <options>no_full_log</options>
   </rule>
 
   <rule id="200304" level="4">
     <if_sid>18100</if_sid>
     <field name="WinEvtChannel.System.SeverityValue">^AUDIT_FAILURE|^failure</field>
-    <description>[Unknown][AUDIT_FAILURE] Windows event.</description>
+    <description>[UNKNOWN][AUDIT_FAILURE] Windows event.</description>
     <options>no_full_log</options>
     <group>pci_dss_10.6.1,gdpr_IV_35.7.d,</group>
   </rule>
 
   <rule id="200305" level="3">
     <if_sid>200000</if_sid>
-    <field name="WinEvtChannel.System.SeverityValue">^Unknown</field>
-    <description>[Unknown][Unknown] Windows event.</description>
+    <field name="WinEvtChannel.System.SeverityValue">^UNKNOWN</field>
+    <description>[UNKNOWN][UNKNOWN] Windows event.</description>
     <options>no_full_log</options>
     <group>pci_dss_10.6.1,gdpr_IV_35.7.d,</group>
   </rule>
@@ -513,10 +432,10 @@
   <rule id="200314" level="5">
     <if_sid>200011</if_sid>
     <field name="WinEvtChannel.System.EventID">^632$|^4728$|^633$|^4729$|^636$|^4732$|^637$|^4733$|^639$|^4735$|
-            ^641$|^4737$|^637$|^4733$|^659$|^4755$|^660$|^4766$|^668$|^4764$|
-            ^649$|^4745$|^650$|^4746$|^651$|^4747$|^654$|^4750$|^655$|^4751$|
-            ^656$|^4752$|^659$|^4755$|^660$|^4756$|^661$|^4757$|^664$|^4760$|
-            ^665$|^4761$|^666$|^4762$</field>
+            |^641$|^4737$|^637$|^4733$|^659$|^4755$|^660$|^4766$|^668$|^4764$|
+            |^649$|^4745$|^650$|^4746$|^651$|^4747$|^654$|^4750$|^655$|^4751$|
+            |^656$|^4752$|^659$|^4755$|^660$|^4756$|^661$|^4757$|^664$|^4760$|
+            |^665$|^4761$|^666$|^4762$</field>
     <description>Windows: Group Account Changed</description>
     <options>no_full_log</options>
     <group>group_changed,win_group_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
@@ -607,7 +526,7 @@
   <rule id="200330" level="5">
     <if_sid>200306</if_sid>
     <field name="WinEvtChannel.System.EventID">^529$|^4625$</field>
-    <description>Windows: Logon Failure - Unknown user $(WinEvtChannel.EventData.User) or bad password.</description>
+    <description>Windows: Logon Failure - UNKNOWN user $(WinEvtChannel.EventData.User) or bad password.</description>
     <options>no_full_log</options>
     <info type="link">http://www.ultimatewindowssecurity.com/events/com190.html</info>
     <group>win_authentication_failed,pci_dss_10.2.4,pci_dss_10.2.5,gpg13_7.1,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
@@ -1437,7 +1356,7 @@
   <rule id="200355" level="10" frequency="$MS_FREQ" timeframe="120">
     <if_matched_sid>200000</if_matched_sid>
     <field name="WinEvtChannel.System.SeverityValue">^WARNING</field>
-    <description>Multiple Windows warning events.</description>
+    <description>Multiple Windows WARNING events.</description>
     <options>no_full_log</options>
   </rule>
 
@@ -1516,5 +1435,3 @@
   </rule>
 
 </group>
-
-
