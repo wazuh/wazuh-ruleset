@@ -1,18 +1,25 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [v3.7.2]
+## [v3.8.0]
+
+### Changed
+
+- Now CDB lists are not prebuilt in the repository. ([#249](https://github.com/wazuh/wazuh-ruleset/pull/249))
+
+
+## [v3.7.2] 2018-12-17
 
 There are no changes for Wazuh Ruleset in this version.
 
-## [v3.7.1]
+## [v3.7.1] 2018-12-05
 
 ### Added
 
 - New Vulnerability detector rules to warn about version comparison issues. ([#237](https://github.com/wazuh/wazuh-ruleset/pull/237))
 
 
-## [v3.7.0]
+## [v3.7.0] 2018-11-10
 
 ### Added
 
