@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 
 ## [v3.8.0]
 
+### Added
+
+- Added new rules to support the new Windows eventchannel decoder. ([#247](https://github.com/wazuh/wazuh-ruleset/pull/247))
+
 ### Changed
 
 - Now CDB lists are not prebuilt in the repository. ([#249](https://github.com/wazuh/wazuh-ruleset/pull/249))
