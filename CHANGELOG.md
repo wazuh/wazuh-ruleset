@@ -1,6 +1,176 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [v3.7.1]
+
+### Added
+
+- New Vulnerability detector rules to warn about version comparison issues. ([#237](https://github.com/wazuh/wazuh-ruleset/pull/237))
+
+
+## [v3.7.0]
+
+### Added
+
+- osquery: specific alerts for default packs. ([#196](https://github.com/wazuh/wazuh-ruleset/pull/196))
+- Azure integration: Decoders and rules. ([#189](https://github.com/wazuh/wazuh-ruleset/pull/189))
+
+### Changed
+
+- osquery: Rename alerts fields reference. ([#196](https://github.com/wazuh/wazuh-ruleset/pull/196))
+- update_ruleset is not available in worker nodes. ([#225](https://github.com/wazuh/wazuh-ruleset/pull/225))
+- Update composite rules to match only same_source_ip events. ([#161](https://github.com/wazuh/wazuh-ruleset/pull/161))
+
+### Fixed
+
+- Fixed active response decoder in order to match with different dates. ([#223](https://github.com/wazuh/wazuh-ruleset/pull/223))
+
+### Removed
+
+- Removed deprecated rules for Syscheck.
+
+
+## [v3.6.1] 2018-09-07
+
+### Fixed
+
+- Silence rule about full disk for SNAP partitions. ([#183](https://github.com/wazuh/wazuh-ruleset/pull/183))
+
+
+## [v3.6.0] 2018-08-29
+
+### Fixed
+
+ - Fixed login abortion log mismatch in Dovecot decoder when optional parameter didn't appear. ([#171](https://github.com/wazuh/wazuh-ruleset/pull/171))
+ - Fixed decoder for Debian packages. ([#172](https://github.com/wazuh/wazuh-ruleset/pull/172))
+ - Fixed active response decoder. ([#179](https://github.com/wazuh/wazuh-ruleset/pull/179))
+
+### Added
+
+ - Compatibility with TerminalServices-Gateway event type. ([#175](https://github.com/wazuh/wazuh-ruleset/pull/175))
+ - New AWS rules. ([#174](https://github.com/wazuh/wazuh-ruleset/pull/174))
+
+
+## [v3.5.0] 2018-08-10
+
+### Added
+
+  - Rules for the new osquery integration.
+  - Rule to ignore syscollector events.
+  - CIS-CAT rules improved.
+  - Rules and decoders for the new Kaspersky integration.
+  - CIS rootchecks for Windows 2012 R2 (by @Bob-Andrews).
+  - Extract port name for Sysmon event 3. ([#127](https://github.com/wazuh/wazuh-ruleset/pull/127))
+  - Improve Shellshock detection. ([#115](https://github.com/wazuh/wazuh-ruleset/pull/115))
+
+### Changed
+
+  - Decreased agent upgrade failure rules level.
+
+### Fixed
+
+  - Windows rules: Fix SID syntax for group membership changes. ([#125](https://github.com/wazuh/wazuh-ruleset/pull/125)).
+  - Windows decoders: Match "Subject :" format ([#128](https://github.com/wazuh/wazuh-ruleset/pull/128)).
+
+
+## [v3.4.0]
+
+### Added
+
+  - Decoder for syscheck integration with audit.
+
+### Changed
+
+  - Removed offset of the `frequency` attribute in rules. ([#145](https://github.com/wazuh/wazuh-ruleset/pull/145))
+
+
+## [v3.3.1]
+
+### Added
+
+  - Rule to detect when agents are unable to unmerge shared files. ([#143](https://github.com/wazuh/wazuh-ruleset/pull/143))
+
+## [v3.3.0]
+
+There are no changes for Wazuh Ruleset in this version.
+
+
+## [v3.2.4]
+
+There are no changes for Wazuh Ruleset in this version.
+
+
+## [v3.2.3]
+
+### Added
+  - GDPR (General Data Protection Regulation) mapping.
+  - Improve GeoIP and composite rule support for AWS events.
+  - Pfsense rules.
+
+### Fixed
+  - Error handling in update ruleset script using python3.
+
+
+## [v3.2.2]
+### Fixed
+  - Syntax error in cis_rhel7_linux_rcl.txt.
+  - OpenLDAP decoders to extract the IP address properly.
+  - Owncloud rules compatible with JSON logs.
+  - Postfix decoders and rules.
+  - Sendmail decoders to extract the IP address properly.
+  - False positives in SLES 11 rootchecks.
+
+### Removed
+  - Removed alert_by_email for rule 1002 and 9704.
+
+### Added
+  - OpenVAS decoders and rules.
+  - Pfsense decoders.
+  - Mysql rules for Percona and Mcafee.
+  - MariaDB decoders and rules.
+  - Added rootcheck file for apache 2.2/2.4 (by @Bob-Andrews).
+  - Rules to detect USB devices disconnected.
+
+
+## [v3.2.1]
+### Fixed
+  - Silence rules about OpenSCAP and CIS-CAT scan status.
+  - Add compatibility between versions for CIS-CAT rules.
+  - Sudo decoders extract commands with spaces.
+
+
+## [v3.2.0]
+### Added
+  - Added new rules for _Vulnerability detector_.
+
+### Removed
+  - Removed svchost.exe and inetsrv.exe processes checking outside SysNative due to false positive.
+
+### Fixed
+  - Fixed `update_ruleset` script.
+
+
+## [v3.1.0]
+### Added
+  - New rules for VULS integration
+  - New rules for CIS-CAT integration
+
+## [v3.0.0]
+### Added
+  - New features for "update_ruleset.py": custom URL and branch name
+  - New users added to list of known malicious user agents
+  - OwnCloud (Rules and decoders)
+  - Updated scap content from https://github.com/OpenSCAP/scap-security-guide
+  - Rules for VirusTotal integration
+  - Add GPG13 mappings to rules (gpg13.com)
+
+### Changed
+  - Removed "MJ12bot" from list of known malicious user agents
+  - SSH decoders
+  - OpenVPN decoders
+  - RoundCube (Rules and decoders)
+
+
 ## [v2.1.0]
 ### Added
 - Decoders and rules for anti-flooding mechanism
