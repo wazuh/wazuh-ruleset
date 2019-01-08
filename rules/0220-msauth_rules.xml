@@ -2222,7 +2222,7 @@
   <!-- Ignore Login events, type 5, from Advapi for:
     -  LOCAL SERVICE and NETWORK SERVICE.
     -->
-  <rule id="20161" level="0">
+  <rule id="20149" level="0">
     <if_sid>20047,20084</if_sid>
     <field name="EventChannel.System.EventID">^528$|^538$|^540$|^4624$</field>
     <field name="EventChannel.EventData.SubjectUserName">^LOCAL SERVICE|^NETWORK SERVICE|^ANONYMOUS LOGON</field>
@@ -2233,7 +2233,7 @@
 
 
   <!-- Kerberos failures that may indicate an attack -->
-  <rule id="20162" level="10">
+  <rule id="20150" level="10">
     <if_sid>20034</if_sid>
     <field name="EventChannel.EventData.FailureCode">0x1F</field>
     <description>Windows DC integrity check on decrypted </description>
