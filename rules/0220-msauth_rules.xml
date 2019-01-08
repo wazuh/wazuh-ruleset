@@ -168,7 +168,7 @@
 
   <rule id="18126" level="3">
     <if_sid>18101</if_sid>
-    <id>^20308$</id>
+    <id>^20158$</id>
     <description>Windows: Remote access login success.</description>
     <group>authentication_success,pci_dss_10.2.5,pci_dss_8.1.5,gpg13_7.1,gpg13_7.2,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
   </rule>
@@ -996,7 +996,8 @@
     <if_sid>20000</if_sid>
     <field name="EventChannel.System.Channel">System</field>
     <field name="EventChannel.System.EventID">^1$|^6$|^12$|^16$|^18$|^20$|^27$|^32$|^36$|^41$|^55$|^98$|^104$|
-                |^508$|^1101$|^1102$|^1501$|^2505$|^4321$|^6005$|^6008$|^6009$|^6013$|^7001$|^7002$|^7026$|^7034$|
+                |^508$|^1002$|^1005$|^1015$|^1101$|^1102$|^1107$|^1116$|^1117$|^1118$|^1119$|^1501$|^2001$|^2003$|
+                |^2004$|^2012$|^2505$|^3002$|^4321$|^5007$|^5008$|^6005$|^6008$|^6009$|^6013$|^7001$|^7002$|^7026$|^7034$|
                 |^7040$|^7045$|^10010$|^10016$|^16962$|^36887$|^36888$|^50036$|^51046$</field>
     <description>Windows System event.</description>
     <options>no_full_log</options>
@@ -1170,45 +1171,6 @@
     <if_sid>20018</if_sid>
     <field name="EventChannel.System.SeverityValue">^UNKNOWN</field>
     <description>[Sysmon][UNKNOWN] Windows event. '$(EventChannel.System.Message)'</description>
-    <options>no_full_log</options>
-    <group>pci_dss_10.6.1,gdpr_IV_35.7.d,</group>
-  </rule>
-
-  <rule id="20025" level="0">
-    <if_sid>20000</if_sid>
-    <description>Windows Security Essentials event.</description>
-    <options>no_full_log</options>
-    <field name="EventChannel.System.Channel">Microsoft Antimalware</field>
-  </rule>
-
-  <rule id="20026" level="0">
-    <if_sid>20025</if_sid>
-    <field name="EventChannel.System.SeverityValue">^INFORMATION</field>
-    <description>[Security Essentials][INFORMATION] Windows event.</description>
-    <options>no_full_log</options>
-    <group>pci_dss_10.6.1,gdpr_IV_35.7.d,</group>
-  </rule>
-
-  <rule id="20027" level="0">
-    <if_sid>20025</if_sid>
-    <field name="EventChannel.System.SeverityValue">^WARNING</field>
-    <description>[Security Essentials][WARNING] Windows event.</description>
-    <options>no_full_log</options>
-    <group>gpg13_4.12,</group>
-  </rule>
-
-  <rule id="20028" level="5">
-    <if_sid>20025</if_sid>
-    <field name="EventChannel.System.SeverityValue">^ERROR</field>
-    <description>[Security Essentials][ERROR] Windows event.</description>
-    <options>no_full_log</options>
-    <group>system_error,gpg13_4.3,gdpr_IV_35.7.d,</group>
-  </rule>
-
-  <rule id="20029" level="3">
-    <if_sid>20025</if_sid>
-    <field name="EventChannel.System.SeverityValue">^UNKNOWN</field>
-    <description>[Security Essentials][UNKNOWN] Windows event. '$(EventChannel.System.Message)'</description>
     <options>no_full_log</options>
     <group>pci_dss_10.6.1,gdpr_IV_35.7.d,</group>
   </rule>
