@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 
 - Added new rules to support the new Windows eventchannel decoder. ([#247](https://github.com/wazuh/wazuh-ruleset/pull/247))
 - Extend Auditd decoder to support more fields. ([#256](https://github.com/wazuh/wazuh-ruleset/pull/256))
+- Added rule to alert when an agent is removed. ([#2127](https://github.com/wazuh/wazuh/pull/2127))
 
 ### Changed
 
