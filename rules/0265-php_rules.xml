@@ -30,6 +30,7 @@
   <rule id="31404" level="0">
     <match>^PHP Warning: </match>
     <description>PHP Warning message.</description>
+    <group>gpg13_4.12,</group>
   </rule>
 
   <rule id="31405" level="0">
@@ -51,12 +52,13 @@
   <rule id="31410" level="3">
     <if_sid>31401, 31404</if_sid>
     <description>PHP Warning message.</description>
+    <group>gpg13_4.12,</group>
   </rule>
 
   <rule id="31411" level="6">
     <if_sid>31410</if_sid>
     <match> expects parameter 1 to be string, array given in</match>
-    <group>attack,pci_dss_6.5,pci_dss_11.4,gdpr_IV_35.7.d,</group>
+    <group>attack,pci_dss_6.5,pci_dss_11.4,gpg13_5.7,gdpr_IV_35.7.d,</group>
     <description>PHP web attack.</description>
   </rule>
 
@@ -85,6 +87,7 @@ d 'includes/SkinTemplate.php'
   <rule id="31420" level="5">
     <if_sid>31402, 31405</if_sid>
     <description>PHP Fatal error.</description>
+    <group>gpg13_4.3,</group>
   </rule>
 
   <rule id="31421" level="5">
