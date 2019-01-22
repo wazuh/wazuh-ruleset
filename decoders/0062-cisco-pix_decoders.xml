@@ -115,6 +115,24 @@
   <order>id, action, protocol, srcip, srcport, dstip, dstport</order>
 </decoder>
 
+<decoder name="pix-fw9">
+  <parent>pix</parent>
+  <type>firewall</type>
+  <prematch offset="after_parent">^2-106002</prematch>
+  <regex offset="after_parent">^(\S+): (\w+) connection (\w+) \.+ src </regex>
+  <regex>(\S+) (\d+) dest (\S+) (\d+)</regex>
+  <order>id, protocol, action, srcip, srcport, dstip, dstport</order>
+</decoder>
+
+<decoder name="pix-fw10">
+  <parent>pix</parent>
+  <type>firewall</type>
+  <prematch offset="after_parent">^\d-106100</prematch>
+  <regex offset="after_parent">^(\S+): access-list \w+ (\w+) (\w+) \w+/(\S+)\((\d+)\)</regex>
+  <regex> -> \w+/(\S+)\((\d+)\) hit-cnt (\d+)</regex>
+  <order>id, action, protocol, srcip, srcport, dstip, dstport, hit-cnt</order>
+</decoder>
+
 <decoder name="pix-url-success">
   <parent>pix</parent>
   <prematch offset="after_parent">^5-304001: </prematch>
