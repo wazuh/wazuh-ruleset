@@ -106,7 +106,7 @@
 <decoder name="cisco-ios-acl">
   <parent>cisco-ios</parent>
   <type>firewall</type>
-  <prematch>^%SEC-6-IPACCESSLOGP: </prematch>
+  <prematch>%SEC-6-IPACCESSLOGP: </prematch>
   <regex offset="after_prematch">^list \S+ (\w+) (\w+) </regex>
   <regex>(\S+)\((\d+)\) -> (\S+)\((\d+)\),</regex>
   <order>action, protocol, srcip, srcport, dstip, dstport</order>
@@ -122,7 +122,7 @@
 <decoder name="cisco-ios-ids">
   <parent>cisco-ios</parent>
   <type>ids</type>
-  <prematch>^%IPS-4-SIGNATURE: </prematch>
+  <prematch>%IPS-4-SIGNATURE: </prematch>
   <regex offset="after_prematch">^Sig:(\d+) \.+[(\S+):(\d+) -> </regex>
   <regex>(\S+):(\d+)]</regex>
   <order>id, srcip, srcport, dstip, dstport</order>
