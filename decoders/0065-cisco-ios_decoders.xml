@@ -94,6 +94,19 @@
   <prematch>^\d+:\s+\p*\w+\s+\d+\s+\d+:\d+:\d+.\d+\s+\w+:\s+%</prematch>
 </decoder>
 
+<!--
+  - Sequence number and origin-id
+  - 106: ix-edgesw-r1b3a: %SYS-5-CONFIG_I:
+-->
+
+<decoder name="cisco-ios">
+  <prematch>^\d+:\s+\w+:\s+%</prematch>
+  <!-- Capture of origin in parent decoder not working: https://github.com/wazuh/wazuh/issues/2427
+  <regex>^\d+:\s+(\w+):</regex>
+  <order>origin</order>
+  -->
+</decoder>
+
 
 <!-- Cisco IOS
   - Will extract the action, srcip, srcport, dstip and dstport
@@ -138,4 +151,11 @@
   <parent>cisco-ios</parent>
   <regex>(%\w+-\d-\w+):</regex>
   <order>id</order>
+</decoder>
+
+<!-- Workaround for https://github.com/wazuh/wazuh/issues/2427 -->
+<decoder name="cisco-ios-default">
+  <parent>cisco-ios</parent>
+  <regex>^\d+:\s+(\w+):\s+%</regex>
+  <order>origin</order>
 </decoder>
