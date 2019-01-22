@@ -40,6 +40,7 @@
   - %ASA-4-106100: access-list Service_access_in permitted tcp Service/10.0.0.19(22787) -> TestDMZ/192.0.2.44(445) hit-cnt 1 first hit [0xa9f307d2, 0x2e5c606f]
   - %ASA-2-106001: Inbound TCP connection denied from 1.2.3.4/1234 to 213.207.99.248/445 flags SYN on interface outside (Message repeated 2 times)
   - %ASA-4-313004: Denied ICMP type=0, from laddr 192.0.2.144 on interface DMZ to 10.0.0.22: no matching session
+  - %ASA-4-434002: SFR requested to drop TCP packet from outside:169.254.246.80/40188 to TestDMZ:192.0.2.104/22
   -->
 <decoder name="pix">
   <prematch>^%PIX-|^\w\w\w \d\d \d\d\d\d \d\d:\d\d:\d\d: %PIX-|</prematch>
@@ -144,6 +145,15 @@
   <regex offset="after_parent">^(\S+): (\w+) (\w+) \.+from laddr (\S+)</regex>
   <regex> on interface \w+ to (\S+):</regex>
   <order>id, action, protocol, srcip, dstip</order>
+</decoder>
+
+<decoder name="pix-sfr1">
+  <parent>pix</parent>
+  <type>ids</type>
+  <prematch offset="after_parent">^\d-434002</prematch>
+  <regex offset="after_parent">^(\S+): SFR requested to drop (\w+) packet</regex>
+  <regex> from \w+:(\S+)/(\d+) to \w+:(\S+)/(\d+)</regex>
+  <order>id, protocol, srcip, srcport, dstip, dstport</order>
 </decoder>
 
 <decoder name="pix-url-success">
