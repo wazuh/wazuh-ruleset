@@ -1,14 +1,31 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [v3.7.1]
+## [v3.8.0]
+
+### Added
+
+- Added new rules to support the new Windows eventchannel decoder. ([#247](https://github.com/wazuh/wazuh-ruleset/pull/247))
+- Extend Auditd decoder to support more fields. ([#256](https://github.com/wazuh/wazuh-ruleset/pull/256))
+- Added rule to alert when an agent is removed. ([#2127](https://github.com/wazuh/wazuh/pull/2127))
+
+### Changed
+
+- Now CDB lists are not prebuilt in the repository. ([#249](https://github.com/wazuh/wazuh-ruleset/pull/249))
+
+
+## [v3.7.2] 2018-12-17
+
+There are no changes for Wazuh Ruleset in this version.
+
+## [v3.7.1] 2018-12-05
 
 ### Added
 
 - New Vulnerability detector rules to warn about version comparison issues. ([#237](https://github.com/wazuh/wazuh-ruleset/pull/237))
 
 
-## [v3.7.0]
+## [v3.7.0] 2018-11-10
 
 ### Added
 
