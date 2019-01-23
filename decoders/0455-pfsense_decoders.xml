@@ -33,3 +33,9 @@ Jan 22 18:34:00 filterlog: 65,,,0,vmx1,match,pass,out,4,0x0,,63,21011,0,none,1,i
   <regex offset="after_regex">(\d*),(\d*),\S*</regex>
   <order>srcport,dstport</order>
 </decoder>
+
+<decoder name="pf-fields">
+  <parent>pf</parent>
+  <regex offset="after_regex">datalength=(\S*)|(\d*)</regex>
+  <order>length</order>
+</decoder>
