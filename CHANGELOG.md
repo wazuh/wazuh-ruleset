@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [v3.8.1]
+
+There are no changes for Wazuh Ruleset in this version.
+
 ## [v3.8.0]
 
 ### Added
