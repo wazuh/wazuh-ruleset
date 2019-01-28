@@ -15,8 +15,33 @@
   - id=firewall sn=00301E0526B1 time="2004-04-01 10:39:35"
   fw=67.32.44.2 pri=5 c=64 m=36 msg="TCP connection dropped" n=2686 src=67.101.200.27:4507:WAN dst=67.32.44.2:445:LAN rule=0
   -->
+
 <decoder name="sonicwall">
-  <type>firewall</type>
-  <prematch>^id=\w+ sn=\w+ time=\S+ \S+ fw=\S+ pri=\d </prematch>
-  <plugin_decoder>SonicWall_Decoder</plugin_decoder>
+   <prematch>^id=\w+ sn=\w+ time=\S+ \S+ fw=\S+ </prematch>
+   <plugin_decoder>SonicWall_Decoder</plugin_decoder>
+</decoder>
+
+<decoder name="sonicwall-fields">
+  <parent>sonicwall</parent>
+  <regex offset="after_parent">pri=(\S+)</regex>
+  <order>status</order>
+</decoder>
+
+<decoder name="sonicwall-fields">
+  <parent>sonicwall</parent>
+  <regex offset="after_regex"> msg="(\.+)"</regex>
+  <order>action</order>
+</decoder>
+
+<decoder name="sonicwall-fields">
+  <parent>sonicwall</parent>
+  <regex offset="after_regex">src=(\d+.\d+.\d+.\d+):(\d+):\S* dst=(\d+.\d+.\d+.\d+):(\d+):\S*</regex>
+  <order>scrip, scrport ,dstip, dstport, protocol</order>
+</decoder>
+
+
+<decoder name="sonicwall-fields">
+  <parent>sonicwall</parent>
+  <regex offset="after_regex">proto=(\S+)</regex>
+  <order> protocol</order>
 </decoder>
