@@ -356,22 +356,51 @@
     <description>Monitor ADSL line is up.</description>
   </rule>
 
-  <rule id="5132" level="8">
+  <rule id="5132" level="11">
     <if_sid>5100</if_sid>
     <match>module verification failed</match>
     <description>Unsigned kernel module was loaded</description>
   </rule>
 
-  <rule id="5133" level="8">
+  <rule id="5133" level="11">
     <if_sid>5100</if_sid>
     <match>PKCS#7 signature not signed with a trusted key</match>
     <description>Signed but untrusted kernel module was loaded</description>
   </rule>
 
-  <rule id="5134" level="6">
+  <rule id="5134" level="7">
     <program_name>^rngd</program_name>
     <match>failure</match>
     <description>RNGD failure</description>
+  </rule>
+
+  <rule id="5135" level="7">
+   <if_sid>5100</if_sid>
+   <match>Disk failure</match>
+   <description>RAID0/1 disk failure</description>
+  </rule>
+
+  <rule id="5136" level="2">
+   <program_name>^mdadm</program_name>
+   <description>General RAID mdadm event</description>
+  </rule>
+
+  <rule id="5137" level="7">
+   <if_sid>5136</if_sid>
+   <match>FailSpare</match>
+   <description>RAID mdadm spare disk failure</description>
+  </rule>
+
+  <rule id="5138" level="7">
+    <if_sid>5100</if_sid>
+    <match>ata.+: failed command</match>
+    <description>General SATA disk failure</description>
+  </rule>
+
+  <rule id="5139" level="7">
+    <if_sid>5100</if_sid>
+    <match>device not ready</match>
+    <description>General device failure</description>
   </rule>
 
   <rule id="5200" level="0">
