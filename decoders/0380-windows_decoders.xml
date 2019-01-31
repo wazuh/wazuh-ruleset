@@ -630,6 +630,8 @@ Subject:
 2017 Apr 18 17:30:52 WinEvtLog: Security: AUDIT_FAILURE(4625): Microsoft-Windows-Security-Auditing: (no user): no domain: WIN-1: An account failed to log on. Subject: Security ID: S-1-5-10 Account Name: WIN-1$ Account Domain: WORKGROUP Logon ID: 0x3E7 Logon Type: 10 Account For Which Logon Failed: Security ID: S-1-0-0 Account Name: Santiago Account Domain: test2 Failure Information: Failure Reason: Unknown user name or bad password. Status: 0xC000006D Sub Status: 0xC0000064 Process Information: Caller Process ID: 0xb50 Caller Process Name: C:\Windows\System32\winlogon.exe Network Information: Workstation Name: WIN-1 Source Network Address: 17.217.25.247 Source Port: 0 Detailed Authentication Information: Logon Process: User32 Authentication Package: Negotiate Transited Services: - Package Name (NTLM only): - Key Length: 0 This event is generated when a logon request fails. It.
 
 2017 Jun 10 12:34:01 WinEvtLog: Security: AUDIT_SUCCESS(4740): Microsoft-Windows-Security-Auditing: (no user): no domain: SERVER.mydomain.local: 0x8000000000000000    message: A user account was locked out.  Subject:  Security ID:  S-1-5-18  Account Name:  SERVER$  Account Domain:  MYDOMAIN  Logon ID:  0x3e7  Account That Was Locked Out:  Security ID:  S-1-5-21-1634102539-605432415-635521153-12345  Account Name:  user_account_name  Additional Information:  Caller Computer Name: OTHERSERVER
+
+2018 Sep 04 08:41:58 WinEvtLog: Security: AUDIT_FAILURE(5157): Microsoft-Windows-Security-Auditing: (no user): no domain: SXX_W00_QWER_1: The Windows Filtering Platform has blocked a connection. Application Information: Process ID: 4 Application Name: System Network Information: Direction: Inbound Source Address: 10.3.1.136 Source Port: 5 Destination Address: 10.3.1.100 Destination Port: 1 Protocol: 1 Filter Information: Filter Run-Time ID: 66452 Layer Name: Receive/Accept Layer Run-Time ID: 44
 -->
 
 <decoder name="windows_fields">
@@ -686,6 +688,28 @@ Subject:
   <parent>windows</parent>
   <regex>File\s+Object Name:\s+(\w\.+)\s+Handle ID:|File\t+Object Name:\t+(\w\.+)\t+Handle ID:</regex>
   <order>target_file</order>
+</decoder>
+
+<decoder name="windows_fields">
+  <type>windows</type>
+  <parent>windows</parent>
+  <regex>Application Information: Process ID: (\d+) Application Name: (\S*)</regex>
+  <order>process_id, Application_Name</order>
+</decoder>
+
+<decoder name="windows_fields">
+  <type>windows</type>
+  <parent>windows</parent>
+  <regex>System Network Information: Direction: (\S+) Source Address: (\S+) Source Port: (\d+) Destination Address: (\S+) Destination Port: (\d+) Protocol: (\S+)</regex>
+  <order>direction,srcip,srcport,dstip,dstport,protocol</order>
+</decoder>
+
+
+<decoder name="windows_fields">
+  <type>windows</type>
+  <parent>windows</parent>
+  <regex>Filter Information: Filter Run-Time ID: (\d*) Layer Name: (\.*) Layer Run-Time ID: (\d*)</regex>
+  <order>filtre_ID,Layer_Name,Layer_ID</order>
 </decoder>
 
 <!--
