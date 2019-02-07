@@ -1,6 +1,12 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [v3.9.0]
+
+### Added
+
+- Adapt Sysmon rules to new Windows eventchannel format. ([#285](https://github.com/wazuh/wazuh-ruleset/pull/285))
+
 ## [v3.8.2]
 
 ### Changed
