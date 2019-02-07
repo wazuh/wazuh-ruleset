@@ -1,6 +1,18 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [v3.8.2]
+
+### Changed
+
+- Rework of the rules for Windows Eventchannel. ([#277](https://github.com/wazuh/wazuh-ruleset/pull/277))
+
+
+## [v3.8.1]
+
+There are no changes for Wazuh Ruleset in this version.
+
+
 ## [v3.8.0]
 
 ### Added
