@@ -12,12 +12,12 @@
   - Examples:
   - Jan  3 13:45:36 192.168.5.1 id=firewall sn=000SERIAL time="2007-01-03 14:48:06" fw=1.1.1.1 pri=6 c=262144 m=98 msg="Connection Opened" n=23419 src=2.2.2.2:36701:WAN dst=1.1.1.1:50000:WAN proto=tcp/50000
   - Jan  3 13:45:36 192.168.5.1 id=firewall sn=000SERIAL time="2007-01-03 14:48:07" fw=1.1.1.1 pri=1 c=32 m=30 msg="Administrator login denied due to bad credentials" n=7 src=2.2.2.2:36701:WAN dst=1.1.1.1:50000:WAN
-  - id=firewall sn=00301E0526B1 time="2004-04-01 10:39:35"
-  fw=67.32.44.2 pri=5 c=64 m=36 msg="TCP connection dropped" n=2686 src=67.101.200.27:4507:WAN dst=67.32.44.2:445:LAN rule=0
+  - id=firewall sn=00301E0526B1 time="2004-04-01 10:39:35" fw=67.32.44.2 pri=5 c=64 m=36 msg="TCP connection dropped" n=2686 src=67.101.200.27:4507:WAN dst=67.32.44.2:445:LAN rule=0
+  - id=firewall sn=C0EAE4599999 time="2019-02-15 09:45:17 UTC" fw=2.228.169.242 pri=5 c=512 m=1233 msg="Unhandled link-local or multicast IPv6 packet dropped" n=56642 srcV6=fe80::9851:b780:9d9d:a29e src=:49702:X0-V514 dstV6=ff02::1:3 dst=:5355 srcMac=90:e6:ba:32:5c:45 dstMac=33:33:00:01:00:03 proto=udp/5355
   -->
 
 <decoder name="sonicwall">
-   <prematch>^id=\w+ sn=\w+ time=\S+ \S+ fw=\S+ </prematch>
+   <prematch>^id=\w+ sn=\w+ time="\.+" fw=\S+ </prematch>
    <plugin_decoder>SonicWall_Decoder</plugin_decoder>
 </decoder>
 
