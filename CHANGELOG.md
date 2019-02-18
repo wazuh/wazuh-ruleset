@@ -6,6 +6,8 @@ All notable changes to this project will be documented in this file.
 ### Added
 
 - Adapt Sysmon rules to new Windows eventchannel format. ([#285](https://github.com/wazuh/wazuh-ruleset/pull/285))
+- Added ruleset for the Configuration Assessment module. ([#288](https://github.com/wazuh/wazuh-ruleset/pull/288))
+- Added policy files in YAML format for the Configuration Assessment module. ([#288](https://github.com/wazuh/wazuh-ruleset/pull/288))
 
 ## [v3.8.2]
 
