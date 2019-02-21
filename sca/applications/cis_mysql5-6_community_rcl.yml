@@ -18,11 +18,17 @@ policy:
   references:
     - https://www.cisecurity.org/cis-benchmarks/
 
+requirements:
+  title: "Check that MySQL is installed on the system"
+  description: "Requirements for running the SCA scan against the MySQL policy."
+  condition: "all required"
+  rules:
+    - 'd:/etc/mysql;'
+
 variables:
   $home_dirs: /usr2/home/*,/home/*,/home,/*/home/*,/*/home,/;
   $enviroment_files: /*/home/*/\.bashrc,/*/home/*/\.profile,/*/home/*/\.bash_profile,/home/*/\.bashrc,/home/*/\.profile,/home/*/\.bash_profile;
   $mysql-cnfs: /etc/mysql/my.cnf,/etc/mysql/mariadb.cnf,/etc/mysql/conf.d/*.cnf,/etc/mysql/mariadb.conf.d/*.cnf,~/.my.cnf;
-
 
 checks:
 #1 Operating System Level Configuration
