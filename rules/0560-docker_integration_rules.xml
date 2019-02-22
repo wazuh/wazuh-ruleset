@@ -13,49 +13,49 @@ ID: 87900 - 87999
 
     <rule id="87900" level="0">
         <decoded_as>json</decoded_as>
-        <field name="integration">docker</field>
+        <field name="integration">^docker$</field>
         <description>Docker alerts: $(docker.Type).</description>
         <options>no_full_log</options>
     </rule>
 
      <rule id="87901" level="3">
         <if_sid>87900</if_sid>
-        <field name="docker.status">create</field>
+        <field name="docker.status">^create$</field>
         <description>Container $(docker.Actor.Attributes.name) created</description>
         <options>no_full_log</options>
     </rule>
 
     <rule id="87902" level="3">
         <if_sid>87900</if_sid>
-        <field name="docker.status">destroy</field>
+        <field name="docker.status">^destroy$</field>
         <description>Container $(docker.Actor.Attributes.name) destroyed</description>
         <options>no_full_log</options>
     </rule>
 
     <rule id="87903" level="3">
         <if_sid>87900</if_sid>
-        <field name="docker.status">start</field>
+        <field name="docker.status">^start$</field>
         <description>Container $(docker.Actor.Attributes.name) started</description>
         <options>no_full_log</options>
     </rule>
 
-	<rule id="87904" level="3">
+    <rule id="87904" level="3">
         <if_sid>87900</if_sid>
-        <field name="docker.status">stop</field>
+        <field name="docker.status">^stop$</field>
         <description>Container $(docker.Actor.Attributes.name) stopped</description>
         <options>no_full_log</options>
     </rule>
 
     <rule id="87905" level="3">
         <if_sid>87900</if_sid>
-        <field name="docker.status">^pause</field>
+        <field name="docker.status">^pause$</field>
         <description>Container $(docker.Actor.Attributes.name) paused</description>
         <options>no_full_log</options>
     </rule>
 
     <rule id="87906" level="3">
         <if_sid>87900</if_sid>
-        <field name="docker.status">unpause</field>
+        <field name="docker.status">^unpause$</field>
         <description>Container $(docker.Actor.Attributes.name) unpaused</description>
         <options>no_full_log</options>
     </rule>
