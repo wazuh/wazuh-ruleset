@@ -60,4 +60,11 @@ ID: 87900 - 87999
         <options>no_full_log</options>
     </rule>
 
+    <rule id="87907" level="3">
+        <if_sid>87900</if_sid>
+        <field name="docker.status">^exec_start: </field>
+        <description>Command run in container $(docker.Actor.Attributes.name)</description>
+        <options>no_full_log</options>
+    </rule>
+
 </group>
