@@ -14,7 +14,7 @@ ID: 87900 - 87999
     <rule id="87900" level="0">
         <decoded_as>json</decoded_as>
         <field name="integration">^docker$</field>
-        <description>Docker alerts: $(docker.Type).</description>
+        <description>Docker alerts: $(docker.Type)</description>
         <options>no_full_log</options>
     </rule>
 
@@ -203,7 +203,7 @@ ID: 87900 - 87999
     <rule id="87927" level="3">
         <if_sid>87900</if_sid>
         <field name="docker.status">^pull$</field>
-        <description>Image $(docker.Actor.Attributes.name) was pulled.</description>
+        <description>Image $(docker.Actor.Attributes.name) was pulled</description>
         <options>no_full_log</options>
     </rule>
 </group>
