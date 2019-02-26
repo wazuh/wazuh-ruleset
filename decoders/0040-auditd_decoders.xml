@@ -40,7 +40,7 @@ type=SYSCALL msg=audit(1479982525.380:50): arch=c000003e syscall=2 success=yes e
 <!-- CWD -->
 <decoder name="auditd-syscall">
     <parent>auditd</parent>
-    <regex offset="after_regex">type=CWD msg=audit\(\S+\):  cwd="(\.+)" </regex>
+    <regex offset="after_regex">type=CWD msg=audit\(\S+\):\s+cwd="(\.+)" </regex>
     <order>audit.cwd</order>
 </decoder>
 
