@@ -203,11 +203,18 @@ ID: 87900 - 87999
     <rule id="87927" level="3">
         <if_sid>87924</if_sid>
         <field name="docker.Action">^create$</field>
-        <description>Network of type $(docker.Actor.Attributes.type) was created for container $(docker.Actor.Attributes.name)</description>
+        <description>Network $(docker.Actor.Attributes.name) of type $(docker.Actor.Attributes.type) created</description>
         <options>no_full_log</options>
     </rule>
 
     <rule id="87928" level="3">
+        <if_sid>87924</if_sid>
+        <field name="docker.Action">^destroy$</field>
+        <description>Network $(docker.Actor.Attributes.name) of type $(docker.Actor.Attributes.type) deleted</description>
+        <options>no_full_log</options>
+    </rule>
+
+    <rule id="87929" level="3">
         <if_sid>87900</if_sid>
         <field name="docker.status">^pull$</field>
         <description>Image $(docker.Actor.Attributes.name) was pulled</description>
