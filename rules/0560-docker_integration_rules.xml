@@ -199,4 +199,11 @@ ID: 87900 - 87999
         <description>Network disconnected for container $(docker.Actor.Attributes.name)</description>
         <options>no_full_log</options>
     </rule>
+
+    <rule id="87927" level="3">
+        <if_sid>87900</if_sid>
+        <field name="docker.status">^pull$</field>
+        <description>Image $(docker.Actor.Attributes.name) was pulled.</description>
+        <options>no_full_log</options>
+    </rule>
 </group>
