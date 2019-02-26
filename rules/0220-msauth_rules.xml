@@ -1925,7 +1925,7 @@
   <!-- Composite rules -->
   <rule id="20085" level="10" frequency="$MS_FREQ" timeframe="240">
     <if_matched_sid>20008</if_matched_sid>
-    <same_user />
+    <same_field>EventChannel.EventData.TargetUserName</same_field>
     <description>Windows: Multiple failed attempts to perform a privileged operation by the same user</description>
     <options>no_full_log</options>
     <group>pci_dss_10.2.4,pci_dss_10.2.5,pci_dss_11.4,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
@@ -1933,7 +1933,7 @@
 
   <rule id="20086" level="10" frequency="$MS_FREQ" timeframe="240">
     <if_matched_group>win_authentication_failed</if_matched_group>
-    <same_source_ip />
+    <same_field>EventChannel.EventData.IpAddress</same_field>
     <description>Multiple Windows Logon Failures</description>
     <options>no_full_log</options>
     <group>authentication_failures,pci_dss_10.2.4,pci_dss_10.2.5,pci_dss_11.4,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
@@ -1941,7 +1941,7 @@
 
   <rule id="20087" level="10" frequency="$MS_FREQ" timeframe="240">
     <if_matched_sid>20005</if_matched_sid>
-    <same_source_ip />
+    <same_field>EventChannel.EventData.IpAddress</same_field>
     <description>Multiple Windows audit failure events</description>
     <options>no_full_log</options>
     <group>pci_dss_10.6.1,gdpr_IV_35.7.d,</group>
