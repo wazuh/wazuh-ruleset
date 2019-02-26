@@ -178,4 +178,25 @@ ID: 87900 - 87999
         <description>Container $(docker.Actor.Attributes.name) displayed its running processes</description>
         <options>no_full_log</options>
     </rule>
+
+    <rule id="87924" level="3">
+        <if_sid>87900</if_sid>
+        <field name="docker.Type">^network$</field>
+        <description>Container $(docker.Actor.Attributes.name) displayed its running processes</description>
+        <options>no_full_log</options>
+    </rule>
+
+    <rule id="87925" level="3">
+        <if_sid>87924</if_sid>
+        <field name="docker.Action">^connect$</field>
+        <description>Network connected for container $(docker.Actor.Attributes.name)</description>
+        <options>no_full_log</options>
+    </rule>
+
+    <rule id="87926" level="3">
+        <if_sid>87924</if_sid>
+        <field name="docker.Action">^disconnect$</field>
+        <description>Network disconnected for container $(docker.Actor.Attributes.name)</description>
+        <options>no_full_log</options>
+    </rule>
 </group>
