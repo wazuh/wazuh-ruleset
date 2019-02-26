@@ -10,6 +10,7 @@ All notable changes to this project will be documented in this file.
 - Added policy files in YAML format for the SCA module. ([#288](https://github.com/wazuh/wazuh-ruleset/pull/288))
 - Added the policy *cis_win2012r2_memberL2_rcl.yml* for SCA. ([#289](https://github.com/wazuh/wazuh-ruleset/pull/289)) (Thanks to @Bob-Andrews)
 - Improved rules for the docker listener. ([#293](https://github.com/wazuh/wazuh-ruleset/pull/293))
+- New options `same_field` and `not_same_field` to correlate dynamic fields in rules. ([#302](https://github.com/wazuh/wazuh-ruleset/pull/302))
 
 ### Changed
 
