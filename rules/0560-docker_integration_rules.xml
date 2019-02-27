@@ -25,7 +25,7 @@ ID: 87900 - 87999
         <options>no_full_log</options>
     </rule>
 
-    <rule id="87902" level="3">
+    <rule id="87902" level="5">
         <if_sid>87900</if_sid>
         <field name="docker.status">^destroy$</field>
         <description>Container $(docker.Actor.Attributes.name) destroyed</description>
@@ -109,7 +109,7 @@ ID: 87900 - 87999
         <options>no_full_log</options>
     </rule>
 
-    <rule id="87914" level="3">
+    <rule id="87914" level="7">
         <if_sid>87912</if_sid>
         <field name="docker.Action">^destroy$</field>
         <description>Volume destroyed in $(docker.Actor.Attributes.driver)</description>
@@ -117,107 +117,269 @@ ID: 87900 - 87999
     </rule>
 
     <rule id="87915" level="3">
+        <if_sid>87912</if_sid>
+        <field name="docker.Action">^mount$</field>
+        <description>Volume mounted on $(docker.Actor.Attributes.destination)</description>
+        <options>no_full_log</options>
+    </rule>
+
+    <rule id="87916" level="5">
+        <if_sid>87912</if_sid>
+        <field name="docker.Action">^unmount$</field>
+        <description>Volume unmounted from $(docker.Actor.Attributes.driver)</description>
+        <options>no_full_log</options>
+    </rule>
+
+    <rule id="87917" level="3">
         <if_sid>87900</if_sid>
         <field name="docker.status">^commit$</field>
         <description>Container $(docker.Actor.Attributes.name) commited</description>
         <options>no_full_log</options>
     </rule>
 
-    <rule id="87916" level="3">
+    <rule id="87918" level="3">
         <if_sid>87900</if_sid>
         <field name="docker.status">^tag$</field>
         <description>Image $(docker.Actor.Attributes.name) tagged</description>
         <options>no_full_log</options>
     </rule>
 
-    <rule id="87917" level="3">
+    <rule id="87919" level="3">
         <if_sid>87900</if_sid>
         <field name="docker.status">^untag$</field>
         <description>Image $(docker.Actor.Attributes.name) untagged</description>
         <options>no_full_log</options>
     </rule>
 
-    <rule id="87918" level="3">
+    <rule id="87920" level="3">
+        <if_sid>87900</if_sid>
+        <field name="docker.status">^import$</field>
+        <description>Image imported from local directory</description>
+        <options>no_full_log</options>
+    </rule>
+
+    <rule id="87921" level="5">
         <if_sid>87900</if_sid>
         <field name="docker.status">^delete$</field>
         <description>Container $(docker.Actor.Attributes.name) deleted</description>
         <options>no_full_log</options>
     </rule>
 
-    <rule id="87919" level="3">
+    <rule id="87922" level="3">
         <if_sid>87900</if_sid>
         <field name="docker.status">^attach$</field>
         <description>Container $(docker.Actor.Attributes.name) attached standard input, output and error</description>
         <options>no_full_log</options>
     </rule>
 
-    <rule id="87920" level="3">
+    <rule id="87923" level="5">
         <if_sid>87900</if_sid>
         <field name="docker.status">^export$</field>
         <description>Container $(docker.Actor.Attributes.name) exported its filesystem</description>
         <options>no_full_log</options>
     </rule>
 
-    <rule id="87921" level="3">
+    <rule id="87924" level="7">
         <if_sid>87900</if_sid>
         <field name="docker.status">^kill$|^die$</field>
         <description>Container $(docker.Actor.Attributes.name) received the action: $(docker.status)</description>
         <options>no_full_log</options>
     </rule>
 
-    <rule id="87922" level="3">
+    <rule id="87925" level="3">
         <if_sid>87900</if_sid>
         <field name="docker.status">^update$</field>
         <description>Container $(docker.Actor.Attributes.name) updated its configuration</description>
         <options>no_full_log</options>
     </rule>
 
-    <rule id="87923" level="3">
+    <rule id="87926" level="3">
         <if_sid>87900</if_sid>
         <field name="docker.status">^top$</field>
         <description>Container $(docker.Actor.Attributes.name) displayed its running processes</description>
         <options>no_full_log</options>
     </rule>
 
-    <rule id="87924" level="3">
+    <rule id="87927" level="3">
         <if_sid>87900</if_sid>
         <field name="docker.Type">^network$</field>
         <description>Container $(docker.Actor.Attributes.name) displayed its running processes</description>
         <options>no_full_log</options>
     </rule>
 
-    <rule id="87925" level="3">
-        <if_sid>87924</if_sid>
+    <rule id="87928" level="3">
+        <if_sid>87927</if_sid>
         <field name="docker.Action">^connect$</field>
         <description>Network connected for container $(docker.Actor.Attributes.name)</description>
         <options>no_full_log</options>
     </rule>
 
-    <rule id="87926" level="3">
-        <if_sid>87924</if_sid>
+    <rule id="87929" level="3">
+        <if_sid>87927</if_sid>
         <field name="docker.Action">^disconnect$</field>
         <description>Network disconnected for container $(docker.Actor.Attributes.name)</description>
         <options>no_full_log</options>
     </rule>
 
-    <rule id="87927" level="3">
-        <if_sid>87924</if_sid>
+    <rule id="87930" level="3">
+        <if_sid>87927</if_sid>
         <field name="docker.Action">^create$</field>
         <description>Network $(docker.Actor.Attributes.name) of type $(docker.Actor.Attributes.type) created</description>
         <options>no_full_log</options>
     </rule>
 
-    <rule id="87928" level="3">
-        <if_sid>87924</if_sid>
+    <rule id="87931" level="5">
+        <if_sid>87927</if_sid>
         <field name="docker.Action">^destroy$</field>
         <description>Network $(docker.Actor.Attributes.name) of type $(docker.Actor.Attributes.type) deleted</description>
         <options>no_full_log</options>
     </rule>
 
-    <rule id="87929" level="3">
+    <rule id="87932" level="3">
         <if_sid>87900</if_sid>
         <field name="docker.status">^pull$</field>
         <description>Image $(docker.Actor.Attributes.name) was pulled</description>
+        <options>no_full_log</options>
+    </rule>
+
+    <rule id="87933" level="3">
+        <if_sid>87900</if_sid>
+        <field name="docker.status">^load$</field>
+        <description>Image loaded</description>
+        <options>no_full_log</options>
+    </rule>
+
+    <rule id="87934" level="3">
+        <if_sid>87900</if_sid>
+        <field name="docker.status">^save$</field>
+        <description>Image saved</description>
+        <options>no_full_log</options>
+    </rule>
+
+    <rule id="87935" level="3">
+        <if_sid>87900</if_sid>
+        <field name="docker.status">^rename$</field>
+        <description>Container renamed from $(docker.Actor.Attributes.oldName) to $(docker.Actor.Attributes.name)</description>
+        <options>no_full_log</options>
+    </rule>
+
+    <rule id="87936" level="3">
+        <if_sid>87900</if_sid>
+        <field name="docker.Type">^config$</field>
+        <description>Group of Docker config events</description>
+        <options>no_full_log</options>
+    </rule>
+
+    <rule id="87937" level="3">
+        <if_sid>87936</if_sid>
+        <field name="docker.Action">^create$</field>
+        <description>$(docker.Actor.Attributes.name) config created</description>
+        <options>no_full_log</options>
+    </rule>
+
+    <rule id="87938" level="5">
+        <if_sid>87936</if_sid>
+        <field name="docker.Action">^remove$</field>
+        <description>$(docker.Actor.Attributes.name) config deleted</description>
+        <options>no_full_log</options>
+    </rule>
+
+    <rule id="87939" level="3">
+        <if_sid>87900</if_sid>
+        <field name="docker.Type">^secret$</field>
+        <description>Group of Docker secret events</description>
+        <options>no_full_log</options>
+    </rule>
+
+    <rule id="87940" level="3">
+        <if_sid>87939</if_sid>
+        <field name="docker.Action">^create$</field>
+        <description>Secret '$(docker.Actor.Attributes.name)' created</description>
+        <options>no_full_log</options>
+    </rule>
+
+    <rule id="87941" level="3">
+        <if_sid>87939</if_sid>
+        <field name="docker.Action">^remove$</field>
+        <description>Secret '$(docker.Actor.Attributes.name)' removed</description>
+        <options>no_full_log</options>
+    </rule>
+
+    <rule id="87942" level="3">
+        <if_sid>87900</if_sid>
+        <field name="docker.Type">^plugin$</field>
+        <description>Group of Docker plugin events</description>
+        <options>no_full_log</options>
+    </rule>
+
+    <rule id="87943" level="3">
+        <if_sid>87942</if_sid>
+        <field name="docker.Action">^pull$</field>
+        <description>Plugin $(docker.Actor.Attributes.name) was pulled</description>
+        <options>no_full_log</options>
+    </rule>
+
+    <rule id="87944" level="3">
+        <if_sid>87942</if_sid>
+        <field name="docker.Action">^enable$</field>
+        <description>Plugin $(docker.Actor.Attributes.name) was enabled</description>
+        <options>no_full_log</options>
+    </rule>
+
+    <rule id="87945" level="3">
+        <if_sid>87942</if_sid>
+        <field name="docker.Action">^disable$</field>
+        <description>Plugin $(docker.Actor.Attributes.name) was disabled</description>
+        <options>no_full_log</options>
+    </rule>
+
+    <rule id="87946" level="3">
+        <if_sid>87942</if_sid>
+        <field name="docker.Action">^remove$</field>
+        <description>Plugin $(docker.Actor.Attributes.name) was removed</description>
+        <options>no_full_log</options>
+    </rule>
+
+    <rule id="87947" level="3">
+        <if_sid>87942</if_sid>
+        <field name="docker.Action">^create$</field>
+        <description>Plugin $(docker.Actor.Attributes.name) was created</description>
+        <options>no_full_log</options>
+    </rule>
+
+    <rule id="87948" level="3">
+        <if_sid>87900</if_sid>
+        <field name="docker.Type">^node$</field>
+        <description>Group of Docker plugin events</description>
+        <options>no_full_log</options>
+    </rule>
+
+    <rule id="87949" level="3">
+        <if_sid>87948</if_sid>
+        <field name="docker.Action">^create$</field>
+        <description>Node created</description>
+        <options>no_full_log</options>
+    </rule>
+
+    <rule id="87950" level="3">
+        <if_sid>87948</if_sid>
+        <field name="docker.Action">^update$</field>
+        <description>Node updated</description>
+        <options>no_full_log</options>
+    </rule>
+
+    <rule id="87951" level="3">
+        <if_sid>87950</if_sid>
+        <field name="docker.Actor.Attributes.role.new">\.+</field>
+        <field name="docker.Actor.Attributes.role.old">\.+</field>
+        <description>Role for node $(docker.Actor.Attributes.name) has changed from $(docker.Actor.Attributes.role.old) to $(docker.Actor.Attributes.role.new)</description>
+        <options>no_full_log</options>
+    </rule>
+
+    <rule id="87952" level="3">
+        <if_sid>87900</if_sid>
+        <field name="docker.status">^resize$</field>
+        <description>Container $(docker.Actor.Attributes.image) resized terminal size to $(docker.Actor.Attributes.width)x$(docker.Actor.Attributes.height)</description>
         <options>no_full_log</options>
     </rule>
 </group>
