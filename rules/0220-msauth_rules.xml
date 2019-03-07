@@ -1333,22 +1333,6 @@
     <info type="text">This does not appear to be logged on Windows 2000</info>
   </rule>
 
-  <rule id="20046" level="5">
-    <if_sid>20001</if_sid>
-    <field name="win.system.eventID">^11724$</field>
-    <options>alert_by_email</options>
-    <description>Windows: Application Uninstalled $(win.eventdata.data)</description>
-    <options>no_full_log</options>
-  </rule>
-
-  <rule id="20047" level="5">
-    <if_sid>20001</if_sid>
-    <field name="win.system.eventID">^11707$</field>
-    <options>alert_by_email</options>
-    <description>Windows: Application Installed $(win.eventdata.data)</description>
-    <options>no_full_log</options>
-  </rule>
-
   <rule id="20048" level="3">
     <if_sid>20004</if_sid>
     <field name="win.system.eventID">^4608$</field>
@@ -2040,6 +2024,233 @@
       <description>Created default configuration for user</description>
       <options>no_full_log</options>
       <group>gdpr_IV_32.2,</group>
+  </rule>
+
+   <rule id="20380" level="4">
+    <if_sid>20003</if_sid>
+    <field name="win.system.providerName">Application Error</field>
+    <field name="win.system.eventID">^1000$</field>
+    <description>$(win.system.message)</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20381" level="3">
+    <if_sid>20003</if_sid>
+    <field name="win.system.providerName">.NET Runtime</field>
+    <field name="win.system.eventID">^1026$</field>
+    <description>$(win.eventdata.data)</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20382" level="3">
+    <if_sid>20001</if_sid>
+    <field name="win.system.providerName">Microsoft-Windows-Defrag</field>
+    <field name="win.system.eventID">^258$</field>
+    <description>$(win.system.message)</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20383" level="4">
+    <if_sid>20001</if_sid>
+    <field name="win.system.providerName">Microsoft-Windows-WMI</field>
+    <field name="win.system.eventID">^5611$</field>
+    <description>Inconsistent system shutdown detected</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20384" level="4">
+    <if_sid>20001</if_sid>
+    <field name="win.system.providerName">Desktop Window Manager</field>
+    <field name="win.system.eventID">^9002$</field>
+    <description>Unable to start Desktop Window Manager</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20385" level="4">
+    <if_sid>20001</if_sid>
+    <field name="win.system.providerName">Windows Error Reporting</field>
+    <field name="win.system.eventID">^1001$</field>
+    <description>Fault bucket</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20386" level="3">
+    <if_sid>20002</if_sid>
+    <field name="win.system.providerName">Microsoft-Windows-Search</field>
+    <field name="win.system.eventID">^1008$</field>
+    <description>The Windows Search Service attempted to remove the old search index</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20387" level="3">
+    <if_sid>20001</if_sid>
+    <field name="win.system.providerName">Microsoft-Windows-Search</field>
+    <field name="win.system.eventID">^1010$</field>
+    <description>The Windows Search Service removed the old search index successfully</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20388" level="3">
+    <if_sid>20001</if_sid>
+    <field name="win.system.providerName">Microsoft-Windows-EventSystem</field>
+    <field name="win.system.eventID">^4625$</field>
+    <field name="win.eventdata.param1">\.+</field>
+    <description>EventSystem supressed duplicatelog entries for $(win.eventdata.param1) seconds</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20389" level="0">
+    <if_sid>20001</if_sid>
+    <field name="win.system.providerName">ESENT</field>
+    <description>Group of ESENT events</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20390" level="3">
+    <if_sid>20389</if_sid>
+    <field name="win.system.eventID">^103$</field>
+    <description>The database engine stopped an instance</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20391" level="3">
+    <if_sid>20389</if_sid>
+    <field name="win.system.eventID">^327$</field>
+    <description>The database engine detached a database</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20392" level="3">
+    <if_sid>20389</if_sid>
+    <field name="win.system.eventID">^326$</field>
+    <description>The database engine attached a database</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20393" level="3">
+    <if_sid>20001</if_sid>
+    <field name="win.system.providerName">VSS</field>
+    <field name="win.system.eventID">^8224$</field>
+    <description>The VSS service is shutting down due to idle timeout</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20394" level="0">
+    <if_sid>20001</if_sid>
+    <field name="win.system.providerName">MsiInstaller</field>
+    <description>Group of MsiInstaller events</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20395" level="3">
+    <if_sid>20394</if_sid>
+    <field name="win.system.eventID">^1040$</field>
+    <description>Windows Installer began an installation</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20046" level="5">
+    <if_sid>20394</if_sid>
+    <field name="win.system.eventID">^11724$</field>
+    <options>alert_by_email</options>
+    <description>Windows: Application Uninstalled $(win.eventdata.data)</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20047" level="5">
+    <if_sid>20394</if_sid>
+    <field name="win.system.eventID">^11707$</field>
+    <options>alert_by_email</options>
+    <description>Windows: Application Installed $(win.eventdata.data)</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20396" level="3">
+    <if_sid>20001</if_sid>
+    <field name="win.system.providerName">System Restore</field>
+    <field name="win.system.eventID">^8216$</field>
+    <description>Skipped creation of restore point for $(win.eventdata.data) as there is a previous restore point available</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20397" level="3">
+    <if_sid>20001</if_sid>
+    <field name="win.system.providerName">LocationNotifications</field>
+    <field name="win.system.eventID">^1$</field>
+    <description>A program accessed information from a location sensor or default location</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20398" level="0">
+    <if_sid>20001</if_sid>
+    <field name="win.system.providerName">Microsoft-Windows-Security-SPP</field>
+    <description>Group of SPP events</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20399" level="3">
+    <if_sid>20398</if_sid>
+    <field name="win.system.eventID">^903$</field>
+    <description>Software Protection service stopped</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20400" level="3">
+    <if_sid>20398</if_sid>
+    <field name="win.system.eventID">^16384$</field>
+    <description>Software Protection service scheduled successfully</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20401" level="3">
+    <if_sid>20398</if_sid>
+    <field name="win.system.eventID">^8197$</field>
+    <description>SLUI.exe launched</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20402" level="0">
+    <if_sid>20001</if_sid>
+    <field name="win.system.providerName">Microsoft-Windows-Winlogon</field>
+    <description>Group of Winlogon events</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20403" level="3">
+    <if_sid>20402</if_sid>
+    <field name="win.system.eventID">^6000$</field>
+    <description>$(win.eventdata.data) was unavailable to handle a notification event</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20404" level="4">
+    <if_sid>20402</if_sid>
+    <field name="win.system.eventID">^6003$</field>
+    <description>$(win.eventdata.data) was unavailable to handle a critical notification event</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20405" level="3">
+    <if_sid>20402</if_sid>
+    <field name="win.system.eventID">^7002$</field>
+    <description>User Logoff Notification for Customer Experience Improvement Program</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20406" level="3">
+    <if_sid>20001</if_sid>
+    <field name="win.system.providerName">^Microsoft-Windows-User Profiles Service$</field>
+    <field name="win.system.eventID">^1530$</field>
+    <description>The registry file is still in use by other applications or services</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20407" level="3">
+    <if_sid>20001</if_sid>
+    <field name="win.system.providerName">^Desktop Window Manager$</field>
+    <field name="win.system.eventID">^9009$</field>
+    <description>Desktop Window Manager exited with code $(win.eventdata.data)</description>
+    <options>no_full_log</options>
   </rule>
 
 </group>
