@@ -1,0 +1,2406 @@
+<!--
+  -  Windows Event Channel ruleset
+  -  Created by Wazuh, Inc.
+  -  Copyright (C) 2015-2019, Wazuh Inc.
+  -  This program is a free software; you can redistribute it and/or modify it under the terms of GPLv2.
+-->
+
+<var name="MS_FREQ">8</var>
+
+<group name="windows,">
+
+  <rule id="20000" level="0">
+    <category>ossec</category>
+    <decoded_as>windows_eventchannel</decoded_as>
+    <field name="win.system.providerName">\.+</field>
+    <options>no_full_log</options>
+    <description>Group of windows rules</description>
+  </rule>
+
+  <rule id="20001" level="0">
+    <if_sid>20000</if_sid>
+    <field name="win.system.severityValue">^INFORMATION</field>
+    <description>Windows informational event</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20002" level="0">
+    <if_sid>20000</if_sid>
+    <field name="win.system.severityValue">^WARNING</field>
+    <description>Windows warning event</description>
+    <options>no_full_log</options>
+    <group>gpg13_4.12,</group>
+  </rule>
+
+   <!--{"win":{"system":{"providerName":"NetBT","eventID":"4321","level":"2","task":"0","keywords":"0x80000000000000","systemTime":"2018-12-18T10:55:40.107861400Z","eventRecordID":"1701","channel":"System","computer":"qnu","severityValue":"ERROR","message":"Le nom \\\"WORKGROUP      :1d\\\" n’a pas pu être enregistré sur l’interface avec l’adresse IP 10.0.2.15. L’ordinateur avec l’adresse IP 10.0.2.2 n’a pas permis que le nom soit réclamé par cet ordinateur."},"eventdata":{"data":"","data":"WORKGROUP      :1d","data":"10.0.2.15","data":"10.0.2.2","binary":"00000000040032000000000E11000C001010000010000C029000000000000000000000000000000"}}}-->
+  <rule id="20003" level="5">
+    <if_sid>20000</if_sid>
+    <field name="win.system.severityValue">^ERROR</field>
+    <description>Windows System error event</description>
+    <options>no_full_log</options>
+    <group>system_error,gpg13_4.3,gdpr_IV_35.7.d,</group>
+  </rule>
+
+  <rule id="20004" level="0">
+    <if_sid>20000</if_sid>
+    <field name="win.system.severityValue">^AUDIT_SUCCESS|^success</field>
+    <description>Windows audit success event</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20005" level="5">
+    <if_sid>20000</if_sid>
+    <field name="win.system.severityValue">^AUDIT_FAILURE|^failure</field>
+    <description>Windows audit failure event</description>
+    <group>pci_dss_10.6.1,gdpr_IV_35.7.d,</group>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20006" level="5">
+    <if_sid>20005</if_sid>
+    <field name="win.system.eventID">^529$|^530$|^531$|^532$|^533$|^534$|^535$|^536$|^537$|^539$|^4625$</field>
+    <description>Windows Logon Failure</description>
+    <options>no_full_log</options>
+    <group>win_authentication_failed,pci_dss_10.2.4,pci_dss_10.2.5,gpg13_7.1,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+  </rule>
+
+   <!--{"win":{"system":{"providerName":"Microsoft-Windows-Security-Auditing","providerGuid":"{54849625-5478-4994-A5BA-3E3B0328C30D}","eventID":"4624","version":"1","level":"0","task":"12544","opcode":"0","keywords":"0x802000000000000","systemTime":"2018-12-18T10:55:48.073081500Z","eventRecordID":"7017","processID":"548","threadID":"3212","channel":"Security","computer":"qnu","severityValue":"AUDIT_SUCCESS","message":"L’ouverture de session d’un compte s’est correctement déroulée."},"eventdata":{"subjectUserSid":"S-1-5-18","subjectUserName":"QNU$","subjectDomainName":"WORKGROUP","subjectLogonId":"0x3e7","targetUserSid":"S-1-5-18","targetUserName":"Système","targetDomainName":"AUTORITE NT","targetLogonId":"0x3e7","logonType":"5","logonProcessName":"Advapi  ","authenticationPackageName":"Negotiate","workstationName":"-","logonGuid":"{00000000-0000-0000-0000-000000000000}","transmittedServices":"-","lmPackageName":"-","keyLength":"0","processId":"0x21c","processName":"C:\\\\Windows\\\\System32\\\\services.exe","ipAddress":"-","ipPort":"-","impersonationLevel":"%%1833"}}}-->
+  <rule id="20007" level="3">
+    <if_sid>20004</if_sid>
+    <field name="win.system.eventID">^528$|^540$|^673$|^4624$|^4769$</field>
+    <description>Windows Logon Success</description>
+    <options>no_full_log</options>
+    <group>authentication_success,pci_dss_10.2.5,gpg13_7.1,gpg13_7.2,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20008" level="4">
+    <if_sid>20005</if_sid>
+    <field name="win.system.eventID">^577$|^4673$</field>
+    <description>Windows: Failed attempt to perform a privileged operation</description>
+    <options>no_full_log</options>
+    <group>authentication_success,pci_dss_10.2.2,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20009" level="3">
+    <if_sid>20004</if_sid>
+    <field name="win.system.eventID">^682$|^683$|^4778$|^4779$</field>
+    <description>Windows: Session reconnected/disconnected to winstation</description>
+    <options>no_full_log</options>
+    <group>authentication_success,pci_dss_8.1.5,gdpr_IV_35.7.d,</group>
+  </rule>
+
+  <rule id="20010" level="8">
+    <if_sid>20004</if_sid>
+    <field name="win.system.eventID">^624$|^626$|^4720$|^4722$</field>
+    <description>Windows: User account enabled or created</description>
+    <options>no_full_log</options>
+    <group>adduser,account_changed,</group>
+    <group>pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20011" level="8">
+    <if_sid>20004</if_sid>
+    <field name="win.system.eventID">^628$|^642$|^685$|^4738$|^4781$</field>
+    <description>Windows: User account changed</description>
+    <options>no_full_log</options>
+    <group>account_changed,</group>
+    <group>pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20012" level="8">
+    <if_sid>20004</if_sid>
+    <field name="win.system.eventID">^630$|^629$|^4725$|^4726$</field>
+    <description>Windows: User account disabled or deleted</description>
+    <options>no_full_log</options>
+    <group>adduser,account_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20013" level="8">
+    <if_sid>20004</if_sid>
+    <field name="win.system.eventID">^612$|^643$|^4719$|^4907$|^4912$|^4719$</field>
+    <description>Windows Audit Policy changed</description>
+    <options>no_full_log</options>
+    <group>policy_changed,pci_dss_10.6.1,gpg13_10.1,gdpr_IV_35.7.d,</group>
+  </rule>
+
+  <rule id="20014" level="5">
+    <if_sid>20004</if_sid>
+    <field name="win.system.eventID">^632$|^4728$|^633$|^4729$|^636$|^4732$|^637$|^4733$|^639$|^4735$|
+            |^641$|^4737$|^637$|^4733$|^659$|^4755$|^660$|^4766$|^668$|^4764$|
+            |^649$|^4745$|^650$|^4746$|^651$|^4747$|^654$|^4750$|^655$|^4751$|
+            |^656$|^4752$|^659$|^4755$|^660$|^4756$|^661$|^4757$|^664$|^4760$|
+            |^665$|^4761$|^666$|^4762$</field>
+    <description>Windows: Group Account Changed</description>
+    <options>no_full_log</options>
+    <group>group_changed,win_group_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20015" level="8">
+    <if_sid>20004</if_sid>
+    <field name="win.system.eventID">^640$</field>
+    <description>Windows: General account database changed</description>
+    <options>no_full_log</options>
+    <group>adduser,account_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20016" level="9">
+    <if_sid>20004</if_sid>
+    <field name="win.system.eventID">^644$|^4740$</field>
+    <description>Windows: User account locked out (multiple login errors)</description>
+    <options>no_full_log</options>
+    <group>authentication_failures,pci_dss_8.1.6,pci_dss_11.4,gpg13_7.5,gdpr_IV_35.7.d,</group>
+  </rule>
+
+  <rule id="20017" level="7">
+    <if_sid>20004</if_sid>
+    <field name="win.system.eventID">^513$|^4609$</field>
+    <description>Windows is shutting down</description>
+    <options>no_full_log</options>
+    <group>system_shutdown,</group>
+  </rule>
+
+  <rule id="20018" level="9">
+    <if_sid>20004</if_sid>
+    <field name="win.system.eventID">^517$|^1102$</field>
+    <description>Windows audit log was cleared</description>
+    <options>no_full_log</options>
+    <group>logs_cleared,pci_dss_10.6.1,gpg13_10.1,gdpr_IV_35.7.d,</group>
+  </rule>
+
+  <rule id="20019" level="3">
+    <if_sid>20007</if_sid>
+    <field name="win.eventdata.workstationName">\.+</field>
+    <field name="win.eventdata.logonType">^2$</field>
+    <description>Windows Workstation Logon Success</description>
+    <options>no_full_log</options>
+    <group>authentication_success,pci_dss_10.2.5,gpg13_7.1,gpg13_7.2,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20020" level="3">
+    <if_sid>20007</if_sid>
+    <options>alert_by_email</options>
+    <if_fts />
+    <description>Windows: First time this user logged in this system</description>
+    <options>no_full_log</options>
+    <group>authentication_success,pci_dss_10.2.5,gpg13_7.1,gpg13_7.2,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20021" level="0">
+    <if_sid>20005</if_sid>
+    <field name="win.system.eventID">^680$</field>
+    <description>Windows login attempt (ignored). Duplicated</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20025" level="5">
+    <if_sid>20002,20003</if_sid>
+    <field name="win.system.eventID">^20187$|^20014$|^20078$|^20050$|^20049$|^20189$</field>
+    <description>Windows: Remote access login failure</description>
+    <options>no_full_log</options>
+    <group>authentication_failed,pci_dss_10.2.4,pci_dss_10.2.5,pci_dss_8.1.5,gpg13_7.1,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20026" level="3">
+    <if_sid>20001</if_sid>
+    <field name="win.system.eventID">^20158$</field>
+    <description>Windows: Remote access login success</description>
+    <options>no_full_log</options>
+    <group>authentication_success,pci_dss_10.2.5,pci_dss_8.1.5,gpg13_7.1,gpg13_7.2,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20027" level="5">
+    <if_sid>20004</if_sid>
+    <field name="win.system.eventID">^646$|^645$|^647$|^4741$|^4742$|^4743$</field>
+    <description>Windows: Computer account added/changed/deleted</description>
+    <options>no_full_log</options>
+    <group>account_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20029" level="8">
+    <if_sid>20003</if_sid>
+    <field name="win.system.eventID">^13570$</field>
+    <description>Windows file system full</description>
+    <options>no_full_log</options>
+    <group>low_diskspace,pci_dss_10.6.1,gpg13_4.1,gdpr_IV_35.7.d,</group>
+  </rule>
+
+  <!-- Granular windows login rules -->
+  <rule id="20030" level="5">
+    <if_sid>20006</if_sid>
+    <field name="win.system.eventID">^529$|^4625$</field>
+    <description>Windows: Logon Failure - Unknown user or bad password</description>
+    <options>no_full_log</options>
+    <group>win_authentication_failed,pci_dss_10.2.4,pci_dss_10.2.5,gpg13_7.1,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20031" level="5">
+    <if_sid>20006</if_sid>
+    <field name="win.system.eventID">^530$</field>
+    <description>Windows: Logon Failure - Account logon time restriction violation</description>
+    <options>no_full_log</options>
+    <group>win_authentication_failed,login_denied,pci_dss_10.2.5,pci_dss_8.1.5,gpg13_7.1,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20032" level="5">
+    <if_sid>20006</if_sid>
+    <field name="win.system.eventID">^531$</field>
+    <description>Windows: Logon Failure - Account currently disabled</description>
+    <options>no_full_log</options>
+    <group>win_authentication_failed,login_denied,pci_dss_10.2.5,pci_dss_8.1.4,gpg13_7.5,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20033" level="5">
+    <if_sid>20006</if_sid>
+    <field name="win.system.eventID">^532$</field>
+    <description>Windows: Logon Failure - Specified account expired</description>
+    <options>no_full_log</options>
+    <group>win_authentication_failed,login_denied,pci_dss_10.2.5,pci_dss_8.1.5,gpg13_7.5,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20034" level="7">
+    <if_sid>20006</if_sid>
+    <field name="win.system.eventID">^533$</field>
+    <description>Windows: Logon Failure - User not allowed to login at this computer</description>
+    <options>no_full_log</options>
+    <group>win_authentication_failed,login_denied,pci_dss_10.2.4,pci_dss_10.2.5,gpg13_7.5,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20035" level="5">
+    <if_sid>20006</if_sid>
+    <field name="win.system.eventID">^534$</field>
+    <description>Windows: Logon Failure - User not granted logon type</description>
+    <options>no_full_log</options>
+    <group>win_authentication_failed,pci_dss_10.2.4,pci_dss_10.2.5,gpg13_7.5,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20036" level="5">
+    <if_sid>20006</if_sid>
+    <field name="win.system.eventID">^535$</field>
+    <description>Windows: Logon Failure - Account's password expired</description>
+    <options>no_full_log</options>
+    <group>win_authentication_failed,pci_dss_10.2.5,pci_dss_8.2.4,gpg13_7.5,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20037" level="5">
+    <if_sid>20006</if_sid>
+    <field name="win.system.eventID">^536$|^537$</field>
+    <description>Windows: Logon Failure - Internal error</description>
+    <options>no_full_log</options>
+    <group>win_authentication_failed,pci_dss_10.2.4,pci_dss_10.2.5,gpg13_7.1,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20038" level="7">
+    <if_sid>20006</if_sid>
+    <field name="win.system.eventID">^539$</field>
+    <description>Windows: Logon Failure - Account locked out</description>
+    <options>no_full_log</options>
+    <group>win_authentication_failed,pci_dss_10.2.4,pci_dss_10.2.5,pci_dss_8.1.6,gpg13_7.5,gpg13_7.1,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20039" level="5">
+    <if_sid>20005</if_sid>
+    <field name="win.system.eventID">^673$|^675$|^681$|^4769$</field>
+    <description>Windows DC Logon Failure</description>
+    <options>no_full_log</options>
+    <group>win_authentication_failed,pci_dss_10.2.4,pci_dss_10.2.5,gpg13_7.1,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20040" level="5">
+    <if_sid>20004</if_sid>
+    <field name="win.system.eventID">^520$|^4616$</field>
+    <description>Windows: System time changed</description>
+    <options>no_full_log</options>
+    <group>time_changed,pci_dss_10.6.1,gpg13_1.3,gpg13_4.13,gdpr_IV_35.7.d,</group>
+  </rule>
+
+  <rule id="20041" level="7">
+    <if_sid>20002</if_sid>
+    <field name="win.system.eventID">^1076$</field>
+    <group>system_error, system_shutdown,pci_dss_10.6.1,gdpr_IV_35.7.d,</group>
+    <description>Unexpected Windows shutdown</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20042" level="5">
+    <if_sid>20004</if_sid>
+    <field name="win.system.eventID">^671$|^4767$</field>
+    <description>Windows: User account unlocked</description>
+    <options>no_full_log</options>
+    <group>account_changed,pci_dss_10.2.5,pci_dss_8.1.6,gpg13_7.10,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20043" level="8">
+    <if_sid>20014</if_sid>
+    <field name="win.system.eventID">^631$|^635$|^658$</field>
+    <description>Windows: Security enabled group created</description>
+    <options>no_full_log</options>
+    <group>adduser,account_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20044" level="8">
+    <if_sid>20014</if_sid>
+    <field name="win.system.eventID">^634$|^638$|^662$</field>
+    <description>Windows: Security enabled group deleted</description>
+    <options>no_full_log</options>
+    <group>adduser,account_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+  </rule>
+
+
+  <!-- Some services change their startup type automatically -->
+  <rule id="20045" level="3">
+    <if_sid>20001</if_sid>
+    <field name="win.system.eventID">^7040$</field>
+    <group>policy_changed,pci_dss_10.6,gdpr_IV_35.7.d,</group>
+    <description>Windows: Service startup type was changed</description>
+    <options>no_full_log</options>
+    <info type="text">This does not appear to be logged on Windows 2000</info>
+  </rule>
+
+  <rule id="20048" level="3">
+    <if_sid>20004</if_sid>
+    <field name="win.system.eventID">^4608$</field>
+    <description>Windows is starting up</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20049" level="3">
+    <if_sid>20004</if_sid>
+    <field name="win.system.eventID">^538$|^551$|^4634$|^4647$</field>
+    <description>Windows User Logoff</description>
+    <options>no_full_log</options>
+    <group>pci_dss_10.2.5,gdpr_IV_32.2,</group>
+  </rule>
+
+  <!-- Granular group rules -->
+
+  <rule id="20251" level="5">
+    <if_sid>20004</if_sid>
+    <field name="win.system.eventID">^631$|^4727$|^635$|^4731$|^658$|^4754$|^648$|^4744$|^653$|
+                ^4749$|^663$|^4759$</field>
+    <description>Windows: Group Account Created</description>
+    <options>no_full_log</options>
+    <group>group_created,win_group_created,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20252" level="5">
+    <if_sid>20004</if_sid>
+    <field name="win.system.eventID">^634$|^4730$|^638$|^4734$|^662$|^4758$|^652$|^4748$|
+            ^657$|^4753$|^667$|^4763$</field>
+    <description>Windows: Group Account Deleted</description>
+    <options>no_full_log</options>
+    <group>group_deleted,win_group_deleted,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20253" level="5">
+    <if_sid>20251</if_sid>
+    <field name="win.system.eventID">^631$|^4727$</field>
+    <description>Windows: Security Enabled Global Group Created</description>
+    <options>no_full_log</options>
+    <group>group_created,win_group_created,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20254" level="5">
+    <if_sid>20014</if_sid>
+    <field name="win.system.eventID">^632$|^4728$</field>
+    <description>Windows: Security Enabled Global Group Member Added $(win.eventdata.memberSid)</description>
+    <options>no_full_log</options>
+    <group>group_changed,win_group_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20255" level="5">
+    <if_sid>20014</if_sid>
+    <field name="win.system.eventID">^633$|^4729$</field>
+    <description>Windows: Security Enabled Global Group Member Removed $(win.eventdata.memberSid)</description>
+    <options>no_full_log</options>
+    <group>group_changed,win_group_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20256" level="5">
+    <if_sid>20001</if_sid>
+    <field name="win.system.eventID">^634$|^4730$</field>
+    <description>Windows: Security Enabled Global Group Deleted $(win.eventdata.memberSid)</description>
+    <options>no_full_log</options>
+    <group>group_deleted,win_group_deleted,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20257" level="5">
+    <if_sid>20251</if_sid>
+    <field name="win.system.eventID">^635$|^4731$</field>
+    <description>Windows: Security Enabled Local Group Created $(win.eventdata.memberSid)</description>
+    <options>no_full_log</options>
+    <group>group_created,win_group_created,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20258" level="5">
+    <if_sid>20014</if_sid>
+    <field name="win.system.eventID">^636$|^4732$</field>
+    <description>Windows: Security Enabled Local Group Member Added $(win.eventdata.memberSid)</description>
+    <options>no_full_log</options>
+   <group>group_changed,win_group_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20259" level="5">
+    <if_sid>20014</if_sid>
+    <field name="win.system.eventID">^637$|^4733$</field>
+    <description>Windows: Security Enabled Local Group Member Removed $(win.eventdata.memberSid)</description>
+    <options>no_full_log</options>
+    <group>group_changed,win_group_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20260" level="5">
+    <if_sid>20252</if_sid>
+    <field name="win.system.eventID">^638$|^4734$</field>
+    <description>Windows: Security Enabled Local Group Deleted</description>
+    <options>no_full_log</options>
+    <group>group_deleted,win_group_deleted,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20261" level="5">
+    <if_sid>20014</if_sid>
+    <field name="win.system.eventID">^639$|^4735$</field>
+    <description>Windows: Security Enabled Local Group Changed</description>
+    <options>no_full_log</options>
+    <group>group_changed,win_group_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20262" level="5">
+    <if_sid>20014</if_sid>
+    <field name="win.system.eventID">^641$|^4737$</field>
+    <description>Windows: Security Enabled Global Group Changed</description>
+    <options>no_full_log</options>
+    <group>group_changed,win_group_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20263" level="5">
+    <if_sid>20251</if_sid>
+    <field name="win.system.eventID">^658$|^4754$</field>
+    <description>Windows: Security Enabled Universal Group Created</description>
+    <options>no_full_log</options>
+    <group>group_created,win_group_created,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20264" level="5">
+    <if_sid>20014</if_sid>
+    <field name="win.system.eventID">^659$|^4755$</field>
+    <description>Windows: Security Enabled Universal Group Changed</description>
+    <options>no_full_log</options>
+    <group>group_changed,win_group_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20265" level="5">
+    <if_sid>20014</if_sid>
+    <field name="win.system.eventID">^660$|^4756$</field>
+    <description>Windows: Security Enabled Universal Group Member Added</description>
+    <options>no_full_log</options>
+    <group>group_changed,win_group_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20266" level="5">
+    <if_sid>20014</if_sid>
+    <field name="win.system.eventID">^661$|^4757$</field>
+    <description>Windows: Security Enabled Universal Group Member Removed</description>
+    <options>no_full_log</options>
+    <group>group_changed,win_group_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20267" level="5">
+    <if_sid>20252</if_sid>
+    <field name="win.system.eventID">^662$|^4758$</field>
+    <description>Windows: Security Enabled Universal Group Deleted</description>
+    <options>no_full_log</options>
+    <group>group_deleted,win_group_deleted,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20268" level="12">
+    <if_sid>20258,20259</if_sid>
+    <field name="win.eventdata.subjectUserSid">\s*\p*S-1-5-32-544</field>
+    <description>Windows: Administrators Group Changed</description>
+    <options>no_full_log</options>
+    <group>group_changed,win_group_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20269" level="5">
+    <if_sid>20258,20259</if_sid>
+    <field name="win.eventdata.subjectUserSid">\s*S-1-1-0</field>
+    <description>Windows: Everyone Group Changed</description>
+    <options>no_full_log</options>
+    <group>group_changed,win_group_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20270" level="12">
+    <if_sid>20258,20259</if_sid>
+    <field name="win.eventdata.subjectUserSid">\s*S-1-5-9</field>
+    <description>Windows: Enterprise Domain Controllers Group Changed</description>
+    <options>no_full_log</options>
+    <group>group_changed,win_group_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20271" level="5">
+    <if_sid>20258,20259</if_sid>
+    <field name="win.eventdata.subjectUserSid">\s*S-1-5-11</field>
+    <description>Windows: Authenticated Users Group Changed</description>
+    <options>no_full_log</options>
+    <group>group_changed,win_group_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20272" level="5">
+    <if_sid>20258,20259</if_sid>
+    <field name="win.eventdata.subjectUserSid">\s*S-1-5-13</field>
+    <description>Windows: Terminal Server Users Group Changed</description>
+    <options>no_full_log</options>
+    <group>group_changed,win_group_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20273" level="12">
+    <if_sid>20254,20255</if_sid>
+    <field name="win.eventdata.subjectUserSid">\s*S-1-5-21\S*-512</field>
+    <description>Windows: Domain Admins Group Changed</description>
+    <options>no_full_log</options>
+    <group>group_changed,win_group_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20274" level="5">
+    <if_sid>20254,20255</if_sid>
+    <field name="win.eventdata.subjectUserSid">\s*S-1-5-21\S*-513</field>
+    <description>Windows: Domain Users Group Changed</description>
+    <options>no_full_log</options>
+    <group>group_changed,win_group_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20275" level="0">
+    <if_sid>20274,20254</if_sid>
+    <field name="win.eventdata.subjectAccountName">None</field>
+    <description>Windows: Local User Group NONE</description>
+    <options>no_full_log</options>
+    <info>Bogus group user added to upon creation</info>
+  </rule>
+
+  <rule id="20276" level="12">
+    <if_sid>20254,20255</if_sid>
+    <field name="win.eventdata.subjectUserSid">\s*S-1-5-21\S*-514</field>
+    <description>Windows: Domain Guests Group Changed</description>
+    <options>no_full_log</options>
+    <group>group_changed,win_group_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20277" level="5">
+    <if_sid>20254,20255</if_sid>
+    <field name="win.eventdata.subjectUserSid">\s*S-1-5-21\S*-515</field>
+    <description>Windows: Domain Computers Group Changed</description>
+    <options>no_full_log</options>
+    <group>group_changed,win_group_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20278" level="12">
+    <if_sid>20254,20255</if_sid>
+    <field name="win.eventdata.subjectUserSid">\s*S-1-5-21\S*-516</field>
+    <description>Windows: Domain Controllers Group Changed</description>
+    <options>no_full_log</options>
+    <group>group_changed,win_group_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20279" level="10">
+    <if_sid>20258,20259</if_sid>
+    <field name="win.eventdata.subjectUserSid">\s*S-1-5-21\S*-517</field>
+    <description>Windows: Cert Publishers Group Changed</description>
+    <options>no_full_log</options>
+    <group>group_changed,win_group_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20280" level="12">
+    <if_sid>20254,20255</if_sid>
+    <field name="win.eventdata.subjectUserSid">\s*S-1-5-21\S*-518</field>
+    <description>Windows: Schema Admins Group Changed</description>
+    <options>no_full_log</options>
+    <group>group_changed,win_group_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20281" level="12">
+    <if_sid>20254,20255</if_sid>
+    <field name="win.eventdata.subjectUserSid">\s*S-1-5-21\S*-519</field>
+    <description>Windows: Enterprise Admins Group Changed</description>
+    <options>no_full_log</options>
+    <group>group_changed,win_group_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20282" level="10">
+    <if_sid>20254,20255</if_sid>
+    <field name="win.eventdata.subjectUserSid">\s*S-1-5-21\S*-520</field>
+    <description>Windows: Group Policy Creator Owners Group Changed</description>
+    <options>no_full_log</options>
+    <group>group_changed,win_group_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20283" level="10">
+    <if_sid>20258,20259</if_sid>
+    <field name="win.eventdata.subjectUserSid">\s*S-1-5-21\S*-553</field>
+    <description>Windows: RAS and IAS Servers Group Changed</description>
+    <options>no_full_log</options>
+    <group>group_changed,win_group_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20284" level="5">
+    <if_sid>20258,20259</if_sid>
+    <field name="win.eventdata.subjectUserSid">\s*S-1-5-32\S*-545</field>
+    <description>Windows: Users Group Changed</description>
+    <options>no_full_log</options>
+    <group>group_changed,win_group_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20285" level="12">
+    <if_sid>20258,20259</if_sid>
+    <field name="win.eventdata.subjectUserSid">\s*S-1-5-32\S*-546</field>
+    <description>Windows: Guests Group Changed</description>
+    <options>no_full_log</options>
+    <group>group_changed,win_group_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20286" level="10">
+    <if_sid>20258,20259</if_sid>
+    <regex> ID:\s+%{S-1-5-32-547}| ID:\s+S-1-5-32-547</regex>
+    <field name="win.eventdata.subjectUserSid">\s*S-1-5-32\S*-547</field>
+    <description>Windows: Power Users Group Changed</description>
+    <options>no_full_log</options>
+    <group>group_changed,win_group_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20287" level="10">
+    <if_sid>20258,20259</if_sid>
+    <field name="win.eventdata.subjectUserSid">\s*S-1-5-32\S*-548</field>
+    <description>Windows: Account Operators Group Changed</description>
+    <options>no_full_log</options>
+    <group>group_changed,win_group_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20288" level="10">
+    <if_sid>20258,20259</if_sid>
+    <field name="win.eventdata.subjectUserSid">\s*S-1-5-32\S*-549</field>
+    <description>Windows: Server Operators Group Changed</description>
+    <options>no_full_log</options>
+    <group>group_changed,win_group_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20289" level="8">
+    <if_sid>20258,20259</if_sid>
+    <field name="win.eventdata.subjectUserSid">\s*S-1-5-32\S*-550</field>
+    <description>Windows: Print Operators Group Changed</description>
+    <options>no_full_log</options>
+    <group>group_changed,win_group_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20290" level="12">
+    <if_sid>20258,20259</if_sid>
+    <field name="win.eventdata.subjectUserSid">\s*S-1-5-32\S*-551</field>
+    <description>Windows: Backup Operators Group Changed</description>
+    <options>no_full_log</options>
+    <group>group_changed,win_group_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20291" level="10">
+    <if_sid>20258,20259</if_sid>
+    <field name="win.eventdata.subjectUserSid">\s*S-1-5-32\S*-552</field>
+    <description>Windows: Replicators Group Changed</description>
+    <options>no_full_log</options>
+    <group>group_changed,win_group_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20292" level="8">
+    <if_sid>20258,20259</if_sid>
+    <field name="win.eventdata.subjectUserSid">\s*S-1-5-32\S*-554</field>
+    <description>Pre-Windows 2000 Compatible Access Group Changed</description>
+    <options>no_full_log</options>
+    <group>group_changed,win_group_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20293" level="10">
+    <if_sid>20258,20259</if_sid>
+    <field name="win.eventdata.subjectUserSid">\s*S-1-5-32\S*-555</field>
+    <description>Windows: Remote Desktop Users Group Changed</description>
+    <options>no_full_log</options>
+    <group>group_changed,win_group_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20294" level="10">
+    <if_sid>20258,20259</if_sid>
+    <field name="win.eventdata.subjectUserSid">\s*S-1-5-32\S*-556</field>
+    <description>Windows: Network Configuration Operators Group Changed</description>
+    <options>no_full_log</options>
+    <group>group_changed,win_group_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20295" level="10">
+    <if_sid>20258,20259</if_sid>
+    <field name="win.eventdata.subjectUserSid">\s*S-1-5-32\S*-557</field>
+    <description>Windows: Incoming Forest Trust Builders Group Changed</description>
+    <options>no_full_log</options>
+    <group>group_changed,win_group_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20296" level="8">
+    <if_sid>20258,20259</if_sid>
+    <field name="win.eventdata.subjectUserSid">\s*S-1-5-32\S*-558</field>
+    <description>Windows: Performance Monitor Users Group Changed</description>
+    <options>no_full_log</options>
+    <group>group_changed,win_group_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20297" level="8">
+    <if_sid>20258,20259</if_sid>
+    <field name="win.eventdata.subjectUserSid">\s*S-1-5-32\S*-559</field>
+    <description>Windows: Performance Log Users Group Changed</description>
+    <options>no_full_log</options>
+    <group>group_changed,win_group_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20298" level="8">
+    <if_sid>20258,20259</if_sid>
+    <field name="win.eventdata.subjectUserSid">\s*S-1-5-32\S*-560</field>
+    <description>Windows Authorization Access Group Changed</description>
+    <options>no_full_log</options>
+    <group>group_changed,win_group_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20299" level="8">
+    <if_sid>20258,20259</if_sid>
+    <field name="win.eventdata.subjectUserSid">\s*S-1-5-32\S*-561</field>
+    <description>Windows: Terminal Server License Servers Group Changed</description>
+    <options>no_full_log</options>
+    <group>group_changed,win_group_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20300" level="8">
+    <if_sid>20258,20259</if_sid>
+    <field name="win.eventdata.subjectUserSid">\s*S-1-5-32\S*-562</field>
+    <description>Windows: Distributed COM Users Group Changed</description>
+    <options>no_full_log</options>
+    <group>group_changed,win_group_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20301" level="12">
+    <if_sid>20258,20259</if_sid>
+    <field name="win.eventdata.subjectUserSid">\s*S-1-5-\s*21\s*-498</field>
+    <description>Windows: Enterprise Read-only Domain Controllers Group Changed</description>
+    <options>no_full_log</options>
+    <group>group_changed,win_group_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20302" level="12">
+    <if_sid>20258,20259</if_sid>
+    <field name="win.eventdata.subjectUserSid">\s*S-1-5-\s*21\s*-529</field>
+    <description>Windows: Read-only Domain Controllers Group Changed</description>
+    <options>no_full_log</options>
+    <group>group_changed,win_group_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20303" level="12">
+    <if_sid>20258,20259</if_sid>
+    <field name="win.eventdata.subjectUserSid">\s*S-1-5-32-569</field>
+    <description>Windows: Cryptographic Operators Group Changed</description>
+    <options>no_full_log</options>
+    <group>group_changed,win_group_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20304" level="10">
+    <if_sid>20258,20259</if_sid>
+    <field name="win.eventdata.subjectUserSid">\s*S-1-5-\s*21\s*-571</field>
+    <description>Windows: Allowed RODC Password Replication Group Changed</description>
+    <options>no_full_log</options>
+    <group>group_changed,win_group_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20305" level="10">
+    <if_sid>20258,20259</if_sid>
+    <field name="win.eventdata.subjectUserSid">\s*S-1-5-\s*21\s*-572</field>
+    <description>Windows: Denied RODC Password Replication Group Changed</description>
+    <options>no_full_log</options>
+    <group>group_changed,win_group_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20306" level="10">
+    <if_sid>20258,20259</if_sid>
+    <field name="win.eventdata.subjectUserSid">\s*S-1-5-32-573</field>
+    <description>Windows: Event Log Readers Group Changed</description>
+    <options>no_full_log</options>
+    <group>group_changed,win_group_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20307" level="10">
+    <if_sid>20258,20259</if_sid>
+    <field name="win.eventdata.subjectUserSid">\s*S-1-5-32-574</field>
+    <description>Windows: Certificate Service DCOM Access Group Changed</description>
+    <options>no_full_log</options>
+    <group>group_changed,win_group_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20308" level="3">
+    <if_sid>20001</if_sid>
+    <field name="win.system.eventID">^200$|^300$|^302$</field>
+    <description>Windows: TS Gateway login success</description>
+    <options>no_full_log</options>
+    <group>authentication_success,pci_dss_10.2.5,gpg13_7.1,gpg13_7.2,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20098" level="0">
+    <if_sid>20308</if_sid>
+    <field name="win.system.message">\.*The database engine has successfully completed recovery steps|The database engine is initiating recovery steps</field>
+    <description>Ignore rule 200157: TS Gateway login success</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20309" level="5">
+    <if_sid>20002,20003</if_sid>
+    <field name="win.system.eventID">^201$|^203$|^204$|^301$|^304$|^305$|^306$|^1001$</field>
+    <description>Windows: TS Gateway login failure</description>
+    <options>no_full_log</options>
+    <group>authentication_failed,pci_dss_10.2.4,pci_dss_10.2.5,gpg13_7.1,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20160" level="3">
+    <if_sid>20001</if_sid>
+    <field name="win.system.eventID">^202$|^303$</field>
+    <description>Windows: TS Gateway user disconnected</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <!-- Ignore Login events, type 5, from Advapi for:
+    -  LOCAL SERVICE and NETWORK SERVICE.
+    -->
+  <rule id="20149" level="0">
+    <if_sid>20007,20049</if_sid>
+    <field name="win.system.eventID">^528$|^538$|^540$|^4624$</field>
+    <field name="win.eventdata.subjectUserName">^LOCAL SERVICE|^NETWORK SERVICE|^ANONYMOUS LOGON</field>
+    <description>Windows Logon Success (ignored)</description>
+    <options>no_full_log</options>
+    <group>pci_dss_10.2.5,gpg13_7.1,gpg13_7.2,gdpr_IV_32.2,</group>
+  </rule>
+
+
+  <!-- Kerberos failures that may indicate an attack -->
+  <rule id="20150" level="10">
+    <if_sid>20039</if_sid>
+    <field name="win.eventdata.failureCode">0x1F</field>
+    <description>Windows DC integrity check on decrypted</description>
+    <options>no_full_log</options>
+    <description>field failed</description>
+    <group>win_authentication_failed,attacks,pci_dss_10.2.4,pci_dss_10.2.5,pci_dss_11.4,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20163" level="10">
+    <if_sid>20039</if_sid>
+    <field name="win.eventdata.failureCode">0x22</field>
+    <description>Windows DC - Possible replay attack</description>
+    <options>no_full_log</options>
+    <group>win_authentication_failed,attacks,pci_dss_10.2.4,pci_dss_10.2.5,pci_dss_11.4,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20164" level="7">
+    <if_sid>20039</if_sid>
+    <field name="win.eventdata.failureCode">0x25</field>
+    <description>Windows DC - Clock skew too great</description>
+    <options>no_full_log</options>
+    <group>win_authentication_failed,attacks,pci_dss_10.2.4,pci_dss_10.2.5,pci_dss_11.4,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+  </rule>
+
+
+  <!-- MS SQL rules -->
+  <rule id="20099" level="5">
+    <if_sid>20005</if_sid>
+    <field name="win.system.eventID">^18456$</field>
+    <group>win_authentication_failed,pci_dss_10.2.4,pci_dss_10.2.5,gpg13_7.1,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+    <description>MS SQL Server Logon Failure</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20240" level="3">
+    <if_sid>20004</if_sid>
+    <field name="win.system.eventID">^18454$|^18453$</field>
+    <description>MS SQL Server Logon Success</description>
+    <options>no_full_log</options>
+    <group>authentication_success,pci_dss_10.2.5,gpg13_7.1,gpg13_7.2,gdpr_IV_32.2,</group>
+  </rule>
+
+<!-- Detail logon rules -->
+  <rule id="20166" level="3">
+    <if_sid>20007</if_sid>
+    <field name="win.system.eventID">^4624$</field>
+    <field name="win.eventdata.logonType">^8$</field>
+    <description>MS Exchange Logon Success</description>
+    <options>no_full_log</options>
+    <group>pci_dss_10.2.5,gpg13_7.1,gpg13_7.2,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20167" level="0">
+    <if_sid>20049</if_sid>
+    <field name="win.system.eventID">^4634$</field>
+    <field name="win.eventdata.logonType">^8$</field>
+    <description>MS Exchange User Logoff</description>
+    <options>no_full_log</options>
+    <group>pci_dss_10.2.5,gpg13_7.1,gpg13_7.2,gdpr_IV_32.2,</group>
+  </rule>
+
+  <!-- Composite rules -->
+  <rule id="20085" level="10" frequency="$MS_FREQ" timeframe="240">
+    <if_matched_sid>20008</if_matched_sid>
+    <same_field>win.eventdata.targetUserName</same_field>
+    <description>Windows: Multiple failed attempts to perform a privileged operation by the same user</description>
+    <options>no_full_log</options>
+    <group>pci_dss_10.2.4,pci_dss_10.2.5,pci_dss_11.4,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20086" level="10" frequency="$MS_FREQ" timeframe="240">
+    <if_matched_group>win_authentication_failed</if_matched_group>
+    <same_field>win.eventdata.ipAddress</same_field>
+    <description>Multiple Windows Logon Failures</description>
+    <options>no_full_log</options>
+    <group>authentication_failures,pci_dss_10.2.4,pci_dss_10.2.5,pci_dss_11.4,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20087" level="10" frequency="$MS_FREQ" timeframe="240">
+    <if_matched_sid>20005</if_matched_sid>
+    <same_field>win.eventdata.ipAddress</same_field>
+    <description>Multiple Windows audit failure events</description>
+    <options>no_full_log</options>
+    <group>pci_dss_10.6.1,gdpr_IV_35.7.d,</group>
+  </rule>
+
+  <rule id="20088" level="10" frequency="$MS_FREQ" timeframe="240">
+    <if_matched_sid>20003</if_matched_sid>
+    <description>Multiple Windows error events</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20089" level="10" frequency="$MS_FREQ" timeframe="120">
+    <if_matched_sid>20002</if_matched_sid>
+    <description>Multiple Windows WARNING events</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20090" level="10" frequency="$MS_FREQ" timeframe="240">
+    <if_matched_sid>20025</if_matched_sid>
+    <description>Windows: Multiple remote access login failures</description>
+    <options>no_full_log</options>
+    <group>authentication_failures,pci_dss_10.2.4,pci_dss_10.2.5,pci_dss_11.4,pci_dss_8.1.5,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20091" level="10" frequency="$MS_FREQ" timeframe="240">
+      <if_matched_sid>20309</if_matched_sid>
+      <description>Windows: Multiple TS Gateway login failures</description>
+      <options>no_full_log</options>
+      <group>authentication_failures,pci_dss_10.2.4,pci_dss_10.2.5,pci_dss_11.4,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+  </rule>
+
+
+  <!--
+  Chrome Remote Desktop
+  Created by Kevin Branch
+  Updated by Wazuh
+  -->
+  <rule id="20092" level="5">
+      <if_sid>20003</if_sid>
+      <field name="win.system.providerName">chromoting</field>
+      <field name="win.system.message">\.*Access denied for client</field>
+      <description>Chrome Remote Desktop attempt - access denied $(win.eventdata.data)</description>
+      <options>no_full_log</options>
+      <group>gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20093" level="5">
+      <if_sid>20001</if_sid>
+      <field name="win.system.providerName">chromoting</field>
+      <field name="win.system.eventID">^1$</field>
+      <description>Chrome Remote Desktop attempt - Client connected $(win.eventdata.data)</description>
+      <options>no_full_log</options>
+      <group>gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20094" level="5">
+      <if_sid>20001</if_sid>
+      <field name="win.system.providerName">chromoting</field>
+      <field name="win.system.eventID">^2$</field>
+      <description>Chrome Remote Desktop attempt - disconnected ($(win.eventdata.data))</description>
+      <options>no_full_log</options>
+      <group>gdpr_IV_32.2,</group>
+  </rule>
+
+   <!--{"win":{"system":{"providerName":"chromoting","eventID":"5","level":"4","task":"1","keywords":"0x80000000000000","systemTime":"2018-12-18T10:55:48.000000000Z","eventRecordID":"1801","channel":"Application","computer":"qnu","severityValue":"INFORMATION","message":"Hôte démarré pour l'utilisateur \\\"tinamay299@gmail.com\\\""},"eventdata":{"data":"user@gmail.com"}}}-->  <rule id="20095" level="5">
+      <if_sid>20001</if_sid>
+      <field name="win.system.providerName">chromoting</field>
+      <field name="win.system.eventID">^5$</field>
+      <description>Chrome Remote Desktop attempt - started connection from $(win.eventdata.data)</description>
+      <options>no_full_log</options>
+      <group>gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20096" level="3">
+      <if_sid>20001</if_sid>
+      <field name="win.system.eventID">^1$</field>
+      <field name="win.system.providerName">Microsoft-Windows-Search-ProfileNotify</field>
+      <description>Windows Search Service indexed data for user successfully removed in response to user profile deletion</description>
+      <options>no_full_log</options>
+      <group>gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20097" level="3">
+      <if_sid>20001</if_sid>
+      <field name="win.system.eventID">^16$</field>
+      <field name="win.system.providerName">Microsoft-Windows-Search-ProfileNotify</field>
+      <description>Created default configuration for user</description>
+      <options>no_full_log</options>
+      <group>gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20381" level="3">
+    <if_sid>20003</if_sid>
+    <field name="win.system.providerName">.NET Runtime</field>
+    <field name="win.system.eventID">^1026$</field>
+    <description>$(win.eventdata.data)</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20382" level="3">
+    <if_sid>20001</if_sid>
+    <field name="win.system.providerName">Microsoft-Windows-Defrag</field>
+    <field name="win.system.eventID">^258$</field>
+    <description>$(win.system.message)</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20385" level="4">
+    <if_sid>20001</if_sid>
+    <field name="win.system.providerName">Windows Error Reporting</field>
+    <field name="win.system.eventID">^1001$</field>
+    <description>Fault bucket</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20394" level="0">
+    <if_sid>20001</if_sid>
+    <field name="win.system.providerName">MsiInstaller</field>
+    <description>Group of MsiInstaller events</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20395" level="3">
+    <if_sid>20394</if_sid>
+    <field name="win.system.eventID">^1040$</field>
+    <description>Windows Installer began an installation</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20046" level="5">
+    <if_sid>20394</if_sid>
+    <field name="win.system.eventID">^11724$</field>
+    <options>alert_by_email</options>
+    <description>Windows: Application Uninstalled $(win.eventdata.data)</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20047" level="5">
+    <if_sid>20394</if_sid>
+    <field name="win.system.eventID">^11707$</field>
+    <options>alert_by_email</options>
+    <description>Windows: Application Installed $(win.eventdata.data)</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20397" level="3">
+    <if_sid>20001</if_sid>
+    <field name="win.system.providerName">LocationNotifications</field>
+    <field name="win.system.eventID">^1$</field>
+    <description>A program accessed information from a location sensor or default location</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20398" level="0">
+    <if_sid>20001</if_sid>
+    <field name="win.system.providerName">Microsoft-Windows-Security-SPP</field>
+    <description>Group of SPP events</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20399" level="3">
+    <if_sid>20398</if_sid>
+    <field name="win.system.eventID">^903$</field>
+    <description>Software Protection service stopped</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20400" level="3">
+    <if_sid>20398</if_sid>
+    <field name="win.system.eventID">^16384$</field>
+    <description>Software Protection service scheduled successfully</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20401" level="3">
+    <if_sid>20398</if_sid>
+    <field name="win.system.eventID">^8197$</field>
+    <description>SLUI.exe launched</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20480" level="3">
+    <if_sid>20398</if_sid>
+    <field name="win.system.eventID">^1016$</field>
+    <description>Proof of Purchase installed successfully</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20485" level="3">
+    <if_sid>20398</if_sid>
+    <field name="win.system.eventID">^8225$</field>
+    <description>The existing scheduler data does not match the expected data</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20486" level="3">
+    <if_sid>20398</if_sid>
+    <field name="win.system.eventID">^8198$</field>
+    <description>License Activation (slui.exe) failed</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20408" level="4">
+    <if_sid>20001</if_sid>
+    <field name="win.system.providerName">^Application Hang$</field>
+    <field name="win.system.eventID">^1002$</field>
+    <description>Application stopped responding. Program closed</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20409" level="0">
+    <field name="win.system.providerName">^Microsoft-Windows-Search$</field>
+    <description>Group of Windows Search events</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20410" level="3">
+    <if_sid>20409</if_sid>
+    <field name="win.system.eventID">^3007$</field>
+    <description>Performance monitoring cannot be initialized</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20411" level="4">
+    <if_sid>20409</if_sid>
+    <field name="win.system.eventID">^3014$</field>
+    <description>Component loaded in the system generated an internal error</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20411" level="4">
+    <if_sid>20409</if_sid>
+    <field name="win.system.eventID">^3024$</field>
+    <description>Update cannot start because the content sources cannot be accessed</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20412" level="5">
+    <if_sid>20409</if_sid>
+    <field name="win.system.eventID">^3025$</field>
+    <description>Critical error: System low on resources</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20413" level="3">
+    <if_sid>20409</if_sid>
+    <field name="win.system.eventID">^3026$</field>
+    <description>Advise Status Change failed: System low on resources</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20414" level="3">
+    <if_sid>20409</if_sid>
+    <field name="win.system.eventID">^3026$</field>
+    <description>Registry version does not match</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20414" level="3">
+    <if_sid>20409</if_sid>
+    <field name="win.system.eventID">^3052$</field>
+    <description>The crawl was requested to be stopped</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20415" level="3">
+    <if_sid>20409</if_sid>
+    <field name="win.system.eventID">^3085$</field>
+    <description>The application network access account is invalid</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20416" level="3">
+    <if_sid>20409</if_sid>
+    <field name="win.system.eventID">^3087$</field>
+    <description>Cannot flush gatherer files</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20417" level="3">
+    <if_sid>20409</if_sid>
+    <field name="win.system.eventID">^3088$</field>
+    <description>Cannot update checkpoint record</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20418" level="3">
+    <if_sid>20409</if_sid>
+    <field name="win.system.eventID">^3089$</field>
+    <description>Cannot save gatherer files</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20419" level="3">
+    <if_sid>20409</if_sid>
+    <field name="win.system.eventID">^3090$</field>
+    <description>Cannot restore gatherer files from the previous checkpoint</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20420" level="3">
+    <if_sid>20409</if_sid>
+    <field name="win.system.eventID">^3091$</field>
+    <description>Cannot read checkpoint record</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20421" level="3">
+    <if_sid>20409</if_sid>
+    <field name="win.system.eventID">^3099$</field>
+    <description>Unable to terminate notifications normally</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20422" level="3">
+    <if_sid>20409</if_sid>
+    <field name="win.system.eventID">^7011$</field>
+    <description>Directory location invalid</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20423" level="4">
+    <if_sid>20409</if_sid>
+    <field name="win.system.eventID">^7013$</field>
+    <description>Disk full, update paused</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20424" level="3">
+    <if_sid>20409</if_sid>
+    <field name="win.system.eventID">^7040$</field>
+    <description>Index data cannot be read</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20425" level="4">
+    <if_sid>20409</if_sid>
+    <field name="win.system.eventID">^7066$</field>
+    <description>Missing directory configuration</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20426" level="4">
+    <if_sid>20409</if_sid>
+    <field name="win.system.eventID">^7068$</field>
+    <description>Cannot read registry</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20427" level="3">
+    <if_sid>20394</if_sid>
+    <field name="win.system.eventID">^1001$</field>
+    <description>Request for product component failed</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20428" level="3">
+    <if_sid>20394</if_sid>
+    <field name="win.system.eventID">^1002$</field>
+    <description>Missing key value</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20429" level="3">
+    <if_sid>20394</if_sid>
+    <field name="win.system.eventID">^1002$</field>
+    <description>Missing subkey</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20430" level="3">
+    <if_sid>20394</if_sid>
+    <field name="win.system.eventID">^1005$</field>
+    <description>Windows installer restarted to complete configuration</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20431" level="4">
+    <if_sid>20394</if_sid>
+    <field name="win.system.eventID">^1007$</field>
+    <description>Installation not permitted by software restriction policy</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20432" level="4">
+    <if_sid>20394</if_sid>
+    <field name="win.system.eventID">^1008$</field>
+    <description>Installation not permitted due to an error in software restriction policy processing</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20433" level="4">
+    <if_sid>20394</if_sid>
+    <field name="win.system.eventID">^1012$</field>
+    <description>Deploying 64-bit packages is not supported for this version</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20434" level="3">
+    <if_sid>20394</if_sid>
+    <field name="win.system.eventID">^1014$</field>
+    <description>Windows Installer proxy information not correctly registered</description>
+    <options>no_full_log</options>
+  </rule>
+
+
+  <rule id="20386" level="3">
+    <if_sid>20002</if_sid>
+    <field name="win.system.providerName">Microsoft-Windows-Search</field>
+    <field name="win.system.eventID">^1008$</field>
+    <description>The Windows Search Service attempted to remove the old search index</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20387" level="3">
+    <if_sid>20001</if_sid>
+    <field name="win.system.providerName">Microsoft-Windows-Search</field>
+    <field name="win.system.eventID">^1010$</field>
+    <description>The Windows Search Service removed the old search index successfully</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20435" level="5">
+    <if_sid>20394</if_sid>
+    <field name="win.system.eventID">^1015$</field>
+    <description>Failed to connect to server</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20436" level="0">
+    <if_sid>20000</if_sid>
+    <field name="win.system.providerName">VSS</field>
+    <description>Group of VSS events</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20437" level="3">
+    <if_sid>20436</if_sid>
+    <field name="win.system.eventID">^8224$</field>
+    <description>The VSS service is shutting down due to idle timeout</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20438" level="3">
+    <if_sid>20436</if_sid>
+    <field name="win.system.eventID">^11$|^13$</field>
+    <description>COM server cannot be started</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20439" level="4">
+    <if_sid>20436</if_sid>
+    <field name="win.system.eventID">^12$</field>
+    <description>DeleteVolumeMountPoint returned an unexpected error</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20440" level="3">
+    <if_sid>20436</if_sid>
+    <field name="win.system.eventID">^14$</field>
+    <description>User name definition in registry generated an error</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20441" level="3">
+    <if_sid>20436</if_sid>
+    <field name="win.system.eventID">^15$|^16$|^17$</field>
+    <description>User name specified in registry cannot be interpreted</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20442" level="3">
+    <if_sid>20436</if_sid>
+    <field name="win.system.eventID">^18$</field>
+    <description>No Shadow Copy support in Safe mode</description>
+    <options>no_full_log</options>
+  </rule>
+  
+  <rule id="20443" level="3">
+    <if_sid>20436</if_sid>
+    <field name="win.system.eventID">^19$</field>
+    <description>The EventSystem service is disabled or attempting to start during Safe Mode</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20444" level="0">
+    <field name="win.system.providerName">System Restore</field>
+    <description>Group of System Restore events</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20445" level="3">
+    <if_sid>20444</if_sid>
+    <field name="win.system.eventID">^8216$</field>
+    <description>Skipped creation of restore point for $(win.eventdata.data) as there is a previous restore point available</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20446" level="4">
+    <if_sid>20444</if_sid>
+    <field name="win.system.eventID">^8193$</field>
+    <description>Failed to create restore point</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20447" level="3">
+    <if_sid>20444</if_sid>
+    <field name="win.system.eventID">^8194$</field>
+    <description>Restore point created successfully</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20448" level="0">
+    <field name="win.system.providerName">Application Error</field>
+    <description>Group of Application Error events</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20449" level="4">
+    <if_sid>20448</if_sid>
+    <field name="win.system.eventID">^100$|^1000$|^1004$</field>
+    <description>Application faulted</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20450" level="0">
+    <field name="win.system.providerName">Microsoft-Windows-WMI</field>
+    <description>Group of WMI events</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20452" level="4">
+    <if_sid>20450</if_sid> <!-- ERROR -->
+    <field name="win.system.eventID">^10$</field>
+    <description>Event filter could not be activated</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20453" level="4">
+    <if_sid>20450</if_sid>
+    <field name="win.system.eventID">^28$|^29$</field>
+    <description>WMI Service could not be initialized</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20453" level="4">
+    <if_sid>20450</if_sid>
+    <field name="win.system.eventID">^43$</field>
+    <description>WMI ADAP failed to connect to namespace</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20451" level="4">
+    <if_sid>20450</if_sid>
+    <field name="win.system.eventID">^5611$</field>
+    <description>Inconsistent system shutdown detected</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20454" level="3">
+    <if_sid>20450</if_sid>
+    <field name="win.system.eventID">^5601$</field>
+    <description>The WMI service failed to load the repository files</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20455" level="3">
+    <if_sid>20450</if_sid>
+    <field name="win.system.eventID">^5612$</field>
+    <description>A quota reached a warning value, WMI stopped WMIPRVSE.EXE</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20456" level="0">
+    <if_sid>20001</if_sid>
+    <field name="win.system.providerName">Microsoft-Windows-EventSystem</field>
+    <description>Group of EventSystem events</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20457" level="3">
+    <if_sid>20456</if_sid>
+    <field name="win.system.eventID">^4625$</field>
+    <field name="win.eventdata.param1">\.+</field>
+    <description>EventSystem supressed duplicatelog entries for $(win.eventdata.param1) seconds</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20458" level="3">
+    <if_sid>20456</if_sid>
+    <field name="win.system.eventID">^4354$|^4356$</field>
+    <description>Event System failed to create an instance for the subscriber</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20459" level="3">
+    <if_sid>20456</if_sid>
+    <field name="win.system.eventID">^4357$</field>
+    <description>EventObjectChange event could not be fired, query criteria contains an error</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20460" level="4">
+    <if_sid>20456</if_sid>
+    <field name="win.system.eventID">^4612$</field>
+    <description>Event System ran out of memory during its internal processing</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20461" level="4">
+    <if_sid>20456</if_sid>
+    <field name="win.system.eventID">^4613$</field>
+    <description>Unexpected error from Win32 API call</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20407" level="0">
+    <if_sid>20001</if_sid>
+    <field name="win.system.providerName">^Desktop Window Manager$</field>
+    <description>Group of Desktop Window Manager events</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20408" level="4">
+    <if_sid>20407</if_sid>
+    <field name="win.system.eventID">^9002$</field>
+    <description>Unable to start Desktop Window Manager</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20409" level="4">
+    <if_sid>20407</if_sid>
+    <field name="win.system.eventID">^9003$</field>
+    <description>Unable to start Desktop Window Manager due to composited theme not used</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20410" level="3">
+    <if_sid>20407</if_sid>
+    <field name="win.system.eventID">^9009$</field>
+    <description>Desktop Window Manager exited with code $(win.eventdata.data)</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20402" level="0">
+    <if_sid>20001</if_sid>
+    <field name="win.system.providerName">Microsoft-Windows-Winlogon</field>
+    <description>Group of Winlogon events</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20403" level="3">
+    <if_sid>20402</if_sid>
+    <field name="win.system.eventID">^6000$</field>
+    <description>$(win.eventdata.data) was unavailable to handle a notification event</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20404" level="4">
+    <if_sid>20402</if_sid>
+    <field name="win.system.eventID">^6003$</field>
+    <description>$(win.eventdata.data) was unavailable to handle a critical notification event</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20405" level="3">
+    <if_sid>20402</if_sid>
+    <field name="win.system.eventID">^7002$</field>
+    <description>User Logoff Notification for Customer Experience Improvement Program</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20462" level="4">
+    <if_sid>20402</if_sid>
+    <field name="win.system.eventID">^1002$</field>
+    <description>The shell stopped unexpectedly</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20463" level="3">
+    <if_sid>20402</if_sid>
+    <field name="win.system.eventID">^4002$</field>
+    <description>Logon hours restriction policy applied to the logged on user</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20464" level="3">
+    <if_sid>20402</if_sid>
+    <field name="win.system.eventID">^4003$</field>
+    <description>Desktop switch failed</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20465" level="3">
+    <if_sid>20402</if_sid>
+    <field name="win.system.eventID">^4005$|^4006$</field>
+    <description>Windows Logon process terminated unexpectedly</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20466" level="4">
+    <if_sid>20402</if_sid>
+    <field name="win.system.eventID">^4007$</field>
+    <description>Windows Logon process failed to disconnect the user session</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20467" level="3">
+    <if_sid>20402</if_sid>
+    <field name="win.system.eventID">^4101$</field>
+    <description>Windows license validated</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20468" level="4">
+    <if_sid>20402</if_sid>
+    <field name="win.system.eventID">^4102$</field>
+    <description>Invalid Windows license</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20469" level="4">
+    <if_sid>20402</if_sid>
+    <field name="win.system.eventID">^4103$</field>
+    <description>License activation failed</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20470" level="4">
+    <if_sid>20402</if_sid>
+    <field name="win.system.eventID">^6002$</field>
+    <description>Winlogon notification subscriber registration cannot be loaded</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20406" level="3">
+    <if_sid>20001</if_sid>
+    <field name="win.system.providerName">^Microsoft-Windows-User Profiles Service$</field>
+    <field name="win.system.eventID">^1530$</field>
+    <description>The registry file is still in use by other applications or services</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20471" level="0">
+    <if_sid>20001</if_sid>
+    <field name="win.system.providerName">^User Profile$</field>
+    <description>Group of User Profile events</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20472" level="3">
+    <if_sid>20471</if_sid>
+    <field name="win.system.eventID">^1508$</field>
+    <description>Unable to load registry</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20473" level="4">
+    <if_sid>20471</if_sid>
+    <field name="win.system.eventID">^1511$</field>
+    <description>Cannot find local profile, logging with temporary profile</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20389" level="0">
+    <if_sid>20001</if_sid>
+    <field name="win.system.providerName">ESENT</field>
+    <description>Group of ESENT events</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20390" level="3">
+    <if_sid>20389</if_sid>
+    <field name="win.system.eventID">^103$</field>
+    <description>The database engine stopped an instance</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20391" level="3">
+    <if_sid>20389</if_sid>
+    <field name="win.system.eventID">^327$</field>
+    <description>The database engine detached a database</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20392" level="3">
+    <if_sid>20389</if_sid>
+    <field name="win.system.eventID">^326$</field>
+    <description>The database engine attached a database</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20474" level="4">
+    <if_sid>20389</if_sid>
+    <field name="win.system.eventID">^0$</field>
+    <description>Unexpected Win32 error</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20475" level="4">
+    <if_sid>20389</if_sid>
+    <field name="win.system.eventID">^215$</field>
+    <description>The backup was interrupted by the client or the connection failed</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20476" level="4">
+    <if_sid>20389</if_sid>
+    <field name="win.system.eventID">^404$|^405$</field>
+    <description>Synchronous read page checksum error occurred</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20477" level="4">
+    <if_sid>20389</if_sid>
+    <field name="win.system.eventID">^412$</field>
+    <description>Unable to read log header</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20478" level="4">
+    <if_sid>20389</if_sid>
+    <field name="win.system.eventID">^404$</field>
+    <description>Synchronous read page checksum error occurred</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20479" level="3">
+    <if_sid>20001</if_sid>
+    <field name="win.system.providerName">Microsoft-Windows-CEIP</field>
+    <field name="win.system.eventID">^1005$</field>
+    <description>Customer Experience Improvement Program data successfully consolidated</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20481" level="0">
+    <if_sid>20001</if_sid>
+    <field name="win.system.providerName">Microsoft-Windows-CAPI2</field>
+    <description>Group of CAPI2 events</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20482" level="3">
+    <if_sid>20481</if_sid>
+    <field name="win.system.eventID">^3$|^5$|^8$</field>
+    <description>Failed auto update retrieval of third-party root</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20483" level="3">
+    <if_sid>20481</if_sid>
+    <field name="win.system.eventID">^11$|^4107$</field>
+    <description>Failed extract of third-party root list from auto update cab</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20484" level="3">
+    <if_sid>20481</if_sid>
+    <field name="win.system.eventID">^513$</field>
+    <description>Cryptographic Services failed while processing the Onidentify() call</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20485" level="0">
+    <if_sid>20001</if_sid>
+    <field name="win.system.providerName">Microsoft-Windows-MSDTC</field>
+    <description>Group of MSDTC events</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20486" level="3">
+    <if_sid>20485</if_sid>
+    <field name="win.system.eventID">^4098$</field>
+    <description>Unable to translate the MS DTC error code to the appropiate MS DTC error message</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20487" level="3">
+    <if_sid>20485</if_sid>
+    <field name="win.system.eventID">^4099$</field>
+    <description>Permission denied to manage the MS DTC on this system</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20488" level="3">
+    <if_sid>20485</if_sid>
+    <field name="win.system.eventID">^4100$</field>
+    <description>Exception occurred while processing control requests from the Service Control Manager</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20489" level="3">
+    <if_sid>20485</if_sid>
+    <field name="win.system.eventID">^4101$</field>
+    <description>The MS DTC has the same unique identity as the local one</description>
+    <options>no_full_log</options>
+  </rule>
+  
+  <rule id="20490" level="3">
+    <if_sid>20485</if_sid>
+    <field name="win.system.eventID">^4102$</field>
+    <description>MS DTC Transaction Manager could not be initialized</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20491" level="3">
+    <if_sid>20485</if_sid>
+    <field name="win.system.eventID">^4103$</field>
+    <description>MS DTC run out of memory</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20492" level="3">
+    <if_sid>20485</if_sid>
+    <field name="win.system.eventID">^4102$</field>
+    <description>MS DTC Transaction Manager could not be initialized</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20493" level="3">
+    <if_sid>20485</if_sid>
+    <field name="win.system.eventID">^4105$</field>
+    <description>The Microsoft Distributed Transaction Coordinator service was successfully removed</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20494" level="3">
+    <if_sid>20485</if_sid>
+    <field name="win.system.eventID">^4106$</field>
+    <description>Could not install the MS DTC service</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20495" level="3">
+    <if_sid>20485</if_sid>
+    <field name="win.system.eventID">^4107$</field>
+    <description>MS DTC service could not be removed</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20496" level="3">
+    <if_sid>20485</if_sid>
+    <field name="win.system.eventID">^4113$</field>
+    <description>MS DTC log path not found</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20497" level="3">
+    <if_sid>20485</if_sid>
+    <field name="win.system.eventID">^4114$</field>
+    <description>MS DTC Transaction Manager could not be loaded</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20498" level="3">
+    <if_sid>20485</if_sid>
+    <field name="win.system.eventID">^4116$</field>
+    <description>MS DTC name object could not be created</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20499" level="3">
+    <if_sid>20485</if_sid>
+    <field name="win.system.eventID">^4117$</field>
+    <description>MS DTC user interface server object could not be initialized</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20500" level="3">
+    <if_sid>20485</if_sid>
+    <field name="win.system.eventID">^4118$</field>
+    <description>MS DTC user interface server object could not be loaded</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20501" level="3">
+    <if_sid>20485</if_sid>
+    <field name="win.system.eventID">^4119$</field>
+    <description>MS DTC user interface server object does not support the requested interface</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20502" level="3">
+    <if_sid>20485</if_sid>
+    <field name="win.system.eventID">^4120$</field>
+    <description>MS DTC user interface name object could not be loaded</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20503" level="3">
+    <if_sid>20485</if_sid>
+    <field name="win.system.eventID">^4121$</field>
+    <description>MS DTC Log Manager DLL could not be loaded</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20504" level="3">
+    <if_sid>20485</if_sid>
+    <field name="win.system.eventID">^4124$</field>
+    <description>MS DTC Log file could not be decompressed</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20505" level="3">
+    <if_sid>20485</if_sid>
+    <field name="win.system.eventID">^4125$</field>
+    <description>MS DTC log file is full and cannot accept new log records</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20505" level="3">
+    <if_sid>20485</if_sid>
+    <field name="win.system.eventID">^4126$</field>
+    <description>MS DTC log file attributes are invalid</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20505" level="3">
+    <if_sid>20485</if_sid>
+    <field name="win.system.eventID">^4127$</field>
+    <description>MS DTC log file has wrapped</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20505" level="3">
+    <if_sid>20485</if_sid>
+    <field name="win.system.eventID">^4129$</field>
+    <description>XA Transaction Manager attempted to locate the "GetXaSwitch" function</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20505" level="3">
+    <if_sid>20485</if_sid>
+    <field name="win.system.eventID">^4137$</field>
+    <description>Could not force transaction outcome</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20505" level="3">
+    <if_sid>20485</if_sid>
+    <field name="win.system.eventID">^4138$</field>
+    <description>The specified transaction bridge CLSID is not a valid GUID</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20505" level="3">
+    <if_sid>20485</if_sid>
+    <field name="win.system.eventID">^4137$</field>
+    <description>Could not force transaction outcome</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20505" level="3">
+    <if_sid>20485</if_sid>
+    <field name="win.system.eventID">^4139$</field>
+    <description>An error occurred creating the transaction bridge</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20505" level="3">
+    <if_sid>20485</if_sid>
+    <field name="win.system.eventID">^4140$</field>
+    <description>An error occurred initializing the transaction bridge</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20505" level="3">
+    <if_sid>20485</if_sid>
+    <field name="win.system.eventID">^4141$</field>
+    <description>An error occurred starting the transaction bridge</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20505" level="3">
+    <if_sid>20485</if_sid>
+    <field name="win.system.eventID">^4142$</field>
+    <description>A log client has reported taking a checkpoint</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20505" level="3">
+    <if_sid>20485</if_sid>
+    <field name="win.system.eventID">^4147$</field>
+    <description>MS DTC has determined that the cluster service is configured</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20505" level="3">
+    <if_sid>20485</if_sid>
+    <field name="win.system.eventID">^4149$</field>
+    <description>Transaction not found</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20505" level="3">
+    <if_sid>20485</if_sid>
+    <field name="win.system.eventID">^4150$</field>
+    <description>The transaction is not a child transaction</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20505" level="3">
+    <if_sid>20485</if_sid>
+    <field name="win.system.eventID">^4151$</field>
+    <description>The MSDTC TM could not determine if an incoming connection request is from a remote machine</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20505" level="3">
+    <if_sid>20485</if_sid>
+    <field name="win.system.eventID">^4152$</field>
+    <description>Either the transaction is not committed or there are resource managers or subordinate MS DTC Transaction Managers still connected</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20505" level="3">
+    <if_sid>20485</if_sid>
+    <field name="win.system.eventID">^4153$</field>
+    <description>Could not resolve the transaction due to an unknown error</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20505" level="3">
+    <if_sid>20485</if_sid>
+    <field name="win.system.eventID">^4154$</field>
+    <description>The MS DTC log file is unreadable</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20505" level="4">
+    <if_sid>20485</if_sid>
+    <field name="win.system.eventID">^4155$</field>
+    <description>MS DTC encountered an internal error and is terminating</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20505" level="3">
+    <if_sid>20485</if_sid>
+    <field name="win.system.eventID">^4157$</field>
+    <description>Could not stop the MS DTC service or one of its dependent services</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20505" level="3">
+    <if_sid>20485</if_sid>
+    <field name="win.system.eventID">^4160$</field>
+    <description>Invalid command line arguments</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20505" level="3">
+    <if_sid>20485</if_sid>
+    <field name="win.system.eventID">^4162$</field>
+    <description>The MS DTC log file is an incompatible version</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20505" level="3">
+    <if_sid>20485</if_sid>
+    <field name="win.system.eventID">^4165$</field>
+    <description>No transaction is selected</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20505" level="3">
+    <if_sid>20485</if_sid>
+    <field name="win.system.eventID">^4166$</field>
+    <description>The maximum number of active transactions that the MS DTC log file can accomodate has been exceeded</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20505" level="3">
+    <if_sid>20485</if_sid>
+    <field name="win.system.eventID">^4169$|^4170$</field>
+    <description>This MS DTC Transaction Manager is in an inconsistent state and cannot proceed</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20505" level="3">
+    <if_sid>20485</if_sid>
+    <field name="win.system.eventID">^4171$</field>
+    <description>MS DTC Transaction Manager log write failed with error</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20505" level="3">
+    <if_sid>20485</if_sid>
+    <field name="win.system.eventID">^4172$|^4173$|^4174$|^4175$|^4176$|^4177$|^4178$|^4179$|^4180$|^4181$|^4182$|
+            |^4181$|^4182$|^4183$|^4184$|^4185$|^4186$|^4187$|^4188$|^4189$|^4190$|^4191$|^4192$|</field>
+    <description>MS DTC Transaction Manager start failed</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20505" level="3">
+    <if_sid>20485</if_sid>
+    <field name="win.system.eventID">^4193$</field>
+    <description>A resource manager performed recovery<description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20505" level="3">
+    <if_sid>20485</if_sid>
+    <field name="win.system.eventID">^4194$</field>
+    <description>MS DTC XA Transaction Manager object could not be created<description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20505" level="3">
+    <if_sid>20485</if_sid>
+    <field name="win.system.eventID">^4196$</field>
+    <description>MS DTC XA Transaction Manager could not start<description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20505" level="3">
+    <if_sid>20485</if_sid>
+    <field name="win.system.eventID">^4198$</field>
+    <description>Could not locate the MS DTC TIP Gateway contact object<description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20505" level="3">
+    <if_sid>20485</if_sid>
+    <field name="win.system.eventID">^4199$</field>
+    <description>MS DTC TIP Gateway initialization object could not be created<description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20505" level="3">
+    <if_sid>20485</if_sid>
+    <field name="win.system.eventID">^4200$</field>
+    <description>MS DTC TIP Gateway failed to initialize<description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20505" level="3">
+    <if_sid>20485</if_sid>
+    <field name="win.system.eventID">^4201$</field>
+    <description>MS DTC TIP Gateway failed to start<description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20505" level="3">
+    <if_sid>20485</if_sid>
+    <field name="win.system.eventID">^4208$</field>
+    <description>Failed to initialize COM while trying to start MS DTC<description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20505" level="3">
+    <if_sid>20485</if_sid>
+    <field name="win.system.eventID">^4209$</field>
+    <description>A critical error occurred in an MS DTC component, process terminating<description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20505" level="3">
+    <if_sid>20485</if_sid>
+    <field name="win.system.eventID">^4211$</field>
+    <description>Failed to convert the caller provided TIP Transaction URL into a valid MS DTC Transaction Id<description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20505" level="3">
+    <if_sid>20485</if_sid>
+    <field name="win.system.eventID">^4212$|^4213$</field>
+    <description>Unable to get the file name for the OLE Transactions Proxy<description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20505" level="3">
+    <if_sid>20485</if_sid>
+    <field name="win.system.eventID">^4214$</field>
+    <description>The DllGetTransactionManagerCore function is missing from the OLE Transactions Proxy DLL<description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20505" level="3">
+    <if_sid>20485</if_sid>
+    <field name="win.system.eventID">^4215$</field>
+    <description>Failed to connect to the registry on the remote MS DTC Transaction Manager's system<description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20505" level="3">
+    <if_sid>20485</if_sid>
+    <field name="win.system.eventID">^4216$</field>
+    <description>Failed to open the registry key containing the list of transaction managers<description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20505" level="3">
+    <if_sid>20485</if_sid>
+    <field name="win.system.eventID">^4217$</field>
+    <description>Failed to read the name of the default transaction manager from the registry<description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20505" level="3">
+    <if_sid>20485</if_sid>
+    <field name="win.system.eventID">^4224$</field>
+    <description>Failed to open the registry key containing the name of the OLE Transactions Proxy DLL<description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20505" level="3">
+    <if_sid>20485</if_sid>
+    <field name="win.system.eventID">^4225$</field>
+    <description>Failed to read the name of the OLE Transactions Proxy DLL from the registry<description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20505" level="3">
+    <if_sid>20485</if_sid>
+    <field name="win.system.eventID">^4226$</field>
+    <description>Failed to start MS DTC via the MS DTC Proxy DLL<description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20505" level="3">
+    <if_sid>20485</if_sid>
+    <field name="win.system.eventID">^4227$</field>
+    <description>Unable to start MS DTC because initialization of cluster support failed<description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20505" level="3">
+    <if_sid>20485</if_sid>
+    <field name="win.system.eventID">^4229$</field>
+    <description>MS DTC TIP Gateway illegal transition<description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20505" level="3">
+    <if_sid>20485</if_sid>
+    <field name="win.system.eventID">^4230$</field>
+    <description>MS DTC TIP Gateway invalid value<description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20505" level="3">
+    <if_sid>20485</if_sid>
+    <field name="win.system.eventID">^4231$|^4232$</field>
+    <description>MS DTC TIP Gateway encountered error calling CoCreateInstance<description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20505" level="3">
+    <if_sid>20485</if_sid>
+    <field name="win.system.eventID">^4233$</field>
+    <description>An MS DTC component was unable to allocate memory for a critical operation<description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20505" level="3">
+    <if_sid>20485</if_sid>
+    <field name="win.system.eventID">^4240$|4241$|</field>
+    <description>The MS DTC Transaction Manager sent a TIP "ABORT COMMAND"<description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20505" level="3">
+    <if_sid>20485</if_sid>
+    <field name="win.system.eventID">^4242$|4243$</field>
+    <description>The MS DTC Transaction Manager sent a TIP "PUSH COMMAND"<description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20505" level="3">
+    <if_sid>20485</if_sid>
+    <field name="win.system.eventID">^4244$|^4245$</field>
+    <description>The MS DTC Transaction Manager sent a TIP "PREPARE COMMAND"<description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20505" level="3">
+    <if_sid>20485</if_sid>
+    <field name="win.system.eventID">^4246$|^4247$</field>
+    <description>The MS DTC Transaction Manager sent a TIP "COMMIT, QUERY, or RECONNECT COMMAND"<description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20505" level="3">
+    <if_sid>20485</if_sid>
+    <field name="win.system.eventID">^4248$</field>
+    <description>The MS DTC Transaction Manager received a TIP "ERROR COMMAND"<description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20505" level="3">
+    <if_sid>20485</if_sid>
+    <field name="win.system.eventID">^4249$</field>
+    <description>The MS DTC Transaction Manager received an unknown or unexpected TIP command for an Active transaction<description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20505" level="3">
+    <if_sid>20485</if_sid>
+    <field name="win.system.eventID">^4352$</field>
+    <description>The MS DTC Transaction Manager received a TIP "ERROR COMMAND" for a "Prepared" transaction<description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20505" level="3">
+    <if_sid>20485</if_sid>
+    <field name="win.system.eventID">^4353$</field>
+    <description>The MS DTC Transaction Manager received an unexpected or unknown TIP command for a "Prepared" transaction<description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20505" level="3">
+    <if_sid>20485</if_sid>
+    <field name="win.system.eventID">^4356$</field>
+    <description>Failed to initialize the MS DTC Communication Manager<description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20505" level="3">
+    <if_sid>20485</if_sid>
+    <field name="win.system.eventID">^4357$</field>
+    <description>MS DTC is unable to communicate with MS DTC on a remote system<description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20505" level="3">
+    <if_sid>20485</if_sid>
+    <field name="win.system.eventID">^4358$</field>
+    <description>The MS DTC Connection Manager is unable to register with RPC to use TCP/IP or UDP/IP<description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20505" level="3">
+    <if_sid>20485</if_sid>
+    <field name="win.system.eventID">^4359$</field>
+    <description>MS DTC is unable to communicate with MS DTC on a remote system<description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20505" level="3">
+    <if_sid>20485</if_sid>
+    <field name="win.system.eventID">^4360$</field>
+    <description>MS DTC was not able to allocate a console<description>
+    <options>no_full_log</options>
+  </rule>
+</group>
+
