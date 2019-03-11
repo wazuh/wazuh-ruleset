@@ -1328,7 +1328,8 @@
   </rule>
 
   <rule id="20419" level="3">
-    <if_sid>20413</if_sid>
+    <if_sid>20001</if_sid>
+    <field name="win.system.providerName">Microsoft-Windows-Security-SPP</field>
     <field name="win.system.eventID">^8198$</field>
     <description>License Activation (slui.exe) failed</description>
     <options>no_full_log</options>
@@ -1343,6 +1344,7 @@
   </rule>
 
   <rule id="20421" level="0">
+    <if_sid>20001</if_sid>
     <field name="win.system.providerName">^Microsoft-Windows-Search$</field>
     <description>Group of Windows Search events</description>
     <options>no_full_log</options>
@@ -1805,6 +1807,7 @@
   </rule>
 
   <rule id="20487" level="0">
+    <if_sid>20001</if_sid>
     <field name="win.system.providerName">System Restore</field>
     <description>Group of System Restore events</description>
     <options>no_full_log</options>
@@ -1860,6 +1863,7 @@
   </rule>
 
   <rule id="20495" level="0">
+    <if_sid>20001</if_sid>
     <field name="win.system.providerName">Application Error</field>
     <description>Group of Application Error events</description>
     <options>no_full_log</options>
@@ -1880,6 +1884,7 @@
   </rule>
 
   <rule id="20498" level="0">
+    <if_sid>20001</if_sid>
     <field name="win.system.providerName">Microsoft-Windows-WMI</field>
     <description>Group of WMI events</description>
     <options>no_full_log</options>
@@ -1893,8 +1898,9 @@
   </rule>
 
   <rule id="20500" level="4">
-    <if_sid>20498</if_sid>
-    <field name="win.system.eventID">^28$|^29$</field>
+    <if_sid>20003</if_sid>
+    <field name="win.system.providerName">Microsoft-Windows-WMI</field>
+    <field name="win.system.eventID">^29$</field>
     <description>WMI Service could not be initialized</description>
     <options>no_full_log</options>
   </rule>
@@ -3960,5 +3966,465 @@
     <description>.NET Runtime - Fatal Execution Engine Error</description>
     <options>no_full_log</options>
   </rule>
-</group>
 
+  <rule id="20795" level="4">
+    <if_sid>20003</if_sid>
+    <field name="win.system.providerName">Microsoft-Windows-LocationProvider</field>
+    <field name="win.system.eventID">^2006$</field>
+    <description>There was an error with the Windows Location Provider database</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20796" level="4">
+    <if_sid>20001</if_sid>
+    <field name="win.system.providerName">Microsoft-Windows-LocationProvider</field>
+    <field name="win.system.eventID">^2001$</field>
+    <description>The Windows Location Provider has started</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20797" level="4">
+    <if_sid>20001</if_sid>
+    <field name="win.system.providerName">Microsoft-Windows-LocationProvider</field>
+    <field name="win.system.eventID">^2003$</field>
+    <description>The Windows Location Provider has shutdown</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20798" level="4">
+    <if_sid>20001</if_sid>
+    <field name="win.system.providerName">Microsoft-Windows-UserModePowerService</field>
+    <field name="win.system.eventID">^12$</field>
+    <description>Process $(win.eventdata.processPath) reset policy scheme from $(win.eventdata.oldSchemeGuid) to $(win.eventdata.newSchemeGuid)</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20799" level="0">
+    <if_sid>20001</if_sid>
+    <field name="win.system.providerName">Application Management</field>
+    <description>Group of Application Management events</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20800" level="3">
+    <if_sid>20799</if_sid>
+    <field name="win.system.eventID">^101$</field>
+    <description>Assignment of application failed</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20801" level="3">
+    <if_sid>20799</if_sid>
+    <field name="win.system.eventID">^102$</field>
+    <description>The install of application Windows 2000 Service Pack 3 from policy SP3 Install failed</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20802" level="3">
+    <if_sid>20799</if_sid>
+    <field name="win.system.eventID">^103$</field>
+    <description>The removal of the assignment of application from policy failed</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20803" level="3">
+    <if_sid>20799</if_sid>
+    <field name="win.system.eventID">^106$</field>
+    <description>Application was configured to upgrade another application</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20804" level="3">
+    <if_sid>20799</if_sid>
+    <field name="win.system.eventID">^107$</field>
+    <description>The execution of the setup program for an application failed</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20805" level="3">
+    <if_sid>20799</if_sid>
+    <field name="win.system.eventID">^108$</field>
+    <description>Failed to apply changes to software installation settings</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20806" level="3">
+    <if_sid>20799</if_sid>
+    <field name="win.system.eventID">^301$</field>
+    <description>The assignment of an application succeeded</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20807" level="3">
+    <if_sid>20799</if_sid>
+    <field name="win.system.eventID">^303$</field>
+    <description>The removal of the assignment of an application succeeded</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20808" level="3">
+    <if_sid>20799</if_sid>
+    <field name="win.system.eventID">^307$</field>
+    <description>The launch of the setup command for a program succeeded</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20809" level="0">
+    <if_sid>20001</if_sid>
+    <field name="win.system.providerName">Browser</field>
+    <description>Group of Browser events</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20810" level="3">
+    <if_sid>20809</if_sid>
+    <field name="win.system.eventID">^2504$|^2505$</field>
+    <description>Inability to Browse</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20811" level="3">
+    <if_sid>20809</if_sid>
+    <field name="win.system.eventID">^2550$</field>
+    <description>The browser service was configured with MaintainServerList=No</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20812" level="3">
+    <if_sid>20809</if_sid>
+    <field name="win.system.eventID">^8003$</field>
+    <description>The master browser has received a server announcement from the computer that believes that it is the master browser for the domain on transport</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20813" level="3">
+    <if_sid>20809</if_sid>
+    <field name="win.system.eventID">^8004$</field>
+    <description>A request has been submitted to promote the computer to backup when it is already a master browser</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20814" level="3">
+    <if_sid>20809</if_sid>
+    <field name="win.system.eventID">^8005$</field>
+    <description>The browser has received a server announcement indicating that the computer is a master browser, but this computer is not a master browser</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20815" level="3">
+    <if_sid>20809</if_sid>
+    <field name="win.system.eventID">^8006$</field>
+    <description>The browser has received an illegal datagram from a remote computer</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20816" level="3">
+    <if_sid>20809</if_sid>
+    <field name="win.system.eventID">^8007$</field>
+    <description>The browser was unable to update the service status bits</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20817" level="3">
+    <if_sid>20809</if_sid>
+    <field name="win.system.eventID">^8008$</field>
+    <description>The browser was unable to update its role</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20818" level="3">
+    <if_sid>20809</if_sid>
+    <field name="win.system.eventID">^8009$</field>
+    <description>The browser was unable to promote itself to master browser</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20819" level="3">
+    <if_sid>20809</if_sid>
+    <field name="win.system.eventID">^8010$</field>
+    <description>The browser driver was unable to convert a character string to a unicode string</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20820" level="3">
+    <if_sid>20809</if_sid>
+    <field name="win.system.eventID">^8011$</field>
+    <description>The browser was unable to add a configuration parameter</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20821" level="3">
+    <if_sid>20809</if_sid>
+    <field name="win.system.eventID">^8012$</field>
+    <description>The browser driver has received an election packet</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20822" level="3">
+    <if_sid>20809</if_sid>
+    <field name="win.system.eventID">^8015$</field>
+    <description>The browser has forced an election on network because a Windows NT Server browser is started</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20823" level="3">
+    <if_sid>20809</if_sid>
+    <field name="win.system.eventID">^8016$</field>
+    <description>The browser driver has received too many illegal datagrams from the remote computer</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20824" level="3">
+    <if_sid>20809</if_sid>
+    <field name="win.system.eventID">^8019$|^8020$</field>
+    <description>The browser was unable to promote itself to master browser</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20825" level="3">
+    <if_sid>20809</if_sid>
+    <field name="win.system.eventID">^8021$</field>
+    <description>The browser was unable to retrieve a list of servers from the browser master on the network</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20826" level="3">
+    <if_sid>20809</if_sid>
+    <field name="win.system.eventID">^8022$</field>
+    <description>The browser was unable to retrieve a list of domains from the browser master on the network</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20827" level="3">
+    <if_sid>20809</if_sid>
+    <field name="win.system.eventID">^8023$</field>
+    <description>The value for the parameter to the browser service was illegal</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20828" level="3">
+    <if_sid>20809</if_sid>
+    <field name="win.system.eventID">^8029$</field>
+    <description>The browser driver was unable to initialize variables from the Registry</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20829" level="3">
+    <if_sid>20809</if_sid>
+    <field name="win.system.eventID">^8030$</field>
+    <description>The browser driver has discarded too many mailslot messages</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20830" level="3">
+    <if_sid>20809</if_sid>
+    <field name="win.system.eventID">^8031$</field>
+    <description>The browser driver has discarded too many GetBrowserServerList requests</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20831" level="3">
+    <if_sid>20809</if_sid>
+    <field name="win.system.eventID">^8032$</field>
+    <description>The browser service has failed to retrieve the backup list too many times on transport</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20832" level="3">
+    <if_sid>20809</if_sid>
+    <field name="win.system.eventID">^8033$</field>
+    <description>The browser has forced an election on network because a master browser was stopped</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20833" level="3">
+    <if_sid>20809</if_sid>
+    <field name="win.system.eventID">^8035$</field>
+    <description>The browser has forced an election on network because the Domain Controller (or Server) has changed its role</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20834" level="3">
+    <if_sid>20809</if_sid>
+    <field name="win.system.eventID">^10051$</field>
+    <description>Some errors occur aproximately every three seconds</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20835" level="3">
+    <if_sid>20001</if_sid>
+    <field name="win.system.providerName">DNSCache</field>
+    <field name="win.system.eventID">^11050$</field>
+    <description>The DNS Client service could not contact any DNS servers for a repeated number of attempts</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20836" level="0">
+    <if_sid>20001</if_sid>
+    <field name="win.system.providerName">Disk</field>
+    <description>Group of Disk events</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20837" level="3">
+    <if_sid>20836</if_sid>
+    <field name="win.system.eventID">^7$</field>
+    <description>A device has a bad block</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20838" level="3">
+    <if_sid>20836</if_sid>
+    <field name="win.system.eventID">^9$</field>
+    <description>A device did not respond within the timeout period</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20839" level="3">
+    <if_sid>20836</if_sid>
+    <field name="win.system.eventID">^10$|^11$</field>
+    <description>The driver detected a controller error</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20840" level="3">
+    <if_sid>20836</if_sid>
+    <field name="win.system.eventID">^12$</field>
+    <description>A stripe set or volume set member listed in the configuration information was missing</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20841" level="3">
+    <if_sid>20836</if_sid>
+    <field name="win.system.eventID">^13$</field>
+    <description>The fault tolerance driver configuration information is corrupt</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20842" level="3">
+    <if_sid>20836</if_sid>
+    <field name="win.system.eventID">^14$</field>
+    <description>The FT set containing \Device\MissingMirror1Member0 cannot be used</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20843" level="3">
+    <if_sid>20836</if_sid>
+    <field name="win.system.eventID">^15$</field>
+    <description>Mirror initialization or synchronization started</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20844" level="3">
+    <if_sid>20836</if_sid>
+    <field name="win.system.eventID">^17$</field>
+    <description>VDS fails to launch provider</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20845" level="3">
+    <if_sid>20836</if_sid>
+    <field name="win.system.eventID">^23$</field>
+    <description>Initialization of mirror failed</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20846" level="3">
+    <if_sid>20836</if_sid>
+    <field name="win.system.eventID">^25$</field>
+    <description>DCOM error</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20847" level="3">
+    <if_sid>20836</if_sid>
+    <field name="win.system.eventID">^26$</field>
+    <description>The diskeeper defragmentation has stoped for drive c:</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20848" level="3">
+    <if_sid>20836</if_sid>
+    <field name="win.system.eventID">^27$</field>
+    <description>The fault tolerant driver detected the system was shutdown dirty</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20849" level="3">
+    <if_sid>20836</if_sid>
+    <field name="win.system.eventID">^32$</field>
+    <description>The driver detected that the device \Device\Harddisk2\DR2 has its write cache enabled</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20850" level="3">
+    <if_sid>20836</if_sid>
+    <field name="win.system.eventID">^33$</field>
+    <description>Data was recovered using error correction code on device \device\harddisk0\partition2</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20851" level="3">
+    <if_sid>20836</if_sid>
+    <field name="win.system.eventID">^34$</field>
+    <description>The driver disabled the write cache on a device</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20852" level="3">
+    <if_sid>20836</if_sid>
+    <field name="win.system.eventID">^41$</field>
+    <description>The file system structure on the disk is corrupt and unusable</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20853" level="3">
+    <if_sid>20003</if_sid>
+    <field name="win.system.providerName">EventCreate</field>
+    <field name="win.system.eventID">^100$</field>
+    <description>Event created in the application log</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20854" level="0">
+    <if_sid>20001</if_sid>
+    <field name="win.system.providerName">Microsoft-Windows-EventCollector</field>
+    <description>Group of EventCollector events</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20855" level="3">
+    <if_sid>20854</if_sid>
+    <field name="win.system.eventID">^1$|^2$|^4$</field>
+    <description>The Subscription could not be activated on target machine due to communication error</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20856" level="3">
+    <if_sid>20854</if_sid>
+    <field name="win.system.eventID">^3$</field>
+    <description>The subscription has expired and will no longer be serviced</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20857" level="3">
+    <if_sid>20854</if_sid>
+    <field name="win.system.eventID">^6$</field>
+    <description>The Subscription could not publish events from target machine to the log file of this subscription</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20858" level="3">
+    <if_sid>20854</if_sid>
+    <field name="win.system.eventID">^501$</field>
+    <description>The Subscription has a lost event. An event from target machine is lost and could not be delivered</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="20859" level="3">
+    <if_sid>20854</if_sid>
+    <field name="win.system.eventID">^502$</field>
+    <description>The Subscription detects dropped events</description>
+    <options>no_full_log</options>
+  </rule>
+</group>
