@@ -73,6 +73,39 @@
   <prematch>^\d+:\s+\p*\w+\s+\d+\s+\S+\s+\w+:\s+%</prematch>
 </decoder>
 
+<!--
+  - Sequence number, date (preceded by * or . or nothing) and hour
+  - 4425: Aug 23 00:17:55.356:
+-->
+
+<decoder name="cisco-ios">
+  <prematch>^\d+:\s+\w+\s+\d+\s+\S+\s+%</prematch>
+</decoder>
+
+
+<!-- Cisco IOS
+  - Extracts the ID of cisco ios messages IF NOT IDS/ACL log.
+  - 4425: Aug 23 00:17:55.356: %SSH-5-SSH2_SESSION: SSH2 Session request from x.x.x.x (tty = 0) using crypto cipher 'aes-111-sdf0', hmac 'hmac-sha1' Succeeded
+  -->
+<decoder name="cisco-ios-ssh-session">
+  <parent>cisco-ios</parent>
+  <prematch>%SSH-5-SSH2_SESSION: </prematch>
+  <regex>(\S+): SSH2 Session request from (\S+) </regex>
+  <order>id, srcip</order>
+</decoder>
+
+
+<!-- Cisco IOS
+  - Extracts the ID of cisco ios messages IF NOT IDS/ACL log.
+  - 4423: Aug 23 00:16:18.200: %SSH-5-SSH2_USERAUTH: User 'xxxx' authentication for SSH2 Session from x.x.x.x (tty = 0) using crypto cipher 'aes111-sdf0', hmac 'hmac-sha1' Succeeded
+  -->
+<decoder name="cisco-ios-ssh-userauth">
+  <parent>cisco-ios</parent>
+  <prematch>%SSH-5-SSH2_USERAUTH: </prematch>
+  <regex>(\S+): User '(\w+)' authentication for SSH2 Session from (\S+) </regex>
+  <order>id, srcuser, srcip</order>
+</decoder>
+
 
 <!-- Cisco IOS
   - Will extract the action, srcip, srcport, dstip and dstport
@@ -81,7 +114,6 @@
   - %SEC-6-IPACCESSLOGP: list 102 denied tcp 10.0.6.56(3067) -> 172.36.4.7(139), 1 packet
   - %SEC-6-IPACCESSLOGP: list 199 denied tcp 10.0.61.108(1477) -> 10.0.127.20(445), 1 packet
   -->
-
 <decoder name="cisco-ios-acl">
   <parent>cisco-ios</parent>
   <type>firewall</type>
@@ -118,3 +150,6 @@
   <regex>(%\w+-\d-\w+):</regex>
   <order>id</order>
 </decoder>
+
+
+
