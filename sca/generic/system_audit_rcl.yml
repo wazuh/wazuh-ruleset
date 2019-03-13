@@ -13,6 +13,21 @@ policy:
   name: "System audit for web-related vulnerabilities"
   description: "Guidance for establishing a secure configuration for web-related vulnerabilities."
 
+requirements:
+  title: "Check that web-related software is installed on the system"
+  description: "Requirements for running the SCA scan against the web-related policy."
+  condition: "any required"
+  rules:
+    - 'f:/etc/php.ini;'
+    - 'f:/var/www/conf/php.ini;'
+    - 'f:/etc/php5/apache2/php.ini;'
+    - 'd:/var/www;'
+    - 'd:/var/htdocs;'
+    - 'd:/home/httpd;'
+    - 'd:/usr/local/apache;'
+    - 'd:/usr/local/apache2;'
+    - 'd:/usr/local/www;'
+
 variables:
   $php.ini: /etc/php.ini,/var/www/conf/php.ini,/etc/php5/apache2/php.ini;
   $web_dirs: /var/www,/var/htdocs,/home/httpd,/usr/local/apache,/usr/local/apache2,/usr/local/www;
