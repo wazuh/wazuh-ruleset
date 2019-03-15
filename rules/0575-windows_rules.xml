@@ -849,7 +849,7 @@
   <rule id="20098" level="0">
     <if_sid>20308</if_sid>
     <field name="win.system.message">\.*The database engine has successfully completed recovery steps|The database engine is initiating recovery steps</field>
-    <description>Ignore rule 200157: TS Gateway login success</description>
+    <description>Ignore rule 20308: TS Gateway login success</description>
     <options>no_full_log</options>
   </rule>
 
@@ -1085,7 +1085,7 @@
     <options>no_full_log</options>
   </rule>
 
-  <rule id="20384" level="5">
+  <rule id="20384" level="3">
     <if_sid>20382</if_sid>
     <field name="win.system.eventID">^11724$|^1034$</field>
     <options>alert_by_email</options>
@@ -1093,7 +1093,7 @@
     <options>no_full_log</options>
   </rule>
 
-  <rule id="20385" level="5">
+  <rule id="20385" level="3">
     <if_sid>20382</if_sid>
     <field name="win.system.eventID">^11707$|^1033$</field>
     <options>alert_by_email</options>
@@ -1223,7 +1223,7 @@
   <rule id="20403" level="3">
     <if_sid>20382</if_sid>
     <field name="win.system.eventID">^1029$</field>
-    <description>The installation or update for the product required a restart for all changes to take effect</description>
+    <description>The product installation or update required a restart for all changes to take effect</description>
     <options>no_full_log</options>
   </rule>
 
@@ -1724,7 +1724,7 @@
   <rule id="20475" level="3">
     <if_sid>20447</if_sid>
     <field name="win.system.eventID">^8225$</field>
-    <description>The VSS service is shutting down due to shutdown event from the Service Control Manager</description>
+    <description>The VSS service is shutting down due to a shutdown event from the Service Control Manager</description>
     <options>no_full_log</options>
   </rule>
 
@@ -2059,7 +2059,7 @@
     <if_sid>20521</if_sid>
     <field name="win.system.eventID">^4625$</field>
     <field name="win.eventdata.param1">\.+</field>
-    <description>EventSystem supressed duplicatelog entries for $(win.eventdata.param1) seconds</description>
+    <description>EventSystem supressed duplicate log entries for $(win.eventdata.param1) seconds</description>
     <options>no_full_log</options>
   </rule>
 
@@ -2380,189 +2380,189 @@
   </rule>
 
   <rule id="20569" level="5">
-    <if_sid>20564</if_sid>
+    <if_sid>20568</if_sid>
     <field name="win.system.eventID">^103$</field>
     <description>The database engine stopped an instance</description>
     <options>no_full_log</options>
   </rule>
 
   <rule id="20570" level="3">
-    <if_sid>20564</if_sid>
+    <if_sid>20568</if_sid>
     <field name="win.system.eventID">^327$</field>
     <description>The database engine detached a database</description>
     <options>no_full_log</options>
   </rule>
 
   <rule id="20571" level="3">
-    <if_sid>20564</if_sid>
+    <if_sid>20568</if_sid>
     <field name="win.system.eventID">^326$</field>
     <description>The database engine attached a database</description>
     <options>no_full_log</options>
   </rule>
 
   <rule id="20572" level="5">
-    <if_sid>20564</if_sid>
+    <if_sid>20568</if_sid>
     <field name="win.system.eventID">^0$</field>
     <description>Unexpected Win32 error</description>
     <options>no_full_log</options>
   </rule>
 
   <rule id="20573" level="5">
-    <if_sid>20564</if_sid>
+    <if_sid>20568</if_sid>
     <field name="win.system.eventID">^215$</field>
     <description>The backup was interrupted by the client or the connection failed</description>
     <options>no_full_log</options>
   </rule>
 
   <rule id="20574" level="5">
-    <if_sid>20564</if_sid>
+    <if_sid>20568</if_sid>
     <field name="win.system.eventID">^404$|^405$</field>
     <description>Synchronous read page checksum error occurred</description>
     <options>no_full_log</options>
   </rule>
 
   <rule id="20575" level="5">
-    <if_sid>20564</if_sid>
+    <if_sid>20568</if_sid>
     <field name="win.system.eventID">^412$</field>
     <description>Unable to read log header</description>
     <options>no_full_log</options>
   </rule>
 
   <rule id="20576" level="3">
-    <if_sid>20564</if_sid>
+    <if_sid>20568</if_sid>
     <field name="win.system.eventID">^100$</field>
     <description>Database engine started</description>
     <options>no_full_log</options>
   </rule>
 
   <rule id="20577" level="5">
-    <if_sid>20564</if_sid>
+    <if_sid>20568</if_sid>
     <field name="win.system.eventID">^101$</field>
     <description>Database engine stopped</description>
     <options>no_full_log</options>
   </rule>
 
-  <rule id="20578" level="5">
-    <if_sid>20564</if_sid>
+  <rule id="20578" level="3">
+    <if_sid>20568</if_sid>
     <field name="win.system.eventID">^102$</field>
-    <description>The database engine stopped the instance (0)</description>
+    <description>The database engine is starting a new instance</description>
     <options>no_full_log</options>
   </rule>
 
   <rule id="20579" level="3">
-    <if_sid>20564</if_sid>
+    <if_sid>20568</if_sid>
     <field name="win.system.eventID">^210$</field>
     <description>Starting full backup</description>
     <options>no_full_log</options>
   </rule>
 
   <rule id="20580" level="3">
-    <if_sid>20564</if_sid>
+    <if_sid>20568</if_sid>
     <field name="win.system.eventID">^300$</field>
     <description>The database engine is initiating recovery steps</description>
     <options>no_full_log</options>
   </rule>
 
   <rule id="20581" level="3">
-    <if_sid>20564</if_sid>
+    <if_sid>20568</if_sid>
     <field name="win.system.eventID">^301$</field>
     <description>The database engine is replaying log file C:\Winnt\system32\wins\j50.log</description>
     <options>no_full_log</options>
   </rule>
 
   <rule id="20582" level="3">
-    <if_sid>20564</if_sid>
+    <if_sid>20568</if_sid>
     <field name="win.system.eventID">^302$</field>
     <description>The database engine has completed recovery steps</description>
     <options>no_full_log</options>
   </rule>
 
   <rule id="20583" level="5">
-    <if_sid>20564</if_sid>
+    <if_sid>20568</if_sid>
     <field name="win.system.eventID">^411$</field>
     <description>Log version stamp does not match database engine version stamp</description>
     <options>no_full_log</options>
   </rule>
 
   <rule id="20584" level="5">
-    <if_sid>20564</if_sid>
+    <if_sid>20568</if_sid>
     <field name="win.system.eventID">^427$</field>
     <description>The database engine could not access a file</description>
     <options>no_full_log</options>
   </rule>
 
   <rule id="20585" level="5">
-    <if_sid>20564</if_sid>
+    <if_sid>20568</if_sid>
     <field name="win.system.eventID">^439$</field>
     <description>Unable to write a shadowed header file</description>
     <options>no_full_log</options>
   </rule>
 
   <rule id="20586" level="5">
-    <if_sid>20564</if_sid>
+    <if_sid>20568</if_sid>
     <field name="win.system.eventID">^454$</field>
     <description>Unable to read the log header</description>
     <options>no_full_log</options>
   </rule>
 
   <rule id="20587" level="5">
-    <if_sid>20564</if_sid>
+    <if_sid>20568</if_sid>
     <field name="win.system.eventID">^474$</field>
     <description>The database page read failed verification due to a page checksum mismatch</description>
     <options>no_full_log</options>
   </rule>
 
   <rule id="20588" level="5">
-    <if_sid>20564</if_sid>
+    <if_sid>20568</if_sid>
     <field name="win.system.eventID">^476$</field>
     <description>Failed verification for database page read</description>
     <options>no_full_log</options>
   </rule>
 
   <rule id="20589" level="5">
-    <if_sid>20564</if_sid>
+    <if_sid>20568</if_sid>
     <field name="win.system.eventID">^489$</field>
     <description>An attempt to open the file for read only access failed with system error</description>
     <options>no_full_log</options>
   </rule>
 
   <rule id="20590" level="3">
-    <if_sid>20564</if_sid>
+    <if_sid>20568</if_sid>
     <field name="win.system.eventID">^609$</field>
     <description>Index cleanup of database initiated</description>
     <options>no_full_log</options>
   </rule>
 
   <rule id="20591" level="5">
-    <if_sid>20564</if_sid>
+    <if_sid>20568</if_sid>
     <field name="win.system.eventID">^614$</field>
     <description>The secondary index WReplicaSetNameIndex of table ConfigTable may be corrupt</description>
     <options>no_full_log</options>
   </rule>
 
   <rule id="20592" level="5">
-    <if_sid>20564</if_sid>
+    <if_sid>20568</if_sid>
     <field name="win.system.eventID">^623$</field>
-    <description>The version store for this instance (0) has reached its maximum size of 2Mb</description>
+    <description>The version store for this instance has reached its maximum size</description>
     <options>no_full_log</options>
   </rule>
 
   <rule id="20593" level="3">
-    <if_sid>20564</if_sid>
+    <if_sid>20568</if_sid>
     <field name="win.system.eventID">^2001$</field>
     <description>Shadow copy 2 freeze started</description>
     <options>no_full_log</options>
   </rule>
 
   <rule id="20594" level="4">
-    <if_sid>20564</if_sid>
+    <if_sid>20568</if_sid>
     <field name="win.system.eventID">^2003$</field>
     <description>Shadow copy 2 freeze stopped</description>
     <options>no_full_log</options>
   </rule>
 
   <rule id="20595" level="5">
-    <if_sid>20564</if_sid>
+    <if_sid>20568</if_sid>
     <field name="win.system.eventID">^12290$</field>
     <description>Volume Shadow Copy Service warning: Could not perform a backup</description>
     <options>no_full_log</options>
@@ -2730,7 +2730,7 @@
     <options>no_full_log</options>
   </rule>
 
-  <rule id="20619" level="5">
+  <rule id="20619" level="3">
     <if_sid>20611</if_sid>
     <field name="win.system.eventID">^4105$</field>
     <description>Microsoft Distributed Transaction Coordinator service successfully removed</description>
@@ -3201,7 +3201,7 @@
     <options>no_full_log</options>
   </rule>
 
-  <rule id="20686" level="3">
+  <rule id="20686" level="5">
     <if_sid>20611</if_sid>
     <field name="win.system.eventID">^4249$</field>
     <description>The MS DTC Transaction Manager received an unknown or unexpected TIP command for an Active transaction</description>
@@ -3257,7 +3257,7 @@
     <options>no_full_log</options>
   </rule>
 
-  <rule id="20694" level="3">
+  <rule id="20694" level="5">
     <if_sid>20611</if_sid>
     <field name="win.system.eventID">^4361$</field>
     <description>An incompletely initialized MS DTC log file was detected</description>
@@ -4010,13 +4010,6 @@
     <options>no_full_log</options>
   </rule>
 
-  <rule id="20801" level="5">
-    <if_sid>20799</if_sid>
-    <field name="win.system.eventID">^102$</field>
-    <description>The install of application Windows 2000 Service Pack 3 from policy SP3 Install failed</description>
-    <options>no_full_log</options>
-  </rule>
-
   <rule id="20802" level="5">
     <if_sid>20799</if_sid>
     <field name="win.system.eventID">^103$</field>
@@ -4157,13 +4150,6 @@
     <options>no_full_log</options>
   </rule>
 
-  <rule id="20822" level="3">
-    <if_sid>20809</if_sid>
-    <field name="win.system.eventID">^8015$</field>
-    <description>The browser has forced an election on network because a Windows NT Server browser is started</description>
-    <options>no_full_log</options>
-  </rule>
-
   <rule id="20823" level="10">
     <if_sid>20809</if_sid>
     <field name="win.system.eventID">^8016$</field>
@@ -4294,7 +4280,7 @@
   <rule id="20841" level="4">
     <if_sid>20836</if_sid>
     <field name="win.system.eventID">^13$</field>
-    <description>The fault tolerance driver configuration information is corrupt</description>
+    <description>The fault tolerance driver configuration information is corrupted</description>
     <options>no_full_log</options>
   </rule>
 
