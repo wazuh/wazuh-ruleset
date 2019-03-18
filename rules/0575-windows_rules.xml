@@ -4506,7 +4506,7 @@
 
   <rule id="60615" level="3">
     <if_sid>60608</if_sid>
-    <id>^257</id>
+    <field name="win.system.eventID">^257$</field>
     <field name="win.system.message">completed.  No detections</field>
     <description>McAfee Windows AV - Scan completed with no viruses found</description>
     <group>pci_dss_5.1,pci_dss_10.2.6,pci_dss_10.6.1,gpg13_4.14,gpg13_10.1,gdpr_IV_35.7.d,</group>
@@ -5029,7 +5029,6 @@
     <field name="win.system.eventID">^4646$</field>
     <description>IKE DoS-prevention mode started</description>
     <options>no_full_log</options>
-    <group>windows,</group>
   </rule>
 
   <rule id="60684" level="8">
@@ -5037,16 +5036,13 @@
     <field name="win.system.eventID">^4652$|^4653$</field>
     <description>An IPsec Main Mode negotiation failed</description>
     <options>no_full_log</options>
-    <group>windows,</group>
   </rule>
 
   <rule id="60685" level="8">
     <if_sid>60012</if_sid>
-    <id>^4654$</id>
     <field name="win.system.eventID">^4654$</field>
     <description>An IPsec Quick Mode negotiation failed</description>
     <options>no_full_log</options>
-    <group>windows,</group>
   </rule>
 
   <rule id="60686" level="8">
@@ -5054,7 +5050,6 @@
     <field name="win.system.eventID">^4983$|^4984$</field>
     <description>An IPsec Extended Mode negotiation failed</description>
     <options>no_full_log</options>
-    <group>windows,</group>
   </rule>
 
   <rule id="60687" level="4">
@@ -5062,7 +5057,6 @@
     <field name="win.system.eventID">^4960$</field>
     <description>IPsec dropped an inbound packet that failed an integrity check</description>
     <options>no_full_log</options>
-    <group>windows,</group>
   </rule>
 
   <rule id="60688" level="8">
@@ -5070,7 +5064,6 @@
     <field name="win.system.eventID">^4961$|^4962$</field>
     <description>IPsec dropped an inbound packet that failed a replay check</description>
     <options>no_full_log</options>
-    <group>windows,</group>
   </rule>
 
   <rule id="60689" level="8">
@@ -5078,7 +5071,6 @@
     <field name="win.system.eventID">^4963$</field>
     <description>IPsec dropped an inbound clear text packet that should have been secured</description>
     <options>no_full_log</options>
-    <group>windows,</group>
   </rule>
 
   <rule id="60690" level="4">
@@ -5086,7 +5078,6 @@
     <field name="win.system.eventID">^4965$</field>
     <description>IPsec received a packet from a remote computer with an incorrect Security Parameter Index (SPI)</description>
     <options>no_full_log</options>
-    <group>windows,</group>
   </rule>
 
   <rule id="60691" level="7">
@@ -5094,7 +5085,6 @@
     <field name="win.system.eventID">^4976$</field>
     <description>During Main Mode negotiation, IPsec received an invalid negotiation packet</description>
     <options>no_full_log</options>
-    <group>windows,</group>
   </rule>
 
   <rule id="60692" level="7">
@@ -5102,7 +5092,6 @@
     <field name="win.system.eventID">^4977$</field>
     <description>During Quick Mode negotiation, IPsec received an invalid negotiation packet</description>
     <options>no_full_log</options>
-    <group>windows,</group>
   </rule>
 
   <rule id="60693" level="7">
@@ -5110,14 +5099,12 @@
     <field name="win.system.eventID">^4978$</field>
     <description>During Extended Mode negotiation, IPsec received an invalid negotiation packet</description>
     <options>no_full_log</options>
-    <group>windows,</group>
   </rule>
 
   <rule id="60694" level="8">
     <if_sid>60011</if_sid>
     <field name="win.system.eventID">^5453$</field>
     <description>An IPsec negotiation with a remote computer failed because the IKE and AuthIP IPsec Keying Modules (IKEEXT) service is not started</description>
-    <group>windows,</group>
     <options>no_full_log</options>
   </rule>
 
@@ -5126,7 +5113,6 @@
     <field name="win.system.eventID">^5480$</field>
     <description>IPsec Services failed to get the complete list of network interfaces on the computer</description>
     <options>no_full_log</options>
-    <group>windows,</group>
   </rule>
 
   <rule id="60696" level="8">
@@ -5134,7 +5120,6 @@
     <field name="win.system.eventID">^5483$</field>
     <description>IPsec Services failed to initialize RPC server. IPsec Services could not be started</description>
     <options>no_full_log</options>
-    <group>windows,</group>
   </rule>
 
   <rule id="60697" level="8">
@@ -5142,7 +5127,6 @@
     <field name="win.system.eventID">^5484$</field>
     <description>IPsec Services has experienced a critical failure and has been shut down</description>
     <options>no_full_log</options>
-    <group>windows,</group>
   </rule>
 
   <rule id="60698" level="8">
@@ -5150,7 +5134,6 @@
     <field name="win.system.eventID">^5485$</field>
     <description>IPsec Services failed to process some IPsec filters on a plug-and-play event for network interfaces</description>
     <options>no_full_log</options>
-    <group>windows,</group>
   </rule>
 
   <rule id="60699" level="8">
@@ -5158,7 +5141,6 @@
     <field name="win.system.eventID">^4710$</field>
     <description>IPsec Services was disabled</description>
     <options>no_full_log</options>
-    <group>windows,</group>
   </rule>
 
   <rule id="60700" level="8">
@@ -5166,6 +5148,5 @@
     <field name="win.system.eventID">^4712$</field>
     <description>IPsec Services encountered a potentially serious failure</description>
     <options>no_full_log</options>
-    <group>windows,</group>
    </rule>
 </group>
