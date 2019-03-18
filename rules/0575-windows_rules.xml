@@ -949,7 +949,7 @@
   <rule id="60113" level="0">
     <if_sid>60112</if_sid>
     <field name="win.system.message">\.*The database engine has successfully completed recovery steps|The database engine is initiating recovery steps</field>
-    <description>Ignore rule 20112: TS Gateway login success</description>
+    <description>Ignore rule 60112: TS Gateway login success</description>
     <options>no_full_log</options>
   </rule>
 
@@ -4448,7 +4448,7 @@
 </group>
 
  <!-- McAfee rules -->
-<group name="mcafee,">
+<group name="windows,mcafee,">
  <rule id="60607" level="0">
     <if_sid>60001,60002,60003</if_sid>
     <field name="win.system.channel">^McLogEvent</field>
@@ -4734,7 +4734,7 @@
 </group>
 
   <!-- Sysmon rules -->
-<group name="sysmon,">
+<group name="windows,sysmon,">
   <rule id="60643" level="0">
     <if_sid>60001</if_sid>
     <field name="win.system.channel">^Microsoft-Windows-Sysmon/Operational</field>
@@ -4863,7 +4863,7 @@
   </rule>
 </group>
 
-<group name="sysmon,sysmon_process-anomalies,">
+<group name="windows,sysmon,sysmon_process-anomalies,">
   <rule id="60659" level="12">
     <if_group>sysmon_event1</if_group>
     <field name="win.eventdata.image">svchost.exe</field>
