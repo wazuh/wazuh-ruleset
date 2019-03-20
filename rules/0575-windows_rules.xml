@@ -28,6 +28,53 @@
     <options>no_full_log</options>
     <description>Group of Windows rules for the Application channel</description>
   </rule>
+
+  <rule id="60004" level="0">
+    <if_sid>60000</if_sid>
+    <field name="win.system.channel">^Microsoft-Windows-Sysmon/Operational</field>
+    <options>no_full_log</options>
+    <description>Group of Windows rules for the Sysmon channel</description>
+  </rule>
+
+  <rule id="60001" level="0">
+    <if_sid>60000</if_sid>
+    <field name="win.system.severityValue">^INFORMATION</field>
+    <description>Windows informational event</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="60002" level="0">
+    <if_sid>60000</if_sid>
+    <field name="win.system.severityValue">^WARNING</field>
+    <description>Windows warning event</description>
+    <options>no_full_log</options>
+    <group>gpg13_4.12,</group>
+  </rule>
+
+  <!--{"win":{"system":{"providerName":"NetBT","eventID":"4321","level":"2","task":"0","keywords":"0x80000000000000","systemTime":"2018-12-18T10:55:40.107861400Z","eventRecordID":"1701","channel":"System","computer":"qnu","severityValue":"ERROR","message":"Le nom \\\"WORKGROUP      :1d\\\" n’a pas pu être enregistré sur l’interface avec l’adresse IP 10.0.2.15. L’ordinateur avec l’adresse IP 10.0.2.2 n’a pas permis que le nom soit réclamé par cet ordinateur."},"eventdata":{"data":"","data":"WORKGROUP      :1d","data":"10.0.2.15","data":"10.0.2.2","binary":"00000000040032000000000E11000C001010000010000C029000000000000000000000000000000"}}}-->
+  <!--rule id="60003" level="5">
+    <if_sid>60000</if_sid>
+    <field name="win.system.severityValue">^ERROR</field>
+    <description>Windows System error event</description>
+    <options>no_full_log</options>
+    <group>system_error,gpg13_4.3,gdpr_IV_35.7.d,</group>
+  </rule>
+
+  <rule id="60004" level="0">
+    <if_sid>60000</if_sid>
+    <field name="win.system.severityValue">^AUDIT_SUCCESS|^success</field>
+    <description>Windows audit success event</description>
+    <options>no_full_log</options>
+  </rule>
+  -->
+
+  <rule id="60005" level="5">
+    <if_sid>60000</if_sid>
+    <field name="win.system.severityValue">^AUDIT_FAILURE|^failure</field>
+    <description>Windows audit failure event</description>
+    <group>pci_dss_10.6.1,gdpr_IV_35.7.d,</group>
+    <options>no_full_log</options>
+  </rule>
 </group>
 
 <group name="windows, windows_security,">
@@ -965,37 +1012,37 @@
 
 
   <!-- MS Windows Defender rules -->
-<group name="windows,windows_defender,">
+<!--group name="windows,windows_defender,">
   <rule id="60604" level="0">
     <if_sid>60000</if_sid>
     <field name="win.system.providerName">^Microsoft-Windows-Windows Defender/Operational</field>
     <description>Windows Defender messages grouped</description>
     <options>no_full_log</options>
-  </rule>
+  </rule-->
 
   <!--
     {"win":{"system":{"providerName":"Microsoft-Windows-Windows Defender","providerGuid":"{555908d1-a6d7-4695-8e1e-26931d2012f4}","eventSourceName":"Microsoft-Windows-Eventlog","eventID":"1116","version":"0","level":"4","task":"0","opcode":"0","keywords":"0x8080000000000000","systemTime":"2018-11-27T13:03:51.594213100Z","eventRecordID":"8453","correlation":"","processID":"608","threadID":"1296","channel":"Microsoft-Windows-Windows Defender/Operational","computer":"hffg","message":"Windows Defender has detected malware or other potentially unwanted software.","severityValue":"WARNING"},"eventdata":{"subjectUserSid":"S-1-5-21-571","subjectUserName":"HFFG$","subjectDomainName":"WORKGROUP","subjectLogonId":"0x3e7","transactionId":"{D2399FF4-F177-11E8-82BA-08002750D7C5}","newState":"52","resourceManager":"{7D5F0E1F-ABCB-11E8-A2E2-D5514FE2B72B}","processId":"0x3f8","processName":"C:\\Windows\\System32\\svchost.exe"}}}    -->
-  <rule id="60605" level="12">
+  <!--rule id="60605" level="12">
     <if_sid>60604</if_sid>
     <field name="win.system.eventID">^1116$</field>
     <description>Windows Defender: detected potentially unwanted software $(win.eventdata.processName)</description>
     <options>no_full_log</options>
     <group>gdpr_IV_35.7.d,</group>
-  </rule>
+  </rule-->
 
   <!--
     {"win":{"system":{"providerName":"Microsoft-Windows-Windows Defender","providerGuid":"{555908d1-a6d7-4695-8e1e-26931d2012f4}","eventSourceName":"Microsoft-Windows-Eventlog","eventID":"1117","version":"0","level":"4","task":"0","opcode":"0","keywords":"0x8080000000000000","systemTime":"2018-11-27T13:03:51.594213100Z","eventRecordID":"8453","correlation":"","processID":"608","threadID":"1296","channel":"Microsoft-Windows-Windows Defender/Operational","computer":"hffg","message":"Windows Defender has taken action to protect this machine from malware or other potentially unwanted software.   For more information please see the following:  http://go.microsoft.com/fwlink/?linkid=37020&name=Virus:DOS/EICAR_Test_File&threatid=2147519003&enterprise=0         Name: Virus:DOS/EICAR_Test_File         ID: 2147519003          Severity: Severe        Category: Virus         Path: file:_C:\Users\spiderman\Downloads\eicar.com.txt;webfile:_C:\Users\spiderman\Downloads\eicar.com.txt|http://www.eicar.org/download/eicar.com.txt|chrome.exe    Detection Origin: Internet      Detection Type: Concrete        Detection Source: Real-Time Protection          User: NT AUTHORITY\SYSTEM       Process Name: C:\Windows\System32\SearchProtocolHost.exe     Action: Quarantine      Action Status:  No additional actions required          Error Code: 0x80508023          Error description: The program could not find the malware and other potentially unwanted software on this computer.","severityValue":"INFORMATION"},"eventdata":{"subjectUserSid":"S-1-5-21-571","subjectUserName":"HFFG$","subjectDomainName":"WORKGROUP","subjectLogonId":"0x3e7","transactionId":"{D2399FF4-F177-11E8-82BA-08002750D7C5}","newState":"52","resourceManager":"{7D5F0E1F-ABCB-11E8-A2E2-D5514FE2B72B}","processId":"0x3f8","processName":"C:\\Windows\\System32\\svchost.exe"}}}    -->
-  <rule id="60606" level="7">
+  <!--rule id="60606" level="7">
     <if_sid>60604</if_sid>
     <field name="win.system.eventID">^1117$</field>
     <description>Windows Defender: error when taking action on potentially unwanted software $(win.eventdata.processName)</description>
     <options>no_full_log</options>
     <group>gdpr_IV_35.7.d,</group>
   </rule>
-</group>
+</group-->
 
  <!-- McAfee rules -->
-<group name="windows,mcafee,">
+<!--group name="windows,mcafee,">
  <rule id="60607" level="0">
     <if_sid>60001,60002,60003</if_sid>
     <field name="win.system.channel">^McLogEvent</field>
@@ -1099,19 +1146,19 @@
     <field name="win.system.message">contains the EICAR test file</field>
     <options>alert_by_email</options>
     <description>McAfee Windows AV - EICAR test file detected</description>
-  </rule>
+  </rule-->
 
   <!-- Composite rules -->
 
-  <rule id="60622" level="10" frequency="$MCAFEE_FREQ" timeframe="240">
+  <!--rule id="60622" level="10" frequency="$MCAFEE_FREQ" timeframe="240">
     <if_matched_sid>60609</if_matched_sid>
     <description>Multiple McAfee AV warning events</description>
     <group>pci_dss_5.1,pci_dss_10.6.1,gdpr_IV_35.7.d,</group>
   </rule>
-</group>
+</group-->
 
   <!-- MS SE rules -->
-<group name="windows,mse,">
+<!--group name="windows,mse,">
   <rule id="60623" level="0">
     <category>windows</category>
     <if_sid>60001,60002,60003</if_sid>
@@ -1244,333 +1291,44 @@
     <description>Multiple Microsoft Security Essentials AV warnings detected</description>
     <options>no_full_log</options>
   </rule>
-</group>
+</group-->
 
   <!-- MS logs rules -->
 
-<group name="windows,windows_logs,">
+<!--group name="windows,windows_logs,"-->
   <!--
      {"win":{"system":{"providerName":"Microsoft-Windows-Eventlog","providerGuid":"{555908d1-a6d7-4695-8e1e-26931d2012f4}","eventSourceName":"Microsoft-Windows-Eventlog","eventID":"1102","version":"0","level":"4","task":"0","opcode":"0","keywords":"0x8080000000000000","systemTime":"2018-11-27T13:03:51.594213100Z","eventRecordID":"8453","correlation":"","processID":"608","threadID":"1296","channel":"Microsoft-Windows-Eventlog","computer":"hffg","message":"The audit log was cleared.","severityValue":"INFORMATION"},"eventdata":{"subjectUserSid":"S-1-5-21-571","subjectUserName":"HFFG$","subjectDomainName":"WORKGROUP","subjectLogonId":"0x3e7","transactionId":"{D2399FF4-F177-11E8-82BA-08002750D7C5}","newState":"52","resourceManager":"{7D5F0E1F-ABCB-11E8-A2E2-D5514FE2B72B}","processId":"0x3f8","processName":"C:\\Windows\\System32\\svchost.exe"}}}    -->
-  <rule id="60640" level="5">
+  <!--rule id="60640" level="5">
     <if_sid>60001</if_sid>
     <field name="win.system.eventID">^1102$</field>
     <description>The audit log was cleared</description>
     <options>no_full_log</options>
     <group>log_clearing_auditlog,gpg13_10.1,gdpr_II_5.1.f,gdpr_IV_30.1.g,</group>
-  </rule>
+  </rule-->
 
   <!--
     {"win":{"system":{"providerName":"Microsoft-Windows-Eventlog","providerGuid":"{555908d1-a6d7-4695-8e1e-26931d2012f4}","eventSourceName":"Microsoft-Windows-Eventlog","eventID":"104","version":"0","level":"4","task":"0","opcode":"0","keywords":"0x8080000000000000","systemTime":"2018-11-27T13:03:51.594213100Z","eventRecordID":"8453","correlation":"","processID":"608","threadID":"1296","channel":"Microsoft-Windows-Eventlog","computer":"hffg","message":"The Internet Explorer log file was cleared.","severityValue":"INFORMATION"},"eventdata":{"subjectUserSid":"S-1-5-21-571","subjectUserName":"HFFG$","subjectDomainName":"WORKGROUP","subjectLogonId":"0x3e7","transactionId":"{D2399FF4-F177-11E8-82BA-08002750D7C5}","newState":"52","resourceManager":"{7D5F0E1F-ABCB-11E8-A2E2-D5514FE2B72B}","processId":"0x3f8","processName":"C:\\Windows\\System32\\svchost.exe"}}}    -->
-  <rule id="60641" level="5">
+  <!--rule id="60641" level="5">
     <if_sid>60001</if_sid>
     <field name="win.system.eventID">^104$</field>
     <description>The Internet Explorer log file was cleared</description>
     <options>no_full_log</options>
     <group>log_clearing_ie,gpg13_10.1,gdpr_II_5.1.f,</group>
-  </rule>
+  </rule-->
 
   <!--
     {"win":{"system":{"providerName":"Microsoft-Windows-Eventlog","providerGuid":"{555908d1-a6d7-4695-8e1e-26931d2012f4}","eventSourceName":"Microsoft-Windows-Eventlog","eventID":"6005","version":"0","level":"4","task":"0","opcode":"0","keywords":"0x8080000000000000","systemTime":"2018-11-27T13:03:51.594213100Z","eventRecordID":"8453","correlation":"","processID":"608","threadID":"1296","channel":"Microsoft-Windows-Eventlog","computer":"hffg","message":"The Event log service was started.","severityValue":"INFORMATION"},"eventdata":{"subjectUserSid":"S-1-5-21-571","subjectUserName":"HFFG$","subjectDomainName":"WORKGROUP","subjectLogonId":"0x3e7","transactionId":"{D2399FF4-F177-11E8-82BA-08002750D7C5}","newState":"52","resourceManager":"{7D5F0E1F-ABCB-11E8-A2E2-D5514FE2B72B}","processId":"0x3f8","processName":"C:\\Windows\\System32\\svchost.exe"}}}    -->
-  <rule id="60642" level="5">
+  <!--rule id="60642" level="5">
     <if_sid>60001</if_sid>
     <field name="win.system.eventID">^6005$</field>
     <description>The Event log service was started</description>
     <options>no_full_log</options>
     <group>windows_log_service_started,gpg13_10.1,</group>
   </rule>
-</group>
-
-  <!-- Sysmon rules -->
-<group name="windows,sysmon,">
-  <rule id="60643" level="0">
-    <if_sid>60001</if_sid>
-    <field name="win.system.channel">^Microsoft-Windows-Sysmon/Operational</field>
-    <description>Sysmon - Group of events</description>
-    <options>no_full_log</options>
-  </rule>
-
-  <rule id="60644" level="0">
-    <if_sid>60643</if_sid>
-    <field name="win.system.eventID">^1$</field>
-    <description>Sysmon - Event 1: Process creation $(win.eventdata.description)</description>
-    <options>no_full_log</options>
-    <group>sysmon_event1,</group>
-  </rule>
-
-  <rule id="60645" level="0">
-    <if_sid>60643</if_sid>
-    <field name="win.system.eventID">^2$</field>
-    <description>Sysmon - Event 2: A process changed a file creation time by $(win.eventdata.sourceImage)</description>
-    <options>no_full_log</options>
-    <group>sysmon_event2,</group>
-  </rule>
-
-  <rule id="60646" level="0">
-    <if_sid>60643</if_sid>
-    <field name="win.system.eventID">^3$</field>
-    <description>Sysmon - Event 3: Network connection by $(win.eventdata.sourceImage)</description>
-    <options>no_full_log</options>
-    <group>sysmon_event3,</group>
-  </rule>
-
-  <rule id="60647" level="0">
-    <if_sid>60643</if_sid>
-    <field name="win.system.eventID">^4$</field>
-    <description>Sysmon - Event 4: Sysmon service state changed by $(win.eventdata.sourceImage)</description>
-    <options>no_full_log</options>
-    <group>sysmon_event4,</group>
-  </rule>
-
-  <rule id="60648" level="0">
-    <if_sid>60643</if_sid>
-    <field name="win.system.eventID">^5$</field>
-    <description>Sysmon - Event 5: Process terminated by $(win.eventdata.sourceImage)</description>
-    <options>no_full_log</options>
-    <group>sysmon_event5,</group>
-  </rule>
-
-  <rule id="60649" level="0">
-    <if_sid>60643</if_sid>
-    <field name="win.system.eventID">^6$</field>
-    <description>Sysmon - Event 6: Driver loaded by $(win.eventdata.sourceImage)</description>
-    <options>no_full_log</options>
-    <group>sysmon_event6,</group>
-  </rule>
-
-  <rule id="60650" level="0">
-    <if_sid>60643</if_sid>
-    <field name="win.system.eventID">^7$</field>
-    <description>Sysmon - Event 7: Image loaded by $(win.eventdata.sourceImage)</description>
-    <options>no_full_log</options>
-    <group>sysmon_event7,</group>
-  </rule>
-
-  <rule id="60651" level="0">
-    <if_sid>60643</if_sid>
-    <field name="win.system.eventID">^8$</field>
-    <description>Sysmon - Event 8: CreateRemoteThread by $(win.eventdata.sourceImage)</description>
-    <options>no_full_log</options>
-    <group>sysmon_event8,</group>
-  </rule>
-
-  <rule id="60652" level="0">
-    <if_sid>60643</if_sid>
-    <field name="win.system.eventID">^9$</field>
-    <description>Sysmon - Event 9: RawAccessRead by $(win.eventdata.sourceImage)</description>
-    <options>no_full_log</options>
-    <group>sysmon_event9,</group>
-  </rule>
-
-  <rule id="60653" level="0">
-    <if_sid>60643</if_sid>
-    <field name="win.system.eventID">^10$</field>
-    <description>Sysmon - Event 10: ProcessAccess by $(win.eventdata.sourceImage)</description>
-    <options>no_full_log</options>
-    <group>sysmon_event_10,</group>
-  </rule>
-
-  <rule id="60654" level="0">
-    <if_sid>60643</if_sid>
-    <field name="win.system.eventID">^11$</field>
-    <description>Sysmon - Event 11: FileCreate by $(win.eventdata.sourceImage)</description>
-    <options>no_full_log</options>
-    <group>sysmon_event_11,</group>
-  </rule>
-
-  <rule id="60655" level="0">
-    <if_sid>60643</if_sid>
-    <field name="win.system.eventID">^12$</field>
-    <description>Sysmon - Event 12: RegistryEvent (Object create and delete) by $(win.eventdata.sourceImage)</description>
-    <options>no_full_log</options>
-    <group>sysmon_event_12,</group>
-  </rule>
-
-  <rule id="60656" level="0">
-    <if_sid>60643</if_sid>
-    <field name="win.system.eventID">^13$</field>
-    <description>Sysmon - Event 13: RegistryEvent (Value Set) by $(win.eventdata.sourceImage)</description>
-    <options>no_full_log</options>
-    <group>sysmon_event_13,</group>
-  </rule>
-
-  <rule id="60657" level="0">
-    <if_sid>60643</if_sid>
-    <field name="win.system.eventID">^14$</field>
-    <description>Sysmon - Event 14: RegistryEvent (Key and Value Rename) by $(win.eventdata.sourceImage)</description>
-    <options>no_full_log</options>
-    <group>sysmon_event_14,</group>
-  </rule>
-
-  <rule id="60658" level="0">
-    <if_sid>60643</if_sid>
-    <field name="win.system.eventID">^15$</field>
-    <description>Sysmon - Event 15: FileCreateStreamHash by $(win.eventdata.sourceImage)</description>
-    <options>no_full_log</options>
-    <group>sysmon_event_15,</group>
-  </rule>
-</group>
-
-<group name="windows,sysmon,sysmon_process-anomalies,">
-  <rule id="60659" level="12">
-    <if_group>sysmon_event1</if_group>
-    <field name="win.eventdata.image">svchost.exe</field>
-    <description>Sysmon - Suspicious Process - svchost.exe</description>
-    <group>pci_dss_10.6.1,pci_dss_11.4,gdpr_IV_35.7.d,</group>
-  </rule>
-
-  <rule id="60660" level="0">
-    <if_sid>60659</if_sid>
-    <field name="win.eventdata.parentImage">\\services.exe</field>
-    <description>Sysmon - Legitimate Parent Image - svchost.exe</description>
-  </rule>
-
-  <rule id="60661" level="12">
-    <if_group>sysmon_event1</if_group>
-    <field name="win.eventdata.image">lsm.exe</field>
-    <description>Sysmon - Suspicious Process - lsm.exe</description>
-    <group>pci_dss_10.6.1,pci_dss_11.4,gdpr_IV_35.7.d,</group>
-  </rule>
-
-  <rule id="60662" level="0">
-    <if_sid>60661</if_sid>
-    <field name="win.eventdata.parentImage">wininit.exe</field>
-    <description>Sysmon - Legitimate Parent Image - lsm.exe</description>
-  </rule>
-
-  <rule id="60663" level="12">
-    <if_group>sysmon_event1</if_group>
-    <field name="win.eventdata.parentImage">lsm.exe</field>
-    <description>Sysmon - Suspicious Process - lsm.exe is a Parent Image</description>
-    <group>pci_dss_10.6.1,pci_dss_11.4,gdpr_IV_35.7.d,</group>
-  </rule>
-
-  <rule id="60664" level="12">
-    <if_group>sysmon_event1</if_group>
-    <field name="win.eventdata.image">csrss.exe</field>
-    <description>Sysmon - Suspicious Process - csrss.exe</description>
-    <group>pci_dss_10.6.1,pci_dss_11.4,gdpr_IV_35.7.d,</group>
-  </rule>
-
-  <rule id="60665" level="0">
-    <if_sid>60664</if_sid>
-    <field name="win.eventdata.parentImage">smss.exe</field>
-    <description>Sysmon - Legitimate Parent Image - csrss.exe</description>
-  </rule>
-
-  <rule id="60666" level="12">
-    <if_group>sysmon_event1</if_group>
-    <field name="win.eventdata.image">lsass.exe</field>
-    <description>Sysmon - Suspicious Process - lsass</description>
-    <group>pci_dss_10.6.1,pci_dss_11.4,gdpr_IV_35.7.d,</group>
-  </rule>
-
-  <rule id="60667" level="0">
-    <if_sid>60666</if_sid>
-    <field name="win.eventdata.parentImage">wininit.exe</field>
-    <description>Sysmon - Legitimate Parent Image - lsass.exe</description>
-  </rule>
-
-  <rule id="60668" level="12">
-    <if_group>sysmon_event1</if_group>
-    <field name="win.eventdata.parentImage">lsass.exe</field>
-    <description>Sysmon - Suspicious Process - lsass.exe is a Parent Image</description>
-    <group>pci_dss_10.6.1,pci_dss_11.4,gdpr_IV_35.7.d,</group>
-  </rule>
-
-  <rule id="60669" level="12">
-    <if_group>sysmon_event1</if_group>
-    <field name="win.eventdata.image">winlogon.exe</field>
-    <description>Sysmon - Suspicious Process - winlogon.exe</description>
-    <group>pci_dss_10.6.1,pci_dss_11.4,gdpr_IV_35.7.d,</group>
-  </rule>
-
-  <rule id="60670" level="0">
-    <if_sid>60669</if_sid>
-    <field name="win.eventdata.parentImage">smss.exe</field>
-    <description>Sysmon - Legitimate Parent Image - winlogon.exe</description>
-  </rule>
-
-  <rule id="60671" level="12">
-    <if_group>sysmon_event1</if_group>
-    <field name="win.eventdata.image">wininit.exe</field>
-    <description>Sysmon - Suspicious Process - wininit</description>
-    <group>pci_dss_10.6.1,pci_dss_11.4,gdpr_IV_35.7.d,</group>
-  </rule>
-
-  <rule id="60672" level="0">
-    <if_sid>60671</if_sid>
-    <field name="win.eventdata.parentImage">smss.exe</field>
-    <description>Sysmon - Legitimate Parent Image - wininit.exe</description>
-  </rule>
-
-  <rule id="60673" level="12">
-    <if_group>sysmon_event1</if_group>
-    <field name="win.eventdata.image">smss.exe</field>
-    <description>Sysmon - Suspicious Process - smss.exe</description>
-    <group>pci_dss_10.6.1,pci_dss_11.4,gdpr_IV_35.7.d,</group>
-  </rule>
-
-  <rule id="60674" level="0">
-    <if_sid>60673</if_sid>
-    <field name="win.eventdata.parentImage">system</field>
-    <description>Sysmon - Legitimate Parent Image - smss.exe</description>
-  </rule>
-
-  <rule id="60675" level="12">
-    <if_group>sysmon_event1</if_group>
-    <field name="win.eventdata.image">taskhost.exe</field>
-    <description>Sysmon - Suspicious Process - taskhost.exe</description>
-    <group>pci_dss_10.6.1,pci_dss_11.4,gdpr_IV_35.7.d,</group>
-  </rule>
-
-  <rule id="60676" level="0">
-    <if_sid>60675</if_sid>
-    <field name="win.eventdata.parentImage">services.exe|svchost.exe</field>
-    <description>Sysmon - Legitimate Parent Image - taskhost.exe</description>
-  </rule>
-
-  <rule id="60677" level="12">
-    <if_group>sysmon_event1</if_group>
-    <field name="win.eventdata.image">/services.exe</field>
-    <description>Sysmon - Suspicious Process - services.exe</description>
-    <group>pci_dss_10.6.1,pci_dss_11.4,gdpr_IV_35.7.d,</group>
-  </rule>
-
-  <rule id="60678" level="0">
-    <if_sid>60677</if_sid>
-    <field name="win.eventdata.parentImage">wininit.exe</field>
-    <description>Sysmon - Legitimate Parent Image - services.exe</description>
-  </rule>
-
-  <rule id="60679" level="12">
-    <if_group>sysmon_event1</if_group>
-    <field name="win.eventdata.image">dllhost.exe</field>
-    <description>Sysmon - Suspicious Process - dllhost.exe</description>
-    <group>pci_dss_10.6.1,pci_dss_11.4,gdpr_IV_35.7.d,</group>
-  </rule>
-
-  <rule id="60680" level="0">
-    <if_sid>60679</if_sid>
-    <field name="win.eventdata.parentImage">svchost.exe|services.exe</field>
-    <description>Sysmon - Legitimate Parent Image - dllhost.exe</description>
-  </rule>
-
-  <rule id="60681" level="12">
-    <if_group>sysmon_event1</if_group>
-    <field name="win.eventdata.image">\\explorer.exe</field>
-    <description>Sysmon - Suspicious Process - explorer.exe</description>
-    <group>pci_dss_10.6.1,pci_dss_11.4,gdpr_IV_35.7.d,</group>
-  </rule>
-
-  <rule id="60682" level="0">
-    <if_sid>60681</if_sid>
-    <field name="win.eventdata.parentImage">userinit.exe</field>
-    <description>Sysmon - Legitimate Parent Image - explorer.exe</description>
-  </rule>
-</group>
+</group-->
 
   <!-- MS IPSec rules -->
-<group name="windows, ipsec,">
+<!--group name="windows, ipsec,">
   <rule id="60683" level="8">
     <if_sid>60004</if_sid>
     <field name="win.system.eventID">^4646$</field>
@@ -1696,4 +1454,4 @@
     <description>IPsec Services encountered a potentially serious failure</description>
     <options>no_full_log</options>
    </rule>
-</group>
+</group-->
