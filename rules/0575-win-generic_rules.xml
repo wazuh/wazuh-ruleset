@@ -4,6 +4,7 @@
   -  Copyright (C) 2015-2019, Wazuh Inc.
   -  This program is a free software; you can redistribute it and/or modify it under the terms of GPLv2.
 -->
+<var name="MS_FREQ">8</var>
 
 <group name="windows,">
 
@@ -121,7 +122,7 @@
     <options>no_full_log</options>
   </rule>-->
 
-<group name="windows, windows_system">
+<!--group name="windows, windows_system">
   <rule id="60107" level="5">
     <if_sid>60002,60003</if_sid>
     <field name="win.system.eventID">^20187$|^20014$|^20078$|^20050$|^20049$|^20189$</field>
@@ -152,10 +153,10 @@
     <group>system_error, system_shutdown,pci_dss_10.6.1,gdpr_IV_35.7.d,</group>
     <description>Unexpected Windows shutdown</description>
     <options>no_full_log</options>
-  </rule>
+  </rule-->
 
   <!-- Some services change their startup type automatically -->
-  <rule id="60111" level="3">
+  <!--rule id="60111" level="3">
     <if_sid>60001</if_sid>
     <field name="win.system.eventID">^7040$</field>
     <group>policy_changed,pci_dss_10.6,gdpr_IV_35.7.d,</group>
@@ -219,7 +220,7 @@
     <options>no_full_log</options>
     <group>authentication_failures,pci_dss_10.2.4,pci_dss_10.2.5,pci_dss_11.4,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
   </rule>
-</group>
+</group-->
 
   <!-- MS SE rules -->
 <!--group name="windows,mse,">
@@ -357,39 +358,6 @@
   </rule>
 </group-->
 
-  <!-- MS logs rules -->
-
-<!--group name="windows,windows_logs,"-->
-  <!--
-     {"win":{"system":{"providerName":"Microsoft-Windows-Eventlog","providerGuid":"{555908d1-a6d7-4695-8e1e-26931d2012f4}","eventSourceName":"Microsoft-Windows-Eventlog","eventID":"1102","version":"0","level":"4","task":"0","opcode":"0","keywords":"0x8080000000000000","systemTime":"2018-11-27T13:03:51.594213100Z","eventRecordID":"8453","correlation":"","processID":"608","threadID":"1296","channel":"Microsoft-Windows-Eventlog","computer":"hffg","message":"The audit log was cleared.","severityValue":"INFORMATION"},"eventdata":{"subjectUserSid":"S-1-5-21-571","subjectUserName":"HFFG$","subjectDomainName":"WORKGROUP","subjectLogonId":"0x3e7","transactionId":"{D2399FF4-F177-11E8-82BA-08002750D7C5}","newState":"52","resourceManager":"{7D5F0E1F-ABCB-11E8-A2E2-D5514FE2B72B}","processId":"0x3f8","processName":"C:\\Windows\\System32\\svchost.exe"}}}    -->
-  <!--rule id="60640" level="5">
-    <if_sid>60001</if_sid>
-    <field name="win.system.eventID">^1102$</field>
-    <description>The audit log was cleared</description>
-    <options>no_full_log</options>
-    <group>log_clearing_auditlog,gpg13_10.1,gdpr_II_5.1.f,gdpr_IV_30.1.g,</group>
-  </rule-->
-
-  <!--
-    {"win":{"system":{"providerName":"Microsoft-Windows-Eventlog","providerGuid":"{555908d1-a6d7-4695-8e1e-26931d2012f4}","eventSourceName":"Microsoft-Windows-Eventlog","eventID":"104","version":"0","level":"4","task":"0","opcode":"0","keywords":"0x8080000000000000","systemTime":"2018-11-27T13:03:51.594213100Z","eventRecordID":"8453","correlation":"","processID":"608","threadID":"1296","channel":"Microsoft-Windows-Eventlog","computer":"hffg","message":"The Internet Explorer log file was cleared.","severityValue":"INFORMATION"},"eventdata":{"subjectUserSid":"S-1-5-21-571","subjectUserName":"HFFG$","subjectDomainName":"WORKGROUP","subjectLogonId":"0x3e7","transactionId":"{D2399FF4-F177-11E8-82BA-08002750D7C5}","newState":"52","resourceManager":"{7D5F0E1F-ABCB-11E8-A2E2-D5514FE2B72B}","processId":"0x3f8","processName":"C:\\Windows\\System32\\svchost.exe"}}}    -->
-  <!--rule id="60641" level="5">
-    <if_sid>60001</if_sid>
-    <field name="win.system.eventID">^104$</field>
-    <description>The Internet Explorer log file was cleared</description>
-    <options>no_full_log</options>
-    <group>log_clearing_ie,gpg13_10.1,gdpr_II_5.1.f,</group>
-  </rule-->
-
-  <!--
-    {"win":{"system":{"providerName":"Microsoft-Windows-Eventlog","providerGuid":"{555908d1-a6d7-4695-8e1e-26931d2012f4}","eventSourceName":"Microsoft-Windows-Eventlog","eventID":"6005","version":"0","level":"4","task":"0","opcode":"0","keywords":"0x8080000000000000","systemTime":"2018-11-27T13:03:51.594213100Z","eventRecordID":"8453","correlation":"","processID":"608","threadID":"1296","channel":"Microsoft-Windows-Eventlog","computer":"hffg","message":"The Event log service was started.","severityValue":"INFORMATION"},"eventdata":{"subjectUserSid":"S-1-5-21-571","subjectUserName":"HFFG$","subjectDomainName":"WORKGROUP","subjectLogonId":"0x3e7","transactionId":"{D2399FF4-F177-11E8-82BA-08002750D7C5}","newState":"52","resourceManager":"{7D5F0E1F-ABCB-11E8-A2E2-D5514FE2B72B}","processId":"0x3f8","processName":"C:\\Windows\\System32\\svchost.exe"}}}    -->
-  <!--rule id="60642" level="5">
-    <if_sid>60001</if_sid>
-    <field name="win.system.eventID">^6005$</field>
-    <description>The Event log service was started</description>
-    <options>no_full_log</options>
-    <group>windows_log_service_started,gpg13_10.1,</group>
-  </rule>
-</group-->
 
   <!-- MS IPSec rules -->
 <!--group name="windows, ipsec,">
