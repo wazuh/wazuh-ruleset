@@ -1,0 +1,521 @@
+<!--
+  -  Windows Event Channel ruleset
+  -  Created by Wazuh, Inc.
+  -  Copyright (C) 2015-2019, Wazuh Inc.
+  -  This program is a free software; you can redistribute it and/or modify it under the terms of GPLv2.
+-->
+
+<group name="windows,">
+
+  <rule id="60000" level="0">
+    <category>ossec</category>
+    <decoded_as>windows_eventchannel</decoded_as>
+    <field name="win.system.providerName">\.+</field>
+    <options>no_full_log</options>
+    <description>Group of windows rules</description>
+  </rule>
+
+  <rule id="60001" level="0">
+    <if_sid>60000</if_sid>
+    <field name="win.system.channel">^Security</field>
+    <options>no_full_log</options>
+    <description>Group of Windows rules for the Security channel</description>
+  </rule>
+
+  <rule id="60002" level="0">
+    <if_sid>60000</if_sid>
+    <field name="win.system.channel">^System</field>
+    <options>no_full_log</options>
+    <description>Group of Windows rules for the System channel</description>
+  </rule>
+
+  <rule id="60003" level="0">
+    <if_sid>60000</if_sid>
+    <field name="win.system.channel">^Application</field>
+    <options>no_full_log</options>
+    <description>Group of Windows rules for the Application channel</description>
+  </rule>
+
+  <rule id="60004" level="0">
+    <if_sid>60000</if_sid>
+    <field name="win.system.channel">^Microsoft-Windows-Sysmon/Operational</field>
+    <options>no_full_log</options>
+    <description>Group of Windows rules for the Sysmon channel</description>
+  </rule>
+
+  <rule id="60005" level="0">
+    <if_sid>60000</if_sid>
+    <field name="win.system.channel">^Microsoft-Windows-Windows Defender/Operational</field>
+    <options>no_full_log</options>
+    <description>Group of Windows rules for the Sysmon channel</description>
+  </rule>
+
+  <rule id="60006" level="0">
+    <if_sid>60000</if_sid>
+    <field name="win.system.channel">^McLogEvent</field>
+    <options>no_full_log</options>
+    <description>Group of Windows rules for the McAfee channel</description>
+  </rule>
+
+  <rule id="60007" level="0">
+    <if_sid>60000</if_sid>
+    <field name="win.system.channel">^Microsoft-Windows-Eventlog</field>
+    <options>no_full_log</options>
+    <description>Group of rules for Windows Eventlog</description>
+  </rule>
+
+  <rule id="60008" level="0">
+    <if_sid>60000</if_sid>
+    <field name="win.system.channel">^Microsoft Antimalware</field>
+    <options>no_full_log</options>
+    <description>Group of Microsoft Security Essentials rules</description>
+  </rule>
+
+  <!-- To classify -->
+  <rule id="60009" level="0">
+    <if_sid>60000</if_sid>
+    <field name="win.system.channel">^</field>
+    <options>no_full_log</options>
+    <description>Group of IPSec rules</description>
+  </rule>
+
+</group>
+
+  <!-- <rule id="60001" level="0">
+    <if_sid>60000</if_sid>
+    <field name="win.system.severityValue">^INFORMATION</field>
+    <description>Windows informational event</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="60002" level="0">
+    <if_sid>60000</if_sid>
+    <field name="win.system.severityValue">^WARNING</field>
+    <description>Windows warning event</description>
+    <options>no_full_log</options>
+    <group>gpg13_4.12,</group>
+  </rule> -->
+
+  <!--{"win":{"system":{"providerName":"NetBT","eventID":"4321","level":"2","task":"0","keywords":"0x80000000000000","systemTime":"2018-12-18T10:55:40.107861400Z","eventRecordID":"1701","channel":"System","computer":"qnu","severityValue":"ERROR","message":"Le nom \\\"WORKGROUP      :1d\\\" n’a pas pu être enregistré sur l’interface avec l’adresse IP 10.0.2.15. L’ordinateur avec l’adresse IP 10.0.2.2 n’a pas permis que le nom soit réclamé par cet ordinateur."},"eventdata":{"data":"","data":"WORKGROUP      :1d","data":"10.0.2.15","data":"10.0.2.2","binary":"00000000040032000000000E11000C001010000010000C029000000000000000000000000000000"}}}-->
+  <!--rule id="60003" level="5">
+    <if_sid>60000</if_sid>
+    <field name="win.system.severityValue">^ERROR</field>
+    <description>Windows System error event</description>
+    <options>no_full_log</options>
+    <group>system_error,gpg13_4.3,gdpr_IV_35.7.d,</group>
+  </rule>
+
+  <rule id="60004" level="0">
+    <if_sid>60000</if_sid>
+    <field name="win.system.severityValue">^AUDIT_SUCCESS|^success</field>
+    <description>Windows audit success event</description>
+    <options>no_full_log</options>
+  </rule>
+  
+
+  <rule id="60005" level="5">
+    <if_sid>60000</if_sid>
+    <field name="win.system.severityValue">^AUDIT_FAILURE|^failure</field>
+    <description>Windows audit failure event</description>
+    <group>pci_dss_10.6.1,gdpr_IV_35.7.d,</group>
+    <options>no_full_log</options>
+  </rule>-->
+
+<group name="windows, windows_system">
+  <rule id="60107" level="5">
+    <if_sid>60002,60003</if_sid>
+    <field name="win.system.eventID">^20187$|^20014$|^20078$|^20050$|^20049$|^20189$</field>
+    <description>Remote access login failure</description>
+    <options>no_full_log</options>
+    <group>authentication_failed,pci_dss_10.2.4,pci_dss_10.2.5,pci_dss_8.1.5,gpg13_7.1,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="60108" level="3">
+    <if_sid>60001</if_sid>
+    <field name="win.system.eventID">^20158$</field>
+    <description>Remote access login success</description>
+    <options>no_full_log</options>
+    <group>authentication_success,pci_dss_10.2.5,pci_dss_8.1.5,gpg13_7.1,gpg13_7.2,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="60109" level="8">
+    <if_sid>60003</if_sid>
+    <field name="win.system.eventID">^13570$</field>
+    <description>Windows file system full</description>
+    <options>no_full_log</options>
+    <group>low_diskspace,pci_dss_10.6.1,gpg13_4.1,gdpr_IV_35.7.d,</group>
+  </rule>
+
+  <rule id="60110" level="7">
+    <if_sid>60002</if_sid>
+    <field name="win.system.eventID">^1076$</field>
+    <group>system_error, system_shutdown,pci_dss_10.6.1,gdpr_IV_35.7.d,</group>
+    <description>Unexpected Windows shutdown</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <!-- Some services change their startup type automatically -->
+  <rule id="60111" level="3">
+    <if_sid>60001</if_sid>
+    <field name="win.system.eventID">^7040$</field>
+    <group>policy_changed,pci_dss_10.6,gdpr_IV_35.7.d,</group>
+    <description>Service startup type was changed</description>
+    <options>no_full_log</options>
+    <info type="text">This does not appear to be logged on Windows 2000</info>
+  </rule>
+
+  <rule id="60112" level="3">
+    <if_sid>60001</if_sid>
+    <field name="win.system.eventID">^200$|^300$|^302$</field>
+    <description>TS Gateway login success</description>
+    <options>no_full_log</options>
+    <group>authentication_success,pci_dss_10.2.5,gpg13_7.1,gpg13_7.2,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="60113" level="0">
+    <if_sid>60112</if_sid>
+    <field name="win.system.message">\.*The database engine has successfully completed recovery steps|The database engine is initiating recovery steps</field>
+    <description>Ignore rule 60112: TS Gateway login success</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="60114" level="5">
+    <if_sid>60002,60003</if_sid>
+    <field name="win.system.eventID">^201$|^203$|^204$|^301$|^304$|^305$|^306$|^1001$</field>
+    <description>TS Gateway login failure</description>
+    <options>no_full_log</options>
+    <group>authentication_failed,pci_dss_10.2.4,pci_dss_10.2.5,gpg13_7.1,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="60115" level="3">
+    <if_sid>60001</if_sid>
+    <field name="win.system.eventID">^202$|^303$</field>
+    <description>TS Gateway user disconnected</description>
+    <options>no_full_log</options>
+  </rule>
+  
+  <rule id="60116" level="10" frequency="$MS_FREQ" timeframe="240">
+    <if_matched_sid>60003</if_matched_sid>
+    <description>Multiple Windows error events</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="60117" level="10" frequency="$MS_FREQ" timeframe="120">
+    <if_matched_sid>60002</if_matched_sid>
+    <description>Multiple Windows WARNING events</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="60118" level="10" frequency="$MS_FREQ" timeframe="240">
+    <if_matched_sid>60109</if_matched_sid>
+    <description>Multiple remote access login failures</description>
+    <options>no_full_log</options>
+    <group>authentication_failures,pci_dss_10.2.4,pci_dss_10.2.5,pci_dss_11.4,pci_dss_8.1.5,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="60119" level="10" frequency="$MS_FREQ" timeframe="240">
+    <if_matched_sid>60114</if_matched_sid>
+    <description>Multiple TS Gateway login failures</description>
+    <options>no_full_log</options>
+    <group>authentication_failures,pci_dss_10.2.4,pci_dss_10.2.5,pci_dss_11.4,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+  </rule>
+</group>
+
+  <!-- MS SE rules -->
+<!--group name="windows,mse,">
+  <rule id="60623" level="0">
+    <category>windows</category>
+    <if_sid>60001,60002,60003</if_sid>
+    <field name="win.system.channel">^Microsoft Antimalware</field>
+    <description>Grouping of Microsoft Security Essentials rules</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="60624" level="12">
+    <if_sid>60623</if_sid>
+    <field name="win.system.eventID">^1118$|^1119$</field>
+    <group>virus,pci_dss_5.1,pci_dss_5.2,pci_dss_10.6.1,pci_dss_11.4,gpg13_4.2,gdpr_IV_35.7.d,</group>
+    <description>Microsoft Security Essentials - Virus detected, but unable to remove</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="60625" level="7">
+    <if_sid>60623</if_sid>
+    <field name="win.system.eventID">^1107$</field>
+    <group>virus,pci_dss_5.1,pci_dss_5.2,pci_dss_10.6.1,pci_dss_11.4,gpg13_4.2,gdpr_IV_35.7.d,</group>
+    <description>Microsoft Security Essentials - Virus detected and properly removed</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="60626" level="7">
+    <if_sid>60623</if_sid>
+    <field name="win.system.eventID">^1119$|^1118$|^1117$|^1116$</field>
+    <group>virus,pci_dss_5.1,pci_dss_5.2,pci_dss_10.6.1,pci_dss_11.4,gpg13_4.2,gdpr_IV_35.7.d,</group>
+    <description>Microsoft Security Essentials - Virus detected</description>
+    <options>no_full_log</options>
+  </rule>
+
+   <rule id="60627" level="7">
+    <if_sid>60623</if_sid>
+    <field name="win.system.eventID">^1015$</field>
+    <group>virus,pci_dss_5.1,pci_dss_5.2,pci_dss_10.6.1,pci_dss_11.4,gpg13_4.2,gdpr_IV_35.7.d,</group>
+    <description>Microsoft Security Essentials - Suspicious activity detected</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="60628" level="3">
+    <if_sid>60623</if_sid>
+    <field name="win.system.eventID">^5007$</field>
+    <description>Microsoft Security Essentials - Configuration changed</description>
+    <options>no_full_log</options>
+    <group>policy_changed,pci_dss_10.2.7,pci_dss_10.6.1,gpg13_4.4,gdpr_IV_35.7.d,</group>
+  </rule>
+
+  <rule id="60629" level="9">
+    <if_sid>60623</if_sid>
+    <field name="win.system.eventID">^5008$</field>
+    <group>pci_dss_10.6.1,gpg13_4.14,gdpr_IV_35.7.d,</group>
+    <description>Microsoft Security Essentials - Service failed</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="60630" level="9">
+    <if_sid>60623</if_sid>
+    <field name="win.system.eventID">^3002$</field>
+    <group>pci_dss_10.6.1,gpg13_4.14,gdpr_IV_35.7.d,</group>
+    <description>Microsoft Security Essentials - Real time protection failed</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="60631" level="8">
+    <if_sid>60623</if_sid>
+    <field name="win.system.eventID">^2012$</field>
+    <description>Microsoft Security Essentials - Cannot use Dynamic Signature Service</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="60632" level="8">
+    <if_sid>60623</if_sid>
+    <field name="win.system.eventID">^2004$</field>
+    <group>pci_dss_10.6.1,gpg13_4.14,gpg13_4.4,gpg13_,gdpr_IV_35.7.d,</group>
+    <description>Microsoft Security Essentials - Loading definitions failed. Using last good set</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="60633" level="8">
+    <if_sid>60623</if_sid>
+    <field name="win.system.eventID">^2003$</field>
+    <group>pci_dss_10.6.1,gpg13_4.14,gdpr_IV_35.7.d,</group>
+    <description>Microsoft Security Essentials - Engine update failed</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="60634" level="8">
+    <if_sid>60623</if_sid>
+    <field name="win.system.eventID">^2001$</field>
+    <group>pci_dss_10.6.1,gpg13_4.14,gdpr_IV_35.7.d,</group>
+    <description>Microsoft Security Essentials - Definitions update failed</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="60635" level="7">
+    <if_sid>60623</if_sid>
+    <field name="win.system.eventID">^1005$</field>
+    <group>pci_dss_10.6.1,gpg13_4.4,gdpr_IV_35.7.d,</group>
+    <description>Microsoft Security Essentials - Scan error. Scan has stopped</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="60636" level="5">
+    <if_sid>60623</if_sid>
+    <field name="win.system.eventID">^1002$</field>
+    <group>pci_dss_10.6.1,gpg13_4.14,gdpr_IV_35.7.d,</group>
+    <description>Microsoft Security Essentials - Scan stopped before completion</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="60637" level="5">
+    <if_sid>60625,60626</if_sid>
+    <field name="win.system.message">\.*DOS/EICAR_Test_File</field>
+    <options>alert_by_email</options>
+    <description>Microsoft Security Essentials - EICAR test file detected</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="60638" level="10" frequency="8" timeframe="240">
+    <if_matched_sid>60625</if_matched_sid>
+    <group>gdpr_IV_35.7.d,</group>
+    <description>Multiple Microsoft Security Essentials AV warnings detected</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="60639" level="10" frequency="8" timeframe="240">
+    <if_matched_sid>60626</if_matched_sid>
+    <group>gdpr_IV_35.7.d,</group>
+    <description>Multiple Microsoft Security Essentials AV warnings detected</description>
+    <options>no_full_log</options>
+  </rule>
+</group-->
+
+  <!-- MS logs rules -->
+
+<!--group name="windows,windows_logs,"-->
+  <!--
+     {"win":{"system":{"providerName":"Microsoft-Windows-Eventlog","providerGuid":"{555908d1-a6d7-4695-8e1e-26931d2012f4}","eventSourceName":"Microsoft-Windows-Eventlog","eventID":"1102","version":"0","level":"4","task":"0","opcode":"0","keywords":"0x8080000000000000","systemTime":"2018-11-27T13:03:51.594213100Z","eventRecordID":"8453","correlation":"","processID":"608","threadID":"1296","channel":"Microsoft-Windows-Eventlog","computer":"hffg","message":"The audit log was cleared.","severityValue":"INFORMATION"},"eventdata":{"subjectUserSid":"S-1-5-21-571","subjectUserName":"HFFG$","subjectDomainName":"WORKGROUP","subjectLogonId":"0x3e7","transactionId":"{D2399FF4-F177-11E8-82BA-08002750D7C5}","newState":"52","resourceManager":"{7D5F0E1F-ABCB-11E8-A2E2-D5514FE2B72B}","processId":"0x3f8","processName":"C:\\Windows\\System32\\svchost.exe"}}}    -->
+  <!--rule id="60640" level="5">
+    <if_sid>60001</if_sid>
+    <field name="win.system.eventID">^1102$</field>
+    <description>The audit log was cleared</description>
+    <options>no_full_log</options>
+    <group>log_clearing_auditlog,gpg13_10.1,gdpr_II_5.1.f,gdpr_IV_30.1.g,</group>
+  </rule-->
+
+  <!--
+    {"win":{"system":{"providerName":"Microsoft-Windows-Eventlog","providerGuid":"{555908d1-a6d7-4695-8e1e-26931d2012f4}","eventSourceName":"Microsoft-Windows-Eventlog","eventID":"104","version":"0","level":"4","task":"0","opcode":"0","keywords":"0x8080000000000000","systemTime":"2018-11-27T13:03:51.594213100Z","eventRecordID":"8453","correlation":"","processID":"608","threadID":"1296","channel":"Microsoft-Windows-Eventlog","computer":"hffg","message":"The Internet Explorer log file was cleared.","severityValue":"INFORMATION"},"eventdata":{"subjectUserSid":"S-1-5-21-571","subjectUserName":"HFFG$","subjectDomainName":"WORKGROUP","subjectLogonId":"0x3e7","transactionId":"{D2399FF4-F177-11E8-82BA-08002750D7C5}","newState":"52","resourceManager":"{7D5F0E1F-ABCB-11E8-A2E2-D5514FE2B72B}","processId":"0x3f8","processName":"C:\\Windows\\System32\\svchost.exe"}}}    -->
+  <!--rule id="60641" level="5">
+    <if_sid>60001</if_sid>
+    <field name="win.system.eventID">^104$</field>
+    <description>The Internet Explorer log file was cleared</description>
+    <options>no_full_log</options>
+    <group>log_clearing_ie,gpg13_10.1,gdpr_II_5.1.f,</group>
+  </rule-->
+
+  <!--
+    {"win":{"system":{"providerName":"Microsoft-Windows-Eventlog","providerGuid":"{555908d1-a6d7-4695-8e1e-26931d2012f4}","eventSourceName":"Microsoft-Windows-Eventlog","eventID":"6005","version":"0","level":"4","task":"0","opcode":"0","keywords":"0x8080000000000000","systemTime":"2018-11-27T13:03:51.594213100Z","eventRecordID":"8453","correlation":"","processID":"608","threadID":"1296","channel":"Microsoft-Windows-Eventlog","computer":"hffg","message":"The Event log service was started.","severityValue":"INFORMATION"},"eventdata":{"subjectUserSid":"S-1-5-21-571","subjectUserName":"HFFG$","subjectDomainName":"WORKGROUP","subjectLogonId":"0x3e7","transactionId":"{D2399FF4-F177-11E8-82BA-08002750D7C5}","newState":"52","resourceManager":"{7D5F0E1F-ABCB-11E8-A2E2-D5514FE2B72B}","processId":"0x3f8","processName":"C:\\Windows\\System32\\svchost.exe"}}}    -->
+  <!--rule id="60642" level="5">
+    <if_sid>60001</if_sid>
+    <field name="win.system.eventID">^6005$</field>
+    <description>The Event log service was started</description>
+    <options>no_full_log</options>
+    <group>windows_log_service_started,gpg13_10.1,</group>
+  </rule>
+</group-->
+
+  <!-- MS IPSec rules -->
+<!--group name="windows, ipsec,">
+  <rule id="60683" level="8">
+    <if_sid>60004</if_sid>
+    <field name="win.system.eventID">^4646$</field>
+    <description>IKE DoS-prevention mode started</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="60684" level="8">
+    <if_sid>60005</if_sid>
+    <field name="win.system.eventID">^4652$|^4653$</field>
+    <description>An IPsec Main Mode negotiation failed</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="60685" level="8">
+    <if_sid>60005</if_sid>
+    <field name="win.system.eventID">^4654$</field>
+    <description>An IPsec Quick Mode negotiation failed</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="60686" level="8">
+    <if_sid>60004</if_sid>
+    <field name="win.system.eventID">^4983$|^4984$</field>
+    <description>An IPsec Extended Mode negotiation failed</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="60687" level="4">
+    <if_sid>60004</if_sid>
+    <field name="win.system.eventID">^4960$</field>
+    <description>IPsec dropped an inbound packet that failed an integrity check</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="60688" level="8">
+    <if_sid>60004</if_sid>
+    <field name="win.system.eventID">^4961$|^4962$</field>
+    <description>IPsec dropped an inbound packet that failed a replay check</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="60689" level="8">
+    <if_sid>60004</if_sid>
+    <field name="win.system.eventID">^4963$</field>
+    <description>IPsec dropped an inbound clear text packet that should have been secured</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="60690" level="4">
+    <if_sid>60004</if_sid>
+    <field name="win.system.eventID">^4965$</field>
+    <description>IPsec received a packet from a remote computer with an incorrect Security Parameter Index (SPI)</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="60691" level="7">
+    <if_sid>60004</if_sid>
+    <field name="win.system.eventID">^4976$</field>
+    <description>During Main Mode negotiation, IPsec received an invalid negotiation packet</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="60692" level="7">
+    <if_sid>60004</if_sid>
+    <field name="win.system.eventID">^4977$</field>
+    <description>During Quick Mode negotiation, IPsec received an invalid negotiation packet</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="60693" level="7">
+    <if_sid>60004</if_sid>
+    <field name="win.system.eventID">^4978$</field>
+    <description>During Extended Mode negotiation, IPsec received an invalid negotiation packet</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="60694" level="8">
+    <if_sid>60004</if_sid>
+    <field name="win.system.eventID">^5453$</field>
+    <description>An IPsec negotiation with a remote computer failed because the IKE and AuthIP IPsec Keying Modules (IKEEXT) service is not started</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="60695" level="8">
+    <if_sid>60005</if_sid>
+    <field name="win.system.eventID">^5480$</field>
+    <description>IPsec Services failed to get the complete list of network interfaces on the computer</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="60696" level="8">
+    <if_sid>60005</if_sid>
+    <field name="win.system.eventID">^5483$</field>
+    <description>IPsec Services failed to initialize RPC server. IPsec Services could not be started</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="60697" level="8">
+    <if_sid>60005</if_sid>
+    <field name="win.system.eventID">^5484$</field>
+    <description>IPsec Services has experienced a critical failure and has been shut down</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="60698" level="8">
+    <if_sid>60005</if_sid>
+    <field name="win.system.eventID">^5485$</field>
+    <description>IPsec Services failed to process some IPsec filters on a plug-and-play event for network interfaces</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="60699" level="8">
+    <if_sid>60004</if_sid>
+    <field name="win.system.eventID">^4710$</field>
+    <description>IPsec Services was disabled</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="60700" level="8">
+    <if_sid>60005</if_sid>
+    <field name="win.system.eventID">^4712$</field>
+    <description>IPsec Services encountered a potentially serious failure</description>
+    <options>no_full_log</options>
+   </rule>
+</group-->
