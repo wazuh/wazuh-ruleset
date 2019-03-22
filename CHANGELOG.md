@@ -1,14 +1,64 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [v3.7.1]
+## [v3.9.0]
+
+### Added
+
+- Adapt Sysmon rules to new Windows eventchannel format. ([#285](https://github.com/wazuh/wazuh-ruleset/pull/285))
+- Added ruleset for the SCA module. ([#288](https://github.com/wazuh/wazuh-ruleset/pull/288))
+- Added policy files in YAML format for the SCA module. ([#288](https://github.com/wazuh/wazuh-ruleset/pull/288))
+- Added the policy *cis_win2012r2_memberL2_rcl.yml* for SCA. ([#289](https://github.com/wazuh/wazuh-ruleset/pull/289)) (Thanks to @Bob-Andrews)
+- Improved rules for the docker listener. ([#293](https://github.com/wazuh/wazuh-ruleset/pull/293)) ([#307](https://github.com/wazuh/wazuh-ruleset/pull/307))
+- New options `same_field` and `not_same_field` to correlate dynamic fields in rules. ([#302](https://github.com/wazuh/wazuh-ruleset/pull/302))
+- New rule to catch a logon success from a Windows workstation. ([#304](https://github.com/wazuh/wazuh-ruleset/pull/304)) 
+
+### Changed
+
+- Changed the eventchannel field names in rules. ([#299](https://github.com/wazuh/wazuh-ruleset/pull/299))
+
+### Fixed
+
+- Fixed the bruteforce attack rules for Windows Eventchannel. ([#302](https://github.com/wazuh/wazuh-ruleset/pull/302))
+- Updated links for Windows rules. ([#311](https://github.com/wazuh/wazuh-ruleset/pull/311)) (Credits to @atomicturtle ([#1675](https://github.com/ossec/ossec-hids/pull/1675)))
+
+## [v3.8.2]
+
+### Changed
+
+- Rework of the rules for Windows Eventchannel. ([#277](https://github.com/wazuh/wazuh-ruleset/pull/277))
+
+
+## [v3.8.1]
+
+There are no changes for Wazuh Ruleset in this version.
+
+
+## [v3.8.0]
+
+### Added
+
+- Added new rules to support the new Windows eventchannel decoder. ([#247](https://github.com/wazuh/wazuh-ruleset/pull/247))
+- Extend Auditd decoder to support more fields. ([#256](https://github.com/wazuh/wazuh-ruleset/pull/256))
+- Added rule to alert when an agent is removed. ([#2127](https://github.com/wazuh/wazuh/pull/2127))
+
+### Changed
+
+- Now CDB lists are not prebuilt in the repository. ([#249](https://github.com/wazuh/wazuh-ruleset/pull/249))
+
+
+## [v3.7.2] 2018-12-17
+
+There are no changes for Wazuh Ruleset in this version.
+
+## [v3.7.1] 2018-12-05
 
 ### Added
 
 - New Vulnerability detector rules to warn about version comparison issues. ([#237](https://github.com/wazuh/wazuh-ruleset/pull/237))
 
 
-## [v3.7.0]
+## [v3.7.0] 2018-11-10
 
 ### Added
 
