@@ -1,0 +1,89 @@
+<!--
+  -  Windows Event Channel ruleset for the Windows Powershell channel 
+  -  Created by Wazuh, Inc.
+  -  Copyright (C) 2015-2019, Wazuh Inc.
+  -  This program is a free software; you can redistribute it and/or modify it under the terms of GPLv2.
+  -  ID range: 64600 - 65099
+-->
+
+<var name="MS_FREQ">8</var>
+
+<group name="windows, windows_powershell,">
+  <rule id="64600" level="0">
+    <if_sid>60009</if_sid>
+    <field name="win.system.severityValue">^INFORMATION</field>
+    <description>Windows Powershell informational event</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="64601" level="0">
+    <if_sid>60009</if_sid>
+    <field name="win.system.severityValue">^WARNING</field>
+    <description>Windows PowerShell warning event</description>
+    <options>no_full_log</options>
+    <group>gpg13_4.12,</group>
+  </rule>
+
+  <rule id="64602" level="5">
+    <if_sid>60009</if_sid>
+    <field name="win.system.severityValue">^ERROR</field>
+    <description>Windows PowerShell error event</description>
+    <options>no_full_log</options>
+    <group>system_error,gpg13_4.3,gdpr_IV_35.7.d,</group>
+  </rule>
+
+  <rule id="64603" level="8">
+    <if_sid>64600</if_sid>
+    <field name="win.system.eventID">^400$</field>
+    <description>Windows PowerShell was started</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="64604" level="8">
+    <if_sid>64600</if_sid>
+    <field name="win.system.eventID">^800$</field>
+    <description>Windows PowerShell command executed</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="64605" level="8">
+    <if_sid>64600</if_sid>
+    <field name="win.system.eventID">^403$</field>
+    <description>Windows PowerShell was stopped</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="64606" level="2">
+    <if_sid>64600</if_sid>
+    <field name="win.system.message">Set-StrictMode</field>
+    <description>A wrong/misspelled command was tried</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="64607" level="2">
+    <if_sid>64600</if_sid>
+    <field name="win.system.message">CommandLine= CommandInvocation</field>
+    <description>Powershell background activity</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="64608" level="12">
+    <if_sid>64600</if_sid>
+    <field name="win.system.message">Set-ExecutionPolicy|Mimikatz|EncodedCommand|Payload|Find-AVSignature|DllInjection|ReflectivePEInjection|Invoke-Shellcode|Invoke--Shellcode|Invoke-ShellcodeMSIL|Get-GPPPassword|Get-Keystrokes|Get-TimedScreenshot|Get-VaultCredential|Invoke-CredentialInjection|Invoke-NinjaCopy|Invoke-TokenManipulation|Out-Minidump|Set-MasterBootRecord|New-ElevatedPersistenceOption|Invoke-CallbackIEX|Invoke-PSInject|Invoke-DllEncode|Get-ServiceUnquoted|Get-ServiceEXEPerms|Get-ServicePerms|Invoke-ServiceUserAdd|Invoke-ServiceCMD|Write-UserAddServiceBinary|Write-CMDServiceBinary|Write-UserAddMSI|Write-ServiceEXE|Write-ServiceEXECMD|Restore-ServiceEXE|Invoke-ServiceStart|Invoke-ServiceStop|Invoke-ServiceEnable|Invoke-ServiceDisable|Invoke-FindDLLHijack|Invoke-FindPathHijack|Get-RegAlwaysInstallElevated|Get-RegAutoLogon|Get-UnattendedInstallFiles|Get-Webconfig|Get-Webconfig|Get-ApplicationHost|Invoke-AllChecks|Invoke-MassCommand|Invoke-MassMimikatz|Invoke-MassSearch|Invoke-MassTemplate|Invoke-MassTokens|HTTP-Backdoor|Add-ScrnSaveBackdoor|Gupt-Backdoor|Invoke-ADSBackdoor|Execute-OnTime|DNS_TXT_Pwnage|Out-Word|Out-Excel|Out-Java|Out-Shortcut|Out-CHM|Out-HTA|Enable-DuplicateToken|Remove-Update|Execute-DNSTXT-Code|Download-Execute-PS|Execute-Command-MSSQL|Download_Execute|Get-PassHashes|Invoke-CredentialsPhish|Get-LsaSecret|Get-Information|Invoke-MimikatzWDigestDowngrade|Copy-VSS|Check-VM|Invoke-NetworkRelay|Create-MultipleSessions|Run-EXEonRemote|Invoke-BruteForce|Port-Scan|Invoke-PowerShellIcmp|Invoke-PowerShellUdp|Invoke-PsGcatAgent|Invoke-PoshRatHttps|Invoke-PowerShellTcp|Invoke-PoshRatHttp|Invoke-PowerShellWmi|Invoke-PSGcat|Remove-PoshRat|TexttoEXE|Invoke-Encode|Invoke-Decode|Base64ToString|StringtoBase64|Do-Exfiltration|Parse_Keys|Add-Exfiltration|Add-Persistence|Remove-Persistence|Invoke-CreateCertificate|powercat|Find-PSServiceAccounts|Get-PSADForestKRBTGTInfo|Discover-PSMSSQLServers|Discover-PSMSExchangeServers|Get-PSADForestInfo|Get-KerberosPolicy|Discover-PSInterestingServices</field>
+    <description>Possibly Dangerous Command Detected (https://gist.github.com/gfoss/2b39d680badd2cad9d82#file-powershell-command-line-logging)</description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="64609" level="10" frequency="$MS_FREQ" timeframe="120">
+    <if_matched_sid>64601</if_matched_sid>
+    <description>Multiple Windows Powershell warning events </description>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="64610" level="10" frequency="$MS_FREQ" timeframe="240">
+    <if_matched_sid>64602</if_matched_sid>
+    <description>Multiple Windows Powershell error events</description>
+    <options>no_full_log</options>
+  </rule>
+
+</group>
