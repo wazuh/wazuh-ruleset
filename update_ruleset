@@ -277,7 +277,7 @@ def get_new_ruleset(source, url, branch_name=None):
         # Extract
         try:
             with contextlib.closing(ZipFile(ruleset_zip)) as z:
-                zip_dir = search('^wazuh-ruleset-{0}([0-9a-z-]+)?$'.format(branch), z.namelist()[0].strip('/')).group(0)
+                zip_dir = search('^wazuh-ruleset-\S*', z.namelist()[0].strip('/')).group(0)
                 z.extractall(update_downloads)
         except Exception as e:
             exit(2, "\tError extracting file '{0}': {1}.".format(ruleset_zip, e))
