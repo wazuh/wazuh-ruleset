@@ -1,0 +1,55 @@
+# Security Configuration assessment
+# CIS Checks for MacOS 10.13
+# Copyright (C) 2015-2019, Wazuh Inc.
+#
+# This program is a free software; you can redistribute it
+# and/or modify it under the terms of the GNU General Public
+# License (version 2) as published by the FSF - Free Software
+# Foundation
+#
+# Based on:
+
+policy:
+  id: "cis_apple_macos_10_13"
+  file: "cis_apple_macOS_10.13.yml"
+  name: "CIS Apple macOS 10.13 Benchmark"
+  description: "This document, CIS Apple macOS 10.13 Benchmark, provides prescriptive guidance for establishing a secure configuration posture for Apple macOS 10.13. This guide was tested against Apple macOS 10.13. To obtain the latest version of this guide, please visit http://benchmarks.cisecurity.org. If you have questions, comments, or have identified ways to improve this guide, please write us at feedback@cisecurity.org"
+  references:
+    - https://www.cisecurity.org/cis-benchmarks/
+
+requirements:
+  title: "Check Debian version"
+  description: "Requirements for running the SCA scan against Debian/Ubuntu."
+  condition: "all required"
+  rules:
+    - 'f:/etc/debian_version;'
+    - 'f:/proc/sys/kernel/ostype -> Linux;'
+
+checks:
+ - id: YYYYY
+   title: "Install Updates, Patches and Additional Security Software"
+   description: ""
+   rationale: ""
+   remediation: ""
+   condition: any
+   rules:
+     - 'c:softwareupdate -l -> !r:^\s*Now new software available;'
+
+ - id: YYYYY
+   title: "Enable Auto Update"
+   description: ""
+   rationale: ""
+   remediation: ""
+   condition: any
+   rules:
+     - 'c:defaults read /Library/Preferences/com.apple.SoftwareUpdate AutomaticCheckEnabled -> !r:^\s*1;'
+
+ - id: YYYYY
+   title: "Enable app update installs"
+   description: ""
+   rationale: ""
+   remediation: ""
+   condition: any
+   rules:
+     - 'c:defaults read /Library/Preferences/com.apple.commerce AutoUpdate -> !r:^\s*1;'
+
