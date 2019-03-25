@@ -9,6 +9,7 @@
 <var name="MS_FREQ">8</var>
 
 <group name="windows, windows_powershell,">
+
   <rule id="64600" level="0">
     <if_sid>60009</if_sid>
     <field name="win.system.severityValue">^INFORMATION</field>
@@ -54,29 +55,29 @@
   </rule>
 
   <rule id="64606" level="2">
-    <if_sid>64600</if_sid>
-    <field name="win.system.message">Set-StrictMode</field>
+    <if_sid>64604</if_sid>
+    <field name="win.eventdata.data">Set-StrictMode</field>
     <description>A wrong/misspelled command was tried</description>
     <options>no_full_log</options>
   </rule>
 
   <rule id="64607" level="2">
-    <if_sid>64600</if_sid>
-    <field name="win.system.message">CommandLine= CommandInvocation</field>
+    <if_sid>64604</if_sid>
+    <field name="win.eventdata.data">CommandInvocation</field>
     <description>Powershell background activity</description>
     <options>no_full_log</options>
   </rule>
 
   <rule id="64608" level="12">
-    <if_sid>64600</if_sid>
-    <field name="win.system.message">Set-ExecutionPolicy|Mimikatz|EncodedCommand|Payload|Find-AVSignature|DllInjection|ReflectivePEInjection|Invoke-Shellcode|Invoke--Shellcode|Invoke-ShellcodeMSIL|Get-GPPPassword|Get-Keystrokes|Get-TimedScreenshot|Get-VaultCredential|Invoke-CredentialInjection|Invoke-NinjaCopy|Invoke-TokenManipulation|Out-Minidump|Set-MasterBootRecord|New-ElevatedPersistenceOption|Invoke-CallbackIEX|Invoke-PSInject|Invoke-DllEncode|Get-ServiceUnquoted|Get-ServiceEXEPerms|Get-ServicePerms|Invoke-ServiceUserAdd|Invoke-ServiceCMD|Write-UserAddServiceBinary|Write-CMDServiceBinary|Write-UserAddMSI|Write-ServiceEXE|Write-ServiceEXECMD|Restore-ServiceEXE|Invoke-ServiceStart|Invoke-ServiceStop|Invoke-ServiceEnable|Invoke-ServiceDisable|Invoke-FindDLLHijack|Invoke-FindPathHijack|Get-RegAlwaysInstallElevated|Get-RegAutoLogon|Get-UnattendedInstallFiles|Get-Webconfig|Get-Webconfig|Get-ApplicationHost|Invoke-AllChecks|Invoke-MassCommand|Invoke-MassMimikatz|Invoke-MassSearch|Invoke-MassTemplate|Invoke-MassTokens|HTTP-Backdoor|Add-ScrnSaveBackdoor|Gupt-Backdoor|Invoke-ADSBackdoor|Execute-OnTime|DNS_TXT_Pwnage|Out-Word|Out-Excel|Out-Java|Out-Shortcut|Out-CHM|Out-HTA|Enable-DuplicateToken|Remove-Update|Execute-DNSTXT-Code|Download-Execute-PS|Execute-Command-MSSQL|Download_Execute|Get-PassHashes|Invoke-CredentialsPhish|Get-LsaSecret|Get-Information|Invoke-MimikatzWDigestDowngrade|Copy-VSS|Check-VM|Invoke-NetworkRelay|Create-MultipleSessions|Run-EXEonRemote|Invoke-BruteForce|Port-Scan|Invoke-PowerShellIcmp|Invoke-PowerShellUdp|Invoke-PsGcatAgent|Invoke-PoshRatHttps|Invoke-PowerShellTcp|Invoke-PoshRatHttp|Invoke-PowerShellWmi|Invoke-PSGcat|Remove-PoshRat|TexttoEXE|Invoke-Encode|Invoke-Decode|Base64ToString|StringtoBase64|Do-Exfiltration|Parse_Keys|Add-Exfiltration|Add-Persistence|Remove-Persistence|Invoke-CreateCertificate|powercat|Find-PSServiceAccounts|Get-PSADForestKRBTGTInfo|Discover-PSMSSQLServers|Discover-PSMSExchangeServers|Get-PSADForestInfo|Get-KerberosPolicy|Discover-PSInterestingServices</field>
-    <description>Possibly Dangerous Command Detected (https://gist.github.com/gfoss/2b39d680badd2cad9d82#file-powershell-command-line-logging)</description>
+    <if_sid>64604</if_sid>
+    <field name="win.eventdata.data">Set-ExecutionPolicy|Mimikatz|EncodedCommand|Payload|Find-AVSignature|DllInjection|ReflectivePEInjection|Invoke-Shellcode|Invoke--Shellcode|Invoke-ShellcodeMSIL|Get-GPPPassword|Get-Keystrokes|Get-TimedScreenshot|Get-VaultCredential|Invoke-CredentialInjection|Invoke-NinjaCopy|Invoke-TokenManipulation|Out-Minidump|Set-MasterBootRecord|New-ElevatedPersistenceOption|Invoke-CallbackIEX|Invoke-PSInject|Invoke-DllEncode|Get-ServiceUnquoted|Get-ServiceEXEPerms|Get-ServicePerms|Invoke-ServiceUserAdd|Invoke-ServiceCMD|Write-UserAddServiceBinary|Write-CMDServiceBinary|Write-UserAddMSI|Write-ServiceEXE|Write-ServiceEXECMD|Restore-ServiceEXE|Invoke-ServiceStart|Invoke-ServiceStop|Invoke-ServiceEnable|Invoke-ServiceDisable|Invoke-FindDLLHijack|Invoke-FindPathHijack|Get-RegAlwaysInstallElevated|Get-RegAutoLogon|Get-UnattendedInstallFiles|Get-Webconfig|Get-Webconfig|Get-ApplicationHost|Invoke-AllChecks|Invoke-MassCommand|Invoke-MassMimikatz|Invoke-MassSearch|Invoke-MassTemplate|Invoke-MassTokens|HTTP-Backdoor|Add-ScrnSaveBackdoor|Gupt-Backdoor|Invoke-ADSBackdoor|Execute-OnTime|DNS_TXT_Pwnage|Out-Word|Out-Excel|Out-Java|Out-Shortcut|Out-CHM|Out-HTA|Enable-DuplicateToken|Remove-Update|Execute-DNSTXT-Code|Download-Execute-PS|Execute-Command-MSSQL|Download_Execute|Get-PassHashes|Invoke-CredentialsPhish|Get-LsaSecret|Get-Information|Invoke-MimikatzWDigestDowngrade|Copy-VSS|Check-VM|Invoke-NetworkRelay|Create-MultipleSessions|Run-EXEonRemote|Invoke-BruteForce|Port-Scan|Invoke-PowerShellIcmp|Invoke-PowerShellUdp|Invoke-PsGcatAgent|Invoke-PoshRatHttps|Invoke-PowerShellTcp|Invoke-PoshRatHttp|Invoke-PowerShellWmi|Invoke-PSGcat|Remove-PoshRat|TexttoEXE|Invoke-Encode|Invoke-Decode|Base64ToString|StringtoBase64|Do-Exfiltration|Parse_Keys|Add-Exfiltration|Add-Persistence|Remove-Persistence|Invoke-CreateCertificate|powercat|Find-PSServiceAccounts|Get-PSADForestKRBTGTInfo|Discover-PSMSSQLServers|Discover-PSMSExchangeServers|Get-PSADForestInfo|Get-KerberosPolicy|Discover-PSInterestingServices</field>
+    <description>Possibly Dangerous Command Detected</description>
     <options>no_full_log</options>
   </rule>
 
   <rule id="64609" level="10" frequency="$MS_FREQ" timeframe="120">
     <if_matched_sid>64601</if_matched_sid>
-    <description>Multiple Windows Powershell warning events </description>
+    <description>Multiple Windows Powershell warning events</description>
     <options>no_full_log</options>
   </rule>
 
