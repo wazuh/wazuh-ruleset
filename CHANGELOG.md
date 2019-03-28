@@ -11,16 +11,26 @@ All notable changes to this project will be documented in this file.
 - Added the policy *cis_win2012r2_memberL2_rcl.yml* for SCA. ([#289](https://github.com/wazuh/wazuh-ruleset/pull/289)) (Thanks to @Bob-Andrews)
 - Improved rules for the docker listener. ([#293](https://github.com/wazuh/wazuh-ruleset/pull/293)) ([#307](https://github.com/wazuh/wazuh-ruleset/pull/307))
 - New options `same_field` and `not_same_field` to correlate dynamic fields in rules. ([#302](https://github.com/wazuh/wazuh-ruleset/pull/302))
-- New rule to catch a logon success from a Windows workstation. ([#304](https://github.com/wazuh/wazuh-ruleset/pull/304)) 
+- New rule to catch a logon success from a Windows workstation. ([#304](https://github.com/wazuh/wazuh-ruleset/pull/304))
+- Added rules about Application and System channels for the Windows eventchannel format. ([#325](https://github.com/wazuh/wazuh-ruleset/pull/325))
+- Added *PCI-DSS* and *GDPR* mapping to rules for the docker listener. ([#333](https://github.com/wazuh/wazuh-ruleset/pull/333))
 
 ### Changed
 
 - Changed the eventchannel field names in rules. ([#299](https://github.com/wazuh/wazuh-ruleset/pull/299))
+- Redistribute the eventchannel rules by incoming channel. ([#325](https://github.com/wazuh/wazuh-ruleset/pull/325))
 
 ### Fixed
 
 - Fixed the bruteforce attack rules for Windows Eventchannel. ([#302](https://github.com/wazuh/wazuh-ruleset/pull/302))
 - Updated links for Windows rules. ([#311](https://github.com/wazuh/wazuh-ruleset/pull/311)) (Credits to @atomicturtle ([#1675](https://github.com/ossec/ossec-hids/pull/1675)))
+- Several fixes for Windows rules for the eventlog format. (Thanks to @branchnetconsulting)
+  - Fixed SID regexes for eventlog Windows rules. ([#197](https://github.com/wazuh/wazuh-ruleset/pull/197))
+  - Fixed the matched string of rule 18270. ([#219](https://github.com/wazuh/wazuh-ruleset/pull/219))
+  - Fixed Sysmon rule when the destination port is empty. ([#229](https://github.com/wazuh/wazuh-ruleset/pull/229))
+  - Fixed the description for rule 18260. ([#232](https://github.com/wazuh/wazuh-ruleset/pull/232))
+  - Generalize description for rule 83201. ([#241](https://github.com/wazuh/wazuh-ruleset/pull/241))
+- Fixed the flow for Windows rule 18230. ([#253](https://github.com/wazuh/wazuh-ruleset/pull/253))
 
 ## [v3.8.2]
 
