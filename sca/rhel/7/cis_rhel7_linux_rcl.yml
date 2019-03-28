@@ -175,8 +175,20 @@ checks:
    condition: any
    rules:
      - 'f:/etc/fstab -> !r:^# && r:/media && !r:nodev;'
-# 1.1.20 noexec on removable media partitions (not scored)
+# 1.1.19 nosuid on removable media partitions (not scored)
  - id: 6511
+   title: "Ensure nosuid option set on removable media partitions"
+   description: "The nosuid mount option specifies that the filesystem cannot contain setuid files."
+   rationale: "Setting this option on a file system prevents users from introducing privileged programs onto the system and allowing non-root users to execute them."
+   remediation: "Edit the /etc/fstab file and add nosuid to the fourth field (mounting options) of all removable media partitions. Look for entries that have mount points that contain words such as floppy or cdrom."
+   compliance:
+    - cis: "1.1.19"
+    - pci_dss: "2.2.4"
+   condition: any
+   rules:
+     - 'f:/etc/fstab -> !r:^# && r:/media && !r:nosuid;'
+# 1.1.20 noexec on removable media partitions (not scored)
+ - id: 6512
    title: "Ensure noexec option set on removable media partitions"
    description: "The noexec mount option specifies that the filesystem cannot contain executable binaries."
    rationale: "Setting this option on a file system prevents users from executing programs from the removable media. This deters users from being able to introduce potentially malicious software on the system."
@@ -188,18 +200,6 @@ checks:
    condition: any
    rules:
      - 'f:/etc/fstab -> !r:^# && r:/media && !r:noexec;'
-# 1.1.19 nosuid on removable media partitions (not scored)
- - id: 6512
-   title: "Ensure nosuid option set on removable media partitions"
-   description: "The nosuid mount option specifies that the filesystem cannot contain setuid files."
-   rationale: "Setting this option on a file system prevents users from introducing privileged programs onto the system and allowing non-root users to execute them."
-   remediation: "Edit the /etc/fstab file and add nosuid to the fourth field (mounting options) of all removable media partitions. Look for entries that have mount points that contain words such as floppy or cdrom."
-   compliance:
-    - cis: "1.1.19"
-    - pci_dss: "2.2.4"
-   condition: any
-   rules:
-     - 'f:/etc/fstab -> !r:^# && r:/media && !r:nosuid;'
 # 1.1.15 /dev/shm: nodev
  - id: 6513
    title: "Ensure nodev option set on /dev/shm partition"
@@ -805,7 +805,7 @@ checks:
    title: "Ensure Reverse Path Filtering is enabled"
    description: "Setting net.ipv4.conf.all.rp_filter and net.ipv4.conf.default.rp_filter to 1 forces the Linux kernel to utilize reverse path filtering on a received packet to determine if the packet was valid."
    rationale: "Setting these flags is a good way to deter attackers from sending your server bogus packets that cannot be responded to. One instance where this feature breaks down is if asymmetrical routing is employed."
-   remediation: "Set the net.ipv4.conf.all.rp_filterand net.ipv4.conf.default.rp_filter parameters to 1in /etc/sysctl.conf:net.ipv4.conf.all.rp_filter=1; net.ipv4.conf.default.rp_filter=1. Modify active kernel parameters to match: # /sbin/sysctl -w net.ipv4.conf.all.rp_filter=1; # /sbin/sysctl -w net.ipv4.conf.default.rp_filter=1; # /sbin/sysctl -w net.ipv4.route.flush=1"
+   remediation: "Set the net.ipv4.conf.all.rp_filter and net.ipv4.conf.default.rp_filter parameters to 1 in /etc/sysctl.conf:net.ipv4.conf.all.rp_filter=1; net.ipv4.conf.default.rp_filter=1. Modify active kernel parameters to match: # /sbin/sysctl -w net.ipv4.conf.all.rp_filter=1; # /sbin/sysctl -w net.ipv4.conf.default.rp_filter=1; # /sbin/sysctl -w net.ipv4.route.flush=1"
    compliance:
     - cis: "3.2.7"
     - pci_dss: "2.2.4"
