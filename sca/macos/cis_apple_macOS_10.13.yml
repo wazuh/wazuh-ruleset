@@ -24,8 +24,8 @@ requirements:
   condition: "any required"
   rules:
     - 'c:defaults read loginwindow SystemVersionStampAsString -> r:^\s*10\.13;'
-    - 'c:sw_vers -> r:^ProductVersion: -> r:\s*10\.13;'
-    - 'c:system_profiler SPSoftwareDataType -> r:System Version: -> r:\s*10\.13;'
+    - 'c:sw_vers -> r:^ProductVersion:\s*10\.13;'
+    - 'c:system_profiler SPSoftwareDataType -> r:^\s*System Version:.*10\.13;'
 
 checks:
 # 1.1 Verify all Apple provided software is current (Scored)
@@ -36,8 +36,6 @@ checks:
    remediation: "In Terminal, run the following: softwareupdate -l    2. In Terminal, run the following for any packages that show up in step 1: sudo softwareupdate -i packagename"
    compliance:
      - cis: "1.1"
-   references:
-     - ...
    condition: any
    rules:
      - 'c:softwareupdate -l -> !r:^\s*Now new software available;'
@@ -63,8 +61,6 @@ checks:
    remediation: "Open a terminal session and enter the following command to enable the auto update feature: sudo defaults write /Library/Preferences/com.apple.commerce AutoUpdate -bool TRUE    The remediation requires a log out and log in to show in the GUI. Please note that."
    compliance:
      - cis: "1.3"
-   references:
-     - ...
    condition: any
    rules:
      - 'c:defaults read /Library/Preferences/com.apple.commerce AutoUpdate -> !r:^\s*1;'
@@ -81,8 +77,8 @@ checks:
      - https://support.apple.com/en-us/HT202491
    condition: any
    rules:
-     - 'c:defaults read /Library/Preferences/com.apple.SoftwareUpdate -> r:^\s*ConfigDataInstall\s*= -> !r\s*1;;'
-     - 'c:defaults read /Library/Preferences/com.apple.SoftwareUpdate -> r:^\s*CriticalUpdateInstall\s*= -> !r\s*1;;'
+     - 'c:defaults read /Library/Preferences/com.apple.SoftwareUpdate -> r:^\s*ConfigDataInstall\s*= && !r\s*1;;'
+     - 'c:defaults read /Library/Preferences/com.apple.SoftwareUpdate -> r:^\s*CriticalUpdateInstall\s*= && !r\s*1;;'
 # 1.5 Enable macOS update installs (Scored)
  - id: XXXXX
    title: "Enable macOS update installs (Scored)"
@@ -91,37 +87,9 @@ checks:
    remediation: "Open a terminal session and enter the following command to enable install system data files and security updates: sudo defaults write /Library/Preferences/com.apple.commerce AutoUpdateRestartRequired -bool TRUE"
    compliance:
      - cis: "1.5"
-   references:
-     - ...
    condition: any
    rules:
      - 'c:defaults read /Library/Preferences/com.apple.commerce AutoUpdateRestartRequired -> !r:^\s*1;'
-# 2.1.1 Turn off Bluetooth, if no paired devices exist (Scored)
- - id: XXXXX
-   title: "Turn off Bluetooth, if no paired devices exist (Scored)"
-   description: ""
-   rationale: ""
-   remediation: ""
-   compliance:
-     - cis: "2.1.1"
-   references:
-     - ...
-   condition: any
-   rules:
-     - ''
-# 2.1.3 Show Bluetooth status in menu bar (Scored)
- - id: XXXXX
-   title: "Show Bluetooth status in menu bar (Scored)"
-   description: ""
-   rationale: ""
-   remediation: ""
-   compliance:
-     - cis: "2.1.3"
-   references:
-     - ...
-   condition: any
-   rules:
-     - ''
 # 2.2.1 Enable "Set time and date automatically" (Scored)
  - id: XXXXX
    title: "Enable \"Set time and date automatically\" (Scored)"
@@ -130,52 +98,9 @@ checks:
    remediation: "un the following commands: sudo systemsetup -setnetworktimeserver <timeserver>    sudo systemsetup –setusingnetworktime on"
    compliance:
      - cis: "2.2.1"
-   references:
-     - ...
    condition: any
    rules:
-     - 'c:systemsetup -getusingnetworktime -> r:^\s*Network Time: -> !r:\s*On;'
-# 2.2.2 Ensure time set is within appropriate limits (Scored)
- - id: XXXXX
-   title: "Ensure time set is within appropriate limits (Scored)"
-   description: ""
-   rationale: ""
-   remediation: ""
-   compliance:
-     - cis: "2.2.2"
-   references:
-     - ...
-   condition: any
-   rules:
-     - ''
-# 2.3.1 Set an inactivity interval of 20 minutes or less for the screen saver (Scored)
- - id: XXXXX
-   title: "Set an inactivity interval of 20 minutes or less for the screen saver (Scored)"
-   description: "A locking screensaver is one of the standard security controls to limit access to a computer and the current user's session when the computer is temporarily unused or unattended. In macOS the screensaver starts after a value selected in a drop down menu, 10 minutes and 20 minutes are both options and either is acceptable. Any value can be selected through the command line or script but a number that is not reflected in the GUI can be problematic. 20 minutes is the default for new accounts."
-   rationale: "Setting an inactivity interval for the screensaver prevents unauthorized persons from viewing a system left unattended for an extensive period of time."
-   remediation: "1. In Terminal, run one of the the following commands: defaults -currentHost write com.apple.screensaver idleTime -int 600   defaults -currentHost write com.apple.screensaver idleTime -int 1200"
-   compliance:
-     - cis: "2.3.1"
-   references:
-     - ...
-   condition: any
-   rules:
-     # TODO: Will this work?
-     # TODO 2: This only controls the configuration for the current user.
-     - 'c:(( $(defaults -currentHost read com.apple.screensaver idleTime) <= 1200 )) && echo ok || echo ko -> r:ko;'
-# 2.3.2 Secure screen saver corners (Scored)
- - id: XXXXX
-   title: "Secure screen saver corners (Scored)"
-   description: "Hot Corners can be configured to disable the screen saver by moving the mouse cursor to a corner of the screen."
-   rationale: "Setting a hot corner to disable the screen saver poses a potential security risk since an unauthorized person could use this to bypass the login screen and gain access to the system."
-   remediation: "Perform the following to implement the prescribed state: 1. Open System Preferences 2. Select Mission Control 3. Select Hot Corners 4. Remove any corners which are set to Disable Screen Saver"
-   compliance:
-     - cis: "2.3.2"
-   references:
-     - ...
-   condition: any
-   rules:
-     - 'defaults read ~/Library/Preferences/com.apple.dock | grep -i corner -> r:6;'
+     - 'c:systemsetup -getusingnetworktime -> !r:^\s*Network Time:\s*On;'
 # 2.4.1 Disable Remote Apple Events (Scored)
  - id: XXXXX
    title: "Disable Remote Apple Events (Scored)"
@@ -184,37 +109,9 @@ checks:
    remediation: "Run the following command in Terminal: sudo systemsetup -setremoteappleevents off"
    compliance:
      - cis: "2.4.1"
-   references:
-     - ...
    condition: any
    rules:
-     - 'c:systemsetup -getremoteappleevents -> r:^Remote Apple Events: -> !r:\s*Off;'
-# 2.4.2 Disable Internet Sharing (Scored)
- - id: XXXXX
-   title: "Disable Internet Sharing (Scored)"
-   description: ""
-   rationale: ""
-   remediation: ""
-   compliance:
-     - cis: "2.4.2"
-   references:
-     - ...
-   condition: any
-   rules:
-     - ''
-# 2.4.3 Disable Screen Sharing (Scored)
- - id: XXXXX
-   title: "Disable Screen Sharing (Scored)"
-   description: ""
-   rationale: ""
-   remediation: ""
-   compliance:
-     - cis: "2.4.3"
-   references:
-     - ...
-   condition: any
-   rules:
-     - ''
+     - 'c:systemsetup -getremoteappleevents -> !r:^Remote Apple Events:\s*Off;'
 # 2.4.4 Disable Printer Sharing (Scored)
  - id: XXXXX
    title: "Disable Printer Sharing (Scored)"
@@ -223,11 +120,9 @@ checks:
    remediation: "Perform the following to implement the prescribed state: 1. Open System Preferences 2. Select Sharing 3. Uncheck Printer Sharing"
    compliance:
      - cis: "2.4.4"
-   references:
-     - ...
    condition: any
    rules:
-     - 'c:system_profiler SPPrintersDataType -> r:Shared -> !r:Yes;'
+     - 'c:system_profiler SPPrintersDataType -> r:Shared:\s*Yes;'
 # 2.4.5 Disable Remote Login (Scored)
  - id: XXXXX
    title: "Disable Remote Login (Scored)"
@@ -236,37 +131,9 @@ checks:
    remediation: "Run the following command in Terminal: sudo systemsetup -setremotelogin off"
    compliance:
      - cis: "2.4.5"
-   references:
-     - ...
    condition: any
    rules:
-     - 'c:systemsetup -getremotelogin -> r:^Remote Login: -> !r:\s*Off;'
-# 2.4.6 Disable DVD or CD Sharing (Scored)
- - id: XXXXX
-   title: "Disable DVD or CD Sharing (Scored)"
-   description: ""
-   rationale: ""
-   remediation: ""
-   compliance:
-     - cis: "2.4.6"
-   references:
-     - ...
-   condition: any
-   rules:
-     - ''
-# 2.4.7 Disable Bluetooth Sharing (Scored)
- - id: XXXXX
-   title: "Disable Bluetooth Sharing (Scored)"
-   description: ""
-   rationale: ""
-   remediation: ""
-   compliance:
-     - cis: "2.4.7"
-   references:
-     - ...
-   condition: any
-   rules:
-     - ''
+     - 'c:systemsetup -getremotelogin -> !r:^Remote Login:\s*Off;'
 # 2.4.8 Disable File Sharing (Scored)
  - id: XXXXX
    title: "Disable File Sharing (Scored)"
@@ -275,25 +142,10 @@ checks:
    remediation: "Run the following command in Terminal to turn off AFP from the command line: sudo launchctl unload -w /System/Library/LaunchDaemons/com.apple.AppleFileServer.plist   Run the following command in Terminal to turn off SMB sharing from the CLI: sudo launchctl unload -w /System/Library/LaunchDaemons/com.apple.smbd.plist"
    compliance:
      - cis: "2.4.8"
-   references:
-     - ...
    condition: any
    rules:
      - 'c:launchctl list -> r:AppleFileServer;'
      - 'f:/Library/Preferences/SystemConfiguration/com.apple.smb.server.plist -> r:[Aa][Rr][Rr][Aa][Yy];'
-# 2.4.9 Disable Remote Management (Scored)
- - id: XXXXX
-   title: "Disable Remote Management (Scored)"
-   description: ""
-   rationale: ""
-   remediation: ""
-   compliance:
-     - cis: "2.4.9"
-   references:
-     - ...
-   condition: any
-   rules:
-     - ''
 # 2.5.1 Disable "Wake for network access" (Scored)
  - id: XXXXX
    title: "Disable \"Wake for network access\" (Scored)"
@@ -302,11 +154,9 @@ checks:
    remediation: "Run the following command in Terminal: sudo pmset -a womp 0"
    compliance:
      - cis: "2.5.1"
-   references:
-     - ...
    condition: any
    rules:
-     - 'c:pmset -g -> r:^\s*womp -> !r:\s+0;'
+     - 'c:pmset -g -> !r:^\s*womp\s+0;'
 # 2.6.1.1 Enable FileVault (Scored)
  - id: XXXXX
    title: "Enable FileVault (Scored)"
@@ -315,11 +165,9 @@ checks:
    remediation: "1. Open System Preferences 2. Select Security & Privacy 3. Select FileVault 4. Select Turn on FileVault"
    compliance:
      - cis: "2.6.1.1"
-   references:
-     - ...
    condition: any
    rules:
-     - 'c:fdesetup status -> r:^FileVault is -> !r:\s*On\.;'
+     - 'c:fdesetup status -> !r:^FileVault is\s*On\.;'
 # 2.6.2 Enable Gatekeeper (Scored)
  - id: XXXXX
    title: "Enable Gatekeeper (Scored)"
@@ -328,8 +176,6 @@ checks:
    remediation: "Run the following command in Terminal: sudo spctl --master-enable"
    compliance:
      - cis: "2.6.2"
-   references:
-     - 
    condition: any
    rules:
      - 'c:spctl --status -> !r:^assessments enabled;'
@@ -343,9 +189,10 @@ checks:
      - cis: "2.6.3"
    references:
      - https://support.apple.com/en-us/HT201642
-   condition: any
+   condition: all
    rules:
-     - 'c:defaults read /Library/Preferences/com.apple.alf globalstate -> !r:^\s*[12];'
+     - 'c:defaults read /Library/Preferences/com.apple.alf globalstate -> !r:^\s*1;'
+     - 'c:defaults read /Library/Preferences/com.apple.alf globalstate -> !r:^\s*2;'
 # 2.6.4 Enable Firewall Stealth Mode (Scored)
  - id: XXXXX
    title: "Enable Firewall Stealth Mode (Scored)"
@@ -359,138 +206,30 @@ checks:
    condition: any
    rules:
      - 'c:/usr/libexec/ApplicationFirewall/socketfilterfw --getstealthmode -> !r:^\s*Stealth mode enabled;'
-# 2.6.5 Review Application Firewall Rules (Scored)
- - id: XXXXX
-   title: "Review Application Firewall Rules (Scored)"
-   description: "A firewall is a piece of software that blocks unwanted incoming connections to a system.  Apple has posted general documentation about the application firewall. A computer should have a limited number of applications open to incoming connectivity.  This rule will check for whether there are more than 10 rules for inbound connections."
-   rationale: "A firewall minimizes the threat of unauthorized users from gaining access to your system while connected to a network or the Internet. Which applications are allowed access to accept incoming connections through the firewall is important to understand."
-   remediation: "Perform the following to implement the prescribed state: 1. Open System Preferences 2. Select Security & Privacy 3. Select Firewall Options 4. Select unneeded rules 5. Select the minus sign below to delete them    Alternatively: Edit and run the following command in Terminal to remove specific applications: /usr/libexec/ApplicationFirewall/socketfilterfw --remove </Applications/badapp.app>    Where </Applications/badapp.app> is the one to be removed"
-   compliance:
-     - cis: "2.6.5"
-   references:
-     - https://support.apple.com/en-us/HT201642
-   condition: any
-   rules:
-     # TODO: Don't know what the output looks like...
-     - 'c:/usr/libexec/ApplicationFirewall/socketfilterfw --listapps | wc -l -> !r:^\s*([0-9]|10)\s*$;'
-# 2.6.8 Disable sending diagnostic and usage data to Apple (Scored)
- - id: XXXXX
-   title: "Disable sending diagnostic and usage data to Apple (Scored)"
-   description: ""
-   rationale: ""
-   remediation: ""
-   compliance:
-     - cis: "2.6.8"
-   references:
-     - ...
-   condition: any
-   rules:
-     #TODO: No way to audit this via command line?
-     - ''
-# 2.7.4 iCloud Drive Document sync (Scored)
- - id: XXXXX
-   title: "iCloud Drive Document sync (Scored)"
-   description: ""
-   rationale: ""
-   remediation: ""
-   compliance:
-     - cis: "2.7.4"
-   references:
-     - ...
-   condition: any
-   rules:
-     - ''
-# 2.7.5 iCloud Drive Desktop sync (Scored)
- - id: XXXXX
-   title: "iCloud Drive Desktop sync (Scored)"
-   description: ""
-   rationale: ""
-   remediation: ""
-   compliance:
-     - cis: "2.7.5"
-   references:
-     - ...
-   condition: any
-   rules:
-     - ''
-# 2.8.1 Time Machine Auto-Backup (Scored)
- - id: XXXXX
-   title: "Time Machine Auto-Backup (Scored)"
-   description: ""
-   rationale: ""
-   remediation: ""
-   compliance:
-     - cis: "2.8.1"
-   references:
-     - ...
-   condition: any
-   rules:
-     - ''
-# 2.8.2 Time Machine Volumes Are Encrypted (Scored)
- - id: XXXXX
-   title: "Time Machine Volumes Are Encrypted (Scored)"
-   description: ""
-   rationale: ""
-   remediation: ""
-   compliance:
-     - cis: "2.8.2"
-   references:
-     - ...
-   condition: any
-   rules:
-     - ''
-# 2.9 Pair the remote control infrared receiver if enabled (Scored)
- - id: XXXXX
-   title: "Pair the remote control infrared receiver if enabled (Scored)"
-   description: ""
-   rationale: ""
-   remediation: ""
-   compliance:
-     - cis: "2.9"
-   references:
-     - ...
-   condition: any
-   rules:
-     - ''
-# 2.10 Enable Secure Keyboard Entry in terminal.app (Scored)
- - id: XXXXX
-   title: "Enable Secure Keyboard Entry in terminal.app (Scored)"
-   description: ""
-   rationale: ""
-   remediation: ""
-   compliance:
-     - cis: "2.10"
-   references:
-     - ...
-   condition: any
-   rules:
-     - ''
 # 2.11 Java 6 is not the default Java runtime (Scored)
  - id: XXXXX
    title: "Java 6 is not the default Java runtime (Scored)"
-   description: ""
-   rationale: ""
-   remediation: ""
+   description: "Apple had made Java part of the core Operating System for macOS. Apple is no longer providing Java updates for macOS and updated JREs and JDK are made available by Oracle.  The latest version of Java 6 made available by Apple has many unpatched vulnerabilities and should not be the default runtime for Java applets that request one from the Operating System"
+   rationale: "Java has been one of the most exploited environments and Java 6, which was provided as an OS component by Apple, is no longer maintained by Apple or Oracle. The old versions provided by Apple are both unsupported and missing the more modern security controls that have limited current exploits. The EOL version may still be installed and should be removed from the computer or not be in the default path."
+   remediation: "Java 6 can be removed completely or, if required Java applications will only work with Java 6, a custom path can be used. Apple is likely to finally pull the plug on Java 6 in upcoming MacOS versions so any applications that still require Java 6 will likely soon be unavailable."
    compliance:
      - cis: "2.11"
-   references:
-     - ...
    condition: any
    rules:
-     - ''
+     - 'c:java -version -> r:version.*1.6.0;'
+     - 'c:java -version -> r:Runtime Environment.*build.*1.6.0;'
 # 2.13 Ensure EFI version is valid and being regularly checked (Scored)
  - id: XXXXX
    title: "Ensure EFI version is valid and being regularly checked (Scored)"
-   description: ""
-   rationale: ""
-   remediation: ""
+   description: "In order to mitigate firmware attacks Apple has created a automated Firmware check to ensure that the EFI version running is a known good version from Apple. There is also an automated process to check it every seven days."
+   rationale: "If the Firmware of a computer has been compromised the Operating System that the Firmware loads cannot be trusted either."
+   remediation: "If EFI does not pass the integrity check you may send a report to Apple. Backing up files and clean installing a known good Operating System and Firmware is recommended."
    compliance:
      - cis: "2.13"
-   references:
-     - ...
    condition: any
    rules:
-     - ''
+     - 'c:/usr/libexec/firmwarecheckers/eficheck/eficheck --integrity-check -> !r:Primary allowlist version match found\. No changes detected in primary hashes\.;'
+     - 'c:launchctl list -> !r:-\s*0\s*com\.apple\.driver\.eficheck;'
 # 3.1 Enable security auditing (Scored)
  - id: XXXXX
    title: "Enable security auditing (Scored)"
@@ -499,11 +238,9 @@ checks:
    remediation: "Run the following command in Terminal: sudo launchctl load -w /System/Library/LaunchDaemons/com.apple.auditd.plist"
    compliance:
      - cis: "3.1"
-   references:
-     - ...
    condition: any
    rules:
-     - 'c:launchctl list | grep -i auditd -> !r:com.apple.auditd;'
+     - 'c:launchctl list -> !r:com\.apple\.auditd;'
 # 3.2 Configure Security Auditing Flags (Scored)
  - id: XXXXX
    title: "Configure Security Auditing Flags (Scored)"
@@ -512,67 +249,13 @@ checks:
    remediation: "1. Open a terminal session and edit the /etc/security/audit_control file  2. Find the line beginning with \"flags\"  3. Add the following flags: lo, ad, fd, fm, -all.  4. Save the file."
    compliance:
      - cis: "3.2"
-   references:
-     - ...
    condition: any
    rules:
-     - 'f:/etc/security/audit_control -> r:^flags -> !r:lo;'
-     - 'f:/etc/security/audit_control -> r:^flags -> !r:ad;'
-     - 'f:/etc/security/audit_control -> r:^flags -> !r:fd;'
-     - 'f:/etc/security/audit_control -> r:^flags -> !r:fm;'
-     - 'f:/etc/security/audit_control -> r:^flags -> !r:-all;'
-# 3.3 Ensure security auditing retention (Scored)
- - id: XXXXX
-   title: "Ensure security auditing retention (Scored)"
-   description: ""
-   rationale: ""
-   remediation: ""
-   compliance:
-     - cis: "3.3"
-   references:
-     - ...
-   condition: any
-   rules:
-     - ''
-# 3.4 Control access to audit records (Scored)
- - id: XXXXX
-   title: "Control access to audit records (Scored)"
-   description: ""
-   rationale: ""
-   remediation: ""
-   compliance:
-     - cis: "3.4"
-   references:
-     - ...
-   condition: any
-   rules:
-     - ''
-# 3.5 Retain install.log for 365 or more days (Scored)
- - id: XXXXX
-   title: "Retain install.log for 365 or more days (Scored)"
-   description: ""
-   rationale: ""
-   remediation: ""
-   compliance:
-     - cis: "3.5"
-   references:
-     - ...
-   condition: any
-   rules:
-     - ''
-# 3.6 Ensure Firewall is configured to log (Scored)
- - id: XXXXX
-   title: "Ensure Firewall is configured to log (Scored)"
-   description: ""
-   rationale: ""
-   remediation: ""
-   compliance:
-     - cis: "3.6"
-   references:
-     - ...
-   condition: any
-   rules:
-     - ''
+     - 'f:/etc/security/audit_control -> r:^flags && !r:lo;'
+     - 'f:/etc/security/audit_control -> r:^flags && !r:ad;'
+     - 'f:/etc/security/audit_control -> r:^flags && !r:fd;'
+     - 'f:/etc/security/audit_control -> r:^flags && !r:fm;'
+     - 'f:/etc/security/audit_control -> r:^flags && !r:-all;'
 # 4.1 Disable Bonjour advertising service (Scored)
  - id: XXXXX
    title: "Disable Bonjour advertising service (Scored)"
@@ -581,24 +264,9 @@ checks:
    remediation: "Run the following command in Terminal: defaults write /Library/Preferences/com.apple.mDNSResponder.plist NoMulticastAdvertisements"
    compliance:
      - cis: "4.1"
-   references:
-     - ...
    condition: any
    rules:
      - 'c:defaults read /Library/Preferences/com.apple.mDNSResponder.plist NoMulticastAdvertisements -> !r:^\s*1;'
-# 4.2 Enable "Show Wi-Fi status in menu bar" (Scored)
- - id: XXXXX
-   title: "Enable \"Show Wi-Fi status in menu bar\" (Scored)"
-   description: ""
-   rationale: ""
-   remediation: ""
-   compliance:
-     - cis: "4.2"
-   references:
-     - ...
-   condition: any
-   rules:
-     - ''
 # 4.4 Ensure http server is not running (Scored)
  - id: XXXXX
    title: "Ensure http server is not running (Scored)"
@@ -607,11 +275,9 @@ checks:
    remediation: "Ensure that the Web Server is not running and is not set to start at boot Stop the Web Server: sudo apachectl stop    Ensure that the web server will not auto-start at boot sudo: defaults write /System/Library/LaunchDaemons/org.apache.httpd Disabled - bool true"
    compliance:
      - cis: "4.4"
-   references:
-     - ...
    condition: any
    rules:
-     - 'c:ps -ef | grep -i httpd -> r:/usr/bin/httpd;'
+     - 'p:httpd;'
 # 4.5 Ensure nfs server is not running (Scored)
  - id: XXXXX
    title: "Ensure nfs server is not running (Scored)"
@@ -620,182 +286,10 @@ checks:
    remediation: "Ensure that the NFS Server is not running and is not set to start at boot Stop the NFS Server: sudo nfsd disable    Remove the exported Directory listing: rm /etc/export"
    compliance:
      - cis: "4.5"
-   references:
-     - ...
    condition: any
    rules:
-     - 'c:ps -ef | grep -i nfsd -> r:/sbin/nfsd;'
+     - 'p:nfsd;'
      - 'c:cat /etc/exports -> !r:No such file or directory;'
-# 5.1.1 Secure Home Folders (Scored)
- - id: XXXXX
-   title: "Secure Home Folders (Scored)"
-   description: ""
-   rationale: ""
-   remediation: ""
-   compliance:
-     - cis: "5.1.1"
-   references:
-     - ...
-   condition: any
-   rules:
-     - ''
-# 5.1.2 Check System Wide Applications for appropriate permissions (Scored)
- - id: XXXXX
-   title: "Check System Wide Applications for appropriate permissions (Scored)"
-   description: ""
-   rationale: ""
-   remediation: ""
-   compliance:
-     - cis: "5.1.2"
-   references:
-     - ...
-   condition: any
-   rules:
-     - ''
-# 5.1.3 Check System folder for world writable files (Scored)
- - id: XXXXX
-   title: "Check System folder for world writable files (Scored)"
-   description: ""
-   rationale: ""
-   remediation: ""
-   compliance:
-     - cis: "5.1.3"
-   references:
-     - ...
-   condition: any
-   rules:
-     - ''
-# 5.1.4 Check Library folder for world writable files (Scored)
- - id: XXXXX
-   title: "Check Library folder for world writable files (Scored)"
-   description: ""
-   rationale: ""
-   remediation: ""
-   compliance:
-     - cis: "5.1.4"
-   references:
-     - ...
-   condition: any
-   rules:
-     - ''
-# 5.2.1 Configure account lockout threshold (Scored)
- - id: XXXXX
-   title: "Configure account lockout threshold (Scored)"
-   description: "The account lockout threshold specifies the amount of times a user can enter an incorrect password before a lockout will occur.  Ensure that a lockout threshold is part of the password policy on the computer"
-   rationale: "The account lockout feature mitigates brute-force password attacks on the system."
-   remediation: "Run the following command in Terminal: pwpolicy -setaccountpolicies"
-   compliance:
-     - cis: "5.2.1"
-   references:
-     - pwpolicy man page
-   condition: any
-   rules:
-     # TODO: this command may return nothing
-     - 'c:pwpolicy -getaccountpolicies | grep -A 1 ''policyAttributeMaximumFailedAuthentications'' | tail -1 | cut -d''>'' -f2 | cut -d ''<'' -f1 -> !r:[1-5];'
-# 5.2.2 Set a minimum password length (Scored)
- - id: XXXXX
-   title: "Set a minimum password length (Scored)"
-   description: ""
-   rationale: ""
-   remediation: ""
-   compliance:
-     - cis: "5.2.2"
-   references:
-     - ...
-   condition: any
-   rules:
-     - ''
-# 5.2.7 Password Age (Scored)
- - id: XXXXX
-   title: "Password Age (Scored)"
-   description: ""
-   rationale: ""
-   remediation: ""
-   compliance:
-     - cis: "5.2.7"
-   references:
-     - ...
-   condition: any
-   rules:
-     - ''
-# 5.2.8 Password History (Scored)
- - id: XXXXX
-   title: "Password History (Scored)"
-   description: ""
-   rationale: ""
-   remediation: ""
-   compliance:
-     - cis: "5.2.8"
-   references:
-     - ...
-   condition: any
-   rules:
-     - ''
-# 5.3 Reduce the sudo timeout period (Scored)
- - id: XXXXX
-   title: "Reduce the sudo timeout period (Scored)"
-   description: ""
-   rationale: ""
-   remediation: ""
-   compliance:
-     - cis: "5.3"
-   references:
-     - ...
-   condition: any
-   rules:
-     - ''
-# 5.4 Use a separate timestamp for each user/tty combo (Scored)
- - id: XXXXX
-   title: "Use a separate timestamp for each user/tty combo (Scored)"
-   description: ""
-   rationale: ""
-   remediation: ""
-   compliance:
-     - cis: "5.4"
-   references:
-     - ...
-   condition: any
-   rules:
-     - ''
-# 5.7 Automatically lock the login keychain for inactivity (Scored)
- - id: XXXXX
-   title: "Automatically lock the login keychain for inactivity (Scored)"
-   description: ""
-   rationale: ""
-   remediation: ""
-   compliance:
-     - cis: "5.7"
-   references:
-     - ...
-   condition: any
-   rules:
-     - ''
-# 5.8 Ensure login keychain is locked when the computer sleeps (Scored)
- - id: XXXXX
-   title: "Ensure login keychain is locked when the computer sleeps (Scored)"
-   description: ""
-   rationale: ""
-   remediation: ""
-   compliance:
-     - cis: "5.8"
-   references:
-     - ...
-   condition: any
-   rules:
-     - ''
-# 5.9 Enable OCSP and CRL certificate checking (Scored)
- - id: XXXXX
-   title: "Enable OCSP and CRL certificate checking (Scored)"
-   description: ""
-   rationale: ""
-   remediation: ""
-   compliance:
-     - cis: "5.9"
-   references:
-     - ...
-   condition: any
-   rules:
-     - ''
 # 5.11 Do not enable the "root" account (Scored)
  - id: XXXXX
    title: "Do not enable the \"root\" account (Scored)"
@@ -804,8 +298,6 @@ checks:
    remediation: "Open System Preferences, Uses & Groups. Click the lock icon to unlock it. In the Network Account Server section, click Join or Edit. Click Open Directory Utility. Click the lock icon to unlock it. Select the Edit menu > Disable Root User."
    compliance:
      - cis: "5.11"
-   references:
-     - ...
    condition: any
    rules:
      - 'c:dscl . -read /Users/root AuthenticationAuthority -> !r:^No such key: AuthenticationAuthority;'
@@ -817,89 +309,9 @@ checks:
    remediation: "Run the following command in Terminal: sudo defaults delete /Library/Preferences/com.apple.loginwindow autoLoginUser"
    compliance:
      - cis: "5.12"
-   references:
-     - ...
    condition: any
    rules:
      - 'c:defaults read /Library/Preferences/com.apple.loginwindow -> r:autoLoginUser;'
-# 5.13 Require a password to wake the computer from sleep or screen saver (Scored)
- - id: XXXXX
-   title: "Require a password to wake the computer from sleep or screen saver (Scored)"
-   description: ""
-   rationale: ""
-   remediation: ""
-   compliance:
-     - cis: "5.13"
-   references:
-     - ...
-   condition: any
-   rules:
-     - ''
-# 5.14 Ensure system is set to hibernate (Scored)
- - id: XXXXX
-   title: "Ensure system is set to hibernate (Scored)"
-   description: ""
-   rationale: ""
-   remediation: ""
-   compliance:
-     - cis: "5.14"
-   references:
-     - ...
-   condition: any
-   rules:
-     - ''
-# 5.15 Require an administrator password to access system-wide preferences (Scored)
- - id: XXXXX
-   title: "Require an administrator password to access system-wide preferences (Scored)"
-   description: "System Preferences controls system and user settings on a macOS Computer. System Preferences allows the user to tailor their experience on the computer as well as allowing the System Administrator to configure global security settings. Some of the settings should only be altered by the person responsible for the computer."
-   rationale: "By requiring a password to unlock System-wide System Preferences the risk is mitigated of a user changing configurations that affect the entire system and requires an admin user to re-authenticate to make changes"
-   remediation: "In System Preferences: Security, General tab under Advanced, check \"Require an administrator password to access system-wide preferences\""
-   compliance:
-     - cis: "5.15"
-   references:
-     - ...
-   condition: any
-   rules:
-     - 'c:security authorizationdb read system.preferences 2> /dev/null | grep -A1 shared | grep -E ''(true|false)'' -> !r:false;'
-# 5.16 Disable ability to login to another user's active and locked session (Scored)
- - id: XXXXX
-   title: "Disable ability to login to another user's active and locked session (Scored)"
-   description: ""
-   rationale: ""
-   remediation: ""
-   compliance:
-     - cis: "5.16"
-   references:
-     - ...
-   condition: any
-   rules:
-     - ''
-# 5.17 Create a custom message for the Login Screen (Scored)
- - id: XXXXX
-   title: "Create a custom message for the Login Screen (Scored)"
-   description: ""
-   rationale: ""
-   remediation: ""
-   compliance:
-     - cis: "5.17"
-   references:
-     - ...
-   condition: any
-   rules:
-     - ''
-# 5.18 Create a Login window banner (Scored)
- - id: XXXXX
-   title: "Create a Login window banner (Scored)"
-   description: ""
-   rationale: ""
-   remediation: ""
-   compliance:
-     - cis: "5.18"
-   references:
-     - ...
-   condition: any
-   rules:
-     - ''
 # 5.23 System Integrity Protection status (Scored)
  - id: XXXXX
    title: "System Integrity Protection status (Scored)"
@@ -908,37 +320,9 @@ checks:
    remediation: "Perform the following while booted in macOS Recovery Partition.  1. Select Terminal from the Utilities menu    2. Run the following command in Terminal: /usr/bin/csrutil enable    3. The output should be: Successfully enabled System Integrity Protection. Please restart the machine for the changes to take effect.    4. Reboot."
    compliance:
      - cis: "5.23"
-   references:
-     - ...
    condition: any
    rules:
      - 'c:/usr/bin/csrutil status -> !r:^\s*System Integrity Protection status: enabled;'
-# 6.1.1 Display login window as name and password (Scored)
- - id: XXXXX
-   title: "Display login window as name and password (Scored)"
-   description: ""
-   rationale: ""
-   remediation: ""
-   compliance:
-     - cis: "6.1.1"
-   references:
-     - ...
-   condition: any
-   rules:
-     - ''
-# 6.1.2 Disable "Show password hints" (Scored)
- - id: XXXXX
-   title: "Disable \"Show password hints\" (Scored)"
-   description: ""
-   rationale: ""
-   remediation: ""
-   compliance:
-     - cis: "6.1.2"
-   references:
-     - ...
-   condition: any
-   rules:
-     - ''
 # 6.1.3 Disable guest account login (Scored)
  - id: XXXXX
    title: "Disable guest account login (Scored)"
@@ -947,37 +331,20 @@ checks:
    remediation: "Run the following command in Terminal: sudo defaults write /Library/Preferences/com.apple.loginwindow GuestEnabled - bool NO"
    compliance:
      - cis: "6.1.3"
-   references:
-     - ...
    condition: any
    rules:
      - 'c:defaults read /Library/Preferences/com.apple.loginwindow.plist GuestEnabled -> !r:^\s*0;'
-# 6.1.4 Disable "Allow guests to connect to shared folders" (Scored)
- - id: XXXXX
-   title: "Disable \"Allow guests to connect to shared folders\" (Scored)"
-   description: ""
-   rationale: ""
-   remediation: ""
-   compliance:
-     - cis: "6.1.4"
-   references:
-     - ...
-   condition: any
-   rules:
-     - ''
 # 6.1.5 Remove Guest home folder (Scored)
  - id: XXXXX
    title: "Remove Guest home folder (Scored)"
-   description: ""
-   rationale: ""
-   remediation: ""
+   description: "The guest account login should have been disabled, so there is no need for the legacy Guest home folder to remain in the file system. When normal user accounts are removed you have the option to archive it, leave it in place or delete. In the case of the guest folder the folder remains in place without a GUI option to remove it. If at some point in the future a Guest account is needed it will be re-created. The presence of the Guest home folder can cause automated audits to fail when looking for compliant settings within all User folders as well. Rather than ignoring the folders continued existence it is best removed."
+   rationale: "The Guest home folders are unneeded after the Guest account is disabled and could be used inappropriately."
+   remediation: "1. Run the following command in Terminal: rm -R /Users/Guest  2. Make sure there is no output"
    compliance:
      - cis: "6.1.5"
-   references:
-     - ...
    condition: any
    rules:
-     - ''
+     - 'd:/Users/Guest;'
 # 6.2 Turn on filename extensions (Scored)
  - id: XXXXX
    title: "Turn on filename extensions (Scored)"
@@ -986,8 +353,6 @@ checks:
    remediation: "Perform the following to implement the prescribed state: 1. Select Finder 2. Select Preferences 3. Check Show all filename extensions    Alternatively, use the following command: defaults write NSGlobalDomain AppleShowAllExtensions -bool true"
    compliance:
      - cis: "6.2"
-   references:
-     - ...
    condition: any
    rules:
      - 'c:defaults read NSGlobalDomain AppleShowAllExtensions -> !r:^\s*1;'
@@ -999,8 +364,7 @@ checks:
    remediation: "Perform the following to implement the prescribed state: 1. Open Safari 2. Select Safari from the menu bar 3. Select Preferences 4. Select General 5. Uncheck Open \"safe\" files after downloading    Alternatively run the following command in Terminal: defaults write com.apple.Safari AutoOpenSafeDownloads -boolean no"
    compliance:
      - cis: "6.3"
-   references:
-     - ...
    condition: any
    rules:
      - 'c:defaults read com.apple.Safari AutoOpenSafeDownloads -> !r:^0;'
+
