@@ -232,6 +232,8 @@ def get_ossec_version():
 
 
 def get_ruleset_version():
+    ossec_path = common.ossec_path
+    ossec_ruleset_version_path = "{0}/ruleset/VERSION".format(ossec_path)
     try:
         with open(ossec_ruleset_version_path) as version_file:
             lines = version_file.readlines()
@@ -492,7 +494,7 @@ def main():
             os.remove(ossec_update_script+'-old')
             os.remove(ossec_ruleset_version_path+'-old')
             exit(2,"Upgrade aborted: Unexpected version in the new ruleset. " + \
-                "Expected version {0}. Found version {1}".format(old_version[:-1]+'x',
+                "Expected version greater than {0}. Found version {1}".format(old_version,
                 status['new_version']))
         # remove temporary files
         os.remove(ossec_update_script+'-old')
@@ -552,9 +554,9 @@ def same_major_minor(old_version, new_version):
         return False
 
 def usage():
-    branch = get_branch()  # 'stable' 'master' 'development'
+    ruleset_version = get_ruleset_version()  # 'stable' 'master' 'development'
     msg = """
-    Update ruleset v3.2.0
+    Update ruleset {0}
     Github repository: https://github.com/wazuh/wazuh-ruleset
     Full documentation: http://documentation.wazuh.com/en/latest/wazuh_ruleset.html
 
@@ -571,12 +573,12 @@ def usage():
     Additional Params:
     \t-f, --force-update  Force to update the ruleset. By default, only it is updated the new/changed decoders/rules/rootchecks.
     \t-s, --source        Select ruleset source path (instead of download it).
-    \t-j, --json          JSON output. It should be used with '-s' argument.
+    \t-j, --json          JSON output.
     \t-d, --debug         Debug mode.
     \t-u, --url           URL of ruleset zip (default: https://github.com/wazuh/wazuh-ruleset/archive/$BRANCH-NAME.zip)
     \t                    It requires -n parameter.
     \t-n, --branch-name   Branch name (default: stable)
-    """.format(branch)
+    """.format(ruleset_version)
     print(msg)
 
 
