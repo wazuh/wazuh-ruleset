@@ -33,7 +33,7 @@ checks:
    title: "Verify all Apple provided software is current (Scored)"
    description: "Software vendors release security patches and software updates for their products when security vulnerabilities are discovered. There is no simple way to complete this action without a network connection to an Apple software repository. Please ensure appropriate access for this control. This check is only for what Apple provides through software update."
    rationale: "It is important that these updates be applied in a timely manner to prevent unauthorized persons from exploiting the identified vulnerabilities."
-   remediation: "In Terminal, run the following: softwareupdate -l    2. In Terminal, run the following for any packages that show up in step 1: sudo softwareupdate -i packagename"
+   remediation: "1. In Terminal, run the following: softwareupdate -l    2. In Terminal, run the following for any packages that show up in step 1: sudo softwareupdate -i packagename"
    compliance:
      - cis: "1.1"
    condition: any
@@ -95,7 +95,7 @@ checks:
    title: "Enable \"Set time and date automatically\" (Scored)"
    description: "Correct date and time settings are required for authentication protocols, file creation, modification dates and log entries."
    rationale: "Kerberos may not operate correctly if the time on the Mac is off by more than 5 minutes.  This in turn can affect Apple's single sign-on feature, Active Directory logons, and other features."
-   remediation: "un the following commands: sudo systemsetup -setnetworktimeserver <timeserver>    sudo systemsetup –setusingnetworktime on"
+   remediation: "Run the following commands: sudo systemsetup -setnetworktimeserver <timeserver>    sudo systemsetup -setusingnetworktime on"
    compliance:
      - cis: "2.2.1"
    condition: any
