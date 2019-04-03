@@ -206,6 +206,17 @@ checks:
    condition: any
    rules:
      - 'c:/usr/libexec/ApplicationFirewall/socketfilterfw --getstealthmode -> !r:^\s*Stealth mode enabled;'
+# 2.10 Enable Secure Keyboard Entry in terminal.app (Scored)
+ - id: XXXXX
+   title: "Enable Secure Keyboard Entry in terminal.app (Scored)"
+   description: "Secure Keyboard Entry prevents other applications on the system and/or network from detecting and recording what is typed into Terminal."
+   rationale: "Enabling Secure Keyboard Entry minimizes the risk of a key logger from detecting what is entered in Terminal."
+   remediation: "Perform the following to implement the prescribed state: 1. Open Terminal 2. Select Terminal 3. Select Secure Keyboard Entry"
+   compliance:
+     - cis: "2.10"
+   condition: any
+   rules:
+     - 'c:defaults read -app Terminal SecureKeyboardEntry -> !r:^\s*1;'
 # 2.11 Java 6 is not the default Java runtime (Scored)
  - id: 10015
    title: "Java 6 is not the default Java runtime (Scored)"

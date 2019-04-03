@@ -160,7 +160,7 @@ checks:
 # 2.5.1 Disable "Wake for network access" (Scored)
  - id: 10511
    title: "Disable \"Wake for network access\" (Scored)"
-   description: "his feature allows other users to be able to access your computer’s shared resources, such as shared printers or iTunes playlists, even when your computer is in sleep mode. In a closed network when only authorized devices could wake a computer it could be valuable to wake computers in order to do management push activity. Where mobile workstations and agents exist the device will more likely check in to receive updates when already awake. Mobile devices should not be listening for signals on unmanaged network where untrusted devices could send wake signals."
+   description: "This feature allows other users to be able to access your computer’s shared resources, such as shared printers or iTunes playlists, even when your computer is in sleep mode. In a closed network when only authorized devices could wake a computer it could be valuable to wake computers in order to do management push activity. Where mobile workstations and agents exist the device will more likely check in to receive updates when already awake. Mobile devices should not be listening for signals on unmanaged network where untrusted devices could send wake signals."
    rationale: "Disabling this feature mitigates the risk of an attacker remotely waking the system and gaining access."
    remediation: "Run the following command in Terminal: sudo pmset -a womp 0"
    compliance:
@@ -217,6 +217,17 @@ checks:
    condition: any
    rules:
      - 'c:/usr/libexec/ApplicationFirewall/socketfilterfw --getstealthmode -> !r:^\s*Stealth mode enabled;'
+# 2.10 Enable Secure Keyboard Entry in terminal.app (Scored)
+ - id: XXXXX
+   title: "Enable Secure Keyboard Entry in terminal.app (Scored)"
+   description: "Secure Keyboard Entry prevents other applications on the system and/or network from detecting and recording what is typed into Terminal."
+   rationale: "Enabling Secure Keyboard Entry minimizes the risk of a key logger from detecting what is entered in Terminal."
+   remediation: "Perform the following to implement the prescribed state: 1. Open Terminal 2. Select Terminal 3. Select Secure Keyboard Entry"
+   compliance:
+     - cis: "2.10"
+   condition: any
+   rules:
+     - 'c:defaults read -app Terminal SecureKeyboardEntry -> !r:^\s*1;'
 # 2.11 Java 6 is not the default Java runtime (Scored)
  - id: 10516
    title: "Java 6 is not the default Java runtime (Scored)"
