@@ -23,9 +23,9 @@ requirements:
   description: "Requirements for running the SCA scan against MacOS 10.12 (Sierra)."
   condition: "any required"
   rules:
-    - 'c:defaults read loginwindow SystemVersionStampAsString -> r:^\s*10\.12;'
-    - 'c:sw_vers -> r:^ProductVersion:\s*10\.12;'
-    - 'c:system_profiler SPSoftwareDataType -> r:^\s*System Version:.*10\.12;'
+    - 'c:defaults read loginwindow SystemVersionStampAsString -> r:^\s*10.12;'
+    - 'c:sw_vers -> r:^ProductVersion:\s*10.12;'
+    - 'c:system_profiler SPSoftwareDataType -> r:^\s*System Version:.*10.12;'
 
 checks:
 # 1.1 Verify all Apple provided software is current (Scored)
@@ -178,7 +178,7 @@ checks:
      - cis: "2.6.1.1"
    condition: any
    rules:
-     - 'c:fdesetup status -> !r:^FileVault is\s*On\.;'
+     - 'c:fdesetup status -> !r:^FileVault is\s*On.;'
 # 2.6.2 Enable Gatekeeper (Scored)
  - id: 10513
    title: "Enable Gatekeeper (Scored)"
@@ -250,7 +250,7 @@ checks:
      - cis: "3.1"
    condition: any
    rules:
-     - 'c:launchctl list -> !r:com\.apple\.auditd;'
+     - 'c:launchctl list -> !r:com.apple.auditd;'
 # 3.2 Configure Security Auditing Flags (Scored)
  - id: 10519
    title: "Configure Security Auditing Flags (Scored)"
@@ -310,7 +310,7 @@ checks:
    condition: any
    rules:
      - 'p:nfsd;'
-     - 'c:cat /etc/exports -> !r:No such file or directory;'
+     - 'f:/etc/exports;'
 # 5.8 Do not enable the "root" account (Scored)
  - id: 10524
    title: "Do not enable the \"root\" account (Scored)"
@@ -365,7 +365,7 @@ checks:
      - cis: "6.1.5"
    condition: any
    rules:
-     - 'd:/Users/Guest;'
+     - 'd:/Users -> ^Guest$;'
 # 6.2 Turn on filename extensions (Scored)
  - id: 10529
    title: "Turn on filename extensions (Scored)"

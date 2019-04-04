@@ -23,9 +23,9 @@ requirements:
   description: "Requirements for running the SCA scan against MacOS 10.11 (El Capitan)."
   condition: "any required"
   rules:
-    - 'c:defaults read loginwindow SystemVersionStampAsString -> r:^\s*10\.11;'
-    - 'c:sw_vers -> r:^ProductVersion:\s*10\.11;'
-    - 'c:system_profiler SPSoftwareDataType -> r:^\s*System Version:.*10\.11;'
+    - 'c:defaults read loginwindow SystemVersionStampAsString -> r:^\s*10.11;'
+    - 'c:sw_vers -> r:^ProductVersion:\s*10.11;'
+    - 'c:system_profiler SPSoftwareDataType -> r:^\s*System Version:.*10.11;'
 
 checks:
 # 1.1 Verify all Apple provided software is current (Scored)
@@ -263,7 +263,7 @@ checks:
      - cis: "3.2"
    condition: any
    rules:
-     - 'c:launchctl list -> !r:com\.apple\.auditd;'
+     - 'c:launchctl list -> !r:com.apple.auditd;'
 # 3.3 Configure Security Auditing Flags (Scored)
  - id: 11020
    title: "Configure Security Auditing Flags (Scored)"
@@ -323,7 +323,7 @@ checks:
    condition: any
    rules:
      - 'p:nfsd;'
-     - 'c:cat /etc/exports -> !r:No such file or directory;'
+     - 'f:/etc/exports;'
 # 5.7 Do not enable the "root" account (Scored)
  - id: 11025
    title: "Do not enable the \"root\" account (Scored)"
@@ -400,7 +400,7 @@ checks:
      - cis: "6.1.5"
    condition: any
    rules:
-     - 'd:/Users/Guest;'
+     - 'd:/Users -> ^Guest$;'
 # 6.2 Turn on filename extensions (Scored)
  - id: 11032
    title: "Turn on filename extensions (Scored)"
