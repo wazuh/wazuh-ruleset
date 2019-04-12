@@ -60,6 +60,10 @@
   <program_name>^sshd</program_name>
 </decoder>
 
+<decoder name="sshd-mac">
+  <program_name>com.apple.xpc.launchd</program_name>
+</decoder>
+
 <decoder name="sshd-success">
   <parent>sshd</parent>
   <prematch>^Accepted</prematch>
@@ -235,4 +239,19 @@ Sep  4 21:14:25 example sshd[18368]: Did not receive identification string from 
   <prematch> exceeded for </prematch>
   <regex offset="after_prematch">^(\S+) from (\S+) port (\d+) </regex>
   <order>user, srcip, srcport</order>
+</decoder>
+
+<decoder name="ssh-p-running-mac">
+  <parent>sshd</parent>
+  <prematch>^USER_PROCESS: </prematch>
+</decoder>
+
+<decoder name="ssh-p-stopped-mac">
+  <parent>sshd</parent>
+  <prematch>^DEAD_PROCESS: </prematch>
+</decoder>
+
+<decoder name="sshd-exited-code">
+  <parent>sshd-mac</parent>
+  <prematch>^com.openssh.sshd.^</prematch>
 </decoder>
