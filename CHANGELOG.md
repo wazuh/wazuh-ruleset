@@ -19,6 +19,7 @@ All notable changes to this project will be documented in this file.
 
 - Changed the eventchannel field names in rules. ([#299](https://github.com/wazuh/wazuh-ruleset/pull/299))
 - Redistribute the eventchannel rules by incoming channel. ([#325](https://github.com/wazuh/wazuh-ruleset/pull/325))
+- Prevent events invoked by AWS Internal from flooding alerts. ([#351](https://github.com/wazuh/wazuh-ruleset/pull/351))
 
 ### Fixed
 
