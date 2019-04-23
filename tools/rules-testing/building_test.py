@@ -21,7 +21,7 @@ def build_test(path_xml, path_test, rules_write = []):
 
     try:
         file = open(path_test, "a")
-        file.write("\n"+"\n")
+        file.write("\n")
     except:
         print("Can't open " + path_test)
         return False
