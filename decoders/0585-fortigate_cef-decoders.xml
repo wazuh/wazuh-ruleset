@@ -1,0 +1,30 @@
+<!--
+This file contains Fortigate decoders for logs in Common Event Format
+© 2019 · Wazuh Inc
+Author: Sergio Peral Aguilera
+-->
+
+<decoder name="fortigate-cef">
+<program_name>CEF</program_name>
+<prematch>0\|Fortinet\|Fortigate\|v\d+.\d+.\d+\|\d+\|</prematch>
+</decoder>
+
+<!--
+Apr 10 17:08:58 PAYMENT-US-EXTRA-JESERY-FG1000D-FW01 CEF: 0|Fortinet|Fortigate|v5.6.6|00013|traffic:forward client-rst|3|deviceExternalId=FGT1KD3915802316 FTNTFGTlogid=0000000013 cat=traffic:forward FTNTFGTsubtype=forward FTNTFGTlevel=notice FTNTFGTvd=root FTNTFGTeventtime=1554896338 src=XX.XX.XX.XX spt=48088 deviceInboundInterface=portA FTNTFGTsrcintfrole=undefined dst=XX.XX.XX.XX dpt=443 deviceOutboundInterface=portB FTNTFGTdstintfrole=undefined FTNTFGTpoluuid=ba859676-3f1b-51e8-da11-c510ab0158c1 externalId=2776074 proto=6 act=client-rst FTNTFGTpolicyid=127 FTNTFGTpolicytype=policy app=HTTPS FTNTFGTdstcountry=US FTNTFGTsrccountry=Reserved FTNTFGTtrandisp=snat sourceTranslatedAddress=XX.XX.XX.XX sourceTranslatedPort=48088 FTNTFGTduration=31 out=1705 in=5198 FTNTFGTsentpkt=12 FTNTFGTshapingpolicyid=4 FTNTFGTshapersentname=500Mbps FTNTFGTshaperdropsentbyte=0 FTNTFGTshaperrcvdname=500Mbps FTNTFGTshaperdroprcvdbyte=0 FTNTFGTappcat=unscanned
+-->
+<decoder name="fortigate-cef-traffic">
+<parent>fortigate-cef</parent>
+<prematch offset="after_parent">traffic:</prematch>
+<regex>v(\d+.\d+.\d+)\|(\d+)\|(\.+)\|\.+level=(\w+) \.+ src=(\S+) spt=(\d+) \.+ dst=(\S+) dpt=(\d+)</regex>
+<order>version,id,type,level,srcip,srcport,dstip,dstport</order>
+</decoder>
+
+<!--
+Apr 10 17:17:55 PAYTM-IN-NXTRA-MANESAR-FG1000D-FW01 CEF: 0|Fortinet|Fortigate|v5.6.6|38404|event:system|5|deviceExternalId=FGT1KD3915802316 FTNTFGTlogid=0100038404 cat=event:system FTNTFGTsubtype=system FTNTFGTlevel=error FTNTFGTvd=root FTNTFGTeventtime=1554896875 FTNTFGTlogdesc=FortiGuard hostname unresolvable dhost=service.fortiguard.net msg=unable to resolve FortiGuard hostname
+-->
+<decoder name="fortigate-cef-event">
+<parent>fortigate-cef</parent>
+<prematch offset="after_parent">event:</prematch>
+<regex>v(\d+.\d+.\d+)\|(\d+)\|(\.+)\|\.+level=(\w+)</regex>
+<order>version,id,type,level</order>
+</decoder>
