@@ -1,0 +1,32 @@
+<!--
+This file contains a decoder for fortigate-IPS logs
+© 2019 · Wazuh Inc
+Author: Sergio Peral Aguilera
+-->
+
+<decoder name="fortigate-ips">
+<prematch>subject=\.+ device=\.+ severity=\w+ from=\.+ trigger=\.+ log=\.+ idseq=\d+ itime=\d+ devid=\.+ devname=\.+ vd=\.+ date=\S+ time=\S+ logid="\d+" type="\.+" subtype="\.+" eventtype="\.+" level="\.+" </prematch>
+</decoder>
+
+<!--
+Apr 24 12:06:18 172.29.87.198  subject=attack:PHP.Malicious.Shell device=XXXXXX severity=high from=Analyzer_XXXX(FL-1KET318000129) trigger=IPS - High Severity filter= log="logver=56 idseq=82785426246468319 itime=1556087872 devid=FGT1KD3915802343 devname=XXXXXXXX vd=root date=2019-04-24 time=12:07:52 logid="0419016384" type="utm" subtype="ips" eventtype="signature" level="alert" logtime=1556087872 severity="high" srcip=XXXXXX srccountry="China" dstip=XXXXX srcintf="portB" srcintfrole="undefined" dstintf="portA" dstintfrole="undefined" policyid=206 sessionid=2985411296 action="dropped" proto=6 service="HTTP" attack="PHP.Malicious.Shell" srcport=50346 dstport=80 hostname="www.XXXXX.com" direction="outgoing" attackid=44580 profile="IPS_XXXX" ref="http://www.fortinet.com/ids/VID44580" incidentserialno=1914342771 msg="web_app3: PHP.Malicious.Shell," crscore=30 crlevel="high"
+-->
+
+<decoder name="fortigate-ips-1">
+<parent>fortigate-ips</parent>
+<prematch offset="after_parent">logtime=\d+ severity="\.+" srcip=\S+ srccountry="\.+" dstip=\S+ srcintf="\.+" srcintfrole="\.+" dstintf="\.+" dstintfrole="\.+" policyid=\d+ sessionid=\d+ action="\.+" proto=\.+ service="\.+" attack="\.+" srcport=\d+ dstport=\d+ hostname="\S+" direction="\.+" attackid=\d+ profile="\.+" ref="\.+" incidentserialno=\d+ msg="\.+" crscore=\d+ crlevel="\.+"</prematch>
+<regex>subject=(\.+) device=(\.+) severity=(\w+) from=(\.+) trigger=(\.+) \.+ log=(\.+) idseq=(\d+) itime=(\d+) devid=(\.+) devname=(\.+) vd=(\.+) date=(\S+) time=(\S+) logid="(\d+)" type="(\.+)" subtype="(\.+)" eventtype="(\.+)" level="(\.+)" logtime=(\d+) severity="\.+" srcip=(\S+) srccountry="(\.+)" dstip=(\S+) srcintf="(\.+)" srcintfrole="(\.+)" dstintf="(\.+)" dstintfrole="(\.+)" policyid=(\d+) sessionid=(\d+) action="(\.+)" proto=(\.+) service="(\.+)" attack="(\.+)" srcport=(\d+) dstport=(\d+) hostname="(\S+)" direction="(\.+)" attackid=(\d+) profile="(\.+)" ref="(\.+)" incidentserialno=(\d+) msg="(\.+)" crscore=(\d+) crlevel="(\.+)"</regex>
+<order>subject,device,severity,from,trigger,log,idseq,itime,devid,devname,vd,date,time,logid,type,subtype,eventtype,level,logtime,srcip,srccountry,dstip,srcintf,srcintfrole,dstintf,dstintfrole,policyid,sessionid,action,proto,service,attack,srcport,dstport,hostname,direction,attackid,profile,ref,incidentserialno,msg,crscore,crlevel</order>
+</decoder>
+
+<!--
+Apr 24 14:57:13 172.29.87.198  subject=attack:TCP.Out.Of.Range.Timestamp device=XXXXXX severity=low from=Analyzer_XXXXXX(FL-1KET318000129) trigger=IPS - Low Severity filter= log="logver=56 idseq=82785426246474604 itime=1556098108 devid=FGT1KD3915802316 devname=XXXXXX vd=root date=2019-04-24 time=14:54:04 logid="0419016384" type="utm" subtype="ips" eventtype="signature" level="alert" eventtime=1556097844 severity="low" srcip=XXXXXX srccountry="India" dstip=XXXXXX srcintf="portB" srcintfrole="undefined" dstintf="portA" dstintfrole="undefined" sessionid=1795537954 action="dropped" proto=6 service="SSL" policyid=18 attack="TCP.Out.Of.Range.Timestamp" srcport=30060 dstport=443 hostname="XXXXXX.XXXXXX.in" direction="outgoing" attackid=17677 profile="Paytm_XXXXXX" ref="http://www.fortinet.com/ids/VID17677" incidentserialno=1864318107 msg="tcp_reassembler: TCP.Out.Of.Range.Timestamp, bad paws" crscore=5 crlevel="low""
+-->
+
+<decoder name="fortigate-ips-2">
+<parent>fortigate-ips</parent>
+<prematch offset="after_parent">eventtime=\d+ severity="\.+" srcip=\S+ srccountry="\.+" dstip=\S+ srcintf="\.+" srcintfrole="\.+" dstintf="\.+" dstintfrole="\.+" sessionid=\d+ action="\.+" proto=\.+ service="\.+" policyid=\d+ attack="\.+" srcport=\d+ dstport=\d+ hostname="\S+" direction="\.+" attackid=\d+ profile="\.+" ref="\.+" incidentserialno=\d+ msg="\.+" crscore=\d+ crlevel="\.+"</prematch>
+<regex>subject=(\.+) device=(\.+) severity=(\w+) from=(\.+) trigger=(\.+) \.+ log=(\.+) idseq=(\d+) itime=(\d+) devid=(\.+) devname=(\.+) vd=(\.+) date=(\S+) time=(\S+) logid="(\d+)" type="(\.+)" subtype="(\.+)" eventtype="(\.+)" level="(\.+)" eventtime=(\d+) severity="\.+" srcip=(\S+) srccountry="(\.+)" dstip=(\S+) srcintf="(\.+)" srcintfrole="(\.+)" dstintf="(\.+)" dstintfrole="(\.+)" sessionid=(\d+) action="(\.+)" proto=(\.+) service="(\.+)" policyid=(\d+) attack="(\.+)" srcport=(\d+) dstport=(\d+) hostname="(\S+)" direction="(\.+)" attackid=(\d+) profile="(\.+)" ref="(\.+)" incidentserialno=(\d+) msg="(\.+)" crscore=(\d+) crlevel="(\.+)"</regex>
+<order>subject,device,severity,from,trigger,log,idseq,itime,devid,devname,vd,date,time,logid,type,subtype,eventtype,level,eventtime,srcip,srccountry,dstip,srcintf,srcintfrole,dstintf,dstintfrole,sessionid,action,proto,service,policyid,attack,srcport,dstport,hostname,direction,attackid,profile,ref,incidentserialno,msg,crscore,crlevel</order>
+</decoder>
+
