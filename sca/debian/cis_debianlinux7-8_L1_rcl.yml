@@ -534,8 +534,7 @@ checks:
     - cis: "6.16"
    condition: any
    rules:
-     - 'f:/etc/default/rsync -> IN !r:^# && r:RSYNC_ENABLE=true|inetd;'
-     - 'f:/etc/default/rsync -> IN !r:^RSYNC_ENABLE=false;'
+     - 'f:/etc/default/rsync -> NIN !r:^# && r:^RSYNC_ENABLE=false;'
 # 7 Network Configuration and Firewall
  - id: 10547
    title: "Disable IP Forwarding"
