@@ -557,6 +557,7 @@ checks:
    condition: any
    rules:
      - 'f:/etc/sysctl.conf -> IN !r:^# && r:net.ipv4.conf.all.send_redirects\s*=\s*1;'
+     - 'f:/etc/sysctl.conf -> IN !r:^# && r:net.ipv4.conf.default.send_redirects\s*=\s*1;'
  - id: 10549
    title: "Disable Source Routed Packet Acceptance"
    description: "In networking, source routing allows a sender to partially or fully specify the route packets take through a network. In contrast, non-source routed packets travel a path determined by routers in the network. In some cases, systems may not be routable or reachable from some locations (e.g. private addresses vs. Internet routable), and so source routed packets would need to be used."
