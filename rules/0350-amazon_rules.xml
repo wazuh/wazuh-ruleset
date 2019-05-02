@@ -17,6 +17,7 @@ ID: 80200 - 80499
         <decoded_as>json</decoded_as>
         <field name="integration">aws</field>
         <description>AWS alert.</description>
+        <options>no_full_log</options>
     </rule>
 
 
@@ -28,6 +29,7 @@ ID: 80200 - 80499
         <field name="aws.source">cloudtrail</field>
         <list field="aws.eventName" lookup="match_key">etc/lists/amazon/aws-eventnames</list>
         <description>AWS Cloudtrail: $(aws.eventSource) - $(aws.eventName).</description>
+        <options>no_full_log</options>
         <group>aws_cloudtrail,pci_dss_10.6.1,gdpr_IV_35.7.d,</group>
     </rule>
 
@@ -36,6 +38,7 @@ ID: 80200 - 80499
         <if_sid>80202</if_sid>
         <field name="aws.errorCode">\.+</field>
         <description>AWS Cloudtrail: $(aws.eventSource) - $(aws.eventName). Error: $(aws.errorCode).</description>
+        <options>no_full_log</options>
         <group>aws_cloudtrail,pci_dss_10.6.1,amazon-error,gdpr_IV_35.7.d,</group>
     </rule>
 
@@ -46,6 +49,7 @@ ID: 80200 - 80499
         <if_sid>80203</if_sid>
         <field name="aws.errorCode">AccessDenied</field>
         <description>AWS Cloudtrail: $(aws.eventSource) - $(aws.eventName). Error: $(aws.errorCode).</description>
+        <options>no_full_log</options>
         <group>aws_cloudtrail,pci_dss_10.6.1,pci_dss_10.2.4,pci_dss_10.2.5,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
     </rule>
 
@@ -54,12 +58,14 @@ ID: 80200 - 80499
         <if_sid>80202</if_sid>
         <field name="aws.eventName">DeleteObjects</field>
         <description>AWS Cloudtrail: $(aws.eventSource) - $(aws.eventName).</description>
+        <options>no_full_log</options>
         <group>aws_cloudtrail,pci_dss_10.6.1,gdpr_IV_35.7.d,</group>
     </rule>
 
     <rule id="80252" level="10" frequency="22" timeframe="600">
         <if_matched_sid>80251</if_matched_sid>
         <description>AWS Cloudtrail: $(aws.eventSource) - $(aws.eventName) - high number of deleted object.</description>
+        <options>no_full_log</options>
         <group>aws_cloudtrail,pci_dss_10.6.1,gdpr_IV_35.7.d,</group>
     </rule>
 
@@ -68,6 +74,7 @@ ID: 80200 - 80499
         <if_sid>80202</if_sid>
         <field name="aws.eventName">ConsoleLogin</field>
         <description>AWS Cloudtrail: $(aws.eventSource) - $(aws.eventName) - User Login Success.</description>
+        <options>no_full_log</options>
         <group>aws_cloudtrail,authentication_success,pci_dss_10.2.5,gdpr_IV_32.2,</group>
     </rule>
 
@@ -75,12 +82,14 @@ ID: 80200 - 80499
         <if_sid>80253</if_sid>
         <field name="aws.responseElements.ConsoleLogin">Failure</field>
         <description>AWS Cloudtrail: $(aws.eventSource) - $(aws.eventName) - User Login failed.</description>
+        <options>no_full_log</options>
         <group>aws_cloudtrail,authentication_failed,pci_dss_10.2.4,pci_dss_10.2.5,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
     </rule>
 
     <rule id="80255" level="10" frequency="6" timeframe="360">
         <if_matched_sid>80254</if_matched_sid>
         <description>AWS Cloudtrail: $(aws.eventSource) - $(aws.eventName) - Possible breaking attempt (high number of login attempts).</description>
+        <options>no_full_log</options>
         <group>aws_cloudtrail,authentication_failures,pci_dss_11.4,pci_dss_10.2.4,pci_dss_10.2.5,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
     </rule>
 
@@ -91,6 +100,7 @@ ID: 80200 - 80499
         <if_sid>80200</if_sid>
         <field name="aws.source">guardduty</field>
         <description>AWS Guard​Duty alert.</description>
+        <options>no_full_log</options>
         <group>aws_guardduty,</group>
     </rule>
 
@@ -99,18 +109,21 @@ ID: 80200 - 80499
         <if_sid>80300</if_sid>
         <field name="aws.severity">0|1|2|3</field>
         <description>AWS Guard​Duty: $(aws.service.action.actionType) - $(aws.title)</description>
+        <options>no_full_log</options>
         <group>aws_guardduty,</group>
     </rule>
     <rule id="80302" level="6">
         <if_sid>80300</if_sid>
         <field name="aws.severity">4|5|6</field>
         <description>AWS Guard​Duty: $(aws.service.action.actionType) - $(aws.title)</description>
+        <options>no_full_log</options>
         <group>aws_guardduty,</group>
     </rule>
     <rule id="80303" level="10">
         <if_sid>80300</if_sid>
         <field name="aws.severity">7|8|9</field>
         <description>AWS Guard​Duty: $(aws.service.action.actionType) - $(aws.title)</description>
+        <options>no_full_log</options>
         <group>aws_guardduty,</group>
     </rule>
 
@@ -119,6 +132,7 @@ ID: 80200 - 80499
         <if_sid>80301</if_sid>
         <field name="aws.service.action.actionType">PORT_PROBE</field>
         <description>AWS Guard​Duty: $(aws.service.action.actionType) - $(aws.title) [IP: $(aws.service.action.portProbeAction.portProbeDetails.remoteIpDetails.ipAddressV4)] [Port: $(aws.service.action.portProbeAction.portProbeDetails.localPortDetails.port)]</description>
+        <options>no_full_log</options>
         <group>aws_guardduty,</group>
     </rule>
 
@@ -126,6 +140,7 @@ ID: 80200 - 80499
         <if_sid>80302</if_sid>
         <field name="aws.service.action.actionType">PORT_PROBE</field>
         <description>AWS Guard​Duty: $(aws.service.action.actionType) - $(aws.title) [IP: $(aws.service.action.portProbeAction.portProbeDetails.remoteIpDetails.ipAddressV4)] [Port: $(aws.service.action.portProbeAction.portProbeDetails.localPortDetails.port)]</description>
+        <options>no_full_log</options>
         <group>aws_guardduty,</group>
     </rule>
 
@@ -133,6 +148,7 @@ ID: 80200 - 80499
         <if_sid>80303</if_sid>
         <field name="aws.service.action.actionType">PORT_PROBE</field>
         <description>AWS Guard​Duty: $(aws.service.action.actionType) - $(aws.title) [IP: $(aws.service.action.portProbeAction.portProbeDetails.remoteIpDetails.ipAddressV4)] [Port: $(aws.service.action.portProbeAction.portProbeDetails.localPortDetails.port)]</description>
+        <options>no_full_log</options>
         <group>aws_guardduty,</group>
     </rule>
 
@@ -143,6 +159,7 @@ ID: 80200 - 80499
         <if_sid>80200</if_sid>
         <field name="aws.source">macie</field>
         <description>AWS Macie alert.</description>
+        <options>no_full_log</options>
         <group>aws_macie,</group>
     </rule>
 
@@ -150,6 +167,7 @@ ID: 80200 - 80499
         <if_sid>80350</if_sid>
         <field name="aws.severity">INFO</field>
         <description>AWS Macie $(aws.severity): $(aws.name) - $(aws.summary.description)</description>
+        <options>no_full_log</options>
         <group>aws_macie,</group>
     </rule>
 
@@ -157,6 +175,7 @@ ID: 80200 - 80499
         <if_sid>80350</if_sid>
         <field name="aws.severity">LOW</field>
         <description>AWS Macie $(aws.severity): $(aws.name) - $(aws.summary.description)</description>
+        <options>no_full_log</options>
         <group>aws_macie,</group>
     </rule>
 
@@ -164,6 +183,7 @@ ID: 80200 - 80499
         <if_sid>80350</if_sid>
         <field name="aws.severity">MEDIUM</field>
         <description>AWS Macie $(aws.severity): $(aws.name) - $(aws.summary.description)</description>
+        <options>no_full_log</options>
         <group>aws_macie,</group>
     </rule>
 
@@ -171,6 +191,7 @@ ID: 80200 - 80499
         <if_sid>80350</if_sid>
         <field name="aws.severity">HIGH</field>
         <description>AWS Macie $(aws.severity): $(aws.name) - $(aws.summary.description)</description>
+        <options>no_full_log</options>
         <group>aws_macie,</group>
     </rule>
 
@@ -178,6 +199,7 @@ ID: 80200 - 80499
         <if_sid>80350</if_sid>
         <field name="aws.severity">CRITICAL</field>
         <description>AWS Macie $(aws.severity): $(aws.name) - $(aws.summary.description)</description>
+        <options>no_full_log</options>
         <group>aws_macie,</group>
     </rule>
 
@@ -188,6 +210,7 @@ ID: 80200 - 80499
         <if_sid>80200</if_sid>
         <field name="aws.source">vpc</field>
         <description>AWS VPC Flow alert.</description>
+        <options>no_full_log</options>
         <group>aws_vpcflow,</group>
     </rule>
 
@@ -195,6 +218,7 @@ ID: 80200 - 80499
         <if_sid>80400</if_sid>
         <field name="aws.action">ACCEPT</field>
         <description>AWS VPC Flow: [$(aws.action)] - Interface: $(aws.interface_id) - Protocol: $(aws.protocol)</description>
+        <options>no_full_log</options>
         <group>aws_vpcflow,</group>
     </rule>
 
@@ -202,6 +226,7 @@ ID: 80200 - 80499
         <if_sid>80400</if_sid>
         <field name="aws.action">REJECT</field>
         <description>AWS VPC Flow: [$(aws.action)] - Interface: $(aws.interface_id) - Protocol: $(aws.protocol)</description>
+        <options>no_full_log</options>
         <group>aws_vpcflow,</group>
     </rule>
 
@@ -212,6 +237,7 @@ ID: 80200 - 80499
         <if_sid>80200</if_sid>
         <field name="aws.source">config</field>
         <description>AWS Config alert.</description>
+        <options>no_full_log</options>
         <group>aws_config,</group>
     </rule>
 
@@ -220,6 +246,7 @@ ID: 80200 - 80499
         <if_sid>80450</if_sid>
         <field name="aws.log_info.log_file">\.+ConfigHistory</field>
         <description>AWS Config - History</description>
+        <options>no_full_log</options>
         <group>aws_config,aws_config_history,</group>
     </rule>
 
@@ -227,6 +254,7 @@ ID: 80200 - 80499
         <if_sid>80450</if_sid>
         <field name="aws.log_info.log_file">\.+ConfigSnapshot</field>
         <description>AWS Config - Snapshot</description>
+        <options>no_full_log</options>
         <group>aws_config,aws_config_snapshot,</group>
     </rule>
 
@@ -234,6 +262,7 @@ ID: 80200 - 80499
     <rule id="80453" level="3">
         <if_sid>80451</if_sid>
         <description>AWS Config - History [$(aws.awsAccountId) $(aws.awsRegion)] [$(aws.resourceType)]: $(aws.resourceId) ($(aws.configurationItemStatus))</description>
+        <options>no_full_log</options>
         <group>aws_config,aws_config_history,</group>
     </rule>
 
@@ -241,6 +270,7 @@ ID: 80200 - 80499
     <rule id="80475" level="3">
         <if_sid>80452</if_sid>
         <description>AWS Config - Snapshot [$(aws.awsAccountId) $(aws.awsRegion)] [$(aws.resourceType)]: $(aws.resourceId) ($(aws.configurationItemStatus))</description>
+        <options>no_full_log</options>
         <group>aws_config,aws_config_snapshot,</group>
     </rule>
 
@@ -248,6 +278,7 @@ ID: 80200 - 80499
         <if_sid>80475</if_sid>
         <field name="aws.configuration.complianceType">\.+</field>
         <description>AWS Config - Snapshot Compliance [$(aws.awsAccountId) $(aws.awsRegion)] [$(aws.resourceType)] [$(aws.configuration.configRuleList.configRuleName)]: $(aws.resourceId) ($(aws.configurationItemStatus)) $(aws.configuration.complianceType)</description>
+        <options>no_full_log</options>
         <group>aws_config,aws_config_snapshot,aws_config_snapshot_compliance,</group>
     </rule>
 
@@ -258,6 +289,7 @@ ID: 80200 - 80499
         <if_sid>80200</if_sid>
         <field name="aws.source">trustedadvisor</field>
         <description>AWS Trusted Advisor alert.</description>
+        <options>no_full_log</options>
         <group>aws_trusted_advisor,</group>
     </rule>
 
@@ -265,6 +297,7 @@ ID: 80200 - 80499
         <if_sid>80480</if_sid>
         <field name="aws.status">ERROR</field>
         <description>AWS Trusted Advisor - [$(aws.uuid)] [$(aws.check-name)]: $(aws.status)</description>
+        <options>no_full_log</options>
         <group>aws_trusted_advisor,</group>
     </rule>
 
@@ -272,6 +305,7 @@ ID: 80200 - 80499
         <if_sid>80480</if_sid>
         <field name="aws.status">WARN</field>
         <description>AWS Trusted Advisor - [$(aws.uuid)] [$(aws.check-name)]: $(aws.status)</description>
+        <options>no_full_log</options>
         <group>aws_trusted_advisor,</group>
     </rule>
 
@@ -279,6 +313,7 @@ ID: 80200 - 80499
         <if_sid>80480</if_sid>
         <field name="aws.status">OK</field>
         <description>AWS Trusted Advisor - [$(aws.uuid)] [$(aws.check-name)]: $(aws.status)</description>
+        <options>no_full_log</options>
         <group>aws_trusted_advisor,</group>
     </rule>
 
@@ -295,6 +330,7 @@ ID: 80200 - 80499
     <rule id="80491" level="3">
         <if_sid>80490</if_sid>
         <description>AWS KMS: [$(aws.eventName)] $(aws.userIdentity.type)</description>
+        <options>no_full_log</options>
         <group>aws_kms,</group>
     </rule>
 
@@ -302,6 +338,7 @@ ID: 80200 - 80499
         <if_sid>80491</if_sid>
         <field name="aws.userIdentity.userName">\.+</field>
         <description>AWS KMS: [$(aws.eventName)] $(aws.userIdentity.type) - $(aws.userIdentity.userName) - $(aws.sourceIPAddress)</description>
+        <options>no_full_log</options>
         <group>aws_kms,</group>
     </rule>
 
@@ -313,6 +350,7 @@ ID: 80200 - 80499
         <if_sid>80200</if_sid>
         <field name="aws.source">inspector</field>
         <description>AWS Inspector - Network assessment [$(aws.createdAt)]: $(aws.title) [$(aws.severity)]</description>
+        <options>no_full_log</options>
         <group>aws_inspector,</group>
     </rule>
 
@@ -320,6 +358,7 @@ ID: 80200 - 80499
         <if_sid>80495</if_sid>
         <field name="aws.severity">High</field>
         <description>AWS Inspector - Network assessment [$(aws.createdAt)]: $(aws.title) [$(aws.severity)]</description>
+        <options>no_full_log</options>
         <group>aws_inspector,</group>
     </rule>
 
@@ -327,6 +366,7 @@ ID: 80200 - 80499
         <if_sid>80495</if_sid>
         <field name="aws.severity">Medium</field>
         <description>AWS Inspector - Network assessment [$(aws.createdAt)]: $(aws.title) [$(aws.severity)]</description>
+        <options>no_full_log</options>
         <group>aws_inspector,</group>
     </rule>
 
@@ -334,6 +374,7 @@ ID: 80200 - 80499
         <if_sid>80495</if_sid>
         <field name="aws.severity">Low</field>
         <description>AWS Inspector - Network assessment [$(aws.createdAt)]: $(aws.title) [$(aws.severity)]</description>
+        <options>no_full_log</options>
         <group>aws_inspector,</group>
     </rule>
 
@@ -341,6 +382,7 @@ ID: 80200 - 80499
         <if_sid>80495</if_sid>
         <field name="aws.severity">Informational</field>
         <description>AWS Inspector - Network assessment [$(aws.createdAt)]: $(aws.title) [$(aws.severity)]</description>
+        <options>no_full_log</options>
         <group>aws_inspector,</group>
     </rule>
 
