@@ -1,0 +1,39 @@
+<decoder name="java-logger">
+<prematch>^\w+ \d+, \d+ \d+:\d+:\d+ \wM \S+ \S+ \w+: </prematch>
+</decoder>
+
+<!--
+Mar 20, 2019 9:10:15 AM org.apache.jsp.login_jsp _jspService INFO: ba71e72134c91d22cbe94fd952bf:Loggin Exitoso
+-->
+<decoder name="java-logger-jsp">
+<parent>java-logger</parent>
+<prematch>^\w+ \d+, \d+ \d+:\d+:\d+ \wM org.apache.jsp\S+ </prematch>
+<regex>^\w+ \d+, \d+ \d+:\d+:\d+ \wM (org.apache.jsp\S+) (\S+) (\w+): (\.+)</regex>
+<order>class,method,severity,msg</order>
+</decoder>
+
+<!--
+Feb 18, 2017 8:51:56 AM hudson.model.UpdateCenter$DownloadJob run INFO: Installation successful: PAM Authentication plugin
+-->
+<decoder name="jenkins-info-installation">
+    <parent>java-logger</parent>
+    <prematch>^\w+ \d+, \d+ \d+:\d+:\d+ \wM hudson.\.+ Installation successful: </prematch>
+    <regex>^\w+ \d+, \d+ \d+:\d+:\d+ \wM (hudson.\S+) (\S+) (\w+): Installation successful: (\.+)</regex>
+    <order>jenkins.component,jenkins.action,jenkins.severity,jenkins.plugin</order>
+</decoder>
+
+<!--
+Feb 18, 2017 8:53:02 AM hudson.model.UpdateCenter$DownloadJob run INFO: Starting the installation of PAM Authentication plugin on behalf of admin
+-->
+<decoder name="jenkins-info-starting">
+    <parent>java-logger</parent>
+    <prematch>^\w+ \d+, \d+ \d+:\d+:\d+ \wM hudson.\.+ Starting the installation </prematch>
+    <regex>^\w+ \d+, \d+ \d+:\d+:\d+ \wM (hudson.\S+) (\S+) (\w+): Starting the installation of (\.+) on behalf of (\S+)</regex>
+    <order>jenkins.component,jenkins.action,jenkins.severity,jenkins.plugin,srcuser</order>
+</decoder>
+
+<decoder name="java-logger-generic">
+    <parent>java-logger</parent>
+    <regex>^\w+ \d+, \d+ \d+:\d+:\d+ \wM (\S+) (\S+) (\w+): (\.+)</regex>
+    <order>jenkins.component,jenkins.action,jenkins.severity,msg</order>
+</decoder>
