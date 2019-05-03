@@ -63,8 +63,8 @@
 <decoder name="sshd-success">
   <parent>sshd</parent>
   <prematch>^Accepted</prematch>
-  <regex offset="after_prematch">^ \S+ for (\S+) from (\S+) port </regex>
-  <order>user, srcip</order>
+  <regex offset="after_prematch">^ \S+ for (\S+) from (\S+) port (\S+) (\S+)</regex>
+  <order>user, srcip, port, protocol</order>
   <fts>name, user, location</fts>
 </decoder>
 
