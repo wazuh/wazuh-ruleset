@@ -23,9 +23,9 @@ requirements:
   description: "Requirements for running the SCA scan against MacOS 10.11 (El Capitan)."
   condition: "any required"
   rules:
-    - 'c:defaults read loginwindow SystemVersionStampAsString -> r:^\s*10.11;'
-    - 'c:sw_vers -> r:^ProductVersion:\s*10.11;'
-    - 'c:system_profiler SPSoftwareDataType -> r:^\s*System Version:.*10.11;'
+    - 'c:defaults read loginwindow SystemVersionStampAsString -> r:^\s*10\p11;'
+    - 'c:sw_vers -> r:^ProductVersion:\t*10\p11;'
+    - 'c:system_profiler SPSoftwareDataType -> r:^\s*System Version:.*10\p11;'
 
 checks:
 # 1.1 Verify all Apple provided software is current (Scored)
@@ -38,7 +38,7 @@ checks:
      - cis: "1.1"
    condition: any
    rules:
-     - 'c:softwareupdate -l -> !r:^\s*Now new software available;'
+     - 'c:softwareupdate -l -> !r:^\s*No new software available;'
 # 1.2 Enable Auto Update (Scored)
  - id: 3001
    title: "Enable Auto Update (Scored)"
@@ -52,7 +52,7 @@ checks:
      - https://derflounder.wordpress.com/2014/12/17/forcing-xprotect-blacklist-updates-on-mavericks-and-yosemite/
    condition: any
    rules:
-     - 'c:defaults read /Library/Preferences/com.apple.SoftwareUpdate AutomaticCheckEnabled -> !r:^\s*1;'
+     - 'c:defaults read /Library/Preferences/com.apple.SoftwareUpdate AutomaticCheckEnabled -> r:^\s*0$;'
 # 1.3 Enable app update installs (Scored)
  - id: 3002
    title: "Enable app update installs (Scored)"
@@ -63,7 +63,7 @@ checks:
      - cis: "1.3"
    condition: any
    rules:
-     - 'c:defaults read /Library/Preferences/com.apple.commerce AutoUpdate -> !r:^\s*1;'
+     - 'c:defaults read /Library/Preferences/com.apple.commerce AutoUpdate -> r:^\s*0$;'
 # 1.4 Enable system data files and security update installs (Scored)
  - id: 3003
    title: "Enable system data files and security update installs (Scored)"
@@ -89,7 +89,7 @@ checks:
      - cis: "1.5"
    condition: any
    rules:
-     - 'c:defaults read /Library/Preferences/com.apple.commerce AutoUpdateRestartRequired -> !r:^\s*1;'
+     - 'c:defaults read /Library/Preferences/com.apple.commerce AutoUpdateRestartRequired -> r:^\s*0$;'
 # 2.1.2 Turn off Bluetooth "Discoverable" mode when not pairing devices (Scored)
  - id: 3005
    title: "Turn off Bluetooth \"Discoverable\" mode when not pairing devices (Scored)"
@@ -155,7 +155,7 @@ checks:
      - cis: "2.4.5"
    condition: any
    rules:
-     - 'c:systemsetup -getremotelogin -> !r:^Remote Login:\s*Off;'
+     - 'c:systemsetup -getremotelogin -> r:^Remote Login:\s*On;'
 # 2.4.8 Disable File Sharing (Scored)
  - id: 3011
    title: "Disable File Sharing (Scored)"
@@ -178,8 +178,8 @@ checks:
      - cis: "2.5.1"
    condition: any
    rules:
-     - 'c:pmset -c -g -> !r:^\s*womp\s+0;'
-     - 'c:pmset -b -g -> !r:^\s*womp\s+0;'
+     - 'c:pmset -g -> r:^\s*womp\s+1$;'
+     - 'c:pmset -b -g -> r:^\s*womp\s+1$;'
 # 2.6.1 Enable FileVault (Scored)
  - id: 3013
    title: "Enable FileVault (Scored)"
@@ -215,8 +215,8 @@ checks:
      - https://support.apple.com/en-us/HT201642
    condition: all
    rules:
-     - 'c:defaults read /Library/Preferences/com.apple.alf globalstate -> !r:^\s*1;'
-     - 'c:defaults read /Library/Preferences/com.apple.alf globalstate -> !r:^\s*2;'
+     - 'c:defaults read /Library/Preferences/com.apple.alf globalstate -> !r:^\s*1$;'
+     - 'c:defaults read /Library/Preferences/com.apple.alf globalstate -> !r:^\s*2$;'
 # 2.6.4 Enable Firewall Stealth Mode (Scored)
  - id: 3016
    title: "Enable Firewall Stealth Mode (Scored)"
@@ -240,7 +240,7 @@ checks:
      - cis: "2.10"
    condition: any
    rules:
-     - 'c:defaults read -app Terminal SecureKeyboardEntry -> !r:^\s*1;'
+     - 'c:defaults read -app Terminal SecureKeyboardEntry -> r:^\s*0$;'
 # 2.11 Java 6 is not the default Java runtime (Scored)
  - id: 3018
    title: "Java 6 is not the default Java runtime (Scored)"
@@ -289,7 +289,7 @@ checks:
      - cis: "4.1"
    condition: any
    rules:
-     - 'c:defaults read /Library/Preferences/com.apple.mDNSResponder.plist NoMulticastAdvertisements -> !r:^\s*1;'
+     - 'c:defaults read /Library/Preferences/com.apple.mDNSResponder.plist NoMulticastAdvertisements -> !r:^\s*1$;'
 # 4.4 Ensure http server is not running (Scored)
  - id: 3022
    title: "Ensure http server is not running (Scored)"
@@ -301,6 +301,8 @@ checks:
    condition: any
    rules:
      - 'p:httpd;'
+     - 'p:/usr/sbin/httpd;'
+     - 'p:/usr/sbin/httpd -D FOREGROUND;'
 # 4.5 Ensure ftp server is not running (Scored)
  - id: 3023
    title: "Ensure ftp server is not running (Scored)"
@@ -389,7 +391,7 @@ checks:
      - cis: "6.1.3"
    condition: any
    rules:
-     - 'c:defaults read /Library/Preferences/com.apple.loginwindow.plist GuestEnabled -> !r:^\s*0;'
+     - 'c:defaults read /Library/Preferences/com.apple.loginwindow.plist GuestEnabled -> !r:^\s*0$;'
 # 6.1.5 Remove Guest home folder (Scored)
  - id: 3031
    title: "Remove Guest home folder (Scored)"
@@ -411,7 +413,7 @@ checks:
      - cis: "6.2"
    condition: any
    rules:
-     - 'c:defaults read NSGlobalDomain AppleShowAllExtensions -> !r:^\s*1;'
+     - 'c:defaults read NSGlobalDomain AppleShowAllExtensions -> !r:^\s*1$;'
 # 6.3 Disable the automatic run of safe files in Safari (Scored)
  - id: 3033
    title: "Disable the automatic run of safe files in Safari (Scored)"
@@ -422,5 +424,5 @@ checks:
      - cis: "6.3"
    condition: any
    rules:
-     - 'c:defaults read com.apple.Safari AutoOpenSafeDownloads -> !r:^0;'
+     - 'c:defaults read com.apple.Safari AutoOpenSafeDownloads -> r:^1$;'
 
