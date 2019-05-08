@@ -5,6 +5,9 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- Fixed rule for the SCA check 5035 about SSH protocol. ([#385](https://github.com/wazuh/wazuh-ruleset/pull/385))
+- Fixed duplicated rules for the SCA policy cis_debianlinux7-8_L2. ([#386](https://github.com/wazuh/wazuh-ruleset/pull/386))
+
 ## [v3.9.0]
 
 ### Added
