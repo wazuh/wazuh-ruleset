@@ -77,8 +77,8 @@ checks:
      - https://support.apple.com/en-us/HT202491
    condition: any
    rules:
-     - 'c:defaults read /Library/Preferences/com.apple.SoftwareUpdate -> NIN r:^\s*ConfigDataInstall\s*= && r\s*1;;'
-     - 'c:defaults read /Library/Preferences/com.apple.SoftwareUpdate -> NIN r:^\s*CriticalUpdateInstall\s*= && r\s*1;;'
+     - 'c:defaults read /Library/Preferences/com.apple.SoftwareUpdate -> NIN r:^\s*ConfigDataInstall\s*= && r:\s*1;'
+     - 'c:defaults read /Library/Preferences/com.apple.SoftwareUpdate -> NIN r:^\s*CriticalUpdateInstall\s*= && r:\s*1;'
 # 1.5 Enable macOS update installs (Scored)
  - id: 14004
    title: "Enable macOS update installs (Scored)"
@@ -145,7 +145,6 @@ checks:
    condition: any
    rules:
      - 'c:launchctl list -> r:AppleFileServer;'
-     - 'f:/Library/Preferences/SystemConfiguration/com.apple.smb.server.plist -> r:[Aa][Rr][Rr][Aa][Yy];'
 # 2.5.1 Disable "Wake for network access" (Scored)
  - id: 14010
    title: "Disable \"Wake for network access\" (Scored)"
@@ -277,7 +276,7 @@ checks:
      - cis: "4.1"
    condition: any
    rules:
-     - 'c:defaults read /Library/Preferences/com.apple.mDNSResponder.plist NoMulticastAdvertisements -> !r:^\s*1$;'
+     - 'c:defaults read /Library/Preferences/com.apple.mDNSResponder.plist NoMulticastAdvertisements -> r:^\s*0$;'
 # 4.4 Ensure http server is not running (Scored)
  - id: 14021
    title: "Ensure http server is not running (Scored)"

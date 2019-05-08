@@ -167,7 +167,6 @@ checks:
    condition: any
    rules:
      - 'c:launchctl list -> r:AppleFileServer;'
-     - 'f:/Library/Preferences/SystemConfiguration/com.apple.smb.server.plist -> r:[Aa][Rr][Rr][Aa][Yy];'
 # 2.5.1 Disable "Wake for network access" (Scored)
  - id: 3012
    title: "Disable \"Wake for network access\" (Scored)"
@@ -289,7 +288,7 @@ checks:
      - cis: "4.1"
    condition: any
    rules:
-     - 'c:defaults read /Library/Preferences/com.apple.mDNSResponder.plist NoMulticastAdvertisements -> !r:^\s*1$;'
+     - 'c:defaults read /Library/Preferences/com.apple.mDNSResponder.plist NoMulticastAdvertisements -> r:^\s*0$;'
 # 4.4 Ensure http server is not running (Scored)
  - id: 3022
    title: "Ensure http server is not running (Scored)"
@@ -358,7 +357,7 @@ checks:
      - cis: "5.9"
    condition: any
    rules:
-     - 'c:defaults read com.apple.screensaver askForPassword -> !r:^\s*1;'
+     - 'c:defaults read com.apple.screensaver askForPassword -> r:^\s*0$;'
 # 5.11 Disable ability to login to another user's active and locked session (Scored)
  - id: 3028
    title: "Disable ability to login to another user's active and locked session (Scored)"
@@ -413,7 +412,7 @@ checks:
      - cis: "6.2"
    condition: any
    rules:
-     - 'c:defaults read NSGlobalDomain AppleShowAllExtensions -> !r:^\s*1$;'
+     - 'c:defaults read NSGlobalDomain AppleShowAllExtensions -> r:^\s*0$;'
 # 6.3 Disable the automatic run of safe files in Safari (Scored)
  - id: 3033
    title: "Disable the automatic run of safe files in Safari (Scored)"
