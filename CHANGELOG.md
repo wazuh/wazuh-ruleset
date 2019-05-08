@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [v3.9.1]
+
+### Fixed
+
 ## [v3.9.0]
 
 ### Added
