@@ -14,7 +14,7 @@ policy:
   id: "cis_apple_macos_10_13"
   file: "cis_apple_macOS_10.13.yml"
   name: "CIS Apple macOS 10.13 Benchmark"
-  description: "This document, CIS Apple macOS 10.13 Benchmark, provides prescriptive guidance for establishing a secure configuration posture for Apple macOS 10.13. This guide was tested against Apple macOS 10.13. To obtain the latest version of this guide, please visit http://benchmarks.cisecurity.org. If you have questions, comments, or have identified ways to improve this guide, please write us at feedback@cisecurity.org"
+  description: "This document, CIS Apple macOS 10.13 Benchmark, provides prescriptive guidance for establishing a secure configuration posture for Apple macOS 10.13. This guide was tested against Apple macOS 10.13. To obtain the latest version of this guide, please visit https://benchmarks.cisecurity.org. If you have questions, comments, or have identified ways to improve this guide, please write us at feedback@cisecurity.org"
   references:
     - https://www.cisecurity.org/cis-benchmarks/
 
@@ -48,7 +48,7 @@ checks:
    compliance:
      - cis: "1.2"
    references:
-     - http://macops.ca/os-x-admins-your-clients-are-not-getting-background-security-updates/
+     - https://macops.ca/os-x-admins-your-clients-are-not-getting-background-security-updates/
      - https://derflounder.wordpress.com/2014/12/17/forcing-xprotect-blacklist-updates-on-mavericks-and-yosemite/
    condition: any
    rules:
@@ -73,7 +73,7 @@ checks:
    compliance:
      - cis: "1.4"
    references:
-     - http://www.thesafemac.com/tag/xprotect/
+     - https://www.thesafemac.com/tag/xprotect/
      - https://support.apple.com/en-us/HT202491
    condition: any
    rules:
@@ -139,7 +139,7 @@ checks:
    title: "Disable File Sharing (Scored)"
    description: "Apple's File Sharing uses a combination of SMB (Windows sharing) and AFP (Mac sharing)"
    rationale: "By disabling file sharing, the remote attack surface and risk of unauthorized access to files stored on the system is reduced."
-   remediation: "Run the following command in Terminal to turn off AFP from the command line: sudo launchctl unload -w /System/Library/LaunchDaemons/com.apple.AppleFileServer.plist   Run the following command in Terminal to turn off SMB sharing from the CLI: sudo launchctl unload -w /System/Library/LaunchDaemons/com.apple.smbd.plist"
+   remediation: "Run the following command in Terminal to turn off AFP from the command line: sudo launchctl unload -w /System/Library/LaunchDaemons/com.apple.AppleFileServer.plist  - Run the following command in Terminal to turn off SMB sharing from the CLI: sudo launchctl unload -w /System/Library/LaunchDaemons/com.apple.smbd.plist"
    compliance:
      - cis: "2.4.8"
    condition: any
@@ -183,7 +183,7 @@ checks:
    title: "Enable Firewall (Scored)"
    description: "A firewall is a piece of software that blocks unwanted incoming connections to a system.  Apple has posted general documentation about the application firewall."
    rationale: "A firewall minimizes the threat of unauthorized users from gaining access to your system while connected to a network or the Internet."
-   remediation: "Run the following command in Terminal: defaults write /Library/Preferences/com.apple.alf globalstate - int <value>    Where <value> is:  1 = on for specific services  2 = on for essential services "
+   remediation: "Run the following command in Terminal: defaults write /Library/Preferences/com.apple.alf globalstate - int <value>    Where <value> is: - 1 = on for specific services - 2 = on for essential services "
    compliance:
      - cis: "2.6.3"
    references:
