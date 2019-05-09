@@ -45,26 +45,22 @@ class OssecTester(object):
                 shell=False)
         std_out = p.communicate(log)[0]
 
-        if (p.returncode != 0 and not negate) or (p.returncode == 0 and negate):
-            if p.returncode == 3 and decoder == '' and "No decoder matched." in std_out:
-                sys.stdout.write(".")
-            else:
-                self._error = True
-                print ""
-                print "-" * 60
-                print "Failed: Exit code = %s" % (p.returncode)
-                print "        Alert     = %s" % (alert)
-                print "        Rule      = %s" % (rule)
-                print "        Decoder   = %s" % (decoder)
-                print "        Section   = %s" % (section)
-                print "        line name = %s" % (name)
-                print " "
-                print std_out
-        elif self._debug:
-            print "Exit code= %s" % (p.returncode)
-            print std_out
-        else:
-            sys.stdout.write(".")
+        if("Level: '{0}'".format(alert) not in std_out):
+            print ("\t LOG: " + log)
+            print ("Level failed: " + alert)
+            print("")
+        if("Rule id: '2945'".format(rule) not in std_out):
+            print ("\t LOG: " + log)
+            print ("Rule failed: " + rule)
+            print("")
+        if ("Description: '{0}'".format(section) not in std_out):
+            print ("\t LOG: " + log)
+            print ("Description failed: " + section)
+            print("")
+        if ("decoder: '{0}'".format(decoder) not in std_out):
+            print ("\t LOG: " + log)
+            print ("Decoder failed: " + decoder)
+            print("")
 
     def run(self, selective_test=False):
         for aFile in os.listdir(self._test_path):
@@ -90,7 +86,8 @@ class OssecTester(object):
                                 neg = True
                             else:
                                 neg = False
-                            self.runTest(value, rule, alert, decoder, t, name, negate=neg)
+                            if (value != ""):
+                                self.runTest(value, rule, alert, decoder, t, name, negate=neg)
                 print ""
         if self._error:
             sys.exit(1)
