@@ -45,22 +45,21 @@ class OssecTester(object):
                 shell=False)
         std_out = p.communicate(log)[0]
 
-        if("Level: '{0}'".format(alert) not in std_out):
-            print ("\t LOG: " + log)
-            print ("Level failed: " + alert)
-            print("")
-        if("Rule id: '2945'".format(rule) not in std_out):
-            print ("\t LOG: " + log)
-            print ("Rule failed: " + rule)
-            print("")
-        if ("Description: '{0}'".format(section) not in std_out):
-            print ("\t LOG: " + log)
-            print ("Description failed: " + section)
-            print("")
-        if ("decoder: '{0}'".format(decoder) not in std_out):
-            print ("\t LOG: " + log)
-            print ("Decoder failed: " + decoder)
-            print("")
+        if("Level: '{0}'".format(alert) in std_out and "decoder: '{0}'".format(decoder) in std_out
+            and "Description: '{0}'".format(section) in std_out and "Rule id: '2945'".format(rule) in std_out):
+            print "."
+        else:
+            self._error = True
+            print ""
+            print "-" * 60
+            print "Failed: Exit code = %s" % (p.returncode)
+            print "        Alert     = %s" % (alert)
+            print "        Rule      = %s" % (rule)
+            print "        Decoder   = %s" % (decoder)
+            print "        Section   = %s" % (section)
+            print "        line name = %s" % (name)
+            print " "
+            print std_out
 
     def run(self, selective_test=False):
         for aFile in os.listdir(self._test_path):
