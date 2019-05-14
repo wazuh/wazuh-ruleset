@@ -402,7 +402,7 @@
 
 
 <!-- Su messages -->
-<group name="syslog, su,">
+<group name="syslog, su, su-mac,">
   <rule id="5300" level="0" noalert="1">
     <decoded_as>su</decoded_as>
     <description>Initial grouping for su messages.</description>
@@ -450,6 +450,12 @@
     <match>unknown class</match>
     <info>OpenBSD uses login classes, and an inappropriate login class was used.</info>
     <description>A user has attempted to su to an unknown class.</description>
+  </rule>
+
+     <rule id="5307" level="3">
+    <decoded_as>su-mac</decoded_as>
+    <match>AuthenticationAllowed</match>
+    <description>Authentication Attempt on user: </description>
   </rule>
 
 </group> <!-- SYSLOG,SU -->
