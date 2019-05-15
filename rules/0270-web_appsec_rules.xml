@@ -42,7 +42,7 @@
     <url>login.php</url>
     <regex> "POST /\S+.php/login.php?cPath=</regex>
     <description>osCommerce login.php bypass attempt.</description>
-    <group>pci_dss_6.5,pci_dss_11.4,pci_dss_10.2.4,gdpr_IV_35.7.d,</group>
+    <group>pci_dss_6.5,pci_dss_11.4,pci_dss_10.2.4,gdpr_IV_35.7.d,hipaa_164.312.b,</group>
    </rule>
 
   <!-- osCommerce file manager login.php bypass
@@ -52,7 +52,7 @@
     <url>login.php</url>
     <regex>/admin/\w+.php/login.php</regex>
     <description>osCommerce file manager login.php bypass attempt.</description>
-    <group>pci_dss_6.5,pci_dss_11.4,pci_dss_10.2.4,gdpr_IV_35.7.d,</group>
+    <group>pci_dss_6.5,pci_dss_11.4,pci_dss_10.2.4,gdpr_IV_35.7.d,hipaa_164.312.b,</group>
    </rule>
 
   <!-- Timthumb backdoor access.
@@ -62,7 +62,7 @@
     <url>/cache/external</url>
     <regex> "GET /\S+/cache/external\S+.php</regex>
     <description>TimThumb backdoor access attempt.</description>
-    <group>pci_dss_6.5,pci_dss_11.4,pci_dss_10.2.4,gdpr_IV_35.7.d,</group>
+    <group>pci_dss_6.5,pci_dss_11.4,pci_dss_10.2.4,gdpr_IV_35.7.d,hipaa_164.312.b,</group>
    </rule>
 
   <!-- Timthumb backdoor access.
@@ -72,7 +72,7 @@
     <url>cart.php</url>
     <regex> "GET /\S+cart.php?\S+templatefile=../</regex>
     <description>Cart.php directory transversal attempt.</description>
-    <group>pci_dss_6.5,pci_dss_11.4,pci_dss_10.2.4,pci_dss_6.5.1,gdpr_IV_35.7.d,</group>
+    <group>pci_dss_6.5,pci_dss_11.4,pci_dss_10.2.4,pci_dss_6.5.1,gdpr_IV_35.7.d,hipaa_164.312.b,</group>
    </rule>
 
   <!-- MSSQL IIS inject rules -->
@@ -97,7 +97,7 @@
     <url>wp-login.php|/administrator</url>
     <regex>] "POST \S+wp-login.php| "POST /administrator</regex>
     <description>CMS (WordPress or Joomla) login attempt.</description>
-   <group>pci_dss_6.5,pci_dss_11.4,pci_dss_6.5.10,pci_dss_10.2.4,pci_dss_10.2.5,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+   <group>pci_dss_6.5,pci_dss_11.4,pci_dss_6.5.10,pci_dss_10.2.4,pci_dss_10.2.5,gdpr_IV_35.7.d,gdpr_IV_32.2,hipaa_164.312.b,</group>
   </rule>
 
   <!-- If we see frequent wp-login POST's, it is likely a bot. -->
@@ -105,7 +105,7 @@
     <if_matched_sid>31509</if_matched_sid>
     <same_source_ip />
     <description>CMS (WordPress or Joomla) brute force attempt.</description>
-   <group>pci_dss_6.5,pci_dss_11.4,pci_dss_6.5.10,pci_dss_10.2.4,pci_dss_10.2.5,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+   <group>pci_dss_6.5,pci_dss_11.4,pci_dss_6.5.10,pci_dss_10.2.4,pci_dss_10.2.5,gdpr_IV_35.7.d,gdpr_IV_32.2,hipaa_164.312.b,</group>
   </rule>
 
   <!-- Nothing wrong with wget per se, but it misses a lot of links
