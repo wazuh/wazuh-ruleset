@@ -11,7 +11,7 @@ import json
 _rules_file_group = re.compile(r'<group>(.*),<\/group>')
 
 
-def pci_to_hipaa(path, schema):
+def pci_to_any(path, schema):
     if list(path)[-1] != '/':
         path += '/'
     with open(schema) as f:
@@ -50,8 +50,8 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
 
     parser.add_argument('-p', '--path', type=str, default='../../rules/', help='Rules path')
-    parser.add_argument('-s', '--schema', type=str, default='schema.txt', help='Schema path')
+    parser.add_argument('-m', '--mapping', type=str, default='mapping.json', help='Mapping path')
 
     args = parser.parse_args()
 
-    pci_to_hipaa(args.path, args.schema)
+    pci_to_any(args.path, args.mapping)
