@@ -31,26 +31,8 @@
 -->
 
 <decoder name="cisco-ios">
-  <prematch>^\d+:\d+:\d+:\s+%</prematch>
+  <prematch>^\d+:\d+:\d+: %\w+-\d-\w+: </prematch>
 </decoder>
-
-<!--
-  - Date and hour (preceded by * or nothing), no sequence number
-  - *Mar  1 18:46:11: %SYS-5-CONFIG_I: Configured from console by vty2 (10.34.195.36)
-  - Mar  1 18:46:11: %SYS-5-CONFIG_I: Configured from console by vty2 (10.34.195.36)
--->
-<decoder name="cisco-ios">
-  <prematch>^\p*\w+\s+\d*\s+\d+:\d+:\d+:\s+%</prematch>
-</decoder>
-
-<!--
-  - Date and hour (preceded by * or nothing) with ms and timezone, no sequence number
-  - *Mar  1 18:48:50.483 UTC: %SYS-5-CONFIG_I: Configured from console by vty2 (10.34.195.36)
--->
-<decoder name="cisco-ios">
-  <prematch>^\p*\w+\s+\d*\s+\d+:\d+:\d+.\d+\s+\w+:\s+%</prematch>
-</decoder>
-
 
 <!--
   - Sequence number, no date or time
@@ -58,21 +40,94 @@
 -->
 
 <decoder name="cisco-ios">
-  <prematch>^\d+: %</prematch>
+  <prematch>^\d+: %\w+-\d-\w+: </prematch>
+</decoder>
+
+<decoder name="cisco-ios">
+  <program_name />
+  <prematch>^\d+: %\w+-\d-\w+: </prematch>
 </decoder>
 
 <!--
-  - Sequence number, date (preceded by * or . or nothing) and hour
-  - 1348: .Jun 12 18:22:22 UTC: %SYS-5-CONFIG_I:
-  - 1348: *Jun 12 18:22:22 UTC: %SYS-5-CONFIG_I:
-  - 1348: Jun 12 18:22:22 UTC: %SYS-5-CONFIG_I:
-  - 681: Aug 17 17:41:24.776 AEST: %SEC-6-IPACCESSLOGS:
+  - Date (preceded by * or . or nothing) and time (w/wo ms or timezone)
+  - *Mar  1 18:46:11: %SYS-5-CONFIG_I: Configured from console by vty2 (10.34.195.36)
+  - Mar  1 18:46:11: %SYS-5-CONFIG_I: Configured from console by vty2 (10.34.195.36)
+  - *Mar  1 18:48:50 UTC: %SYS-5-CONFIG_I: Configured from console by vty2 (10.34.195.36)
+  - Mar  1 18:48:50 UTC: %SYS-5-CONFIG_I: Configured from console by vty2 (10.34.195.36)
+  - *Mar  1 18:46:11.444: %SYS-5-CONFIG_I: Configured from console by vty2 (10.34.195.36)
+  - Mar  1 18:46:11.444: %SYS-5-CONFIG_I: Configured from console by vty2 (10.34.195.36)
+  - *Mar  1 18:48:50.483 UTC: %SYS-5-CONFIG_I: Configured from console by vty2 (10.34.195.36)
+  - Mar  1 18:48:50.483 UTC: %SYS-5-CONFIG_I: Configured from console by vty2 (10.34.195.36)
 -->
 
 <decoder name="cisco-ios">
-  <prematch>^\d+:\s+\p*\w+\s+\d+\s+\S+\s+\w+:\s+%</prematch>
+  <prematch>^\p*\w+\s+\d*\s+\d+:\d+:\d+:\s+%|</prematch>
+  <prematch>^\p*\w+\s+\d*\s+\d+:\d+:\d+\s+\w+:\s+%|</prematch>
+  <prematch>^\p*\w+\s+\d*\s+\d+:\d+:\d+.\d+:\s+%|</prematch>
+  <prematch>^\p*\w+\s+\d*\s+\d+:\d+:\d+.\d+\s+\w+:\s+%</prematch>
 </decoder>
 
+<decoder name="cisco-ios">
+  <program_name />
+  <prematch>^\p*\w+\s+\d*\s+\d+:\d+:\d+:\s+%|</prematch>
+  <prematch>^\p*\w+\s+\d*\s+\d+:\d+:\d+\s+\w+:\s+%|</prematch>
+  <prematch>^\p*\w+\s+\d*\s+\d+:\d+:\d+.\d+:\s+%|</prematch>
+  <prematch>^\p*\w+\s+\d*\s+\d+:\d+:\d+.\d+\s+\w+:\s+%</prematch>
+</decoder>
+
+<!--
+  - Sequence number, Date (preceded by * or . or nothing) and time (w/wo ms or timezone)
+  - 1348: .Jun 12 18:22:22: %SYS-5-CONFIG_I:
+  - 1348: Jun 12 18:22:22: %SYS-5-CONFIG_I:
+  - 1348: .Jun 12 18:22:22.555: %SYS-5-CONFIG_I:
+  - 1348: Jun 12 18:22:22.555: %SYS-5-CONFIG_I:
+  - 1348: .Jun 12 18:22:22 UTC: %SYS-5-CONFIG_I:
+  - 1348: Jun 12 18:22:22 UTC: %SYS-5-CONFIG_I:
+  - 1348: .Jun 12 18:22:22.555 UTC: %SYS-5-CONFIG_I:
+  - 1348: Jun 12 18:22:22.555 UTC: %SYS-5-CONFIG_I:
+-->
+
+<decoder name="cisco-ios">
+  <prematch>^\d+:\s+\p*\w+\s+\d*\s+\d+:\d+:\d+:\s+%|</prematch>
+  <prematch>^\d+:\s+\p*\w+\s+\d*\s+\d+:\d+:\d+\s+\w+:\s+%|</prematch>
+  <prematch>^\d+:\s+\p*\w+\s+\d*\s+\d+:\d+:\d+.\d+:\s+%|</prematch>
+  <prematch>^\d+:\s+\p*\w+\s+\d*\s+\d+:\d+:\d+.\d+\s+\w+:\s+%</prematch>
+</decoder>
+
+<decoder name="cisco-ios">
+  <program_name />
+  <prematch>^\d+:\s+\p*\w+\s+\d*\s+\d+:\d+:\d+:\s+%|</prematch>
+  <prematch>^\d+:\s+\p*\w+\s+\d*\s+\d+:\d+:\d+\s+\w+:\s+%|</prematch>
+  <prematch>^\d+:\s+\p*\w+\s+\d*\s+\d+:\d+:\d+.\d+:\s+%|</prematch>
+  <prematch>^\d+:\s+\p*\w+\s+\d*\s+\d+:\d+:\d+.\d+\s+\w+:\s+%</prematch>
+</decoder>
+
+<!--
+  - Sequence number, origin-id, Date (preceded by * or . or nothing) and time (w/wo ms or timezone)
+  - 1348: HOSTNAME: .Jun 12 18:22:22: %SYS-5-CONFIG_I:
+  - 1348: HOSTNAME: Jun 12 18:22:22: %SYS-5-CONFIG_I:
+  - 1348: HOSTNAME: .Jun 12 18:22:22.555: %SYS-5-CONFIG_I:
+  - 1348: HOSTNAME: Jun 12 18:22:22.555: %SYS-5-CONFIG_I:
+  - 1348: HOSTNAME: .Jun 12 18:22:22 UTC: %SYS-5-CONFIG_I:
+  - 1348: HOSTNAME: Jun 12 18:22:22 UTC: %SYS-5-CONFIG_I:
+  - 1348: HOSTNAME: .Jun 12 18:22:22.555 UTC: %SYS-5-CONFIG_I:
+  - 1348: HOSTNAME: Jun 12 18:22:22.555 UTC: %SYS-5-CONFIG_I:
+-->
+
+<decoder name="cisco-ios">
+  <prematch>^\d+:\s+\.+:\s+\p*\w+\s+\d*\s+\d+:\d+:\d+:\s+%|</prematch>
+  <prematch>^\d+:\s+\.+:\s+\p*\w+\s+\d*\s+\d+:\d+:\d+\s+\w+:\s+%|</prematch>
+  <prematch>^\d+:\s+\.+:\s+\p*\w+\s+\d*\s+\d+:\d+:\d+.\d+:\s+%|</prematch>
+  <prematch>^\d+:\s+\.+:\s+\p*\w+\s+\d*\s+\d+:\d+:\d+.\d+\s+\w+:\s+%</prematch>
+</decoder>
+
+<decoder name="cisco-ios">
+  <program_name />
+  <prematch>^\d+:\s+\.+:\s+\p*\w+\s+\d*\s+\d+:\d+:\d+:\s+%|</prematch>
+  <prematch>^\d+:\s+\.+:\s+\p*\w+\s+\d*\s+\d+:\d+:\d+\s+\w+:\s+%|</prematch>
+  <prematch>^\d+:\s+\.+:\s+\p*\w+\s+\d*\s+\d+:\d+:\d+.\d+:\s+%|</prematch>
+  <prematch>^\d+:\s+\.+:\s+\p*\w+\s+\d*\s+\d+:\d+:\d+.\d+\s+\w+:\s+%</prematch>
+</decoder>
 
 <!-- Cisco IOS
   - Will extract the action, srcip, srcport, dstip and dstport
@@ -85,10 +140,10 @@
 <decoder name="cisco-ios-acl">
   <parent>cisco-ios</parent>
   <type>firewall</type>
-  <prematch>^%SEC-6-IPACCESSLOGP: </prematch>
-  <regex offset="after_prematch">^list \S+ (\w+) (\w+) </regex>
-  <regex>(\S+)\((\d+)\) -> (\S+)\((\d+)\),</regex>
-  <order>action, protocol, srcip, srcport, dstip, dstport</order>
+  <prematch>%SEC-6-IPACCESSLOGP: list \S+ \S+ \S+</prematch>
+  <regex>%(\w+)-(\d)-(\w+): list \S+ (\w+) (\w+) (\d+.\d+.\d+.\d+)\((\d+)\) \S+ \S+ -> (\d+.\d+.\d+.\d+)\((\d+)\),|</regex>
+  <regex>%(\w+)-(\d)-(\w+): list \S+ (\w+) (\w+) (\d+.\d+.\d+.\d+)\((\d+)\) -> (\d+.\d+.\d+.\d+)\((\d+)\),</regex>
+  <order>cisco.facility, cisco.severity, cisco.mnemonic, action, protocol, srcip, srcport, dstip, dstport</order>
 </decoder>
 
 
@@ -101,20 +156,38 @@
 <decoder name="cisco-ios-ids">
   <parent>cisco-ios</parent>
   <type>ids</type>
-  <prematch>^%IPS-4-SIGNATURE: </prematch>
-  <regex offset="after_prematch">^Sig:(\d+) \.+[(\S+):(\d+) -> </regex>
-  <regex>(\S+):(\d+)]</regex>
-  <order>id, srcip, srcport, dstip, dstport</order>
+  <prematch>%IPS-4-SIGNATURE: Sig:\d+ </prematch>
+  <regex>%(\w+)-(\d)-(\w+): Sig:(\d+) \.+[(\d+.\d+.\d+.\d+):(\d+) -> (\d+.\d+.\d+.\d+):(\d+)]</regex>
+  <order>cisco.facility, cisco.severity, cisco.mnemonic, id, srcip, srcport, dstip, dstport</order>
   <fts>name, id, srcip, dstip</fts>
   <ftscomment>First time Cisco IOS IDS/IPS module rule fired.</ftscomment>
 </decoder>
 
+<!-- Cisco IOS config changed via console
+ - Mar  1 18:48:50 UTC: %SYS-5-CONFIG_I: Configured from console by vty2 (1.2.3.4)
+ - Mar  1 18:48:50 UTC: %SYS-5-CONFIG_I: Configured from console by johnsmith on vty2 (1.2.3.4)
+ -->
+
+<decoder name="cisco-ios-chcfg">
+  <parent>cisco-ios</parent>
+  <prematch>%SYS-5-CONFIG_I: Configured from console by \w+ \(</prematch>
+  <regex>%(\w+)-(\d)-(\w+): Configured from console by \w+ \((\d+.\d+.\d+.\d+)\)</regex>
+  <order>cisco.facility, cisco.severity, cisco.mnemonic, srcip</order>
+</decoder>
+
+<decoder name="cisco-ios-chcfg-user">
+  <parent>cisco-ios</parent>
+  <prematch>%SYS-5-CONFIG_I: Configured from console by \S+ on \w+ \(</prematch>
+  <regex>%(\w+)-(\d)-(\w+): Configured from console by (\S+) on \w+ \((\d+.\d+.\d+.\d+)\)</regex>
+  <order>cisco.facility, cisco.severity, cisco.mnemonic, srcuser, srcip</order>
+</decoder>
 
 <!-- Cisco IOS
   - Extracts the ID of cisco ios messages IF NOT IDS/ACL log.
   -->
+
 <decoder name="cisco-ios-default">
   <parent>cisco-ios</parent>
-  <regex>(%\w+-\d-\w+):</regex>
-  <order>id</order>
+  <regex>%(\w+)-(\d)-(\w+):</regex>
+  <order>cisco.facility, cisco.severity, cisco.mnemonic</order>
 </decoder>
