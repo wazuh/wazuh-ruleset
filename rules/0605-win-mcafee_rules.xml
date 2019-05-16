@@ -17,14 +17,14 @@
 <group name="windows,mcafee,">
   <rule id="62600" level="0">
     <if_sid>60006</if_sid>
-    <field name="win.system.severityValue">^INFORMATION</field>
+    <field name="win.system.severityValue">^INFORMATION$</field>
     <description>Windows McAfee informational event</description>
     <options>no_full_log</options>
   </rule>
 
   <rule id="62601" level="0">
     <if_sid>60006</if_sid>
-    <field name="win.system.severityValue">^WARNING</field>
+    <field name="win.system.severityValue">^WARNING$</field>
     <description>Windows McAfee warning event</description>
     <options>no_full_log</options>
     <group>gpg13_4.12,</group>
@@ -32,7 +32,7 @@
 
   <rule id="62602" level="5">
     <if_sid>60006</if_sid>
-    <field name="win.system.severityValue">^ERROR</field>
+    <field name="win.system.severityValue">^ERROR$</field>
     <description>Windows McAfee error event</description>
     <options>no_full_log</options>
     <group>system_error,gpg13_4.3,gdpr_IV_35.7.d,</group>
@@ -42,34 +42,34 @@
 
   <rule id="62603" level="2">
     <if_sid>62600</if_sid>
-    <field name="win.system.eventID">$MCAFEE_INFO</field>
+    <field name="win.system.eventID">$MCAFEE_INFO$</field>
     <description>McAfee Windows AV informational event</description>
   </rule>
 
   <rule id="62604" level="3">
     <if_sid>62601</if_sid>
-    <field name="win.system.eventID">$MCAFEE_WARN</field>
+    <field name="win.system.eventID">$MCAFEE_WARN$</field>
     <description>McAfee Windows AV warning event</description>
     <group>gpg13_4.12,</group>
   </rule>
 
   <rule id="62605" level="4">
     <if_sid>62602</if_sid>
-    <field name="win.system.eventID">$MCAFEE_ERROR</field>
+    <field name="win.system.eventID">$MCAFEE_ERROR$</field>
     <description>McAfee Windows AV error event</description>
     <group>gpg13_4.3,</group>
   </rule>
 
   <rule id="62606" level="12">
     <if_sid>62600,62601,62602</if_sid>
-    <field name="win.system.message">$MCAFEE_VIRUS</field>
+    <field name="win.system.message">$MCAFEE_VIRUS$</field>
     <group>virus,pci_dss_5.1,pci_dss_5.2,pci_dss_10.6.1,pci_dss_11.4,gpg13_4.2,gdpr_IV_35.7.d,</group>
     <description>McAfee Windows AV - Virus detected and not removed</description>
   </rule>
 
   <rule id="62607" level="7">
     <if_sid>62606</if_sid>
-    <field name="win.system.message">$MCAFEE_VIRUS_OK</field>
+    <field name="win.system.message">$MCAFEE_VIRUS_OK$</field>
     <group>virus,pci_dss_5.1,pci_dss_5.2,pci_dss_10.6.1,pci_dss_11.4,gpg13_4.2,gdpr_IV_35.7.d,</group>
     <description>McAfee Windows AV - Virus detected and properly removed</description>
   </rule>
