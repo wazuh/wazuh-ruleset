@@ -8,6 +8,10 @@ All notable changes to this project will be documented in this file.
 - Fixed rule for the SCA check 5035 about SSH protocol. ([#385](https://github.com/wazuh/wazuh-ruleset/pull/385))
 - Fixed duplicated rules for the SCA policy cis_debianlinux7-8_L2. ([#386](https://github.com/wazuh/wazuh-ruleset/pull/386))
 - Fixed Windows Defender rule description. ([#388](https://github.com/wazuh/wazuh-ruleset/pull/388))
+- Fixed rules and requirements for SCA CIS policies of Mac OS X. ([#387](https://github.com/wazuh/wazuh-ruleset/pull/387))
+- Fixed Windows NT registries in Windows SCA policies. ([#393](https://github.com/wazuh/wazuh-ruleset/pull/393))
+- Fixed Windows EventChannel rules for Eventlog and Security Essentials. ([#397](https://github.com/wazuh/wazuh-ruleset/pull/397))
+- Fixed Windows rules to avoid filtering by erroneous provider names. ([#403](https://github.com/wazuh/wazuh-ruleset/pull/403))
 
 ## [v3.9.0]
 
