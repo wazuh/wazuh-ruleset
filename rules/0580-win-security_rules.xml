@@ -1023,5 +1023,12 @@
     <description>IPsec Services encountered a potentially serious failure</description>
     <options>no_full_log</options>
   </rule>
+  
+   <rule id="60226" level="8">
+    <if_sid>60100</if_sid>
+    <field name="win.system.eventID">^1102$</field>
+    <description>The audit log was cleared.</description>    
+    <options>no_full_log</options>
+  </rule>
 
 </group>
