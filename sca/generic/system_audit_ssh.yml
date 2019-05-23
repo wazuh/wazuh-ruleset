@@ -46,7 +46,7 @@ checks:
     - pci_dss: "2.2.4"
    condition: any
    rules:
-     - f:$sshd_file -> !r:^# && n:Protocol\s*\t*(\d+) compare > 1
+     - f:$sshd_file -> n:^\s*\t*Protocol\s*\t*(\d+) compare > 1
 
  - id: 1502
    title: "SSH Hardening - 3: Root account should not be able to log in"
@@ -88,7 +88,7 @@ checks:
     - pci_dss: "2.2.4"
    condition: any
    rules:
-     - f:$sshd_file -> r:^\s*PermitEmptyPasswords\.+no
+     - not f:$sshd_file -> r:^\s*PermitEmptyPasswords\.+yes
 
  - id: 1506
    title: "SSH Hardening - 7: Rhost or shost should not be used for authentication"
@@ -99,7 +99,7 @@ checks:
     - pci_dss: "2.2.4"
    condition: any
    rules:
-     - f:$sshd_file -> r:^\s*IgnoreRhosts\.+yes
+     - not f:$sshd_file -> r:^\s*\t*IgnoreRhosts\.+no
 
  - id: 1507
    title: "SSH Hardening - 8: Grace Time should be 30 or less."
@@ -122,3 +122,14 @@ checks:
    condition: any
    rules:
      - f:$sshd_file -> n:^\s*MaxAuthTries\s+(\d+) compare <= 4
+
+ - id: 1509
+   title: "Ensure SSH HostbasedAuthentication is disabled"
+   description: "The HostbasedAuthentication parameter specifies if authentication is allowed through trusted hosts via the user of .rhosts , or /etc/hosts.equiv , along with successful public key client host authentication. This option only applies to SSH Protocol Version 2."
+   rationale: "Even though the .rhosts files are ineffective if support is disabled in /etc/pam.conf, disabling the ability to use .rhosts files in SSH provides an additional layer of protection."
+   remediation: "Edit the /etc/ssh/sshd_config file to set the parameter as follows: HostbasedAuthentication no"
+   compliance:
+    - pci_dss: "4.1"
+   condition: any
+   rules:
+     - not f:$sshd_file -> r:^\s*\t*HostbasedAuthentication\.+yes
