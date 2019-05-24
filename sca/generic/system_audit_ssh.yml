@@ -20,10 +20,10 @@ requirements:
   description: "Requirements for running the SCA scan against the SSH policy."
   condition: "all"
   rules:
-    - f:/etc/ssh/sshd_config;
+    - 'f:/etc/ssh/sshd_config'
 
 variables:
- $sshd_file: /etc/ssh/sshd_config;
+ $sshd_file: /etc/ssh/sshd_config
 
 checks:
  - id: 1500
@@ -33,9 +33,9 @@ checks:
    remediation: "Change the Port option value in the sshd_config file."
    compliance:
     - pci_dss: "2.2.4"
-   condition: any
+   condition: all
    rules:
-     - f:$sshd_file -> !r:^# && n:Port\s*\t*(\d+) compare != 22
+     - 'f:$sshd_file -> !r:^# && n:Port\s*\t*(\d+) compare != 22'
 
  - id: 1501
    title: "SSH Hardening - 2: Protocol should not be 1"
@@ -44,18 +44,18 @@ checks:
    remediation: "Change the Protocol option value in the sshd_config file."
    compliance:
     - pci_dss: "2.2.4"
-   condition: any
+   condition: all
    rules:
-     - f:$sshd_file -> n:^\s*\t*Protocol\s*\t*(\d+) compare > 1
+     - 'f:$sshd_file -> n:^\s*\t*Protocol\s*\t*(\d+) compare > 1'
 
  - id: 1502
    title: "SSH Hardening - 3: Root account should not be able to log in"
    description: "The option PermitRootLogin should be set to no."
    rationale: "The option PermitRootLogin specifies whether root can log in using ssh. If you want log in as root, you should use the option \"Match\" and restrict it to a few IP addresses."
    remediation: "Change the PermitRootLogin option value in the sshd_config file."
-   condition: any
+   condition: all
    rules:
-     - f:$sshd_file -> r:^\s*PermitRootLogin\.+no
+     - 'f:$sshd_file -> r:^\s*PermitRootLogin\.+no'
 
  - id: 1503
    title: "SSH Hardening - 4: No Public Key authentication"
@@ -64,9 +64,9 @@ checks:
    remediation: "Change the PubkeyAuthentication option value in the sshd_config file."
    compliance:
     - pci_dss: "2.2.4"
-   condition: any
+   condition: all
    rules:
-     - f:$sshd_file -> r:^\s*PubkeyAuthentication\.+yes
+     - 'f:$sshd_file -> r:^\s*PubkeyAuthentication\.+yes'
 
  - id: 1504
    title: "SSH Hardening - 5: Password Authentication should be disabled"
@@ -75,9 +75,9 @@ checks:
    remediation: "Change the PasswordAuthentication option value in the sshd_config file."
    compliance:
     - pci_dss: "2.2.4"
-   condition: any
+   condition: all
    rules:
-     - f:$sshd_file -> r:^\s*PasswordAuthentication\.+no
+     - 'f:$sshd_file -> r:^\s*PasswordAuthentication\.+no'
 
  - id: 1505
    title: "SSH Hardening - 6: Empty passwords should not be allowed"
@@ -86,9 +86,9 @@ checks:
    remediation: "Change the PermitEmptyPasswords option value in the sshd_config file."
    compliance:
     - pci_dss: "2.2.4"
-   condition: any
+   condition: none
    rules:
-     - not f:$sshd_file -> r:^\s*PermitEmptyPasswords\.+yes
+     - 'f:$sshd_file -> r:^\s*PermitEmptyPasswords\.+yes'
 
  - id: 1506
    title: "SSH Hardening - 7: Rhost or shost should not be used for authentication"
@@ -97,9 +97,9 @@ checks:
    remediation: "Change the IgnoreRhosts option value in the sshd_config file."
    compliance:
     - pci_dss: "2.2.4"
-   condition: any
+   condition: none
    rules:
-     - not f:$sshd_file -> r:^\s*\t*IgnoreRhosts\.+no
+     - 'f:$sshd_file -> r:^\s*\t*IgnoreRhosts\.+no'
 
  - id: 1507
    title: "SSH Hardening - 8: Grace Time should be 30 or less."
@@ -108,9 +108,9 @@ checks:
    remediation: "Change the LoginGraceTime option value in the sshd_config file."
    compliance:
     - pci_dss: "2.2.4"
-   condition: any
+   condition: all
    rules:
-     - f:$sshd_file -> n:^\s*LoginGraceTime\s+(\d+) compare <= 30
+     - 'f:$sshd_file -> n:^\s*LoginGraceTime\s+(\d+) compare <= 30'
 
  - id: 1508
    title: "SSH Hardening - 9: Wrong Maximum number of authentication attempts"
@@ -119,9 +119,9 @@ checks:
    remediation: "Change the MaxAuthTries option value in the sshd_config file."
    compliance:
     - pci_dss: "2.2.4"
-   condition: any
+   condition: all
    rules:
-     - f:$sshd_file -> n:^\s*MaxAuthTries\s+(\d+) compare <= 4
+     - 'f:$sshd_file -> n:^\s*MaxAuthTries\s+(\d+) compare <= 4'
 
  - id: 1509
    title: "Ensure SSH HostbasedAuthentication is disabled"
@@ -130,6 +130,6 @@ checks:
    remediation: "Edit the /etc/ssh/sshd_config file to set the parameter as follows: HostbasedAuthentication no"
    compliance:
     - pci_dss: "4.1"
-   condition: any
+   condition: none
    rules:
-     - not f:$sshd_file -> r:^\s*\t*HostbasedAuthentication\.+yes
+     - 'f:$sshd_file -> r:^\s*\t*HostbasedAuthentication\.+yes'
