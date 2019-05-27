@@ -20,10 +20,15 @@ policy:
 
 requirements:
   title: "Check RHEL7 version"
-  description: "Requirements for running the SCA scan against RHEL 7 family."
-  condition: all
+  description: "Requirements for running the policy against RHEL 7 family."
+  condition: any
   rules:
-    - 'f:/etc/redhat-release -> r:^Red Hat Enterprise Linux|^CentOS|^Cloud|^Oracle|^Better|^OpenVZ && r:release 7'
+    - 'f:/etc/redhat-release -> r:^Red Hat Enterprise Linux && r:release 7'
+    - 'f:/etc/redhat-release -> r:^CentOS && r:release 7'
+    - 'f:/etc/redhat-release -> r:^Cloud && r:release 7'
+    - 'f:/etc/redhat-release -> r:^Oracle && r:release 7'
+    - 'f:/etc/redhat-release -> r:^Better && r:release 7'
+    - 'f:/etc/redhat-release -> r:^OpenVZ && r:release 7'
 
 variables:
   $sshd_file: /etc/ssh/sshd_config
@@ -124,7 +129,7 @@ checks:
     - cis_csc: "6.3"
    references:
     - AJ Lewis, "LVM HOWTO", https://tldp.org/HOWTO/LVM-HOWTO/
-   condition: any
+   condition: all
    rules:
      - 'f:/etc/fstab -> !r:^# && r:/var/log'
 
@@ -232,9 +237,9 @@ checks:
    compliance:
     - cis: "1.1.16"
     - pci_dss: "2.2.4"
-   condition: any
+   condition: all
    rules:
-     - 'f:/etc/fstab -> NIN !r:^# && r:/dev/shm && r:nosuid;'
+     - 'f:/etc/fstab -> !r:^# && r:/dev/shm && r:nosuid'
 
 # 1.1.17 /dev/shm: noexec
  - id: 6515
@@ -367,7 +372,7 @@ checks:
     - cis_csc: "8.4"
    condition: all
    rules:
-     - 'f:/proc/sys/kernel/randomize_va_space -> r:^2$;'
+     - 'f:/proc/sys/kernel/randomize_va_space -> r:^2$'
 
 ###############################################
 # 2 OS Services
@@ -377,7 +382,7 @@ checks:
 ###############################################
 # 2.2.19 Remove telnet-server (Scored)
  - id: 6524
-   title: "Ensure telnet server is is disabled"
+   title: "Ensure telnet server is disabled"
    description: "The telnet-server package contains the telnet daemon, which accepts connections from users from other systems via the telnet protocol."
    rationale: "The telnet protocol is insecure and unencrypted. The use of an unencrypted transmission medium could allow a user with access to sniff network traffic the ability to steal credentials. The ssh package provides an encrypted session and stronger security."
    remediation: "Run the following command to disable telnet: # systemctl disable telnet.socket"
@@ -392,7 +397,7 @@ checks:
 
 # 2.2.17 Remove rsh-server (Scored)
  - id: 6525
-   title: "Ensure rsh server is is disabled"
+   title: "Ensure rsh server is disabled"
    description: "The Berkeley rsh-server ( rsh , rlogin , rexec ) package contains legacy services that exchange credentials in clear-text."
    rationale: "These legacy services contain numerous security exposures and have been replaced with the more secure SSH package."
    remediation: "Run the following commands to disable rsh, rlogin, and rexec: # systemctl disable rsh.socket   # systemctl disable rlogin.socket   # systemctl disable rexec.socket "
@@ -426,7 +431,7 @@ checks:
 
 # 2.2.16 Remove NIS Server (Scored)
  - id: 6527
-   title: "Ensure NIS Server is is disabled"
+   title: "Ensure NIS Server is disabled"
    description: "The Network Information Service (NIS) (formally known as Yellow Pages) is a client-server directory service protocol for distributing system configuration files. The NIS server is a collection of programs that allow for the distribution of configuration files."
    rationale: "The NIS service is inherently an insecure system that has been vulnerable to DOS attacks, buffer overflows and has poor authentication for querying NIS maps. NIS generally been replaced by such protocols as Lightweight Directory Access Protocol (LDAP). It is recommended that the service be disabled and other, more secure services be used"
    remediation: "Run the following command to disable ypserv: # systemctl disable ypserv"
@@ -441,7 +446,7 @@ checks:
 
 # 2.2.20 Remove tftp-server (Scored)
  - id: 6528
-   title: "Ensure tftp server is is disabled"
+   title: "Ensure tftp server is disabled"
    description: "Trivial File Transfer Protocol (TFTP) is a simple file transfer protocol, typically used to automatically transfer configuration or boot machines from a boot server. The package tftp-server is used to define and support a TFTP server."
    rationale: "TFTP does not support authentication nor does it ensure the confidentiality or integrity of data. It is recommended that TFTP be removed, unless there is a specific need for TFTP. In that case, extreme caution must be used when configuring the services."
    remediation: "Run the following command to disable tftp: # systemctl disable tftp.socket"
@@ -456,7 +461,7 @@ checks:
 
 # 2.1.18 Remove talk-server (Scored)
  - id: 6529
-   title: "Ensure talk server is is disabled"
+   title: "Ensure talk server is disabled"
    description: "The talk software makes it possible for users to send and receive messages across systems through a terminal session. The talk client (allows initiate of talk sessions) is installed by default."
    rationale: "The software presents a security risk as it uses unencrypted protocols for communication."
    remediation: "Run the following command to disable talk: # systemctl disable ntalk"
@@ -471,7 +476,7 @@ checks:
 
 # 2.1.7 Remove xinetd (Scored)
  - id: 6530
-   title: "Ensure xinetd is is disabled"
+   title: "Ensure xinetd is disabled"
    description: "The eXtended InterNET Daemon ( xinetd ) is an open source super daemon that replaced the original inetd daemon. The xinetd daemon listens for well known services and dispatches the appropriate daemon to properly respond to service requests."
    rationale: "If there are no xinetd services required, it is recommended that the daemon be disabled."
    remediation: "Run the following command to disable xinetd: # systemctl disable xinetd"
@@ -576,7 +581,7 @@ checks:
 
 # 2.2.3 Disable Avahi Server (Scored)
  - id: 6538
-   title: "Ensure Avahi Server is is disabled"
+   title: "Ensure Avahi Server is disabled"
    description: "Avahi is a free zeroconf implementation, including a system for multicast DNS/DNS-SD service discovery. Avahi allows programs to publish and discover services and hosts running on a local network with no specific configuration. For example, a user can plug a computer into a network and Avahi automatically finds printers to print to, files to look at and people to talk to, as well as network services running on the machine."
    rationale: "Automatic discovery of network services is not normally required for system functionality. It is recommended to disable the service to reduce the potential attack surface."
    remediation: "Run the following command to disable avahi-daemon: # systemctl disable avahi-daemon"
@@ -590,7 +595,7 @@ checks:
 
 # 2.2.5 Remove DHCP Server (Scored)
  - id: 6539
-   title: "Ensure DHCP Server is is disabled"
+   title: "Ensure DHCP Server is disabled"
    description: "The Dynamic Host Configuration Protocol (DHCP) is a service that allows machines to be dynamically assigned IP addresses."
    rationale: "Unless a system is specifically set up to act as a DHCP server, it is recommended that this service be disabled to reduce the potential attack surface."
    remediation: "Run the following command to disable dhcpd: # systemctl disable dhcpd"
@@ -606,7 +611,7 @@ checks:
 # 2.2.1.2 Configure Network Time Protocol (NTP) (Scored)
  - id: 6540
    title: "Ensure time synchronization is in use"
-   description: "System time should be synchronized between all systems in an environment. This is typically done by establishing an authoritative time server or set of servers and having all systems synchronize their clocks to them."
+   description: "System time should be synchronized between all systems in an environment. This typically done by establishing an authoritative time server or set of servers and having all systems synchronize their clocks to them."
    rationale: "Time synchronization is important to support time sensitive security mechanisms like Kerberos and also ensures log files have consistent time records across the enterprise, which aids in forensic investigations."
    remediation: "On physical systems or virtual systems where host based time synchronization is not available run one of the following commands to install either ntp or chrony: # yum install ntp; # yum install chrony; On virtual systems where host based time synchronization is available consult your virtualization software documentation and setup host based synchronization."
    compliance:
@@ -637,7 +642,7 @@ checks:
 
 # 2.2.9 Remove FTP Server (Not Scored)
  - id: 6542
-   title: "Ensure FTP Server is is disabled"
+   title: "Ensure FTP Server is disabled"
    description: "The File Transfer Protocol (FTP) provides networked computers with the ability to transfer files."
    rationale: "FTP does not protect the confidentiality of data or authentication credentials. It is recommended sftp be used if file transfer is required. Unless there is a need to run the system as a FTP server (for example, to allow anonymous downloads), it is recommended that the service be disabled to reduce the potential attack surface."
    remediation: "Run the following command to disable vsftpd: # systemctl disable vsftpd"
@@ -651,7 +656,7 @@ checks:
 
 # 2.2.10 Remove HTTP Server (Not Scored)
  - id: 6543
-   title: "Ensure HTTP server is is disabled"
+   title: "Ensure HTTP server is disabled"
    description: "HTTP or web servers provide the ability to host web site content."
    rationale: "Unless there is a need to run the system as a web server, it is recommended that the service be disabled to reduce the potential attack surface."
    remediation: "Run the following command to disable httpd: # systemctl disable httpd"
@@ -664,7 +669,7 @@ checks:
 
 # 2.2.11 Remove Dovecot (IMAP and POP3 services) (Not Scored)
  - id: 6544
-   title: "Ensure IMAP and POP3 server is is disabled"
+   title: "Ensure IMAP and POP3 server is disabled"
    description: "dovecot is an open source IMAP and POP3 server for Linux based systems."
    rationale: "Unless POP3 and/or IMAP servers are to be provided by this system, it is recommended that the service be disabled to reduce the potential attack surface."
    remediation: "Run the following command to disable dovecot: # systemctl disable dovecot"
@@ -677,7 +682,7 @@ checks:
      - 'f:/etc/xinetd.d/cyrus-imapd -> !r:^# && r:disable && r:no'
 
  - id: 6545
-   title: "Ensure IMAP and POP3 server is is disabled"
+   title: "Ensure IMAP and POP3 server is disabled"
    description: "dovecot is an open source IMAP and POP3 server for Linux based systems."
    rationale: "Unless POP3 and/or IMAP servers are to be provided by this system, it is recommended that the service be disabled to reduce the potential attack surface."
    remediation: "Run the following command to disable dovecot: # systemctl disable dovecot"
@@ -691,7 +696,7 @@ checks:
 
 # 2.2.12 Remove Samba (Not Scored)
  - id: 6546
-   title: "Ensure Samba is is disabled"
+   title: "Ensure Samba is disabled"
    description: "The Samba daemon allows system administrators to configure their Linux systems to share file systems and directories with Windows desktops. Samba will advertise the file systems and directories via the Small Message Block (SMB) protocol. Windows desktop users will be able to mount these directories and file systems as letter drives on their systems."
    rationale: "If there is no need to mount directories and file systems to Windows systems, then this service can be disabled to reduce the potential attack surface."
    remediation: "Run the following command to disable smb: # systemctl disable smb"
@@ -706,7 +711,7 @@ checks:
 
 # 2.2.13 Remove HTTP Proxy Server (Not Scored)
  - id: 6547
-   title: "Ensure HTTP Proxy Server is is disabled"
+   title: "Ensure HTTP Proxy Server is disabled"
    description: "Squid is a standard proxy server used in many distributions and environments."
    rationale: "If there is no need for a proxy server, it is recommended that the squid proxy be disabled to reduce the potential attack surface."
    remediation: "Run the following command to disable squid: # systemctl disable squid"
@@ -720,7 +725,7 @@ checks:
 
 # 2.2.14 Remove SNMP Server (Not Scored)
  - id: 6548
-   title: "Ensure SNMP Server is is disabled"
+   title: "Ensure SNMP Server is disabled"
    description: "The Simple Network Management Protocol (SNMP) server is used to listen for SNMP commands from an SNMP management system, execute the commands or collect the information and then send results back to the requesting system."
    rationale: "The SNMP server can communicate using SNMP v1, which transmits data in the clear and does not require authentication to execute commands. Unless absolutely necessary, it is recommended that the SNMP service not be used. If SNMP is required the server should be configured to disallow SNMP v1."
    remediation: "Run the following command to disable snmpd: # systemctl disable snmpd"
@@ -873,7 +878,7 @@ checks:
    title: "Ensure Reverse Path Filtering is enabled"
    description: "Setting net.ipv4.conf.all.rp_filter and net.ipv4.conf.default.rp_filter to 1 forces the Linux kernel to utilize reverse path filtering on a received packet to determine if the packet was valid."
    rationale: "Setting these flags is a good way to deter attackers from sending your server bogus packets that cannot be responded to. One instance where this feature breaks down is if asymmetrical routing is employed."
-   remediation: "Set the net.ipv4.conf.all.rp_filter and net.ipv4.conf.default.rp_filter parameters to 1 in /etc/sysctl.conf:net.ipv4.conf.all.rp_filter=1; net.ipv4.conf.default.rp_filter=1. Modify active kernel parameters to match: # /sbin/sysctl -w net.ipv4.conf.all.rp_filter=1; # /sbin/sysctl -w net.ipv4.conf.default.rp_filter=1; # /sbin/sysctl -w net.ipv4.route.flush=1"
+   remediation: "Set the net.ipv4.conf.all.rp_filter and net.ipv4.conf.default.rp_filter parameters to 1 in /etc/sysctl.conf: net.ipv4.conf.all.rp_filter=1; net.ipv4.conf.default.rp_filter=1. Modify active kernel parameters to match: # /sbin/sysctl -w net.ipv4.conf.all.rp_filter=1; # /sbin/sysctl -w net.ipv4.conf.default.rp_filter=1; # /sbin/sysctl -w net.ipv4.route.flush=1"
    compliance:
     - cis: "3.2.7"
     - pci_dss: "2.2.4"
@@ -914,7 +919,7 @@ checks:
     - pci_dss: "4.1"
    condition: all
    rules:
-     - 'f:/etc/ssh/sshd_config -> n:^\s*\t*Protocol\s*\t*(\d+) compare > 1'
+     - 'f:$sshd_file -> n:^\s*\t*Protocol\s*\t*(\d+) compare > 1'
 
 # 5.2.3 Set LogLevel to INFO (Scored)
  - id: 6561
@@ -928,7 +933,7 @@ checks:
     - pci_dss: "4.1"
    condition: all
    rules:
-     - 'f:/etc/ssh/sshd_config -> !r:^# && r:LogLevel\.+INFO;'
+     - 'f:$sshd_file -> !r:^# && r:LogLevel\.+INFO'
 
 # 5.2.5 Set SSH MaxAuthTries to 4 or Less (Scored)
  - id: 6562
@@ -947,7 +952,7 @@ checks:
 # 5.2.6 Set SSH IgnoreRhosts to Yes (Scored)
  - id: 6563
    title: "Ensure SSH IgnoreRhosts is enabled"
-   description: "The IgnoreRhosts parameter specifies that .rhosts and .shosts files will not be used in RhostsRSAAuthentication or HostbasedAuthentication ."
+   description: "The IgnoreRhosts parameter specifies that .rhosts and .shosts files will not be used in RhostsRSAAuthentication or HostbasedAuthentication."
    rationale: "Setting this parameter forces users to enter a password when authenticating with ssh."
    remediation: "Edit the /etc/ssh/sshd_config file to set the parameter as follows: IgnoreRhosts yes"
    compliance:
@@ -956,7 +961,7 @@ checks:
     - pci_dss: "4.1"
    condition: none
    rules:
-     - 'f:/etc/ssh/sshd_config -> !r:^# && r:IgnoreRhosts\.+no'
+     - 'f:$sshd_file -> !r:^# && r:IgnoreRhosts\.+no'
 
 # 5.2.7 Set SSH HostbasedAuthentication to No (Scored)
  - id: 6564
@@ -970,7 +975,7 @@ checks:
     - pci_dss: "4.1"
    condition: none
    rules:
-     - 'f:/etc/ssh/sshd_config -> r:^\s*\t*HostbasedAuthentication\.+yes'
+     - 'f:$sshd_file -> r:^\s*\t*HostbasedAuthentication\.+yes'
 
 # 5.2.8 Disable SSH Root Login (Scored)
  - id: 6565
@@ -982,7 +987,7 @@ checks:
     - cis: "5.2.8"
     - cis_csc: "5.8"
     - pci_dss: "4.1"
-   condition: none
+   condition: all
    rules:
      - 'f:$sshd_file -> r:^\s\t**PermitRootLogin\.+no'
 
@@ -1031,7 +1036,6 @@ checks:
 
  - id: 6569
    title: "User-mounted removable partition allowed on the console"
-   compliance:
    condition: none
    rules:
      - 'f:/etc/security/console.perms -> r:^<console>  \d+ <cdrom>'
@@ -1039,7 +1043,6 @@ checks:
 
  - id: 6570
    title: "Disable standard boot services - Kudzu hardware detection Enabled"
-   compliance:
    condition: none
    rules:
      - 'd:$rc_dirs -> ^S\d\dkudzu$'
