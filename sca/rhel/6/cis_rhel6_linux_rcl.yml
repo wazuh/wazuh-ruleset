@@ -115,7 +115,7 @@ checks:
     - cis: "1.1.7"
    condition: all
    rules:
-     - 'f:/etc/fstab -> !r:^# && r:/var/tmp'
+     - 'f:/etc/fstab -> !r:^# && r:/var/tmp && r:bind'
 
 # 1.1.11 /var/log: partition
  - id: 6006
@@ -351,7 +351,7 @@ checks:
     - cis: "1.4.3"
     - cis_csc: "5.1"
     - pci_dss: "2.2.4"
-   condition: any
+   condition: none
    rules:
      - 'f:/etc/inittab -> !r:^# && r:S:wait'
 
@@ -899,7 +899,7 @@ checks:
     - pci_dss: "4.1"
    condition: all
    rules:
-     - 'f:$sshd_file -> r:^\s\t**PermitRootLogin\.+no'
+     - 'f:$sshd_file -> r:^\s*\t*PermitRootLogin\.+no'
 
 # 5.2.9 Set SSH PermitEmptyPasswords to No (Scored)
  - id: 6060
