@@ -183,8 +183,7 @@ checks:
  - id: 4511
    title: "Ensure 'log_warning' is set to 2"
    description: "The log_warnings system variable, enabled by default, provides additional information to the MySQL log.  A value of 1 enables logging of warning messages, and higher integer values tend to enable more logging."
-   rationale: "This might help to detect malicious behavior by logging communication errors and aborted
-connections."
+   rationale: "This might help to detect malicious behavior by logging communication errors and aborted connections."
    remediation: "Ensure a line containing log-warnings = 2 is found in the mysqld section of the MySQL configuration file (my.cnf)."
    compliance:
     - cis: "6.3"
@@ -206,87 +205,10 @@ connections."
     - https://dev.mysql.com/doc/refman/5.6/en/server-options.html#option_mysqld_log-raw
    condition: all
    rules:
-     - 'f:$mysql-cnfs -> !r^# && r:log-raw\s*off$'
-
- - id: 4513
-   title: "Ensure audit_log_connection_policy is not set to 'NONE'"
-   description: "The audit_log_connection_policy variable controls how the audit plugin writes connection events to the audit log file. "
-   rationale: "The audit_log_connection_policy offers three options: NONE, ERRORS, and ALL. Each option determines whether connection events are logged and the type of connection events that are logged. Setting a non 'NONE' value for audit_log_connection_policy ensures at a minimum, failed connection events are being logged. The ERRORS setting will log failed connection events and the ALL setting will log all connection events. For MySQL versions => 5.6.20, the audit_log_policy variable can override the audit_log_connection_policy, potentially invalidating this benchmark recommendation, therefore enforcing a setting for audit_log_connection_policy ensures the integrity of this recommendation."
-   remediation: "Set the audit_log_connection_policy option to ERRORS or ALL in the MySQL configuration file."
-   compliance:
-    - cis: "6.5"
-   condition: none
-   rules:
-     - 'f:$mysql-cnfs -> !r^# && r::audit_log_connection_policy\s*=\s*none'
-
- - id: 4514
-   title: "Ensure audit_log_exclude_account is set to NULL"
-   description: "The audit_log_exclude_accounts variable enables the administrator to set accounts for which events will not be logged in the audit log."
-   rationale: "The audit_log_exclude_accounts variable has two permitted values, either NULL or a list of MySQL accounts. Setting this variable correctly ensures no single user is able to unintentionally evade being logged. Particular attention should be made to privileged accounts, as such accounts will generally be bestowed with more privileges than normal users, and should not be listed against this variable."
-   remediation: "Set audit_log_exclude_accounts=NULL in my.cnf."
-   compliance:
-    - cis: "6.6"
-   condition: all
-   rules:
-     - 'f:$mysql-cnfs -> !r:^# && r:audit_log_exclude_accounts\s*=\s* && r:null\s*$'
-
- - id: 4515
-   title: "Ensure audit_log_include_accounts is set to NULL"
-   description: "The audit_log_include_accounts variable enables the administrator to set accounts for which events should be logged in the audit log."
-   rationale: "The audit_log_include_accounts variable has two permitted values, either NULL or a list of MySQL accounts. Setting this variable correctly ensures all MySQL users are being logged in the audit log."
-   remediation: "Set audit_log_include_accounts=NULL in my.cnf."
-   compliance:
-    - cis: "6.7"
-   condition: all
-   rules:
-     - 'f:$mysql-cnfs -> !r:^# && r:audit_log_include_accounts\s*=\s* && r:null\s*$;'
-
- - id: 4516
-   title: "Ensure audit_log_policy is set to log logins and connections"
-   description: "With the audit_log_policy setting the amount of information which is sent to the audit log is controlled.  It must be set to log logins and connections."
-   rationale: "If this setting is set to QUERIES, CONNECTIONS or NONE then either connections or queries are not written to the audit log file."
-   remediation: "Set audit_log_policy='ALL' in the MySQL configuration file and activate the setting by restarting the server or executing SET GLOBAL audit_log_policy='ALL';"
-   compliance:
-    - cis: "6.9"
-   condition: any
-   rules:
-     - 'f:$mysql-cnfs -> !r:^# && r:audit_log_policy=ALL'
-
- - id: 4517
-   title: "Ensure audit_log_statement_policy is set to ALL"
-   description: "This setting controls whether statements are written to the audit log."
-   rationale: "This setting must be set to ALL to ensure all statement information is written to the audit log."
-   remediation: "Add the option audit_log_statement_policy='ALL' to the mysqld section of the MySQL configuration file and restart the server."
-   compliance:
-    - cis: "6.10"
-   condition: all
-   rules:
-     - 'f:$mysql-cnfs -> r:audit_log_statement_policy\s*all$'
-
- - id: 4518
-   title: "Set audit_log_strategy to SYNCHRONOUS or SEMISYNCRONOUS"
-   description: "The audit_log_strategy must be set to SYNCHRONOUS or SEMISYNCHRONOUS."
-   rationale: "This setting controls how information is written to the audit log. It can be set to SYNCHRONOUS to make it fully durable or other settings which are less durable but have less performance overhead."
-   remediation: "Set audit_log_strategy='SEMISYNCHRONOUS' (or SYNCHRONOUS) in the mysqld section of the configuration file (my.cnf)."
-   compliance:
-    - cis: "6.11"
-   condition: all
-   rules:
-     - 'f:$mysql-cnfs ->  r:audit_log_strategy\s*=\s* && r:semisynchronous|synchronous'
-
- - id: 4519
-   title: "Make sure the audit plugin can't be unloaded"
-   description: "Set audit_log to FORCE_PLUS_PERMANENT."
-   rationale: "This makes disables unloading on the plugin."
-   remediation: "Ensure a line audit_log = 'FORCE_PLUS_PERMANENT' is found in the mysqld section of the MySQL configuration file (my.cnf)."
-   compliance:
-    - cis: "6.12"
-   condition: all
-   rules:
-     - 'f:$mysql-cnfs -> !r:^audit_log\s*=\s*force_plus_permanent'
+     - 'f:$mysql-cnfs -> !r:^# && r:log-raw\s*off$'
 
 #7 Authentication
- - id: 4520
+ - id: 4513
    title: "Ensure 'old_passwords' Is Not Set to '1' or 'ON'"
    description: "This variable controls the password hashing method used by the PASSWORD() function and for the IDENTIFIED BY clause of the CREATE USER and GRANT statements.  Before 5.6.6, the value can be 0 (or OFF), or 1 (or ON). As of 5.6.6, the following value can be one of the following: 0 - authenticate with the mysql_native_password plugin; 1 - authenticate with the mysql_old_password plugin; 2 - authenticate with the sha256_password plugin"
    rationale: "The mysql_old_password plugin leverages an algorithm that can be quickly brute forced using an offline dictionary attack. See CVE-2003-1480 for additional details."
@@ -303,7 +225,7 @@ connections."
      - 'f:$mysql-cnfs -> !r:^# && r:old_passwords\s*=\s*1'
      - 'f:$mysql-cnfs -> !r:^# && r:old_passwords\s*=\s*on'
 
- - id: 4521
+ - id: 4514
    title: "Ensure 'secure_auth' is set to 'ON'"
    description: "This option dictates whether the server will deny connections by clients that attempt to use accounts that have their password stored in the mysql_old_password format."
    rationale: "Enabling this option will prevent all use of passwords employing the old format (and hence insecure communication over the network)."
@@ -316,7 +238,7 @@ connections."
    rules:
      - 'f:$mysql-cnfs -> r:secure_auth\s*=\s*on'
 
- - id: 4522
+ - id: 4515
    title: "Ensure Passwords Are Not Stored in the Global Configuration"
    description: "The [client] section of the MySQL configuration file allows setting a user and password to be used. Verify the password option is not used in the global configuration file (my.cnf)."
    rationale: "The use of the password parameter may negatively impact the confidentiality of the user's password."
@@ -329,7 +251,7 @@ connections."
    rules:
      - 'f:$mysql-cnfs -> !r:^# && r:^\s*password\.*'
 
- - id: 4523
+ - id: 4516
    title: "Ensure 'sql_mode' Contains 'NO_AUTO_CREATE_USER'"
    description: "NO_AUTO_CREATE_USER is an option for sql_mode that prevents a GRANT statement from automatically creating a user when authentication information is not provided."
    rationale: "Blank passwords negate the benefits provided by authentication mechanisms. Without this setting an administrative user might accidentally create a user without a password."
@@ -340,7 +262,7 @@ connections."
    rules:
      - 'f:$mysql-cnfs -> r:^# && r:\s*no_auto_create_user\s*$'
 
- - id: 4524
+ - id: 4517
    title: "Ensure Password Policy is in Place"
    description: "Password complexity includes password characteristics such as length, case, length, and character sets."
    rationale: "Complex passwords help mitigate dictionary, brute forcing, and other password attacks. This recommendation prevents users from choosing weak passwords which can easily be guessed."
@@ -360,7 +282,7 @@ connections."
      - 'f:$mysql-cnfs -> r:validate_password_policy\s*=\s*medium\s*;'
 
 #9 Replication
- - id: 4525
+ - id: 4518
    title: "Ensure 'master_info_repositrory' is set to 'TABLE'"
    description: "The master_info_repository setting determines to where a slave logs master status and connection information.  The options are FILE or TABLE. Note also that this setting is associated with the sync_master_info setting as well."
    rationale: "The password which the client uses is stored in the master info repository, which by default is a plaintext file. The TABLE master info repository is a bit safer, but with filesystem access it's still possible to gain access to the password the slave is using."
@@ -372,3 +294,81 @@ connections."
    condition: all
    rules:
      - 'f:$mysql-cnfs -> r:master_info_repository\s*=\s*table'
+
+#10 Enterprise rules
+- id: 4519
+   title: "Ensure audit_log_connection_policy is not set to 'NONE'"
+   description: "The audit_log_connection_policy variable controls how the audit plugin writes connection events to the audit log file. "
+   rationale: "The audit_log_connection_policy offers three options: NONE, ERRORS, and ALL. Each option determines whether connection events are logged and the type of connection events that are logged. Setting a non 'NONE' value for audit_log_connection_policy ensures at a minimum, failed connection events are being logged. The ERRORS setting will log failed connection events and the ALL setting will log all connection events. For MySQL versions => 5.6.20, the audit_log_policy variable can override the audit_log_connection_policy, potentially invalidating this benchmark recommendation, therefore enforcing a setting for audit_log_connection_policy ensures the integrity of this recommendation."
+   remediation: "Set the audit_log_connection_policy option to ERRORS or ALL in the MySQL configuration file."
+   compliance:
+    - cis: "6.5"
+   condition: none
+   rules:
+     - 'f:$mysql-cnfs -> !r:^# && r::audit_log_connection_policy\s*=\s*none'
+
+ - id: 4520
+   title: "Ensure audit_log_exclude_account is set to NULL"
+   description: "The audit_log_exclude_accounts variable enables the administrator to set accounts for which events will not be logged in the audit log."
+   rationale: "The audit_log_exclude_accounts variable has two permitted values, either NULL or a list of MySQL accounts. Setting this variable correctly ensures no single user is able to unintentionally evade being logged. Particular attention should be made to privileged accounts, as such accounts will generally be bestowed with more privileges than normal users, and should not be listed against this variable."
+   remediation: "Set audit_log_exclude_accounts=NULL in my.cnf."
+   compliance:
+    - cis: "6.6"
+   condition: all
+   rules:
+     - 'f:$mysql-cnfs -> !r:^# && r:audit_log_exclude_accounts\s*=\s* && r:null\s*$'
+
+ - id: 4521
+   title: "Ensure audit_log_include_accounts is set to NULL"
+   description: "The audit_log_include_accounts variable enables the administrator to set accounts for which events should be logged in the audit log."
+   rationale: "The audit_log_include_accounts variable has two permitted values, either NULL or a list of MySQL accounts. Setting this variable correctly ensures all MySQL users are being logged in the audit log."
+   remediation: "Set audit_log_include_accounts=NULL in my.cnf."
+   compliance:
+    - cis: "6.7"
+   condition: all
+   rules:
+     - 'f:$mysql-cnfs -> !r:^# && r:audit_log_include_accounts\s*=\s* && r:null\s*$;'
+
+ - id: 4522
+   title: "Ensure audit_log_policy is set to log logins and connections"
+   description: "With the audit_log_policy setting the amount of information which is sent to the audit log is controlled.  It must be set to log logins and connections."
+   rationale: "If this setting is set to QUERIES, CONNECTIONS or NONE then either connections or queries are not written to the audit log file."
+   remediation: "Set audit_log_policy='ALL' in the MySQL configuration file and activate the setting by restarting the server or executing SET GLOBAL audit_log_policy='ALL';"
+   compliance:
+    - cis: "6.9"
+   condition: any
+   rules:
+     - 'f:$mysql-cnfs -> !r:^# && r:audit_log_policy=ALL'
+
+ - id: 4523
+   title: "Ensure audit_log_statement_policy is set to ALL"
+   description: "This setting controls whether statements are written to the audit log."
+   rationale: "This setting must be set to ALL to ensure all statement information is written to the audit log."
+   remediation: "Add the option audit_log_statement_policy='ALL' to the mysqld section of the MySQL configuration file and restart the server."
+   compliance:
+    - cis: "6.10"
+   condition: all
+   rules:
+     - 'f:$mysql-cnfs -> r:audit_log_statement_policy\s*all$'
+
+ - id: 4524
+   title: "Set audit_log_strategy to SYNCHRONOUS or SEMISYNCRONOUS"
+   description: "The audit_log_strategy must be set to SYNCHRONOUS or SEMISYNCHRONOUS."
+   rationale: "This setting controls how information is written to the audit log. It can be set to SYNCHRONOUS to make it fully durable or other settings which are less durable but have less performance overhead."
+   remediation: "Set audit_log_strategy='SEMISYNCHRONOUS' (or SYNCHRONOUS) in the mysqld section of the configuration file (my.cnf)."
+   compliance:
+    - cis: "6.11"
+   condition: all
+   rules:
+     - 'f:$mysql-cnfs ->  r:audit_log_strategy\s*=\s* && r:semisynchronous|synchronous'
+
+ - id: 4525
+   title: "Make sure the audit plugin can't be unloaded"
+   description: "Set audit_log to FORCE_PLUS_PERMANENT."
+   rationale: "This makes disables unloading on the plugin."
+   remediation: "Ensure a line audit_log = 'FORCE_PLUS_PERMANENT' is found in the mysqld section of the MySQL configuration file (my.cnf)."
+   compliance:
+    - cis: "6.12"
+   condition: all
+   rules:
+     - 'f:$mysql-cnfs -> !r:^audit_log\s*=\s*force_plus_permanent'
