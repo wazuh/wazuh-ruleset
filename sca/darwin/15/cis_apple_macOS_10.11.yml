@@ -222,12 +222,12 @@ checks:
    title: "Enable Firewall (Scored)"
    description: "A firewall is a piece of software that blocks unwanted incoming connections to a system.  Apple has posted general documentation about the application firewall."
    rationale: "A firewall minimizes the threat of unauthorized users from gaining access to your system while connected to a network or the Internet."
-   remediation: "Run the following command in Terminal: defaults write /Library/Preferences/com.apple.alf globalstate - int <value>    Where <value> is:   1 = on for specific services   2 = on for essential services"
+   remediation: "Run the following command in Terminal: defaults write /Library/Preferences/com.apple.alf globalstate - int <value>    Where <value> is: - 1 = on for specific services - 2 = on for essential services"
    compliance:
      - cis: "2.6.3"
    references:
      - https://support.apple.com/en-us/HT201642
-   condition: any
+   condition: all
    rules:
      - 'c:defaults read /Library/Preferences/com.apple.alf globalstate -> r:^1$|^2$'
 
