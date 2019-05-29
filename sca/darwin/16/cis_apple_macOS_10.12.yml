@@ -21,11 +21,11 @@ policy:
 requirements:
   title: "Check MacOS version"
   description: "Requirements for running the SCA scan against MacOS 10.12 (Sierra)."
-  condition: "any required"
+  condition: any
   rules:
-    - 'c:defaults read loginwindow SystemVersionStampAsString -> r:^\s*10\p12;'
-    - 'c:sw_vers -> r:^ProductVersion:\t*10\p12;'
-    - 'c:system_profiler SPSoftwareDataType -> r:^\s*System Version:\.*10\p12;'
+    - 'c:defaults read loginwindow SystemVersionStampAsString -> r:^\s*10\p12'
+    - 'c:sw_vers -> r:^ProductVersion:\t*10\p12'
+    - 'c:system_profiler SPSoftwareDataType -> r:^\s*System Version:\.*10\p12'
 
 checks:
 # 1.1 Verify all Apple provided software is current (Scored)
@@ -33,12 +33,13 @@ checks:
    title: "Verify all Apple provided software is current (Scored)"
    description: "Software vendors release security patches and software updates for their products when security vulnerabilities are discovered. There is no simple way to complete this action without a network connection to an Apple software repository. Please ensure appropriate access for this control. This check is only for what Apple provides through software update."
    rationale: "It is important that these updates be applied in a timely manner to prevent unauthorized persons from exploiting the identified vulnerabilities."
-   remediation: "1. In Terminal, run the following: softwareupdate -l    2. In Terminal, run the following for any packages that show up in step 1: sudo softwareupdate -i <packagename>"
+   remediation: "1. In Terminal, run the following: softwareupdate -l  2. In Terminal, run the following for any packages that show up in step 1: sudo softwareupdate -i packagename"
    compliance:
      - cis: "1.1"
-   condition: any
+   condition: all
    rules:
-     - 'c:softwareupdate -l -> !r:^\s*No new software available;'
+     - 'c:softwareupdate -l -> r:No new software available'
+
 # 1.2 Enable Auto Update (Scored)
  - id: 13501
    title: "Enable Auto Update (Scored)"
@@ -50,9 +51,10 @@ checks:
    references:
      - https://macops.ca/os-x-admins-your-clients-are-not-getting-background-security-updates/
      - https://derflounder.wordpress.com/2014/12/17/forcing-xprotect-blacklist-updates-on-mavericks-and-yosemite/
-   condition: any
+   condition: all
    rules:
-     - 'c:defaults read /Library/Preferences/com.apple.SoftwareUpdate AutomaticCheckEnabled -> !r:^\s*1;'
+     - 'c:defaults read /Library/Preferences/com.apple.SoftwareUpdate -> r:AutomaticCheckEnabled\s*\t*=\s*\t*1'
+
 # 1.3 Enable app update installs (Scored)
  - id: 13502
    title: "Enable app update installs (Scored)"
@@ -61,9 +63,10 @@ checks:
    remediation: "Open a terminal session and enter the following command to enable the auto update feature: sudo defaults write /Library/Preferences/com.apple.commerce AutoUpdate -bool TRUE    The remediation requires a log out and log in to show in the GUI. Please note that."
    compliance:
      - cis: "1.3"
-   condition: any
+   condition: all
    rules:
-     - 'c:defaults read /Library/Preferences/com.apple.commerce AutoUpdate -> r:^\s*0$;'
+     - 'c:defaults read /Library/Preferences/com.apple.commerce -> r:AutoUpdate\s*\t*=\s*\t*1'
+
 # 1.4 Enable system data files and security update installs (Scored)
  - id: 13503
    title: "Enable system data files and security update installs (Scored)"
@@ -75,10 +78,11 @@ checks:
    references:
      - https://www.thesafemac.com/tag/xprotect/
      - https://support.apple.com/en-us/HT202491
-   condition: any
+   condition: all
    rules:
-     - 'c:defaults read /Library/Preferences/com.apple.SoftwareUpdate -> NIN r:^\s*ConfigDataInstall\s*= && r:\s*1;'
-     - 'c:defaults read /Library/Preferences/com.apple.SoftwareUpdate -> NIN r:^\s*CriticalUpdateInstall\s*= && r:\s*1;'
+     - 'c:defaults read /Library/Preferences/com.apple.SoftwareUpdate -> r:ConfigDataInstall\s*\t*=\s*\t*1'
+     - 'c:defaults read /Library/Preferences/com.apple.SoftwareUpdate -> r:CriticalUpdateInstall\s*\t*=\s*\t*1'
+
 # 1.5 Enable macOS update installs (Scored)
  - id: 13504
    title: "Enable macOS update installs (Scored)"
@@ -87,20 +91,22 @@ checks:
    remediation: "Open a terminal session and enter the following command to enable install system data files and security updates: sudo defaults write /Library/Preferences/com.apple.commerce AutoUpdateRestartRequired -bool TRUE"
    compliance:
      - cis: "1.5"
-   condition: any
+   condition: all
    rules:
-     - 'c:defaults read /Library/Preferences/com.apple.commerce AutoUpdateRestartRequired -> r:^\s*0$;'
+     - 'c:defaults read /Library/Preferences/com.apple.commerce -> r:AutoUpdateRestartRequired\s*\t*=\s*\t*1'
+
 # 2.1.2 Turn off Bluetooth "Discoverable" mode when not pairing devices (Scored)
  - id: 13505
    title: "Turn off Bluetooth \"Discoverable\" mode when not pairing devices (Scored)"
-   description: "When Bluetooth is set to discoverable mode, the Mac sends a signal indicating that it's available to pair with another Bluetooth device. When a device is \"discoverable\" it broadcasts information about itself and its location. Starting with OS X 10.9 Discoverable mode is enabled while the Bluetooth System Preference is open and turned off once closed.  Systems that have the Bluetooth System Preference open at the time of audit will show as Discoverable"
+   description: "When Bluetooth is set to discoverable mode, the Mac sends a signal indicating that it's available to pair with another Bluetooth device. When a device is \"discoverable\" it broadcasts information about itself and its location. Starting with OS X 10.9 Discoverable mode is enabled while the Bluetooth System Preference is open and turned off once closed.  Systems that have the Bluetooth System Preference open at the time of audit will show as Discoverable."
    rationale: "When in the discoverable state an unauthorized user could gain access to the system by pairing it with a remote device."
    remediation: "Starting with OS X (10.9) Bluetooth is only set to Discoverable when the Bluetooth System Preference is selected. To ensure that the computer is not Discoverable do not leave that preference open."
    compliance:
      - cis: "2.1.2"
-   condition: any
+   condition: all
    rules:
-     - 'c:/usr/sbin/system_profiler SPBluetoothDataType -> !r:^\s*[Dd]iscoverable:\s*Off;'
+     - 'c:/usr/sbin/system_profiler SPBluetoothDataType -> r:Discoverable:\s*\t*Off'
+
 # 2.2.1 Enable "Set time and date automatically" (Scored)
  - id: 13506
    title: "Enable \"Set time and date automatically\" (Scored)"
@@ -109,9 +115,10 @@ checks:
    remediation: "Run the following commands: sudo systemsetup -setnetworktimeserver <timeserver>    sudo systemsetup -setusingnetworktime on"
    compliance:
      - cis: "2.2.1"
-   condition: any
+   condition: all
    rules:
-     - 'c:systemsetup -getusingnetworktime -> !r:^\s*Network Time:\s*On;'
+     - 'c:systemsetup -getusingnetworktime -> r:Network Time:\s*\t*On'
+
 # 2.4.1 Disable Remote Apple Events (Scored)
  - id: 13507
    title: "Disable Remote Apple Events (Scored)"
@@ -120,9 +127,10 @@ checks:
    remediation: "Run the following command in Terminal: sudo systemsetup -setremoteappleevents off"
    compliance:
      - cis: "2.4.1"
-   condition: any
+   condition: all
    rules:
-     - 'c:systemsetup -getremoteappleevents -> !r:^Remote Apple Events:\s*Off;'
+     - 'c:systemsetup -getremoteappleevents -> r:Remote Apple Events:\s*\t*Off'
+
 # 2.4.4 Disable Printer Sharing (Scored)
  - id: 13508
    title: "Disable Printer Sharing (Scored)"
@@ -131,9 +139,10 @@ checks:
    remediation: "Perform the following to implement the prescribed state: 1. Open System Preferences 2. Select Sharing 3. Uncheck Printer Sharing"
    compliance:
      - cis: "2.4.4"
-   condition: any
+   condition: none
    rules:
-     - 'c:system_profiler SPPrintersDataType -> r:Shared:\s*Yes;'
+     - 'c:system_profiler SPPrintersDataType -> r:Shared:\s*\t*Yes'
+
 # 2.4.5 Disable Remote Login (Scored)
  - id: 13509
    title: "Disable Remote Login (Scored)"
@@ -142,31 +151,34 @@ checks:
    remediation: "Run the following command in Terminal: sudo systemsetup -setremotelogin off"
    compliance:
      - cis: "2.4.5"
-   condition: any
+   condition: all
    rules:
-     - 'c:systemsetup -getremotelogin -> r:^Remote Login:\s*On;'
+     - 'c:systemsetup -getremotelogin -> r:Remote Login:\s*\t*Off'
+
 # 2.4.8 Disable File Sharing (Scored)
  - id: 13510
    title: "Disable File Sharing (Scored)"
    description: "Apple's File Sharing uses a combination of SMB (Windows sharing) and AFP (Mac sharing)"
    rationale: "By disabling file sharing, the remote attack surface and risk of unauthorized access to files stored on the system is reduced."
-   remediation: "Run the following command in Terminal to turn off AFP from the command line: sudo launchctl unload -w /System/Library/LaunchDaemons/com.apple.AppleFileServer.plist  - Run the following command in Terminal to turn off SMB sharing from the CLI: sudo launchctl unload -w /System/Library/LaunchDaemons/com.apple.smbd.plist"
+   remediation: "Run the following command in Terminal to turn off AFP from the command line: sudo launchctl unload -w /System/Library/LaunchDaemons/com.apple.AppleFileServer.plist  - Run the following command in Terminal to turn off SMB sharing from the CLI:  sudo launchctl unload -w /System/Library/LaunchDaemons/com.apple.smbd.plist"
    compliance:
      - cis: "2.4.8"
-   condition: any
+   condition: none
    rules:
-     - 'c:launchctl list -> r:AppleFileServer;'
+     - 'c:launchctl list -> r:AppleFileServer'
+
 # 2.5.1 Disable "Wake for network access" (Scored)
  - id: 13511
    title: "Disable \"Wake for network access\" (Scored)"
    description: "This feature allows other users to be able to access your computer’s shared resources, such as shared printers or iTunes playlists, even when your computer is in sleep mode. In a closed network when only authorized devices could wake a computer it could be valuable to wake computers in order to do management push activity. Where mobile workstations and agents exist the device will more likely check in to receive updates when already awake. Mobile devices should not be listening for signals on unmanaged network where untrusted devices could send wake signals."
    rationale: "Disabling this feature mitigates the risk of an attacker remotely waking the system and gaining access."
-   remediation: "Run the following command in Terminal: sudo pmset -a womp 0"
+   remediation: "Run the following command in Terminal:  sudo pmset -a womp 0   Note: The -c flag means \"wall power.\" Different settings must be used for other power sources."
    compliance:
      - cis: "2.5.1"
-   condition: any
+   condition: none
    rules:
-     - 'c:pmset -g -> r:^\s*womp\s+1$;'
+     - 'c:pmset -g -> :womp && !r:0'
+
 # 2.6.1.1 Enable FileVault (Scored)
  - id: 13512
    title: "Enable FileVault (Scored)"
@@ -175,9 +187,10 @@ checks:
    remediation: "Perform the following to implement the prescribed state: 1. Open System Preferences 2. Select Security & Privacy 3. Select FileVault 4. Select Turn on FileVault"
    compliance:
      - cis: "2.6.1.1"
-   condition: any
+   condition: all
    rules:
-     - 'c:fdesetup status -> r:^FileVault is\s*Off\p;'
+     - 'c:fdesetup status -> r:FileVault is\s*\t*On'
+
 # 2.6.2 Enable Gatekeeper (Scored)
  - id: 13513
    title: "Enable Gatekeeper (Scored)"
@@ -186,9 +199,10 @@ checks:
    remediation: "Run the following command in Terminal: sudo spctl --master-enable"
    compliance:
      - cis: "2.6.2"
-   condition: any
+   condition: all
    rules:
-     - 'c:spctl --status -> !r:^assessments enabled;'
+     - 'c:spctl --status -> r:assessments enabled'
+
 # 2.6.3 Enable Firewall (Scored)
  - id: 13514
    title: "Enable Firewall (Scored)"
@@ -201,8 +215,8 @@ checks:
      - https://support.apple.com/en-us/HT201642
    condition: all
    rules:
-     - 'c:defaults read /Library/Preferences/com.apple.alf globalstate -> !r:^\s*1$;'
-     - 'c:defaults read /Library/Preferences/com.apple.alf globalstate -> !r:^\s*2$;'
+     - 'c:defaults read /Library/Preferences/com.apple.alf globalstate -> r:^1$|^2$'
+
 # 2.6.4 Enable Firewall Stealth Mode (Scored)
  - id: 13515
    title: "Enable Firewall Stealth Mode (Scored)"
@@ -213,9 +227,10 @@ checks:
      - cis: "2.6.4"
    references:
      - https://support.apple.com/en-us/HT201642
-   condition: any
+   condition: all
    rules:
-     - 'c:/usr/libexec/ApplicationFirewall/socketfilterfw --getstealthmode -> !r:^\s*Stealth mode enabled;'
+     - 'c:/usr/libexec/ApplicationFirewall/socketfilterfw --getstealthmode -> r:Stealth mode enabled'
+
 # 2.10 Enable Secure Keyboard Entry in terminal.app (Scored)
  - id: 13516
    title: "Enable Secure Keyboard Entry in terminal.app (Scored)"
@@ -224,9 +239,10 @@ checks:
    remediation: "Perform the following to implement the prescribed state: 1. Open Terminal 2. Select Terminal 3. Select Secure Keyboard Entry"
    compliance:
      - cis: "2.10"
-   condition: any
+   condition: all
    rules:
-     - 'c:defaults read -app Terminal SecureKeyboardEntry -> r:^\s*0$;'
+     - 'c:defaults read -app Terminal SecureKeyboardEntry -> r:^1$'
+
 # 2.11 Java 6 is not the default Java runtime (Scored)
  - id: 13517
    title: "Java 6 is not the default Java runtime (Scored)"
@@ -235,10 +251,10 @@ checks:
    remediation: "Java 6 can be removed completely or, if required Java applications will only work with Java 6, a custom path can be used. Apple is likely to finally pull the plug on Java 6 in upcoming macOS versions so any applications that still require Java 6 will likely soon be unavailable."
    compliance:
      - cis: "2.11"
-   condition: any
+   condition: none
    rules:
-     - 'c:java -version -> r:version.*1.6.0;'
-     - 'c:java -version -> r:Runtime Environment.*build.*1.6.0;'
+     - 'c:java -version -> r:1.6.0'
+
 # 3.1 Enable security auditing (Scored)
  - id: 13518
    title: "Enable security auditing (Scored)"
@@ -247,9 +263,10 @@ checks:
    remediation: "Run the following command in Terminal: sudo launchctl load -w /System/Library/LaunchDaemons/com.apple.auditd.plist"
    compliance:
      - cis: "3.1"
-   condition: any
+   condition: all
    rules:
-     - 'c:launchctl list -> !r:com.apple.auditd;'
+     - 'c:launchctl list -> r:com.apple.auditd'
+
 # 3.2 Configure Security Auditing Flags (Scored)
  - id: 13519
    title: "Configure Security Auditing Flags (Scored)"
@@ -258,13 +275,10 @@ checks:
    remediation: "1. Open a terminal session and edit the /etc/security/audit_control file 2. Find the line beginning with \"flags\" 3. Add the following flags: lo, ad, fd, fm, -all.  4. Save the file."
    compliance:
      - cis: "3.2"
-   condition: any
+   condition: all
    rules:
-     - 'f:/etc/security/audit_control -> NIN r:^flags && r:lo;'
-     - 'f:/etc/security/audit_control -> NIN r:^flags && r:ad;'
-     - 'f:/etc/security/audit_control -> NIN r:^flags && r:fd;'
-     - 'f:/etc/security/audit_control -> NIN r:^flags && r:fm;'
-     - 'f:/etc/security/audit_control -> NIN r:^flags && r:-all;'
+     - 'f:/etc/security/audit_control -> r:^flags && r:lo && r:ad && r:fd && r:fm && r:-all'
+
 # 4.1 Disable Bonjour advertising service (Scored)
  - id: 13520
    title: "Disable Bonjour advertising service (Scored)"
@@ -273,9 +287,10 @@ checks:
    remediation: "Run the following command in Terminal: defaults write /Library/Preferences/com.apple.mDNSResponder.plist NoMulticastAdvertisements"
    compliance:
      - cis: "4.1"
-   condition: any
+   condition: all
    rules:
-     - 'c:defaults read /Library/Preferences/com.apple.mDNSResponder.plist NoMulticastAdvertisements -> r:^\s*0$;'
+     - 'c:defaults read /Library/Preferences/com.apple.mDNSResponder.plist NoMulticastAdvertisements -> r:^1$'
+
 # 4.4 Ensure http server is not running (Scored)
  - id: 13521
    title: "Ensure http server is not running (Scored)"
@@ -284,11 +299,13 @@ checks:
    remediation: "Stop the Web Server sudo apachectl stop    Ensure that the web server will not auto-start at boot sudo defaults write /System/Library/LaunchDaemons/org.apache.httpd Disabled - bool true"
    compliance:
      - cis: "4.4"
-   condition: any
+   condition: none
    rules:
-     - 'p:httpd;'
-     - 'p:/usr/sbin/httpd;'
-     - 'p:/usr/sbin/httpd -D FOREGROUND;'
+     - 'c:defaults read /System/Library/LaunchDaemons/org.apache.httpd -> r:Disabled && !r:1'
+     - 'p:httpd'
+     - 'p:/usr/sbin/httpd'
+     - 'p:/usr/sbin/httpd -D FOREGROUND'
+
 # 4.5 Ensure FTP server is not running (Scored)
  - id: 13522
    title: "Ensure FTP server is not running (Scored)"
@@ -297,9 +314,10 @@ checks:
    remediation: "Stop the ftp Server sudo -s launchctl unload -w /System/Library/LaunchDaemons/ftp.plist"
    compliance:
      - cis: "4.5"
-   condition: any
+   condition: none
    rules:
-     - 'c:launchctl list -> r:ftp;'
+     - 'c:launchctl list -> r:ftp'
+
 # 4.6 Ensure nfs server is not running (Scored)
  - id: 13523
    title: "Ensure nfs server is not running (Scored)"
@@ -308,10 +326,11 @@ checks:
    remediation: "Stop the NFS Server sudo nfsd disable    Remove the exported Directory listing rm /etc/export"
    compliance:
      - cis: "4.6"
-   condition: any
+   condition: none
    rules:
-     - 'p:nfsd;'
-     - 'f:/etc/exports;'
+     - 'p:nfsd'
+     - 'f:/etc/exports'
+
 # 5.8 Do not enable the "root" account (Scored)
  - id: 13524
    title: "Do not enable the \"root\" account (Scored)"
@@ -320,9 +339,10 @@ checks:
    remediation: "Open System Preferences, Uses & Groups. Click the lock icon to unlock it. In the Network Account Server section, click Join or Edit. Click Open Directory Utility. Click the lock icon to unlock it. Select the Edit menu > Disable Root User."
    compliance:
      - cis: "5.8"
-   condition: any
+   condition: all
    rules:
-     - 'c:dscl . -read /Users/root AuthenticationAuthority -> !r:^No such key: AuthenticationAuthority;'
+     - 'c:dscl . -read /Users/root AuthenticationAuthority -> r:No such key: AuthenticationAuthority'
+
 # 5.9 Disable automatic login (Scored)
  - id: 13525
    title: "Disable automatic login (Scored)"
@@ -331,9 +351,11 @@ checks:
    remediation: "Run the following command in Terminal: sudo defaults delete /Library/Preferences/com.apple.loginwindow autoLoginUser"
    compliance:
      - cis: "5.9"
-   condition: any
+   condition: none
    rules:
-     - 'c:defaults read /Library/Preferences/com.apple.loginwindow -> r:autoLoginUser;'
+     - 'c:defaults read /Library/Preferences/com.apple.loginwindow -> r:autoLoginUser'
+
+
 # 5.20 System Integrity Protection status (Scored)
  - id: 13526
    title: "System Integrity Protection status (Scored)"
@@ -342,9 +364,10 @@ checks:
    remediation: "Perform the following while booted in macOS Recovery Partition.  1. Select Terminal from the Utilities menu    2. Run the following command in Terminal: /usr/bin/csrutil enable    3. The output should be: Successfully enabled System Integrity Protection. Please restart the machine for the changes to take effect.    4. Reboot."
    compliance:
      - cis: "5.20"
-   condition: any
+   condition: all
    rules:
-     - 'c:/usr/bin/csrutil status -> !r:^\s*System Integrity Protection status: enabled;'
+     - 'c:/usr/bin/csrutil status -> r:System Integrity Protection status: enabled'
+
 # 6.1.3 Disable guest account login (Scored)
  - id: 13527
    title: "Disable guest account login (Scored)"
@@ -353,9 +376,10 @@ checks:
    remediation: "Run the following command in Terminal: sudo defaults write /Library/Preferences/com.apple.loginwindow GuestEnabled - bool NO"
    compliance:
      - cis: "6.1.3"
-   condition: any
+   condition: all
    rules:
-     - 'c:defaults read /Library/Preferences/com.apple.loginwindow.plist GuestEnabled -> !r:^\s*0$;'
+     - 'c:defaults read /Library/Preferences/com.apple.loginwindow.plist GuestEnabled -> r:^0$'
+
 # 6.1.5 Remove Guest home folder (Scored)
  - id: 13528
    title: "Remove Guest home folder (Scored)"
@@ -364,29 +388,30 @@ checks:
    remediation: "1. Run the following command in Terminal: rm -R /Users/Guest  2. Make sure there is no output"
    compliance:
      - cis: "6.1.5"
-   condition: any
+   condition: none
    rules:
-     - 'd:/Users/Guest;'
+     - 'd:/Users/Guest'
+
 # 6.2 Turn on filename extensions (Scored)
  - id: 13529
    title: "Turn on filename extensions (Scored)"
    description: "A filename extension is a suffix added to a base filename that indicates the base filename's file format."
    rationale: "Visible filename extensions allows the user to identify the file type and the application it is associated with which leads to quick identification of misrepresented malicious files."
-   remediation: "Perform the following to implement the prescribed state: 1. Select Finder 2. Select Preferences 3. Check Show all filename extensions Alternatively, use the following command: defaults write NSGlobalDomain AppleShowAllExtensions -bool true"
+   remediation: "Perform the following to implement the prescribed state: 1. Select Finder 2. Select Preferences 3. Check Show all filename extensions    Alternatively, use the following command: defaults write NSGlobalDomain AppleShowAllExtensions -bool true"
    compliance:
      - cis: "6.2"
-   condition: any
+   condition: all
    rules:
-     - 'c:defaults read NSGlobalDomain AppleShowAllExtensions -> r:^\s*0$;'
+     - 'c:defaults read NSGlobalDomain AppleShowAllExtensions -> r:^1$'
+
 # 6.3 Disable the automatic run of safe files in Safari (Scored)
  - id: 13530
    title: "Disable the automatic run of safe files in Safari (Scored)"
    description: "Safari will automatically run or execute what it considers safe files. This can include installers and other files that execute on the operating system. Safari bases file safety by using a list of filetypes maintained by Apple. The list of files include text, image, video and archive formats that would be run in the context of the OS rather than the browser."
    rationale: "Hackers have taken advantage of this setting via drive-by attacks. These attacks occur when a user visits a legitimate website that has been corrupted. The user unknowingly downloads a malicious file either by closing an infected pop-up or hovering over a malicious banner. An attacker can create a malicious file that will fall within Safari's safe file list that will download and execute without user input."
-   remediation: "Perform the following to implement the prescribed state: 1. Open Safari 2. Select Safari from the menu bar 3. Select Preferences 4. Select General 5. Uncheck Open \"safe\" files after downloading Alternatively run the following command in Terminal: defaults write com.apple.Safari AutoOpenSafeDownloads -boolean no"
+   remediation: "Perform the following to implement the prescribed state: 1. Open Safari 2. Select Safari from the menu bar 3. Select Preferences 4. Select General 5. Uncheck Open \"safe\" files after downloading    Alternatively run the following command in Terminal: defaults write com.apple.Safari AutoOpenSafeDownloads -boolean no"
    compliance:
      - cis: "6.3"
-   condition: any
+   condition: all
    rules:
-     - 'c:defaults read com.apple.Safari AutoOpenSafeDownloads -> r:^1$;'
-
+     - 'c:defaults read com.apple.Safari AutoOpenSafeDownloads -> r:^0$;'
