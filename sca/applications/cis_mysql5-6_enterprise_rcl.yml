@@ -176,9 +176,7 @@ checks:
     - https://dev.mysql.com/doc/refman/5.6/en/replication-options-binary-log.html
    condition: all
    rules:
-     - 'f:$mysql-cnfs -> r:log_bin\s*$'
-     - 'not f:$mysql-cnfs -> !r:^# && r:log_bin= && r:\s*/var/\S*\s*'
-     - 'not f:$mysql-cnfs -> !r:^# && r:log_bin= && r:\s*/usr/\S*\s*'
+     - 'f:$mysql-cnfs -> r:log_bin\s*\t*.+\s*\t*$ && !r:log_bin\s*\t*/+\s*\t*$|log_bin\s*\t*/+var/*\s*\t*$|log_bin\s*\t*/+usr/*\s*\t*$'
      
  - id: 4511
    title: "Ensure 'log_warning' is set to 2"
