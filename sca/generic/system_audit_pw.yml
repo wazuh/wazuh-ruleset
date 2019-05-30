@@ -61,8 +61,8 @@ checks:
     - https://linux-audit.com/configure-the-minimum-password-length-on-linux-systems/
    condition: any
    rules:
-     - 'f:$pam_d_files -> r:pam_cracklib.so && n:minlen=(\d+) >= 14'
-     - 'f:/etc/security/pwquality.conf -> n:minlen=(\d+) >= 14'
+     - 'f:$pam_d_files -> r:pam_cracklib.so && n:minlen=(\d+) compare >= 14'
+     - 'f:/etc/security/pwquality.conf -> n:minlen=(\d+) compare >= 14'
 
  - id: 13002
    title: "Ensure passwords contain at least one digit"
@@ -153,8 +153,8 @@ checks:
    condition: any
    rules:
      - 'f:/etc/security/policy.conf -> r:^CRYPT_DEFAULT=\d && !r:^CRYPT_DEFAULT=1|^CRYPT_DEFAULT=2|^CRYPT_DEFAULT=2a|^CRYPT_DEFAULT=2x|^CRYPT_DEFAULT=2y|^CRYPT_DEFAULT=md5|^CRYPT_DEFAULT=__unix__'
-     - 'f:$pam_d_files -> n:^password\.+pam_unix.so\.+sha(\d+) >= 256'
-     - 'f:/etc/login.defs -> r:^ENCRYPT_METHOD\s+ && n:SHA(\d+) >= 256'
+     - 'f:$pam_d_files -> n:^password\.+pam_unix.so\.+sha(\d+) compare >= 256'
+     - 'f:/etc/login.defs -> r:^ENCRYPT_METHOD\s+ && n:SHA(\d+) compare >= 256'
 
  - id: 13008
    title: "Ensure passwords in /etc/shadow are hashed with SHA-512 or SHA-256"

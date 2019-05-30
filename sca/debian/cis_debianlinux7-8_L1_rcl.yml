@@ -996,7 +996,7 @@ checks:
     - cis: "9.3.1"
    condition: all
    rules:
-     - 'f:/etc/ssh/sshd_config -> n:^\s*\t*Protocol\s*\t*(\d+) compare > 1'
+     - 'f:/etc/ssh/sshd_config -> r:^\s*\t*Protocol\s*\t*2'
 
  - id: 10578
    title: "Set LogLevel to INFO"
@@ -1030,7 +1030,6 @@ checks:
    condition: all
    rules:
      - 'f:/etc/ssh/sshd_config -> n:^MaxAuthTries\s+(\d+) compare <= 4'
-     - 'not f:/etc/ssh/sshd_config -> !r:^\s*\t*# && n:^MaxAuthTries\s+(\d+) compare > 4'
 
  - id: 10581
    title: "Set SSH IgnoreRhosts to Yes"
@@ -1042,7 +1041,6 @@ checks:
    condition: all
    rules:
      - 'f:/etc/ssh/sshd_config -> r:^IgnoreRhosts\s+yes'
-     - 'not f:/etc/ssh/sshd_config -> !r:^\s*\t*# && r:IgnoreRhosts\s+yes'
 
  - id: 10582
    title: "Set SSH HostbasedAuthentication to No"
@@ -1054,7 +1052,6 @@ checks:
    condition: all
    rules:
      - 'f:/etc/ssh/sshd_config -> r:^HostbasedAuthentication\s+no'
-     - 'not f:/etc/ssh/sshd_config -> !r:^\s*\t*# && r:HostbasedAuthentication\s+yes'
 
  - id: 10583
    title: "Disable SSH Root Login"
@@ -1066,7 +1063,6 @@ checks:
    condition: all
    rules:
      - 'f:/etc/ssh/sshd_config -> r:^PermitRootLogin\s+no'
-     - 'not f:/etc/ssh/sshd_config -> !r:^# && r:PermitRootLogin\s+yes'
 
  - id: 10584
    title: "Set SSH PermitEmptyPasswords to No"
@@ -1078,7 +1074,6 @@ checks:
    condition: all
    rules:
      - 'f:/etc/ssh/sshd_config -> r:^PermitEmptyPasswords\s+no'
-     - 'not f:/etc/ssh/sshd_config -> !r:^# && r:PermitEmptyPasswords\s+yes'
 
  - id: 10585
    title: "Do Not Allow Users to Set Environment Options"
@@ -1090,7 +1085,6 @@ checks:
    condition: all
    rules:
      - 'f:/etc/ssh/sshd_config -> r:^PermitUserEnvironment\s+no'
-     - 'not f:/etc/ssh/sshd_config -> !r:^# && r:PermitUserEnvironment\s+yes'
 
  - id: 10586
    title: "Set Idle Timeout Interval for User Login"
@@ -1147,7 +1141,7 @@ checks:
     - cis: "10.1.1"
    condition: all
    rules:
-     - 'f:/etc/login.defs -> !n:^PASS_MAX_DAYS\s+(\d+) compare <= 90'
+     - 'f:/etc/login.defs -> n:^PASS_MAX_DAYS\s+(\d+) compare <= 90'
 
  - id: 10591
    title: "Set Password Change Minimum Number of Days"
@@ -1158,7 +1152,7 @@ checks:
     - cis: "10.1.2"
    condition: all
    rules:
-     - 'f:/etc/login.defs -> r:^PASS_MIN_DAYS\s+(\d+) compare <= 7'
+     - 'f:/etc/login.defs -> n:^PASS_MIN_DAYS\s+(\d+) compare <= 7'
 
  - id: 10592
    title: "Set Password Expiring Warning Days"
@@ -1169,7 +1163,7 @@ checks:
     - cis: "10.1.3"
    condition: all
    rules:
-     - 'f:/etc/login.defs -> r:^PASS_WARN_DAYS\s+(\d+) compare <= 7'
+     - 'f:/etc/login.defs -> n:^PASS_WARN_DAYS\s+(\d+) compare <= 7'
 
  - id: 10593
    title: "Set Default Group for root Account"
@@ -1203,7 +1197,7 @@ checks:
     - cis: "10.5"
    condition: all
    rules:
-     - 'f:/etc/default/useradd -> r:^INACTIVE=(\d+) compare <= 35'
+     - 'f:/etc/default/useradd -> n:^INACTIVE=(\d+) compare <= 35'
 
 # 11 Warning Banners
  - id: 10596

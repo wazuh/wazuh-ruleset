@@ -919,7 +919,7 @@ checks:
     - pci_dss: "4.1"
    condition: all
    rules:
-     - 'f:$sshd_file -> n:^\s*\t*Protocol\s*\t*(\d+) compare > 1'
+     - 'f:$sshd_file -> r:^\s*\t*Protocol\s*\t*2'
 
 # 5.2.3 Set LogLevel to INFO (Scored)
  - id: 6561
@@ -959,9 +959,9 @@ checks:
     - cis: "5.2.6"
     - cis_csc: "9"
     - pci_dss: "4.1"
-   condition: none
+   condition: all
    rules:
-     - 'f:$sshd_file -> !r:^# && r:IgnoreRhosts\.+no'
+     - 'f:$sshd_file -> !r:^# && r:IgnoreRhosts\.+yes'
 
 # 5.2.7 Set SSH HostbasedAuthentication to No (Scored)
  - id: 6564
@@ -973,9 +973,9 @@ checks:
     - cis: "5.2.7"
     - cis_csc: "9"
     - pci_dss: "4.1"
-   condition: none
+   condition: all
    rules:
-     - 'f:$sshd_file -> r:^\s*\t*HostbasedAuthentication\.+yes'
+     - 'f:$sshd_file -> r:^\s*\t*HostbasedAuthentication\.+no'
 
 # 5.2.8 Disable SSH Root Login (Scored)
  - id: 6565
@@ -1001,9 +1001,9 @@ checks:
     - cis: "5.2.9"
     - cis_csc: "16"
     - pci_dss: "4.1"
-   condition: none
+   condition: all
    rules:
-     - 'f:$sshd_file -> r:^\s*\t*PermitEmptyPasswords\.+yes'
+     - 'f:$sshd_file -> r:^\s*\t*PermitEmptyPasswords\.+no'
 
 ###############################################
 # 6 System Maintenance

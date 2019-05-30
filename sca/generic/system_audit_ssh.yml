@@ -35,7 +35,7 @@ checks:
     - pci_dss: "2.2.4"
    condition: all
    rules:
-     - 'f:$sshd_file -> !r:^# && n:Port\s*\t*(\d+) compare != 22'
+     - 'f:$sshd_file -> !r:^# && r:Port && !r:\D22\D*$'
 
  - id: 1501
    title: "SSH Hardening - 2: Protocol should not be 1"
@@ -46,7 +46,7 @@ checks:
     - pci_dss: "2.2.4"
    condition: all
    rules:
-     - 'f:$sshd_file -> n:^\s*\t*Protocol\s*\t*(\d+) compare > 1'
+     - 'f:$sshd_file -> r:^\s*\t*Protocol\s*\t*\D2\D*$'
 
  - id: 1502
    title: "SSH Hardening - 3: Root account should not be able to log in"
