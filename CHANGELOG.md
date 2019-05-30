@@ -1,6 +1,12 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [v3.9.2]
+
+### Fixed
+
+- Fixed Windows rule about audit log. ([#408](https://github.com/wazuh/wazuh-ruleset/pull/408))
+
 ## [v3.9.1]
 
 ### Fixed
