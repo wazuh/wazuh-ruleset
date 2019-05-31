@@ -1,17 +1,20 @@
 #!/usr/bin/env python
 # Copyright (C) 2015-2019, Wazuh Inc.
-#
-# This program is a free software; you can redistribute it
-# and/or modify it under the terms of the GNU General Public
-# License (version 2) as published by the FSF - Free Software
-# Foundation
 
 import ConfigParser
 import subprocess
 import os
 import sys
 import os.path
+from collections import OrderedDict
+import shutil
 
+class MultiOrderedDict(OrderedDict):
+    def __setitem__(self, key, value):
+        if isinstance(value, list) and key in self:
+            self[key].extend(value)
+        else:
+            super(MultiOrderedDict, self).__setitem__(key, value)
 
 class OssecTester(object):
     def __init__(self):
@@ -32,9 +35,7 @@ class OssecTester(object):
             cmd += ["-D", self._base_dir]
         cmd += ['-U', "%s:%s:%s" % (rule, alert, decoder)]
         return cmd
-
     def runTest(self, log, rule, alert, decoder, section, name, negate=False):
-        #print self.buildCmd(rule, alert, decoder)
         p = subprocess.Popen(
                 self.buildCmd(rule, alert, decoder),
                 stdout=subprocess.PIPE,
@@ -67,7 +68,7 @@ class OssecTester(object):
                 if selective_test and not aFile.endswith(selective_test):
                     continue
                 print "- [ File = %s ] ---------" % (aFile)
-                tGroup = ConfigParser.ConfigParser()
+                tGroup = ConfigParser.RawConfigParser(dict_type=MultiOrderedDict)
                 tGroup.read([aFile])
                 tSections = tGroup.sections()
                 for t in tSections:
@@ -85,7 +86,7 @@ class OssecTester(object):
                             else:
                                 neg = False
                             self.runTest(value, rule, alert, decoder,
-                                         t, name, negate=neg)
+                            t, name, negate=neg)
                 print ""
         if self._error:
             sys.exit(1)
@@ -97,5 +98,9 @@ if __name__ == "__main__":
             selective_test += '.ini'
     else:
         selective_test = False
+    shutil.copy2("./rules/test_rules.xml", "/var/ossec/etc/rules")
+    shutil.copy2("./decoders/test_decoders.xml", "/var/ossec/etc/decoders")
     OT = OssecTester()
     OT.run(selective_test)
+    os.remove("/var/ossec/etc/rules/test_rules.xml")
+    os.remove("/var/ossec/etc/decoders/test_decoders.xml")
