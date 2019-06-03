@@ -11,6 +11,27 @@ import json
 _rules_file_group = re.compile(r'<group>(.*),<\/group>')
 
 
+def delete_standard(path, standard):
+    if list(path)[-1] != '/':
+        path += '/'
+    os.chdir(path)
+    for file in glob.glob('*.xml'):
+        print('[DELETE] Processing {}'.format(file))
+        with open(file, 'r+') as f:
+            lines = f.readlines()
+        new_file = ''
+        for line in lines:
+            match = re.search(_rules_file_group, line)
+            if match:
+                for group in match.groups():
+                    groups = group.split(',')
+                    for index, pci in enumerate(groups):
+                        if standard in pci:
+                            groups.pop(index)
+        with open(file, 'w') as f:
+            f.write(new_file)
+
+
 def pci_to_any(path, schema):
     if list(path)[-1] != '/':
         path += '/'
@@ -51,7 +72,11 @@ if __name__ == '__main__':
 
     parser.add_argument('-p', '--path', type=str, default='../../rules/', help='Rules path')
     parser.add_argument('-m', '--mapping', type=str, default='mapping.json', help='Mapping path')
+    parser.add_argument('-d', '--delete', type=str, default='', help='Standard to be delete')
 
     args = parser.parse_args()
 
-    pci_to_any(args.path, args.mapping)
+    if args.delete == '':
+        pci_to_any(args.path, args.mapping)
+    else:
+        delete_standard(args.path, args.delete)
