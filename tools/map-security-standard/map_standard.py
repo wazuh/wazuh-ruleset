@@ -39,8 +39,11 @@ def delete_standard(path, standard):
                             else:
                                 changed = True
                         elif len(splitted) == 3:
-                            if standard != splitted[0]+'_'+splitted[1]:
-                                new_line += pci+','
+                            if standard == 'gdpr' and splitted[0] == 'gdpr':
+                                changed = True
+                                continue
+                            if standard != splitted[0] + '_' + splitted[1]:
+                                new_line += pci + ','
                             else:
                                 changed = True
                         elif len(splitted) <= 2:
