@@ -91,15 +91,16 @@ def pci_to_any(path, schema):
         with open(file) as f:
             yaml_file = ruamel.yaml.round_trip_load(f, preserve_quotes=True)
             for element in yaml_file['checks']:
-                add_standard(element['compliance'], list_standards, json_data)
+                try:
+                    add_standard(element['compliance'], list_standards, json_data)
+                except:
+                    pass
 
         with open(file, 'w') as f:
             yaml = ruamel.yaml.YAML()
             yaml.width = 4096
             yaml.Representer.add_representer(OrderedDict, yaml.Representer.represent_dict)
             yaml.dump(yaml_file, f)
-
-        break
 
 
 if __name__ == '__main__':
