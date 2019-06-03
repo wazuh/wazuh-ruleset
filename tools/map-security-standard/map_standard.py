@@ -33,7 +33,10 @@ def delete_standard(path, standard):
                     groups = group.split(',')
                     for index, pci in enumerate(groups):
                         splitted = pci.split('_')
-                        if len(splitted) > 2:
+                        if len(splitted) == 4:  # nist
+                            if standard != splitted[0]+'_'+splitted[1]+'_'+splitted[2]:
+                                new_line += pci+','
+                        elif len(splitted) == 3:
                             if standard != splitted[0]+'_'+splitted[1]:
                                 new_line += pci+','
                         elif len(splitted) <= 2:
