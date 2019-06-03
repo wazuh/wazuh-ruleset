@@ -20,11 +20,11 @@ def delete_standard(path, standard):
         path += '/'
     os.chdir(path)
     for file in glob.glob('*.xml'):
-        print('[DELETE] Deleting {} in file {}'.format(standard, file))
         with open(file, 'r+') as f:
             lines = f.readlines()
         new_file = ''
         new_line = ''
+        changed = False
         for line in lines:
             match = re.search(_rules_file_group, line)
             if match:
@@ -48,6 +48,8 @@ def delete_standard(path, standard):
                 new_line = ''
             else:
                 new_file += line
+        if changed:
+            print('[DELETE] Deleted {} in file {}'.format(standard, file))
         with open(file, 'w') as f:
             f.write(new_file)
 
