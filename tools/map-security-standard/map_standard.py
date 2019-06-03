@@ -28,7 +28,7 @@ def delete_standard(path, standard):
         for line in lines:
             match = re.search(_rules_file_group, line)
             if match:
-                new_line = '    <group>'
+                new_line = line.split('<')[0]+'<group>'
                 for group in match.groups():
                     groups = group.split(',')
                     for index, pci in enumerate(groups):
