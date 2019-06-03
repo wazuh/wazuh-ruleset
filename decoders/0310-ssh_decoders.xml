@@ -236,3 +236,9 @@ Sep  4 21:14:25 example sshd[18368]: Did not receive identification string from 
   <regex offset="after_prematch">^(\S+) from (\S+) port (\d+) </regex>
   <order>user, srcip, srcport</order>
 </decoder>
+
+<decoder name="sshd-read-error">
+  <parent>sshd</parent>
+  <regex>Read error from remote host (\S+): </regex>
+  <order>srcip</order>
+</decoder>

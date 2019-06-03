@@ -14,6 +14,22 @@
   <type>ossec</type>
 </decoder>
 
+<decoder name="ossec-file-rotation">
+  <parent>ossec</parent>
+  <type>ossec</type>
+  <prematch>^ossec: File rotated</prematch>
+  <regex offset="after_prematch">'(\S+\S)'</regex>
+  <order>file</order>
+</decoder>
+
+<decoder name="ossec-size-reduced">
+  <parent>ossec</parent>
+  <type>ossec</type>
+  <prematch>^ossec: File size reduced</prematch>
+  <regex offset="after_prematch">'(\S+\S)'</regex>
+  <order>file</order>
+</decoder>
+
 <decoder name="ossec-logcollector">
   <type>ossec</type>
   <prematch>^\d\d\d\d/\d\d/\d\d \d\d:\d\d:\d\d ossec-logcollector</prematch>
@@ -34,6 +50,15 @@
   <parent>ossec</parent>
   <type>ossec</type>
   <prematch offset="after_parent">^Agent started:</prematch>
+  <regex offset="after_prematch">^ '(\S+\S)'</regex>
+  <order>extra_data</order>
+  <fts>name, location, extra_data</fts>
+</decoder>
+
+<decoder name="ossec-agent1">
+  <parent>ossec</parent>
+  <type>ossec</type>
+  <prematch offset="after_parent">^Agent disconnected:</prematch>
   <regex offset="after_prematch">^ '(\S+\S)'</regex>
   <order>extra_data</order>
   <fts>name, location, extra_data</fts>

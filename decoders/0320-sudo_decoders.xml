@@ -40,6 +40,24 @@
 
 <decoder name="sudo-fields">
   <parent>sudo</parent>
+  <regex offset="after_regex">LOGNAME=(\S+)</regex>
+  <order>logname</order>
+</decoder>
+
+<decoder name="sudo-fields">
+  <parent>sudo</parent>
+  <regex offset="after_regex">UID=(\S+)</regex>
+  <order>uid</order>
+</decoder>
+
+<decoder name="sudo-fields">
+  <parent>sudo</parent>
+  <regex offset="after_regex">EUID=(\S+)</regex>
+  <order>euid</order>
+</decoder>
+
+<decoder name="sudo-fields">
+  <parent>sudo</parent>
   <regex offset="after_regex">TTY=(\S+)</regex>
   <order>tty</order>
 </decoder>
@@ -48,6 +66,18 @@
   <parent>sudo</parent>
   <regex offset="after_regex">PWD=(\S+)</regex>
   <order>pwd</order>
+</decoder>
+
+<decoder name="sudo-fields">
+  <parent>sudo</parent>
+  <regex offset="after_regex">RUSER=(\S+)</regex>
+  <order>srcuser</order>
+</decoder>
+
+<decoder name="sudo-fields">
+  <parent>sudo</parent>
+  <regex offset="after_regex">RHOST=(\S+)</regex>
+  <order>srcip</order>
 </decoder>
 
 <decoder name="sudo-fields">

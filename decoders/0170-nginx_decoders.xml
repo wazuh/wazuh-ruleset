@@ -12,6 +12,7 @@
   - Examples:
   - 2009/09/15 20:55:40 [error] 63858#0: *3663 open() "/srv/www/ossec.net/robots.txt" failed (2: No such file or directory), client: 1.2.3.4, server: ossec.net, request: "GET /robots.txt HTTP/1.1", host: "www.ossec.net"
   - 2009/09/15 19:51:07 [error] 37992#0: accept() failed (53: Software caused connection abort)
+  - 2018/10/29 23:13:59 [warn] 99601#0: conflicting server name "*******" on *.*.*.*:80, ignored
   -->
 <decoder name="nginx-errorlog">
   <prematch>^20\d\d/\d\d/\d\d \d\d:\d\d:\d\d [</prematch>
@@ -22,4 +23,10 @@
   <prematch offset="after_parent">, client: \S+, server: \S+, request: "\S+ </prematch>
   <regex offset="after_parent">, client: (\S+), </regex>
   <order>srcip</order>
+</decoder>
+
+<decoder name="nginx-errorlog-conflict">
+  <parent>nginx-errorlog</parent>
+  <regex>conflicting server name "(\S+)" on (\S+), </regex>
+  <order>server, srcip</order>
 </decoder>
