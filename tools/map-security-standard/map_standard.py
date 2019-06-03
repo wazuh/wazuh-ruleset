@@ -12,22 +12,39 @@ _rules_file_group = re.compile(r'<group>(.*),<\/group>')
 
 
 def delete_standard(path, standard):
+    if standard.isdigit():
+        print('Version numbers are not allowed in the standards')
+        return
+
     if list(path)[-1] != '/':
         path += '/'
     os.chdir(path)
     for file in glob.glob('*.xml'):
-        print('[DELETE] Processing {}'.format(file))
+        print('[DELETE] Deleting {} in file {}'.format(standard, file))
         with open(file, 'r+') as f:
             lines = f.readlines()
         new_file = ''
+        new_line = ''
         for line in lines:
             match = re.search(_rules_file_group, line)
             if match:
+                new_line = '    <group>'
                 for group in match.groups():
                     groups = group.split(',')
                     for index, pci in enumerate(groups):
-                        if standard in pci:
-                            groups.pop(index)
+                        splitted = pci.split('_')
+                        if len(splitted) > 2:
+                            if standard != splitted[0]+'_'+splitted[1]:
+                                new_line += pci+','
+                        elif len(splitted) <= 2:
+                            if standard != splitted[0]:
+                                new_line += pci+','
+                new_line += '</group>\n'
+            if new_line != '':
+                new_file += new_line
+                new_line = ''
+            else:
+                new_file += line
         with open(file, 'w') as f:
             f.write(new_file)
 
