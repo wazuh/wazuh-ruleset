@@ -36,12 +36,18 @@ def delete_standard(path, standard):
                         if len(splitted) == 4:  # nist
                             if standard != splitted[0]+'_'+splitted[1]+'_'+splitted[2]:
                                 new_line += pci+','
+                            else:
+                                changed = True
                         elif len(splitted) == 3:
                             if standard != splitted[0]+'_'+splitted[1]:
                                 new_line += pci+','
+                            else:
+                                changed = True
                         elif len(splitted) <= 2:
                             if standard != splitted[0]:
                                 new_line += pci+','
+                            else:
+                                changed = True
                 new_line += '</group>\n'
             if new_line != '':
                 new_file += new_line
