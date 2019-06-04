@@ -64,10 +64,11 @@ def standard_to_any(path, schema):
                 for group in match.groups():
                     for current_standard in group.split(','):
                         if current_standard in list(json_data.keys()):
-                            if json_data[current_standard] not in group.split(','):
-                                if json_data[current_standard] not in added:
-                                    added.append(json_data[current_standard])
-                                    added.append(',')
+                            for split_current_standard in json_data[current_standard].split(','):
+                                if split_current_standard not in group.split(','):
+                                    if split_current_standard not in added:
+                                        added.append(split_current_standard)
+                                        added.append(',')
                 if len(added) > 1:
                     new_line = line.split(',')
                     new_line.insert(-1, "".join(added[0:-1]))
