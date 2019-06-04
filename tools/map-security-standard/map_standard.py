@@ -28,7 +28,7 @@ def delete_standard(path, standard):
                 for group in match.groups():
                     groups = group.split(',')
                     for current_standard in groups:
-                        if current_standard != standard:
+                        if not current_standard.startswith(standard):
                             new_line += current_standard + ','
                         else:
                             changed = True
@@ -38,10 +38,12 @@ def delete_standard(path, standard):
                 new_line = ''
             else:
                 new_file += line
-        if changed:
-            print('[DELETE] Deleted {} in file {}'.format(standard, file))
+
         with open(file, 'w') as f:
             f.write(new_file)
+
+        if changed:
+            print('[DELETE] Deleted {} in file {}'.format(standard, file))
 
 
 def standard_to_any(path, schema):
