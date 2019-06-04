@@ -265,7 +265,7 @@
     <if_sid>18106</if_sid>
     <id>^539$</id>
     <description>Windows: Logon Failure - Account locked out.</description>
-    <group>win_authentication_failed,pci_dss_10.2.4,pci_dss_10.2.5,pci_dss_8.1.6,gpg13_7.5,gpg13_7.1,gdpr_IV_35.7.d,gdpr_IV_32.2,hipaa_164.312.b,hipaa_164.312.a.1,nist_800_53_IA.10,nist_800_53_AC.7,nist_800_53_AC.7,</group>
+    <group>win_authentication_failed,pci_dss_10.2.4,pci_dss_10.2.5,pci_dss_8.1.6,gpg13_7.5,gpg13_7.1,gdpr_IV_35.7.d,gdpr_IV_32.2,hipaa_164.312.b,hipaa_164.312.a.1,nist_800_53_IA.10,nist_800_53_AC.7,</group>
   </rule>
 
   <rule id="18139" level="5">
@@ -295,7 +295,7 @@
     <id>^671$|^4767$</id>
     <description>Windows: User account unlocked.</description>
     <info type="link">https://www.ultimatewindowssecurity.com/securitylog/encyclopedia/event.aspx?eventID=4767</info>
-    <group>account_changed,pci_dss_10.2.5,pci_dss_8.1.6,gpg13_7.10,gdpr_IV_32.2,hipaa_164.312.b,hipaa_164.312.a.1,nist_800_53_IA.10,nist_800_53_AC.7,nist_800_53_AC.7,</group>
+    <group>account_changed,pci_dss_10.2.5,pci_dss_8.1.6,gpg13_7.10,gdpr_IV_32.2,hipaa_164.312.b,hipaa_164.312.a.1,nist_800_53_IA.10,nist_800_53_AC.7,</group>
   </rule>
 
   <rule id="18143" level="8">
@@ -861,7 +861,7 @@
     <description>Windows DC integrity check on decrypted </description>
     <description>field failed.</description>
     <info type="link">https://web.mit.edu/kerberos/</info>
-    <group>win_authentication_failed,attacks,pci_dss_10.2.4,pci_dss_10.2.5,pci_dss_11.4,gdpr_IV_35.7.d,gdpr_IV_32.2,hipaa_164.312.b,nist_800_53_IA.10,nist_800_53_AC.7,nist_800_53_IA.10,</group>
+    <group>win_authentication_failed,attacks,pci_dss_10.2.4,pci_dss_10.2.5,pci_dss_11.4,gdpr_IV_35.7.d,gdpr_IV_32.2,hipaa_164.312.b,nist_800_53_IA.10,nist_800_53_AC.7,</group>
   </rule>
 
   <rule id="18171" level="10">
@@ -869,7 +869,7 @@
     <match>Failure Code: 0x22</match>
     <description>Windows DC - Possible replay attack.</description>
     <info type="link">https://web.mit.edu/kerberos/</info>
-    <group>win_authentication_failed,attacks,pci_dss_10.2.4,pci_dss_10.2.5,pci_dss_11.4,gdpr_IV_35.7.d,gdpr_IV_32.2,hipaa_164.312.b,nist_800_53_IA.10,nist_800_53_AC.7,nist_800_53_IA.10,</group>
+    <group>win_authentication_failed,attacks,pci_dss_10.2.4,pci_dss_10.2.5,pci_dss_11.4,gdpr_IV_35.7.d,gdpr_IV_32.2,hipaa_164.312.b,nist_800_53_IA.10,nist_800_53_AC.7,</group>
   </rule>
 
   <rule id="18172" level="7">
@@ -877,7 +877,7 @@
     <match>Failure Code: 0x25</match>
     <description>Windows DC - Clock skew too great.</description>
     <info type="link">https://web.mit.edu/kerberos/</info>
-    <group>win_authentication_failed,attacks,pci_dss_10.2.4,pci_dss_10.2.5,pci_dss_11.4,gdpr_IV_35.7.d,gdpr_IV_32.2,hipaa_164.312.b,nist_800_53_IA.10,nist_800_53_AC.7,nist_800_53_IA.10,</group>
+    <group>win_authentication_failed,attacks,pci_dss_10.2.4,pci_dss_10.2.5,pci_dss_11.4,gdpr_IV_35.7.d,gdpr_IV_32.2,hipaa_164.312.b,nist_800_53_IA.10,nist_800_53_AC.7,</group>
   </rule>
 
 
@@ -919,14 +919,14 @@
     <if_matched_sid>18108</if_matched_sid>
     <same_user />
     <description>Windows: Multiple failed attempts to perform a privileged operation by the same user.</description>
-    <group>pci_dss_10.2.4,pci_dss_10.2.5,pci_dss_11.4,gdpr_IV_35.7.d,gdpr_IV_32.2,hipaa_164.312.b,nist_800_53_IA.10,nist_800_53_AC.7,nist_800_53_IA.10,</group>
+    <group>pci_dss_10.2.4,pci_dss_10.2.5,pci_dss_11.4,gdpr_IV_35.7.d,gdpr_IV_32.2,hipaa_164.312.b,nist_800_53_IA.10,nist_800_53_AC.7,</group>
   </rule>
 
   <rule id="18152" level="10" frequency="$MS_FREQ" timeframe="240">
     <if_matched_group>win_authentication_failed</if_matched_group>
     <same_source_ip />
     <description>Multiple Windows Logon Failures.</description>
-    <group>authentication_failures,pci_dss_10.2.4,pci_dss_10.2.5,pci_dss_11.4,gdpr_IV_35.7.d,gdpr_IV_32.2,hipaa_164.312.b,nist_800_53_IA.10,nist_800_53_AC.7,nist_800_53_IA.10,</group>
+    <group>authentication_failures,pci_dss_10.2.4,pci_dss_10.2.5,pci_dss_11.4,gdpr_IV_35.7.d,gdpr_IV_32.2,hipaa_164.312.b,nist_800_53_IA.10,nist_800_53_AC.7,</group>
   </rule>
 
   <rule id="18153" level="10" frequency="$MS_FREQ" timeframe="240">
@@ -949,13 +949,13 @@
   <rule id="18156" level="10" frequency="$MS_FREQ" timeframe="240">
     <if_matched_sid>18125</if_matched_sid>
     <description>Windows: Multiple remote access login failures.</description>
-    <group>authentication_failures,pci_dss_10.2.4,pci_dss_10.2.5,pci_dss_11.4,pci_dss_8.1.5,gdpr_IV_35.7.d,gdpr_IV_32.2,hipaa_164.312.b,hipaa_164.312.a.1,nist_800_53_IA.10,nist_800_53_AC.7,nist_800_53_IA.10,nist_800_53_AC.2,</group>
+    <group>authentication_failures,pci_dss_10.2.4,pci_dss_10.2.5,pci_dss_11.4,pci_dss_8.1.5,gdpr_IV_35.7.d,gdpr_IV_32.2,hipaa_164.312.b,hipaa_164.312.a.1,nist_800_53_IA.10,nist_800_53_AC.7,nist_800_53_AC.2,</group>
   </rule>
 
   <rule id="18157" level="10" frequency="$MS_FREQ" timeframe="240">
       <if_matched_sid>18258</if_matched_sid>
       <description>Windows: Multiple TS Gateway login failures.</description>
-      <group>authentication_failures,pci_dss_10.2.4,pci_dss_10.2.5,pci_dss_11.4,gdpr_IV_35.7.d,gdpr_IV_32.2,hipaa_164.312.b,nist_800_53_IA.10,nist_800_53_AC.7,nist_800_53_IA.10,</group>
+      <group>authentication_failures,pci_dss_10.2.4,pci_dss_10.2.5,pci_dss_11.4,gdpr_IV_35.7.d,gdpr_IV_32.2,hipaa_164.312.b,nist_800_53_IA.10,nist_800_53_AC.7,</group>
   </rule>
 
   <!--
