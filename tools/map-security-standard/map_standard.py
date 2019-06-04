@@ -28,7 +28,7 @@ def delete_standard(path, standard):
                 for group in match.groups():
                     groups = group.split(',')
                     for current_standard in groups:
-                        if current_standard != standard:
+                        if not current_standard.startswith(standard):
                             new_line += current_standard + ','
                         else:
                             changed = True
@@ -38,10 +38,12 @@ def delete_standard(path, standard):
                 new_line = ''
             else:
                 new_file += line
-        if changed:
-            print('[DELETE] Deleted {} in file {}'.format(standard, file))
+
         with open(file, 'w') as f:
             f.write(new_file)
+
+        if changed:
+            print('[DELETE] Deleted {} in file {}'.format(standard, file))
 
 
 def standard_to_any(path, schema):
@@ -62,10 +64,11 @@ def standard_to_any(path, schema):
                 for group in match.groups():
                     for current_standard in group.split(','):
                         if current_standard in list(json_data.keys()):
-                            if json_data[current_standard] not in group.split(','):
-                                if json_data[current_standard] not in added:
-                                    added.append(json_data[current_standard])
-                                    added.append(',')
+                            for split_current_standard in json_data[current_standard].split(','):
+                                if split_current_standard not in group.split(','):
+                                    if split_current_standard not in added:
+                                        added.append(split_current_standard)
+                                        added.append(',')
                 if len(added) > 1:
                     new_line = line.split(',')
                     new_line.insert(-1, "".join(added[0:-1]))
