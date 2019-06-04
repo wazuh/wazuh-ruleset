@@ -27,9 +27,9 @@ def delete_standard(path, standard):
                 new_line = line.split('<')[0]+'<group>'
                 for group in match.groups():
                     groups = group.split(',')
-                    for index, pci in enumerate(groups):
-                        if pci != standard:
-                            new_line += pci + ','
+                    for actual_standard in groups:
+                        if actual_standard != standard:
+                            new_line += actual_standard + ','
                         else:
                             changed = True
                 new_line += '</group>\n'
@@ -44,7 +44,7 @@ def delete_standard(path, standard):
             f.write(new_file)
 
 
-def pci_to_any(path, schema):
+def standard_to_any(path, schema):
     if list(path)[-1] != '/':
         path += '/'
     with open(schema) as f:
@@ -60,11 +60,11 @@ def pci_to_any(path, schema):
             if match:
                 added = list()
                 for group in match.groups():
-                    for pci in group.split(','):
-                        if pci in list(json_data.keys()):
-                            if json_data[pci] not in group.split(','):
-                                if json_data[pci] not in added:
-                                    added.append(json_data[pci])
+                    for actual_standard in group.split(','):
+                        if actual_standard in list(json_data.keys()):
+                            if json_data[actual_standard] not in group.split(','):
+                                if json_data[actual_standard] not in added:
+                                    added.append(json_data[actual_standard])
                                     added.append(',')
                 if len(added) > 1:
                     new_line = line.split(',')
@@ -89,6 +89,6 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     if args.delete == '':
-        pci_to_any(args.path, args.mapping)
+        standard_to_any(args.path, args.mapping)
     else:
         delete_standard(args.path, args.delete)
