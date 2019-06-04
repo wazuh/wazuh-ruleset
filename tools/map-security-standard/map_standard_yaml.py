@@ -100,6 +100,7 @@ def pci_to_any(path, schema):
             yaml = ruamel.yaml.YAML()
             yaml.width = 4096
             yaml.Representer.add_representer(OrderedDict, yaml.Representer.represent_dict)
+            yaml.indent(mapping=2, sequence=4, offset=2)
             yaml.dump(yaml_file, f)
 
 
