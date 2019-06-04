@@ -19,7 +19,9 @@ def get_standards(schema):
     for s in json_data.keys():
         if s not in dict_standards.keys():
             splitted = s.split('_')
-            if len(splitted) < 3:
+            if len(splitted) == 1:
+                dict_standards[splitted] = splitted
+            elif len(splitted) < 3:
                 if splitted[0] not in list(dict_standards.keys()):
                     dict_standards[splitted[0]] = list()
                 dict_standards[splitted[0]].append(splitted[1])
@@ -79,7 +81,7 @@ def add_standard(actual_compliances, schema, schema_total):
                 pass
 
 
-def pci_to_any(path, schema):
+def standard_to_any(path, schema):
     if list(path)[-1] != '/':
         path += '/'
     with open(schema) as f:
@@ -112,4 +114,4 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    pci_to_any(args.path, args.mapping)
+    standard_to_any(args.path, args.mapping)
