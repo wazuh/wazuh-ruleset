@@ -21,14 +21,28 @@ class MultiOrderedDict(OrderedDict):
         else:
             super(MultiOrderedDict, self).__setitem__(key, value)
 
+def checkConfig(initconf,path):
+    if os.path.isfile(path):
+        with open(path) as f:
+            for line in f.readlines():
+                key, value = line.rstrip("\n").split("=")
+                value = value.replace("\"","")
+                initconf[key] = value
+        if initconf["NAME"] != "Wazuh":
+            print "Name is incorrect"
+            sys.exit(1)
+    else:
+        print "Seems like there is no Wazuh installation."
+        sys.exit(1)
+
 class OssecTester(object):
-    def __init__(self):
+    def __init__(self, bdir):
         self._error = False
         self._debug = False
         self._quiet = False
-        self._ossec_conf = "/var/ossec/etc/ossec.conf"
-        self._base_dir = "/var/ossec/"
-        self._ossec_path = "/var/ossec/bin/"
+        self._ossec_conf = bdir + "/etc/ossec.conf"
+        self._base_dir = bdir
+        self._ossec_path = bdir + "/bin/"
         self._test_path = "./tests"
 
     def buildCmd(self, rule, alert, decoder):
@@ -103,9 +117,12 @@ if __name__ == "__main__":
             selective_test += '.ini'
     else:
         selective_test = False
-    shutil.copy2("./rules/test_rules.xml", "/var/ossec/etc/rules")
-    shutil.copy2("./decoders/test_decoders.xml", "/var/ossec/etc/decoders")
-    OT = OssecTester()
-    OT.run(selective_test)
-    os.remove("/var/ossec/etc/rules/test_rules.xml")
-    os.remove("/var/ossec/etc/decoders/test_decoders.xml")
+        ossec_init = {}
+        initconfigpath = "/etc/ossec-init.conf"
+        checkConfig(ossec_init, initconfigpath)
+        shutil.copy2("./rules/test_rules.xml", ossec_init["DIRECTORY"] + "/etc/rules")
+        shutil.copy2("./decoders/test_decoders.xml", ossec_init["DIRECTORY"] + "/etc/decoders")
+        OT = OssecTester(ossec_init["DIRECTORY"])
+        OT.run(selective_test)
+        os.remove(ossec_init["DIRECTORY"] + "/etc/rules/test_rules.xml")
+        os.remove(ossec_init["DIRECTORY"] + "/etc/decoders/test_decoders.xml")
