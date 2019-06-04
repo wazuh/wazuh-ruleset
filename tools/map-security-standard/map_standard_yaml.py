@@ -38,11 +38,12 @@ def add_standard(actual_compliances, schema, schema_total):
                     for version in schema[key]:
                         if version == value:
                             new_key = OrderedDict()
-                            new_key_v = schema_total[key + '_' + value].split('_')[0]
+                            new_key_v = None
+                            for v in schema_total[key + '_' + value].strip().split(','):
+                                new_key_v = v.split('_')[0:len(v.split('_'))-1]
+                                new_key_v = '_'.join(new_key_v)
                             new_values = ''
                             for index_c, ver_c in enumerate(schema_total[key + '_' + value].split(',')):
-                                # for index, ver in enumerate(ver_c.split('_')[-1]):
-                                #     if index % 2 != 0:
                                 new_values += \
                                     ruamel.yaml.scalarstring.DoubleQuotedScalarString(','+ver_c.split('_')[-1])
                             for split in new_values.split(','):
@@ -58,7 +59,9 @@ def add_standard(actual_compliances, schema, schema_total):
                                     for ke in actual_compliances[-1].keys():
                                         for new_vaa in new_key[ke].split(', '):
                                             if new_vaa not in actual_compliances[-1][ke]:
-                                                actual_compliances[-1][ke] = actual_compliances[-1][ke]+', '+new_vaa
+                                                actual_compliances[-1][ke] = \
+                                                    ruamel.yaml.scalarstring.DoubleQuotedScalarString(
+                                                        actual_compliances[-1][ke]+', '+new_vaa)
                                 else:
                                     for k, v in new_key.items():
                                         new_key[k] = ruamel.yaml.scalarstring.DoubleQuotedScalarString(v)
@@ -93,8 +96,6 @@ def standard_to_any(path, schema):
             yaml.Representer.add_representer(OrderedDict, yaml.Representer.represent_dict)
             yaml.indent(mapping=2, sequence=4, offset=2)
             yaml.dump(yaml_file, f)
-
-        break
 
 
 if __name__ == '__main__':
