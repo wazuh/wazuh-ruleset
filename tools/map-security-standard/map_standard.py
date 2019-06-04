@@ -12,10 +12,6 @@ _rules_file_group = re.compile(r'<group>(.*),<\/group>')
 
 
 def delete_standard(path, standard):
-    if standard.isdigit():
-        print('Version numbers are not allowed in the standards')
-        return
-
     if list(path)[-1] != '/':
         path += '/'
     os.chdir(path)
@@ -32,25 +28,10 @@ def delete_standard(path, standard):
                 for group in match.groups():
                     groups = group.split(',')
                     for index, pci in enumerate(groups):
-                        splitted = pci.split('_')
-                        if len(splitted) == 4:  # nist
-                            if standard != splitted[0]+'_'+splitted[1]+'_'+splitted[2]:
-                                new_line += pci+','
-                            else:
-                                changed = True
-                        elif len(splitted) == 3:
-                            if standard == 'gdpr' and splitted[0] == 'gdpr':
-                                changed = True
-                                continue
-                            if standard != splitted[0] + '_' + splitted[1]:
-                                new_line += pci + ','
-                            else:
-                                changed = True
-                        elif len(splitted) <= 2:
-                            if standard != splitted[0]:
-                                new_line += pci+','
-                            else:
-                                changed = True
+                        if pci != standard:
+                            new_line += pci + ','
+                        else:
+                            changed = True
                 new_line += '</group>\n'
             if new_line != '':
                 new_file += new_line
