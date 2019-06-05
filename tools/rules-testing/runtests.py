@@ -21,18 +21,33 @@ class MultiOrderedDict(OrderedDict):
         else:
             super(MultiOrderedDict, self).__setitem__(key, value)
 
-def checkConfig(initconf,path):
+def getOssecConfig(initconf,path):
     if os.path.isfile(path):
         with open(path) as f:
             for line in f.readlines():
                 key, value = line.rstrip("\n").split("=")
-                value = value.replace("\"","")
-                initconf[key] = value
-        if initconf["NAME"] != "Wazuh":
-            print "Name is incorrect"
+                initconf[key] = value.replace("\"","")
+        if initconf["NAME"] != "Wazuh" or not os.path.exists(initconf["DIRECTORY"]):
+            print "Seems like there is no correct Wazuh installation "
             sys.exit(1)
     else:
-        print "Seems like there is no Wazuh installation."
+        print "Seems like there is no Wazuh installation or ossec-init.conf is missing."
+        sys.exit(1)
+
+def provisionDR(bdir):
+    if os.path.isfile("./rules/test_rules.xml") and os.path.isfile("./decoders/test_decoders.xml"):
+        shutil.copy2("./rules/test_rules.xml", ossec_init["DIRECTORY"] + "/etc/rules")
+        shutil.copy2("./decoders/test_decoders.xml", ossec_init["DIRECTORY"] + "/etc/decoders")
+    else:
+        print "Test files are missing."
+        sys.exit(1)
+
+def cleanDR(bdir):
+    if os.path.isfile(bdir + "/etc/rules/test_rules.xml") and os.path.isfile(bdir + "/etc/decoders/test_decoders.xml"):
+        os.remove(bdir + "/etc/rules/test_rules.xml")
+        os.remove(bdir + "/etc/decoders/test_decoders.xml")
+    else:
+        print "Could not clean rules and decoders test files"
         sys.exit(1)
 
 class OssecTester(object):
@@ -119,10 +134,8 @@ if __name__ == "__main__":
         selective_test = False
         ossec_init = {}
         initconfigpath = "/etc/ossec-init.conf"
-        checkConfig(ossec_init, initconfigpath)
-        shutil.copy2("./rules/test_rules.xml", ossec_init["DIRECTORY"] + "/etc/rules")
-        shutil.copy2("./decoders/test_decoders.xml", ossec_init["DIRECTORY"] + "/etc/decoders")
+        getOssecConfig(ossec_init, initconfigpath)
+        provisionDR(ossec_init["DIRECTORY"])
         OT = OssecTester(ossec_init["DIRECTORY"])
         OT.run(selective_test)
-        os.remove(ossec_init["DIRECTORY"] + "/etc/rules/test_rules.xml")
-        os.remove(ossec_init["DIRECTORY"] + "/etc/decoders/test_decoders.xml")
+        cleanDR(ossec_init["DIRECTORY"])
