@@ -98,12 +98,45 @@ def standard_to_any(path, schema):
             yaml.dump(yaml_file, f)
 
 
+def delete_standard(path, standard):
+    if list(path)[-1] != '/':
+        path += '/'
+    os.chdir(path)
+    for file in glob.glob('**/*.yml', recursive=True):
+        changed = False
+        with open(file) as f:
+            yaml_file = ruamel.yaml.round_trip_load(f, preserve_quotes=True)
+            for element in yaml_file['checks']:
+                try:
+                    for index, key in enumerate(element['compliance']):
+                        for k in key:
+                            if k == standard:
+                                element['compliance'].pop(index)
+                                changed = True
+                except:
+                    pass
+
+        with open(file, 'w') as f:
+            yaml = ruamel.yaml.YAML()
+            yaml.width = 4096
+            yaml.Representer.add_representer(OrderedDict, yaml.Representer.represent_dict)
+            yaml.indent(mapping=2, sequence=4, offset=2)
+            yaml.dump(yaml_file, f)
+
+        if changed:
+            print('[DELETE] Deleted {} in file {}'.format(standard, file))
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
 
     parser.add_argument('-p', '--path', type=str, default='../../sca/', help='Sca path')
     parser.add_argument('-m', '--mapping', type=str, default='mapping.json', help='Mapping path')
+    parser.add_argument('-d', '--delete', type=str, default='', help='Standard to be delete')
 
     args = parser.parse_args()
 
-    standard_to_any(args.path, args.mapping)
+    if args.delete == '':
+        standard_to_any(args.path, args.mapping)
+    else:
+        delete_standard(args.path, args.delete)
