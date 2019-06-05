@@ -154,8 +154,8 @@ checks:
    rules:
      - 'f:/etc/fstab -> !r:^# && r:/home && r:nodev'
 
-# 1.1.18 nodev on removable media partitions (not scored)
-- id: 7012
+ # 1.1.18 nodev on removable media partitions (not scored)
+ - id: 7012
    title: "Ensure nodev option set on removable media partitions"
    description: "The nodev mount option specifies that the filesystem cannot contain special devices."
    rationale: "Removable media containing character and block special devices could be used to circumvent security controls by allowing non-root users to access sensitive device files such as /dev/kmem or the raw disk partitions."
@@ -434,8 +434,8 @@ checks:
    rules:
      - 'f:/etc/ntp.conf -> r:restrict -4 default kod limited nomodify notrap nopeer noquery'
      - 'f:/etc/ntp.conf -> r:restrict -6 default kod limited nomodify notrap nopeer noquery'
-     - 'f:/etc/ntp.conf -> r:^server|^pool
-     - 'f:/etc/sysconfig/ntpd -> r:"NTPD_OPTIONS="-u ntp:ntp"'
+     - 'f:/etc/ntp.conf -> r:^server|^pool'
+     - 'f:/etc/sysconfig/ntpd -> r:NTPD_OPTIONS="-u ntp:ntp"'
 
 # 2.2.2 Remove X Windows (Scored)
  - id: 7029

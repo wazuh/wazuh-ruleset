@@ -583,7 +583,7 @@ checks:
    rules:
      - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Lsa -> LmCompatibilityLevel'
      - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Lsa -> LmCompatibilityLevel -> 5'
-   - id: 9042
+ - id: 9042
    title: "Ensure 'Network security: LDAP client signing requirements' is set to 'Negotiate signing' or higher"
    description: "This policy setting determines the level of data signing that is requested on behalf of clients that issue LDAP BIND requests.  Note: This policy setting does not have any impact on LDAP simple bind (ldap_simple_bind) or LDAP simple bind through SSL (ldap_simple_bind_s). No Microsoft LDAP clients that are included with Windows XP Professional use ldap_simple_bind or ldap_simple_bind_s to communicate with a Domain Controller.  The recommended state for this setting is: Negotiate signing. Configuring this setting to Require signing also conforms to the benchmark."
    rationale: "Unsigned network traffic is susceptible to man-in-the-middle attacks in which an intruder captures the packets between the client and server, modifies them, and then forwards them to the server. For an LDAP server, this susceptibility means that an attacker could cause a server to make decisions that are based on false or altered data from the LDAP queries. To lower this risk in your network, you can implement strong physical security measures to protect the network infrastructure. Also, you can make all types of man-in-the-middle attacks extremely difficult if you require digital signatures on all network packets by means of IPsec authentication headers."
