@@ -294,7 +294,7 @@ checks:
      - 'f:$mysql-cnfs -> r:master_info_repository\s*=\s*table'
 
 #10 Enterprise rules
-- id: 4519
+ - id: 4519
    title: "Ensure audit_log_connection_policy is not set to 'NONE'"
    description: "The audit_log_connection_policy variable controls how the audit plugin writes connection events to the audit log file. "
    rationale: "The audit_log_connection_policy offers three options: NONE, ERRORS, and ALL. Each option determines whether connection events are logged and the type of connection events that are logged. Setting a non 'NONE' value for audit_log_connection_policy ensures at a minimum, failed connection events are being logged. The ERRORS setting will log failed connection events and the ALL setting will log all connection events. For MySQL versions => 5.6.20, the audit_log_policy variable can override the audit_log_connection_policy, potentially invalidating this benchmark recommendation, therefore enforcing a setting for audit_log_connection_policy ensures the integrity of this recommendation."
