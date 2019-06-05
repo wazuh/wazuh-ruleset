@@ -297,6 +297,7 @@ checks:
       - cis_csc: "9.2"
       - cis: "2.2.9"
       - pci_dss: "2.2.3"
+      - nist_800_53: "CM.1"
     condition: none
     rules:
       - 'f:/etc/inetd.conf -> !r:^# && r:/ftp'
@@ -310,6 +311,7 @@ checks:
       - cis_csc: "9.2"
       - cis: "2.2.9"
       - pci_dss: "2.2.3"
+      - nist_800_53: "CM.1"
     condition: none
     rules:
       - 'f:/etc/inetd.conf -> !r:^# && r:tftp'
@@ -444,6 +446,7 @@ checks:
       - cis_csc: "2.6, 4.5"
       - cis: "2.3.4"
       - pci_dss: "2.2.3"
+      - nist_800_53: "CM.1"
     condition: none
     rules:
       - 'f:/etc/inetd.conf -> !r:^# && r:telnet'
@@ -509,6 +512,7 @@ checks:
       - cis: "5.2.4"
       - pci_dss: "4.1"
       - hipaa: "164.312.a.2.IV, 164.312.e.1, 164.312.e.2.I, 164.312.e.2.II"
+      - nist_800_53: "SC.8"
     condition: all
     rules:
       - 'f:/etc/ssh/sshd_config -> n:^\s*\t*Protocol\s*\t*(\d+) compare > 1'
@@ -523,6 +527,7 @@ checks:
       - cis: "5.2.8"
       - pci_dss: "4.1"
       - hipaa: "164.312.a.2.IV, 164.312.e.1, 164.312.e.2.I, 164.312.e.2.II"
+      - nist_800_53: "SC.8"
     condition: none
     rules:
       - 'f:/etc/ssh/sshd_config -> r:^\s*\t*IgnoreRhosts\.+no'
@@ -537,6 +542,7 @@ checks:
       - cis: "5.2.9"
       - pci_dss: "4.1"
       - hipaa: "164.312.a.2.IV, 164.312.e.1, 164.312.e.2.I, 164.312.e.2.II"
+      - nist_800_53: "SC.8"
     condition: none
     rules:
       - 'f:/etc/ssh/sshd_config -> r:^\s*\t*HostbasedAuthentication\.+yes'
@@ -551,6 +557,7 @@ checks:
       - cis: "5.2.10"
       - pci_dss: "4.1"
       - hipaa: "164.312.a.2.IV, 164.312.e.1, 164.312.e.2.I, 164.312.e.2.II"
+      - nist_800_53: "SC.8"
     condition: all
     rules:
       - 'f:/etc/ssh/sshd_config -> r:^\s*\t*PermitRootLogin\.+no'
@@ -565,6 +572,7 @@ checks:
       - cis: "5.2.11"
       - pci_dss: "4.1"
       - hipaa: "164.312.a.2.IV, 164.312.e.1, 164.312.e.2.I, 164.312.e.2.II"
+      - nist_800_53: "SC.8"
     condition: none
     rules:
       - 'f:/etc/ssh/sshd_config -> r:^\s*\t*PermitEmptyPasswords\.+yes'
@@ -580,6 +588,7 @@ checks:
       - cis: "6.2.1"
       - pci_dss: "10.2.5"
       - hipaa: "164.312.b"
+      - nist_800_53: "IA.10, AC.7"
     condition: none
     rules:
       - 'f:/etc/shadow -> r:^\w+::'
@@ -594,6 +603,7 @@ checks:
       - cis: "6.2.5"
       - pci_dss: "10.2.5"
       - hipaa: "164.312.b"
+      - nist_800_53: "IA.10, AC.7"
     condition: none
     rules:
       - 'f:/etc/passwd -> !r:^# && !r:^\s*\t*root: && r:^\w+:\w+:0:'

@@ -27,6 +27,7 @@ checks:
     compliance:
       - pci_dss: "10.6.1"
       - hipaa: "164.312.b"
+      - nist_800_53: "AU.6"
     condition: all
     rules:
       - 'r:HKLM\Software\Microsoft\Windows\CurrentVersion\Policies\System -> DisableRegistryTools'
@@ -37,6 +38,7 @@ checks:
     compliance:
       - pci_dss: "10.6.1"
       - hipaa: "164.312.b"
+      - nist_800_53: "AU.6"
     references:
       - https://support.microsoft.com/es-es/help/825750/how-to-disable-dcom-support-in-windows
     condition: all
@@ -48,6 +50,7 @@ checks:
     compliance:
       - pci_dss: "10.6.1, 11.4"
       - hipaa: "164.312.b"
+      - nist_800_53: "AU.6, IA.10"
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\LSA -> LMCompatibilityLevel'
@@ -59,6 +62,7 @@ checks:
     compliance:
       - pci_dss: "10.6.1"
       - hipaa: "164.312.b"
+      - nist_800_53: "AU.6"
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Security Center -> FirewallDisableNotify'
@@ -75,6 +79,7 @@ checks:
     compliance:
       - pci_dss: "10.6.1, 1.4"
       - hipaa: "164.312.b, 164.312.a.1"
+      - nist_800_53: "AU.6, SC.7"
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\software\policies\microsoft\windowsfirewall\domainprofile -> enablefirewall'
@@ -85,6 +90,7 @@ checks:
     title: "Ensure Null sessions are disallowed"
     compliance:
       - pci_dss: "11.4"
+      - nist_800_53: "IA.10"
     condition: all
     rules:
       - 'r:HKLM\System\CurrentControlSet\Control\Lsa -> RestrictAnonymous'
@@ -94,6 +100,7 @@ checks:
     compliance:
       - pci_dss: "10.6.1"
       - hipaa: "164.312.b"
+      - nist_800_53: "AU.6"
     references:
       - https://windowsir.blogspot.com/2007/04/something-new-to-look-for.html
     condition: all
@@ -115,6 +122,7 @@ checks:
     compliance:
       - pci_dss: "10.6.1"
       - hipaa: "164.312.b"
+      - nist_800_53: "AU.6"
     condition: any
     rules:
       - 'not r:HKLM\Software\Microsoft\Windows NT\CurrentVersion\Winlogon -> DefaultPassword'
@@ -125,6 +133,7 @@ checks:
     compliance:
       - pci_dss: "10.6.1"
       - hipaa: "164.312.b"
+      - nist_800_53: "AU.6"
     condition: none
     rules:
       - 'f:%WINDIR%\System32\drivers\npf.sys'

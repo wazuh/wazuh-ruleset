@@ -45,6 +45,7 @@ checks:
     title: "Web exploits: '.yop' is an uncommon file name inside htdocs - Possible compromise"
     compliance:
       - pci_dss: "6.5, 6.6, 11.4"
+      - nist_800_53: "SA.11, IA.10"
     condition: any
     rules:
       - 'd:$web_dirs -> ^.yop$'
@@ -52,6 +53,7 @@ checks:
     title: "Web exploits: 'id' is an uncommon file name inside htdocs - Possible compromise"
     compliance:
       - pci_dss: "6.5, 6.6, 11.4"
+      - nist_800_53: "SA.11, IA.10"
     condition: any
     rules:
       - 'd:$web_dirs -> ^id$'
@@ -59,6 +61,7 @@ checks:
     title: "Web exploits: '.ssh' is an uncommon file name inside htdocs"
     compliance:
       - pci_dss: "6.5, 6.6, 11.4"
+      - nist_800_53: "SA.11, IA.10"
     condition: any
     rules:
       - 'd:$web_dirs -> ^.ssh$'
@@ -66,6 +69,7 @@ checks:
     title: "Web exploits: '...' is an uncommon file name inside htdocs - Possible compromise"
     compliance:
       - pci_dss: "6.5, 6.6, 11.4"
+      - nist_800_53: "SA.11, IA.10"
     condition: any
     rules:
       - 'd:$web_dirs -> ^...$'
@@ -73,6 +77,7 @@ checks:
     title: "Web exploits: '.shell' is an uncommon file name inside htdocs - Possible compromise"
     compliance:
       - pci_dss: "6.5, 6.6, 11.4"
+      - nist_800_53: "SA.11, IA.10"
     condition: any
     rules:
       - 'd:$web_dirs -> ^.shell$'
@@ -81,6 +86,7 @@ checks:
     title: "Web vulnerability - Outdated WordPress installation"
     compliance:
       - pci_dss: "6.5, 6.6, 11.4"
+      - nist_800_53: "SA.11, IA.10"
     condition: any
     rules:
       - 'd:$web_dirs -> ^version.php$ -> IN r:^\.wp_version && >:$wp_version = ''4.4.2'''
@@ -88,6 +94,7 @@ checks:
     title: "Web vulnerability - Outdated Joomla installation"
     compliance:
       - pci_dss: "6.5, 6.6, 11.4"
+      - nist_800_53: "SA.11, IA.10"
     condition: any
     rules:
       - 'd:$web_dirs -> ^version.php$ -> IN r:var \.RELEASE && r:''3.4.8'''
@@ -95,6 +102,7 @@ checks:
     title: "Web vulnerability - Outdated osCommerce (v2.2) installation"
     compliance:
       - pci_dss: "6.5, 6.6, 11.4"
+      - nist_800_53: "SA.11, IA.10"
     condition: any
     rules:
       - "d:$web_dirs -> ^application_top.php$ -> r:'osCommerce 2.2-;"
@@ -103,6 +111,7 @@ checks:
     title: "Web vulnerability - Backdoors / Web based malware found - eval(base64_decode)"
     compliance:
       - pci_dss: "6.5, 6.6, 11.4"
+      - nist_800_53: "SA.11, IA.10"
     condition: any
     rules:
       - 'd:$web_dirs -> .php$ -> r:eval\(base64_decode\(\paWYo'
@@ -110,6 +119,7 @@ checks:
     title: "Web vulnerability - Backdoors / Web based malware found - eval(base64_decode(POST))"
     compliance:
       - pci_dss: "6.5, 6.6, 11.4"
+      - nist_800_53: "SA.11, IA.10"
     condition: any
     rules:
       - 'd:$web_dirs -> .php$ -> r:eval\(base64_decode\(\S_POST'
@@ -117,6 +127,7 @@ checks:
     title: "Web vulnerability - .htaccess file compromised"
     compliance:
       - pci_dss: "6.5, 6.6, 11.4"
+      - nist_800_53: "SA.11, IA.10"
     references:
       - https://blog.sucuri.net/2011/05/understanding-htaccess-attacks-part-1.html
     condition: any
@@ -126,6 +137,7 @@ checks:
     title: "Web vulnerability - .htaccess file compromised - auto append"
     compliance:
       - pci_dss: "6.5, 6.6, 11.4"
+      - nist_800_53: "SA.11, IA.10"
     references:
       - https://blog.sucuri.net/2011/05/understanding-htaccess-attacks-part-1.html
     condition: any

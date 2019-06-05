@@ -390,6 +390,7 @@ checks:
       - cis: "2.2.19"
       - cis_csc: "9.1"
       - pci_dss: "2.2.3"
+      - nist_800_53: "CM.1"
     condition: none
     rules:
       - 'f:/etc/xinetd.d/telnet -> !r:^# && r:disable && r:no'
@@ -405,6 +406,7 @@ checks:
       - cis: "2.2.17"
       - cis_csc: "9.1"
       - pci_dss: "2.2.3"
+      - nist_800_53: "CM.1"
     condition: none
     rules:
       - 'f:/etc/xinetd.d/rlogin -> !r:^# && r:disable && r:no'
@@ -424,6 +426,7 @@ checks:
       - cis: "2.3.1"
       - cis_csc: "2"
       - pci_dss: "2.2.3"
+      - nist_800_53: "CM.1"
     condition: none
     rules:
       - 'd:$rc_dirs -> ^S\d\dypbind$'
@@ -439,6 +442,7 @@ checks:
       - cis: "2.2.16"
       - cis_csc: "9.1"
       - pci_dss: "2.2.3"
+      - nist_800_53: "CM.1"
     condition: none
     rules:
       - 'd:$rc_dirs -> ^S\d\dypserv$'
@@ -454,6 +458,7 @@ checks:
       - cis: "2.2.20"
       - cis_csc: "9.1"
       - pci_dss: "2.2.3"
+      - nist_800_53: "CM.1"
     condition: none
     rules:
       - 'f:/etc/xinetd.d/tftpd -> !r:^# && r:disable && r:no'
@@ -469,6 +474,7 @@ checks:
       - cis: "2.2.18"
       - cis_csc: "9.1"
       - pci_dss: "2.2.3"
+      - nist_800_53: "CM.1"
     condition: none
     rules:
       - 'f:/etc/xinetd.d/talk -> !r:^# && r:disable && r:no'
@@ -918,6 +924,7 @@ checks:
       - cis_csc: "3.4"
       - pci_dss: "4.1"
       - hipaa: "164.312.a.2.IV, 164.312.e.1, 164.312.e.2.I, 164.312.e.2.II"
+      - nist_800_53: "SC.8"
     condition: all
     rules:
       - 'f:$sshd_file -> r:^\s*\t*Protocol\s*\t*2'
@@ -933,6 +940,7 @@ checks:
       - cis_csc: "16"
       - pci_dss: "4.1"
       - hipaa: "164.312.a.2.IV, 164.312.e.1, 164.312.e.2.I, 164.312.e.2.II"
+      - nist_800_53: "SC.8"
     condition: all
     rules:
       - 'f:$sshd_file -> !r:^# && r:LogLevel\.+INFO'
@@ -962,6 +970,7 @@ checks:
       - cis_csc: "9"
       - pci_dss: "4.1"
       - hipaa: "164.312.a.2.IV, 164.312.e.1, 164.312.e.2.I, 164.312.e.2.II"
+      - nist_800_53: "SC.8"
     condition: all
     rules:
       - 'f:$sshd_file -> !r:^# && r:IgnoreRhosts\.+yes'
@@ -977,6 +986,7 @@ checks:
       - cis_csc: "9"
       - pci_dss: "4.1"
       - hipaa: "164.312.a.2.IV, 164.312.e.1, 164.312.e.2.I, 164.312.e.2.II"
+      - nist_800_53: "SC.8"
     condition: all
     rules:
       - 'f:$sshd_file -> r:^\s*\t*HostbasedAuthentication\.+no'
@@ -992,6 +1002,7 @@ checks:
       - cis_csc: "5.8"
       - pci_dss: "4.1"
       - hipaa: "164.312.a.2.IV, 164.312.e.1, 164.312.e.2.I, 164.312.e.2.II"
+      - nist_800_53: "SC.8"
     condition: all
     rules:
       - 'f:$sshd_file -> r:^\s\t**PermitRootLogin\.+no'
@@ -1007,6 +1018,7 @@ checks:
       - cis_csc: "16"
       - pci_dss: "4.1"
       - hipaa: "164.312.a.2.IV, 164.312.e.1, 164.312.e.2.I, 164.312.e.2.II"
+      - nist_800_53: "SC.8"
     condition: all
     rules:
       - 'f:$sshd_file -> r:^\s*\t*PermitEmptyPasswords\.+no'
@@ -1028,6 +1040,7 @@ checks:
       - cis_csc: "5.1"
       - pci_dss: "10.2.5"
       - hipaa: "164.312.b"
+      - nist_800_53: "IA.10, AC.7"
     condition: none
     rules:
       - 'f:/etc/passwd -> !r:^# && !r:^\s*\t*root: && r:^\w+:\w+:0:'
@@ -1038,6 +1051,7 @@ checks:
     compliance:
       - pci_dss: "10.2.5"
       - hipaa: "164.312.b"
+      - nist_800_53: "IA.10, AC.7"
     condition: none
     rules:
       - 'f:/etc/shadow -> r:^\w+::'
