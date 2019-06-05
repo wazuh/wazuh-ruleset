@@ -506,7 +506,7 @@ checks:
    condition: all
    rules:
      - 'f:$main-conf -> !r:^# && n:timeout\s+(\d+) compare <= 10'
-     
+
 #9.2:Set the KeepAlive directive to On
  - id: 3532
    title: "Ensure KeepAlive Is Enabled"
@@ -522,7 +522,7 @@ checks:
    condition: none
    rules:
      - 'f:$main-conf -> !r:^# && r:keepalive\s+off'
-     
+
 #9.3:Set MaxKeepAliveRequests to 100 or greater
  - id: 3533
    title: "The MaxKeepAliveRequests directive limits the number of requests allowed per connection when KeepAlive is on. If it is set to 0 , unlimited requests will be allowed. It is recommended that the MaxKeepAliveRequests directive be set to 100 or greater."

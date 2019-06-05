@@ -27,7 +27,7 @@ requirements:
 
 variables:
   $sshd_file: /etc/ssh/sshd_config
-  $rc_dirs: /etc/rc.d/rc2.d,/etc/rc.d/rc3.d,/etc/rc.d/rc4.d,/etc/rc.d/rc5.d;
+  $rc_dirs: /etc/rc.d/rc2.d,/etc/rc.d/rc3.d,/etc/rc.d/rc4.d,/etc/rc.d/rc5.d
 
 checks:
 # Section 1.1 - Filesystem Configuration
@@ -166,7 +166,7 @@ checks:
    condition: all
    rules:
      - 'f:/etc/fstab -> !r:^# && r:/media && r:nodev'
- 
+
  # 1.1.19 nosuid on removable media partitions (not scored)
  - id: 7013
    title: "Ensure nosuid option set on removable media partitions"
@@ -233,7 +233,7 @@ checks:
    condition: all
    rules:
      - 'f:/etc/fstab -> !r:^# && r:/dev/shm && r:noexec'
- 
+
 ###############################################
 # 1.4  Secure Boot Settings
 ###############################################

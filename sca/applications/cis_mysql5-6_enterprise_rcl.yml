@@ -138,7 +138,7 @@ checks:
    condition: all
    rules:
      - 'f:$mysql-cnfs -> !r:secure_file_priv=\s*\S+\s*'
-    
+
  - id: 4508
    title: "Ensure 'sql_mode' Contains 'STRICT_ALL_TABLES'"
    description: "When data changing statements are made (i.e. INSERT, UPDATE), MySQL can handle invalid or missing values differently depending on whether strict SQL mode is enabled. When strict SQL mode is enabled, data may not be truncated or otherwise 'adjusted' to make the data changing statement work."
@@ -177,7 +177,7 @@ checks:
    condition: all
    rules:
      - 'f:$mysql-cnfs -> r:log_bin\s*\t*.+\s*\t*$ && !r:log_bin\s*\t*/+\s*\t*$|log_bin\s*\t*/+var/*\s*\t*$|log_bin\s*\t*/+usr/*\s*\t*$'
-     
+
  - id: 4511
    title: "Ensure 'log_warning' is set to 2"
    description: "The log_warnings system variable, enabled by default, provides additional information to the MySQL log.  A value of 1 enables logging of warning messages, and higher integer values tend to enable more logging."

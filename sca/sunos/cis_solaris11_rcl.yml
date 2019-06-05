@@ -178,7 +178,7 @@ checks:
    rules:
      - 'f:/etc/hosts.allow'
      - 'f:/etc/hosts.deny'
-     
+
  - id: 11512
    title: "Disable Telnet Service"
    description: "The telnet daemon, which accepts connections from users from other systems via the telnet protocol and can be used for remote shell access."
@@ -555,7 +555,7 @@ checks:
      - 'f:/etc/default/passwd -> r:^whitespace\pyes'
      - 'f:/etc/default/passwd -> r:^dictiondbdir\p/var/passwd'
      - 'f:/etc/default/passwd -> r:^dictionlist\p/usr/share/lib/dict/words'
-     
+
  - id: 11539
    title: "Set Default umask for users"
    description: "The default umask(1) determines the permissions of files created by users. The user creating the file has the discretion of making their files and directories readable by others via the chmod(1) command. Users who wish to allow their files and directories to be readable by others by default may choose a different default umask by inserting the umask command into the standard shell configuration files (.profile, .cshrc, etc.) in their home directories."
@@ -684,7 +684,7 @@ checks:
      - 'f:/etc/shadow -> r:xvm && !r::\p*LK\p*:'
      - 'f:/etc/shadow -> r:upnp && !r::NL:|:NP:'
      - 'f:/etc/shadow -> r:zfssnap && !r::NL:|:NP:'
-  
+
  - id: 11548
    title: "Ensure Password Fields are Not Empty"
    description: "An account with an empty password field means that anybody may log in as that user without providing a password at all (assuming that the value PASSREQ=NO is set in /etc/default/login)."
