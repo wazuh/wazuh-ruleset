@@ -320,7 +320,7 @@ checks:
    rules:
      - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters -> AutoDisconnect'
      - 'not r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters -> AutoDisconnect -> 0'
-     - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters -> AutoDisconnect -> n:(\d+) compare <= 15'
+     - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters -> AutoDisconnect -> n:^(\d+) compare <= 15'
 
  - id: 9022
    title: "Ensure 'Microsoft network server: Digitally sign communications (always)' is set to 'Enabled'"
@@ -1217,7 +1217,7 @@ checks:
    condition: all
    rules:
      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft Services\AdmPwd -> PasswordAgeDays'
-     - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft Services\AdmPwd -> PasswordAgeDays -> n: ^(\d+) compare <= 30'
+     - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft Services\AdmPwd -> PasswordAgeDays -> n:^(\d+) compare <= 30'
 
 # Section 18.3 - MS Security Guide
  - id: 9091
