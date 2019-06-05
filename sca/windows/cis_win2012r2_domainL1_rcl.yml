@@ -836,7 +836,7 @@ checks:
    condition: all
    rules:
      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\DomainProfile\Logging -> LogFileSize'
-     - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\DomainProfile\Logging -> LogFileSize -> n:(\d+) compare >= 16384'
+     - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\DomainProfile\Logging -> LogFileSize -> n:^(\d+) compare >= 16384'
 
  - id: 8062
    title: "Ensure 'Windows Firewall: Domain: Logging: Log dropped packets' is set to 'Yes'"
