@@ -97,7 +97,7 @@ checks:
     - https://dev.mysql.com/doc/refman/5.6/en/load-data.html
    condition: all
    rules:
-     - 'f:$mysql-cnfs -> r:local-infile\s*=\*0$;'
+     - 'f:$mysql-cnfs -> r:local-infile\s*=\*0$'
 
  - id: 4505
    title: "Ensure 'mysqld' Is Not Started with '--skip-grant-tables'"
@@ -110,7 +110,7 @@ checks:
     - https://dev.mysql.com/doc/refman/5.6/en/server-options.html#option_mysqld_skip-grant-tables
    condition: all
    rules:
-     - 'f:$mysql-cnfs -> r:skip-grant-tables\s*=\s*false;'
+     - 'f:$mysql-cnfs -> r:skip-grant-tables\s*=\s*false'
 
  - id: 4506
    title: "Ensure '--skip-symbolic-links' Is Enabled"
@@ -137,7 +137,7 @@ checks:
     - https://dev.mysql.com/doc/refman/5.6/en/server-system-variables.html#sysvar_secure_file_priv
    condition: all
    rules:
-     - 'f:$mysql-cnfs -> !r:secure_file_priv=\s*\S+\s*;'
+     - 'f:$mysql-cnfs -> !r:secure_file_priv=\s*\S+\s*'
     
  - id: 4508
    title: "Ensure 'sql_mode' Contains 'STRICT_ALL_TABLES'"
@@ -271,13 +271,13 @@ checks:
     - https://dev.mysql.com/doc/refman/5.6/en/validate-password-plugin.html
    condition: none
    rules:
-     - 'f:$mysql-cnfs -> r:plugin-load\s*=\s*validate_password.so\s*$;'
-     - 'f:$mysql-cnfs -> r:validate-password\s*=\s*force_plus_permanent\s*$;'
-     - 'f:$mysql-cnfs -> r:validate_password_length\s*=\s*14\s$;'
-     - 'f:$mysql-cnfs -> r:validate_password_mixed_case_count\s*=\s*1\s*$;'
-     - 'f:$mysql-cnfs -> r:validate_password_number_count\s*=\s*1\s*$;'
-     - 'f:$mysql-cnfs -> r:validate_password_special_char_count\s*=\s*1;'
-     - 'f:$mysql-cnfs -> r:validate_password_policy\s*=\s*medium\s*;'
+     - 'f:$mysql-cnfs -> r:plugin-load\s*=\s*validate_password.so\s*$'
+     - 'f:$mysql-cnfs -> r:validate-password\s*=\s*force_plus_permanent\s*$'
+     - 'f:$mysql-cnfs -> r:validate_password_length\s*=\s*14\s$'
+     - 'f:$mysql-cnfs -> r:validate_password_mixed_case_count\s*=\s*1\s*$'
+     - 'f:$mysql-cnfs -> r:validate_password_number_count\s*=\s*1\s*$'
+     - 'f:$mysql-cnfs -> r:validate_password_special_char_count\s*=\s*1'
+     - 'f:$mysql-cnfs -> r:validate_password_policy\s*=\s*medium\s*'
 
 #9 Replication
  - id: 4518
@@ -325,7 +325,7 @@ checks:
     - cis: "6.7"
    condition: all
    rules:
-     - 'f:$mysql-cnfs -> !r:^# && r:audit_log_include_accounts\s*=\s* && r:null\s*$;'
+     - 'f:$mysql-cnfs -> !r:^# && r:audit_log_include_accounts\s*=\s* && r:null\s*$'
 
  - id: 4522
    title: "Ensure audit_log_policy is set to log logins and connections"
