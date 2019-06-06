@@ -47,8 +47,7 @@ checks:
       - AJ Lewis, "LVM HOWTO", https://tldp.org/HOWTO/LVM-HOWTO/
     condition: all
     rules:
-      - 'd:/tmp'
-      - 'f:/etc/fstab -> !r:^# && r:/tmp'
+      - 'c:mount -> r:\s/tmp\s'
 
 # 1.1.3 /tmp: nodev
   - id: 6501
@@ -59,10 +58,10 @@ checks:
     compliance:
       - cis: "1.1.3"
       - pci_dss: "2.2.4"
-    condition: all
+    condition: any
     rules:
-      - 'd:/tmp'
-      - 'f:/etc/fstab -> !r:^# && r:/tmp && r:nodev'
+      - 'not c:mount -> r:\s/tmp\s'
+      - 'c:mount -> r:\s/tmp\s && r:nodev'
 
 # 1.1.4 /tmp: nosuid
   - id: 6502
@@ -75,7 +74,8 @@ checks:
       - pci_dss: "2.2.4"
     condition: all
     rules:
-      - 'f:/etc/fstab -> !r:^# && r:/tmp && r:nosuid'
+      - 'not c:mount -> r:\s/tmp\s'
+      - 'c:mount -> r:\s/tmp\s && r:nosuid'
 
 # 1.1.5 /tmp: noexec
   - id: 6503
@@ -89,7 +89,8 @@ checks:
       - pci_dss: "2.2.4"
     condition: all
     rules:
-      - 'f:/etc/fstab -> !r:^# && r:/tmp && r:noexec'
+      - 'not c:mount -> r:\s/tmp\s'
+      - 'c:mount -> r:\s/tmp\s && r:noexec'
 
 # 1.1.6 Build considerations - Partition scheme.
   - id: 6504
@@ -103,8 +104,7 @@ checks:
       - AJ Lewis, "LVM HOWTO", https://tldp.org/HOWTO/LVM-HOWTO/
     condition: all
     rules:
-      - 'd:/var'
-      - 'f:/etc/fstab -> !r^# && r:/var'
+      - 'c:mount -> r:\s/var\s'
 
 # 1.1.7 bind mount /var/tmp to /tmp
   - id: 6505
@@ -116,7 +116,7 @@ checks:
       - cis: "1.1.7"
     condition: all
     rules:
-      - 'f:/etc/fstab -> !r:^# && r:/var/tmp && r:bind'
+      - 'c:mount -> r:\s/var/tmp\s'
 
 # 1.1.11 /var/log: partition
   - id: 6506
@@ -131,7 +131,7 @@ checks:
       - AJ Lewis, "LVM HOWTO", https://tldp.org/HOWTO/LVM-HOWTO/
     condition: all
     rules:
-      - 'f:/etc/fstab -> !r:^# && r:/var/log'
+      - 'c:mount -> r:\s/var/log\s'
 
 # 1.1.12 /var/log/audit: partition
   - id: 6507
@@ -146,7 +146,7 @@ checks:
       - AJ Lewis, "LVM HOWTO", https://tldp.org/HOWTO/LVM-HOWTO/
     condition: all
     rules:
-      - 'f:/etc/fstab -> !r:^# && r:/var/log/audit'
+      - 'c:mount -> r:\s/var/log/audit\s'
 
 # 1.1.13 /home: partition
   - id: 6508
@@ -160,7 +160,7 @@ checks:
       - AJ Lewis, "LVM HOWTO", https://tldp.org/HOWTO/LVM-HOWTO/
     condition: all
     rules:
-      - 'f:/etc/fstab -> !r:^# && r:/home'
+      - 'c:mount -> r:\s/home\s'
 
 # 1.1.14 /home: nodev
   - id: 6509
@@ -171,49 +171,10 @@ checks:
     compliance:
       - cis: "1.1.14"
       - pci_dss: "2.2.4"
-    condition: all
+    condition: any
     rules:
-      - 'f:/etc/fstab -> !r:^# && r:/home && r:nodev'
-
-# 1.1.18 nodev on removable media partitions (not scored)
-  - id: 6510
-    title: "Ensure nodev option set on removable media partitions"
-    description: "The nodev mount option specifies that the filesystem cannot contain special devices."
-    rationale: "Removable media containing character and block special devices could be used to circumvent security controls by allowing non-root users to access sensitive device files such as /dev/kmem or the raw disk partitions."
-    remediation: "Edit the /etc/fstab file and add nodev to the fourth field (mounting options) of all removable media partitions. Look for entries that have mount points that contain words such as floppy or cdrom. See the fstab(5) manual page for more information."
-    compliance:
-      - cis: "1.1.18"
-      - pci_dss: "2.2.4"
-    condition: all
-    rules:
-      - 'f:/etc/fstab -> !r:^# && r:/media && r:nodev'
-
-# 1.1.19 nosuid on removable media partitions (not scored)
-  - id: 6511
-    title: "Ensure nosuid option set on removable media partitions"
-    description: "The nosuid mount option specifies that the filesystem cannot contain setuid files."
-    rationale: "Setting this option on a file system prevents users from introducing privileged programs onto the system and allowing non-root users to execute them."
-    remediation: "Edit the /etc/fstab file and add nosuid to the fourth field (mounting options) of all removable media partitions. Look for entries that have mount points that contain words such as floppy or cdrom."
-    compliance:
-      - cis: "1.1.19"
-      - pci_dss: "2.2.4"
-    condition: all
-    rules:
-      - 'f:/etc/fstab -> !r:^# && r:/media && r:nosuid'
-
-# 1.1.20 noexec on removable media partitions (not scored)
-  - id: 6512
-    title: "Ensure noexec option set on removable media partitions"
-    description: "The noexec mount option specifies that the filesystem cannot contain executable binaries."
-    rationale: "Setting this option on a file system prevents users from executing programs from the removable media. This deters users from being able to introduce potentially malicious software on the system."
-    remediation: "Edit the /etc/fstab file and add noexec to the fourth field (mounting options) of all removable media partitions. Look for entries that have mount points that contain words such as floppy or cdrom."
-    compliance:
-      - cis: "1.1.20"
-      - cis_csc: "8"
-      - pci_dss: "2.2.4"
-    condition: all
-    rules:
-      - 'f:/etc/fstab -> !r:^# && r:/media && r:noexec'
+      - 'not c:mount -> r:\s/home\s'
+      - 'c:mount -> r:\s/home\s && r:nodev'
 
 # 1.1.15 /dev/shm: nodev
   - id: 6513
@@ -226,7 +187,8 @@ checks:
       - pci_dss: "2.2.4"
     condition: all
     rules:
-      - 'f:/etc/fstab -> !r:^# && r:/dev/shm && r:nodev'
+      - 'not c:mount -> r:\s/dev/shm\s'
+      - 'c:mount -> r:\s/dev/shm\s && r:nodev'
 
 # 1.1.16 /dev/shm: nosuid
   - id: 6514
@@ -239,7 +201,8 @@ checks:
       - pci_dss: "2.2.4"
     condition: all
     rules:
-      - 'f:/etc/fstab -> !r:^# && r:/dev/shm && r:nosuid'
+      - 'not c:mount -> r:\s/dev/shm\s'
+      - 'c:mount -> r:\s/dev/shm\s && r:nosuid'
 
 # 1.1.17 /dev/shm: noexec
   - id: 6515
@@ -253,26 +216,12 @@ checks:
       - pci_dss: "2.2.4"
     condition: all
     rules:
-      - 'f:/etc/fstab -> !r:^# && r:/dev/shm && r:noexec'
+      - 'not c:mount -> r:\s/dev/shm\s'
+      - 'c:mount -> r:\s/dev/shm\s && r:noexec'
 
 ###############################################
 # 1.6 Configure SELinux
 ###############################################
-# 1.6.1.1 enable selinux in /etc/grub.conf
-  - id: 6516
-    title: "Ensure SELinux is not disabled in bootloader configuration"
-    description: "Configure SELINUX to be enabled at boot time and verify that it has not been overwritten by the grub boot parameters."
-    rationale: "SELinux must be enabled at boot time in your grub configuration to ensure that the controls it provides are not overridden."
-    remediation: "Edit /etc/default/grub and remove all instances of selinux=0 and enforcing=0 from all CMDLINE_LINUX parameters: GRUB_CMDLINE_LINUX_DEFAULT='quiet'; GRUB_CMDLINE_LINUX=''"
-    compliance:
-      - cis: "1.6.1.1"
-      - cis_csc: "14.4"
-      - pci_dss: "2.2.4"
-    condition: none
-    rules:
-      - 'f:/etc/grub.conf -> r:selinux=0'
-      - 'f:/etc/grub2.cfg -> r:selinux=0'
-
 # 1.6.1.2 Set selinux state
   - id: 6517
     title: "Ensure the SELinux state is enforcing"
@@ -285,7 +234,10 @@ checks:
       - pci_dss: "2.2.4"
     condition: all
     rules:
-      - 'f:/etc/selinux/config -> r:SELINUX=enforcing'
+      - 'c:sestatus -> r:^SELinux status:\s+enabled$'
+      - 'c:sestatus -> r:^Current mode:\s+enforcing$'
+      - 'c:sestatus -> r:^Mode from config file:\s+enforcing$'
+      - 'f:/etc/selinux/config -> r:^\s*SELINUX\s*=\s*enforcing'
 
 # 1.6.1.3 Set selinux policy
   - id: 6518
@@ -298,7 +250,8 @@ checks:
       - pci_dss: "2.2.4"
     condition: all
     rules:
-      - 'f:/etc/selinux/config -> r:SELINUXTYPE=targeted'
+      - 'c:sestatus -> r:^Loaded policy name:\s+targeted$'
+      - 'f:/etc/selinux/config -> r:^\s*SELINUXTYPE\s*=\s*targeted|^\s*SELINUXTYPE\s*=\s*mls'
 
 # 1.6.1.4 Remove SETroubleshoot
   - id: 6519
@@ -309,10 +262,9 @@ checks:
     compliance:
       - cis: "1.6.1.4"
       - pci_dss: "2.2.4"
-    condition: none
+    condition: all
     rules:
-      - 'd:$rc_dirs -> ^S\d\dsetroubleshoot$'
-      - 'f:/usr/share/dbus-1/services/sealert.service -> r:Exec=/usr/bin/sealert'
+      - 'c:rpm -q setroubleshoot -> r:^package setroubleshoot is not installed$'
 
 # 1.6.1.5 Disable MCS Translation service mcstrans
   - id: 6520
@@ -323,10 +275,9 @@ checks:
     compliance:
       - cis: "1.6.1.5"
       - pci_dss: "2.2.4"
-    condition: none
+    condition: all
     rules:
-      - 'd:$rc_dirs -> ^S\d\dmctrans$'
-      - 'f:/usr/lib/systemd/system/mcstransd.service -> r:ExecStart=/usr/sbin/mcstransd'
+      - 'c:rpm -q mcstrans -> r:^package mcstrans is not installed$'
 
 ###############################################
 # 1.4  Secure Boot Settings
@@ -334,7 +285,7 @@ checks:
 # 1.4.2 Set Boot Loader Password (Scored)
   - id: 6521
     title: "Ensure bootloader password is set"
-    description: "Setting the boot loader password will require that anyone rebooting the system must enter a password before being able to set command line boot parameters"
+    description: "Setting the boot loader password will require that anyone rebooting the system must enter a password before being able to set command line boot parameters."
     rationale: "Requiring a boot password upon execution of the boot loader will prevent an unauthorized user from entering boot parameters or changing the boot partition. This prevents users from weakening security (e.g. turning off SELinux at boot time)."
     remediation: "Create an encrypted password with grub2-setpassword: # grub2-setpassword"
     compliance:
@@ -343,7 +294,7 @@ checks:
       - pci_dss: "2.2.4"
     condition: all
     rules:
-      - 'f:/boot/grub2/grub.cfg -> !r:^# && r:password'
+      - 'f:/boot/grub2/grub.cfg -> !r:^# && r:^\s*GRUB2_PASSWORD\.$'
 
 ###############################################
 # 1.5  Additional Process Hardening
@@ -357,9 +308,13 @@ checks:
     compliance:
       - cis: "1.5.1"
       - cis_csc: "13"
-    condition: all
+    condition: any
     rules:
       - 'f:/etc/security/limits.conf -> !r:^# && r:hard\.+core\.+0'
+      - 'd:/etc/security/limits.d -> r:^\.+ -> !r:^# && r:hard\.+core\.+0'
+      - 'c:sysctl fs.suid_dumpable -> r:^fs.suid_dumpable\s*=\s*0\s*$'
+      - 'f:/etc/sysctl.conf -> !r:^# && r:^\s*fs.suid_dumpable\s*=\s*0\s*$'
+      - 'd:/etc/sysctl.d -> r:^\.+ -> !r:^# && r:^\s*fs.suid_dumpable\s*=\s*0\s*$'
 
 # 1.5.3 Enable Randomized Virtual Memory Region Placement (Scored)
   - id: 6523
@@ -372,7 +327,7 @@ checks:
       - cis_csc: "8.4"
     condition: all
     rules:
-      - 'f:/proc/sys/kernel/randomize_va_space -> r:^2$'
+      - 'c:sysctl kernel.randomize_va_space -> r:^\s*kernel.randomize_va_space\s*=\s*2'
 
 ###############################################
 # 2 OS Services
@@ -380,25 +335,24 @@ checks:
 ###############################################
 # 2.2 Remove Legacy Services
 ###############################################
-# 2.2.19 Remove telnet-server (Scored)
-  - id: 6524
-    title: "Ensure telnet server is disabled"
-    description: "The telnet-server package contains the telnet daemon, which accepts connections from users from other systems via the telnet protocol."
-    rationale: "The telnet protocol is insecure and unencrypted. The use of an unencrypted transmission medium could allow a user with access to sniff network traffic the ability to steal credentials. The ssh package provides an encrypted session and stronger security."
-    remediation: "Run the following command to disable telnet: # systemctl disable telnet.socket"
+# 2.2.16 Remove NIS Server (Scored)
+  - id: 6527
+    title: "Ensure NIS Server is not enabled"
+    description: "The Network Information Service (NIS) (formally known as Yellow Pages) is a client-server directory service protocol for distributing system configuration files. The NIS server is a collection of programs that allow for the distribution of configuration files."
+    rationale: "The NIS service is inherently an insecure system that has been vulnerable to DOS attacks, buffer overflows and has poor authentication for querying NIS maps. NIS generally been replaced by such protocols as Lightweight Directory Access Protocol (LDAP). It is recommended that the service be disabled and other, more secure services be used"
+    remediation: "Run the following command to disable ypserv: # systemctl disable ypserv"
     compliance:
-      - cis: "2.2.19"
+      - cis: "2.2.16"
       - cis_csc: "9.1"
       - pci_dss: "2.2.3"
       - nist_800_53: "CM.1"
     condition: none
     rules:
-      - 'f:/etc/xinetd.d/telnet -> !r:^# && r:disable && r:no'
-      - 'f:/usr/lib/systemd/system/telnet@.service -> r:ExecStart=-/usr/sbin/in.telnetd'
+      - 'c:systemctl is-enabled ypserv -> r:^enabled'
 
 # 2.2.17 Remove rsh-server (Scored)
   - id: 6525
-    title: "Ensure rsh server is disabled"
+    title: "Ensure rsh server is not enabled"
     description: "The Berkeley rsh-server ( rsh , rlogin , rexec ) package contains legacy services that exchange credentials in clear-text."
     rationale: "These legacy services contain numerous security exposures and have been replaced with the more secure SSH package."
     remediation: "Run the following commands to disable rsh, rlogin, and rexec: # systemctl disable rsh.socket   # systemctl disable rlogin.socket   # systemctl disable rexec.socket "
@@ -409,12 +363,69 @@ checks:
       - nist_800_53: "CM.1"
     condition: none
     rules:
-      - 'f:/etc/xinetd.d/rlogin -> !r:^# && r:disable && r:no'
-      - 'f:/etc/xinetd.d/rsh -> !r:^# && r:disable && r:no'
-      - 'f:/etc/xinetd.d/shell -> !r:^# && r:disable && r:no'
-      - 'f:/usr/lib/systemd/system/rexec@.service -> r:ExecStart'
-      - 'f:/usr/lib/systemd/system/rlogin@.service -> r:ExecStart'
-      - 'f:/usr/lib/systemd/system/rsh@.service -> r:ExecStart'
+      - 'c:systemctl is-enabled rsh.socket -> r:^enabled'
+      - 'c:systemctl is-enabled rlogin.socket -> r:^enabled'
+      - 'c:systemctl is-enabled rexec.socket -> r:^enabled'
+
+# 2.2.18 Remove talk server (Scored)
+  - id: 6525
+    title: "Ensure talk server is not enabled"
+    description: "The talk software makes it possible for users to send and receive messages across systems through a terminal session. The talk client (allows initiate of talk sessions) is installed by default."
+    rationale: "The software presents a security risk as it uses unencrypted protocols for communication."
+    remediation: "Run the following command to disable talk: # systemctl disable ntalk"
+    compliance:
+      - cis: "2.2.18"
+      - cis_csc: "9.1"
+      - pci_dss: "2.2.3"
+      - nist_800_53: "CM.1"
+    condition: none
+    rules:
+      - 'c:systemctl is-enabled ntalk -> r:^enabled'
+
+# 2.2.19 Remove telnet-server (Scored)
+  - id: 6524
+    title: "Ensure telnet server is not enabled"
+    description: "The telnet-server package contains the telnet daemon, which accepts connections from users from other systems via the telnet protocol."
+    rationale: "The telnet protocol is insecure and unencrypted. The use of an unencrypted transmission medium could allow a user with access to sniff network traffic the ability to steal credentials. The ssh package provides an encrypted session and stronger security."
+    remediation: "Run the following command to disable telnet: # systemctl disable telnet.socket"
+    compliance:
+      - cis: "2.2.19"
+      - cis_csc: "9.1"
+      - pci_dss: "2.2.3"
+      - nist_800_53: "CM.1"
+    condition: none
+    rules:
+      - 'c:systemctl is-enabled telnet.socket -> r:^enabled'
+
+# 2.2.20 Remove tftp server (Scored)
+  - id: 6525
+    title: "Ensure tftp server is not enabled"
+    description: "Trivial File Transfer Protocol (TFTP) is a simple file transfer protocol, typically used to automatically transfer configuration or boot machines from a boot server. The package tftp-server is used to define and support a TFTP server."
+    rationale: "TFTP does not support authentication nor does it ensure the confidentiality or integrity of data. It is recommended that TFTP be removed, unless there is a specific need for TFTP. In that case, extreme caution must be used when configuring the services."
+    remediation: "Run the following command to disable tftp: # systemctl disable tftp.socket"
+    compliance:
+      - cis: "2.2.20"
+      - cis_csc: "9.1"
+      - pci_dss: "2.2.3"
+      - nist_800_53: "CM.1"
+    condition: none
+    rules:
+      - 'c:systemctl is-enabled tftp.socket -> r:^enabled'
+
+# 2.2.21 Remove rsync service (Scored)
+  - id: 6525
+    title: "Ensure rsync service is not enabled"
+    description: "The rsyncd service can be used to synchronize files between systems over network links."
+    rationale: "The rsyncd service presents a security risk as it uses unencrypted protocols for communication."
+    remediation: "Run the following command to disable rsync: # systemctl disable rsyncd"
+    compliance:
+      - cis: "2.2.21"
+      - cis_csc: "9.1"
+      - pci_dss: "2.2.3"
+      - nist_800_53: "CM.1"
+    condition: none
+    rules:
+      - 'c:systemctl is-enabled rsyncd -> r:^enabled'
 
 # 2.3.1 Remove NIS Client (Scored)
   - id: 6526
@@ -427,149 +438,102 @@ checks:
       - cis_csc: "2"
       - pci_dss: "2.2.3"
       - nist_800_53: "CM.1"
-    condition: none
+    condition: all
     rules:
-      - 'd:$rc_dirs -> ^S\d\dypbind$'
-      - 'f:/usr/lib/systemd/system/ypbind.service -> r:Exec'
-
-# 2.2.16 Remove NIS Server (Scored)
-  - id: 6527
-    title: "Ensure NIS Server is disabled"
-    description: "The Network Information Service (NIS) (formally known as Yellow Pages) is a client-server directory service protocol for distributing system configuration files. The NIS server is a collection of programs that allow for the distribution of configuration files."
-    rationale: "The NIS service is inherently an insecure system that has been vulnerable to DOS attacks, buffer overflows and has poor authentication for querying NIS maps. NIS generally been replaced by such protocols as Lightweight Directory Access Protocol (LDAP). It is recommended that the service be disabled and other, more secure services be used"
-    remediation: "Run the following command to disable ypserv: # systemctl disable ypserv"
-    compliance:
-      - cis: "2.2.16"
-      - cis_csc: "9.1"
-      - pci_dss: "2.2.3"
-      - nist_800_53: "CM.1"
-    condition: none
-    rules:
-      - 'd:$rc_dirs -> ^S\d\dypserv$'
-      - 'f:/usr/lib/systemd/system/ypserv.service -> r:Exec'
-
-# 2.2.20 Remove tftp-server (Scored)
-  - id: 6528
-    title: "Ensure tftp server is disabled"
-    description: "Trivial File Transfer Protocol (TFTP) is a simple file transfer protocol, typically used to automatically transfer configuration or boot machines from a boot server. The package tftp-server is used to define and support a TFTP server."
-    rationale: "TFTP does not support authentication nor does it ensure the confidentiality or integrity of data. It is recommended that TFTP be removed, unless there is a specific need for TFTP. In that case, extreme caution must be used when configuring the services."
-    remediation: "Run the following command to disable tftp: # systemctl disable tftp.socket"
-    compliance:
-      - cis: "2.2.20"
-      - cis_csc: "9.1"
-      - pci_dss: "2.2.3"
-      - nist_800_53: "CM.1"
-    condition: none
-    rules:
-      - 'f:/etc/xinetd.d/tftpd -> !r:^# && r:disable && r:no'
-      - 'f:/usr/lib/systemd/system/tftp.service -> r:Exec'
-
-# 2.1.18 Remove talk-server (Scored)
-  - id: 6529
-    title: "Ensure talk server is disabled"
-    description: "The talk software makes it possible for users to send and receive messages across systems through a terminal session. The talk client (allows initiate of talk sessions) is installed by default."
-    rationale: "The software presents a security risk as it uses unencrypted protocols for communication."
-    remediation: "Run the following command to disable talk: # systemctl disable ntalk"
-    compliance:
-      - cis: "2.2.18"
-      - cis_csc: "9.1"
-      - pci_dss: "2.2.3"
-      - nist_800_53: "CM.1"
-    condition: none
-    rules:
-      - 'f:/etc/xinetd.d/talk -> !r:^# && r:disable && r:no'
-      - 'f:/usr/lib/systemd/system/ntalk.service -> r:Exec'
+      - 'c:rpm -q ypbind -> r:^package ypbind is not installed$'
 
 # 2.1.7 Remove xinetd (Scored)
   - id: 6530
-    title: "Ensure xinetd is disabled"
+    title: "Ensure xinetd is not enabled"
     description: "The eXtended InterNET Daemon ( xinetd ) is an open source super daemon that replaced the original inetd daemon. The xinetd daemon listens for well known services and dispatches the appropriate daemon to properly respond to service requests."
     rationale: "If there are no xinetd services required, it is recommended that the daemon be disabled."
     remediation: "Run the following command to disable xinetd: # systemctl disable xinetd"
     compliance:
       - cis: "2.1.7"
       - cis_csc: "9.1"
+      - pci_dss: "2.2.3"
+      - nist_800_53: "CM.1"
     condition: none
     rules:
-      - 'f:/usr/lib/systemd/system/xinetd.service -> r:Exec'
+      - 'c:systemctl is-enabled xinetd -> r:^enabled'
 
-# 2.1.1 Disable chargen-dgram (Scored)
+# 2.1.1 Disable chargen services (Scored)
   - id: 6531
-    title: "Ensure chargen services are is disabled"
+    title: "Ensure chargen services are not enabled"
     description: "chargen is a network service that responds with 0 to 512 ASCII characters for each connection it receives. This service is intended for debugging and testing purposes. It is recommended that this service be disabled."
     rationale: "Disabling this service will reduce the remote attack surface of the system."
     remediation: "Run the following commands to disable chargen-dgram and chargen-stream: # chkconfig chargen-dgram off; # chkconfig chargen-stream off"
     compliance:
       - cis: "2.1.1"
       - cis_csc: "9.1"
+      - pci_dss: "2.2.3"
+      - nist_800_53: "CM.1"
     condition: none
     rules:
-      - 'f:/etc/xinetd.d/chargen-dgram -> !r:^# && r:disable && r:no'
+      - 'c:chkconfig --list -> r:^\s*\t*chargen-dgram:\s*\t*on'
+      - 'c:chkconfig --list -> r:^\s*\t*chargen-stream:\s*\t*on'
 
-# 2.1.1 Disable chargen-stream (Scored)
-  - id: 6532
-    title: "Ensure chargen services are is disabled"
-    description: "chargen is a network service that responds with 0 to 512 ASCII characters for each connection it receives. This service is intended for debugging and testing purposes. It is recommended that this service be disabled."
-    rationale: "Disabling this service will reduce the remote attack surface of the system."
-    remediation: "Run the following commands to disable chargen-dgram and chargen-stream: # chkconfig chargen-dgram off; # chkconfig chargen-stream off"
-    compliance:
-      - cis: "2.1.1"
-      - cis_csc: "9.1"
-    condition: none
-    rules:
-      - 'f:/etc/xinetd.d/chargen-stream -> !r:^# && r:disable && r:no'
-
-# 2.1.2 Disable daytime-dgram (Scored)
+# 2.1.2 Disable daytime services (Scored)
   - id: 6533
-    title: "Ensure daytime services are is disabled"
+    title: "Ensure daytime services are not enabled"
     description: "daytime is a network service that responds with the server's current date and time. This service is intended for debugging and testing purposes. It is recommended that this service be disabled."
     rationale: "Disabling this service will reduce the remote attack surface of the system."
-    remediation: "Run the following commands to disable daytime -dgram and daytime -stream: # chkconfig daytime-dgram off; # chkconfig daytime-stream off"
+    remediation: "Run the following commands to disable daytime-dgram and daytime-stream: # chkconfig daytime-dgram off; # chkconfig daytime-stream off"
     compliance:
       - cis: "2.1.2"
       - cis_csc: "9.1"
     condition: none
     rules:
-      - 'f:/etc/xinetd.d/daytime-dgram -> !r:^# && r:disable && r:no'
+      - 'c:chkconfig --list -> r:^\s*\t*daytime-dgram:\s*\t*on'
+      - 'c:chkconfig --list -> r:^\s*\t*daytime-stream:\s*\t*on'
 
-# 2.1.2 Disable daytime-stream (Scored)
+# 2.1.3 Disable discard services (Scored)
   - id: 6534
-    title: "Ensure daytime services are is disabled"
-    description: "daytime is a network service that responds with the server's current date and time. This service is intended for debugging and testing purposes. It is recommended that this service be disabled."
+    title: "Ensure discard services are not enabled"
+    description: "discardis a network service that simply discards all data it receives. This service is intended for debugging and testing purposes. It is recommended that this service be disabled."
     rationale: "Disabling this service will reduce the remote attack surface of the system."
-    remediation: "Run the following commands to disable daytime -dgram and daytime -stream: # chkconfig daytime-dgram off; # chkconfig daytime-stream off"
+    remediation: "Run the following commands to disable discard-dgram and discard-stream: # chkconfig discard-dgram off; # chkconfig discard-stream off"
     compliance:
-      - cis: "2.1.2"
+      - cis: "2.1.3"
       - cis_csc: "9.1"
+      - pci_dss: "2.2.3"
+      - nist_800_53: "CM.1"
     condition: none
     rules:
-      - 'f:/etc/xinetd.d/daytime-stream -> !r:^# && r:disable && r:no'
+      - 'c:chkconfig --list -> r:^\s*\t*discard-dgram:\s*\t*on'
+      - 'c:chkconfig --list -> r:^\s*\t*discard-stream:\s*\t*on'
 
 # 2.1.4 Disable echo-dgram (Scored)
   - id: 6535
-    title: "Ensure echo services are is disabled"
+    title: "Ensure echo services are not enabled"
     description: "echo is a network service that responds to clients with the data sent to it by the client. This service is intended for debugging and testing purposes. It is recommended that this service be disabled."
     rationale: "Disabling this service will reduce the remote attack surface of the system."
-    remediation: "Run the following commands to disable echo -dgram and echo -stream: # chkconfig echo-dgram off; # chkconfig echo-stream off"
+    remediation: "Run the following commands to disable echo-dgram and echo-stream: # chkconfig echo-dgram off; # chkconfig echo-stream off"
     compliance:
       - cis: "2.1.4"
       - cis_csc: "9.1"
+      - pci_dss: "2.2.3"
+      - nist_800_53: "CM.1"
     condition: none
     rules:
-      - 'f:/etc/xinetd.d/echo-dgram -> !r:^# && r:disable && r:no'
+      - 'c:chkconfig --list -> r:^\s*\t*echo-dgram:\s*\t*on'
+      - 'c:chkconfig --list -> r:^\s*\t*echo-stream:\s*\t*on'
 
-# 2.1.4 Disable echo-stream (Scored)
+# 2.1.5 Disable time-stream (Scored)
   - id: 6536
-    title: "Ensure echo services are is disabled"
-    description: "echo is a network service that responds to clients with the data sent to it by the client. This service is intended for debugging and testing purposes. It is recommended that this service be disabled."
+    title: "Ensure time services are not enabled"
+    description: "time is a network service that responds with the server's current date and time as a 32 bit integer. This service is intended for debugging and testing purposes. It is recommended that this service be disabled."
     rationale: "Disabling this service will reduce the remote attack surface of the system."
-    remediation: "Run the following commands to disable echo -dgram and echo -stream: # chkconfig echo-dgram off; # chkconfig echo-stream off"
+    remediation: "Run the following commands to disable time-dgram and time-stream: # chkconfig time-dgram off; # chkconfig time-stream off"
     compliance:
       - cis: "2.1.4"
       - cis_csc: "9.1"
+      - pci_dss: "2.2.3"
+      - nist_800_53: "CM.1"
     condition: none
     rules:
-      - 'f:/etc/xinetd.d/echo-stream -> !r:^# && r:disable && r:no'
+      - 'c:chkconfig --list -> r:^\s*\t*time-dgram:\s*\t*on'
+      - 'c:chkconfig --list -> r:^\s*\t*time-stream:\s*\t*on'
 
 # 2.2.2 Remove X Windows (Scored)
   - id: 6537
@@ -583,11 +547,11 @@ checks:
       - pci_dss: "2.2.2"
     condition: none
     rules:
-      - 'p:gdm-x-session'
+      - 'c:rpm -qa xorg-x11* -> r:^xorg-x11\.+'
 
 # 2.2.3 Disable Avahi Server (Scored)
   - id: 6538
-    title: "Ensure Avahi Server is disabled"
+    title: "Ensure Avahi Server is not enabled"
     description: "Avahi is a free zeroconf implementation, including a system for multicast DNS/DNS-SD service discovery. Avahi allows programs to publish and discover services and hosts running on a local network with no specific configuration. For example, a user can plug a computer into a network and Avahi automatically finds printers to print to, files to look at and people to talk to, as well as network services running on the machine."
     rationale: "Automatic discovery of network services is not normally required for system functionality. It is recommended to disable the service to reduce the potential attack surface."
     remediation: "Run the following command to disable avahi-daemon: # systemctl disable avahi-daemon"
@@ -597,43 +561,61 @@ checks:
       - pci_dss: "2.2.2"
     condition: none
     rules:
-      - 'p:avahi-daemon'
+      - 'c:systemctl is-enabled avahi-daemon -> r:^enabled'
 
 # 2.2.5 Remove DHCP Server (Scored)
   - id: 6539
-    title: "Ensure DHCP Server is disabled"
+    title: "Ensure DHCP Server is not enabled"
     description: "The Dynamic Host Configuration Protocol (DHCP) is a service that allows machines to be dynamically assigned IP addresses."
     rationale: "Unless a system is specifically set up to act as a DHCP server, it is recommended that this service be disabled to reduce the potential attack surface."
     remediation: "Run the following command to disable dhcpd: # systemctl disable dhcpd"
     compliance:
       - cis: "2.2.5"
       - cis_csc: "9.1"
+      - pci_dss: "2.2.2"
     references:
-      - More detailed documentation on DHCP is available at https://www.isc.org
+      - More detailed documentation on DHCP is available at https://www.isc.org/software/dhcp
     condition: none
     rules:
-      - 'f:/usr/lib/systemd/system/dhcpd.service -> r:Exec'
+      - 'c:systemctl is-enabled dhcpd -> r:^enabled'
+
+# 2.2.6 Remove LDAP Server (Scored)
+  - id: 6539
+    title: "Ensure LDAP Server is not enabled"
+    description: "The Lightweight Directory Access Protocol (LDAP) was introduced as a replacement for NIS/YP. It is a service that provides a method for looking up information from a central database."
+    rationale: "If the system will not need to act as an LDAP server, it is recommended that the software be disabled to reduce the potential attack surface."
+    remediation: "Run the following command to disable slapd: # systemctl disable dhcpd"
+    compliance:
+      - cis: "2.2.6"
+      - cis_csc: "9.1"
+      - pci_dss: "2.2.2"
+    references:
+      - More detailed documentation on OpenLDAP is available at https://www.openldap.org
+    condition: none
+    rules:
+      - 'c:systemctl is-enabled sladp -> r:^enabled'
 
 # 2.2.1.2 Configure Network Time Protocol (NTP) (Scored)
   - id: 6540
-    title: "Ensure time synchronization is in use"
-    description: "System time should be synchronized between all systems in an environment. This typically done by establishing an authoritative time server or set of servers and having all systems synchronize their clocks to them."
-    rationale: "Time synchronization is important to support time sensitive security mechanisms like Kerberos and also ensures log files have consistent time records across the enterprise, which aids in forensic investigations."
-    remediation: "On physical systems or virtual systems where host based time synchronization is not available run one of the following commands to install either ntp or chrony: # yum install ntp; # yum install chrony; On virtual systems where host based time synchronization is available consult your virtualization software documentation and setup host based synchronization."
+    title: "Ensure ntp is configured"
+    description: "ntp is a daemon which implements the Network Time Protocol (NTP). It is designed to synchronize system clocks across a variety of systems and use a source that is highly accurate. More information on NTP can be found at https://www.ntp.org. ntp can be configured to be a client and/or a server."
+    rationale: "If ntp is in use on the system proper configuration is vital to ensuring time synchronization is working properly."
+    remediation: "1) Add or edit restrict lines in /etc/ntp.conf to match the following: - restrict -4 default kod nomodify notrap nopeer noquery and - restrict -4 default kod nomodify notrap nopeer noquery. 2) Add or edit server or pool lines to /etc/ntp.conf as appropriate: server <remote-server>. 3) Add or edit the OPTIONS in /etc/sysconfig/ntpd to include ' -u ntp:ntp ': - OPTIONS='-u ntp:ntp'"
     compliance:
-      - cis: "2.2.1.1"
+      - cis: "2.2.1.2"
       - cis_csc: "6.1"
       - pci_dss: "2.2.2"
     condition: all
     rules:
-      - 'f:/etc/ntp.conf -> r:^restrict -4 default kod nomodify notrap nopeer noquery'
-      - 'f:/etc/ntp.conf -> r:^restrict -6 default kod nomodify notrap nopeer noquery'
+      - 'f:/etc/ntp.conf -> r:^restrict\s+-4\s+default|^restrict\s+default && r:\s+kod\s+ && r:\s+nomodify\s+ && r:\s+notrap\s+ && r:\s+nopeer\s+ && r:\s+noquery\s+'
+      - 'f:/etc/ntp.conf -> r:^restrict\s+-6\s+default && r:\s+kod\s+ && r:\s+nomodify\s+ && r:\s+notrap\s+ && r:\s+nopeer\s+ && r:\s+noquery\s+'
       - 'f:/etc/ntp.conf -> r:^server\.+$'
-      - 'f:/etc/sysconfig/ntpd -> r:OPTIONS="-u ntp:ntp -p /var/run/ntpd.pid"'
+      - 'f:/etc/sysconfig/ntpd -> r:^OPTIONS\s*=\s* && r:-u ntp:ntp'
+      - 'f:/usr/lib/systemd/system/ntpd.service -> r:^Execstart\s*=\s*/usr/sbin/ntpd\s+-u\s+ntp:ntp'
 
-# 2.2.7 Disable NFS and RPC (Not Scored)
+# 2.2.7 Disable NFS and RPC (Scored)
   - id: 6541
-    title: "Ensure NFS and RPC are is disabled"
+    title: "Ensure NFS and RPC are not enabled"
     description: "The Network File System (NFS) is one of the first and most widely distributed file systems in the UNIX environment. It provides the ability for systems to mount file systems of other servers through the network."
     rationale: "If the system does not export NFS shares or act as an NFS client, it is recommended that these services be disabled to reduce remote attack surface."
     remediation: "Run the following commands to disable nfs, nfs-server and rpcbind: # systemctl disable nfs; # systemctl disable nfs-server; # systemctl disable rpcbind"
@@ -643,12 +625,13 @@ checks:
       - pci_dss: "2.2.2"
     condition: none
     rules:
-      - 'd:$rc_dirs -> ^S\d\dnfs$'
-      - 'd:$rc_dirs -> ^S\d\dnfslock$'
+      - 'c:systemctl is-enabled nfs -> r:^enabled'
+      - 'c:systemctl is-enabled nfs-server -> r:^enabled'
+      - 'c:systemctl is-enabled rpcbind -> r:^enabled'
 
-# 2.2.9 Remove FTP Server (Not Scored)
+# 2.2.9 Remove FTP Server (Scored)
   - id: 6542
-    title: "Ensure FTP Server is disabled"
+    title: "Ensure FTP Server is not enabled"
     description: "The File Transfer Protocol (FTP) provides networked computers with the ability to transfer files."
     rationale: "FTP does not protect the confidentiality of data or authentication credentials. It is recommended sftp be used if file transfer is required. Unless there is a need to run the system as a FTP server (for example, to allow anonymous downloads), it is recommended that the service be disabled to reduce the potential attack surface."
     remediation: "Run the following command to disable vsftpd: # systemctl disable vsftpd"
@@ -658,11 +641,11 @@ checks:
       - pci_dss: "2.2.2"
     condition: none
     rules:
-      - 'f:/etc/xinetd.d/vsftpd -> !r:^# && r:disable && r:no'
+      - 'c:systemctl is-enabled vsftpd -> r:^enabled'
 
-# 2.2.10 Remove HTTP Server (Not Scored)
+# 2.2.10 Remove HTTP Server (Scored)
   - id: 6543
-    title: "Ensure HTTP server is disabled"
+    title: "Ensure HTTP server is not enabled"
     description: "HTTP or web servers provide the ability to host web site content."
     rationale: "Unless there is a need to run the system as a web server, it is recommended that the service be disabled to reduce the potential attack surface."
     remediation: "Run the following command to disable httpd: # systemctl disable httpd"
@@ -671,11 +654,11 @@ checks:
       - cis_csc: "9.1"
     condition: none
     rules:
-      - 'd:$rc_dirs -> ^S\d\dhttpd$'
+      - 'c:systemctl is-enabled httpd -> r:^enabled'
 
-# 2.2.11 Remove Dovecot (IMAP and POP3 services) (Not Scored)
+# 2.2.11 Remove Dovecot (IMAP and POP3 services) (Scored)
   - id: 6544
-    title: "Ensure IMAP and POP3 server is disabled"
+    title: "Ensure IMAP and POP3 server is not enabled"
     description: "dovecot is an open source IMAP and POP3 server for Linux based systems."
     rationale: "Unless POP3 and/or IMAP servers are to be provided by this system, it is recommended that the service be disabled to reduce the potential attack surface."
     remediation: "Run the following command to disable dovecot: # systemctl disable dovecot"
@@ -685,24 +668,11 @@ checks:
       - pci_dss: "2.2.2"
     condition: none
     rules:
-      - 'f:/etc/xinetd.d/cyrus-imapd -> !r:^# && r:disable && r:no'
+      - 'c:systemctl is-enabled dovecot -> r:^enabled'
 
-  - id: 6545
-    title: "Ensure IMAP and POP3 server is disabled"
-    description: "dovecot is an open source IMAP and POP3 server for Linux based systems."
-    rationale: "Unless POP3 and/or IMAP servers are to be provided by this system, it is recommended that the service be disabled to reduce the potential attack surface."
-    remediation: "Run the following command to disable dovecot: # systemctl disable dovecot"
-    compliance:
-      - cis: "2.2.11"
-      - cis_csc: "9.1"
-      - pci_dss: "2.2.2"
-    condition: none
-    rules:
-      - 'f:/etc/xinetd.d/dovecot -> !r:^# && r:disable && r:no'
-
-# 2.2.12 Remove Samba (Not Scored)
+# 2.2.12 Remove Samba (Scored)
   - id: 6546
-    title: "Ensure Samba is disabled"
+    title: "Ensure Samba is not enabled"
     description: "The Samba daemon allows system administrators to configure their Linux systems to share file systems and directories with Windows desktops. Samba will advertise the file systems and directories via the Small Message Block (SMB) protocol. Windows desktop users will be able to mount these directories and file systems as letter drives on their systems."
     rationale: "If there is no need to mount directories and file systems to Windows systems, then this service can be disabled to reduce the potential attack surface."
     remediation: "Run the following command to disable smb: # systemctl disable smb"
@@ -712,12 +682,11 @@ checks:
       - pci_dss: "2.2.2"
     condition: none
     rules:
-      - 'd:$rc_dirs -> ^S\d\dsamba$'
-      - 'd:$rc_dirs -> ^S\d\dsmb$'
+      - 'c:systemctl is-enabled smb -> r:^enabled'
 
-# 2.2.13 Remove HTTP Proxy Server (Not Scored)
+# 2.2.13 Remove HTTP Proxy Server (Scored)
   - id: 6547
-    title: "Ensure HTTP Proxy Server is disabled"
+    title: "Ensure HTTP Proxy Server is not enabled"
     description: "Squid is a standard proxy server used in many distributions and environments."
     rationale: "If there is no need for a proxy server, it is recommended that the squid proxy be disabled to reduce the potential attack surface."
     remediation: "Run the following command to disable squid: # systemctl disable squid"
@@ -727,11 +696,11 @@ checks:
       - pci_dss: "2.2.2"
     condition: none
     rules:
-      - 'd:$rc_dirs -> ^S\d\dsquid$'
+      - 'c:systemctl is-enabled squid -> r:^enabled'
 
 # 2.2.14 Remove SNMP Server (Not Scored)
   - id: 6548
-    title: "Ensure SNMP Server is disabled"
+    title: "Ensure SNMP Server is not enabled"
     description: "The Simple Network Management Protocol (SNMP) server is used to listen for SNMP commands from an SNMP management system, execute the commands or collect the information and then send results back to the requesting system."
     rationale: "The SNMP server can communicate using SNMP v1, which transmits data in the clear and does not require authentication to execute commands. Unless absolutely necessary, it is recommended that the SNMP service not be used. If SNMP is required the server should be configured to disallow SNMP v1."
     remediation: "Run the following command to disable snmpd: # systemctl disable snmpd"
@@ -741,7 +710,7 @@ checks:
       - pci_dss: "2.2.2"
     condition: none
     rules:
-      - 'd:$rc_dirs -> ^S\d\dsnmpd$'
+      - 'c:systemctl is-enabled snmpd -> r:^enabled'
 
 ###############################################
 # 3 Network Configuration and Firewalls
@@ -751,7 +720,7 @@ checks:
 ###############################################
 # 3.1.1 Disable IP Forwarding (Scored)
   - id: 6549
-    title: "Ensure IPv4 forwarding is disabled"
+    title: "Ensure IP forwarding is disabled"
     description: "The net.ipv4.ip_forward flag is used to tell the system whether it can forward packets or not."
     rationale: "Setting the flag to 0 ensures that a system with multiple interfaces (for example, a hard proxy), will never be able to forward packets, and therefore, never serve as a router."
     remediation: "Set the following parameter in /etc/sysctl.conf or a /etc/sysctl.d/* file: net.ipv4.ip_forward = 0 and set the active kernel parameters."
