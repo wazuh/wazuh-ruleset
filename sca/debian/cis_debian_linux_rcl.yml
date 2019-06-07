@@ -56,6 +56,7 @@ checks:
     - pci_dss: "2.2.4"
    condition: all
    rules:
+     - 'not c:mount -> r:\s/tmp\s'
      - 'c:mount -> r:\s/tmp\s && r:nodev'
 
 
@@ -198,7 +199,7 @@ checks:
    condition: any
    rules:
      - 'not c:mount -> r:\s/run/shm\s'
-     - 'c:mount -> r:\s/media\s && r:nodev'
+     - 'c:mount -> r:\s/run/shm\s && r:nodev'
 
  - id: 5016
    title: "Add nosuid Option to /run/shm Partition"
@@ -428,8 +429,8 @@ checks:
     - cis: "3.2.1"
    condition: all
    rules:
-     - 'c:sysctl net.ipv4.conf.all.accept_source_route -> 0'
-     - 'c:sysctl net.ipv4.conf.default.accept_source_route -> 0'
+     - 'c:sysctl net.ipv4.conf.all.accept_source_route -> r:= 0$'
+     - 'c:sysctl net.ipv4.conf.default.accept_source_route -> r:= 0$'
 
  - id: 5034
    title: "Ensure broadcast ICMP requests are ignored"
@@ -441,7 +442,7 @@ checks:
     - cis: "3.2.5"
    condition: all
    rules:
-     - 'c:sysctl net.ipv4.icmp_echo_ignore_broadcasts -> 1'
+     - 'c:sysctl net.ipv4.icmp_echo_ignore_broadcasts -> r:= 1$'
 
 # Section 5.2 - SSH Server Configuration
  - id: 5035
