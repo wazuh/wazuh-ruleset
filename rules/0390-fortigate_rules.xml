@@ -272,5 +272,30 @@ ID: 81600 - 80799
         <description>Fortigate Attack Dropped</description>
         <group>attack,gdpr_IV_35.7.d,</group>
     </rule>
+  
+    <rule id="81630" level="3">
+      <decoded_as>fortigate-ips</decoded_as>
+      <field name="trigger">Low</field>
+      <description>Fortigate-IPS: Low Severity event</description>
+    </rule>
 
+    <rule id="81631" level="5">
+      <decoded_as>fortigate-ips</decoded_as>
+      <field name="trigger">Medium</field>
+      <description>Fortigate-IPS: Medium Severity event</description>
+    </rule>
+
+    <rule id="81632" level="7">
+      <decoded_as>fortigate-ips</decoded_as>
+      <field name="trigger">High</field>
+      <description>Fortigate-IPS: High Severity event</description>
+    </rule>
+
+    <rule id="81633" level="10">
+      <decoded_as>fortigate-ips</decoded_as>
+      <if_sid>71102</if_sid>
+      <field name="subject">attack</field>
+      <description>Fortigate IPS: Message with "attack" subject</description>
+    </rule>
+  
 </group>
