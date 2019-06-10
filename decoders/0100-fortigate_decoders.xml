@@ -194,3 +194,53 @@ date=2016-06-16 time=10:49:08 devname=Device_Name devid=FGTXXXX9999999999 logid=
     <regex>srcip=(\S+) srcport=(\d+) \.+ dstip=(\S+) dstport=(\d+) \.+ appcat="(\.+)" apprisk=(\w+) applist=</regex>
     <order>srcip,srcport,dstip,dstport,protocol,status</order>
 </decoder>
+
+<decoder name="fortigate-ips">
+  <prematch>subject=\.+ device=\.+ severity=\w+ from=\.+ trigger=\.+ log=\.+ idseq=\d+ itime=\d+ devid=\.+ devname=\.+ vd=\.+ date=\S+ time=\S+ logid="\d+" type="\.+" subtype="\.+" eventtype="\.+" level="\.+" </prematch>
+</decoder>
+
+<!--
+Apr 24 12:06:18 172.29.87.198  subject=attack:PHP.Malicious.Shell device=XXXXXX severity=high from=Analyzer_XXXX(FL-1KET318000129) trigger=IPS - High Severity filter= log="logver=56 idseq=82785426246468319 itime=1556087872 devid=FGT1KD3915802343 devname=XXXXXXXX vd=root date=2019-04-24 time=12:07:52 logid="0419016384" type="utm" subtype="ips" eventtype="signature" level="alert" logtime=1556087872 severity="high" srcip=XXXXXX srccountry="China" dstip=XXXXX srcintf="portB" srcintfrole="undefined" dstintf="portA" dstintfrole="undefined" policyid=206 sessionid=2985411296 action="dropped" proto=6 service="HTTP" attack="PHP.Malicious.Shell" srcport=50346 dstport=80 hostname="www.XXXXX.com" direction="outgoing" attackid=44580 profile="IPS_XXXX" ref="http://www.fortinet.com/ids/VID44580" incidentserialno=1914342771 msg="web_app3: PHP.Malicious.Shell," crscore=30 crlevel="high"
+-->
+<decoder name="fortigate-ips-1">
+  <parent>fortigate-ips</parent>
+  <prematch offset="after_parent">logtime=\d+ severity="\.+" srcip=\S+ srccountry="\.+" dstip=\S+ srcintf="\.+" srcintfrole="\.+" dstintf="\.+" dstintfrole="\.+" policyid=\d+ sessionid=\d+ action="\.+" proto=\.+ service="\.+" attack="\.+" srcport=\d+ dstport=\d+ hostname="\S+" direction="\.+" attackid=\d+ profile="\.+" ref="\.+" incidentserialno=\d+ msg="\.+" crscore=\d+ crlevel="\.+"</prematch>
+  <regex>subject=(\.+) device=(\.+) severity=(\w+) from=(\.+) trigger=(\.+) \.+ log=(\.+) idseq=(\d+) itime=(\d+) devid=(\.+) devname=(\.+) vd=(\.+) date=(\S+) time=(\S+) logid="(\d+)" type="(\.+)" subtype="(\.+)" eventtype="(\.+)" level="(\.+)" logtime=(\d+) severity="\.+" srcip=(\S+) srccountry="(\.+)" dstip=(\S+) srcintf="(\.+)" srcintfrole="(\.+)" dstintf="(\.+)" dstintfrole="(\.+)" policyid=(\d+) sessionid=(\d+) action="(\.+)" proto=(\.+) service="(\.+)" attack="(\.+)" srcport=(\d+) dstport=(\d+) hostname="(\S+)" direction="(\.+)" attackid=(\d+) profile="(\.+)" ref="(\.+)" incidentserialno=(\d+) msg="(\.+)" crscore=(\d+) crlevel="(\.+)"</regex>
+  <order>subject,device,severity,from,trigger,log,idseq,itime,devid,devname,vd,date,time,logid,type,subtype,eventtype,level,logtime,srcip,srccountry,dstip,srcintf,srcintfrole,dstintf,dstintfrole,policyid,sessionid,action,proto,service,attack,srcport,dstport,hostname,direction,attackid,profile,ref,incidentserialno,msg,crscore,crlevel</order>
+</decoder>
+
+<!--
+Apr 24 14:57:13 172.29.87.198  subject=attack:TCP.Out.Of.Range.Timestamp device=XXXXXX severity=low from=Analyzer_XXXXXX(FL-1KET318000129) trigger=IPS - Low Severity filter= log="logver=56 idseq=82785426246474604 itime=1556098108 devid=FGT1KD3915802316 devname=XXXXXX vd=root date=2019-04-24 time=14:54:04 logid="0419016384" type="utm" subtype="ips" eventtype="signature" level="alert" eventtime=1556097844 severity="low" srcip=XXXXXX srccountry="India" dstip=XXXXXX srcintf="portB" srcintfrole="undefined" dstintf="portA" dstintfrole="undefined" sessionid=1795537954 action="dropped" proto=6 service="SSL" policyid=18 attack="TCP.Out.Of.Range.Timestamp" srcport=30060 dstport=443 hostname="XXXXXX.XXXXXX.in" direction="outgoing" attackid=17677 profile="Paytm_XXXXXX" ref="http://www.fortinet.com/ids/VID17677" incidentserialno=1864318107 msg="tcp_reassembler: TCP.Out.Of.Range.Timestamp, bad paws" crscore=5 crlevel="low""
+logtime
+-->
+<decoder name="fortigate-ips-2">
+  <parent>fortigate-ips</parent>
+  <prematch offset="after_parent">eventtime=\d+ severity="\.+" srcip=\S+ srccountry="\.+" dstip=\S+ srcintf="\.+" srcintfrole="\.+" dstintf="\.+" dstintfrole="\.+" sessionid=\d+ action="\.+" proto=\.+ service="\.+" policyid=\d+ attack="\.+" srcport=\d+ dstport=\d+ hostname="\S+" direction="\.+" attackid=\d+ profile="\.+" ref="\.+" incidentserialno=\d+ msg="\.+" crscore=\d+ crlevel="\.+"</prematch>
+  <regex>subject=(\.+) device=(\.+) severity=(\w+) from=(\.+) trigger=(\.+) \.+ log=(\.+) idseq=(\d+) itime=(\d+) devid=(\.+) devname=(\.+) vd=(\.+) date=(\S+) time=(\S+) logid="(\d+)" type="(\.+)" subtype="(\.+)" eventtype="(\.+)" level="(\.+)" eventtime=(\d+) severity="\.+" srcip=(\S+) srccountry="(\.+)" dstip=(\S+) srcintf="(\.+)" srcintfrole="(\.+)" dstintf="(\.+)" dstintfrole="(\.+)" sessionid=(\d+) action="(\.+)" proto=(\.+) service="(\.+)" policyid=(\d+) attack="(\.+)" srcport=(\d+) dstport=(\d+) hostname="(\S+)" direction="(\.+)" attackid=(\d+) profile="(\.+)" ref="(\.+)" incidentserialno=(\d+) msg="(\.+)" crscore=(\d+) crlevel="(\.+)"</regex>
+  <order>subject,device,severity,from,trigger,log,idseq,itime,devid,devname,vd,date,time,logid,type,subtype,eventtype,level,eventtime,srcip,srccountry,dstip,srcintf,srcintfrole,dstintf,dstintfrole,sessionid,action,proto,service,policyid,attack,srcport,dstport,hostname,direction,attackid,profile,ref,incidentserialno,msg,crscore,crlevel</order>
+</decoder>
+
+<decoder name="fortigate-cef">
+<program_name>CEF</program_name>
+<prematch>0\|\w+\|Fortigate\|v\d+.\d+.\d+\|\d+\|</prematch>
+</decoder>
+
+<!--
+Apr 10 17:17:55 PAYTM-IN-NXTRA-MANESAR-FG1000D-FW01 CEF: 0|Fortinet|Fortigate|v5.6.6|38404|event:system|5|deviceExternalId=FGT1KD3915802316 FTNTFGTlogid=0100038404 cat=event:system FTNTFGTsubtype=system FTNTFGTlevel=error FTNTFGTvd=root FTNTFGTeventtime=1554896875 FTNTFGTlogdesc=FortiGuard hostname unresolvable dhost=service.fortiguard.net msg=unable to resolve FortiGuard hostname
+-->
+<decoder name="fortigate-cef-event">
+<parent>fortigate-cef</parent>
+<prematch offset="after_parent">event:</prematch>
+<regex>0\|(\w+)\|(Fortigate)\|v(\d+.\d+.\d+)\|(\d+)\|(\.+)\|(\d+)\|deviceExternalId=(\S+) FTNTFGTlogid=(\d+) cat=(\S+) FTNTFGTsubtype=(\S+) FTNTFGTlevel=(\S+) FTNTFGTvd=(\S+) FTNTFGTeventtime=(\d+) FTNTFGTlogdesc=(\.+) dhost=(\S+) msg=(\.+)</regex>
+<order>device_vendor, device_product, device_version, signature_id, name, severity, deviceExternalId, FTNTFGTlogid, cat, FTNTFGTsubtype, FTNTFGTlevel, FTNTFGTvd, FTNTFGTeventtime, FTNTFGTlogdesc, dhost, msg</order>
+</decoder>
+
+<!--
+Apr 10 17:08:58 PAYMENT-US-EXTRA-JESERY-FG1000D-FW01 CEF: 0|Fortinet|Fortigate|v5.6.6|00013|traffic:forward client-rst|3|deviceExternalId=FGT1KD3915802316 FTNTFGTlogid=0000000013 cat=traffic:forward FTNTFGTsubtype=forward FTNTFGTlevel=notice FTNTFGTvd=root FTNTFGTeventtime=1554896338 src=XX.XX.XX.XX spt=48088 deviceInboundInterface=portA FTNTFGTsrcintfrole=undefined dst=XX.XX.XX.XX dpt=443 deviceOutboundInterface=portB FTNTFGTdstintfrole=undefined FTNTFGTpoluuid=ba859676-3f1b-51e8-da11-c510ab0158c1 externalId=2776074 proto=6 act=client-rst FTNTFGTpolicyid=127 FTNTFGTpolicytype=policy app=HTTPS FTNTFGTdstcountry=US FTNTFGTsrccountry=Reserved FTNTFGTtrandisp=snat sourceTranslatedAddress=XX.XX.XX.XX sourceTranslatedPort=48088 FTNTFGTduration=31 out=1705 in=5198 FTNTFGTsentpkt=12 FTNTFGTshapingpolicyid=4 FTNTFGTshapersentname=500Mbps FTNTFGTshaperdropsentbyte=0 FTNTFGTshaperrcvdname=500Mbps FTNTFGTshaperdroprcvdbyte=0 FTNTFGTappcat=unscanned
+-->
+<decoder name="fortigate-cef-traffic">
+<parent>fortigate-cef</parent>
+<prematch offset="after_parent">traffic:</prematch>
+<regex>0\|(\w+)\|(Fortigate)\|v(\d+.\d+.\d+)\|(\d+)\|(\.+)\|(\d+)\|deviceExternalId=(\S+) FTNTFGTlogid=(\d+) cat=(\S+) FTNTFGTsubtype=(\S+) FTNTFGTlevel=(\S+) FTNTFGTvd=(\S+) FTNTFGTeventtime=(\d+) src=(\S+) spt=(\d+) deviceInboundInterface=(\S+) FTNTFGTsrcintfrole=(\S+) dst=(\S+) dpt=(\d+) deviceOutboundInterface=(\S+) FTNTFGTdstintfrole=(\S+) FTNTFGTpoluuid=(\S+) externalId=(\w+) proto=(\S+) act=(\S+) FTNTFGTpolicyid=(\d+) FTNTFGTpolicytype=(\S+) app=(\S+) FTNTFGTdstcountry=(\S+) FTNTFGTsrccountry=(\S+) FTNTFGTtrandisp=(\S+) sourceTranslatedAddress=(\S+) sourceTranslatedPort=(\d+) FTNTFGTduration=(\d+) out=(\d+) in=(\d+) FTNTFGTsentpkt=(\S+) FTNTFGTshapingpolicyid=(\d+) FTNTFGTshapersentname=(\S+) FTNTFGTshaperdropsentbyte=(\S+) FTNTFGTshaperrcvdname=(\S+) FTNTFGTshaperdroprcvdbyte=(\S+) FTNTFGTappcat=(\S+)</regex>
+<order>device_vendor, device_product, device_version, signature_id, name, severity, deviceExternalId, FTNTFGTlogid, cat, FTNTFGTsubtype, FTNTFGTlevel, FTNTFGTvd, FTNTFGTeventtime, src, spt, deviceInboundInterface, FTNTFGTsrcintfrole, dst, dpt, deviceOutboundInterface, FTNTFGTdstintfrole, FTNTFGTpoluuid, externalId, proto, act, FTNTFGTpolicyid, FTNTFGTpolicytype, app, FTNTFGTdstcountry, FTNTFGTsrccountry, FTNTFGTtrandisp, sourceTranslatedAddress, sourceTranslatedPort, FTNTFGTduration, out, in, FTNTFGTsentpkt, FTNTFGTshapingpolicyid, FTNTFGTshapersentname, FTNTFGTshaperdropsentbyte, FTNTFGTshaperrcvdname, FTNTFGTshaperdroprcvdbyte, FTNTFGTappcat</order>
+</decoder>
