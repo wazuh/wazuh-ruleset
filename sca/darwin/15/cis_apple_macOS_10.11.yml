@@ -187,10 +187,10 @@ checks:
     remediation: "Run the following command in Terminal:  sudo pmset -a womp 0   Note: The -c flag means \"wall power.\" Different settings must be used for other power sources."
     compliance:
       - cis: "2.5.1"
-    condition: none
+    condition: all
     rules:
-      - 'c:pmset -c -g -> r:womp && !r:0'
-      - 'c:pmset -b -g -> r:womp && !r:0'
+      - 'c:pmset -c -g -> r:womp && r:0'
+      - 'c:pmset -b -g -> r:womp && r:0'
 
 # 2.6.1 Enable FileVault (Scored)
   - id: 3013

@@ -164,9 +164,9 @@ checks:
     remediation: "Run the following command in Terminal: sudo pmset -a womp 0"
     compliance:
       - cis: "2.5.1"
-    condition: none
+    condition: all
     rules:
-      - 'c:pmset -g ->  r:womp && !r:0'
+      - 'c:pmset -g ->  r:womp && r:0'
 
 # 2.6.1.1 Enable FileVault (Scored)
   - id: 14011
@@ -254,7 +254,7 @@ checks:
       - cis: "2.13"
     condition: all
     rules:
-      - 'c:/usr/libexec/firmwarecheckers/eficheck/eficheck --integrity-check -> Primary allowlist version match found. No changes detected in primary hashes'
+      - 'c:/usr/libexec/firmwarecheckers/eficheck/eficheck --integrity-check -> r:Primary allowlist version match found. No changes detected in primary hashes'
       - 'c:launchctl list -> r:-\s*\t*0\s*\t*com.apple.driver.eficheck'
 
 # 3.1 Enable security auditing (Scored)
