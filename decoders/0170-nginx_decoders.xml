@@ -23,3 +23,9 @@
   <regex offset="after_parent">, client: (\S+), </regex>
   <order>srcip</order>
 </decoder>
+
+<decoder name="nginx-errorlog-conflict">
+  <parent>nginx-errorlog</parent>
+  <regex>conflicting server name "(\S+)" on (\S+), </regex>
+  <order>server, srcip</order>
+</decoder>
