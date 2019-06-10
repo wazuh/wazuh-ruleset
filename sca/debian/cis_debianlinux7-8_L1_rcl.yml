@@ -27,9 +27,6 @@ requirements:
     - 'f:/etc/debian_version'
     - 'f:/proc/sys/kernel/ostype -> Linux'
 
-variables:
-  $home_dirs: /usr2/home/*,/home/*,/home,/*/home/*,/*/home,/
-
 checks:
 # 2 Filesystem Configuration
   - id: 10500
@@ -200,7 +197,7 @@ checks:
       - cis: "2.25"
     condition: none
     rules:
-      - 'c:ls -1 /etc/rc*.d -> r:S\.+autofsc'
+      - 'c:ls /etc/rc*.d -> r:S\.+autofsc'
 
 # 3 Secure Boot Settings
   - id: 10517
@@ -222,9 +219,9 @@ checks:
     remediation: "Run the following command and follow the prompts to set a password for the root user: # passwd root"
     compliance:
       - cis: "3.4"
-    condition: all
+    condition: none
     rules:
-      - 'f:/etc/shadow -> r:^root:\$'
+      - 'f:/etc/shadow -> r:^root:[*\!]:'
 
 # 4 Additional Process Hardening
   - id: 10519
@@ -236,7 +233,7 @@ checks:
       - cis: "4.1"
     condition: all
     rules:
-      - 'c:ulimit -Hc -> 0'
+      - 'c:ulimit -H -c -> 0'
       - 'c:sysctl fs.suid_dumpable -> r:= 0$'
 
   - id: 10520
@@ -315,7 +312,7 @@ checks:
       - cis: "5.1.8"
     condition: none
     rules:
-      - 'c:ls -1 /etc/rc*.d -> r:S\.+xinetd'
+      - 'c:ls /etc/rc*.d -> r:S\.+xinetd'
 
   - id: 10527
     title: "Ensure chargen is not enabled"
@@ -382,7 +379,7 @@ checks:
       - cis: "6.2"
     condition: none
     rules:
-      - 'c:ls -1 /etc/rc*.d -> r:S\.+avahi-daemon'
+      - 'c:ls /etc/rc*.d -> r:S\.+avahi-daemon'
 
   - id: 10533
     title: "Ensure print server is not enabled"
@@ -393,7 +390,7 @@ checks:
       - cis: "6.3"
     condition: none
     rules:
-      - 'c:ls -1 /etc/rc*.d -> r:S\.+cups\S*'
+      - 'c:ls /etc/rc*.d -> r:S\.+cups\S*'
 
   - id: 10534
     title: "Ensure DHCP Server is not enabled"
@@ -404,7 +401,7 @@ checks:
       - cis: "6.4"
     condition: none
     rules:
-      - 'c:ls -1 /etc/rc*.d -> r:S\.+disc-dhcp-server'
+      - 'c:ls /etc/rc*.d -> r:S\.+disc-dhcp-server'
 
   - id: 10535
     title: "Configure Network Time Protocol (NTP)"
@@ -457,8 +454,7 @@ checks:
       - cis: "6.8"
     condition: none
     rules:
-     - 'c:chkconfig --list named -> r:0:off && r:1:off && r:2:off && r:3:off && r:4:off && r:5:off && r:6:off'
-     - 'c:systemctl is-enabled named -> r:disabled'
+     - 'c:find /etc -regex /etc/rc.*named -> r:named'
 
   - id: 10539
     title: "Ensure FTP Server is not enabled"
@@ -469,7 +465,7 @@ checks:
       - cis: "6.9"
     condition: none
     rules:
-      - 'c:ls -1 /etc/rc*.d -> r:S\.+vsftpd'
+      - 'c:find /etc -regex /etc/rc.*vsftpd -> r:vsftpd'
 
   - id: 10540
     title: "Ensure HTTP Server is not enabled"
@@ -480,8 +476,7 @@ checks:
       - cis: "6.10"
     condition: none
     rules:
-     - 'c:chkconfig --list httpd -> r:0:off && r:1:off && r:2:off && r:3:off && r:4:off && r:5:off && r:6:off'
-     - 'c:systemctl is-enabled httpd -> r:disabled'
+     - 'c:find /etc -regex /etc/rc.*apache2 -> r:apache2'
 
   - id: 10541
     title: "Ensure IMAP and POP server is not enabled"
@@ -492,7 +487,7 @@ checks:
       - cis: "6.11"
     condition: none
     rules:
-      - 'c:ls -1 /etc/rc*.d -> r:S\.+dovecot'
+      - 'c:find /etc -regex /etc/rc.*dovecot -> r:dovecot'
 
   - id: 10542
     title: "Ensure Samba is not enabled"
@@ -503,8 +498,7 @@ checks:
       - cis: "6.12"
     condition: none
     rules:
-     - 'c:chkconfig --list smb -> r:0:off && r:1:off && r:2:off && r:3:off && r:4:off && r:5:off && r:6:off'
-     - 'c:systemctl is-enabled smb -> r:disabled'
+     - 'c:find /etc -regex /etc/rc.*smb -> r:smb'
 
   - id: 10543
     title: "Ensure HTTP Proxy Server is not enabled"
@@ -515,8 +509,7 @@ checks:
       - cis: "6.13"
     condition: none
     rules:
-     - 'c:chkconfig --list squid -> r:0:off && r:1:off && r:2:off && r:3:off && r:4:off && r:5:off && r:6:off'
-     - 'c:systemctl is-enabled squid -> r:disabled'
+     - 'c:find /etc -regex /etc/rc.*squid -> r:squid'
 
   - id: 10544
     title: "Ensure SNMP Server is not enabled"
@@ -527,7 +520,7 @@ checks:
       - cis: "6.14"
     condition: none
     rules:
-      - 'c:ls -1 /etc/rc*.d -> r:S\.+snmpd'
+      - 'c:find /etc -regex /etc/rc.*snmpd -> r:snmpd'
 
   - id: 10545
     title: "Configure Mail Transfer Agent for Local-Only Mode"
@@ -562,7 +555,7 @@ checks:
       - cis: "7.1.1"
     condition: all
     rules:
-      - 'c:/sbin/sysctl net.ipv4.ip_forward -> r:net.ipv4.ip_forward=0'
+      - 'c:/sbin/sysctl net.ipv4.ip_forward -> r:= 0$'
 
   - id: 10548
     title: "Disable Send Packet Redirects"
@@ -787,11 +780,6 @@ checks:
     condition: all
     rules:
       - 'c:dpkg -s iptables -> r:install ok installed'
-      - 'c:dpkg -s iptables-persistent -> r:install ok installed'
-      - 'f:/etc/rc2.d/S01iptables-persistent'
-      - 'f:/etc/rc3.d/S01iptables-persistent'
-      - 'f:/etc/rc4.d/S01iptables-persistent'
-      - 'f:/etc/rc5.d/S01iptables-persistent'
 
 # 8 Logging and Auditing
   - id: 10567
@@ -803,10 +791,7 @@ checks:
       - cis: "8.2.2"
     condition: all
     rules:
-      - 'f:/etc/rc2.d/S01rsyslog'
-      - 'f:/etc/rc3.d/S01rsyslog'
-      - 'f:/etc/rc4.d/S01rsyslog'
-      - 'f:/etc/rc5.d/S01rsyslog'
+      - 'c:systemctl is-enabled rsyslog.service -> enabled'
 
   - id: 10568
     title: "Configure /etc/rsyslog.conf"
@@ -930,7 +915,7 @@ checks:
       - cis: "9.2.2"
     condition: all
     rules:
-      - 'f:/etc/pam.d/login -> !r:^# && r:auth required pam_tally2.so onerr=fail audit silent deny=\d unlock_time=\d\d\d+'
+      - 'f:/etc/pam.d/login -> !r:^# && r:auth\s*\t*required\s*\t*pam_tally2.so\s*\t*onerr=fail\s*\t*audit\s*\t*silent\s*\t*deny=\d\s*\t*unlock_time=\d\d\d+'
 
   - id: 10576
     title: "Limit Password Reuse"
@@ -1085,7 +1070,7 @@ checks:
       - cis: "9.5"
     condition: all
     rules:
-      - 'f:/etc/pam.d/su -> !r:^# && r:auth required pam_wheel.so use_uid'
+      - 'f:/etc/pam.d/su -> !r:^# && r:auth\s*\t*required\s*\t*pam_wheel.so\s*\t*use_uid'
       - 'f:/etc/group -> !r:^# && r:^wheel'
 
 # 10 User Accounts and Environment
@@ -1120,7 +1105,7 @@ checks:
       - cis: "10.1.3"
     condition: all
     rules:
-      - 'f:/etc/login.defs -> n:^PASS_WARN_DAYS\s+(\d+) compare <= 7'
+      - 'f:/etc/login.defs -> n:^PASS_WARN_AGE\s+(\d+) compare <= 7'
 
   - id: 10593
     title: "Set Default Group for root Account"
@@ -1142,7 +1127,7 @@ checks:
       - cis: "10.4"
     condition: all
     rules:
-      - 'c:grep -er "^umask 077" /etc/profile.d/'
+      - 'c:grep -r -e "^umask 077" /etc/profile.d/'
       - 'f:/etc/bash.bashrc -> !r:^# && r:^umask 077'
 
   - id: 10595
@@ -1182,7 +1167,9 @@ checks:
       - cis: "11.2"
     condition: none
     rules:
-      - 'f:/etc/motd -> r:debian|gnu|linux'
+      - 'c: egrep "(\\v|\\r|\\m|\\s)" /etc/issue'
+      - 'c: egrep "(\\v|\\r|\\m|\\s)" /etc/motd'
+      - 'c: egrep "(\\v|\\r|\\m|\\s)" /etc/issue.net'
 
 # 13 Review User and Group Settings
   - id: 10598
@@ -1248,7 +1235,7 @@ checks:
       - cis: "13.10"
     condition: none
     rules:
-      - 'd:$home_dirs -> r:^.rhosts$'
+      - 'd:/home -> r:^.rhosts$'
 
   - id: 10604
     title: "Check for Presence of User .netrc Files"
@@ -1259,7 +1246,7 @@ checks:
       - cis: "13.18"
     condition: none
     rules:
-      - 'd:$home_dirs -> r:^.netrc$'
+      - 'd:/home -> r:^.netrc$'
 
   - id: 10605
     title: "Check for Presence of User .forward Files"
@@ -1270,7 +1257,7 @@ checks:
       - cis: "13.19"
     condition: none
     rules:
-      - 'd:$home_dirs -> r:^.forward$'
+      - 'd:/home -> r:^.forward$'
 
   - id: 10606
     title: "Ensure shadow group is empty"
