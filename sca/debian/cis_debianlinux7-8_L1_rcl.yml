@@ -543,7 +543,7 @@ checks:
     condition: none
     rules:
       - 'c:dpkg -s rsync -> install ok installed'
-      - 'f:/etc/default/rsync -> !r:^# && r:^RSYNC_ENABLE=false'
+      - 'f:/etc/default/rsync -> !r:^# && r:RSYNC_ENABLE=false'
 
 # 7 Network Configuration and Firewall
   - id: 10547
@@ -959,7 +959,7 @@ checks:
       - cis: "9.3.4"
     condition: all
     rules:
-      - 'f:/etc/ssh/sshd_config -> !r:^# && r:^X11Forwarding\s+no'
+      - 'f:/etc/ssh/sshd_config -> r:^X11Forwarding\s+no'
 
   - id: 10580
     title: "Set SSH MaxAuthTries to 4 or Less"
@@ -970,7 +970,7 @@ checks:
       - cis: "9.3.5"
     condition: all
     rules:
-      - 'f:/etc/ssh/sshd_config -> !r:^# && r:^MaxAuthTries && n:(\d+) compare <= 4'
+      - 'f:/etc/ssh/sshd_config -> n:^MaxAuthTries\s*\t*(\d+) compare <= 4'
 
   - id: 10581
     title: "Set SSH IgnoreRhosts to Yes"
@@ -981,7 +981,7 @@ checks:
       - cis: "9.3.6"
     condition: all
     rules:
-      - 'f:/etc/ssh/sshd_config -> !r:^# && r:^IgnoreRhosts\s+yes'
+      - 'f:/etc/ssh/sshd_config -> !r:^# && r:IgnoreRhosts\s+yes'
 
   - id: 10582
     title: "Set SSH HostbasedAuthentication to No"
@@ -992,7 +992,7 @@ checks:
       - cis: "9.3.7"
     condition: all
     rules:
-      - 'f:/etc/ssh/sshd_config -> !r:^# && r:^HostbasedAuthentication\s+no'
+      - 'f:/etc/ssh/sshd_config -> !r:^# && r:HostbasedAuthentication\s+no'
 
   - id: 10583
     title: "Disable SSH Root Login"
@@ -1003,7 +1003,7 @@ checks:
       - cis: "9.3.8"
     condition: all
     rules:
-      - 'f:/etc/ssh/sshd_config -> !r:^# && r:^PermitRootLogin\s+no'
+      - 'f:/etc/ssh/sshd_config -> !r:^# && r:PermitRootLogin\s+no'
 
   - id: 10584
     title: "Set SSH PermitEmptyPasswords to No"
@@ -1014,7 +1014,7 @@ checks:
       - cis: "9.3.9"
     condition: all
     rules:
-      - 'f:/etc/ssh/sshd_config -> !r:^# && r:^PermitEmptyPasswords\s+no'
+      - 'f:/etc/ssh/sshd_config -> !r:^# && r:PermitEmptyPasswords\s+no'
 
   - id: 10585
     title: "Do Not Allow Users to Set Environment Options"
@@ -1025,7 +1025,7 @@ checks:
       - cis: "9.3.10"
     condition: all
     rules:
-      - 'f:/etc/ssh/sshd_config -> !r:^# && r:^PermitUserEnvironment\s+no'
+      - 'f:/etc/ssh/sshd_config -> !r:^# && r:PermitUserEnvironment\s+no'
 
   - id: 10586
     title: "Set Idle Timeout Interval for User Login"
@@ -1036,8 +1036,8 @@ checks:
       - cis: "9.3.12"
     condition: all
     rules:
-      - 'f:/etc/ssh/sshd_config -> !r:^# && r:^ClientAliveInterval && n:(\d+) compare <= 300'
-      - 'f:/etc/ssh/sshd_config -> !r:^# && r:^ClientAliveCountMax\s+0'
+      - 'f:/etc/ssh/sshd_config -> !r:^# && n:ClientAliveInterval\s*\t*(\d+) compare <= 300'
+      - 'f:/etc/ssh/sshd_config -> !r:^# && r:ClientAliveCountMax\s+0'
 
   - id: 10587
     title: "Limit Access via SSH"
@@ -1048,7 +1048,7 @@ checks:
       - cis: "9.3.13"
     condition: all
     rules:
-      - 'f:/etc/ssh/sshd_config -> !r:^# && r:^AllowUsers\s+\w+|^AllowGroups\s+\w+|^DenyUsers\s+\w+|^DenyGroups\s+\w+'
+      - 'f:/etc/ssh/sshd_config -> !r:^# && r:AllowUsers\s+\w+|^AllowGroups\s+\w+|^DenyUsers\s+\w+|^DenyGroups\s+\w+'
 
   - id: 10588
     title: "Set SSH Banner"
@@ -1059,7 +1059,7 @@ checks:
       - cis: "9.3.14"
     condition: all
     rules:
-      - 'f:/etc/ssh/sshd_config -> !r:^# && r:^Banner\s*\t*/etc/issue.net|^Banner\s\t*/etc/issue'
+      - 'f:/etc/ssh/sshd_config -> !r:^# && r:Banner\s*\t*/etc/issue.net|^Banner\s\t*/etc/issue'
 
   - id: 10589
     title: "Restrict Access to the su Command"
@@ -1071,7 +1071,7 @@ checks:
     condition: all
     rules:
       - 'f:/etc/pam.d/su -> !r:^# && r:auth\s*\t*required\s*\t*pam_wheel.so\s*\t*use_uid'
-      - 'f:/etc/group -> !r:^# && r:^wheel'
+      - 'f:/etc/group -> !r:^# && r:wheel'
 
 # 10 User Accounts and Environment
   - id: 10590
@@ -1083,7 +1083,7 @@ checks:
       - cis: "10.1.1"
     condition: all
     rules:
-      - 'f:/etc/login.defs -> !r:^# && r:^PASS_MAX_DAYS && n:(\d+) compare <= 90'
+      - 'f:/etc/login.defs -> n:^PASS_MAX_DAYS\s*\t*(\d+) compare <= 90'
 
   - id: 10591
     title: "Set Password Change Minimum Number of Days"
@@ -1094,7 +1094,7 @@ checks:
       - cis: "10.1.2"
     condition: all
     rules:
-      - 'f:/etc/login.defs -> n:^PASS_MIN_DAYS\s+(\d+) compare <= 7'
+      - 'f:/etc/login.defs -> n:^PASS_MIN_DAYS\s*\t*(\d+) compare <= 7'
 
   - id: 10592
     title: "Set Password Expiring Warning Days"
@@ -1105,7 +1105,7 @@ checks:
       - cis: "10.1.3"
     condition: all
     rules:
-      - 'f:/etc/login.defs -> n:^PASS_WARN_AGE\s+(\d+) compare <= 7'
+      - 'f:/etc/login.defs -> n:^PASS_WARN_AGE\s*\t*(\d+) compare <= 7'
 
   - id: 10593
     title: "Set Default Group for root Account"
@@ -1116,7 +1116,7 @@ checks:
       - cis: "10.3"
     condition: all
     rules:
-      - 'f:/etc/passwd -> !r:^# && r:^root:\w+:\w+:0:'
+      - 'f:/etc/passwd -> !r:^# && r:root:\w+:\w+:0:'
 
   - id: 10594
     title: "Set Default umask for Users"
@@ -1128,7 +1128,7 @@ checks:
     condition: all
     rules:
       - 'c:grep -r -e "^umask 077" /etc/profile.d/'
-      - 'f:/etc/bash.bashrc -> !r:^# && r:^umask 077'
+      - 'f:/etc/bash.bashrc -> !r:^# && r:umask 077'
 
   - id: 10595
     title: "Lock Inactive User Accounts"
@@ -1224,7 +1224,7 @@ checks:
       - cis: "13.5"
     condition: none
     rules:
-      - 'f:/etc/passwd -> !r:^# && !r:^\s*\t*root: && r:^\w+:\w+:0:'
+      - 'f:/etc/passwd -> !r:^# && not r:^\s*\t*root: && r:^\w+:\w+:0:'
 
   - id: 10603
     title: "Check for Presence of User .rhosts Files"
