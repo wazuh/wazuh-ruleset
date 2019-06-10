@@ -28,9 +28,6 @@ requirements:
     - 'f:/proc/sys/kernel/ostype -> Linux'
 
 variables:
-  $rc_dirs: /etc/rc0.d,/etc/rc1.d,/etc/rc2.d,/etc/rc3.d,/etc/rc4.d,/etc/rc5.d,/etc/rc6.d,/etc/rc7.d,/etc/rc8.d,/etc/rc9.d,/etc/rca.d,/etc/rcb.d,/etc/rcc.d,/etc/rcs.d,/etc/rcS.d
-  $rsyslog_files: /etc/rsyslog.conf,/etc/rsyslog.d/*
-  $profiledfiles: /etc/profile.d/*
   $home_dirs: /usr2/home/*,/home/*,/home,/*/home/*,/*/home,/
 
 checks:
@@ -448,8 +445,8 @@ checks:
       - cis: "6.7"
     condition: none
     rules:
-      - 'c:ls -1 /etc/rc*.d -> r:S\.+rpcbind'
-      - 'c:ls -1 /etc/rc*.d -> r:S\.+nfs-kernel-server'
+     - 'c:systemctl is-enabled nfs -> r:disabled'
+     - 'c:systemctl is-enabled rpcbind -> r:disabled'
 
   - id: 10538
     title: "Ensure DNS Server is not enabled"
@@ -460,7 +457,8 @@ checks:
       - cis: "6.8"
     condition: none
     rules:
-      - 'c:ls -1 /etc/rc*.d -> r:S\.+bind9'
+     - 'c:chkconfig --list named -> r:0:off && r:1:off && r:2:off && r:3:off && r:4:off && r:5:off && r:6:off'
+     - 'c:systemctl is-enabled named -> r:disabled'
 
   - id: 10539
     title: "Ensure FTP Server is not enabled"
@@ -482,7 +480,8 @@ checks:
       - cis: "6.10"
     condition: none
     rules:
-      - 'c:ls -1 /etc/rc*.d -> r:S\.+apache2'
+     - 'c:chkconfig --list httpd -> r:0:off && r:1:off && r:2:off && r:3:off && r:4:off && r:5:off && r:6:off'
+     - 'c:systemctl is-enabled httpd -> r:disabled'
 
   - id: 10541
     title: "Ensure IMAP and POP server is not enabled"
@@ -504,7 +503,8 @@ checks:
       - cis: "6.12"
     condition: none
     rules:
-      - 'c:ls -1 /etc/rc*.d -> r:S\.+samba'
+     - 'c:chkconfig --list smb -> r:0:off && r:1:off && r:2:off && r:3:off && r:4:off && r:5:off && r:6:off'
+     - 'c:systemctl is-enabled smb -> r:disabled'
 
   - id: 10543
     title: "Ensure HTTP Proxy Server is not enabled"
@@ -515,7 +515,8 @@ checks:
       - cis: "6.13"
     condition: none
     rules:
-      - 'c:ls -1 /etc/rc*.d -> r:S\.+squid3'
+     - 'c:chkconfig --list squid -> r:0:off && r:1:off && r:2:off && r:3:off && r:4:off && r:5:off && r:6:off'
+     - 'c:systemctl is-enabled squid -> r:disabled'
 
   - id: 10544
     title: "Ensure SNMP Server is not enabled"
@@ -701,14 +702,12 @@ checks:
       - cis: "7.3.3"
     condition: none
     rules:
-      - 'c:sysctl net.ipv6.conf.all.disable_ipv6 -> 1'
-      - 'c:sysctl net.ipv6.conf.default.disable_ipv6 -> 1'
-      - 'c:sysctl net.ipv6.conf.lo.disable_ipv6 -> 1'
+      - 'c:sysctl net.ipv6.conf.all.disable_ipv6 -> r:= 1$'
+      - 'c:sysctl net.ipv6.conf.default.disable_ipv6 -> r:= 1$'
+      - 'c:sysctl net.ipv6.conf.lo.disable_ipv6 -> r:= 1$'
       - 'f:/etc/sysctl.conf -> r:^net.ipv6.conf.all.disable_ipv6=1'
       - 'f:/etc/sysctl.conf -> r:^net.ipv6.conf.default.disable_ipv6=1'
       - 'f:/etc/sysctl.conf -> r:^net.ipv6.conf.lo.disable_ipv6=1'
-
-      - 'c:ip addr -> r:inet6'
 
   - id: 10560
     title: "Create /etc/hosts.allow"
@@ -1170,6 +1169,9 @@ checks:
       - 'f:/etc/motd'
       - 'f:/etc/issue'
       - 'f:/etc/issue.net'
+      - 'c:stat -c%u-%g-%a /etc/motd -> 0-0-644'
+      - 'c:stat -c%u-%g-%a /etc/issue -> 0-0-644'
+      - 'c:stat -c%u-%g-%a /etc/issue.net -> 0-0-644'
 
   - id: 10597
     title: "Remove OS Information from Login Warning Banners"
