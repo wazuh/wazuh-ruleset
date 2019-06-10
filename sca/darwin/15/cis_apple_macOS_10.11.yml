@@ -301,8 +301,9 @@ checks:
     remediation: "Run the following command in Terminal: defaults write /Library/Preferences/com.apple.mDNSResponder.plist NoMulticastAdvertisements"
     compliance:
       - cis: "4.1"
-    condition: all
+    condition: any
     rules:
+      - 'c:defaults read /Library/Preferences/com.apple.mDNSResponder.plist NoMulticastAdvertisements -> r:does not exist'
       - 'c:defaults read /Library/Preferences/com.apple.mDNSResponder.plist NoMulticastAdvertisements -> r:^1$'
 
 # 4.4 Ensure http server is not running (Scored)
@@ -449,6 +450,7 @@ checks:
     remediation: "Perform the following to implement the prescribed state: 1. Open Safari 2. Select Safari from the menu bar 3. Select Preferences 4. Select General 5. Uncheck Open \"safe\" files after downloading    Alternatively run the following command in Terminal: defaults write com.apple.Safari AutoOpenSafeDownloads -boolean no"
     compliance:
       - cis: "6.3"
-    condition: all
+    condition: any
     rules:
-      - 'c:defaults read com.apple.Safari AutoOpenSafeDownloads -> r:^0$;'
+      - 'c:defaults read com.apple.Safari AutoOpenSafeDownloads -> r:does not exist'
+      - 'c:defaults read com.apple.Safari AutoOpenSafeDownloads -> r:^0$'
