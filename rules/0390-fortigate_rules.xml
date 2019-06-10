@@ -273,4 +273,51 @@ ID: 81600 - 80799
         <group>attack,gdpr_IV_35.7.d,</group>
     </rule>
 
+    <rule id="81630" level="0">
+      <decoded_as>fortigate-ips</decoded_as>
+      <description>Fortigate-IPS parent rule</description>
+    </rule> 
+
+    <rule id="81631" level="3">
+      <if_sid>81630</if_sid>      
+      <field name="trigger">Low</field>
+      <description>Fortigate-IPS: Low Severity event</description>
+    </rule>
+
+    <rule id="81632" level="5">
+      <if_sid>81630</if_sid>      
+      <field name="trigger">Medium</field>
+      <description>Fortigate-IPS: Medium Severity event</description>
+    </rule>
+
+    <rule id="81633" level="7">
+      <if_sid>81630</if_sid>      
+     <field name="trigger">High</field>
+      <description>Fortigate-IPS: High Severity event</description>
+    </rule>
+
+    <rule id="81634" level="10">
+      <if_sid>81633</if_sid>
+      <field name="subject">attack</field>
+      <description>Fortigate IPS: attack detected</description>
+    </rule>
+
+    <rule id="81635" level="0">
+      <decoded_as>fortigate-cef</decoded_as>
+      <description>Grouping of fortigate rules for CEF logs</description>
+    </rule>
+
+
+    <rule id="81636" level="3">
+      <if_sid>81635</if_sid>
+      <field name="severity">3</field>
+      <description>Fortigate: Severity level 3 message</description>
+    </rule>
+
+    <rule id="81637" level="5">
+      <if_sid>81635</if_sid>
+      <field name="severity">5</field>
+      <description>Fortigate: Severity level 5 message</description>
+    </rule>
+
 </group>
