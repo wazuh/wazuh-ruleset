@@ -403,6 +403,17 @@
     <description>General device failure</description>
   </rule>
 
+  <rule id="5140" level="2">
+   <program_name>^zpool</program_name>
+   <description>General ZFS pool event</description>
+  </rule>
+
+  <rule id="5141" level="7">
+    <if_sid>5140</if_sid>
+    <match>cannot import</match>
+    <description>Cannot import a ZFS pool due to an error</description>
+  </rule>
+
   <rule id="5200" level="0">
     <match>^hpiod: unable to ParDevice</match>
     <description>Ignoring hpiod for producing useless logs.</description>
