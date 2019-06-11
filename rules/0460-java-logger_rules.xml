@@ -11,7 +11,7 @@ Feb 18, 2017 8:51:48 AM component action WARNING: Text
 Feb 18, 2017 8:51:48 AM component action SEVERE: Text
 -->
 
-<!-- ID: 86250 - 86500 -->
+<!-- ID: 86250 - 86255 -->
 
 <group name="java-logger,">
 
@@ -27,7 +27,7 @@ Feb 18, 2017 8:51:48 AM component action SEVERE: Text
         <group>jenkins-info,</group>
     </rule>
 
-    <rule id="86252" level="1">
+    <rule id="86252" level="2">
         <if_sid>86250</if_sid>
         <field name="jenkins.severity">WARNING</field>
         <description>Jenkins: Warning message</description>
@@ -41,9 +41,6 @@ Feb 18, 2017 8:51:48 AM component action SEVERE: Text
         <group>jenkins-severe,</group>
     </rule>
 
-    <!--
-    Feb 18, 2017 8:51:56 AM hudson.model.UpdateCenter$DownloadJob run INFO: Installation successful: PAM Authentication plugin
-    -->
     <rule id="86254" level="3">
         <if_sid>86251</if_sid>
         <match>Installation successful:</match>
@@ -51,9 +48,6 @@ Feb 18, 2017 8:51:48 AM component action SEVERE: Text
         <group>jenkins-info,</group>
     </rule>
 
-    <!--
-    Feb 18, 2017 8:48:15 AM org.jenkinsci.main.modules.sshd.SSHD start INFO: Started SSHD at port 35627
-    -->
     <rule id="86255" level="3">
         <if_sid>86251</if_sid>
         <match>Started SSHD</match>
