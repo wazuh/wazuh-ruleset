@@ -1,6 +1,69 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [v3.9.2]
+
+### Fixed
+
+- Fixed Windows rule about audit log. ([#408](https://github.com/wazuh/wazuh-ruleset/pull/408))
+- Fixed check 11522 of Solaris SCA policy. ([#420](https://github.com/wazuh/wazuh-ruleset/pull/420))
+
+## [v3.9.1]
+
+### Fixed
+
+- Fixed rule for the SCA check 5035 about SSH protocol. ([#385](https://github.com/wazuh/wazuh-ruleset/pull/385))
+- Fixed duplicated rules for the SCA policy cis_debianlinux7-8_L2. ([#386](https://github.com/wazuh/wazuh-ruleset/pull/386))
+- Fixed Windows Defender rule description. ([#388](https://github.com/wazuh/wazuh-ruleset/pull/388))
+- Fixed rules and requirements for SCA CIS policies of Mac OS X. ([#387](https://github.com/wazuh/wazuh-ruleset/pull/387))
+- Fixed Windows NT registries in Windows SCA policies. ([#393](https://github.com/wazuh/wazuh-ruleset/pull/393))
+- Fixed Windows EventChannel rules for Eventlog and Security Essentials. ([#397](https://github.com/wazuh/wazuh-ruleset/pull/397))
+- Fixed Windows rules to avoid filtering by erroneous provider names. ([#403](https://github.com/wazuh/wazuh-ruleset/pull/403))
+
+## [v3.9.0]
+
+### Added
+
+- Adapt Sysmon rules to new Windows eventchannel format. ([#285](https://github.com/wazuh/wazuh-ruleset/pull/285))
+- Added ruleset for the SCA module. ([#288](https://github.com/wazuh/wazuh-ruleset/pull/288))
+- Added policy files in YAML format for the SCA module. ([#288](https://github.com/wazuh/wazuh-ruleset/pull/288))
+- Added the policy *cis_win2012r2_memberL2_rcl.yml* for SCA. ([#289](https://github.com/wazuh/wazuh-ruleset/pull/289)) (Thanks to @Bob-Andrews)
+- Improved rules for the docker listener. ([#293](https://github.com/wazuh/wazuh-ruleset/pull/293)) ([#307](https://github.com/wazuh/wazuh-ruleset/pull/307))
+- New options `same_field` and `not_same_field` to correlate dynamic fields in rules. ([#302](https://github.com/wazuh/wazuh-ruleset/pull/302))
+- New rule to catch a logon success from a Windows workstation. ([#304](https://github.com/wazuh/wazuh-ruleset/pull/304))
+- Added rules about Application and System channels for the Windows eventchannel format. ([#325](https://github.com/wazuh/wazuh-ruleset/pull/325))
+- Added *PCI-DSS* and *GDPR* mapping to rules for the docker listener. ([#333](https://github.com/wazuh/wazuh-ruleset/pull/333))
+
+### Changed
+
+- Changed the eventchannel field names in rules. ([#299](https://github.com/wazuh/wazuh-ruleset/pull/299))
+- Redistribute the eventchannel rules by incoming channel. ([#325](https://github.com/wazuh/wazuh-ruleset/pull/325))
+- Prevent events invoked by AWS Internal from flooding alerts. ([#351](https://github.com/wazuh/wazuh-ruleset/pull/351))
+
+### Fixed
+
+- Fixed the bruteforce attack rules for Windows Eventchannel. ([#302](https://github.com/wazuh/wazuh-ruleset/pull/302))
+- Updated links for Windows rules. ([#311](https://github.com/wazuh/wazuh-ruleset/pull/311)) (Credits to @atomicturtle ([#1675](https://github.com/ossec/ossec-hids/pull/1675)))
+- Several fixes for Windows rules for the eventlog format. (Thanks to @branchnetconsulting)
+  - Fixed SID regexes for eventlog Windows rules. ([#197](https://github.com/wazuh/wazuh-ruleset/pull/197))
+  - Fixed the matched string of rule 18270. ([#219](https://github.com/wazuh/wazuh-ruleset/pull/219))
+  - Fixed Sysmon rule when the destination port is empty. ([#229](https://github.com/wazuh/wazuh-ruleset/pull/229))
+  - Fixed the description for rule 18260. ([#232](https://github.com/wazuh/wazuh-ruleset/pull/232))
+  - Generalize description for rule 83201. ([#241](https://github.com/wazuh/wazuh-ruleset/pull/241))
+- Fixed the flow for Windows rule 18230. ([#253](https://github.com/wazuh/wazuh-ruleset/pull/253)) (Thanks to @wiredaem0n)
+
+## [v3.8.2]
+
+### Changed
+
+- Rework of the rules for Windows Eventchannel. ([#277](https://github.com/wazuh/wazuh-ruleset/pull/277))
+
+
+## [v3.8.1]
+
+There are no changes for Wazuh Ruleset in this version.
+
+
 ## [v3.8.0]
 
 ### Added
