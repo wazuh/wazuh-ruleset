@@ -49,7 +49,7 @@ checks:
     remediation: "Edit the /etc/fstab file and add nodev to the fourth field (mounting options). See the fstab(5) manual page for more information.  # mount -o remount,nodev /tmp"
     compliance:
       - cis: "2.2"
-    condition: any
+    condition: all
     rules:
       - 'not c:mount -> r:\s/tmp\s'
       - 'c:mount -> r:\s/tmp\s && r:nodev'
@@ -61,7 +61,7 @@ checks:
     remediation: "Edit the /etc/fstab file and add nosuid to the fourth field (mounting options). See the fstab(5) manual page for more information.  # mount -o remount,nosuid /tmp"
     compliance:
       - cis: "2.3"
-    condition: any
+    condition: all
     rules:
       - 'not c:mount -> r:\s/tmp\s'
       - 'c:mount -> r:\s/tmp\s && r:nosuid'
@@ -73,7 +73,7 @@ checks:
     remediation: "Edit the /etc/fstab file and add noexec to the fourth field (mounting options). See the fstab(5) manual page for more information.  # mount -o remount,noexec /tmp"
     compliance:
       - cis: "2.4"
-    condition: any
+    condition: all
     rules:
       - 'not c:mount -> r:\s/tmp\s'
       - 'c:mount -> r:\s/tmp\s && r:noexec'
@@ -176,6 +176,7 @@ checks:
     rules:
       - 'not c:mount -> r:\s/run/shm\s'
       - 'c:mount -> r:\s/run/shm\s && r:nosuid'
+
   - id: 10515
     title: "Add noexec Option to /run/shm Partition"
     description: "Set noexec on the shared memory partition to prevent programs from executing from there."
@@ -415,8 +416,8 @@ checks:
     condition: all
     rules:
       - 'c:dpkg -s ntp -> r:install ok installed'
-      - 'f:/etc/ntp.conf -> r:^restrict -4 default kod nomodify notrap nopeer noquery'
-      - 'f:/etc/ntp.conf -> r:^restrict -6 default kod nomodify notrap nopeer noquery'
+      - 'f:/etc/ntp.conf -> r:^restrict -4 default && r:kod && r:nomodify && r:notrap && r:nopeer && r:noquery'
+      - 'f:/etc/ntp.conf -> r:^restrict -6 default && r:kod && r:nomodify && r:notrap && r:nopeer && r:noquery'
       - 'f:/etc/ntp.conf -> r:^server\s\.+'
       - 'f:/etc/ntp.conf -> r:RUNASUSER=ntp'
 
@@ -1127,7 +1128,7 @@ checks:
       - cis: "10.4"
     condition: all
     rules:
-      - 'c:grep -r -e "^umask 077" /etc/profile.d/'
+      - 'c:grep -R -e "^umask 077" /etc/profile.d/'
       - 'f:/etc/bash.bashrc -> !r:^# && r:umask 077'
 
   - id: 10595
