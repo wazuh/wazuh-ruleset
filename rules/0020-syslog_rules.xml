@@ -377,7 +377,7 @@
   <rule id="5135" level="7">
    <if_sid>5100</if_sid>
    <match>Disk failure</match>
-   <description>RAID0/1 disk failure</description>
+   <description>RAID disk failure</description>
   </rule>
 
   <rule id="5136" level="2">
@@ -387,13 +387,13 @@
 
   <rule id="5137" level="7">
    <if_sid>5136</if_sid>
-   <match>FailSpare</match>
-   <description>RAID mdadm spare disk failure</description>
+   <match>Fail</match>
+   <description>RAID mdadm disk failure</description>
   </rule>
 
   <rule id="5138" level="7">
     <if_sid>5100</if_sid>
-    <match>ata.+: failed command</match>
+    <regex>ata\S+: failed command</regex>
     <description>General SATA disk failure</description>
   </rule>
 
