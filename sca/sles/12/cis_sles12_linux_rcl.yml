@@ -911,7 +911,7 @@ checks:
       - nist_800_53: "IA.10, AC.7"
     condition: none
     rules:
-      - 'f:/etc/passwd -> !r:^# && !r:^\s*\t*root: && r:^\w+:\w+:0:'
+      - 'f:/etc/passwd -> !r:^\s*\t*# && !r:^\s*\t*root: && r:^\w+:\w+:0:'
 
   - id: 7561
     title: "Ensure password fields are not empty"
