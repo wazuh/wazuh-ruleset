@@ -38,8 +38,8 @@ checks:
       - cis: "2.18"
     condition: all
     rules:
-      - 'f:/etc/modprobe.d/CIS.conf'
-      - 'f:/etc/modprobe.d/CIS.conf -> r:^install cramfs /bin/true'
+      - 'c:/sbin/modprobe -n -v cramfs -> r:^install /bin/true'
+      - 'not c:lsmod -> r:cramfs'
 
   - id: 11001
     title: "Disable Mounting of freevxfs Filesystems"
@@ -50,8 +50,8 @@ checks:
       - cis: "2.19"
     condition: all
     rules:
-      - f:/etc/modprobe.d/CIS.conf
-      - f:/etc/modprobe.d/CIS.conf -> r:^install freevxfs /bin/true
+      - 'c:/sbin/modprobe -n -v freevxfs -> r:^install /bin/true'
+      - 'not c:lsmod -> r:freevxfs'
 
   - id: 11002
     title: "Disable Mounting of jffs2 Filesystems"
@@ -62,8 +62,8 @@ checks:
       - cis: "2.20"
     condition: all
     rules:
-      - 'f:/etc/modprobe.d/CIS.conf'
-      - 'f:/etc/modprobe.d/CIS.conf -> r:^install jffs2 /bin/true'
+      - 'c:/sbin/modprobe -n -v jffs2 -> r:^install /bin/true'
+      - 'not c:lsmod -> r:jffs2'
 
   - id: 11003
     title: "Disable Mounting of hfs Filesystems"
@@ -74,8 +74,8 @@ checks:
       - cis: "2.21"
     condition: all
     rules:
-      - 'f:/etc/modprobe.d/CIS.conf'
-      - 'f:/etc/modprobe.d/CIS.conf -> r:^install hfs /bin/true'
+      - 'c:/sbin/modprobe -n -v hfs -> r:^install /bin/true'
+      - 'not c:lsmod -> r:hfs'
 
   - id: 11004
     title: "Disable Mounting of hfsplus Filesystems"
@@ -86,8 +86,8 @@ checks:
       - cis: "2.22"
     condition: all
     rules:
-      - 'f:/etc/modprobe.d/CIS.conf'
-      - 'f:/etc/modprobe.d/CIS.conf -> r:^install hfsplus /bin/true'
+      - 'c:/sbin/modprobe -n -v hfsplus -> r:^install /bin/true'
+      - 'not c:lsmod -> r:hfsplus'
 
   - id: 11005
     title: "Disable Mounting of squashfs Filesystems"
@@ -98,8 +98,8 @@ checks:
       - cis: "2.23"
     condition: all
     rules:
-      - 'f:/etc/modprobe.d/CIS.conf'
-      - 'f:/etc/modprobe.d/CIS.conf -> r:^install squashfs /bin/true'
+      - 'c:/sbin/modprobe -n -v squashfs -> r:^install /bin/true'
+      - 'not c:lsmod -> r:squashfs'
 
   - id: 11006
     title: "Disable Mounting of udf Filesystems"
@@ -110,8 +110,8 @@ checks:
       - cis: "2.24"
     condition: all
     rules:
-      - 'f:/etc/modprobe.d/CIS.conf'
-      - 'f:/etc/modprobe.d/CIS.conf -> r:^install udf /bin/true'
+      - 'c:/sbin/modprobe -n -v udf -> r:^install /bin/true'
+      - 'not c:lsmod -> r:udf'
 
 # 4 Additional Process Hardening
   - id: 11007
@@ -227,6 +227,7 @@ checks:
       - 'f:/etc/audit'
       - 'f:/etc/audit/audit.rules'
       - 'f:/etc/audit/audit.rules -> r:^-a exit,always -F arch=b32 -S sethostname -S setdomainname -k system-locale'
+      - 'f:/etc/audit/audit.rules -> r:^-a exit,always -F arch=b64 -S sethostname -S setdomainname -k system-locale'
       - 'f:/etc/audit/audit.rules -> r:^-w /etc/issue -p wa -k system-locale'
       - 'f:/etc/audit/audit.rules -> r:^-w /etc/issue.net -p wa -k system-locale'
       - 'f:/etc/audit/audit.rules -> r:^-w /etc/hosts -p wa -k system-locale'
@@ -304,11 +305,10 @@ checks:
     rules:
       - 'd:/etc/audit'
       - 'f:/etc/audit/audit.rules'
-      - 'f:/etc/audit/audit.rules -> r:^-a always,exit -F arch=b64 -S creat -S open -S openat -S truncate -S ftruncate -F exit=-EACCES -F auid>=1000 -F auid!=4294967295 -k access'
-      - 'f:/etc/audit/audit.rules -> r:^-a always,exit -F arch=b32 -S creat -S open -S openat -S truncate -S ftruncate -F exit=-EACCES -F auid>=1000 -F auid!=4294967295 -k access'
-      - 'f:/etc/audit/audit.rules -> r:^-a always,exit -F arch=b64 -S creat -S open -S openat -S truncate -S ftruncate -F exit=-EPERM -F auid>=1000 -F auid!=4294967295 -k access'
-      - 'f:/etc/audit/audit.rules -> r:^-a always,exit -F arch=b32 -S creat -S open -S openat -S truncate -S ftruncate -F exit=-EPERM -F auid>=1000 -F auid!=4294967295 -k access'
-
+      - 'f:/etc/audit/audit.rules -> r:^-a always,exit -F arch=b64 -S creat -S open -S openat -S truncate -F exit=-EACCES -F auid>=1000 -F auid!=4294967295 -k access'
+      - 'f:/etc/audit/audit.rules -> r:^-a always,exit -F arch=b32 -S creat -S open -S openat -S truncate -F exit=-EACCES -F auid>=1000 -F auid!=4294967295 -k access'
+      - 'f:/etc/audit/audit.rules -> r:^-a always,exit -F arch=b64 -S creat -S open -S openat -S truncate -F exit=-EPERM -F auid>=1000 -F auid!=4294967295 -k access'
+      - 'f:/etc/audit/audit.rules -> r:^-a always,exit -F arch=b32 -S creat -S open -S openat -S truncate -F exit=-EPERM -F auid>=1000 -F auid!=4294967295 -k access'
   - id: 11020
     title: "Collect Successful File System Mounts"
     description: "Monitor the use of the mount system call. The mount (and umount) system call controls the mounting and unmounting of file systems. The parameters below configure the system to create an audit record when the mount system call is used by a non-privileged user"
@@ -333,8 +333,8 @@ checks:
     rules:
       - 'd:/etc/audit'
       - 'f:/etc/audit/audit.rules'
-      - 'f:/etc/audit/audit.rules -> r:^-a always,exit -F arch=b64 -S unlink -S unlinkat -S rename -S renameat -F auid>=1000 -F auid!=4294967295 -k delete'
-      - 'f:/etc/audit/audit.rules -> r:^-a always,exit -F arch=b32 -S unlink -S unlinkat -S rename -S renameat -F auid>=1000 -F auid!=4294967295 -k delete'
+      - 'f:/etc/audit/audit.rules -> r:^-a always,exit -F arch=b64 -S mount -F auid>=1000 -F auid!=4294967295 -k mounts'
+      - 'f:/etc/audit/audit.rules -> r:^-a always,exit -F arch=b32 -S mount -F auid>=1000 -F auid!=4294967295 -k mounts'
 
   - id: 11022
     title: "Collect Changes to System Administration Scope (sudoers)"
@@ -402,6 +402,7 @@ checks:
     condition: all
     rules:
       - 'f:/usr/sbin/aideinit'
+      - 'c:dpkg -s aide -> r:install ok installed'
 
   - id: 11027
     title: "Implement Periodic Execution of File Integrity"
@@ -412,4 +413,4 @@ checks:
       - cis: "8.3.2"
     condition: all
     rules:
-      - 'f:/etc/crontab -> r:\s*\t*/usr/sbin/aide --check'
+      - 'f:/etc/crontab -> r:\s*\t*/usr/sbin/aide\s*\t*--check'

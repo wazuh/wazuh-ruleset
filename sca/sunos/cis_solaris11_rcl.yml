@@ -25,9 +25,6 @@ requirements:
   rules:
     - 'f:/etc/release -> r:^\s*Oracle\s+Solaris\s+11\p'
 
-variables:
-  $home_dirs: /usr2/home/*,/home/*,/home,/*/home/*,/*/home,/
-
 checks:
 # 2 Disable Unnecessary Services
   - id: 11500
@@ -188,7 +185,7 @@ checks:
       - cis: "2.13"
     condition: all
     rules:
-      - 'p:telnetd'
+      - 'p:telnet'
 
 # 3 Kernel Tuning
   - id: 11513
@@ -200,6 +197,7 @@ checks:
       - cis: "3.1"
     condition: all
     rules:
+      - 'f:/etc/coreadm.conf'
       - 'f:/etc/coreadm.conf -> r:^COREADM_GLOB_PATTERN\p\.+'
       - 'f:/etc/coreadm.conf -> r:^COREADM_GLOB_CONTENT\pdefault'
       - 'f:/etc/coreadm.conf -> r:^COREADM_INIT_PATTERN\pcore'
@@ -466,6 +464,7 @@ checks:
       - cis: "6.12"
     condition: all
     rules:
+      - 'f:/usr/share/X11/app-defaults/XScreensaver'
       - 'f:/usr/share/X11/app-defaults/XScreensaver -> r:^*timeout:\s*\t*0:10:00'
       - 'f:/usr/share/X11/app-defaults/XScreensaver -> r:^*locktimeout:\s*\t*0:00:00'
       - 'f:/usr/share/X11/app-defaults/XScreensaver -> r:^*lock:\s*\t*true'
@@ -518,6 +517,7 @@ checks:
       - cis: "6.17"
     condition: all
     rules:
+      - 'f:/rpool/boot/grub/menu.lst'
       - 'f:/rpool/boot/grub/menu.lst -> r:^password\s*--md5'
 
 # 7 User Accounts and Environment
@@ -622,6 +622,7 @@ checks:
       - cis: "8.3"
     condition: all
     rules:
+      - 'f:/etc/gdm/Init/Default'
       - 'f:/etc/gdm/Init/Default -> r:^/usr/bin/zenity\s\.'
 
   - id: 11545
@@ -741,7 +742,7 @@ checks:
       - cis: "9.10"
     condition: none
     rules:
-      - 'd:$home_dirs -> ^.rhosts$'
+      - 'd:/home -> ^.rhosts$'
 
   - id: 11552
     title: "Check That Users Are Assigned Home Directories"
@@ -763,7 +764,7 @@ checks:
       - cis: "9.20"
     condition: none
     rules:
-      - 'd:$home_dirs -> ^.netrc$'
+      - 'd:/home -> ^.netrc$'
 
   - id: 11554
     title: "Check for Presence of User .forward Files"
@@ -774,4 +775,4 @@ checks:
       - cis: "9.21"
     condition: none
     rules:
-      - 'd:$home_dirs -> ^.forward$'
+      - 'd:/home -> ^.forward$'

@@ -27,12 +27,6 @@ requirements:
     - 'f:/etc/debian_version'
     - 'f:/proc/sys/kernel/ostype -> Linux'
 
-variables:
-  $rc_dirs: /etc/rc0.d,/etc/rc1.d,/etc/rc2.d,/etc/rc3.d,/etc/rc4.d,/etc/rc5.d,/etc/rc6.d,/etc/rc7.d,/etc/rc8.d,/etc/rc9.d,/etc/rca.d,/etc/rcb.d,/etc/rcc.d,/etc/rcs.d,/etc/rcS.d
-  $rsyslog_files: /etc/rsyslog.conf,/etc/rsyslog.d/*
-  $profiledfiles: /etc/profile.d/*
-  $home_dirs: /usr2/home/*,/home/*,/home,/*/home/*,/*/home,/
-
 checks:
 # 2 Filesystem Configuration
   - id: 10500
@@ -44,9 +38,9 @@ checks:
       - cis: "2.1"
     references:
       - http://tldp.org/HOWTO/LVM-HOWTO/
-    condition: all
+    condition: any
     rules:
-      - 'f:/etc/fstab -> !r:^\s*\t*# && r:/tmp'
+      - 'c:mount -> r:\s/tmp\s'
 
   - id: 10501
     title: "Set nodev option for /tmp Partition"
@@ -57,7 +51,8 @@ checks:
       - cis: "2.2"
     condition: all
     rules:
-      - 'f:/etc/fstab -> !r:^\s*\t*# && r:/tmp\s+\w+\s+\.*nodev'
+      - 'not c:mount -> r:\s/tmp\s'
+      - 'c:mount -> r:\s/tmp\s && r:nodev'
 
   - id: 10502
     title: "Set nosuid option for /tmp Partition"
@@ -68,7 +63,8 @@ checks:
       - cis: "2.3"
     condition: all
     rules:
-      - 'f:/etc/fstab -> !r:^\s*\t*# && r:/tmp\s+\w+\s+\.*nosuid'
+      - 'not c:mount -> r:\s/tmp\s'
+      - 'c:mount -> r:\s/tmp\s && r:nosuid'
 
   - id: 10503
     title: "Set noexec option for /tmp Partition"
@@ -79,10 +75,11 @@ checks:
       - cis: "2.4"
     condition: all
     rules:
-      - 'f:/etc/fstab -> !r:^\s*\t*# && r:/tmp\s+\w+\s+\.*noexec'
+      - 'not c:mount -> r:\s/tmp\s'
+      - 'c:mount -> r:\s/tmp\s && r:noexec'
 
   - id: 10504
-    title: " Create Separate Partition for /var"
+    title: "Create Separate Partition for /var"
     description: "The /var directory is used by daemons and other system services to temporarily store dynamic data. Some directories created by these processes may be world-writable."
     rationale: "Since the /var directory may contain world-writable files and directories, there is a risk of resource exhaustion if it is not bound to a separate partition."
     remediation: "For new installations, during installation create a custom partition setup and specify a separate partition for /var.  For systems that were previously installed, use the Logical Volume Manager (LVM) to create partitions."
@@ -92,7 +89,7 @@ checks:
       - http://tldp.org/HOWTO/LVM-HOWTO/
     condition: all
     rules:
-      - 'f:/etc/fstab -> !r:^\s*\t*# && r:/var'
+      - 'c:mount -> r:\s/var\s'
 
   - id: 10505
     title: "Bind Mount the /var/tmp directory to /tmp"
@@ -103,7 +100,7 @@ checks:
       - cis: "2.6"
     condition: all
     rules:
-      - 'f:/etc/fstab -> !r:^\s*\t*# && r:/tmp\s+/var/tmp\s+none\s+\.*bind\.*0\s+0'
+      - 'c:findmnt -> r:/var/tmp && r:[/tmp]'
 
   - id: 10506
     title: "Create Separate Partition for /var/log"
@@ -116,7 +113,7 @@ checks:
       - http://tldp.org/HOWTO/LVM-HOWTO/
     condition: all
     rules:
-      - 'f:/etc/fstab -> !r:^\s*\t*# && r:/var/log'
+      - 'c:mount -> r:\s/var/log\s'
 
   - id: 10507
     title: "Create Separate Partition for /var/log/audit"
@@ -129,7 +126,7 @@ checks:
       - http://tldp.org/HOWTO/LVM-HOWTO/
     condition: all
     rules:
-      - 'f:/etc/fstab -> !r:^\s*\t*# && r:/var/log/audit'
+      - 'c:mount -> r:\s/var/log/audit\s'
 
   - id: 10508
     title: "Create Separate Partition for /home"
@@ -142,7 +139,7 @@ checks:
       - http://tldp.org/HOWTO/LVM-HOWTO/
     condition: all
     rules:
-      - 'f:/etc/fstab -> !r:^\s*\t*# && r:/home'
+      - 'c:mount -> r:\s/home\s'
 
   - id: 10509
     title: "Add nodev Option to /home"
@@ -153,40 +150,8 @@ checks:
       - cis: "2.10"
     condition: all
     rules:
-      - 'f:/etc/fstab -> !r:^\s*\t*# && r:/home\s+\w+\s+\.*nodev'
-
-  - id: 10510
-    title: "Add nodev Option to Removable Media Partitions"
-    description: "Set nodev on removable media to prevent character and block special devices that are present on the removable media from being treated as device files."
-    rationale: "Removable media containing character and block special devices could be used to circumvent security controls by allowing non-root users to access sensitive device files such as /dev/kmem or the raw disk partitions."
-    remediation: "Edit the /etc/fstab file and add \"nodev\" to the fourth field (mounting options). Look for entries that have mount points that contain words such as floppy or cdrom. See the fstab(5) manual page for more information."
-    compliance:
-      - cis: "2.11"
-    condition: all
-    rules:
-      - 'f:/etc/fstab -> !r:^\s*\t*# && r:/media\.*\s+\w+\s+\.*nodev'
-
-  - id: 10511
-    title: "Add noexec Option to Removable Media Partitions"
-    description: "Set noexec on removable media to prevent programs from executing from the removable media."
-    rationale: "Setting this option on a file system prevents users from executing programs from the removable media. This deters users from being able to introduce potentially malicious software on the system."
-    remediation: "Edit the /etc/fstab file and add noexec to the fourth field (mounting options). Look for entries that have mount points that contain words such as floppy or cdrom. See the fstab(5) manual page for more information."
-    compliance:
-      - cis: "2.12"
-    condition: all
-    rules:
-      - 'f:/etc/fstab -> !r:^\s*\t*# && r:/media\.*\s+\w+\s+\.*noexec'
-
-  - id: 10512
-    title: "Add nosuid Option to Removable Media Partitions"
-    description: "Set nosuid on removable media to prevent setuid and setgid executable files that are on that media from being executed as setuid and setgid."
-    rationale: "Setting this option on a file system prevents users from introducing privileged programs onto the system and allowing non-root users to execute them."
-    remediation: "Edit the /etc/fstab file and add nosuid to the fourth field (mounting options). Look for entries that have mount points that contain words such as floppy or cdrom. See the fstab(5) manual page for more information."
-    compliance:
-      - cis: "2.13"
-    condition: all
-    rules:
-      - 'f:/etc/fstab -> r:/media\.*\s+\w+\s+\.*nosuid'
+      - 'not c:mount -> r:\s/home\s'
+      - 'c:mount -> r:\s/home\s && r:nodev'
 
   - id: 10513
     title: "Add nodev Option to /run/shm Partition"
@@ -197,7 +162,8 @@ checks:
       - cis: "2.14"
     condition: all
     rules:
-      - 'f:/etc/fstab -> !r:^\s*\t*# && r:/run/shm\s+\w+\s+\.*nodev'
+      - 'not c:mount -> r:\s/run/shm\s'
+      - 'c:mount -> r:\s/run/shm\s && r:nodev'
 
   - id: 10514
     title: "Add nosuid Option to /run/shm Partition"
@@ -208,7 +174,8 @@ checks:
       - cis: "2.15"
     condition: all
     rules:
-      - 'f:/etc/fstab -> !r:^\s*\t*# && r:/run/shm\s+\w+\s+\.*nosuid'
+      - 'not c:mount -> r:\s/run/shm\s'
+      - 'c:mount -> r:\s/run/shm\s && r:nosuid'
 
   - id: 10515
     title: "Add noexec Option to /run/shm Partition"
@@ -219,7 +186,8 @@ checks:
       - cis: "2.16"
     condition: all
     rules:
-      - 'f:/etc/fstab -> !r:^\s*\t*# && r:/run/shm\s+\w+\s+\.*noexec'
+      - 'not c:mount -> r:\s/run/shm\s'
+      - 'c:mount -> r:\s/run/shm\s && r:noexec'
 
   - id: 10516
     title: "Disable Automounting"
@@ -230,7 +198,7 @@ checks:
       - cis: "2.25"
     condition: none
     rules:
-      - 'd:$rc_dirs -> S -> r:autofsc'
+      - 'c:ls /etc/rc*.d -> r:S\.+autofsc'
 
 # 3 Secure Boot Settings
   - id: 10517
@@ -252,9 +220,9 @@ checks:
     remediation: "Run the following command and follow the prompts to set a password for the root user: # passwd root"
     compliance:
       - cis: "3.4"
-    condition: all
+    condition: none
     rules:
-      - 'f:/etc/shadow -> r:^root:\$'
+      - 'f:/etc/shadow -> r:^root:[*\!]:'
 
 # 4 Additional Process Hardening
   - id: 10519
@@ -266,8 +234,8 @@ checks:
       - cis: "4.1"
     condition: all
     rules:
-      - 'f:/etc/security/limits.conf -> !r:^* hard core 0'
-      - 'f:/etc/sysctl.conf -> !r:^fs.suid_dumpable = 0'
+      - 'c:ulimit -H -c -> 0'
+      - 'c:sysctl fs.suid_dumpable -> r:= 0$'
 
   - id: 10520
     title: "Enable Randomized Virtual Memory Region Placement"
@@ -290,10 +258,10 @@ checks:
       - cis: "5.1.1"
     condition: none
     rules:
-      - 'f:/etc/init.d/nis'
+      - 'c:dpkg -s nis -> r:install ok installed'
 
   - id: 10522
-    title: "Ensure rsh server is disabled"
+    title: "Ensure rsh server is not enabled"
     description: "The Berkeley rsh-server (rsh, rlogin, rcp) package contains legacy services that exchange credentials in clear-text."
     rationale: "These legacy service contain numerous security exposures and have been replaced with the more secure SSH package."
     remediation: "Remove or comment out any shell, login, or exec lines in /etc/inetd.conf: #shell stream tcp nowait root /usr/sbin/tcpd /usr/sbin/in.rshd    #login stream tcp nowait root /usr/sbin/tcpd /usr/sbin/in.rlogind    #exec stream tcp nowait root /usr/sbin/tcpd /usr/sbin/in.rexecd"
@@ -304,7 +272,7 @@ checks:
       - 'f:/etc/inetd.conf -> !r:^# && r:shell|login|exec'
 
   - id: 10523
-    title: "Ensure talk server is disabled"
+    title: "Ensure talk server is not enabled"
     description: "The talk software makes it possible for users to send and receive messages across systems through a terminal session. The talk client (allows initiate of talk sessions) is installed by default."
     rationale: "The software presents a security risk as it uses unencrypted protocols for communication."
     remediation: "Remove or comment out any talk or ntalk lines in /etc/inetd.conf: #talk dgram udp wait nobody.tty /usr/sbin/in.talkd in.talkd    #ntalk dgram udp wait nobody.tty /usr/sbin/in.ntalkd in.ntalkd"
@@ -315,7 +283,7 @@ checks:
       - 'f:/etc/inetd.conf -> !r:^# && r:talk|ntalk'
 
   - id: 10524
-    title: "Ensure telnet server is disabled"
+    title: "Ensure telnet server is not enabled"
     description: "The telnet-server package contains the telnet daemon, which accepts connections from users from other systems via the telnet protocol."
     rationale: "The telnet protocol is insecure and unencrypted. The use of an unencrypted transmission medium could allow a user with access to sniff network traffic the ability to steal credentials.  The ssh package provides an encrypted session and stronger security."
     remediation: "Remove or comment out any telnet lines in /etc/inetd.conf: #telnet stream tcp nowait telnetd /usr/sbin/tcpd /usr/sbin/in.telnetd"
@@ -326,7 +294,7 @@ checks:
       - 'f:/etc/inetd.conf -> !r:^# && r:telnet'
 
   - id: 10525
-    title: "Ensure tftp-server is disabled"
+    title: "Ensure tftp-server is not enabled"
     description: "Trivial File Transfer Protocol (TFTP) is a simple file transfer protocol, typically used to automatically transfer configuration or boot machines from a boot server. The packages tftp and atftp are both used to define and support a TFTP server."
     rationale: "TFTP does not support authentication nor does it ensure the confidentiality or integrity of data. It is recommended that TFTP be removed, unless there is a specific need for TFTP. In that case, extreme caution must be used when configuring the services."
     remediation: "Remove or comment out any tftp lines in /etc/inetd.conf: #tftp stream tcp nowait root internal"
@@ -337,7 +305,7 @@ checks:
       - 'f:/etc/inetd.conf -> !r:^# && r:tftp'
 
   - id: 10526
-    title: "Ensure xinetd is disabled"
+    title: "Ensure xinetd is not enabled"
     description: "The eXtended InterNET Daemon (xinetd) is an open source super daemon that replaced the original inetd daemon. The xinetd daemon listens for well known services and dispatches the appropriate daemon to properly respond to service requests.  Note: Several other services recommended to be disabled in this benchmark have xinetd versions as well, if xinetd is required in your environment ensure they are disabled in xinetd configuration as well."
     rationale: "If there are no xinetd services required, it is recommended that the daemon be disabled."
     remediation: "Disable xinetd: # update-rc.d xinetd disable"
@@ -345,10 +313,10 @@ checks:
       - cis: "5.1.8"
     condition: none
     rules:
-      - 'd:$rc_dirs -> S -> r:xinetd'
+      - 'c:ls /etc/rc*.d -> r:S\.+xinetd'
 
   - id: 10527
-    title: "Ensure chargen is disabled"
+    title: "Ensure chargen is not enabled"
     description: "chargen is a network service that responds with 0 to 512 ASCII characters for each connection it receives. This service is intended for debugging and testing purposes. It is recommended that this service be disabled."
     rationale: "Disabling this service will reduce the remote attack surface of the system."
     remediation: "Remove or comment out any chargen lines in /etc/inetd.conf: #chargen stream tcp nowait root internal"
@@ -359,7 +327,7 @@ checks:
       - 'f:/etc/inetd.conf -> !r:^# && r:chargen'
 
   - id: 10528
-    title: "Ensure daytime is disabled"
+    title: "Ensure daytime is not enabled"
     description: "daytime is a network service that responds with the server's current date and time. This service is intended for debugging and testing purposes. It is recommended that this service be disabled."
     rationale: "Disabling this service will reduce the remote attack surface of the system."
     remediation: "Remove or comment out any daytime lines in /etc/inetd.conf: #daytime stream tcp nowait root internal"
@@ -370,7 +338,7 @@ checks:
       - 'f:/etc/inetd.conf -> !r:^# && r:daytime'
 
   - id: 10529
-    title: "Ensure echo is disabled"
+    title: "Ensure echo is not enabled"
     description: "echo is a network service that responds to clients with the data sent to it by the client. This service is intended for debugging and testing purposes. It is recommended that this service be disabled."
     rationale: "Disabling this service will reduce the remote attack surface of the system."
     remediation: "Remove or comment out any echo lines in /etc/inetd.conf: #echo stream tcp nowait root internal"
@@ -381,7 +349,7 @@ checks:
       - 'f:/etc/inetd.conf -> !r:^# && r:echo'
 
   - id: 10530
-    title: "Ensure discard is disabled"
+    title: "Ensure discard is not enabled"
     description: "discard is a network service that simply discards all data it receives. This service is intended for debugging and testing purposes. It is recommended that this service be disabled."
     rationale: "Disabling this service will reduce the remote attack surface of the system."
     remediation: "Remove or comment out any discard lines in /etc/inetd.conf: #discard stream tcp nowait root internal"
@@ -392,7 +360,7 @@ checks:
       - 'f:/etc/inetd.conf -> !r:^# && r:discard'
 
   - id: 10531
-    title: "Ensure time is disabled"
+    title: "Ensure time is not enabled"
     description: "time is a network service that responds with the server's current date and time as a 32 bit integer. This service is intended for debugging and testing purposes. It is recommended that this service be disabled."
     rationale: "Disabling this service will reduce the remote attack surface of the system."
     remediation: "Remove or comment out any time lines in /etc/inetd.conf: #time stream tcp nowait root internal"
@@ -404,7 +372,7 @@ checks:
 
 # 6 Special Purpose Services
   - id: 10532
-    title: "Ensure Avahi Server is disabled"
+    title: "Ensure Avahi Server is not enabled"
     description: "Avahi is a free zeroconf implementation, including a system for multicast DNS/DNS-SD service discovery. Avahi allows programs to publish and discover services and hosts running on a local network with no specific configuration. For example, a user can plug a computer into a network and Avahi automatically finds printers to print to, files to look at and people to talk to, as well as network services running on the machine."
     rationale: "Since servers are not normally used for printing, this service is not needed unless dependencies require it. If this is the case, disable the service to reduce the potential attack surface."
     remediation: "Disable avahi-daemon: # update-rc.d avahi-daemon disable"
@@ -412,10 +380,10 @@ checks:
       - cis: "6.2"
     condition: none
     rules:
-      - 'd:$rc_dirs -> S -> r:avahi-daemon'
+      - 'c:ls /etc/rc*.d -> r:S\.+avahi-daemon'
 
   - id: 10533
-    title: "Ensure print server is disabled"
+    title: "Ensure print server is not enabled"
     description: "The Common Unix Print System (CUPS) provides the ability to print to both local and network printers. A system running CUPS can also accept print jobs from remote systems and print them to local printers. It also provides a web based remote administration capability."
     rationale: "If the system does not need to print jobs or accept print jobs from other systems, it is recommended that CUPS be disabled to reduce the potential attack surface."
     remediation: "Disable cups: # update-rc.d cups disable"
@@ -423,11 +391,10 @@ checks:
       - cis: "6.3"
     condition: none
     rules:
-      - 'd:$rc_dirs -> S -> r:cups'
-      - 'd:$rc_dirs -> S -> r:cups-browsed'
+      - 'c:ls /etc/rc*.d -> r:S\.+cups\S*'
 
   - id: 10534
-    title: "Ensure DHCP Server is disabled"
+    title: "Ensure DHCP Server is not enabled"
     description: "The Dynamic Host Configuration Protocol (DHCP) is a service that allows machines to be dynamically assigned IP addresses."
     rationale: "Unless a server is specifically set up to act as a DHCP server, it is recommended that this service be deleted to reduce the potential attack surface."
     remediation: "Disable isc-dhcp-server: # update-rc.d isc-dhcp-server disable"
@@ -435,7 +402,7 @@ checks:
       - cis: "6.4"
     condition: none
     rules:
-      - 'd:$rc_dirs -> S -> r:disc-dhcp-server'
+      - 'c:ls /etc/rc*.d -> r:S\.+disc-dhcp-server'
 
   - id: 10535
     title: "Configure Network Time Protocol (NTP)"
@@ -448,12 +415,14 @@ checks:
       - http://www.ntp.org/
     condition: all
     rules:
-      - 'f:/etc/ntp.conf -> r:^restrict -4 default kod nomodify notrap nopeer noquery'
-      - 'f:/etc/ntp.conf -> r:^restrict -6 default kod nomodify notrap nopeer noquery'
+      - 'c:dpkg -s ntp -> r:install ok installed'
+      - 'f:/etc/ntp.conf -> r:^restrict -4 default && r:kod && r:nomodify && r:notrap && r:nopeer && r:noquery'
+      - 'f:/etc/ntp.conf -> r:^restrict -6 default && r:kod && r:nomodify && r:notrap && r:nopeer && r:noquery'
       - 'f:/etc/ntp.conf -> r:^server\s\.+'
+      - 'f:/etc/ntp.conf -> r:RUNASUSER=ntp'
 
   - id: 10536
-    title: "Ensure LDAP is disabled"
+    title: "Ensure LDAP is not enabled"
     description: "The Lightweight Directory Access Protocol (LDAP) was introduced as a replacement for NIS/YP. It is a service that provides a method for looking up information from a central database."
     rationale: "If the server will not need to act as an LDAP client or server, it is recommended that the software be disabled to reduce the potential attack surface."
     remediation: "Uninstall the slapd package: # apt-get purge slapd"
@@ -463,10 +432,10 @@ checks:
       - http://www.openldap.org
     condition: none
     rules:
-      - 'd:/etc/init.d -> r:ldap'
+      - 'c:dpkg -s slapd -> install ok installed'
 
   - id: 10537
-    title: "Ensure NFS and RPC are disabled"
+    title: "Ensure NFS and RPC are not enabled"
     description: "The Network File System (NFS) is one of the first and most widely distributed file systems in the UNIX environment. It provides the ability for systems to mount file systems of other servers through the network."
     rationale: "If the server does not export NFS shares or act as an NFS client, it is recommended that these services be disabled to reduce remote attack surface."
     remediation: "Disable rpcbind: # update-rc.d rpcbind disable    Disable nfs-kernel-server: # update-rc.d nfs-kernel-server disable"
@@ -474,11 +443,11 @@ checks:
       - cis: "6.7"
     condition: none
     rules:
-      - 'd:$rc_dirs -> S -> r:rpcbind'
-      - 'd:$rc_dirs -> S -> r:nfs-kernel-server'
+     - 'c:systemctl is-enabled nfs -> r:disabled'
+     - 'c:systemctl is-enabled rpcbind -> r:disabled'
 
   - id: 10538
-    title: "Ensure DNS Server is disabled"
+    title: "Ensure DNS Server is not enabled"
     description: "The Domain Name System (DNS) is a hierarchical naming system that maps names to IP addresses for computers, services and other resources connected to a network."
     rationale: "Unless a server is specifically designated to act as a DNS server, it is recommended that the package be deleted to reduce the potential attack surface."
     remediation: "Disable bind9: # update-rc.d bind9 disable"
@@ -486,10 +455,10 @@ checks:
       - cis: "6.8"
     condition: none
     rules:
-      - 'd:$rc_dirs -> S -> r:bind9'
+     - 'c:find /etc -regex /etc/rc.*named -> r:named'
 
   - id: 10539
-    title: "Ensure FTP Server is disabled"
+    title: "Ensure FTP Server is not enabled"
     description: "The File Transfer Protocol (FTP) provides networked computers with the ability to transfer files."
     rationale: "FTP does not protect the confidentiality of data or authentication credentials. It is recommended sftp be used if file transfer is required. Unless there is a need to run the system as a FTP server (for example, to allow anonymous downloads), it is recommended that the package be deleted to reduce the potential attack surface."
     remediation: "Disable vsftpd: # update-rc.d vsftpd disable"
@@ -497,10 +466,10 @@ checks:
       - cis: "6.9"
     condition: none
     rules:
-      - 'd:$rc_dirs -> S -> r:vsftpd'
+      - 'c:find /etc -regex /etc/rc.*vsftpd -> r:vsftpd'
 
   - id: 10540
-    title: "Ensure HTTP Server is disabled"
+    title: "Ensure HTTP Server is not enabled"
     description: "HTTP or web servers provide the ability to host web site content."
     rationale: "Unless there is a need to run the system as a web server, it is recommended that the package be deleted to reduce the potential attack surface."
     remediation: "Disable apache2: # update-rc.d apache2 disable"
@@ -508,10 +477,10 @@ checks:
       - cis: "6.10"
     condition: none
     rules:
-      - 'd:$rc_dirs -> S -> r:apache2'
+     - 'c:find /etc -regex /etc/rc.*apache2 -> r:apache2'
 
   - id: 10541
-    title: "Ensure IMAP and POP server is disabled"
+    title: "Ensure IMAP and POP server is not enabled"
     description: "Dovecot is an open source IMAP and POP3 server for Linux based systems."
     rationale: "Unless POP3 and/or IMAP servers are to be provided to this server, it is recommended that the service be deleted to reduce the potential attack surface."
     remediation: "Disable dovecot: # update-rc.d dovecot disable"
@@ -519,10 +488,10 @@ checks:
       - cis: "6.11"
     condition: none
     rules:
-      - 'd:$rc_dirs -> S -> r:dovecot'
+      - 'c:find /etc -regex /etc/rc.*dovecot -> r:dovecot'
 
   - id: 10542
-    title: "Ensure Samba is disabled"
+    title: "Ensure Samba is not enabled"
     description: "The Samba daemon allows system administrators to configure their Linux systems to share file systems and directories with Windows desktops. Samba will advertise the file systems and directories via the Small Message Block (SMB) protocol. Windows desktop users will be able to mount these directories and file systems as letter drives on their systems."
     rationale: "If there is no need to mount directories and file systems to Windows systems, then this service can be deleted to reduce the potential attack surface."
     remediation: "Disable samba: # update-rc.d samba disable"
@@ -530,10 +499,10 @@ checks:
       - cis: "6.12"
     condition: none
     rules:
-      - 'd:$rc_dirs -> S -> r:samba'
+     - 'c:find /etc -regex /etc/rc.*smb -> r:smb'
 
   - id: 10543
-    title: "Ensure HTTP Proxy Server is disabled"
+    title: "Ensure HTTP Proxy Server is not enabled"
     description: "Squid is a standard proxy server used in many distributions and environments."
     rationale: "If there is no need for a proxy server, it is recommended that the squid proxy be deleted to reduce the potential attack surface."
     remediation: "Disable squid3: # update-rc.d squid3 disable"
@@ -541,10 +510,10 @@ checks:
       - cis: "6.13"
     condition: none
     rules:
-      - 'd:$rc_dirs -> S -> r:squid3'
+     - 'c:find /etc -regex /etc/rc.*squid -> r:squid'
 
   - id: 10544
-    title: "Ensure SNMP Server is disabled"
+    title: "Ensure SNMP Server is not enabled"
     description: "The Simple Network Management Protocol (SNMP) server is used to listen for SNMP commands from an SNMP management system, execute the commands or collect the information and then send results back to the requesting system."
     rationale: "The SNMP server communicates using SNMP v1, which transmits data in the clear and does not require authentication to execute commands. Unless absolutely necessary, it is recommended that the SNMP service not be used."
     remediation: "Disable snmpd: # update-rc.d snmpd disable"
@@ -552,7 +521,7 @@ checks:
       - cis: "6.14"
     condition: none
     rules:
-      - 'd:$rc_dirs -> S -> r:snmpd'
+      - 'c:find /etc -regex /etc/rc.*snmpd -> r:snmpd'
 
   - id: 10545
     title: "Configure Mail Transfer Agent for Local-Only Mode"
@@ -566,15 +535,16 @@ checks:
       - 'f:/etc/exim4/update-exim4.conf.conf -> r:^dc_local_interfaces= && r:''127.0.0.1\s*\p\s*::1''$|''::1\s*\p\s*127.0.0.1''$|''127.0.0.1''$|''::1''$'
 
   - id: 10546
-    title: "Ensure rsync service is disabled"
+    title: "Ensure rsync service is not enabled"
     description: "The rsyncd service can be used to synchronize files between systems over network links."
     rationale: "The rsyncd service presents a security risk as it uses unencrypted protocols for communication."
     remediation: "Set RSYNC_ENABLE to false in /etc/default/rsync: RSYNC_ENABLE=false"
     compliance:
       - cis: "6.16"
-    condition: all
+    condition: none
     rules:
-      - 'f:/etc/default/rsync -> !r:^# && r:^RSYNC_ENABLE=false'
+      - 'c:dpkg -s rsync -> install ok installed'
+      - 'f:/etc/default/rsync -> !r:^# && r:RSYNC_ENABLE=false'
 
 # 7 Network Configuration and Firewall
   - id: 10547
@@ -586,7 +556,7 @@ checks:
       - cis: "7.1.1"
     condition: all
     rules:
-      - 'f:/etc/sysctl.conf -> !r:^\s*\t*# && r:net.ipv4.ip_forward=0'
+      - 'c:/sbin/sysctl net.ipv4.ip_forward -> r:= 0$'
 
   - id: 10548
     title: "Disable Send Packet Redirects"
@@ -597,10 +567,8 @@ checks:
       - cis: "7.1.2"
     condition: all
     rules:
-      - 'c:sysctl net.ipv4.conf.all.send_redirects -> 0'
-      - 'c:sysctl net.ipv4.conf.default.send_redirects -> 0'
-      - 'f:/etc/sysctl.conf -> !r:^# && r:net.ipv4.conf.all.send_redirects\s*=\s*0'
-      - 'f:/etc/sysctl.conf -> !r:^# && r:net.ipv4.conf.default.send_redirects\s*=\s*0'
+      - 'c:/sbin/sysctl net.ipv4.conf.all.send_redirects -> r:= 0$'
+      - 'c:/sbin/sysctl net.ipv4.conf.default.send_redirects -> r:= 0$'
 
   - id: 10549
     title: "Disable Source Routed Packet Acceptance"
@@ -611,10 +579,8 @@ checks:
       - cis: "7.2.1"
     condition: all
     rules:
-      - 'c:sysctl net.ipv4.conf.all.accept_source_route -> 0'
-      - 'c:sysctl net.ipv4.conf.default.accept_source_route -> 0'
-      - 'f:/etc/sysctl.conf -> r:^net.ipv4.conf.all.accept_source_route=0'
-      - 'f:/etc/sysctl.conf -> r:^net.ipv4.conf.default.accept_source_route=0'
+      - 'c:/sbin/sysctl net.ipv4.conf.all.accept_source_route -> r:= 0$'
+      - 'c:/sbin/sysctl net.ipv4.conf.default.accept_source_route -> r:= 0$'
 
   - id: 10550
     title: "Disable ICMP Redirect Acceptance"
@@ -625,10 +591,8 @@ checks:
       - cis: "7.2.2"
     condition: all
     rules:
-      - 'c:sysctl net.ipv4.conf.all.accept_redirects -> 0'
-      - 'c:sysctl net.ipv4.conf.default.accept_redirects -> 0'
-      - 'f:/etc/sysctl.conf -> r:^net.ipv4.conf.all.accept_redirects=0'
-      - 'f:/etc/sysctl.conf -> r:^net.ipv4.conf.default.accept_redirects=0'
+      - 'c:/sbin/sysctl net.ipv4.conf.all.accept_redirects -> r:= 0$'
+      - 'c:/sbin/sysctl net.ipv4.conf.default.accept_redirects -> r:= 0$'
 
   - id: 10551
     title: "Disable Secure ICMP Redirect Acceptance"
@@ -639,10 +603,8 @@ checks:
       - cis: "7.2.3"
     condition: all
     rules:
-      - 'c:sysctl net.ipv4.conf.all.secure_redirects -> 0'
-      - 'c:sysctl net.ipv4.conf.default.secure_redirects -> 0'
-      - 'f:/etc/sysctl.conf -> r:^net.ipv4.conf.all.secure_redirects=0'
-      - 'f:/etc/sysctl.conf -> r:^net.ipv4.conf.default.secure_redirects=0'
+      - 'c:/sbin/sysctl net.ipv4.conf.all.secure_redirects -> r:= 0$'
+      - 'c:/sbin/sysctl net.ipv4.conf.default.secure_redirects -> r:= 0$'
 
   - id: 10552
     title: "Log Suspicious Packets"
@@ -653,10 +615,8 @@ checks:
       - cis: "7.2.4"
     condition: all
     rules:
-      - 'c:sysctl net.ipv4.conf.all.log_martians -> 1'
-      - 'c:sysctl net.ipv4.conf.default.log_martians -> 1'
-      - 'f:/etc/sysctl.conf -> r:^net.ipv4.conf.all.log_martians=1'
-      - 'f:/etc/sysctl.conf -> r:^net.ipv4.conf.default.log_martians=1'
+      - 'c:/sbin/sysctl net.ipv4.conf.all.log_martians -> r:= 1$'
+      - 'c:/sbin/sysctl net.ipv4.conf.default.log_martians -> r:= 1$'
 
   - id: 10553
     title: "Enable Ignore Broadcast Requests"
@@ -667,8 +627,7 @@ checks:
       - cis: "7.2.5"
     condition: all
     rules:
-      - 'c:sysctl net.ipv4.icmp_echo_ignore_broadcasts -> 1'
-      - 'f:/etc/sysctl.conf -> r:^net.ipv4.icmp_echo_ignore_broadcasts=1'
+      - 'c:/sbin/sysctl net.ipv4.icmp_echo_ignore_broadcasts -> r:= 1$'
 
   - id: 10554
     title: "Enable Bad Error Message Protection"
@@ -679,8 +638,7 @@ checks:
       - cis: "7.2.6"
     condition: all
     rules:
-      - 'c:sysctl net.ipv4.icmp_ignore_bogus_error_responses -> 1'
-      - 'f:/etc/sysctl.conf -> r:^net.ipv4.icmp_ignore_bogus_error_responses=1'
+      - 'c:/sbin/sysctl net.ipv4.icmp_ignore_bogus_error_responses -> r:= 1$'
 
   - id: 10555
     title: "Enable RFC-recommended Source Route Validation"
@@ -691,10 +649,8 @@ checks:
       - cis: "7.2.7"
     condition: all
     rules:
-      - 'c:sysctl net.ipv4.conf.all.rp_filter -> 1'
-      - 'c:sysctl net.ipv4.conf.default.rp_filter -> 1'
-      - 'f:/etc/sysctl.conf -> r:^net.ipv4.conf.all.rp_filter=1'
-      - 'f:/etc/sysctl.conf -> r:^net.ipv4.conf.default.rp_filter=1'
+      - 'c:/sbin/sysctl net.ipv4.conf.all.rp_filter -> r:= 1$'
+      - 'c:/sbin/sysctl net.ipv4.conf.default.rp_filter -> r:= 1$'
 
   - id: 10556
     title: "Enable TCP SYN Cookies"
@@ -705,8 +661,7 @@ checks:
       - cis: "7.2.8"
     condition: all
     rules:
-      - 'c:sysctl net.ipv4.tcp_syncookies -> 1'
-      - 'f:/etc/sysctl.conf -> r:^net.ipv4.tcp_syncookies=1'
+      - 'c:/sbin/sysctl net.ipv4.tcp_syncookies -> r:= 1$'
 
   - id: 10557
     title: "Disable IPv6 Router Advertisements"
@@ -717,10 +672,8 @@ checks:
       - cis: "7.3.1"
     condition: all
     rules:
-      - 'c:sysctl net.ipv6.conf.all.accept_ra -> 0'
-      - 'c:sysctl net.ipv6.conf.default.accept_ra -> 0'
-      - 'f:/etc/sysctl.conf -> r:^net.ipv6.conf.all.accept_ra=0'
-      - 'f:/etc/sysctl.conf -> r:^net.ipv6.conf.default.accept_ra=0'
+      - 'c:/sbin/sysctl net.ipv6.conf.all.accept_ra -> r:= 0$'
+      - 'c:/sbin/sysctl net.ipv6.conf.default.accept_ra -> r:= 0$'
 
   - id: 10558
     title: "Disable IPv6 Redirect Acceptance"
@@ -731,10 +684,8 @@ checks:
       - cis: "7.3.2"
     condition: all
     rules:
-      - 'c:sysctl net.ipv6.conf.all.accept_redirects -> 0'
-      - 'c:sysctl net.ipv6.conf.default.accept_redirects -> 0'
-      - 'f:/etc/sysctl.conf -> r:^net.ipv6.conf.all.accept_redirects=0'
-      - 'f:/etc/sysctl.conf -> r:^net.ipv6.conf.default.accept_redirects=0'
+      - 'c:/sbin/sysctl net.ipv6.conf.all.accept_redirects -> r:= 0$'
+      - 'c:/sbin/sysctl net.ipv6.conf.default.accept_redirects -> r:= 0$'
 
   - id: 10559
     title: "Disable IPv6"
@@ -743,11 +694,11 @@ checks:
     remediation: "Create or edit the file /etc/sysctl.conf and add the following lines: net.ipv6.conf.all.disable_ipv6=1    net.ipv6.conf.default.disable_ipv6=1    net.ipv6.conf.lo.disable_ipv6=1    Run the following command or reboot to apply the changes: # sysctl -p"
     compliance:
       - cis: "7.3.3"
-    condition: all
+    condition: none
     rules:
-      - 'c:sysctl net.ipv6.conf.all.disable_ipv6 -> 1'
-      - 'c:sysctl net.ipv6.conf.default.disable_ipv6 -> 1'
-      - 'c:sysctl net.ipv6.conf.lo.disable_ipv6 -> 1'
+      - 'c:sysctl net.ipv6.conf.all.disable_ipv6 -> r:= 1$'
+      - 'c:sysctl net.ipv6.conf.default.disable_ipv6 -> r:= 1$'
+      - 'c:sysctl net.ipv6.conf.lo.disable_ipv6 -> r:= 1$'
       - 'f:/etc/sysctl.conf -> r:^net.ipv6.conf.all.disable_ipv6=1'
       - 'f:/etc/sysctl.conf -> r:^net.ipv6.conf.default.disable_ipv6=1'
       - 'f:/etc/sysctl.conf -> r:^net.ipv6.conf.lo.disable_ipv6=1'
@@ -783,10 +734,9 @@ checks:
     remediation: "# echo \"install dccp /bin/true\" >> /etc/modprobe.d/CIS.conf"
     compliance:
       - cis: "7.5.1"
-    condition: all
+    condition: none
     rules:
-      - 'f:/etc/modprobe.d/CIS.conf'
-      - 'f:/etc/modprobe.d/CIS.conf -> r:^install dccp /bin/true'
+      - 'c:lsmod -> r:dccp'
 
   - id: 10563
     title: "Disable SCTP"
@@ -795,10 +745,9 @@ checks:
     remediation: "# echo \"install sctp /bin/true\" >> /etc/modprobe.d/CIS.conf"
     compliance:
       - cis: "7.5.2"
-    condition: all
+    condition: none
     rules:
-      - 'f:/etc/modprobe.d/CIS.conf'
-      - 'f:/etc/modprobe.d/CIS.conf -> r:^install sctp /bin/true'
+      - 'c:lsmod -> r:sctp'
 
   - id: 10564
     title: "Disable RDS"
@@ -807,10 +756,9 @@ checks:
     remediation: "# echo \"install rds /bin/true\" >> /etc/modprobe.d/CIS.conf"
     compliance:
       - cis: "7.5.3"
-    condition: all
+    condition: none
     rules:
-      - 'f:/etc/modprobe.d/CIS.conf'
-      - 'f:/etc/modprobe.d/CIS.conf -> r:^install rds /bin/true'
+      - 'c:lsmod -> r:rds'
 
   - id: 10565
     title: "Disable TIPC"
@@ -819,10 +767,9 @@ checks:
     remediation: "# echo \"install tipc /bin/true\" >> /etc/modprobe.d/CIS.conf"
     compliance:
       - cis: "7.5.4"
-    condition: all
+    condition: none
     rules:
-      - 'f:/etc/modprobe.d/CIS.conf'
-      - 'f:/etc/modprobe.d/CIS.conf -> r:^install tipc /bin/true'
+      - 'c:lsmod -> r:tipc'
 
   - id: 10566
     title: "Ensure Firewall is active"
@@ -833,10 +780,7 @@ checks:
       - cis: "7.7"
     condition: all
     rules:
-      - 'f:/etc/rc2.d/S01iptables-persistent'
-      - 'f:/etc/rc3.d/S01iptables-persistent'
-      - 'f:/etc/rc4.d/S01iptables-persistent'
-      - 'f:/etc/rc5.d/S01iptables-persistent'
+      - 'c:dpkg -s iptables -> r:install ok installed'
 
 # 8 Logging and Auditing
   - id: 10567
@@ -848,10 +792,7 @@ checks:
       - cis: "8.2.2"
     condition: all
     rules:
-      - 'f:/etc/rc2.d/S01rsyslog'
-      - 'f:/etc/rc3.d/S01rsyslog'
-      - 'f:/etc/rc4.d/S01rsyslog'
-      - 'f:/etc/rc5.d/S01rsyslog'
+      - 'c:systemctl is-enabled rsyslog.service -> enabled'
 
   - id: 10568
     title: "Configure /etc/rsyslog.conf"
@@ -864,21 +805,21 @@ checks:
       - rsyslog.conf(5) man page
     condition: all
     rules:
-      - 'f:$rsyslog_files -> r:^*.emerg\s*\t*\s*\S'
-      - 'f:$rsyslog_files -> r:^mail.*\s*\t*\s*\S'
-      - 'f:$rsyslog_files -> r:^mail.info\s*\t*\s*\S'
-      - 'f:$rsyslog_files -> r:^mail.warning\s*\t*\s*\S'
-      - 'f:$rsyslog_files -> r:^mail.err\s*\t*\s*\S'
-      - 'f:$rsyslog_files -> r:^news.crit\s*\t*\s*\S'
-      - 'f:$rsyslog_files -> r:^news.err\s*\t*\s*\S'
-      - 'f:$rsyslog_files -> r:^news.notice\s*\t*\s*\S'
-      - 'f:$rsyslog_files -> r:^*.=warning;*.=err\s*\t*\s*\S'
-      - 'f:$rsyslog_files -> r:^*.crit\s*\t*\s*\S'
-      - 'f:$rsyslog_files -> r:^*.*;mail.none;news.none\s*\t*\s*\S'
-      - 'f:$rsyslog_files -> r:^local0,local1.*\s*\t*\s*\S'
-      - 'f:$rsyslog_files -> r:^local2,local3.*\s*\t*\s*\S'
-      - 'f:$rsyslog_files -> r:^local4,local5.*\s*\t*\s*\S'
-      - 'f:$rsyslog_files -> r:^local6,local7.*\s*\t*\s*\S'
+      - 'c:grep -er "^*.emerg\s*\t*\s*\S" /etc/rsyslog.conf /etc/rsyslog.d/'
+      - 'c:grep -er "^mail.*\s*\t*\s*\S" /etc/rsyslog.conf /etc/rsyslog.d/'
+      - 'c:grep -er "^mail.info\s*\t*\s*\S" /etc/rsyslog.conf /etc/rsyslog.d/'
+      - 'c:grep -er "^mail.warning\s*\t*\s*\S" /etc/rsyslog.conf /etc/rsyslog.d/'
+      - 'c:grep -er "^mail.err\s*\t*\s*\S" /etc/rsyslog.conf /etc/rsyslog.d/'
+      - 'c:grep -er "^news.crit\s*\t*\s*\S" /etc/rsyslog.conf /etc/rsyslog.d/'
+      - 'c:grep -er "^news.err\s*\t*\s*\S" /etc/rsyslog.conf /etc/rsyslog.d/'
+      - 'c:grep -er "^news.notice\s*\t*\s*\S" /etc/rsyslog.conf /etc/rsyslog.d/'
+      - 'c:grep -er "^*.=warning;*.=err\s*\t*\s*\S" /etc/rsyslog.conf /etc/rsyslog.d/'
+      - 'c:grep -er "^*.crit\s*\t*\s*\S" /etc/rsyslog.conf /etc/rsyslog.d/'
+      - 'c:grep -er "^*.*;mail.none;news.none\s*\t*\s*\S" /etc/rsyslog.conf /etc/rsyslog.d/'
+      - 'c:grep -er "^local0,local1.*\s*\t*\s*\S" /etc/rsyslog.conf /etc/rsyslog.d/'
+      - 'c:grep -er "^local2,local3.*\s*\t*\s*\S" /etc/rsyslog.conf /etc/rsyslog.d/'
+      - 'c:grep -er "^local4,local5.*\s*\t*\s*\S" /etc/rsyslog.conf /etc/rsyslog.d/'
+      - 'c:grep -er "^local6,local7.*\s*\t*\s*\S" /etc/rsyslog.conf /etc/rsyslog.d/'
 
   - id: 10569
     title: "Configure rsyslog to Send Logs to a Remote Log Host"
@@ -904,8 +845,8 @@ checks:
       - rsyslog.conf(8) man page
     condition: all
     rules:
-      - 'f:$rsyslog_files -> r:^\$ModLoad imtcp.so'
-      - 'f:$rsyslog_files -> r:^\$InputTCPServerRun 514'
+      - 'c:grep -er "^\$ModLoad imtcp.so" /etc/rsyslog.conf,/etc/rsyslog.d/'
+      - 'c:grep -er "^\$InputTCPServerRun 514" /etc/rsyslog.conf,/etc/rsyslog.d/'
 
   - id: 10571
     title: "Configure logrotate"
@@ -963,7 +904,8 @@ checks:
       - cis: "9.2.1"
     condition: all
     rules:
-      - 'f:/etc/pam.d/common-password -> r:password required pam_cracklib.so retry=\d minlen=\d\d+ dcredit=-\d+ ucredit=-\d+ ocredit=-\d+ lcredit=-\d+'
+      - 'c:dpkg -s libpam-cracklib -> install ok installed'
+      - 'f:/etc/pam.d/common-password -> !r:^# && r:password required pam_cracklib.so retry=\d minlen=\d\d+ dcredit=-\d+ ucredit=-\d+ ocredit=-\d+ lcredit=-\d+'
 
   - id: 10575
     title: " Set Lockout for Failed Password Attempts"
@@ -974,7 +916,7 @@ checks:
       - cis: "9.2.2"
     condition: all
     rules:
-      - 'f:/etc/pam.d/login -> r:auth required pam_tally2.so onerr=fail audit silent deny=\d unlock_time=\d\d\d+'
+      - 'f:/etc/pam.d/login -> !r:^# && r:auth\s*\t*required\s*\t*pam_tally2.so\s*\t*onerr=fail\s*\t*audit\s*\t*silent\s*\t*deny=\d\s*\t*unlock_time=\d\d\d+'
 
   - id: 10576
     title: "Limit Password Reuse"
@@ -985,7 +927,7 @@ checks:
       - cis: "9.2.3"
     condition: all
     rules:
-      - 'f:/etc/pam.d/common-password -> r:password [success=1 default=ignore] pam_unix.so obscure sha512 remember=\d'
+      - 'f:/etc/pam.d/common-password -> !r:^# && r:password\s*\t*[success=1 default=ignore]\s*\t*pam_unix.so\s*\t*obscure\s*\t*sha512\s*\t*remember=\d'
 
   - id: 10577
     title: "Set SSH Protocol to 2"
@@ -996,7 +938,7 @@ checks:
       - cis: "9.3.1"
     condition: all
     rules:
-      - 'f:/etc/ssh/sshd_config -> r:^\s*\t*Protocol\s*\t*2'
+      - 'f:/etc/ssh/sshd_config -> !r:^# && r:^\s*\t*Protocol\s*\t*2'
 
   - id: 10578
     title: "Set LogLevel to INFO"
@@ -1007,7 +949,7 @@ checks:
       - cis: "9.3.2"
     condition: all
     rules:
-      - 'f:/etc/ssh/sshd_config -> r:^\s*\t*LogLevel\s+INFO'
+      - 'f:/etc/ssh/sshd_config -> !r:^# && r:^\s*\t*LogLevel\s+INFO'
 
   - id: 10579
     title: "Disable SSH X11 Forwarding"
@@ -1029,7 +971,7 @@ checks:
       - cis: "9.3.5"
     condition: all
     rules:
-      - 'f:/etc/ssh/sshd_config -> n:^MaxAuthTries\s+(\d+) compare <= 4'
+      - 'f:/etc/ssh/sshd_config -> n:^MaxAuthTries\s*\t*(\d+) compare <= 4'
 
   - id: 10581
     title: "Set SSH IgnoreRhosts to Yes"
@@ -1040,7 +982,7 @@ checks:
       - cis: "9.3.6"
     condition: all
     rules:
-      - 'f:/etc/ssh/sshd_config -> r:^IgnoreRhosts\s+yes'
+      - 'f:/etc/ssh/sshd_config -> !r:^# && r:IgnoreRhosts\s+yes'
 
   - id: 10582
     title: "Set SSH HostbasedAuthentication to No"
@@ -1051,7 +993,7 @@ checks:
       - cis: "9.3.7"
     condition: all
     rules:
-      - 'f:/etc/ssh/sshd_config -> r:^HostbasedAuthentication\s+no'
+      - 'f:/etc/ssh/sshd_config -> !r:^# && r:HostbasedAuthentication\s+no'
 
   - id: 10583
     title: "Disable SSH Root Login"
@@ -1062,7 +1004,7 @@ checks:
       - cis: "9.3.8"
     condition: all
     rules:
-      - 'f:/etc/ssh/sshd_config -> r:^PermitRootLogin\s+no'
+      - 'f:/etc/ssh/sshd_config -> !r:^# && r:PermitRootLogin\s+no'
 
   - id: 10584
     title: "Set SSH PermitEmptyPasswords to No"
@@ -1073,7 +1015,7 @@ checks:
       - cis: "9.3.9"
     condition: all
     rules:
-      - 'f:/etc/ssh/sshd_config -> r:^PermitEmptyPasswords\s+no'
+      - 'f:/etc/ssh/sshd_config -> !r:^# && r:PermitEmptyPasswords\s+no'
 
   - id: 10585
     title: "Do Not Allow Users to Set Environment Options"
@@ -1084,7 +1026,7 @@ checks:
       - cis: "9.3.10"
     condition: all
     rules:
-      - 'f:/etc/ssh/sshd_config -> r:^PermitUserEnvironment\s+no'
+      - 'f:/etc/ssh/sshd_config -> !r:^# && r:PermitUserEnvironment\s+no'
 
   - id: 10586
     title: "Set Idle Timeout Interval for User Login"
@@ -1095,8 +1037,8 @@ checks:
       - cis: "9.3.12"
     condition: all
     rules:
-      - 'f:/etc/ssh/sshd_config -> n:^ClientAliveInterval\s+(\d+) compare <= 300'
-      - 'f:/etc/ssh/sshd_config -> r:^ClientAliveCountMax\s+0'
+      - 'f:/etc/ssh/sshd_config -> !r:^# && n:ClientAliveInterval\s*\t*(\d+) compare <= 300'
+      - 'f:/etc/ssh/sshd_config -> !r:^# && r:ClientAliveCountMax\s+0'
 
   - id: 10587
     title: "Limit Access via SSH"
@@ -1107,7 +1049,7 @@ checks:
       - cis: "9.3.13"
     condition: all
     rules:
-      - 'f:/etc/ssh/sshd_config -> r:^AllowUsers\s+\w+|^AllowGroups\s+\w+|^DenyUsers\s+\w+|^DenyGroups\s+\w+'
+      - 'f:/etc/ssh/sshd_config -> !r:^# && r:AllowUsers\s+\w+|^AllowGroups\s+\w+|^DenyUsers\s+\w+|^DenyGroups\s+\w+'
 
   - id: 10588
     title: "Set SSH Banner"
@@ -1118,7 +1060,7 @@ checks:
       - cis: "9.3.14"
     condition: all
     rules:
-      - 'f:/etc/ssh/sshd_config -> r:^Banner /etc/issue.net'
+      - 'f:/etc/ssh/sshd_config -> !r:^# && r:Banner\s*\t*/etc/issue.net|^Banner\s\t*/etc/issue'
 
   - id: 10589
     title: "Restrict Access to the su Command"
@@ -1129,7 +1071,8 @@ checks:
       - cis: "9.5"
     condition: all
     rules:
-      - 'f:/etc/pam.d/su -> r:auth required pam_wheel.so use_uid'
+      - 'f:/etc/pam.d/su -> !r:^# && r:auth\s*\t*required\s*\t*pam_wheel.so\s*\t*use_uid'
+      - 'f:/etc/group -> !r:^# && r:wheel'
 
 # 10 User Accounts and Environment
   - id: 10590
@@ -1141,7 +1084,7 @@ checks:
       - cis: "10.1.1"
     condition: all
     rules:
-      - 'f:/etc/login.defs -> n:^PASS_MAX_DAYS\s+(\d+) compare <= 90'
+      - 'f:/etc/login.defs -> n:^PASS_MAX_DAYS\s*\t*(\d+) compare <= 90'
 
   - id: 10591
     title: "Set Password Change Minimum Number of Days"
@@ -1152,7 +1095,7 @@ checks:
       - cis: "10.1.2"
     condition: all
     rules:
-      - 'f:/etc/login.defs -> n:^PASS_MIN_DAYS\s+(\d+) compare <= 7'
+      - 'f:/etc/login.defs -> n:^PASS_MIN_DAYS\s*\t*(\d+) compare <= 7'
 
   - id: 10592
     title: "Set Password Expiring Warning Days"
@@ -1163,7 +1106,7 @@ checks:
       - cis: "10.1.3"
     condition: all
     rules:
-      - 'f:/etc/login.defs -> n:^PASS_WARN_DAYS\s+(\d+) compare <= 7'
+      - 'f:/etc/login.defs -> n:^PASS_WARN_AGE\s*\t*(\d+) compare <= 7'
 
   - id: 10593
     title: "Set Default Group for root Account"
@@ -1174,7 +1117,7 @@ checks:
       - cis: "10.3"
     condition: all
     rules:
-      - 'f:/etc/passwd -> r:^root:\w+:\w+:0:'
+      - 'f:/etc/passwd -> !r:^# && r:root:\w+:\w+:0:'
 
   - id: 10594
     title: "Set Default umask for Users"
@@ -1185,8 +1128,8 @@ checks:
       - cis: "10.4"
     condition: all
     rules:
-      - 'f:$profiledfiles -> r:^umask 077'
-      - 'f:/etc/bash.bashrc -> r:^umask 077'
+      - 'c:grep -R -e "^umask 077" /etc/profile.d/'
+      - 'f:/etc/bash.bashrc -> !r:^# && r:umask 077'
 
   - id: 10595
     title: "Lock Inactive User Accounts"
@@ -1212,6 +1155,9 @@ checks:
       - 'f:/etc/motd'
       - 'f:/etc/issue'
       - 'f:/etc/issue.net'
+      - 'c:stat -c%u-%g-%a /etc/motd -> 0-0-644'
+      - 'c:stat -c%u-%g-%a /etc/issue -> 0-0-644'
+      - 'c:stat -c%u-%g-%a /etc/issue.net -> 0-0-644'
 
   - id: 10597
     title: "Remove OS Information from Login Warning Banners"
@@ -1222,7 +1168,9 @@ checks:
       - cis: "11.2"
     condition: none
     rules:
-      - 'f:/etc/motd -> r:debian|gnu|linux'
+      - 'c: egrep "(\\v|\\r|\\m|\\s)" /etc/issue'
+      - 'c: egrep "(\\v|\\r|\\m|\\s)" /etc/motd'
+      - 'c: egrep "(\\v|\\r|\\m|\\s)" /etc/issue.net'
 
 # 13 Review User and Group Settings
   - id: 10598
@@ -1277,7 +1225,7 @@ checks:
       - cis: "13.5"
     condition: none
     rules:
-      - 'f:/etc/passwd -> !r:^# && !r:^\s*\t*root: && r:^\w+:\w+:0:'
+      - 'f:/etc/passwd -> !r:^# && not r:^\s*\t*root: && r:^\w+:\w+:0:'
 
   - id: 10603
     title: "Check for Presence of User .rhosts Files"
@@ -1288,7 +1236,7 @@ checks:
       - cis: "13.10"
     condition: none
     rules:
-      - 'd:$home_dirs -> r:^.rhosts$'
+      - 'd:/home -> r:^.rhosts$'
 
   - id: 10604
     title: "Check for Presence of User .netrc Files"
@@ -1299,7 +1247,7 @@ checks:
       - cis: "13.18"
     condition: none
     rules:
-      - 'd:$home_dirs -> r:^.netrc$'
+      - 'd:/home -> r:^.netrc$'
 
   - id: 10605
     title: "Check for Presence of User .forward Files"
@@ -1310,7 +1258,7 @@ checks:
       - cis: "13.19"
     condition: none
     rules:
-      - 'd:$home_dirs -> r:^.forward$'
+      - 'd:/home -> r:^.forward$'
 
   - id: 10606
     title: "Ensure shadow group is empty"

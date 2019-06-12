@@ -42,8 +42,7 @@ checks:
       - AJ Lewis, "LVM HOWTO", https://tldp.org/HOWTO/LVM-HOWTO/
     condition: all
     rules:
-      - 'd:/tmp'
-      - 'f:/etc/fstab -> !r:^# && r:/tmp'
+      - 'c:mount -> r:\s/tmp\s'
 
   - id: 7001
     title: "Ensure nodev option set on /tmp partition"
@@ -55,8 +54,8 @@ checks:
       - pci_dss: "2.2.4"
     condition: all
     rules:
-      - 'd:/tmp'
-      - 'f:/etc/fstab -> !r:^# && r:/tmp && r:nodev'
+      - 'not c:mount -> r:\s/tmp\s'
+      - 'c:mount -> r:\s/tmp\s && r:nodev'
 
   - id: 7002
     title: "Ensure nosuid option set on /tmp partition"
@@ -68,7 +67,8 @@ checks:
       - pci_dss: "2.2.4"
     condition: all
     rules:
-      - 'f:/etc/fstab -> !r:^# && r:/tmp && r:nosuid'
+      - 'not c:mount -> r:\s/tmp\s'
+      - 'c:mount -> r:\s/tmp\s && r:nosuid'
 
 # 1.1.5 /tmp: noexec
   - id: 7003
@@ -82,7 +82,8 @@ checks:
       - pci_dss: "2.2.4"
     condition: all
     rules:
-      - 'f:/etc/fstab -> !r:^# && r:/tmp && r:noexec'
+      - 'not c:mount -> r:\s/tmp\s'
+      - 'c:mount -> r:\s/tmp\s && r:noexec'
 
 # 1.1.6 Build considerations - Partition scheme.
   - id: 7004
@@ -96,8 +97,7 @@ checks:
       - AJ Lewis, "LVM HOWTO", https://tldp.org/HOWTO/LVM-HOWTO/
     condition: all
     rules:
-      - 'd:/var'
-      - 'f:/etc/fstab -> !r:^# && r:/var'
+      - 'c:mount -> r:\s/var\s'
 
   - id: 7005
     title: "Ensure separate partition exists for /var/log"
@@ -111,7 +111,7 @@ checks:
       - AJ Lewis, "LVM HOWTO", https://tldp.org/HOWTO/LVM-HOWTO/
     condition: all
     rules:
-      - 'f:/etc/fstab -> !r:^# && r:/var/log'
+      - 'c:mount -> r:\s/var/log\s'
 
 # 1.1.12 /var/log/audit: partition
   - id: 7006
@@ -126,7 +126,7 @@ checks:
       - AJ Lewis, "LVM HOWTO", https://tldp.org/HOWTO/LVM-HOWTO/
     condition: all
     rules:
-      - 'f:/etc/fstab -> !r:^# && r:/var/log/audit'
+      - 'c:mount -> r:\s/var/log/audit\s'
 
 # 1.1.13 /home: partition
   - id: 7007
@@ -140,7 +140,7 @@ checks:
       - AJ Lewis, "LVM HOWTO", https://tldp.org/HOWTO/LVM-HOWTO/
     condition: all
     rules:
-      - 'f:/etc/fstab -> !r:^# && r:/home'
+      - 'c:mount -> r:\s/home\s'
 
   - id: 7008
     title: "Ensure nodev option set on /home partition"
@@ -152,47 +152,8 @@ checks:
       - pci_dss: "2.2.4"
     condition: all
     rules:
-      - 'f:/etc/fstab -> !r:^# && r:/home && r:nodev'
-
- # 1.1.18 nodev on removable media partitions (not scored)
-  - id: 7012
-    title: "Ensure nodev option set on removable media partitions"
-    description: "The nodev mount option specifies that the filesystem cannot contain special devices."
-    rationale: "Removable media containing character and block special devices could be used to circumvent security controls by allowing non-root users to access sensitive device files such as /dev/kmem or the raw disk partitions."
-    remediation: "Edit the /etc/fstab file and add nodev to the fourth field (mounting options) of all removable media partitions. Look for entries that have mount points that contain words such as floppy or cdrom. See the fstab(5) manual page for more information."
-    compliance:
-      - cis: "1.1.18"
-      - pci_dss: "2.2.4"
-    condition: all
-    rules:
-      - 'f:/etc/fstab -> !r:^# && r:/media && r:nodev'
-
- # 1.1.19 nosuid on removable media partitions (not scored)
-  - id: 7013
-    title: "Ensure nosuid option set on removable media partitions"
-    description: "The nosuid mount option specifies that the filesystem cannot contain setuid files."
-    rationale: "Setting this option on a file system prevents users from introducing privileged programs onto the system and allowing non-root users to execute them."
-    remediation: "Edit the /etc/fstab file and add nosuid to the fourth field (mounting options) of all removable media partitions. Look for entries that have mount points that contain words such as floppy or cdrom. See the fstab(5) manual page for more information."
-    compliance:
-      - cis: "1.1.19"
-      - pci_dss: "2.2.4"
-    condition: all
-    rules:
-      - 'f:/etc/fstab -> !r:^# && r:/media && r:nosuid'
-
-# 1.1.20 noexec on removable media partitions (not scored)
-  - id: 7014
-    title: "Ensure noexec option set on removable media partitions"
-    description: "The noexec mount option specifies that the filesystem cannot contain executable binaries."
-    rationale: "Setting this option on a file system prevents users from executing programs from the removable media. This deters users from being able to introduce potentially malicious software on the system."
-    remediation: "Edit the /etc/fstab file and add noexec to the fourth field (mounting options) of all removable media partitions. Look for entries that have mount points that contain words such as floppy or cdrom. See the fstab(5) manual page for more information."
-    compliance:
-      - cis: "1.1.20"
-      - cis_csc: "8"
-      - pci_dss: "2.2.4"
-    condition: all
-    rules:
-      - 'f:/etc/fstab -> !r:^# && r:/media && r:noexec'
+      - 'not c:mount -> r:\s/home\s'
+      - 'c:mount -> r:\s/home\s && r:nodev'
 
 # 1.1.15 /dev/shm: nodev
   - id: 7009
@@ -205,7 +166,8 @@ checks:
       - pci_dss: "2.2.4"
     condition: all
     rules:
-      - 'f:/etc/fstab -> !r:^# && r:/dev/shm && r:nodev'
+      - 'not c:mount -> r:\s/dev/shm\s'
+      - 'c:mount -> r:\s/dev/shm\s && r:nodev'
 
 # 1.1.16 /dev/shm: nosuid
   - id: 7010
@@ -218,7 +180,8 @@ checks:
       - pci_dss: "2.2.4"
     condition: all
     rules:
-      - 'f:/etc/fstab -> !r:^# && r:/dev/shm && r:nosuid'
+      - 'not c:mount -> r:\s/dev/shm\s'
+      - 'c:mount -> r:\s/dev/shm\s && r:nosuid'
 
 # 1.1.17 /dev/shm: noexec
   - id: 7011
@@ -232,7 +195,8 @@ checks:
       - pci_dss: "2.2.4"
     condition: all
     rules:
-      - 'f:/etc/fstab -> !r:^# && r:/dev/shm && r:noexec'
+      - 'not c:mount -> r:\s/dev/shm\s'
+      - 'c:mount -> r:\s/dev/shm\s && r:noexec'
 
 ###############################################
 # 1.4  Secure Boot Settings
@@ -265,7 +229,8 @@ checks:
       - cis_csc: "13"
     condition: all
     rules:
-      - 'f:/etc/security/limits.conf -> !r:^# && r:hard\.+core\.+0'
+      - 'c:ulimit -H -c -> 0'
+      - 'c:sysctl fs.suid_dumpable -> r:= 0$'
 
 # 1.5.3 Enable Randomized Virtual Memory Region Placement (Scored)
   - id: 7017
@@ -278,6 +243,7 @@ checks:
       - cis_csc: "8.4"
     condition: all
     rules:
+      - 'c:grep -R "kernel\.randomize_va_space" /etc/sysctl.conf /etc/sysctl.d/ -> r:= 2$'
       - 'f:/proc/sys/kernel/randomize_va_space -> r:^2$'
 
 ###############################################
@@ -297,8 +263,8 @@ checks:
       - cis_csc: "9.1"
     condition: none
     rules:
-      - 'f:/etc/xinetd.d/chargen -> !r:^# && r:disable && r:no'
-      - 'f:/etc/xinetd.d/chargen-udp -> !r:^# && r:disable && r:no'
+      - 'c:chkconfig --list -> \s*\t*chargen:\s*\t*on'
+      - 'c:chkconfig --list -> \s*\t*chargen-udp:\s*\t*on'
 
   - id: 7019
     title: "Ensure daytime services are not enabled"
@@ -310,8 +276,8 @@ checks:
       - cis_csc: "9.1"
     condition: none
     rules:
-      - 'f:/etc/xinetd.d/daytime -> !r:^# && r:disable && r:no'
-      - 'f:/etc/xinetd.d/daytime-udp -> !r:^# && r:disable && r:no'
+     - 'c:chkconfig --list -> \s*\t*daytime:\s*\t*on'
+     - 'c:chkconfig --list -> \s*\t*daytime-udp:\s*\t*on'
 
   - id: 7020
     title: "Ensure discard services are not enabled"
@@ -323,8 +289,8 @@ checks:
       - cis_csc: "9.1"
     condition: none
     rules:
-      - 'f:/etc/xinetd.d/discard -> !r:^# && r:disable && r:no'
-      - 'f:/etc/xinetd.d/discard-udp -> !r:^# && r:disable && r:no'
+      - 'c:chkconfig --list -> \s*\t*discard:\s*\t*on'
+      - 'c:chkconfig --list -> \s*\t*discard-udp:\s*\t*on'
 
   - id: 7021
     title: "Ensure echo services are not enabled"
@@ -336,8 +302,8 @@ checks:
       - cis_csc: "9.1"
     condition: none
     rules:
-      - 'f:/etc/xinetd.d/echo -> !r:^# && r:disable && r:no'
-      - 'f:/etc/xinetd.d/echo-udp -> !r:^# && r:disable && r:no'
+      - 'c:chkconfig --list -> \s*\t*echo:\s*\t*on'
+      - 'c:chkconfig --list -> \s*\t*echo-udp:\s*\t*on'
 
   - id: 7022
     title: "Ensure time services are not enabled"
@@ -349,8 +315,8 @@ checks:
       - cis_csc: "9.1"
     condition: none
     rules:
-      - 'f:/etc/xinetd.d/time -> !r:^# && r:disable && r:no'
-      - 'f:/etc/xinetd.d/time-udp -> !r:^# && r:disable && r:no'
+      - 'c:chkconfig --list -> \s*\t*time:\s*\t*on'
+      - 'c:chkconfig --list -> \s*\t*time-udp:\s*\t*on'
 
   - id: 7023
     title: "Ensure rsh server is not enabled"
@@ -364,9 +330,9 @@ checks:
       - nist_800_53: "CM.1"
     condition: none
     rules:
-      - 'f:/etc/xinetd.d/rlogin -> !r:^# && r:disable && r:no'
-      - 'f:/etc/xinetd.d/rsh -> !r:^# && r:disable && r:no'
-      - 'f:/etc/xinetd.d/shell -> !r:^# && r:disable && r:no'
+      - 'c:chkconfig --list -> \s*\t*rexec:\s*\t*on'
+      - 'c:chkconfig --list -> \s*\t*rlogin:\s*\t*on'
+      - 'c:chkconfig --list -> \s*\t*rsh:\s*\t*on'
 
   - id: 7024
     title: "Ensure talk server is not enabled"
@@ -380,7 +346,7 @@ checks:
       - nist_800_53: "CM.1"
     condition: none
     rules:
-      - 'f:/etc/xinetd.d/talk -> !r:^# && r:disable && r:no'
+      - 'c:chkconfig --list -> \s*\t*talk:\s*\t*on'
 
   - id: 7025
     title: "Ensure telnet server is not enabled"
@@ -394,7 +360,7 @@ checks:
       - nist_800_53: "CM.1"
     condition: none
     rules:
-      - 'f:/etc/xinetd.d/telnet -> !r:^# && r:disable && r:no'
+      - 'c:chkconfig --list -> \s*\t*telnet:\s*\t*on'
 
   - id: 7026
     title: "Ensure tftp server is not enabled"
@@ -408,7 +374,7 @@ checks:
       - nist_800_53: "CM.1"
     condition: none
     rules:
-      - 'f:/etc/xinetd.d/tftpd -> !r:^# && r:disable && r:no'
+      - 'c:chkconfig --list -> \s*\t*tftp:\s*\t*:on'
 
   - id: 7027
     title: "Ensure rsync service is not enabled"
@@ -418,9 +384,9 @@ checks:
     compliance:
       - cis: "2.1.10, 2.2.17"
       - pci_dss: "2.2.2"
-    condition: none
+    condition: all
     rules:
-      - 'd:$rc_dirs -> ^S\d\drsyncd$'
+      - 'c:chkconfig --list -> \s*\t*rsyncd\s*\t*0:off\s*\t*1:off\s*\t*2:off\s*\t*3:off\s*\t*4:off\s*\t*5:off\s*\t*6:off'
 
 ###############################################
 # 2 Special Purpose Services
@@ -436,8 +402,8 @@ checks:
       - pci_dss: "2.2.2"
     condition: any
     rules:
-      - 'f:/etc/ntp.conf -> r:restrict -4 default kod limited nomodify notrap nopeer noquery'
-      - 'f:/etc/ntp.conf -> r:restrict -6 default kod limited nomodify notrap nopeer noquery'
+      - 'f:/etc/ntp.conf -> r:restrict -4 default && r:kod && r:limited && r:nomodify && r:notrap && r:nopeer && r:noquery'
+      - 'f:/etc/ntp.conf -> r:restrict -6 default && r:kod && r:limited && r:nomodify && r:notrap && r:nopeer && r:noquery'
       - 'f:/etc/ntp.conf -> r:^server|^pool'
       - 'f:/etc/sysconfig/ntpd -> r:NTPD_OPTIONS="-u ntp:ntp"'
 
@@ -453,7 +419,7 @@ checks:
       - pci_dss: "2.2.2"
     condition: none
     rules:
-      - 'f:/etc/inittab -> IN !r:^# && r:id:5'
+      - 'c:rpm -qa xorg-x11* -> r:^xorg-x11'
 
 # 2.2.3 Disable Avahi Server (Scored)
   - id: 7030
@@ -477,10 +443,9 @@ checks:
     compliance:
       - cis: "2.2.5"
       - cis_csc: "9.1"
-    condition: none
+    condition: all
     rules:
-      - 'd:$rc_dirs -> ^S\d\dhcpd$'
-      - 'd:$rc_dirs -> ^S\d\dhcpd6$'
+      - 'c:chkconfig --list dhcpd -> \s*\t*dhcpd\s*\t*0:off\s*\t*1:off\s*\t*2:off\s*\t*3:off\s*\t*4:off\s*\t*5:off\s*\t*6:off'
 
 # 2.2.7 Disable NFS and RPC (Not Scored)
   - id: 7032
@@ -492,10 +457,10 @@ checks:
       - cis: "2.2.7"
       - cis_csc: "9.1"
       - pci_dss: "2.2.2"
-    condition: none
+    condition: all
     rules:
-      - 'd:$rc_dirs -> ^S\d\dnfs$'
-      - 'd:$rc_dirs -> ^S\d\dnfslock$'
+      - 'c:chkconfig --list nfs -> \s*\t*nfs\s*\t*0:off\s*\t*1:off\s*\t*2:off\s*\t*3:off\s*\t*4:off\s*\t*5:off\s*\t*6:off'
+      - 'c:chkconfig --list rpcbind -> \s*\t*rpcbind\s*\t*0:off\s*\t*1:off\s*\t*2:off\s*\t*3:off\s*\t*4:off\s*\t*5:off\s*\t*6:off'
 
   - id: 7033
     title: "Ensure DNS Server is not enabled"
@@ -506,9 +471,9 @@ checks:
       - cis: "2.2.8"
       - cis_csc: "9.1"
       - pci_dss: "2.2.2"
-    condition: none
+    condition: all
     rules:
-      - 'd:$rc_dirs -> ^S\d\dnamed$'
+      - 'c:chkconfig --list named -> \s*\t*named\s*\t*0:off\s*\t*1:off\s*\t*2:off\s*\t*3:off\s*\t*4:off\s*\t*5:off\s*\t*6:off'
 
   - id: 7034
     title: "Ensure FTP Server is not enabled"
@@ -519,9 +484,9 @@ checks:
       - cis: "2.2.9"
       - cis_csc: "9.1"
       - pci_dss: "2.2.2"
-    condition: none
+    condition: all
     rules:
-      - 'f:/etc/xinetd.d/vsftpd -> !r:^# && r:disable && r:no'
+      - 'c:chkconfig --list vsftpd -> \s*\t*vsftpd\s*\t*0:off\s*\t*1:off\s*\t*2:off\s*\t*3:off\s*\t*4:off\s*\t*5:off\s*\t*6:off'
 
 # 2.2.10 Remove HTTP Server (Not Scored)
   - id: 7035
@@ -532,9 +497,9 @@ checks:
     compliance:
       - cis: "2.2.10"
       - cis_csc: "9.1"
-    condition: none
+    condition: all
     rules:
-      - 'd:$rc_dirs -> ^S\d\dapache2$'
+      - 'c:chkconfig --list apache2 -> \s*\t*apache2\s*\t*0:off\s*\t*1:off\s*\t*2:off\s*\t*3:off\s*\t*4:off\s*\t*5:off\s*\t*6:off'
 
   - id: 7036
     title: "Ensure IMAP and POP3 server is not enabled"
@@ -547,8 +512,7 @@ checks:
       - pci_dss: "2.2.2"
     condition: none
     rules:
-      - 'f:/etc/xinetd.d/cyrus-imapd -> !r:^# && r:disable && r:no'
-      - 'f:/etc/xinetd.d/dovecot -> !r:^# && r:disable && r:no'
+      - 'c:chkconfig --list cyrus -> \s*\t*cyrus\s*\t*0:off\s*\t*1:off\s*\t*2:off\s*\t*3:off\s*\t*4:off\s*\t*5:off\s*\t*6:off'
 
 # 2.2.12 Remove Samba (Not Scored)
   - id: 7037
@@ -560,10 +524,9 @@ checks:
       - cis: "2.2.12"
       - cis_csc: "9.1"
       - pci_dss: "2.2.2"
-    condition: none
+    condition: all
     rules:
-      - 'd:$rc_dirs -> ^S\d\dsamba$'
-      - 'd:$rc_dirs -> ^S\d\dsmb$'
+      - 'c:chkconfig --list smb -> \s*\t*smb\s*\t*0:off\s*\t*1:off\s*\t*2:off\s*\t*3:off\s*\t*4:off\s*\t*5:off\s*\t*6:off'
 
   - id: 7038
     title: "Ensure HTTP Proxy Server is not enabled"
@@ -574,9 +537,9 @@ checks:
       - cis: "2.2.13"
       - cis_csc: "9.1"
       - pci_dss: "2.2.2"
-    condition: none
+    condition: all
     rules:
-      - 'd:$rc_dirs -> ^S\d\dsquid$'
+      - 'c:chkconfig --list squid -> \s*\t*squid\s*\t*0:off\s*\t*1:off\s*\t*2:off\s*\t*3:off\s*\t*4:off\s*\t*5:off\s*\t*6:off'
 
   - id: 7039
     title: "Ensure SNMP Server is not enabled"
@@ -587,9 +550,9 @@ checks:
       - cis: "2.2.14"
       - cis_csc: "9.1"
       - pci_dss: "2.2.2"
-    condition: none
+    condition: all
     rules:
-      - 'd:$rc_dirs -> ^S\d\dsnmpd$'
+      - 'c:chkconfig --list snmpd -> \s*\t*snmpd\s*\t*0:off\s*\t*1:off\s*\t*2:off\s*\t*3:off\s*\t*4:off\s*\t*5:off\s*\t*6:off'
 
   - id: 7040
     title: "Ensure NIS Server is not enabled"
@@ -603,7 +566,7 @@ checks:
       - nist_800_53: "CM.1"
     condition: none
     rules:
-      - 'd:$rc_dirs -> ^S\d\dypserv$'
+      - 'c:chkconfig --list ypserv -> \s*\t*ypserv\s*\t*0:off\s*\t*1:off\s*\t*2:off\s*\t*3:off\s*\t*4:off\s*\t*5:off\s*\t*6:off'
 
 # Section 2.3 - Service Clients
   - id: 7041
@@ -618,7 +581,7 @@ checks:
       - nist_800_53: "CM.1"
     condition: none
     rules:
-      - 'd:$rc_dirs -> ^S\d\dypbind$'
+      - 'c:rpm -q ybind -> r:^ypbind-\S*'
 
 ###############################################
 # 3 Network Configuration and Firewalls
@@ -638,20 +601,8 @@ checks:
       - pci_dss: "2.2.4"
     condition: all
     rules:
-      - 'f:/proc/sys/net/ipv4/ip_forward -> 0'
-
-  - id: 7043
-    title: "Ensure IPv6 forwarding is disabled"
-    description: "The net.ipv6.conf.all.forwarding flag is used to tell the system whether it can forward packets or not."
-    rationale: "Setting the flag to 0 ensures that a system with multiple interfaces (for example, a hard proxy), will never be able to forward packets, and therefore, never serve as a router."
-    remediation: "Set the following parameter in /etc/sysctl.conf or a /etc/sysctl.d/* file: net.ipv6.conf.all.forwarding = 0.  Run the following commands to set the active kernel parameters: # sysctl -w net.ipv6.conf.all.forwarding=0 # sysctl -w net.ipv6.route.flush=1"
-    compliance:
-      - cis: "3.1.1"
-      - cis_csc: "3, 11"
-      - pci_dss: "2.2.4"
-    condition: all
-    rules:
-      - 'f:/proc/sys/net/ipv6/ip_forward -> 0'
+      - 'c:grep -R "net\.ipv4\.ip_forward" /etc/sysctl.conf /etc/sysctl.d/ -> r:= 0$'
+      - 'c:/sbin/sysctl net.ipv4.ip_forward -> r:= 0$' 
 
 # 3.1.2 Disable Send Packet Redirects (Scored)
   - id: 7044
@@ -665,8 +616,10 @@ checks:
       - pci_dss: "2.2.4"
     condition: all
     rules:
-      - 'f:/proc/sys/net/ipv4/conf/all/send_redirects -> 0'
-      - 'f:/proc/sys/net/ipv4/conf/default/send_redirects -> 0'
+      - 'c:grep -R "net\.ipv4\.conf\.all\.send_redirects" /etc/sysctl.conf /etc/sysctl.d/ -> r:= 0$'
+      - 'c:grep -R "net\.ipv4\.conf\.default\.send_redirects" /etc/sysctl.conf /etc/sysctl.d/ -> r:= 0$'
+      - 'c:/sbin/sysctl net.ipv4.conf.all.send_redirects -> r:= 0$'
+      - 'c:/sbin/sysctl net.ipv4.conf.default.send_redirects -> r:= 0$'
 
 ###############################################
 # 3.2 Modify Network Parameters (Host and Router)
@@ -683,7 +636,10 @@ checks:
       - pci_dss: "2.2.4"
     condition: all
     rules:
-      - 'f:/proc/sys/net/ipv4/conf/all/accept_source_route -> 0'
+      - 'c:grep -R "net\.ipv4\.conf\.all\.accept_source_route" /etc/sysctl.conf /etc/sysctl.d/ -> r:= 0$'
+      - 'c:grep -R "net\.ipv4\.conf\.default\.accept_source_route" /etc/sysctl.conf /etc/sysctl.d/ -> r:= 0$'
+      - 'c:/sbin/sysctl net.ipv4.conf.all.accept_source_route -> r:= 0$'
+      - 'c:/sbin/sysctl net.ipv4.conf.default.accept_source_route -> r:= 0$'
 
 # 3.2.2 Disable ICMP Redirect Acceptance (Scored)
   - id: 7046
@@ -697,8 +653,10 @@ checks:
       - pci_dss: "2.2.4"
     condition: all
     rules:
-      - 'f:/proc/sys/net/ipv4/conf/all/accept_redirects -> 0'
-      - 'f:/proc/sys/net/ipv4/conf/default/accept_redirects -> 0'
+      - 'c:grep -R "net\.ipv4\.conf\.all\.accept_redirects" /etc/sysctl.conf /etc/sysctl.d/ -> r:= 0$'
+      - 'c:grep -R "net\.ipv4\.conf\.default\.accept_redirects" /etc/sysctl.conf /etc/sysctl.d/ -> r:= 0$'
+      - 'c:/sbin/sysctl net.ipv4.conf.all.accept_redirects -> r:= 0$'
+      - 'c:/sbin/sysctl net.ipv4.conf.default.accept_redirects -> r:= 0$'
 
 # 3.2.3 Disable Secure ICMP Redirect Acceptance (Scored)
   - id: 7047
@@ -712,8 +670,10 @@ checks:
       - pci_dss: "2.2.4"
     condition: all
     rules:
-      - 'f:/proc/sys/net/ipv4/conf/all/secure_redirects -> 0'
-      - 'f:/proc/sys/net/ipv4/conf/default/secure_redirects -> 0'
+      - 'c:grep -R "net\.ipv4\.conf\.all\.secure_redirects" /etc/sysctl.conf /etc/sysctl.d/ -> r:= 0$'
+      - 'c:grep -R "net\.ipv4\.conf\.default\.secure_redirects" /etc/sysctl.conf /etc/sysctl.d/ -> r:= 0$'
+      - 'c:/sbin/sysctl net.ipv4.conf.all.secure_redirects -> r:= 0$'
+      - 'c:/sbin/sysctl net.ipv4.conf.default.secure_redirects -> r:= 0$'
 
   - id: 7048
     title: "Ensure suspicious packets are logged"
@@ -726,8 +686,10 @@ checks:
       - pci_dss: "2.2.4"
     condition: all
     rules:
-      - 'f:/proc/sys/net/ipv4/conf/all/log_martians -> 1'
-      - 'f:/proc/sys/net/ipv4/conf/default/log_martians -> 1'
+      - 'c:grep -R "net\.ipv4\.conf\.all\.log_martians" /etc/sysctl.conf /etc/sysctl.d/ -> r:= 1$'
+      - 'c:grep -R "net\.ipv4\.conf\.default\.log_martians" /etc/sysctl.conf /etc/sysctl.d/ -> r:= 1$'
+      - 'c:/sbin/sysctl net.ipv4.conf.all.log_martians -> r:= 1$'
+      - 'c:/sbin/sysctl net.ipv4.conf.default.log_martians -> r:= 1$'
 
 # 3.2.5 Enable Ignore Broadcast Requests (Scored)
   - id: 7049
@@ -741,7 +703,8 @@ checks:
       - pci_dss: "2.2.4"
     condition: all
     rules:
-      - 'f:/proc/sys/net/ipv4/icmp_echo_ignore_broadcasts -> 1'
+      - 'c:grep -R "net\.ipv4\.icmp_echo_ignore_broadcasts" /etc/sysctl.conf /etc/sysctl.d/ -> r:= 1$'
+      - 'c:/sbin/sysctl net.ipv4.icpm_echo_ignore_broadcasts -> r:= 1$'
 
 # 3.2.6 Enable Bad Error Message Protection (Scored)
   - id: 7050
@@ -755,7 +718,8 @@ checks:
       - pci_dss: "2.2.4"
     condition: all
     rules:
-      - 'f:/proc/sys/net/ipv4/icmp_ignore_bogus_error_responses -> 1'
+      - 'c:grep -R "net\.ipv4\.icmp_ignore_bogus_error_responses" /etc/sysctl.conf /etc/sysctl.d/ -> r:= 1$'
+      - 'c:/sbin/sysctl net.ipv4.icmp_ignore_bogus_error_responses -> r:= 1$'
 
 # 3.2.7 Ensure Reverse Path Filtering is enabled (Scored)
   - id: 7051
@@ -769,8 +733,10 @@ checks:
       - pci_dss: "2.2.4"
     condition: all
     rules:
-      - 'f:/proc/sys/net/ipv4/conf/all/rp_filter -> 1'
-      - 'f:/proc/sys/net/ipv4/conf/default/rp_filter -> 1'
+      - 'c:grep -R "net\.ipv4\.conf\.all\.rp_filter" /etc/sysctl.conf /etc/sysctl.d/ -> r:= 1$'
+      - 'c:grep -R "net\.ipv4\.conf\.default\.rp_filter" /etc/sysctl.conf /etc/sysctl.d/ -> r:= 1$'
+      - 'c:/sbin/sysctl net.ipv4.conf.all.rp_filter -> r:= 1$'
+      - 'c:/sbin/sysctl net.ipv4.conf.default.rp_filter -> r:= 1$'
 
 # 3.2.8 Enable TCP SYN Cookies (Scored)
   - id: 7052
@@ -784,7 +750,8 @@ checks:
       - pci_dss: "2.2.4"
     condition: all
     rules:
-      - 'f:/proc/sys/net/ipv4/tcp_syncookies -> 1'
+      - 'c:grep -R "net\.ipv4\.tcp_syncookies" /etc/sysctl.conf /etc/sysctl.d/ -> r:= 1$'
+      - 'c:/sbin/sysctl net.ipv4.tcp_syncookies -> r:= 1$'
 
 ###############################################
 # 5 System Access, Authentication and Authorization
@@ -806,7 +773,7 @@ checks:
       - nist_800_53: "SC.8"
     condition: all
     rules:
-      - 'f:$sshd_file -> n:^\s*\t*Protocol\s*\t*(\d+) compare > 1'
+      - 'f:/etc/ssh/sshd_config -> !r:^# && r:^\s*\t*Protocol\s*\t*2'
 
 # 5.2.3 Set LogLevel to INFO (Scored)
   - id: 7054
@@ -922,7 +889,7 @@ checks:
       - nist_800_53: "IA.10, AC.7"
     condition: none
     rules:
-      - 'f:/etc/passwd -> !r:^# && !r:^\s*\t*root: && r:^\w+:\w+:0:'
+      - 'f:/etc/passwd -> !r:^# && not r:^\s*\t*root: && r:^\w+:\w+:0:'
 
   - id: 7060
     title: "Ensure password fields are not empty"

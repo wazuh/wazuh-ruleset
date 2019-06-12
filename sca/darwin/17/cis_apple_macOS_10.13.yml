@@ -164,9 +164,9 @@ checks:
     remediation: "Run the following command in Terminal: sudo pmset -a womp 0"
     compliance:
       - cis: "2.5.1"
-    condition: none
+    condition: all
     rules:
-      - 'c:pmset -g ->  r:womp && !r:0'
+      - 'c:pmset -g ->  r:womp && r:0'
 
 # 2.6.1.1 Enable FileVault (Scored)
   - id: 14011
@@ -254,7 +254,7 @@ checks:
       - cis: "2.13"
     condition: all
     rules:
-      - 'c:/usr/libexec/firmwarecheckers/eficheck/eficheck --integrity-check -> Primary allowlist version match found. No changes detected in primary hashes'
+      - 'c:/usr/libexec/firmwarecheckers/eficheck/eficheck --integrity-check -> r:Primary allowlist version match found. No changes detected in primary hashes'
       - 'c:launchctl list -> r:-\s*\t*0\s*\t*com.apple.driver.eficheck'
 
 # 3.1 Enable security auditing (Scored)
@@ -291,6 +291,7 @@ checks:
       - cis: "4.1"
     condition: all
     rules:
+      - 'c:defaults read /Library/Preferences/com.apple.mDNSResponder.plist NoMulticastAdvertisements -> r:does not exist'
       - 'c:defaults read /Library/Preferences/com.apple.mDNSResponder.plist NoMulticastAdvertisements -> r:^1$'
 
 # 4.4 Ensure http server is not running (Scored)
@@ -401,6 +402,7 @@ checks:
     remediation: "Perform the following to implement the prescribed state: 1. Open Safari 2. Select Safari from the menu bar 3. Select Preferences 4. Select General 5. Uncheck Open \"safe\" files after downloading    Alternatively run the following command in Terminal: defaults write com.apple.Safari AutoOpenSafeDownloads -boolean no"
     compliance:
       - cis: "6.3"
-    condition: all
+    condition: any
     rules:
-      - 'c:defaults read com.apple.Safari AutoOpenSafeDownloads -> r:^0$'
+      - 'c:defaults read com.apple.Safari AutoOpenSafeDownloads -> r:does not exist'
+      - 'c:defaults read com.apple.Safari -> r:AutoOpenSafeDownloads && r:0$'

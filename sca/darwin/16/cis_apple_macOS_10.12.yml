@@ -175,9 +175,9 @@ checks:
     remediation: "Run the following command in Terminal:  sudo pmset -a womp 0   Note: The -c flag means \"wall power.\" Different settings must be used for other power sources."
     compliance:
       - cis: "2.5.1"
-    condition: none
+    condition: all
     rules:
-      - 'c:pmset -g -> :womp && !r:0'
+      - 'c:pmset -g -> :womp && r:0'
 
 # 2.6.1.1 Enable FileVault (Scored)
   - id: 13512
@@ -289,6 +289,7 @@ checks:
       - cis: "4.1"
     condition: all
     rules:
+      - 'c:defaults read /Library/Preferences/com.apple.mDNSResponder.plist NoMulticastAdvertisements -> r:does not exist'
       - 'c:defaults read /Library/Preferences/com.apple.mDNSResponder.plist NoMulticastAdvertisements -> r:^1$'
 
 # 4.4 Ensure http server is not running (Scored)
@@ -412,6 +413,7 @@ checks:
     remediation: "Perform the following to implement the prescribed state: 1. Open Safari 2. Select Safari from the menu bar 3. Select Preferences 4. Select General 5. Uncheck Open \"safe\" files after downloading    Alternatively run the following command in Terminal: defaults write com.apple.Safari AutoOpenSafeDownloads -boolean no"
     compliance:
       - cis: "6.3"
-    condition: all
+    condition: any
     rules:
+      - 'c:defaults read com.apple.Safari AutoOpenSafeDownloads -> r:does not exist'
       - 'c:defaults read com.apple.Safari AutoOpenSafeDownloads -> r:^0$'
