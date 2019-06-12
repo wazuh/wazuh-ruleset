@@ -123,7 +123,9 @@ checks:
       - cis: "4.5"
     condition: all
     rules:
-      - 'f:/etc/default/grub -> r:apparmor=1 && r:security=apparmor'
+      - 'c:apparmor_status -> n:^(\d+)\s*profiles are loaded compare > 0'
+      - 'c:apparmor_status -> r:^0\s*processes are in complain mode'
+      - 'c:apparmor_status -> r:^0\s*processes are unconfined'
 
 # 8.1 Configure System Accounting (auditd)
   - id: 11008
@@ -153,8 +155,6 @@ checks:
       - 'f:/etc/audit/auditd.conf -> r:^\s*\t*action_mail_acct\s*=\s*root'
       - 'f:/etc/audit/auditd.conf -> r:^\s*\t*space_left_action\s*=\s*email'
       - 'f:/etc/audit/auditd.conf -> r:^\s*\t*admin_space_left_action\s*=\s*halt'
-      - 'not f:/etc/audit/auditd.conf -> r:^\s*\t*space_left_action\s*=\s*ignore|syslog|suspend|single|halt'
-      - 'not f:/etc/audit/auditd.conf -> r:^\s*\t*admin_space_left_action\s*=\s*ignore|syslog|email|suspend|single'
 
   - id: 11010
     title: "Keep All Auditing Information"
@@ -168,7 +168,6 @@ checks:
       - 'd:/etc/audit'
       - 'f:/etc/audit/auditd.conf'
       - 'f:/etc/audit/auditd.conf -> r:^\s*\t*max_log_file_action\s*=\s*keep_logs'
-      - 'not f:/etc/audit/auditd.conf -> r:^\s*\t*max_log_file_action\s*=\s*ignore|syslog|suspend|rotate'
 
   - id: 11011
     title: "Enable Auditing for Processes That Start Prior to auditd"
@@ -401,7 +400,6 @@ checks:
       - cis: "8.3.1"
     condition: all
     rules:
-      - 'f:/usr/sbin/aideinit'
       - 'c:dpkg -s aide -> r:install ok installed'
 
   - id: 11027
