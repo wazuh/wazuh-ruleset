@@ -43,31 +43,31 @@ checks:
       - 'c:mount -> r:\s/tmp\s'
 
   - id: 10501
-    title: "Set nodev option for /tmp Partition"
+    title: "Ensure nodev option set on /tmp partition"
     description: "The nodev mount option specifies that the filesystem cannot contain special devices."
     rationale: "Since the /tmp filesystem is not intended to support devices, set this option to ensure that users cannot attempt to create block or character special devices in /tmp."
     remediation: "Edit the /etc/fstab file and add nodev to the fourth field (mounting options). See the fstab(5) manual page for more information.  # mount -o remount,nodev /tmp"
     compliance:
-      - cis: "2.2"
+      - cis: "1.1.3"
     condition: all
     rules:
       - 'not c:mount -> r:\s/tmp\s'
       - 'c:mount -> r:\s/tmp\s && r:nodev'
 
   - id: 10502
-    title: "Set nosuid option for /tmp Partition"
+    title: "Ensure nosuid option set on /tmp partition"
     description: "The nosuid mount option specifies that the filesystem cannot contain set userid files."
     rationale: "Since the /tmp filesystem is only intended for temporary file storage, set this option to ensure that users cannot create set userid files in /tmp."
     remediation: "Edit the /etc/fstab file and add nosuid to the fourth field (mounting options). See the fstab(5) manual page for more information.  # mount -o remount,nosuid /tmp"
     compliance:
-      - cis: "2.3"
+      - cis: "1.1.4"
     condition: all
     rules:
       - 'not c:mount -> r:\s/tmp\s'
       - 'c:mount -> r:\s/tmp\s && r:nosuid'
 
   - id: 10503
-    title: "Set noexec option for /tmp Partition"
+    title: "Set noexec option for /tmp partition"
     description: "The noexec mount option specifies that the filesystem cannot contain executable binaries."
     rationale: "Since the /tmp filesystem is only intended for temporary file storage, set this option to ensure that users cannot run executable binaries from /tmp."
     remediation: "Edit the /etc/fstab file and add noexec to the fourth field (mounting options). See the fstab(5) manual page for more information.  # mount -o remount,noexec /tmp"
@@ -79,12 +79,12 @@ checks:
       - 'c:mount -> r:\s/tmp\s && r:noexec'
 
   - id: 10504
-    title: "Create Separate Partition for /var"
+    title: "Ensure separate partition exists for /var"
     description: "The /var directory is used by daemons and other system services to temporarily store dynamic data. Some directories created by these processes may be world-writable."
     rationale: "Since the /var directory may contain world-writable files and directories, there is a risk of resource exhaustion if it is not bound to a separate partition."
     remediation: "For new installations, during installation create a custom partition setup and specify a separate partition for /var.  For systems that were previously installed, use the Logical Volume Manager (LVM) to create partitions."
     compliance:
-      - cis: "2.5"
+      - cis: "1.1.5"
     references:
       - http://tldp.org/HOWTO/LVM-HOWTO/
     condition: all
@@ -92,7 +92,7 @@ checks:
       - 'c:mount -> r:\s/var\s'
 
   - id: 10505
-    title: "Bind Mount the /var/tmp directory to /tmp"
+    title: "Bind mount the /var/tmp directory to /tmp"
     description: "The /var/tmp directory is normally a standalone directory in the /var file system. Binding /var/tmp to /tmp establishes an unbreakable link to /tmp that cannot be removed (even by the root user). It also allows /var/tmp to inherit the same mount options that /tmp owns, allowing /var/tmp to be protected in the same manner /tmp is protected. It will also prevent /var from filling up with temporary files as the contents of /var/tmp will actually reside in the file system containing /tmp."
     rationale: "All programs that use /var/tmp and /tmp to read/write temporary files will always be write to tmp file system, preventing a user from running the /var file system out of space or trying to perform operations that have been blocked in the /tmp filesystem."
     remediation: "# mount --bind /tmp /var/tmp  and edit the /etc/fstab file to contain the following line: /tmp /var/tmp none bind 0 0"
@@ -101,14 +101,16 @@ checks:
     condition: all
     rules:
       - 'c:findmnt -> r:/var/tmp && r:[/tmp]'
+      - 'c:grep -e "^/tmp" /etc/fstab -> r:^/tmp && r:\s*/var/tmp\s*'
+      - 'c:mount -> r:^/tmp && r:\s*/var/tmp\s*'
 
   - id: 10506
-    title: "Create Separate Partition for /var/log"
+    title: "Ensure separate partition exists for /var/log"
     description: "The /var/log directory is used by system services to store log data."
     rationale: "There are two important reasons to ensure that system logs are stored on a separate partition: protection against resource exhaustion (since logs can grow quite large) and protection of audit data."
     remediation: "For new installations, during installation create a custom partition setup and specify a separate partition for /var/log.  For systems that were previously installed, use the Logical Volume Manager (LVM) to create partitions."
     compliance:
-      - cis: "2.7"
+      - cis: "1.1.10"
     references:
       - http://tldp.org/HOWTO/LVM-HOWTO/
     condition: all
@@ -116,12 +118,12 @@ checks:
       - 'c:mount -> r:\s/var/log\s'
 
   - id: 10507
-    title: "Create Separate Partition for /var/log/audit"
+    title: "Ensure separate partition exists for /var/log/audit"
     description: "The auditing daemon, auditd, stores log data in the /var/log/audit directory."
     rationale: "There are two important reasons to ensure that data gathered by auditd is stored on a separate partition: protection against resource exhaustion (since the audit.log file can grow quite large) and protection of audit data. The audit daemon calculates how much free space is left and performs actions based on the results. If other processes (such as syslog) consume space in the same partition as auditd, it may not perform as desired."
     remediation: "For new installations, during installation create a custom partition setup and specify a separate partition for /var/log/audit.  For systems that were previously installed, use the Logical Volume Manager (LVM) to create partitions."
     compliance:
-      - cis: "2.8"
+      - cis: "1.1.11"
     references:
       - http://tldp.org/HOWTO/LVM-HOWTO/
     condition: all
@@ -129,12 +131,12 @@ checks:
       - 'c:mount -> r:\s/var/log/audit\s'
 
   - id: 10508
-    title: "Create Separate Partition for /home"
+    title: "Ensure separate partition exists for /home"
     description: "The /home directory is used to support disk storage needs of local users."
     rationale: "If the system is intended to support local users, create a separate partition for the /home directory to protect against resource exhaustion and restrict the type of files that can be stored under /home."
     remediation: "For new installations, during installation create a custom partition setup and specify a separate partition for /home.  For systems that were previously installed, use the Logical Volume Manager (LVM) to create partitions."
     compliance:
-      - cis: "2.9"
+      - cis: "1.1.12"
     references:
       - http://tldp.org/HOWTO/LVM-HOWTO/
     condition: all
@@ -142,12 +144,12 @@ checks:
       - 'c:mount -> r:\s/home\s'
 
   - id: 10509
-    title: "Add nodev Option to /home"
+    title: "Ensure nodev option set on /home partition"
     description: "When set on a file system, this option prevents character and block special devices from being defined, or if they exist, from being used as character and block special devices."
     rationale: "Since the user partitions are not intended to support devices, set this option to ensure that users cannot attempt to create block or character special devices.  Note: The actions in the item refer to the /home partition, which is the default user partition that is defined in many distributions. If you have created other user partitions, it is recommended that the Remediation and Audit steps be applied to these partitions as well."
     remediation: "Edit the /etc/fstab file and add nodev to the fourth field (mounting options). See the fstab(5) manual page for more information. # mount -o remount,nodev /home"
     compliance:
-      - cis: "2.10"
+      - cis: "1.1.13"
     condition: all
     rules:
       - 'not c:mount -> r:\s/home\s'
@@ -198,7 +200,7 @@ checks:
       - cis: "2.25"
     condition: none
     rules:
-      - 'c:ls /etc/rc*.d -> r:S\.+autofsc'
+      - 'c:find /etc -regex /etc/rc.*autofsc -> r:S\.*autofsc'
 
 # 3 Secure Boot Settings
   - id: 10517
@@ -214,7 +216,7 @@ checks:
       - 'f:/boot/grub/grub.cfg -> r:^\s*\t*password'
 
   - id: 10518
-    title: "Require Authentication for Single-User Mode"
+    title: "Require authentication for Single-User mode"
     description: "Setting a password for the root user will force authentication in single user mode."
     rationale: "Requiring authentication in single user mode prevents an unauthorized user from rebooting the system into single user to gain root privileges without credentials."
     remediation: "Run the following command and follow the prompts to set a password for the root user: # passwd root"
@@ -235,7 +237,9 @@ checks:
     condition: all
     rules:
       - 'c:ulimit -H -c -> 0'
-      - 'c:sysctl fs.suid_dumpable -> r:= 0$'
+      - 'c:sysctl fs.suid_dumpable -> r:=\s*0$'
+      - 'c:grep -e "hard\s*\t*core" /etc/security/limits.conf -> !r:^# && r:\s*\t*hard\s*\t*core\s*\t*0'
+      - 'c:grep -R -e"^*\s\+hard\s\+core\s\+" /etc/security/limits.conf /etc/security/limits.d -> r:\s0$|\t0$'
 
   - id: 10520
     title: "Enable Randomized Virtual Memory Region Placement"
@@ -246,16 +250,16 @@ checks:
       - cis: "4.3"
     condition: all
     rules:
-      - 'f:/etc/sysctl.conf -> r:^kernel.randomize_va_space = 2'
+      - 'c:sysctl kernel.randomize_va_space -> r:^kernel.randomize_va_space\s*\t*=\s*\t*2'
 
 # 5 OS Services
   - id: 10521
-    title: "Ensure NIS is not installed"
+    title: "Ensure NIS Client is not installed"
     description: "The Network Information Service (NIS), formerly known as Yellow Pages, is a client-server directory service protocol used to distribute system configuration files."
     rationale: "The NIS service is inherently an insecure system that has been vulnerable to DOS attacks, buffer overflows and has poor authentication for querying NIS maps. NIS generally has been replaced by such protocols as Lightweight Directory Access Protocol (LDAP). It is recommended that the service be removed."
     remediation: "Uninstall the nis package: # apt-get purge nis"
     compliance:
-      - cis: "5.1.1"
+      - cis: "2.3.1"
     condition: none
     rules:
       - 'c:dpkg -s nis -> r:install ok installed'
@@ -269,7 +273,7 @@ checks:
       - cis: "5.1.2"
     condition: none
     rules:
-      - 'f:/etc/inetd.conf -> !r:^# && r:shell|login|exec'
+      - 'f:/etc/inetd.conf -> r:^shell|^login|^exec'
 
   - id: 10523
     title: "Ensure talk server is not enabled"
@@ -280,18 +284,18 @@ checks:
       - cis: "5.1.4"
     condition: none
     rules:
-      - 'f:/etc/inetd.conf -> !r:^# && r:talk|ntalk'
+      - 'f:/etc/inetd.conf -> r:^talk|^ntalk'
 
   - id: 10524
-    title: "Ensure telnet server is not enabled"
-    description: "The telnet-server package contains the telnet daemon, which accepts connections from users from other systems via the telnet protocol."
-    rationale: "The telnet protocol is insecure and unencrypted. The use of an unencrypted transmission medium could allow a user with access to sniff network traffic the ability to steal credentials.  The ssh package provides an encrypted session and stronger security."
-    remediation: "Remove or comment out any telnet lines in /etc/inetd.conf: #telnet stream tcp nowait telnetd /usr/sbin/tcpd /usr/sbin/in.telnetd"
+    title: "Ensure telnet client is not installed"
+    description: "The telnet package contains the telnet client, which allows users to start connections to other systems via the telnet protocol."
+    rationale: "The telnet protocol is insecure and unencrypted. The use of an unencrypted transmission medium could allow an unauthorized user to steal credentials. The ssh package provides an encrypted session and stronger security and is included in most Linux distributions."
+    remediation: "Run the following command to uninstall telnet: # apt-get remove telnet"
     compliance:
-      - cis: "5.1.6"
+      - cis: "2.3.4"
     condition: none
     rules:
-      - 'f:/etc/inetd.conf -> !r:^# && r:telnet'
+      - 'c:dpkg -s telnet -> r:install ok installed'
 
   - id: 10525
     title: "Ensure tftp-server is not enabled"
@@ -313,7 +317,7 @@ checks:
       - cis: "5.1.8"
     condition: none
     rules:
-      - 'c:ls /etc/rc*.d -> r:S\.+xinetd'
+      - 'c:find /etc -regex /etc/rc.*xinetd -> r:S\.+xinetd'
 
   - id: 10527
     title: "Ensure chargen is not enabled"
@@ -380,7 +384,7 @@ checks:
       - cis: "6.2"
     condition: none
     rules:
-      - 'c:ls /etc/rc*.d -> r:S\.+avahi-daemon'
+      - 'c:find /etc -regex /etc/rc.*avahi-daemon -> r:S\.*avahi-daemon'
 
   - id: 10533
     title: "Ensure print server is not enabled"
@@ -391,7 +395,7 @@ checks:
       - cis: "6.3"
     condition: none
     rules:
-      - 'c:ls /etc/rc*.d -> r:S\.+cups\S*'
+      - 'c:find /etc -regex /etc/rc.*cups -> r:S\.*cups'
 
   - id: 10534
     title: "Ensure DHCP Server is not enabled"
@@ -402,7 +406,7 @@ checks:
       - cis: "6.4"
     condition: none
     rules:
-      - 'c:ls /etc/rc*.d -> r:S\.+disc-dhcp-server'
+      - 'c:find /etc -regex /etc/rc.*isc-dhcp-server -> r:S\.*isc-dhcp-server'
 
   - id: 10535
     title: "Configure Network Time Protocol (NTP)"
@@ -419,7 +423,7 @@ checks:
       - 'f:/etc/ntp.conf -> r:^restrict -4 default && r:kod && r:nomodify && r:notrap && r:nopeer && r:noquery'
       - 'f:/etc/ntp.conf -> r:^restrict -6 default && r:kod && r:nomodify && r:notrap && r:nopeer && r:noquery'
       - 'f:/etc/ntp.conf -> r:^server\s\.+'
-      - 'f:/etc/ntp.conf -> r:RUNASUSER=ntp'
+      - 'f:/etc/ntp.conf -> r:^RUNASUSER\s*\t*=\s*\t*ntp'
 
   - id: 10536
     title: "Ensure LDAP is not enabled"
@@ -443,8 +447,8 @@ checks:
       - cis: "6.7"
     condition: none
     rules:
-     - 'c:systemctl is-enabled nfs -> r:disabled'
-     - 'c:systemctl is-enabled rpcbind -> r:disabled'
+      - 'c:find /etc -regex /etc/rc.*rpcbind -> r:S\.*rpcbind'
+      - 'c:find /etc -regex /etc/rc.*nfs-kernel-server -> r:S\.*nfs-kernel-server'
 
   - id: 10538
     title: "Ensure DNS Server is not enabled"
@@ -455,7 +459,7 @@ checks:
       - cis: "6.8"
     condition: none
     rules:
-     - 'c:find /etc -regex /etc/rc.*named -> r:named'
+      - 'c:find /etc -regex /etc/rc.*bind9 -> r:S\.*bind9'
 
   - id: 10539
     title: "Ensure FTP Server is not enabled"
@@ -466,7 +470,7 @@ checks:
       - cis: "6.9"
     condition: none
     rules:
-      - 'c:find /etc -regex /etc/rc.*vsftpd -> r:vsftpd'
+      - 'c:find /etc -regex /etc/rc.*vsftpd -> r:S\.*vsftpd'
 
   - id: 10540
     title: "Ensure HTTP Server is not enabled"
@@ -477,7 +481,7 @@ checks:
       - cis: "6.10"
     condition: none
     rules:
-     - 'c:find /etc -regex /etc/rc.*apache2 -> r:apache2'
+     - 'c:find /etc -regex /etc/rc.*apache2 -> r:S\.*apache2'
 
   - id: 10541
     title: "Ensure IMAP and POP server is not enabled"
@@ -488,7 +492,7 @@ checks:
       - cis: "6.11"
     condition: none
     rules:
-      - 'c:find /etc -regex /etc/rc.*dovecot -> r:dovecot'
+      - 'c:find /etc -regex /etc/rc.*dovecot -> r:S\.*dovecot'
 
   - id: 10542
     title: "Ensure Samba is not enabled"
@@ -499,7 +503,7 @@ checks:
       - cis: "6.12"
     condition: none
     rules:
-     - 'c:find /etc -regex /etc/rc.*smb -> r:smb'
+     - 'c:find /etc -regex /etc/rc.*smb -> r:S\.*smb'
 
   - id: 10543
     title: "Ensure HTTP Proxy Server is not enabled"
@@ -510,7 +514,7 @@ checks:
       - cis: "6.13"
     condition: none
     rules:
-     - 'c:find /etc -regex /etc/rc.*squid -> r:squid'
+     - 'c:find /etc -regex /etc/rc.*squid -> r:S\.*squid'
 
   - id: 10544
     title: "Ensure SNMP Server is not enabled"
@@ -521,7 +525,7 @@ checks:
       - cis: "6.14"
     condition: none
     rules:
-      - 'c:find /etc -regex /etc/rc.*snmpd -> r:snmpd'
+      - 'c:find /etc -regex /etc/rc.*snmpd -> r:S\.*snmpd'
 
   - id: 10545
     title: "Configure Mail Transfer Agent for Local-Only Mode"
@@ -544,7 +548,7 @@ checks:
     condition: none
     rules:
       - 'c:dpkg -s rsync -> install ok installed'
-      - 'f:/etc/default/rsync -> !r:^# && r:RSYNC_ENABLE=false'
+      - 'f:/etc/default/rsync -> !r:^# && r:RSYNC_ENABLE\s*\t*=\s*\t*false'
 
 # 7 Network Configuration and Firewall
   - id: 10547
@@ -556,7 +560,7 @@ checks:
       - cis: "7.1.1"
     condition: all
     rules:
-      - 'c:/sbin/sysctl net.ipv4.ip_forward -> r:= 0$'
+      - 'c:/sbin/sysctl net.ipv4.ip_forward -> r:=\s*\t*0$'
 
   - id: 10548
     title: "Disable Send Packet Redirects"
@@ -567,8 +571,8 @@ checks:
       - cis: "7.1.2"
     condition: all
     rules:
-      - 'c:/sbin/sysctl net.ipv4.conf.all.send_redirects -> r:= 0$'
-      - 'c:/sbin/sysctl net.ipv4.conf.default.send_redirects -> r:= 0$'
+      - 'c:/sbin/sysctl net.ipv4.conf.all.send_redirects -> r:=\s*\t*0$'
+      - 'c:/sbin/sysctl net.ipv4.conf.default.send_redirects -> r:=\s*\t*0$'
 
   - id: 10549
     title: "Disable Source Routed Packet Acceptance"
@@ -579,8 +583,8 @@ checks:
       - cis: "7.2.1"
     condition: all
     rules:
-      - 'c:/sbin/sysctl net.ipv4.conf.all.accept_source_route -> r:= 0$'
-      - 'c:/sbin/sysctl net.ipv4.conf.default.accept_source_route -> r:= 0$'
+      - 'c:/sbin/sysctl net.ipv4.conf.all.accept_source_route -> r:=\s*\t*0$'
+      - 'c:/sbin/sysctl net.ipv4.conf.default.accept_source_route -> r:=\s*\t*0$'
 
   - id: 10550
     title: "Disable ICMP Redirect Acceptance"
@@ -591,8 +595,8 @@ checks:
       - cis: "7.2.2"
     condition: all
     rules:
-      - 'c:/sbin/sysctl net.ipv4.conf.all.accept_redirects -> r:= 0$'
-      - 'c:/sbin/sysctl net.ipv4.conf.default.accept_redirects -> r:= 0$'
+      - 'c:/sbin/sysctl net.ipv4.conf.all.accept_redirects -> r:=\s*\t*0$'
+      - 'c:/sbin/sysctl net.ipv4.conf.default.accept_redirects -> r:=\s*\t*0$'
 
   - id: 10551
     title: "Disable Secure ICMP Redirect Acceptance"
@@ -603,8 +607,8 @@ checks:
       - cis: "7.2.3"
     condition: all
     rules:
-      - 'c:/sbin/sysctl net.ipv4.conf.all.secure_redirects -> r:= 0$'
-      - 'c:/sbin/sysctl net.ipv4.conf.default.secure_redirects -> r:= 0$'
+      - 'c:/sbin/sysctl net.ipv4.conf.all.secure_redirects -> r:=\s*\t*0$'
+      - 'c:/sbin/sysctl net.ipv4.conf.default.secure_redirects -> r:=\s*\t*0$'
 
   - id: 10552
     title: "Log Suspicious Packets"
@@ -615,8 +619,8 @@ checks:
       - cis: "7.2.4"
     condition: all
     rules:
-      - 'c:/sbin/sysctl net.ipv4.conf.all.log_martians -> r:= 1$'
-      - 'c:/sbin/sysctl net.ipv4.conf.default.log_martians -> r:= 1$'
+      - 'c:/sbin/sysctl net.ipv4.conf.all.log_martians -> r:=\s*\t*1$'
+      - 'c:/sbin/sysctl net.ipv4.conf.default.log_martians -> r:=\s*\t*1$'
 
   - id: 10553
     title: "Enable Ignore Broadcast Requests"
@@ -627,7 +631,7 @@ checks:
       - cis: "7.2.5"
     condition: all
     rules:
-      - 'c:/sbin/sysctl net.ipv4.icmp_echo_ignore_broadcasts -> r:= 1$'
+      - 'c:/sbin/sysctl net.ipv4.icmp_echo_ignore_broadcasts -> r:=\s*\t*1$'
 
   - id: 10554
     title: "Enable Bad Error Message Protection"
@@ -638,7 +642,7 @@ checks:
       - cis: "7.2.6"
     condition: all
     rules:
-      - 'c:/sbin/sysctl net.ipv4.icmp_ignore_bogus_error_responses -> r:= 1$'
+      - 'c:/sbin/sysctl net.ipv4.icmp_ignore_bogus_error_responses -> r:=\s*\t*1$'
 
   - id: 10555
     title: "Enable RFC-recommended Source Route Validation"
@@ -649,8 +653,8 @@ checks:
       - cis: "7.2.7"
     condition: all
     rules:
-      - 'c:/sbin/sysctl net.ipv4.conf.all.rp_filter -> r:= 1$'
-      - 'c:/sbin/sysctl net.ipv4.conf.default.rp_filter -> r:= 1$'
+      - 'c:/sbin/sysctl net.ipv4.conf.all.rp_filter -> r:=\s*\t*1$'
+      - 'c:/sbin/sysctl net.ipv4.conf.default.rp_filter -> r:=\s*\t*1$'
 
   - id: 10556
     title: "Enable TCP SYN Cookies"
@@ -661,7 +665,7 @@ checks:
       - cis: "7.2.8"
     condition: all
     rules:
-      - 'c:/sbin/sysctl net.ipv4.tcp_syncookies -> r:= 1$'
+      - 'c:/sbin/sysctl net.ipv4.tcp_syncookies -> r:=\s*\t*1$'
 
   - id: 10557
     title: "Disable IPv6 Router Advertisements"
@@ -672,8 +676,8 @@ checks:
       - cis: "7.3.1"
     condition: all
     rules:
-      - 'c:/sbin/sysctl net.ipv6.conf.all.accept_ra -> r:= 0$'
-      - 'c:/sbin/sysctl net.ipv6.conf.default.accept_ra -> r:= 0$'
+      - 'c:/sbin/sysctl net.ipv6.conf.all.accept_ra -> r:=\s*\t*0$'
+      - 'c:/sbin/sysctl net.ipv6.conf.default.accept_ra -> r:=\s*\t*0$'
 
   - id: 10558
     title: "Disable IPv6 Redirect Acceptance"
@@ -684,8 +688,8 @@ checks:
       - cis: "7.3.2"
     condition: all
     rules:
-      - 'c:/sbin/sysctl net.ipv6.conf.all.accept_redirects -> r:= 0$'
-      - 'c:/sbin/sysctl net.ipv6.conf.default.accept_redirects -> r:= 0$'
+      - 'c:/sbin/sysctl net.ipv6.conf.all.accept_redirects -> r:=\s*\t*0$'
+      - 'c:/sbin/sysctl net.ipv6.conf.default.accept_redirects -> r:=\s*\t*0$'
 
   - id: 10559
     title: "Disable IPv6"
@@ -696,12 +700,12 @@ checks:
       - cis: "7.3.3"
     condition: none
     rules:
-      - 'c:sysctl net.ipv6.conf.all.disable_ipv6 -> r:= 1$'
-      - 'c:sysctl net.ipv6.conf.default.disable_ipv6 -> r:= 1$'
-      - 'c:sysctl net.ipv6.conf.lo.disable_ipv6 -> r:= 1$'
-      - 'f:/etc/sysctl.conf -> r:^net.ipv6.conf.all.disable_ipv6=1'
-      - 'f:/etc/sysctl.conf -> r:^net.ipv6.conf.default.disable_ipv6=1'
-      - 'f:/etc/sysctl.conf -> r:^net.ipv6.conf.lo.disable_ipv6=1'
+      - 'c:sysctl net.ipv6.conf.all.disable_ipv6 -> r:=\s*\t*1$'
+      - 'c:sysctl net.ipv6.conf.default.disable_ipv6 -> r:=\s*\t*1$'
+      - 'c:sysctl net.ipv6.conf.lo.disable_ipv6 -> r:=\s*\t*1$'
+      - 'f:/etc/sysctl.conf -> r:^net.ipv6.conf.all.disable_ipv6\s*\t*=\s*\t*1'
+      - 'f:/etc/sysctl.conf -> r:^net.ipv6.conf.default.disable_ipv6\s*\t*=\s*\t*1'
+      - 'f:/etc/sysctl.conf -> r:^net.ipv6.conf.lo.disable_ipv6\s*\t*=\s*\t*1'
 
   - id: 10560
     title: "Create /etc/hosts.allow"
@@ -713,7 +717,6 @@ checks:
     condition: all
     rules:
       - 'f:/etc/hosts.allow'
-      - 'f:/etc/hosts.allow -> r:^ALL:\.*'
 
   - id: 10561
     title: "Create /etc/hosts.deny"
@@ -781,6 +784,8 @@ checks:
     condition: all
     rules:
       - 'c:dpkg -s iptables -> r:install ok installed'
+      - 'c:dpkg -s iptables-persistent -> r:install ok installed'
+      - 'c:find /etc -regex "/etc/rc.*iptables-persistent" -> r:S\.*iptables-persistent'
 
 # 8 Logging and Auditing
   - id: 10567
@@ -792,7 +797,7 @@ checks:
       - cis: "8.2.2"
     condition: all
     rules:
-      - 'c:systemctl is-enabled rsyslog.service -> enabled'
+      - 'c:find /etc -regex "/etc/rc.*rsyslog" -> r:S\.*rsyslog'
 
   - id: 10568
     title: "Configure /etc/rsyslog.conf"
@@ -805,21 +810,21 @@ checks:
       - rsyslog.conf(5) man page
     condition: all
     rules:
-      - 'c:grep -er "^*.emerg\s*\t*\s*\S" /etc/rsyslog.conf /etc/rsyslog.d/'
-      - 'c:grep -er "^mail.*\s*\t*\s*\S" /etc/rsyslog.conf /etc/rsyslog.d/'
-      - 'c:grep -er "^mail.info\s*\t*\s*\S" /etc/rsyslog.conf /etc/rsyslog.d/'
-      - 'c:grep -er "^mail.warning\s*\t*\s*\S" /etc/rsyslog.conf /etc/rsyslog.d/'
-      - 'c:grep -er "^mail.err\s*\t*\s*\S" /etc/rsyslog.conf /etc/rsyslog.d/'
-      - 'c:grep -er "^news.crit\s*\t*\s*\S" /etc/rsyslog.conf /etc/rsyslog.d/'
-      - 'c:grep -er "^news.err\s*\t*\s*\S" /etc/rsyslog.conf /etc/rsyslog.d/'
-      - 'c:grep -er "^news.notice\s*\t*\s*\S" /etc/rsyslog.conf /etc/rsyslog.d/'
-      - 'c:grep -er "^*.=warning;*.=err\s*\t*\s*\S" /etc/rsyslog.conf /etc/rsyslog.d/'
-      - 'c:grep -er "^*.crit\s*\t*\s*\S" /etc/rsyslog.conf /etc/rsyslog.d/'
-      - 'c:grep -er "^*.*;mail.none;news.none\s*\t*\s*\S" /etc/rsyslog.conf /etc/rsyslog.d/'
-      - 'c:grep -er "^local0,local1.*\s*\t*\s*\S" /etc/rsyslog.conf /etc/rsyslog.d/'
-      - 'c:grep -er "^local2,local3.*\s*\t*\s*\S" /etc/rsyslog.conf /etc/rsyslog.d/'
-      - 'c:grep -er "^local4,local5.*\s*\t*\s*\S" /etc/rsyslog.conf /etc/rsyslog.d/'
-      - 'c:grep -er "^local6,local7.*\s*\t*\s*\S" /etc/rsyslog.conf /etc/rsyslog.d/'
+      - 'c:grep -R -e "^*.emerg\s*\t*\s*\S" /etc/rsyslog.conf /etc/rsyslog.d/'
+      - 'c:grep -R -e "^mail.*\s*\t*\s*\S" /etc/rsyslog.conf /etc/rsyslog.d/'
+      - 'c:grep -R -e "^mail.info\s*\t*\s*\S" /etc/rsyslog.conf /etc/rsyslog.d/'
+      - 'c:grep -R -e "^mail.warning\s*\t*\s*\S" /etc/rsyslog.conf /etc/rsyslog.d/'
+      - 'c:grep -R -e "^mail.err\s*\t*\s*\S" /etc/rsyslog.conf /etc/rsyslog.d/'
+      - 'c:grep -R -e "^news.crit\s*\t*\s*\S" /etc/rsyslog.conf /etc/rsyslog.d/'
+      - 'c:grep -R -e "^news.err\s*\t*\s*\S" /etc/rsyslog.conf /etc/rsyslog.d/'
+      - 'c:grep -R -e "^news.notice\s*\t*\s*\S" /etc/rsyslog.conf /etc/rsyslog.d/'
+      - 'c:grep -R -e "^*.=warning;*.=err\s*\t*\s*\S" /etc/rsyslog.conf /etc/rsyslog.d/'
+      - 'c:grep -R -e "^*.crit\s*\t*\s*\S" /etc/rsyslog.conf /etc/rsyslog.d/'
+      - 'c:grep -R -e "^*.*;mail.none;news.none\s*\t*\s*\S" /etc/rsyslog.conf /etc/rsyslog.d/'
+      - 'c:grep -R -e "^local0,local1.*\s*\t*\s*\S" /etc/rsyslog.conf /etc/rsyslog.d/'
+      - 'c:grep -R -e "^local2,local3.*\s*\t*\s*\S" /etc/rsyslog.conf /etc/rsyslog.d/'
+      - 'c:grep -R -e "^local4,local5.*\s*\t*\s*\S" /etc/rsyslog.conf /etc/rsyslog.d/'
+      - 'c:grep -R -e "^local6,local7.*\s*\t*\s*\S" /etc/rsyslog.conf /etc/rsyslog.d/'
 
   - id: 10569
     title: "Configure rsyslog to Send Logs to a Remote Log Host"
@@ -845,8 +850,8 @@ checks:
       - rsyslog.conf(8) man page
     condition: all
     rules:
-      - 'c:grep -er "^\$ModLoad imtcp.so" /etc/rsyslog.conf,/etc/rsyslog.d/'
-      - 'c:grep -er "^\$InputTCPServerRun 514" /etc/rsyslog.conf,/etc/rsyslog.d/'
+      - 'c:grep -R -e "^\$ModLoad imtcp.so" /etc/rsyslog.conf,/etc/rsyslog.d/ -> r:^$ModLoad\s*\t*imtcp.so'
+      - 'c:grep -R -e "^\$InputTCPServerRun 514" /etc/rsyslog.conf,/etc/rsyslog.d/ -> r:^$InputTCPServerRun\s*\t*514'
 
   - id: 10571
     title: "Configure logrotate"
@@ -905,10 +910,10 @@ checks:
     condition: all
     rules:
       - 'c:dpkg -s libpam-cracklib -> install ok installed'
-      - 'f:/etc/pam.d/common-password -> !r:^# && r:password required pam_cracklib.so retry=\d minlen=\d\d+ dcredit=-\d+ ucredit=-\d+ ocredit=-\d+ lcredit=-\d+'
+      - 'f:/etc/pam.d/common-password -> !r:^# && r:password\s*\t*required\s*\t*pam_cracklib.so\s*\t*retry=\d\s*\t*minlen=\d\d+\s*\t*dcredit=-\d+\s*\t*ucredit=-\d+\s*\t*ocredit=-\d+\s*\t*lcredit=-\d+'
 
   - id: 10575
-    title: " Set Lockout for Failed Password Attempts"
+    title: "Set Lockout for Failed Password Attempts"
     description: "Lock out users after n unsuccessful consecutive login attempts. The first sets of changes are made to the PAM configuration file /etc/pam.d/login. The second set of changes are applied to the program specific PAM configuration file. The second set of changes must be applied to each program that will lock out users.  Check the documentation for each secondary program for instructions on how to configure them to work with PAM.  Set the lockout number to the policy in effect at your site."
     rationale: "Locking out userIDs after n unsuccessful consecutive login attempts mitigates brute force password attacks against your systems."
     remediation: "Edit the /etc/pam.d/login file and add the auth line below: auth required pam_tally2.so onerr=fail audit silent deny=5 unlock_time=900    Note: If a user has been locked out because they have reached the maximum consecutive failure count defined by deny= in the pam_tally2.so module, the user can be unlocked by issuing the command /sbin/pam_tally2 -u <username> --reset. This command sets the failed count to 0, effectively unlocking the user."
@@ -1168,9 +1173,9 @@ checks:
       - cis: "11.2"
     condition: none
     rules:
-      - 'c: egrep "(\\v|\\r|\\m|\\s)" /etc/issue'
-      - 'c: egrep "(\\v|\\r|\\m|\\s)" /etc/motd'
-      - 'c: egrep "(\\v|\\r|\\m|\\s)" /etc/issue.net'
+      - 'c:grep -e "(\\v|\\r|\\m|\\s)" /etc/issue'
+      - 'c:grep -e "(\\v|\\r|\\m|\\s)" /etc/motd'
+      - 'c:grep -e "(\\v|\\r|\\m|\\s)" /etc/issue.net'
 
 # 13 Review User and Group Settings
   - id: 10598
