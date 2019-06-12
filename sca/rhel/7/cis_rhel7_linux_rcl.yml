@@ -307,13 +307,11 @@ checks:
     compliance:
       - cis: "1.5.1"
       - cis_csc: "13"
-    condition: any
+    condition: all
     rules:
-      - 'f:/etc/security/limits.conf -> !r:^# && r:hard\.+core\.+0'
-      - 'd:/etc/security/limits.d -> r:^\.+ -> !r:^# && r:hard\.+core\.+0'
+      - 'c:grep -e "*\s\+hard\s\+core\s\+" -R /etc/security/limits.conf /etc/security/limits.d -> r:\s0$|\t0$'
       - 'c:sysctl fs.suid_dumpable -> r:^fs.suid_dumpable\s*=\s*0\s*$'
-      - 'f:/etc/sysctl.conf -> !r:^# && r:^\s*fs.suid_dumpable\s*=\s*0\s*$'
-      - 'd:/etc/sysctl.d -> r:^\.+ -> !r:^# && r:^\s*fs.suid_dumpable\s*=\s*0\s*$'
+      - 'c:grep "fs\.suid_dumpable" -R /etc/sysctl.conf /etc/sysctl.d -> r:^\s*fs.suid_dumpable\s*=\s*0\s*$'
 
 # 1.5.3 Enable Randomized Virtual Memory Region Placement (Scored)
   - id: 6519
@@ -326,6 +324,7 @@ checks:
       - cis_csc: "8.4"
     condition: all
     rules:
+      - 'c:grep -e "^\s*kernel\.randomize_va_space\s\+" -R /etc/sysctl.conf /etc/sysctl.d -> r:\s2$|\t2$
       - 'c:sysctl kernel.randomize_va_space -> r:^\s*kernel.randomize_va_space\s*=\s*2'
 
 ###############################################
