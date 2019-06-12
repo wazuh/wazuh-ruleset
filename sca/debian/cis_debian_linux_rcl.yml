@@ -59,21 +59,6 @@ checks:
      - 'not c:mount -> r:\s/tmp\s'
      - 'c:mount -> r:\s/tmp\s && r:nodev'
 
-
- - id: 5002
-   title: "Ensure separate partition exists for /opt"
-   description: "The /opt directory is a world-writable directory used for temporary storage by all users and some applications."
-   rationale: "Since the /opt directory may contain world-writable files and directories, there is a risk of resource exhaustion if it is not bound to a separate partition."
-   remediation: "For new installations, during installation create a custom partition setup and specify a separate partition for /opt. For systems that were previously installed, create a new partition and configure /etc/fstab as appropriate."
-   compliance:
-    - cis_csc: "5.1"
-    - cis: "1.1.6"
-   references:
-    - https://tldp.org/HOWTO/LVM-HOWTO/
-   condition: all
-   rules:
-     - 'c:mount -> r:\s/opt\s'
-
  - id: 5003
    title: "Ensure separate partition exists for /var"
    description: "The /var directory is used by daemons and other system services to temporarily store dynamic data. Some directories created by these processes may be world-writable."
@@ -179,16 +164,13 @@ checks:
     - pci_dss: "2.2.2"
    condition: all
    rules:
-     - 'f:/etc/dconf/profile/gdm -> r:user-db:user'
-     - 'f:/etc/dconf/profile/gdm -> r:system-db:gdm'
-     - 'f:/etc/dconf/profile/gdm -> r:file-db:/usr/share/gdm/greeter-dconf-defaults'
-     - 'd:/etc/dconf/db/gdm.d -> r:\.+ -> r:[org/gnome/login-screen]'
-     - 'd:/etc/dconf/db/gdm.d -> r:\.+ -> r:banner-message-enable=true'
-     - 'd:/etc/dconf/db/gdm.d -> r:\.+ -> r:banner-message-text=\p\.+\p$'
+     - 'f:/etc/gdm3/greeter.dconf-defaults -> r:^[org/gnome/login-screen]'
+     - 'f:/etc/gdm3/greeter.dconf-defaults -> r:^banner-message-enable=true'
+     - 'f:/etc/gdm3/greeter.dconf-defaults -> r:^banner-message-text=\'\''
 
 # Section 2 - Filesystem Configuration - Debian 7
  - id: 5015
-   title: "Add nodev Option to /run/shm Partition"
+   title: "Add nodev option to /run/shm Partition"
    description: "The nodev mount option specifies that the /run/shm (temporary filesystem stored in memory) cannot contain block or character special devices."
    rationale: "Since the /run/shm filesystem is not intended to support devices, set this option to ensure that users cannot attempt to create special devices in /run/shm partitions."
    remediation: "Edit the /etc/fstab file and add nodev to the fourth field (mounting options of entries that have mount points that contain /run/shm . See the fstab(5) manual page for more information. # mount -o remount,nodev /run/shm"
@@ -202,7 +184,7 @@ checks:
      - 'c:mount -> r:\s/run/shm\s && r:nodev'
 
  - id: 5016
-   title: "Add nosuid Option to /run/shm Partition"
+   title: "Add nosuid option to /run/shm Partition"
    description: "The nosuid mount option specifies that the /run/shm (temporary filesystem stored in memory) will not execute setuid and setgid on executable programs as such, but rather execute them with the uid and gid of the user executing the program."
    rationale: "Setting this option on a file system prevents users from introducing privileged programs onto the system and allowing non-root users to execute them."
    remediation: "Edit the /etc/fstab file and add nosuid to the fourth field (mounting options). Look for entries that have mount points that contain /run/shm . See the fstab(5) manual page for more information. # mount -o remount,nosuid /run/shm."
@@ -215,7 +197,7 @@ checks:
      - 'c:mount -> r:\s/run/shm\s && r:nosuid'
 
  - id: 5017
-   title: "Add noexec Option to /run/shm Partition"
+   title: "Add noexec option to /run/shm Partition"
    description: "Set noexec on the shared memory partition to prevent programs from executing from there."
    rationale: "Setting this option on a file system prevents users from executing programs from shared memory. This deters users from introducing potentially malicious software on the system."
    remediation: "Edit the /etc/fstab file and add noexec to the fourth field (mounting options). Look for entries that have mount points that contain /run/shm . See the fstab(5) manual page for more information. # mount -o remount,noexec /run/shm."
@@ -267,7 +249,7 @@ checks:
     - pci_dss: "2.2.2"
    condition: none
    rules:
-     - 'f:/etc/inetd.conf -> !r:^# && r:imap'
+     - 'c:dpkg -s exim4 -> install ok installed'
 
  - id: 5022
    title: "Ensure IMAP and POP3 server is not enabled (POP3)"
@@ -280,7 +262,7 @@ checks:
     - pci_dss: "2.2.2"
    condition: none
    rules:
-     - 'f:/etc/inetd.conf -> !r:^# && r:pop'
+     - 'c:dpkg -s exim4 -> install ok installed'
 
  - id: 5023
    title: "Ensure Samba is not enabled"
@@ -291,9 +273,9 @@ checks:
     - cis_csc: "9.2"
     - cis: "2.2.12"
     - pci_dss: "2.2.2"
-   condition: any
+   condition: none
    rules:
-     - 'c:systemctl is-enabled smb -> r:disabled'
+     - 'c:systemctl is-enabled smb -> r:^enabled'
 
  - id: 5024
    title: "Ensure NFS and RPC are not enabled"
@@ -304,10 +286,10 @@ checks:
     - cis_csc: "9.2"
     - cis: "2.2.7"
     - pci_dss: "2.2.2"
-   condition: all
+   condition: none
    rules:
-     - 'c:systemctl is-enabled nfs -> r:disabled'
-     - 'c:systemctl is-enabled rpcbind -> r:disabled'
+     - 'c:systemctl is-enabled nfs-server -> r:^enabled'
+     - 'c:systemctl is-enabled rpcbind -> r:^enabled'
 
  - id: 5025
    title: "Ensure NIS Server is not enabled"
@@ -320,7 +302,7 @@ checks:
     - pci_dss: "2.2.2"
    condition: none
    rules:
-     - 'f:/etc/init.d/nis'
+     - 'c:systemctl is-enabled nis -> r:^enabled'
 
  - id: 5026
    title: "Ensure HTTP server is not enabled"
@@ -331,9 +313,9 @@ checks:
     - cis_csc: "9.2"
     - cis: "2.2.10"
     - pci_dss: "2.2.2"
-   condition: any
+   condition: none
    rules:
-     - 'c:systemctl is-enabled httpd -> r:disabled'
+     - 'c:systemctl is-enabled apache2 -> r:^enabled'
 
  - id: 5027
    title: "Ensure DNS Server is not enabled"
@@ -344,9 +326,9 @@ checks:
     - cis_csc: "9.2"
     - cis: "2.2.8"
     - pci_dss: "2.2.2"
-   condition: any
+   condition: none
    rules:
-     - 'c:systemctl is-enabled named -> r:disabled'
+     - 'c:systemctl is-enabled bind9 -> r:^enabled'
 
  - id: 5028
    title: "Ensure HTTP Proxy Server is not enabled"
@@ -357,9 +339,9 @@ checks:
     - cis_csc: "9.2"
     - cis: "2.2.13"
     - pci_dss: "2.2.2"
-   condition: any
+   condition: none
    rules:
-     - 'c:systemctl is-enabled squid -> r:disabled'
+     - 'c:systemctl is-enabled squid -> r:^enabled'
 
 # Section 2.3 - Service clients
  - id: 5029
@@ -373,7 +355,8 @@ checks:
     - pci_dss: "2.2.2"
    condition: none
    rules:
-     - 'c:dpkg -s rsh -> install ok installed'
+     - 'c:dpkg -s rsh-client -> install ok installed'
+     - 'c:dpkg -s rsh-redone-client -> install ok installed'
 
  - id: 5030
    title: "Ensure telnet client is not installed"
@@ -399,7 +382,8 @@ checks:
      - cis: "3.1.1"
    condition: all
    rules:
-     - 'f:/proc/sys/net/ipv4/ip_forward -> 0'
+     - 'c:sysctl net.ipv4.ip_forward -> r:=^net.ipv4_forward\s*=\s*0$'
+     - 'c:grep "net\.ipv4\.ip_forward" -R /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4_forward\s*=\s*0$'
 
  - id: 5032
    title: "Ensure IPv6 forwarding is disabled"
@@ -411,7 +395,8 @@ checks:
      - cis: "3.1.1"
    condition: all
    rules:
-     - 'f:/proc/sys/net/ipv6/ip_forward -> 0'
+     - 'c:sysctl net.ipv6.conf.all.forwarding -> r:=^net.ipv6_forward.conf.all.forwarding\s*=\s*0$'
+     - 'c:grep "net\.ipv6\.ip_forward\.conf\.all\.forwarding" -R /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv6_forward.conf.all.forwarding\s*=\s*0$'
 
 # Section 3.2 - Network Parameters (Host and Router)
  - id: 5033
@@ -422,10 +407,16 @@ checks:
    compliance:
     - cis_csc: "5.1"
     - cis: "3.2.1"
-   condition: all
-   rules:
-     - 'c:sysctl net.ipv4.conf.all.accept_source_route -> r:= 0$'
-     - 'c:sysctl net.ipv4.conf.default.accept_source_route -> r:= 0$'
+    condition: all
+    rules:
+     - 'c:sysctl net.ipv4.conf.all.accept_source_route -> r:^net.ipv4.conf.all.accept_source_route\s*=\s*0$'
+     - 'c:sysctl net.ipv4.conf.default.accept_source_route -> r:^net.ipv4.conf.default.accept_source_route\s*=\s*0$'
+     - 'c:grep "net\.ipv4\.conf\.all\.accept_source_route" -R /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.conf.all.accept_source_route\s*=\s*0$'
+     - 'c:grep "net\.ipv4\.conf\.default\.accept_source_route" -R /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.conf.default.accept_source_route\s*=\s*0$'
+     - 'c:sysctl net.ipv6.conf.all.accept_source_route -> r:^net.ipv6.conf.all.accept_source_route\s*=\s*0$'
+     - 'c:sysctl net.ipv6.conf.default.accept_source_route -> r:^net.ipv6.conf.default.accept_source_route\s*=\s*0$'
+     - 'c:grep "net\.ipv6\.conf\.all\.accept_source_route" -R /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv6.conf.all.accept_source_route\s*=\s*0$'
+     - 'c:grep "net\.ipv6\.conf\.default\.accept_source_route" -R /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv6.conf.default.accept_source_route\s*=\s*0$'
 
  - id: 5034
    title: "Ensure broadcast ICMP requests are ignored"
@@ -437,7 +428,8 @@ checks:
     - cis: "3.2.5"
    condition: all
    rules:
-     - 'c:sysctl net.ipv4.icmp_echo_ignore_broadcasts -> r:= 1$'
+     - 'c:sysctl net.ipv4.icmp_echo_ignore_broadcasts -> r:^net.ipv4.icmp_echo_ignore_broadcasts\s*=\s*1$'
+     - 'c:grep -R "net\.ipv4\.icmp_echo_ignore_broadcasts" /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.icmp_echo_ignore_broadcasts\s*=\s*1'
 
 # Section 5.2 - SSH Server Configuration
  - id: 5035
@@ -453,7 +445,7 @@ checks:
      - nist_800_53: "SC.8"
    condition: all
    rules:
-     - 'f:/etc/ssh/sshd_config -> n:^\s*\t*Protocol\s*\t*(\d+) compare > 1'
+     - 'f:/etc/ssh/sshd_config -> !r:^# && r:Protocol\s*\t*2'
 
  - id: 5036
    title: "Ensure SSH IgnoreRhosts is enabled"
@@ -466,9 +458,9 @@ checks:
      - pci_dss: "4.1"
      - hipaa: "164.312.a.2.IV, 164.312.e.1, 164.312.e.2.I, 164.312.e.2.II"
      - nist_800_53: "SC.8"
-   condition: none
+   condition: all
    rules:
-     - 'f:/etc/ssh/sshd_config -> r:^\s*\t*IgnoreRhosts\.+no'
+     - 'f:/etc/ssh/sshd_config -> r:^\s*\t*IgnoreRhosts\.+yes'
 
  - id: 5037
    title: "Ensure SSH HostbasedAuthentication is disabled"
@@ -481,9 +473,9 @@ checks:
      - pci_dss: "4.1"
      - hipaa: "164.312.a.2.IV, 164.312.e.1, 164.312.e.2.I, 164.312.e.2.II"
      - nist_800_53: "SC.8"
-   condition: none
+   condition: all
    rules:
-     - 'f:/etc/ssh/sshd_config -> r:^\s*\t*HostbasedAuthentication\.+yes'
+     - 'f:/etc/ssh/sshd_config -> r:^\s*\t*HostbasedAuthentication\.+no'
 
  - id: 5038
    title: "Ensure SSH root login is disabled"
@@ -511,9 +503,9 @@ checks:
      - pci_dss: "4.1"
      - hipaa: "164.312.a.2.IV, 164.312.e.1, 164.312.e.2.I, 164.312.e.2.II"
      - nist_800_53: "SC.8"
-   condition: none
+   condition: all
    rules:
-     - 'f:/etc/ssh/sshd_config -> r:^\s*\t*PermitEmptyPasswords\.+yes'
+     - 'f:/etc/ssh/sshd_config -> r:^\s*\t*PermitEmptyPasswords\.+no'
 
 # Section 6.2 - User and Group Settings
  - id: 5040
