@@ -27,7 +27,6 @@ requirements:
 
 variables:
   $sshd_file: /etc/ssh/sshd_config
-  $rc_dirs: /etc/rc.d/rc2.d,/etc/rc.d/rc3.d,/etc/rc.d/rc4.d,/etc/rc.d/rc5.d
 
 checks:
 # Section 1.1 - Filesystem Configuration
@@ -42,8 +41,7 @@ checks:
       - AJ Lewis, "LVM HOWTO", https://tldp.org/HOWTO/LVM-HOWTO/
     condition: all
     rules:
-      - 'd:/tmp'
-      - 'f:/etc/fstab -> !r:^# && r:/tmp'
+      - 'c:mount -> r:\s/tmp\s'
 
   - id: 7501
     title: "Ensure nodev option set on /tmp partition"
@@ -55,8 +53,7 @@ checks:
       - pci_dss: "2.2.4"
     condition: all
     rules:
-      - 'd:/tmp'
-      - 'f:/etc/fstab -> !r:^# && r:/tmp && r:nodev'
+      - 'c:mount -> r:\s/tmp\s && r:nodev'
 
   - id: 7502
     title: "Ensure nosuid option set on /tmp partition"
@@ -68,7 +65,7 @@ checks:
       - pci_dss: "2.2.4"
     condition: all
     rules:
-      - 'f:/etc/fstab -> !r:^# && r:/tmp && r:nosuid'
+      - 'c:mount -> r:\s/tmp\s && r:nousid'
 
 # 1.1.5 /tmp: noexec
   - id: 7503
@@ -82,7 +79,7 @@ checks:
       - pci_dss: "2.2.4"
     condition: all
     rules:
-      - 'f:/etc/fstab -> !r:^# && r:/tmp && r:noexec'
+      - 'c:mount -> r:\s/tmp\s && r:noexec'
 
 # 1.1.6 Build considerations - Partition scheme.
   - id: 7504
@@ -96,8 +93,7 @@ checks:
       - AJ Lewis, "LVM HOWTO", https://tldp.org/HOWTO/LVM-HOWTO/
     condition: all
     rules:
-      - 'd:/var'
-      - 'f:/etc/fstab -> !r:^# && r:/var'
+      - 'c:mount -> r:\s/var\s'
 
   - id: 7505
     title: "Ensure separate partition exists for /var/log"
@@ -111,7 +107,7 @@ checks:
       - AJ Lewis, "LVM HOWTO", https://tldp.org/HOWTO/LVM-HOWTO/
     condition: all
     rules:
-      - 'f:/etc/fstab -> !r:^# && r:/var/log'
+      - 'c:mount -> r:\s/var/log\s'
 
 # 1.1.12 /var/log/audit: partition
   - id: 7506
@@ -126,7 +122,7 @@ checks:
       - AJ Lewis, "LVM HOWTO", https://tldp.org/HOWTO/LVM-HOWTO/
     condition: all
     rules:
-      - 'f:/etc/fstab -> !r:^# && r:/var/log/audit'
+      - 'c:mount -> r:\s/var/log/audit\s'
 
 # 1.1.13 /home: partition
   - id: 7507
@@ -140,7 +136,7 @@ checks:
       - AJ Lewis, "LVM HOWTO", https://tldp.org/HOWTO/LVM-HOWTO/
     condition: all
     rules:
-      - 'f:/etc/fstab -> !r:^# && r:/home'
+      - 'c:mount -> r:\s/home\s'
 
 # 1.1.14 /home: nodev
   - id: 7508
@@ -153,7 +149,7 @@ checks:
       - pci_dss: "2.2.4"
     condition: all
     rules:
-      - 'f:/etc/fstab -> !r:^# && r:/home && r:nodev'
+      - 'c:mount -> r:\s/home\s && r:nodev'
 
 # 1.1.18 nodev on removable media partitions (not scored)
   - id: 7512
@@ -166,7 +162,7 @@ checks:
       - pci_dss: "2.2.4"
     condition: all
     rules:
-      - 'f:/etc/fstab -> !r:^# && r:/media && r:nodev'
+      - 'c:mount -> r:\s/media\s && r:nodev'
 
 # 1.1.19 nosuid on removable media partitions (not scored)
   - id: 7513
@@ -179,7 +175,7 @@ checks:
       - pci_dss: "2.2.4"
     condition: all
     rules:
-      - 'f:/etc/fstab -> !r:^# && r:/media && r:nosuid'
+      - 'c:mount -> r:\s/media\s && r:nosuid'
 
 # 1.1.20 noexec on removable media partitions (not scored)
   - id: 7514
@@ -193,7 +189,7 @@ checks:
       - pci_dss: "2.2.4"
     condition: all
     rules:
-      - 'f:/etc/fstab -> !r:^# && r:/media && r:noexec'
+      - 'c:mount -> r:\s/media\s && r:noexec'
 
 # 1.1.15 /dev/shm: nodev
   - id: 7509
@@ -206,7 +202,7 @@ checks:
       - pci_dss: "2.2.4"
     condition: all
     rules:
-      - 'f:/etc/fstab -> !r:^# && r:/dev/shm && r:nodev'
+      - 'c:mount -> r:\s/dev/shm\s && r:nodev'
 
 # 1.1.16 /dev/shm: nosuid
   - id: 7510
@@ -219,7 +215,7 @@ checks:
       - pci_dss: "2.2.4"
     condition: all
     rules:
-      - 'f:/etc/fstab -> !r:^# && r:/dev/shm && r:nosuid'
+      - 'c:mount -> r:\s/dev/shm\s && r:nosuid'
 
 # 1.1.17 /dev/shm: noexec
   - id: 7511
@@ -233,24 +229,7 @@ checks:
       - pci_dss: "2.2.4"
     condition: all
     rules:
-      - 'f:/etc/fstab -> !r:^# && r:/dev/shm && r:noexec'
-
-###############################################
-# 1.4  Secure Boot Settings
-###############################################
-# 1.4.2 Set Boot Loader Password (Scored)
-  - id: 7515
-    title: "Ensure bootloader password is set"
-    description: "Setting the boot loader password will require that anyone rebooting the system must enter a password before being able to set command line boot parameters"
-    rationale: "Requiring a boot password upon execution of the boot loader will prevent an unauthorized user from entering boot parameters or changing the boot partition. This prevents users from weakening security (e.g. turning off SELinux at boot time)."
-    remediation: "Create an encrypted password with grub-mkpasswd-pbkdf2 : # grub2-mkpasswd-pbkdf2. The final message is 'Your PBKDF2 is <encrypted-password>'. Add the following into /etc/grub.d/01_users or a custom /etc/grub.d configuration file: cat <<EOF set superusers=\"<username>\" password_pbkdf2 <username> <encrypted-password> EOF    Run the following command to update the grub2 configuration: # grub2-mkconfig > /boot/grub2/grub.cfg    Notes: This recommendation is designed around the grub bootloader, if LILO or another bootloader is in use in your environment enact equivalent settings."
-    compliance:
-      - cis: "1.4.2"
-      - cis_csc: "5.1"
-      - pci_dss: "2.2.4"
-    condition: all
-    rules:
-      - 'f:/boot/grub2/grub.cfg -> !r:^# && r:password'
+      - 'c:mount -> r:\s/dev/shm\s && r:noexec'
 
 ###############################################
 # 1.5  Additional Process Hardening
@@ -266,7 +245,9 @@ checks:
       - cis_csc: "13"
     condition: all
     rules:
-      - 'f:/etc/security/limits.conf -> !r:^# && r:hard\.+core\.+0'
+      - 'c:sysctl fs.suid_dumpable -> r:\s0$'
+      - 'c:ulimit -Hc -> 0'
+      - 'c:grep -R -e"^\*\s\+hard\s\+core\s\+" /etc/security/limits.conf /etc/security/limits.d -> r:\s0$|\t0$'
 
 # 1.5.3 Enable Randomized Virtual Memory Region Placement (Scored)
   - id: 7517
@@ -279,7 +260,8 @@ checks:
       - cis_csc: "8.4"
     condition: all
     rules:
-      - 'f:/proc/sys/kernel/randomize_va_space -> r:^2$'
+      - 'c:sysctl kernel.randomize_va_space -> r:\s2$|\t2$'
+      - 'c:grep -R -e"^\s*kernel\.randomize_va_space\s\+" /etc/sysctl.conf /etc/sysctl.d -> r:\s2$|\t2$'
 
 ###############################################
 # 2 OS Services
@@ -298,8 +280,7 @@ checks:
       - cis_csc: "9.1"
     condition: none
     rules:
-      - 'f:/etc/xinetd.d/chargen -> !r:^# && r:disable && r:no'
-      - 'f:/etc/xinetd.d/chargen-udp -> !r:^# && r:disable && r:no'
+      - 'c:chkconfig --list -> r:chargen:|chargen-udp: && r:on'
 
   - id: 7519
     title: "Ensure daytime services are not enabled"
@@ -311,8 +292,7 @@ checks:
       - cis_csc: "9.1"
     condition: none
     rules:
-      - 'f:/etc/xinetd.d/daytime -> !r:^# && r:disable && r:no'
-      - 'f:/etc/xinetd.d/daytime-udp -> !r:^# && r:disable && r:no'
+      - 'c:chkconfig --list -> r:daytime:|daytime-udp && r:on'
 
   - id: 7520
     title: "Ensure discard services are not enabled"
@@ -324,8 +304,7 @@ checks:
       - cis_csc: "9.1"
     condition: none
     rules:
-      - 'f:/etc/xinetd.d/discard -> !r:^# && r:disable && r:no'
-      - 'f:/etc/xinetd.d/discard-udp -> !r:^# && r:disable && r:no'
+      - 'c:chkconfig --list -> r:discard:|discard-udp: && r:on'
 
   - id: 7521
     title: "Ensure echo services are not enabled"
@@ -337,8 +316,7 @@ checks:
       - cis_csc: "9.1"
     condition: none
     rules:
-      - 'f:/etc/xinetd.d/echo -> !r:^# && r:disable && r:no'
-      - 'f:/etc/xinetd.d/echo-udp -> !r:^# && r:disable && r:no'
+      - 'c:chkconfig --list -> r:echo:|echo-udp: && r:on'
 
   - id: 7522
     title: "Ensure time services are not enabled"
@@ -350,12 +328,11 @@ checks:
       - cis_csc: "9.1"
     condition: none
     rules:
-      - 'f:/etc/xinetd.d/time -> !r:^# && r:disable && r:no'
-      - 'f:/etc/xinetd.d/time-udp -> !r:^# && r:disable && r:no'
+      - 'c:chkconfig --list -> r:time:|time-udp && r:on'
 
   - id: 7523
-    title: "Ensure rsh server is disabled"
-    description: "The Berkeley rsh-server ( rsh , rlogin , rexec ) package contains legacy services that exchange credentials in clear-text."
+    title: "Ensure rsh server is not enabled"
+    description: "The Berkeley rsh-server (rsh, rlogin, rexec) package contains legacy services that exchange credentials in clear-text."
     rationale: "These legacy services contain numerous security exposures and have been replaced with the more secure SSH package."
     remediation: "Run the following commands to disable rsh , rlogin , and rexec : # chkconfig rexec off # chkconfig rlogin off # chkconfig rsh off"
     compliance:
@@ -365,15 +342,10 @@ checks:
       - nist_800_53: "CM.1"
     condition: none
     rules:
-      - 'f:/etc/xinetd.d/rlogin -> !r:^# && r:disable && r:no'
-      - 'f:/etc/xinetd.d/rsh -> !r:^# && r:disable && r:no'
-      - 'f:/etc/xinetd.d/shell -> !r:^# && r:disable && r:no'
-      - 'f:/usr/lib/systemd/system/rexec@.service -> r:ExecStart'
-      - 'f:/usr/lib/systemd/system/rlogin@.service -> r:ExecStart'
-      - 'f:/usr/lib/systemd/system/rsh@.service -> r:ExecStart'
+      - 'c:chkconfig --list -> r:rexec:|rlogin:|rsh: && r:on'
 
   - id: 7524
-    title: "Ensure talk server is disabled"
+    title: "Ensure talk server is not enabled"
     description: "The talk software makes it possible for users to send and receive messages across systems through a terminal session. The talk client (allows initiate of talk sessions) is installed by default."
     rationale: "The software presents a security risk as it uses unencrypted protocols for communication."
     remediation: "Run the following command to disable talk: # chkconfig talk off"
@@ -384,11 +356,10 @@ checks:
       - nist_800_53: "CM.1"
     condition: none
     rules:
-      - 'f:/etc/xinetd.d/talk -> !r:^# && r:disable && r:no'
-      - 'f:/usr/lib/systemd/system/ntalk.service -> r:Exec'
+      - 'c:chkconfig --list -> r:talk: && r:on'
 
   - id: 7525
-    title: "Ensure telnet server is disabled"
+    title: "Ensure telnet server is not enabled"
     description: "The telnet-server package contains the telnet daemon, which accepts connections from users from other systems via the telnet protocol."
     rationale: "The telnet protocol is insecure and unencrypted. The use of an unencrypted transmission medium could allow a user with access to sniff network traffic the ability to steal credentials. The ssh package provides an encrypted session and stronger security."
     remediation: "Run the following command to disable telnet: # chkconfig telnet off"
@@ -399,11 +370,10 @@ checks:
       - nist_800_53: "CM.1"
     condition: none
     rules:
-      - 'f:/etc/xinetd.d/telnet -> !r:^# && r:disable && r:no'
-      - 'f:/usr/lib/systemd/system/telnet@.service -> r:ExecStart=-/usr/sbin/in.telnetd'
+      - 'c:chkconfig --list -> r:telnet: && r:on'
 
   - id: 7526
-    title: "Ensure tftp server is disabled"
+    title: "Ensure tftp server is not enabled"
     description: "Trivial File Transfer Protocol (TFTP) is a simple file transfer protocol, typically used to automatically transfer configuration or boot machines from a boot server. The package atftp is used to define and support a TFTP server."
     rationale: "TFTP does not support authentication nor does it ensure the confidentiality or integrity of data. It is recommended that TFTP be removed, unless there is a specific need for TFTP. In that case, extreme caution must be used when configuring the services."
     remediation: "Run the following command to disable tftp: # systemctl disable atftpd"
@@ -414,11 +384,10 @@ checks:
       - nist_800_53: "CM.1"
     condition: none
     rules:
-      - 'f:/etc/xinetd.d/tftpd -> !r:^# && r:disable && r:no'
-      - 'f:/usr/lib/systemd/system/tftp.service -> r:Exec'
+      - 'c:chkconfig --list -> r:tftp: && r:on'
 
   - id: 7527
-    title: "Ensure rsync service is disabled"
+    title: "Ensure rsync service is not enabled"
     description: "The rsyncd service can be used to synchronize files between systems over network links."
     rationale: "The rsyncd service presents a security risk as it uses unencrypted protocols for communication."
     remediation: "Run the following command to disable rsyncd: # systemctl disable rsyncd"
@@ -427,10 +396,10 @@ checks:
       - pci_dss: "2.2.2"
     condition: none
     rules:
-      - 'd:$rc_dirs -> ^S\d\drsyncd$'
+      - 'c:chkconfig --list -> r:rsync: && r:on'
 
   - id: 7528
-    title: "Ensure xinetd is disabled"
+    title: "Ensure xinetd is not enabled"
     description: "The eXtended InterNET Daemon ( xinetd ) is an open source super daemon that replaced the original inetd daemon. The xinetd daemon listens for well known services and dispatches the appropriate daemon to properly respond to service requests."
     rationale: "If there are no xinetd services required, it is recommended that the daemon be disabled."
     remediation: "Run the following command to disable xinetd : # systemctl disable xinetd"
@@ -439,8 +408,7 @@ checks:
       - cis_csc: "9.1"
     condition: none
     rules:
-      - 'f:/usr/lib/systemd/system/xinetd.service -> r:Exec'
-
+      - 'c:systemctl is-enabled xinetd -> r:enabled'
 
 ###############################################
 # 2 Special Purpose Services
@@ -454,11 +422,11 @@ checks:
       - cis: "2.2.1.2"
       - cis_csc: "6.1"
       - pci_dss: "2.2.2"
-    condition: any
+    condition: all
     rules:
-      - 'f:/etc/ntp.conf -> r:restrict -4 default kod limited nomodify notrap nopeer noquery'
-      - 'f:/etc/ntp.conf -> r:restrict -6 default kod limited nomodify notrap nopeer noquery'
-      - 'f:/etc/ntp.conf -> r:^server|^pool'
+      - 'f:/etc/ntp.conf -> r:^restrict\s+-4\s+default|^restrict\s+default && r:\s+kod\s+ && r:\s+nomodify\s+ && r:\s+notrap\s+ && r:\s+nopeer\s+ && r:\s+noquery\s+'
+      - 'f:/etc/ntp.conf -> r:^restrict\s+-6\s+default && r:\s+kod\s+ && r:\s+nomodify\s+ && r:\s+notrap\s+ && r:\s+nopeer\s+ && r:\s+noquery\s+'
+      - 'f:/etc/ntp.conf -> r:^server\.+$|^pool\.+$'
       - 'f:/etc/sysconfig/ntpd -> r:"NTPD_OPTIONS="-u ntp:ntp"'
 
 # 2.2.2 Remove X Windows (Scored)
@@ -473,12 +441,11 @@ checks:
       - pci_dss: "2.2.2"
     condition: none
     rules:
-      - 'f:/usr/lib/systemd/system/default.target -> r:Graphical'
-      - 'p:gdm-x-session'
+      - 'c:rpm -qa xorg-x11* -> r:\.'
 
 # 2.2.3 Disable Avahi Server (Scored)
   - id: 7531
-    title: "Ensure Avahi Server is disabled"
+    title: "Ensure Avahi Server is not enabled"
     description: "Avahi is a free zeroconf implementation, including a system for multicast DNS/DNS-SD service discovery. Avahi allows programs to publish and discover services and hosts running on a local network with no specific configuration. For example, a user can plug a computer into a network and Avahi automatically finds printers to print to, files to look at and people to talk to, as well as network services running on the machine."
     rationale: "Automatic discovery of network services is not normally required for system functionality.  It is recommended to disable the service to reduce the potential attack surface."
     remediation: "Run the following command to disable avahi-daemon : # systemctl disable avahi-daemon"
@@ -488,10 +455,10 @@ checks:
       - pci_dss: "2.2.2"
     condition: none
     rules:
-      - 'p:avahi-daemon'
+      - 'c:systemctl is-enabled avahi-daemon -> r:enabled'
 
   - id: 7532
-    title: "Ensure DHCP Server is disabled"
+    title: "Ensure DHCP Server is not enabled"
     description: "The Dynamic Host Configuration Protocol (DHCP) is a service that allows machines to be dynamically assigned IP addresses."
     rationale: "Unless a system is specifically set up to act as a DHCP server, it is recommended that this service be disabled to reduce the potential attack surface."
     remediation: "Run the following command to disable dhcpd : # systemctl disable dhcpd"
@@ -500,7 +467,7 @@ checks:
       - cis_csc: "9.1"
     condition: none
     rules:
-      - 'f:/usr/lib/systemd/system/dhcpd.service -> r:Exec'
+      - 'c:systemctl is-enabled dhcpd -> r:enabled'
 
 # 2.2.7 Disable NFS and RPC (Not Scored)
   - id: 7533
@@ -514,11 +481,11 @@ checks:
       - pci_dss: "2.2.2"
     condition: none
     rules:
-      - 'd:$rc_dirs -> ^S\d\dnfs$'
-      - 'd:$rc_dirs -> ^S\d\dnfslock$'
+      - 'c:systemctl is-enabled nfs -> r:enabled'
+      - 'c:systemctl is-enabled rpcbind -> r:enabled'
 
   - id: 7534
-    title: "Ensure DNS Server is disabled"
+    title: "Ensure DNS Server is not enabled"
     description: "The Domain Name System (DNS) is a hierarchical naming system that maps names to IP addresses for computers, services and other resources connected to a network."
     rationale: "Unless a system is specifically designated to act as a DNS server, it is recommended that the service be disabled to reduce the potential attack surface."
     remediation: "Run the following command to disable named : # systemctl disable named"
@@ -528,10 +495,10 @@ checks:
       - pci_dss: "2.2.2"
     condition: none
     rules:
-      - 'd:$rc_dirs -> ^S\d\dnamed$'
+      - 'c:systemctl is-enabled named -> r:enabled'
 
   - id: 7535
-    title: "Ensure FTP Server is disabled"
+    title: "Ensure FTP Server is not enabled"
     description: "The File Transfer Protocol (FTP) provides networked computers with the ability to transfer files."
     rationale: "FTP does not protect the confidentiality of data or authentication credentials. It is recommended sftp be used if file transfer is required. Unless there is a need to run the system as a FTP server (for example, to allow anonymous downloads), it is recommended that the service be disabled to reduce the potential attack surface."
     remediation: "Run the following command to disable vsftpd : # systemctl disable vsftpd    Notes: Additional FTP servers also exist and should be audited."
@@ -541,11 +508,11 @@ checks:
       - pci_dss: "2.2.2"
     condition: none
     rules:
-      - 'f:/etc/xinetd.d/vsftpd -> !r:^# && r:disable && r:no'
+      - 'c:systemctl is-enabled vsftpd -> r:enabled'
 
 # 2.2.10 Remove HTTP Server (Not Scored)
   - id: 7536
-    title: "Ensure HTTP server is disabled"
+    title: "Ensure HTTP server is not enabled"
     description: "HTTP or web servers provide the ability to host web site content."
     rationale: "Unless there is a need to run the system as a web server, it is recommended that the service be disabled to reduce the potential attack surface."
     remediation: "Run the following command to disable apache2 : # systemctl disable apache2    Notes: Several httpd servers exist and can use other service names. apache, apache2, lighttpd, and nginx are example services that provide an HTTP server. These and other services should also be audited."
@@ -554,10 +521,10 @@ checks:
       - cis_csc: "9.1"
     condition: none
     rules:
-      - 'd:$rc_dirs -> ^S\d\dapache2$'
+      - 'c:systemctl is-enabled apache2 -> r:enabled'
 
   - id: 7537
-    title: "Ensure IMAP and POP3 server is disabled"
+    title: "Ensure IMAP and POP3 server is not enabled"
     description: "dovecot is an open source IMAP and POP3 server for Linux based systems."
     rationale: "Unless POP3 and/or IMAP servers are to be provided by this system, it is recommended that the service be disabled to reduce the potential attack surface."
     remediation: "Run the following command to disable dovecot : # systemctl disable dovecot    Notes: Several IMAP/POP3 servers exist and can use other service names. cyrus-imap is an example service that provides an IMAP/POP3 server. These and other services should also be audited."
@@ -567,12 +534,11 @@ checks:
       - pci_dss: "2.2.2"
     condition: none
     rules:
-      - 'f:/etc/xinetd.d/cyrus-imapd -> !r:^# && r:disable && r:no'
-      - 'f:/etc/xinetd.d/dovecot -> !r:^# && r:disable && r:no'
+      - 'c:systemctl is-enabled dovecot -> r:enabled'
 
 # 2.2.12 Remove Samba (Not Scored)
   - id: 7538
-    title: "Ensure Samba is disabled"
+    title: "Ensure Samba is not enabled"
     description: "The Samba daemon allows system administrators to configure their Linux systems to share file systems and directories with Windows desktops. Samba will advertise the file systems and directories via the Small Message Block (SMB) protocol. Windows desktop users will be able to mount these directories and file systems as letter drives on their systems."
     rationale: "If there is no need to mount directories and file systems to Windows systems, then this service can be disabled to reduce the potential attack surface."
     remediation: "Run the following command to disable smb : # systemctl disable smb"
@@ -582,11 +548,10 @@ checks:
       - pci_dss: "2.2.2"
     condition: none
     rules:
-      - 'd:$rc_dirs -> ^S\d\dsamba$'
-      - 'd:$rc_dirs -> ^S\d\dsmb$'
+      - 'c:systemctl is-enabled smb -> r:enabled'
 
   - id: 7539
-    title: "Ensure HTTP Proxy Server is disabled"
+    title: "Ensure HTTP Proxy Server is not enabled"
     description: "Squid is a standard proxy server used in many distributions and environments."
     rationale: "If there is no need for a proxy server, it is recommended that the squid proxy be disabled to reduce the potential attack surface."
     remediation: "Run the following command to disable squid : # systemctl disable squid    Notes: Several HTTP proxy servers exist. These and other services should be checked."
@@ -596,10 +561,10 @@ checks:
       - pci_dss: "2.2.2"
     condition: none
     rules:
-      - 'd:$rc_dirs -> ^S\d\dsquid$'
+      - 'c:systemctl is-enabled squid -> r:enabled'
 
   - id: 7540
-    title: "Ensure SNMP Server is disabled"
+    title: "Ensure SNMP Server is not enabled"
     description: "The Simple Network Management Protocol (SNMP) server is used to listen for SNMP commands from an SNMP management system, execute the commands or collect the information and then send results back to the requesting system."
     rationale: "The SNMP server can communicate using SNMP v1, which transmits data in the clear and does not require authentication to execute commands. Unless absolutely necessary, it is recommended that the SNMP service not be used. If SNMP is required the server should be configured to disallow SNMP v1."
     remediation: "Run the following command to disable snmpd: # systemctl disable snmpd    Notes: Additional methods of disabling a service exist. Consult your distribution documentation for appropriate methods."
@@ -609,10 +574,10 @@ checks:
       - pci_dss: "2.2.2"
     condition: none
     rules:
-      - 'd:$rc_dirs -> ^S\d\dsnmpd$'
+      - 'c:systemctl is-enabled snmpd -> r:enabled'
 
   - id: 7541
-    title: "Ensure NIS Server is disabled"
+    title: "Ensure NIS Server is not enabled"
     description: "The Network Information Service (NIS) (formally known as Yellow Pages) is a client-server directory service protocol for distributing system configuration files. The NIS server is a collection of programs that allow for the distribution of configuration files."
     rationale: "The NIS service is inherently an insecure system that has been vulnerable to DOS attacks, buffer overflows and has poor authentication for querying NIS maps. NIS generally been replaced by such protocols as Lightweight Directory Access Protocol (LDAP). It is recommended that the service be disabled and other, more secure services be used"
     remediation: "Run the following command to disable ypserv : # systemctl disable ypserv"
@@ -623,8 +588,7 @@ checks:
       - nist_800_53: "CM.1"
     condition: none
     rules:
-      - 'd:$rc_dirs -> ^S\d\dypserv$'
-      - 'f:/usr/lib/systemd/system/ypserv.service -> r:Exec'
+      - 'c:systemctl is-enabled ypserv -> r:enabled'
 
 # Section 2.3 - Service Clients
   - id: 7542
@@ -637,10 +601,9 @@ checks:
       - cis_csc: "2"
       - pci_dss: "2.2.3"
       - nist_800_53: "CM.1"
-    condition: none
+    condition: all
     rules:
-      - 'd:$rc_dirs -> ^S\d\dypbind$'
-      - 'f:/usr/lib/systemd/system/ypbind.service -> r:Exec'
+      - 'c:rpm -q ypbind -> r:not installed$'
 
 ###############################################
 # 3 Network Configuration and Firewalls
@@ -650,7 +613,7 @@ checks:
 ###############################################
 # 3.1.1 Disable IP Forwarding (Scored)
   - id: 7543
-    title: "Ensure IPv4 forwarding is disabled"
+    title: "Ensure IP forwarding is disabled"
     description: "The net.ipv4.ip_forward flag is used to tell the system whether it can forward packets or not."
     rationale: "Setting the flag to 0 ensures that a system with multiple interfaces (for example, a hard proxy), will never be able to forward packets, and therefore, never serve as a router."
     remediation: "Set the following parameter in /etc/sysctl.conf or a /etc/sysctl.d/* file: net.ipv4.ip_forward = 0.  Run the following commands to set the active kernel parameters: # sysctl -w net.ipv4.ip_forward=0 # sysctl -w net.ipv4.route.flush=1"
@@ -660,20 +623,8 @@ checks:
       - pci_dss: "2.2.4"
     condition: all
     rules:
-      - 'f:/proc/sys/net/ipv4/ip_forward -> 0'
-
-  - id: 7544
-    title: "Ensure IPv6 forwarding is disabled"
-    description: "The net.ipv6.conf.all.forwarding flag is used to tell the system whether it can forward packets or not."
-    rationale: "Setting the flag to 0 ensures that a system with multiple interfaces (for example, a hard proxy), will never be able to forward packets, and therefore, never serve as a router."
-    remediation: "Set the following parameter in /etc/sysctl.conf or a /etc/sysctl.d/* file: net.ipv6.conf.all.forwarding = 0.  Run the following commands to set the active kernel parameters: # sysctl -w net.ipv6.conf.all.forwarding=0 # sysctl -w net.ipv6.route.flush=1"
-    compliance:
-      - cis: "3.1.1"
-      - cis_csc: "3, 11"
-      - pci_dss: "2.2.4"
-    condition: all
-    rules:
-      - 'f:/proc/sys/net/ipv6/ip_forward -> 0'
+      - 'c:sysctl net.ipv4.ip_forward -> r:\s0$'
+      - 'c:grep "net\.ipv4\.ip_forward" -R /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4_forward\s*=\s*0$'
 
 # 3.1.2 Disable Send Packet Redirects (Scored)
   - id: 7545
@@ -687,8 +638,10 @@ checks:
       - pci_dss: "2.2.4"
     condition: all
     rules:
-      - 'f:/proc/sys/net/ipv4/conf/all/send_redirects -> 0'
-      - 'f:/proc/sys/net/ipv4/conf/default/send_redirects -> 0'
+      - 'c:sysctl net.ipv4.conf.all.send_redirects -> r:^net.ipv4.conf.all.send_redirects\s*=\s*0$'
+      - 'c:sysctl net.ipv4.conf.default.send_redirects -> r:^net.ipv4.conf.default.send_redirects\s*=\s*0$'
+      - 'c:grep -R "net\.ipv4\.conf\.all\.send_redirects" /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.conf.all.send_redirects\s*=\s*0$'
+      - 'c:grep -R "net\.ipv4\.conf\.default\.send_redirects" /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.conf.default.send_redirects\s*=\s*0$'
 
 ###############################################
 # 3.2 Modify Network Parameters (Host and Router)
@@ -705,7 +658,10 @@ checks:
       - pci_dss: "2.2.4"
     condition: all
     rules:
-      - 'f:/proc/sys/net/ipv4/conf/all/accept_source_route -> 0'
+      - 'c:sysctl net.ipv4.conf.all.accept_source_route -> r:^net.ipv4.conf.all.accept_source_route\s*=\s*0$'
+      - 'c:sysctl net.ipv4.conf.default.accept_source_route -> r:^net.ipv4.conf.default.accept_source_route\s*=\s*0$'
+      - 'c:grep -R "net\.ipv4\.conf\.all\.accept_source_route" /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.conf.all.accept_source_route\s*=\s*0$'
+      - 'c:grep -R "net\.ipv4\.conf\.default\.accept_source_route" /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.conf.default.accept_source_route\s*=\s*0$'
 
 # 3.2.2 Disable ICMP Redirect Acceptance (Scored)
   - id: 7547
@@ -719,8 +675,10 @@ checks:
       - pci_dss: "2.2.4"
     condition: all
     rules:
-      - 'f:/proc/sys/net/ipv4/conf/all/accept_redirects -> 0'
-      - 'f:/proc/sys/net/ipv4/conf/default/accept_redirects -> 0'
+      - 'c:sysctl net.ipv4.conf.all.accept_redirects -> r:^net.ipv4.conf.all.accept_redirects\s*=\s*0$'
+      - 'c:sysctl net.ipv4.conf.default.accept_redirects -> r:^net.ipv4.conf.default.accept_redirects\s*=\s*0$'
+      - 'c:grep -R "net\.ipv4\.conf\.all\.accept_redirects" /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.conf.all.accept_redirects\s*=\s*0$'
+      - 'c:grep -R "net\.ipv4\.conf\.default\.accept_redirects" /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.conf.default.accept_redirects\s*=\s*0$'
 
 # 3.2.3 Disable Secure ICMP Redirect Acceptance (Scored)
   - id: 7548
@@ -734,8 +692,10 @@ checks:
       - pci_dss: "2.2.4"
     condition: all
     rules:
-      - 'f:/proc/sys/net/ipv4/conf/all/secure_redirects -> 0'
-      - 'f:/proc/sys/net/ipv4/conf/default/secure_redirects -> 0'
+      - 'c:sysctl net.ipv4.conf.all.secure_redirects -> r:^net.ipv4.conf.all.secure_redirects\s*=\s*0$'
+      - 'c:sysctl net.ipv4.conf.default.secure_redirects -> r:^net.ipv4.conf.default.secure_redirects\s*=\s*0$'
+      - 'c:grep -R "net\.ipv4\.conf\.all\.secure_redirects" /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.conf.all.secure_redirects\s*=\s*0$'
+      - 'c:grep -R "net\.ipv4\.conf\.default\.secure_redirects" /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.conf.default.secure_redirects\s*=\s*0$'
 
   - id: 7549
     title: "Ensure suspicious packets are logged"
@@ -748,8 +708,10 @@ checks:
       - pci_dss: "2.2.4"
     condition: all
     rules:
-      - 'f:/proc/sys/net/ipv4/conf/all/log_martians -> 1'
-      - 'f:/proc/sys/net/ipv4/conf/default/log_martians -> 1'
+      - 'c:sysctl net.ipv4.conf.all.log_martians -> r:^net.ipv4.conf.all.log_martians\s*=\s*1$'
+      - 'c:sysctl net.ipv4.conf.default.log_martians -> r:^net.ipv4.conf.default.log_martians\s*=\s*1$'
+      - 'c:grep -R "net\.ipv4\.conf\.all\.log_martians" /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.conf.all.log_martians\s*=\s*1$'
+      - 'c:grep -R "net\.ipv4\.conf\.default\.log_martians" /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.conf.default.log_martians\s*=\s*1$'
 
 # 3.2.5 Enable Ignore Broadcast Requests (Scored)
   - id: 7550
@@ -763,7 +725,8 @@ checks:
       - pci_dss: "2.2.4"
     condition: all
     rules:
-      - 'f:/proc/sys/net/ipv4/icmp_echo_ignore_broadcasts -> 1'
+      - 'c:sysctl net.ipv4.icmp_ignore_bogus_error_responses -> r:^net.ipv4.icmp_ignore_bogus_error_responses\s*=\s*1$'
+      - 'c:grep -R "net\.ipv4\.icmp_ignore_bogus_error_responses" /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.icmp_ignore_bogus_error_responses\s*=\s*1$'
 
 # 3.2.6 Enable Bad Error Message Protection (Scored)
   - id: 7551
@@ -777,7 +740,8 @@ checks:
       - pci_dss: "2.2.4"
     condition: all
     rules:
-      - 'f:/proc/sys/net/ipv4/icmp_ignore_bogus_error_responses -> 1'
+      - 'c:sysctl net.ipv4.icmp_ignore_bogus_error_responses -> r:^net.ipv4.icmp_ignore_bogus_error_responses\s*=\s*1$'
+      - 'c:grep -R "net\.ipv4\.icmp_ignore_bogus_error_responses" /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.icmp_ignore_bogus_error_responses\s*=\s*1$'
 
 # 3.2.7 Ensure Reverse Path Filtering is enabled (Scored)
   - id: 7552
@@ -791,8 +755,10 @@ checks:
       - pci_dss: "2.2.4"
     condition: all
     rules:
-      - 'f:/proc/sys/net/ipv4/conf/all/rp_filter -> 1'
-      - 'f:/proc/sys/net/ipv4/conf/default/rp_filter -> 1'
+      - 'c:sysctl net.ipv4.conf.all.rp_filter -> r:^net.ipv4.conf.all.rp_filter\s*=\s*1$'
+      - 'c:sysctl net.ipv4.conf.default.rp_filter -> r:^net.ipv4.conf.default.rp_filter\s*=\s*1$'
+      - 'c:grep -R "net\.ipv4\.conf\.all\.rp_filter" /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.conf.all.rp_filter\s*=\s$*1$'
+      - 'c:grep -R "net\.ipv4\.conf\.default\.rp_filter" /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.conf.default.rp_filter\s*=\s*1$'
 
 # 3.2.8 Enable TCP SYN Cookies (Scored)
   - id: 7553
@@ -806,7 +772,8 @@ checks:
       - pci_dss: "2.2.4"
     condition: all
     rules:
-      - 'f:/proc/sys/net/ipv4/tcp_syncookies -> 1'
+      - 'c:sysctl net.ipv4.tcp_syncookies -> r:^net.tcp_syncookies\s*=\s*1$'
+      - 'c:grep -R "net\.ipv4\.tcp_syncookies" /etc/sysctl.conf /etc/sysctl.d -> r:^net.tcp_syncookies\s*=\s*1$'
 
 ###############################################
 # 5 System Access, Authentication and Authorization
@@ -828,7 +795,7 @@ checks:
       - nist_800_53: "SC.8"
     condition: all
     rules:
-      - 'f:$sshd_file -> r:^\s*\t*Protocol\s*\t*\D2\D*$'
+      - 'f:$sshd_file -> !r:^\s*\t*# && r:Protocol\s*\t*2$'
 
 # 5.2.3 Set LogLevel to INFO (Scored)
   - id: 7555
@@ -844,7 +811,7 @@ checks:
       - nist_800_53: "SC.8"
     condition: all
     rules:
-      - 'f:$sshd_file -> !r:^# && r:LogLevel\.+INFO'
+      - 'f:$sshd_file -> !r:^\s*\t*# && r:LogLevel\s*\t*INFO'
 
 # 5.2.5 Set SSH MaxAuthTries to 4 or Less (Scored)
   - id: 7556
@@ -858,7 +825,7 @@ checks:
       - pci_dss: "2.2.4"
     condition: all
     rules:
-      - 'f:$sshd_file -> n:^MaxAuthTries\s+(\d+) compare <= 4'
+      - 'f:$sshd_file -> !r:^\s*\t*# && n:^MaxAuthTries\s*\t*(\d+) compare <= 4'
 
 # 5.2.6 Set SSH IgnoreRhosts to Yes (Scored)
   - id: 7557
@@ -872,9 +839,9 @@ checks:
       - pci_dss: "4.1"
       - hipaa: "164.312.a.2.IV, 164.312.e.1, 164.312.e.2.I, 164.312.e.2.II"
       - nist_800_53: "SC.8"
-    condition: none
+    condition: all
     rules:
-      - 'f:$sshd_file -> !r:^# && r:IgnoreRhosts\.+no'
+      - 'f:$sshd_file -> !r:^\s*\t*# && r:IgnoreRhosts\s*\t*yes'
 
 # 5.2.7 Set SSH HostbasedAuthentication to No (Scored)
   - id: 7558
@@ -888,9 +855,9 @@ checks:
       - pci_dss: "4.1"
       - hipaa: "164.312.a.2.IV, 164.312.e.1, 164.312.e.2.I, 164.312.e.2.II"
       - nist_800_53: "SC.8"
-    condition: none
+    condition: all
     rules:
-      - 'f:$sshd_file -> r:^\s*\t*HostbasedAuthentication\.+yes'
+      - 'f:$sshd_file -> !r:^\s*\t*# && r:HostbasedAuthentication\s*\t*no'
 
 # 5.2.8 Disable SSH Root Login (Scored)
   - id: 7559
@@ -906,7 +873,7 @@ checks:
       - nist_800_53: "SC.8"
     condition: all
     rules:
-      - 'f:$sshd_file -> r:^\s*\t*PermitRootLogin\.+no'
+      - 'f:$sshd_file -> !r:^\s*\t*# && r:PermitRootLogin\s*\t*no'
 
 # 5.2.9 Set SSH PermitEmptyPasswords to No (Scored)
   - id: 7560
@@ -922,7 +889,7 @@ checks:
       - nist_800_53: "SC.8"
     condition: none
     rules:
-      - 'f:$sshd_file -> r:^\s*\t*PermitEmptyPasswords\.+yes'
+      - 'f:$sshd_file -> !r:^\s*\t*# && r:PermitEmptyPasswords\s*\t*no'
 
 ###############################################
 # 6 System Maintenance
