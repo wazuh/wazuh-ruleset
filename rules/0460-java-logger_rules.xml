@@ -1,0 +1,41 @@
+<!--
+  -  Java-logger rules
+  -  Created by Wazuh, Inc.
+  -  Copyright (C) 2015-2019, Wazuh Inc.
+  -  This program is a free software; you can redistribute it and/or modify it under the terms of GPLv2.
+-->
+
+<!--
+Feb 18, 2017 8:51:48 AM component action INFO: Text
+Feb 18, 2017 8:51:48 AM component action WARNING: Text
+Feb 18, 2017 8:51:48 AM component action SEVERE: Text
+-->
+
+<!-- ID: 86250 -->
+
+<group name="java-logger,">
+
+    <rule id="86250" level="0">
+        <decoded_as>java-logger</decoded_as>
+        <description>Java-logger  messages</description>
+    </rule>
+
+    <rule id="86251" level="1">
+        <if_sid>86250</if_sid>
+        <field name="severity">INFO</field>  
+        <description>Java-logger INFO message</description>
+    </rule>
+
+    <rule id="86252" level="2">
+        <if_sid>86250</if_sid>
+        <field name="severity">WARNING</field>
+        <description>Java-logger WARNING message</description>
+    </rule>
+
+    <rule id="86253" level="3">
+         <if_sid>86250</if_sid>
+        <field name="severity">SEVERE</field>
+        <description>Java-logger SEVERE message</description>
+    </rule>
+
+</group>
