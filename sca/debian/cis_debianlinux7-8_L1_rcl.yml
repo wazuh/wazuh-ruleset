@@ -30,12 +30,12 @@ requirements:
 checks:
 # 2 Filesystem Configuration
   - id: 10500
-    title: "Create Separate Partition for /tmp"
+    title: "Ensure /tmp is configured"
     description: "The /tmp directory is a world-writable directory used for temporary storage by all users and some applications."
     rationale: "Since the /tmp directory is intended to be world-writable, there is a risk of resource exhaustion if it is not bound to a separate partition. In addition, making /tmp its own file system allows an administrator to set the noexec option on the mount, making /tmp useless for an attacker to install executable code. It would also prevent an attacker from establishing a hardlink to a system setuid program and wait for it to be updated. Once the program was updated, the hardlink would be broken and the attacker would have his own copy of the program. If the program happened to have a security vulnerability, the attacker could continue to exploit the known flaw."
-    remediation: "For new installations, during installation create a custom partition setup and specify a separate partition for /tmp.  For systems that were previously installed, use the Logical Volume Manager (LVM) to create partitions."
+    remediation: "Configure /etc/fstab as appropiate or Run the following commands to enable systemd /tmp mounting: systemctl umask tmp.mount; systemctl enable tmp.mount. Edit /etc/systemd/system/local-fs.target.wants/tmp.mount to configure the /tmp mount."
     compliance:
-      - cis: "2.1"
+      - cis: "1.1.2"
     references:
       - http://tldp.org/HOWTO/LVM-HOWTO/
     condition: any
@@ -102,7 +102,6 @@ checks:
     rules:
       - 'c:findmnt -> r:/var/tmp && r:[/tmp]'
       - 'c:grep -e "^/tmp" /etc/fstab -> r:^/tmp && r:\s*/var/tmp\s*'
-      - 'c:mount -> r:^/tmp && r:\s*/var/tmp\s*'
 
   - id: 10506
     title: "Ensure separate partition exists for /var/log"
@@ -885,20 +884,20 @@ checks:
       - 'f:/etc/rc5.d/S15cron'
 
   - id: 10573
-    title: "Restrict at/cron to Authorized Users"
+    title: "Ensure at/cron is restricted to authorized users"
     description: "Configure /etc/cron.allow and /etc/at.allow to allow specific users to use these services. If /etc/cron.allow or /etc/at.allow do not exist, then /etc/at.deny and /etc/cron.deny are checked. Any user not specifically defined in those files is allowed to use at and cron. By removing the files, only users in /etc/cron.allow and /etc/at.allow are allowed to use at and cron. Note that even though a given user is not listed in cron.allow, cron jobs can still be run as that user. The cron.allow file only controls administrative access to the crontab command for scheduling and modifying cron jobs."
     rationale: "On many systems, only the system administrator is authorized to schedule cron jobs. Using the cron.allow file to control who can run cron jobs enforces this policy. It is easier to manage an allow list than a deny list. In a deny list, you could potentially add a user ID to the system and forget to add it to the deny files."
     remediation: "# /bin/rm /etc/cron.deny    # /bin/rm /etc/at.deny    # touch /etc/cron.allow    # touch /etc/at.allow    # chmod og-rwx /etc/cron.allow    # chmod og-rwx /etc/at.allow    # chown root:root /etc/cron.allow    # chown root:root /etc/at.allow"
     compliance:
-      - cis: "9.1.8"
+      - cis: "5.1.8"
     condition: all
     rules:
       - 'f:/etc/cron.allow'
       - 'f:/etc/at.allow'
       - 'not f:/etc/cron.deny'
       - 'not f:/etc/at.deny'
-      - 'c:stat -c%u-%g-%a /etc/cron.allow -> r:^0-0-\d00'
-      - 'c:stat -c%u-%g-%a /etc/at.allow -> r:^0-0-\d00'
+      - 'c:stat -c%u-%g-%a /etc/cron.allow -> r:^0-0-600'
+      - 'c:stat -c%u-%g-%a /etc/at.allow -> r:^0-0-600'
 
   - id: 10574
     title: "Set Password Creation Requirement Parameters Using pam_cracklib"
