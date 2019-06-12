@@ -607,7 +607,7 @@ checks:
     rules:
       - 'f:/etc/ntp.conf -> r:^restrict\s+-4\s+default|^restrict\s+default && r:\s+kod\s+ && r:\s+nomodify\s+ && r:\s+notrap\s+ && r:\s+nopeer\s+ && r:\s+noquery\s+'
       - 'f:/etc/ntp.conf -> r:^restrict\s+-6\s+default && r:\s+kod\s+ && r:\s+nomodify\s+ && r:\s+notrap\s+ && r:\s+nopeer\s+ && r:\s+noquery\s+'
-      - 'f:/etc/ntp.conf -> r:^server\.+$'
+      - 'f:/etc/ntp.conf -> r:^server\.+$|^pool\.+$'
       - 'f:/etc/sysconfig/ntpd -> r:^OPTIONS\s*=\s* && r:-u ntp:ntp'
       - 'f:/usr/lib/systemd/system/ntpd.service -> r:^Execstart\s*=\s*/usr/sbin/ntpd\s+-u\s+ntp:ntp'
 
@@ -728,7 +728,7 @@ checks:
       - pci_dss: "2.2.4"
     condition: all
     rules:
-      - 'c:sysctl net.ipv4.ip_forward -> r:=^net.ipv4_forward\s*=\s*0$'
+      - 'c:sysctl net.ipv4.ip_forward -> r:^net.ipv4_forward\s*=\s*0$'
       - 'c:grep "net\.ipv4\.ip_forward" -R /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4_forward\s*=\s*0$'
 
 # 3.1.2 Disable Send Packet Redirects (Scored)
@@ -878,7 +878,7 @@ checks:
       - pci_dss: "2.2.4"
     condition: all
     rules:
-      - 'c:sysctl net.ipv4.tcp_syncookies -> r:=^net.tcp_syncookies\s*=\s*1$'
+      - 'c:sysctl net.ipv4.tcp_syncookies -> r:^net.tcp_syncookies\s*=\s*1$'
       - 'c:grep "net\.ipv4\.tcp_syncookies" -R /etc/sysctl.conf /etc/sysctl.d -> r:^net.tcp_syncookies\s*=\s*1$'
 
 ###############################################
