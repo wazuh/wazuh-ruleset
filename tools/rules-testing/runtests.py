@@ -94,6 +94,7 @@ class OssecTester(object):
             print std_out
         else:
             sys.stdout.write(".")
+            sys.stdout.flush()
 
     def run(self, selective_test=False):
         for aFile in os.listdir(self._test_path):
