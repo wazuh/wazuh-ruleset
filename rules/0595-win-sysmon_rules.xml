@@ -151,6 +151,55 @@
     <options>no_full_log</options>
     <group>sysmon_event_15,</group>
   </rule>
+
+  <rule id="61644" level="0">
+    <if_sid>61600</if_sid>
+    <field name="win.system.eventID">^17$</field>
+    <description>Sysmon - Event 17: PipeEvent (Pipe Created) by $(win.eventdata.sourceImage)</description>
+    <options>no_full_log</options>
+    <group>sysmon_event_17,</group>
+  </rule>
+
+  <rule id="61645" level="0">
+    <if_sid>61600</if_sid>
+    <field name="win.system.eventID">^18$</field>
+    <description>Sysmon - Event 18: PipeEvent (Pipe Connected) by $(win.eventdata.sourceImage)</description>
+    <options>no_full_log</options>
+    <group>sysmon_event_18,</group>
+  </rule>
+
+  <rule id="61646" level="0">
+    <if_sid>61600</if_sid>
+    <field name="win.system.eventID">^19$</field>
+    <description>Sysmon - Event 19: WmiEvent (WmiEventFilter activity detected) by $(win.eventdata.sourceImage)</description>
+    <options>no_full_log</options>
+    <group>sysmon_event_19,</group>
+  </rule>
+
+  <rule id="61647" level="0">
+    <if_sid>61600</if_sid>
+    <field name="win.system.eventID">^20$</field>
+    <description>Sysmon - Event 20: WmiEvent (WmiEventConsumer activity detected) by $(win.eventdata.sourceImage)</description>
+    <options>no_full_log</options>
+    <group>sysmon_event_20,</group>
+  </rule>
+
+  <rule id="61648" level="0">
+    <if_sid>61600</if_sid>
+    <field name="win.system.eventID">^21$</field>
+    <description>Sysmon - Event 21: WmiEvent (WmiEventConsumerToFilter activity detected) by $(win.eventdata.sourceImage)</description>
+    <options>no_full_log</options>
+    <group>sysmon_event_21,</group>
+  </rule>
+
+  <rule id="61649" level="0">
+    <if_sid>61600</if_sid>
+    <field name="win.system.eventID">^22$</field>
+    <description>Sysmon - Event 22: DNSEvent (DNS query) by $(win.eventdata.sourceImage)</description>
+    <options>no_full_log</options>
+    <group>sysmon_event_22,</group>
+  </rule>
+
 </group>
 
 <group name="windows,sysmon,sysmon_process-anomalies,">
