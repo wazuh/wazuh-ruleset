@@ -90,9 +90,9 @@ checks:
     references:
       - https://dev.mysql.com/doc/refman/5.6/en/string-functions.html#function_load-file
       - https://dev.mysql.com/doc/refman/5.6/en/load-data.html
-    condition: any
+    condition: all
     rules:
-      - 'c:grep -R local_inside /etc/mysql/my.cnf /etc/mysql/mariadb.cnf /etc/mysql/conf.d /etc/mysql/mariadb.conf.d -> r:local_inside=0'
+      - 'c:grep -R local-infile /etc/mysql/my.cnf /etc/mysql/mariadb.cnf /etc/mysql/conf.d /etc/mysql/mariadb.conf.d -> r:local-infile\s+=\s+0'
 
   - id: 4505
     title: "Ensure 'mysqld' Is Not Started with '--skip-grant-tables'"
@@ -132,7 +132,7 @@ checks:
       - https://dev.mysql.com/doc/refman/5.6/en/server-system-variables.html#sysvar_secure_file_priv
     condition: all
     rules:
-      - 'c:grep -R secure_file_priv /etc/mysql/my.cnf /etc/mysql/mariadb.cnf /etc/mysql/conf.d /etc/mysql/mariadb.conf.d -> r:secure_file_priv=\s*\S+\s*'
+      - 'c:grep -R secure_file_priv /etc/mysql/my.cnf /etc/mysql/mariadb.cnf /etc/mysql/conf.d /etc/mysql/mariadb.conf.d -> r:secure_file_priv\s*=\s*\.'
 
   - id: 4508
     title: "Ensure 'sql_mode' Contains 'STRICT_ALL_TABLES'"
@@ -353,7 +353,7 @@ checks:
       - cis: "6.11"
     condition: all
     rules:
-      - 'c:grep -R audit_log_strategy /etc/mysql/my.cnf -> r:audit_log_strategy\s*=\s* && r:semisynchronous|synchronous|SEMISYNCHRONOUS|SYNCHRONOUS'
+      - 'c:grep -R audit_log_strategy /etc/mysql/my.cnf /etc/mysql/mariadb.cnf /etc/mysql/conf.d /etc/mysql/mariadb.conf.d -> r:audit_log_strategy\s*=\s* && r:semisynchronous|synchronous|SEMISYNCHRONOUS|SYNCHRONOUS'
 
   - id: 4525
     title: "Make sure the audit plugin can't be unloaded"

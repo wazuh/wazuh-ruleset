@@ -25,11 +25,6 @@ requirements:
   rules:
     - 'd:/etc/mysql'
 
-variables:
-  $home_dirs: /usr2/home/*,/home/*,/home,/*/home/*,/*/home,/
-  $enviroment_files: /*/home/*/\.bashrc,/*/home/*/\.profile,/*/home/*/\.bash_profile,/home/*/\.bashrc,/home/*/\.profile,/home/*/\.bash_profile
-  $mysql-cnfs: /etc/mysql/my.cnf,/etc/mysql/mariadb.cnf,/etc/mysql/conf.d/*.cnf,/etc/mysql/mariadb.conf.d/*.cnf,~/.my.cnf
-
 checks:
 #1 Operating System Level Configuration
   - id: 4500
@@ -44,7 +39,7 @@ checks:
       - https://bugs.mysql.com/bug.php?id=72158
     condition: none
     rules:
-      - 'd:$home_dirs -> ^.mysql_history$'
+      - 'd:/home -> ^.mysql_history$'
 
   - id: 4501
     title: "Disable Interactive Login"
@@ -53,9 +48,9 @@ checks:
     remediation: "Execute one of the following commands in a terminal: 'usermod -s /bin/false mysql' or 'usermod -s /sbin/nologin mysql'"
     compliance:
       - cis: "1.5"
-    condition: all
+    condition: none
     rules:
-      - 'f:/etc/passwd -> r:^mysql && r:\.*/bin/false$|/sbin/nologin$'
+      - 'c:getent passwd mysql -> r:^\s$'
 
   - id: 4502
     title: "Verify That 'MYSQL_PWD' Is Not Set In Users' Profiles"
@@ -68,7 +63,7 @@ checks:
       - https://dev.mysql.com/doc/refman/5.6/en/environment-variables.html
     condition: none
     rules:
-      - 'f:$enviroment_files -> r:\.*MYSQL_PWD\.*'
+      - 'c:find /home -maxdepth 2 -type f -regex "/home/.*/\(\.bashrc\|\.profile\|.bash_profile\)" -exec grep MYSQL_PWD {} + -> r:MYSQL_PWD'
 
 #4 General
   - id: 4503
@@ -83,10 +78,10 @@ checks:
       - https://dev.mysql.com/doc/refman/5.6/en/server-options.html#option_mysqld_allow-suspicious-udfs
     condition: none
     rules:
-      - 'f:$mysql-cnfs -> r:allow-suspicious-udfs'
+      - 'c:my_print_defaults mysqld -> r:allow-suspicious-udfs'
 
   - id: 4504
-    title: "Ensure 'local_infile is Disabled"
+    title: "Ensure 'local_infile' is Disabled"
     description: "The 'local_infile' parameter dictates whether files located on the MySQL client's computer can be loaded or selected via 'LOAD DATA INFILE' or 'SELECT local_file'."
     rationale: "Disabling 'local_infile' reduces an attacker's ability to read sensitive files off the affected server via a SQL injection vulnerability."
     remediation: "Add a line local-infile=0 in the [mysqld] section of the MySQL configuration file and restart the MySQL service."
@@ -97,7 +92,7 @@ checks:
       - https://dev.mysql.com/doc/refman/5.6/en/load-data.html
     condition: all
     rules:
-      - 'f:$mysql-cnfs -> r:local-infile\s*=\*0$'
+      - 'c:grep -R local-infile /etc/mysql/my.cnf /etc/mysql/mariadb.cnf /etc/mysql/conf.d /etc/mysql/mariadb.conf.d -> r:local-infile\s+=\s+0'
 
   - id: 4505
     title: "Ensure 'mysqld' Is Not Started with '--skip-grant-tables'"
@@ -110,7 +105,7 @@ checks:
       - https://dev.mysql.com/doc/refman/5.6/en/server-options.html#option_mysqld_skip-grant-tables
     condition: all
     rules:
-      - 'f:$mysql-cnfs -> r:skip-grant-tables\s*=\s*false'
+      - 'c:grep -R skip-grant-tables /etc/mysql/my.cnf /etc/mysql/mariadb.cnf /etc/mysql/conf.d /etc/mysql/mariadb.conf.d -> r:skip-grant-tables\s*=\s*FALSE|skip-grant-tables\s*=\s*false'
 
   - id: 4506
     title: "Ensure '--skip-symbolic-links' Is Enabled"
@@ -124,7 +119,7 @@ checks:
       - https://dev.mysql.com/doc/refman/5.6/en/server-options.html#option_mysqld_symbolic-links
     condition: all
     rules:
-      - 'f:$mysql-cnfs -> r:skip_symbolic_links\s*=\s*yes'
+      - 'c:grep -R skip_symbolic_links /etc/mysql/my.cnf /etc/mysql/mariadb.cnf /etc/mysql/conf.d /etc/mysql/mariadb.conf.d -> r:skip_symbolic_links\s*=\s*YES|skip_symbolic_links\s*=\s*yes'
 
   - id: 4507
     title: "Ensure 'secure_file_priv' is not empty"
@@ -137,7 +132,7 @@ checks:
       - https://dev.mysql.com/doc/refman/5.6/en/server-system-variables.html#sysvar_secure_file_priv
     condition: all
     rules:
-      - 'f:$mysql-cnfs -> !r:secure_file_priv=\s*\S+\s*'
+      - 'c:grep -R secure_file_priv /etc/mysql/my.cnf /etc/mysql/mariadb.cnf /etc/mysql/conf.d /etc/mysql/mariadb.conf.d -> r:secure_file_priv\s*=\s*\.'
 
   - id: 4508
     title: "Ensure 'sql_mode' Contains 'STRICT_ALL_TABLES'"
@@ -148,7 +143,7 @@ checks:
       - cis: "4.9"
     condition: all
     rules:
-      - 'f:$mysql-cnfs -> r:strict_all_tables'
+      - 'c:grep -R strict_all_tables /etc/mysql/my.cnf /etc/mysql/my.ini /etc/mysql/mariadb.cnf /etc/mysql/conf.d /etc/mysql/mariadb.conf.d -> r:strict_all_tables'
 
 #6 Auditing and Logging
   - id: 4509
@@ -162,7 +157,7 @@ checks:
       - https://dev.mysql.com/doc/refman/5.6/en/error-log.html
     condition: all
     rules:
-      - 'f:$mysql-cnfs -> !r:log_error\s*=\s*\S+\s*'
+      - 'c:grep -R log_error /etc/mysql/my.cnf /etc/mysql/mariadb.cnf /etc/mysql/conf.d /etc/mysql/mariadb.conf.d -> r:log_error\s*=\s*\S+\s*'
 
   - id: 4510
     title: "Ensure Log Files are not Stored on a non-system partition"
@@ -174,9 +169,9 @@ checks:
     references:
       - https://dev.mysql.com/doc/refman/5.6/en/binary-log.html
       - https://dev.mysql.com/doc/refman/5.6/en/replication-options-binary-log.html
-    condition: all
+    condition: none
     rules:
-      - 'f:$mysql-cnfs -> r:log_bin\s*\t*.+\s*\t*$ && !r:log_bin\s*\t*/+\s*\t*$|log_bin\s*\t*/+var/*\s*\t*$|log_bin\s*\t*/+usr/*\s*\t*$'
+      - 'c:grep -R log_bin /etc/mysql/my.cnf /etc/mysql/mariadb.cnf /etc/mysql/conf.d /etc/mysql/mariadb.conf.d -> r:log_bin\s*\t*/+\s*\t*$|log_bin\s*\t*/+var/*\s*\t*$|log_bin\s*\t*/+usr/*\s*\t*$'
 
   - id: 4511
     title: "Ensure 'log_warning' is set to 2"
@@ -189,7 +184,7 @@ checks:
       - https://dev.mysql.com/doc/refman/5.6/en/server-options.html#option_mysqld_log-warnings
     condition: all
     rules:
-      - 'f:$mysql-cnfs -> !r:^# && r:log_warnings\s*=\s*2'
+      - 'c:grep -R log_warnings /etc/mysql/my.cnf /etc/mysql/mariadb.cnf /etc/mysql/conf.d /etc/mysql/mariadb.conf.d -> !r:^\s*\t*# && r:log_warnings\s*=\s*2'
 
   - id: 4512
     title: "Ensure 'log_raw' is set to 'OFF'"
@@ -203,7 +198,7 @@ checks:
       - https://dev.mysql.com/doc/refman/5.6/en/server-options.html#option_mysqld_log-raw
     condition: all
     rules:
-      - 'f:$mysql-cnfs -> !r:^# && r:log-raw\s*off$'
+      - 'c:grep -R log-raw /etc/mysql/my.cnf /etc/mysql/mariadb.cnf /etc/mysql/conf.d /etc/mysql/mariadb.conf.d -> !r:^\s*\t*# && r:log-raw\s*OFF$|log-raw\s*off$'
 
 #7 Authentication
   - id: 4513
@@ -220,8 +215,8 @@ checks:
       - https://www.cvedetails.com/cve/CVE-2003-1480/
     condition: none
     rules:
-      - 'f:$mysql-cnfs -> !r:^# && r:old_passwords\s*=\s*1'
-      - 'f:$mysql-cnfs -> !r:^# && r:old_passwords\s*=\s*on'
+      - 'c:grep -R old_passwords /etc/mysql/my.cnf /etc/mysql/mariadb.cnf /etc/mysql/conf.d /etc/mysql/mariadb.conf.d -> !r:^\s*\t*# && r:old_passwords\s*=\s*1'
+      - 'c:grep -R old_passwords /etc/mysql/my.cnf /etc/mysql/mariadb.cnf /etc/mysql/conf.d /etc/mysql/mariadb.conf.d -> !r:^\s*\t*# && r:old_passwords\s*=\s*ON|old_passwords\s*=\s*on'
 
   - id: 4514
     title: "Ensure 'secure_auth' is set to 'ON'"
@@ -234,7 +229,7 @@ checks:
       - https://dev.mysql.com/doc/refman/5.6/en/server-options.html#option_mysqld_secure-auth
     condition: all
     rules:
-      - 'f:$mysql-cnfs -> r:secure_auth\s*=\s*on'
+      - 'c:grep -R secure_auth /etc/mysql/my.cnf /etc/mysql/mariadb.cnf /etc/mysql/conf.d /etc/mysql/mariadb.conf.d -> r:secure_auth\s*=\s*ON|secure_auth\s*=\s*on'
 
   - id: 4515
     title: "Ensure Passwords Are Not Stored in the Global Configuration"
@@ -247,7 +242,7 @@ checks:
       - https://dev.mysql.com/doc/refman/5.6/en/mysql-config-editor.html
     condition: none
     rules:
-      - 'f:$mysql-cnfs -> !r:^# && r:^\s*password\.*'
+      - 'c:grep -R password /etc/mysql/my.cnf /etc/mysql/mariadb.cnf /etc/mysql/conf.d /etc/mysql/mariadb.conf.d -> !r:^\s*\t*# && r:^\s*password\.*'
 
   - id: 4516
     title: "Ensure 'sql_mode' Contains 'NO_AUTO_CREATE_USER'"
@@ -258,7 +253,7 @@ checks:
       - cis: "7.4"
     condition: all
     rules:
-      - 'f:$mysql-cnfs -> r:^# && r:\s*no_auto_create_user\s*$'
+      - 'c:grep -R no_auto_create_user /etc/mysql/my.cnf /etc/mysql/mariadb.cnf /etc/mysql/conf.d /etc/mysql/mariadb.conf.d -> !r:^\s*\t*# && r:\s*no_auto_create_user\s*$'
 
   - id: 4517
     title: "Ensure Password Policy is in Place"
@@ -269,15 +264,15 @@ checks:
       - cis: "7.6"
     references:
       - https://dev.mysql.com/doc/refman/5.6/en/validate-password-plugin.html
-    condition: none
+    condition: all
     rules:
-      - 'f:$mysql-cnfs -> r:plugin-load\s*=\s*validate_password.so\s*$'
-      - 'f:$mysql-cnfs -> r:validate-password\s*=\s*force_plus_permanent\s*$'
-      - 'f:$mysql-cnfs -> r:validate_password_length\s*=\s*14\s$'
-      - 'f:$mysql-cnfs -> r:validate_password_mixed_case_count\s*=\s*1\s*$'
-      - 'f:$mysql-cnfs -> r:validate_password_number_count\s*=\s*1\s*$'
-      - 'f:$mysql-cnfs -> r:validate_password_special_char_count\s*=\s*1'
-      - 'f:$mysql-cnfs -> r:validate_password_policy\s*=\s*medium\s*'
+      - 'c:grep -R plugin-load /etc/mysql/my.cnf /etc/mysql/mariadb.cnf /etc/mysql/conf.d /etc/mysql/mariadb.conf.d -> r:plugin-load\s*=\s*validate_password.so\s*$'
+      - 'c:grep -R validate-password /etc/mysql/my.cnf /etc/mysql/mariadb.cnf /etc/mysql/conf.d /etc/mysql/mariadb.conf.d -> r:validate-password\s*=\s*force_plus_permanent\s*$'
+      - 'c:grep -R validate_password_length /etc/mysql/my.cnf /etc/mysql/mariadb.cnf /etc/mysql/conf.d /etc/mysql/mariadb.conf.d -> n:validate_password_length\s*=\s*(\d+)\s$ compare >= 14'
+      - 'c:grep -R validate_password_mixed_case_count /etc/mysql/my.cnf /etc/mysql/mariadb.cnf /etc/mysql/conf.d /etc/mysql/mariadb.conf.d -> n:validate_password_mixed_case_count\s*=\s*(\d+)\s*$ compare >= 1'
+      - 'c:grep -R validate_password_number_count /etc/mysql/my.cnf /etc/mysql/mariadb.cnf /etc/mysql/conf.d /etc/mysql/mariadb.conf.d -> n:validate_password_number_count\s*=\s*(\d+)\s*$ compare >= 1'
+      - 'c:grep -R validate_password_special_char_count /etc/mysql/my.cnf /etc/mysql/mariadb.cnf /etc/mysql/conf.d /etc/mysql/mariadb.conf.d -> n:validate_password_special_char_count\s*=\s*(\d+) compare >= 1'
+      - 'c:grep -R validate_password_policy /etc/mysql/my.cnf /etc/mysql/mariadb.cnf /etc/mysql/conf.d /etc/mysql/mariadb.conf.d -> r:validate_password_policy\s*=\s*MEDIUM\s*|validate_password_policy\s*=\s*STRONG\s*|validate_password_policy\s*=\s*medium\s*|validate_password_policy\s*=\s*strong\s*'
 
 #9 Replication
   - id: 4518
@@ -291,4 +286,4 @@ checks:
       - https://dev.mysql.com/doc/refman/5.6/en/replication-options-slave.html#sysvar_master_info_repository
     condition: all
     rules:
-      - 'f:$mysql-cnfs -> r:master_info_repository\s*=\s*table'
+      - 'c:grep -R master_info_repository /etc/mysql/my.cnf /etc/mysql/mariadb.cnf /etc/mysql/conf.d /etc/mysql/mariadb.conf.d -> r:master_info_repository\s*=\s*TABLE|master_info_repository\s*=\s*table'
