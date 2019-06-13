@@ -213,7 +213,7 @@ checks:
       - pci_dss: "2.2.4"
     condition: all
     rules:
-      - 'f:/boot/grub2/grub.cfg -> !r:^# && r:password'
+      - 'f:/boot/grub/menu.lst -> !r:^# && r:password --med5'
 
 ###############################################
 # 1.5  Additional Process Hardening
@@ -231,6 +231,7 @@ checks:
     rules:
       - 'c:ulimit -H -c -> 0'
       - 'c:sysctl fs.suid_dumpable -> r:= 0$'
+      - 'c:grep -R -e"^\*\s\+hard\s\+core\s\+" /etc/security/limits.conf /etc/security/limits.d -> r:\s0$|\t0$'
 
 # 1.5.3 Enable Randomized Virtual Memory Region Placement (Scored)
   - id: 7017
@@ -244,7 +245,7 @@ checks:
     condition: all
     rules:
       - 'c:grep -R "kernel\.randomize_va_space" /etc/sysctl.conf /etc/sysctl.d/ -> r:= 2$'
-      - 'f:/proc/sys/kernel/randomize_va_space -> r:^2$'
+      - 'c:/sbin/sysctl kernel.randomize_va_space -> r:=\s*2$'
 
 ###############################################
 # 2 OS Services
@@ -384,9 +385,9 @@ checks:
     compliance:
       - cis: "2.1.10, 2.2.17"
       - pci_dss: "2.2.2"
-    condition: all
+    condition: none
     rules:
-      - 'c:chkconfig --list -> \s*\t*rsyncd\s*\t*0:off\s*\t*1:off\s*\t*2:off\s*\t*3:off\s*\t*4:off\s*\t*5:off\s*\t*6:off'
+      - 'c:chkconfig --list -> r:rsync: && r:on'
 
 ###############################################
 # 2 Special Purpose Services
@@ -419,7 +420,7 @@ checks:
       - pci_dss: "2.2.2"
     condition: none
     rules:
-      - 'c:rpm -qa xorg-x11* -> r:^xorg-x11'
+      - 'c:rpm -qa xorg-x11* -> r:\.'
 
 # 2.2.3 Disable Avahi Server (Scored)
   - id: 7030
@@ -433,7 +434,7 @@ checks:
       - pci_dss: "2.2.2"
     condition: none
     rules:
-      - 'p:avahi-daemon'
+      - 'c:systemctl is-enabled avahi-daemon -> r:enabled'
 
   - id: 7031
     title: "Ensure DHCP Server is not enabled"
@@ -443,9 +444,9 @@ checks:
     compliance:
       - cis: "2.2.5"
       - cis_csc: "9.1"
-    condition: all
+    condition: none
     rules:
-      - 'c:chkconfig --list dhcpd -> \s*\t*dhcpd\s*\t*0:off\s*\t*1:off\s*\t*2:off\s*\t*3:off\s*\t*4:off\s*\t*5:off\s*\t*6:off'
+      - 'c:chkconfig --list dhcpd -> r:dhcpd && r:on'
 
 # 2.2.7 Disable NFS and RPC (Not Scored)
   - id: 7032
@@ -457,10 +458,10 @@ checks:
       - cis: "2.2.7"
       - cis_csc: "9.1"
       - pci_dss: "2.2.2"
-    condition: all
+    condition: none
     rules:
-      - 'c:chkconfig --list nfs -> \s*\t*nfs\s*\t*0:off\s*\t*1:off\s*\t*2:off\s*\t*3:off\s*\t*4:off\s*\t*5:off\s*\t*6:off'
-      - 'c:chkconfig --list rpcbind -> \s*\t*rpcbind\s*\t*0:off\s*\t*1:off\s*\t*2:off\s*\t*3:off\s*\t*4:off\s*\t*5:off\s*\t*6:off'
+      - 'c:chkconfig --list nfs -> r:nfs && r:on'
+      - 'c:chkconfig --list rpcbind -> r:rpcbind && r:on'
 
   - id: 7033
     title: "Ensure DNS Server is not enabled"
@@ -471,9 +472,9 @@ checks:
       - cis: "2.2.8"
       - cis_csc: "9.1"
       - pci_dss: "2.2.2"
-    condition: all
+    condition: none
     rules:
-      - 'c:chkconfig --list named -> \s*\t*named\s*\t*0:off\s*\t*1:off\s*\t*2:off\s*\t*3:off\s*\t*4:off\s*\t*5:off\s*\t*6:off'
+      - 'c:chkconfig --list named -> r:named && r:on'
 
   - id: 7034
     title: "Ensure FTP Server is not enabled"
@@ -484,9 +485,9 @@ checks:
       - cis: "2.2.9"
       - cis_csc: "9.1"
       - pci_dss: "2.2.2"
-    condition: all
+    condition: none
     rules:
-      - 'c:chkconfig --list vsftpd -> \s*\t*vsftpd\s*\t*0:off\s*\t*1:off\s*\t*2:off\s*\t*3:off\s*\t*4:off\s*\t*5:off\s*\t*6:off'
+      - 'c:chkconfig --list vsftpd -> r:vsftpd && r:on'
 
 # 2.2.10 Remove HTTP Server (Not Scored)
   - id: 7035
@@ -497,9 +498,9 @@ checks:
     compliance:
       - cis: "2.2.10"
       - cis_csc: "9.1"
-    condition: all
+    condition: none
     rules:
-      - 'c:chkconfig --list apache2 -> \s*\t*apache2\s*\t*0:off\s*\t*1:off\s*\t*2:off\s*\t*3:off\s*\t*4:off\s*\t*5:off\s*\t*6:off'
+      - 'c:chkconfig --list apache2 -> r:apache2 && r:on'
 
   - id: 7036
     title: "Ensure IMAP and POP3 server is not enabled"
@@ -512,7 +513,7 @@ checks:
       - pci_dss: "2.2.2"
     condition: none
     rules:
-      - 'c:chkconfig --list cyrus -> \s*\t*cyrus\s*\t*0:off\s*\t*1:off\s*\t*2:off\s*\t*3:off\s*\t*4:off\s*\t*5:off\s*\t*6:off'
+      - 'c:chkconfig --list cyrus -> r:cyrus && r:on'
 
 # 2.2.12 Remove Samba (Not Scored)
   - id: 7037
@@ -524,9 +525,9 @@ checks:
       - cis: "2.2.12"
       - cis_csc: "9.1"
       - pci_dss: "2.2.2"
-    condition: all
+    condition: none
     rules:
-      - 'c:chkconfig --list smb -> \s*\t*smb\s*\t*0:off\s*\t*1:off\s*\t*2:off\s*\t*3:off\s*\t*4:off\s*\t*5:off\s*\t*6:off'
+      - 'c:chkconfig --list smb -> r:smb && r:on'
 
   - id: 7038
     title: "Ensure HTTP Proxy Server is not enabled"
@@ -537,9 +538,9 @@ checks:
       - cis: "2.2.13"
       - cis_csc: "9.1"
       - pci_dss: "2.2.2"
-    condition: all
+    condition: none
     rules:
-      - 'c:chkconfig --list squid -> \s*\t*squid\s*\t*0:off\s*\t*1:off\s*\t*2:off\s*\t*3:off\s*\t*4:off\s*\t*5:off\s*\t*6:off'
+      - 'c:chkconfig --list squid -> r:squid && r:on'
 
   - id: 7039
     title: "Ensure SNMP Server is not enabled"
@@ -550,9 +551,9 @@ checks:
       - cis: "2.2.14"
       - cis_csc: "9.1"
       - pci_dss: "2.2.2"
-    condition: all
+    condition: node
     rules:
-      - 'c:chkconfig --list snmpd -> \s*\t*snmpd\s*\t*0:off\s*\t*1:off\s*\t*2:off\s*\t*3:off\s*\t*4:off\s*\t*5:off\s*\t*6:off'
+      - 'c:chkconfig --list snmpd -> r:snmpd && r:on'
 
   - id: 7040
     title: "Ensure NIS Server is not enabled"
@@ -566,7 +567,7 @@ checks:
       - nist_800_53: "CM.1"
     condition: none
     rules:
-      - 'c:chkconfig --list ypserv -> \s*\t*ypserv\s*\t*0:off\s*\t*1:off\s*\t*2:off\s*\t*3:off\s*\t*4:off\s*\t*5:off\s*\t*6:off'
+      - 'c:chkconfig --list ypserv -> r:ypserv && r:on'
 
 # Section 2.3 - Service Clients
   - id: 7041
@@ -581,7 +582,7 @@ checks:
       - nist_800_53: "CM.1"
     condition: none
     rules:
-      - 'c:rpm -q ybind -> r:^ypbind-\S*'
+      - 'c:rpm -qa ypbind -> r:\.'
 
 ###############################################
 # 3 Network Configuration and Firewalls
@@ -601,8 +602,8 @@ checks:
       - pci_dss: "2.2.4"
     condition: all
     rules:
-      - 'c:grep -R "net\.ipv4\.ip_forward" /etc/sysctl.conf /etc/sysctl.d/ -> r:= 0$'
-      - 'c:/sbin/sysctl net.ipv4.ip_forward -> r:= 0$' 
+      - 'c:grep -R "net\.ipv4\.ip_forward" /etc/sysctl.conf /etc/sysctl.d/ -> r:=\s*0$'
+      - 'c:/sbin/sysctl net.ipv4.ip_forward -> r:=\s*0$'
 
 # 3.1.2 Disable Send Packet Redirects (Scored)
   - id: 7044
@@ -616,10 +617,10 @@ checks:
       - pci_dss: "2.2.4"
     condition: all
     rules:
-      - 'c:grep -R "net\.ipv4\.conf\.all\.send_redirects" /etc/sysctl.conf /etc/sysctl.d/ -> r:= 0$'
-      - 'c:grep -R "net\.ipv4\.conf\.default\.send_redirects" /etc/sysctl.conf /etc/sysctl.d/ -> r:= 0$'
-      - 'c:/sbin/sysctl net.ipv4.conf.all.send_redirects -> r:= 0$'
-      - 'c:/sbin/sysctl net.ipv4.conf.default.send_redirects -> r:= 0$'
+      - 'c:grep -R "net\.ipv4\.conf\.all\.send_redirects" /etc/sysctl.conf /etc/sysctl.d/ -> r:=\s*0$'
+      - 'c:grep -R "net\.ipv4\.conf\.default\.send_redirects" /etc/sysctl.conf /etc/sysctl.d/ -> r:=\s*0$'
+      - 'c:/sbin/sysctl net.ipv4.conf.all.send_redirects -> r:=\s*0$'
+      - 'c:/sbin/sysctl net.ipv4.conf.default.send_redirects -> r:=\s*0$'
 
 ###############################################
 # 3.2 Modify Network Parameters (Host and Router)
@@ -636,10 +637,10 @@ checks:
       - pci_dss: "2.2.4"
     condition: all
     rules:
-      - 'c:grep -R "net\.ipv4\.conf\.all\.accept_source_route" /etc/sysctl.conf /etc/sysctl.d/ -> r:= 0$'
-      - 'c:grep -R "net\.ipv4\.conf\.default\.accept_source_route" /etc/sysctl.conf /etc/sysctl.d/ -> r:= 0$'
-      - 'c:/sbin/sysctl net.ipv4.conf.all.accept_source_route -> r:= 0$'
-      - 'c:/sbin/sysctl net.ipv4.conf.default.accept_source_route -> r:= 0$'
+      - 'c:grep -R "net\.ipv4\.conf\.all\.accept_source_route" /etc/sysctl.conf /etc/sysctl.d/ -> r:=\s*0$'
+      - 'c:grep -R "net\.ipv4\.conf\.default\.accept_source_route" /etc/sysctl.conf /etc/sysctl.d/ -> r:=\s*0$'
+      - 'c:/sbin/sysctl net.ipv4.conf.all.accept_source_route -> r:=\s*0$'
+      - 'c:/sbin/sysctl net.ipv4.conf.default.accept_source_route -> r:=\s*0$'
 
 # 3.2.2 Disable ICMP Redirect Acceptance (Scored)
   - id: 7046
@@ -653,10 +654,10 @@ checks:
       - pci_dss: "2.2.4"
     condition: all
     rules:
-      - 'c:grep -R "net\.ipv4\.conf\.all\.accept_redirects" /etc/sysctl.conf /etc/sysctl.d/ -> r:= 0$'
-      - 'c:grep -R "net\.ipv4\.conf\.default\.accept_redirects" /etc/sysctl.conf /etc/sysctl.d/ -> r:= 0$'
-      - 'c:/sbin/sysctl net.ipv4.conf.all.accept_redirects -> r:= 0$'
-      - 'c:/sbin/sysctl net.ipv4.conf.default.accept_redirects -> r:= 0$'
+      - 'c:grep -R "net\.ipv4\.conf\.all\.accept_redirects" /etc/sysctl.conf /etc/sysctl.d/ -> r:=\s*0$'
+      - 'c:grep -R "net\.ipv4\.conf\.default\.accept_redirects" /etc/sysctl.conf /etc/sysctl.d/ -> r:=\s*0$'
+      - 'c:/sbin/sysctl net.ipv4.conf.all.accept_redirects -> r:=\s*0$'
+      - 'c:/sbin/sysctl net.ipv4.conf.default.accept_redirects -> r:=\s*0$'
 
 # 3.2.3 Disable Secure ICMP Redirect Acceptance (Scored)
   - id: 7047
@@ -670,10 +671,10 @@ checks:
       - pci_dss: "2.2.4"
     condition: all
     rules:
-      - 'c:grep -R "net\.ipv4\.conf\.all\.secure_redirects" /etc/sysctl.conf /etc/sysctl.d/ -> r:= 0$'
-      - 'c:grep -R "net\.ipv4\.conf\.default\.secure_redirects" /etc/sysctl.conf /etc/sysctl.d/ -> r:= 0$'
-      - 'c:/sbin/sysctl net.ipv4.conf.all.secure_redirects -> r:= 0$'
-      - 'c:/sbin/sysctl net.ipv4.conf.default.secure_redirects -> r:= 0$'
+      - 'c:grep -R "net\.ipv4\.conf\.all\.secure_redirects" /etc/sysctl.conf /etc/sysctl.d/ -> r:=\s*0$'
+      - 'c:grep -R "net\.ipv4\.conf\.default\.secure_redirects" /etc/sysctl.conf /etc/sysctl.d/ -> r:=\s*0$'
+      - 'c:/sbin/sysctl net.ipv4.conf.all.secure_redirects -> r:=\s*0$'
+      - 'c:/sbin/sysctl net.ipv4.conf.default.secure_redirects -> r:=\s*0$'
 
   - id: 7048
     title: "Ensure suspicious packets are logged"
@@ -686,10 +687,10 @@ checks:
       - pci_dss: "2.2.4"
     condition: all
     rules:
-      - 'c:grep -R "net\.ipv4\.conf\.all\.log_martians" /etc/sysctl.conf /etc/sysctl.d/ -> r:= 1$'
-      - 'c:grep -R "net\.ipv4\.conf\.default\.log_martians" /etc/sysctl.conf /etc/sysctl.d/ -> r:= 1$'
-      - 'c:/sbin/sysctl net.ipv4.conf.all.log_martians -> r:= 1$'
-      - 'c:/sbin/sysctl net.ipv4.conf.default.log_martians -> r:= 1$'
+      - 'c:grep -R "net\.ipv4\.conf\.all\.log_martians" /etc/sysctl.conf /etc/sysctl.d/ -> r:=\s*1$'
+      - 'c:grep -R "net\.ipv4\.conf\.default\.log_martians" /etc/sysctl.conf /etc/sysctl.d/ -> r:=\s*1$'
+      - 'c:/sbin/sysctl net.ipv4.conf.all.log_martians -> r:=\s*1$'
+      - 'c:/sbin/sysctl net.ipv4.conf.default.log_martians -> r:=\s*1$'
 
 # 3.2.5 Enable Ignore Broadcast Requests (Scored)
   - id: 7049
@@ -703,8 +704,8 @@ checks:
       - pci_dss: "2.2.4"
     condition: all
     rules:
-      - 'c:grep -R "net\.ipv4\.icmp_echo_ignore_broadcasts" /etc/sysctl.conf /etc/sysctl.d/ -> r:= 1$'
-      - 'c:/sbin/sysctl net.ipv4.icpm_echo_ignore_broadcasts -> r:= 1$'
+      - 'c:grep -R "net\.ipv4\.icmp_echo_ignore_broadcasts" /etc/sysctl.conf /etc/sysctl.d/ -> r:=\s*1$'
+      - 'c:/sbin/sysctl net.ipv4.icpm_echo_ignore_broadcasts -> r:=\s*1$'
 
 # 3.2.6 Enable Bad Error Message Protection (Scored)
   - id: 7050
@@ -718,8 +719,8 @@ checks:
       - pci_dss: "2.2.4"
     condition: all
     rules:
-      - 'c:grep -R "net\.ipv4\.icmp_ignore_bogus_error_responses" /etc/sysctl.conf /etc/sysctl.d/ -> r:= 1$'
-      - 'c:/sbin/sysctl net.ipv4.icmp_ignore_bogus_error_responses -> r:= 1$'
+      - 'c:grep -R "net\.ipv4\.icmp_ignore_bogus_error_responses" /etc/sysctl.conf /etc/sysctl.d/ -> r:=\s*1$'
+      - 'c:/sbin/sysctl net.ipv4.icmp_ignore_bogus_error_responses -> r:=\s*1$'
 
 # 3.2.7 Ensure Reverse Path Filtering is enabled (Scored)
   - id: 7051
@@ -733,10 +734,10 @@ checks:
       - pci_dss: "2.2.4"
     condition: all
     rules:
-      - 'c:grep -R "net\.ipv4\.conf\.all\.rp_filter" /etc/sysctl.conf /etc/sysctl.d/ -> r:= 1$'
-      - 'c:grep -R "net\.ipv4\.conf\.default\.rp_filter" /etc/sysctl.conf /etc/sysctl.d/ -> r:= 1$'
-      - 'c:/sbin/sysctl net.ipv4.conf.all.rp_filter -> r:= 1$'
-      - 'c:/sbin/sysctl net.ipv4.conf.default.rp_filter -> r:= 1$'
+      - 'c:grep -R "net\.ipv4\.conf\.all\.rp_filter" /etc/sysctl.conf /etc/sysctl.d/ -> r:=\s*1$'
+      - 'c:grep -R "net\.ipv4\.conf\.default\.rp_filter" /etc/sysctl.conf /etc/sysctl.d/ -> r:=\s*1$'
+      - 'c:/sbin/sysctl net.ipv4.conf.all.rp_filter -> r:=\s*1$'
+      - 'c:/sbin/sysctl net.ipv4.conf.default.rp_filter -> r:=\s*1$'
 
 # 3.2.8 Enable TCP SYN Cookies (Scored)
   - id: 7052
@@ -750,8 +751,8 @@ checks:
       - pci_dss: "2.2.4"
     condition: all
     rules:
-      - 'c:grep -R "net\.ipv4\.tcp_syncookies" /etc/sysctl.conf /etc/sysctl.d/ -> r:= 1$'
-      - 'c:/sbin/sysctl net.ipv4.tcp_syncookies -> r:= 1$'
+      - 'c:grep -R "net\.ipv4\.tcp_syncookies" /etc/sysctl.conf /etc/sysctl.d/ -> r:=\s*1$'
+      - 'c:/sbin/sysctl net.ipv4.tcp_syncookies -> r:=\s*1$'
 
 ###############################################
 # 5 System Access, Authentication and Authorization
@@ -773,7 +774,7 @@ checks:
       - nist_800_53: "SC.8"
     condition: all
     rules:
-      - 'f:/etc/ssh/sshd_config -> !r:^# && r:^\s*\t*Protocol\s*\t*2'
+      - 'f:$sshd_file -> !r:^# && r:^\s*\t*Protocol\s*\t*2'
 
 # 5.2.3 Set LogLevel to INFO (Scored)
   - id: 7054
@@ -817,9 +818,9 @@ checks:
       - pci_dss: "4.1"
       - hipaa: "164.312.a.2.IV, 164.312.e.1, 164.312.e.2.I, 164.312.e.2.II"
       - nist_800_53: "SC.8"
-    condition: none
+    condition: all
     rules:
-      - 'f:$sshd_file -> !r:^# && r:IgnoreRhosts\.+no'
+      - 'f:$sshd_file -> !r:^# && r:IgnoreRhosts\.+yes'
 
 # 5.2.7 Set SSH HostbasedAuthentication to No (Scored)
   - id: 7057
@@ -833,9 +834,9 @@ checks:
       - pci_dss: "4.1"
       - hipaa: "164.312.a.2.IV, 164.312.e.1, 164.312.e.2.I, 164.312.e.2.II"
       - nist_800_53: "SC.8"
-    condition: none
+    condition: all
     rules:
-      - 'f:$sshd_file -> r:^\s*\t*HostbasedAuthentication\.+yes'
+      - 'f:$sshd_file -> r:^\s*\t*HostbasedAuthentication\.+no'
 
 # 5.2.8 Disable SSH Root Login (Scored)
   - id: 7058
@@ -865,9 +866,9 @@ checks:
       - pci_dss: "4.1"
       - hipaa: "164.312.a.2.IV, 164.312.e.1, 164.312.e.2.I, 164.312.e.2.II"
       - nist_800_53: "SC.8"
-    condition: none
+    condition: all
     rules:
-      - 'f:$sshd_file -> r:^\s*\t*PermitEmptyPasswords\.+yes'
+      - 'f:$sshd_file -> r:^\s*\t*PermitEmptyPasswords\.+no'
 
 ###############################################
 # 6 System Maintenance

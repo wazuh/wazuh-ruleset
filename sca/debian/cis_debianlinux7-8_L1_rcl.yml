@@ -237,8 +237,7 @@ checks:
     rules:
       - 'c:ulimit -H -c -> 0'
       - 'c:sysctl fs.suid_dumpable -> r:=\s*0$'
-      - 'c:grep -e "hard\s*\t*core" /etc/security/limits.conf -> !r:^# && r:\s*\t*hard\s*\t*core\s*\t*0'
-      - 'c:grep -R -e"^*\s\+hard\s\+core\s\+" /etc/security/limits.conf /etc/security/limits.d -> r:\s0$|\t0$'
+      - 'c:grep -R -e"^\*\s\+hard\s\+core\s\+" /etc/security/limits.conf /etc/security/limits.d -> r:\s0$|\t0$'
 
   - id: 10517
     title: "Enable Randomized Virtual Memory Region Placement"
