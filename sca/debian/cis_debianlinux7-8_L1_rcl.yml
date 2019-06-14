@@ -101,7 +101,7 @@ checks:
     condition: all
     rules:
       - 'c:findmnt -> r:/var/tmp && r:[/tmp]'
-      - 'c:grep -e "^/tmp" /etc/fstab -> r:^/tmp && r:\s*/var/tmp\s*'
+      - 'c:grep ^/tmp /etc/fstab -> r:^/tmp && r:\s*/var/tmp\s*'
 
   - id: 10506
     title: "Ensure separate partition exists for /var/log"
@@ -237,7 +237,7 @@ checks:
     rules:
       - 'c:ulimit -H -c -> 0'
       - 'c:sysctl fs.suid_dumpable -> r:=\s*0$'
-      - 'c:grep -R -e"^\*\s\+hard\s\+core\s\+" /etc/security/limits.conf /etc/security/limits.d -> r:\s0$|\t0$'
+      - 'c:grep -R ^\*\s\+hard\s\+core\s\+ /etc/security/limits.conf /etc/security/limits.d -> r:\s0$|\t0$'
 
   - id: 10517
     title: "Enable Randomized Virtual Memory Region Placement"
@@ -808,21 +808,21 @@ checks:
       - rsyslog.conf(5) man page
     condition: all
     rules:
-      - 'c:grep -R -e "^*.emerg\s*\t*\s*\S" /etc/rsyslog.conf /etc/rsyslog.d/'
-      - 'c:grep -R -e "^mail.*\s*\t*\s*\S" /etc/rsyslog.conf /etc/rsyslog.d/'
-      - 'c:grep -R -e "^mail.info\s*\t*\s*\S" /etc/rsyslog.conf /etc/rsyslog.d/'
-      - 'c:grep -R -e "^mail.warning\s*\t*\s*\S" /etc/rsyslog.conf /etc/rsyslog.d/'
-      - 'c:grep -R -e "^mail.err\s*\t*\s*\S" /etc/rsyslog.conf /etc/rsyslog.d/'
-      - 'c:grep -R -e "^news.crit\s*\t*\s*\S" /etc/rsyslog.conf /etc/rsyslog.d/'
-      - 'c:grep -R -e "^news.err\s*\t*\s*\S" /etc/rsyslog.conf /etc/rsyslog.d/'
-      - 'c:grep -R -e "^news.notice\s*\t*\s*\S" /etc/rsyslog.conf /etc/rsyslog.d/'
-      - 'c:grep -R -e "^*.=warning;*.=err\s*\t*\s*\S" /etc/rsyslog.conf /etc/rsyslog.d/'
-      - 'c:grep -R -e "^*.crit\s*\t*\s*\S" /etc/rsyslog.conf /etc/rsyslog.d/'
-      - 'c:grep -R -e "^*.*;mail.none;news.none\s*\t*\s*\S" /etc/rsyslog.conf /etc/rsyslog.d/'
-      - 'c:grep -R -e "^local0,local1.*\s*\t*\s*\S" /etc/rsyslog.conf /etc/rsyslog.d/'
-      - 'c:grep -R -e "^local2,local3.*\s*\t*\s*\S" /etc/rsyslog.conf /etc/rsyslog.d/'
-      - 'c:grep -R -e "^local4,local5.*\s*\t*\s*\S" /etc/rsyslog.conf /etc/rsyslog.d/'
-      - 'c:grep -R -e "^local6,local7.*\s*\t*\s*\S" /etc/rsyslog.conf /etc/rsyslog.d/'
+      - 'c:grep -R ^*.emerg\s*\t*\s*\S /etc/rsyslog.conf /etc/rsyslog.d/'
+      - 'c:grep -R ^mail.*\s*\t*\s*\S /etc/rsyslog.conf /etc/rsyslog.d/'
+      - 'c:grep -R ^mail.info\s*\t*\s*\S /etc/rsyslog.conf /etc/rsyslog.d/'
+      - 'c:grep -R ^mail.warning\s*\t*\s*\S /etc/rsyslog.conf /etc/rsyslog.d/'
+      - 'c:grep -R ^mail.err\s*\t*\s*\S /etc/rsyslog.conf /etc/rsyslog.d/'
+      - 'c:grep -R ^news.crit\s*\t*\s*\S /etc/rsyslog.conf /etc/rsyslog.d/'
+      - 'c:grep -R ^news.err\s*\t*\s*\S /etc/rsyslog.conf /etc/rsyslog.d/'
+      - 'c:grep -R ^news.notice\s*\t*\s*\S /etc/rsyslog.conf /etc/rsyslog.d/'
+      - 'c:grep -R ^*.=warning;*.=err\s*\t*\s*\S /etc/rsyslog.conf /etc/rsyslog.d/'
+      - 'c:grep -R ^*.crit\s*\t*\s*\S /etc/rsyslog.conf /etc/rsyslog.d/'
+      - 'c:grep -R ^*.*;mail.none;news.none\s*\t*\s*\S /etc/rsyslog.conf /etc/rsyslog.d/'
+      - 'c:grep -R ^local0,local1.*\s*\t*\s*\S /etc/rsyslog.conf /etc/rsyslog.d/'
+      - 'c:grep -R ^local2,local3.*\s*\t*\s*\S /etc/rsyslog.conf /etc/rsyslog.d/'
+      - 'c:grep -R ^local4,local5.*\s*\t*\s*\S /etc/rsyslog.conf /etc/rsyslog.d/'
+      - 'c:grep -R ^local6,local7.*\s*\t*\s*\S /etc/rsyslog.conf /etc/rsyslog.d/'
 
   - id: 10566
     title: "Configure rsyslog to Send Logs to a Remote Log Host"
@@ -848,8 +848,8 @@ checks:
       - rsyslog.conf(8) man page
     condition: all
     rules:
-      - 'c:grep -R -e "^\$ModLoad imtcp.so" /etc/rsyslog.conf,/etc/rsyslog.d/ -> r:^$ModLoad\s*\t*imtcp.so'
-      - 'c:grep -R -e "^\$InputTCPServerRun 514" /etc/rsyslog.conf,/etc/rsyslog.d/ -> r:^$InputTCPServerRun\s*\t*514'
+      - 'c:grep -R ^\$ModLoad imtcp.so /etc/rsyslog.conf /etc/rsyslog.d/ -> r:^$ModLoad\s*\t*imtcp.so'
+      - 'c:grep -R ^\$InputTCPServerRun 514 /etc/rsyslog.conf /etc/rsyslog.d/ -> r:^$InputTCPServerRun\s*\t*514'
 
   - id: 10568
     title: "Configure logrotate"
@@ -1131,7 +1131,7 @@ checks:
       - cis: "10.4"
     condition: all
     rules:
-      - 'c:grep -R -e "^umask 077" /etc/profile.d/'
+      - 'c:grep -R ^umask 077 /etc/profile.d/'
       - 'f:/etc/bash.bashrc -> !r:^# && r:umask 077'
 
   - id: 10592
@@ -1171,9 +1171,9 @@ checks:
       - cis: "11.2"
     condition: none
     rules:
-      - 'c:grep -e "(\\v|\\r|\\m|\\s)" /etc/issue'
-      - 'c:grep -e "(\\v|\\r|\\m|\\s)" /etc/motd'
-      - 'c:grep -e "(\\v|\\r|\\m|\\s)" /etc/issue.net'
+      - 'c:grep (\\v|\\r|\\m|\\s) /etc/issue'
+      - 'c:grep (\\v|\\r|\\m|\\s) /etc/motd'
+      - 'c:grep (\\v|\\r|\\m|\\s) /etc/issue.net'
 
 # 13 Review User and Group Settings
   - id: 10595

@@ -383,7 +383,7 @@ checks:
    condition: all
    rules:
      - 'c:sysctl net.ipv4.ip_forward -> r:=^net.ipv4_forward\s*=\s*0$'
-     - 'c:grep "net\.ipv4\.ip_forward" -R /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4_forward\s*=\s*0$'
+     - 'c:grep -R net\.ipv4\.ip_forward  /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4_forward\s*=\s*0$'
 
  - id: 5026
    title: "Ensure IPv6 forwarding is disabled"
@@ -396,7 +396,7 @@ checks:
    condition: all
    rules:
      - 'c:sysctl net.ipv6.conf.all.forwarding -> r:=^net.ipv6_forward.conf.all.forwarding\s*=\s*0$'
-     - 'c:grep "net\.ipv6\.ip_forward\.conf\.all\.forwarding" -R /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv6_forward.conf.all.forwarding\s*=\s*0$'
+     - 'c:grep -R net\.ipv6\.ip_forward\.conf\.all\.forwarding /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv6_forward.conf.all.forwarding\s*=\s*0$'
 
 # Section 3.2 - Network Parameters (Host and Router)
  - id: 5027
@@ -411,12 +411,12 @@ checks:
     rules:
      - 'c:sysctl net.ipv4.conf.all.accept_source_route -> r:^net.ipv4.conf.all.accept_source_route\s*=\s*0$'
      - 'c:sysctl net.ipv4.conf.default.accept_source_route -> r:^net.ipv4.conf.default.accept_source_route\s*=\s*0$'
-     - 'c:grep "net\.ipv4\.conf\.all\.accept_source_route" -R /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.conf.all.accept_source_route\s*=\s*0$'
-     - 'c:grep "net\.ipv4\.conf\.default\.accept_source_route" -R /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.conf.default.accept_source_route\s*=\s*0$'
+     - 'c:grep -R net\.ipv4\.conf\.all\.accept_source_route /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.conf.all.accept_source_route\s*=\s*0$'
+     - 'c:grep -R net\.ipv4\.conf\.default\.accept_source_route /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.conf.default.accept_source_route\s*=\s*0$'
      - 'c:sysctl net.ipv6.conf.all.accept_source_route -> r:^net.ipv6.conf.all.accept_source_route\s*=\s*0$'
      - 'c:sysctl net.ipv6.conf.default.accept_source_route -> r:^net.ipv6.conf.default.accept_source_route\s*=\s*0$'
-     - 'c:grep "net\.ipv6\.conf\.all\.accept_source_route" -R /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv6.conf.all.accept_source_route\s*=\s*0$'
-     - 'c:grep "net\.ipv6\.conf\.default\.accept_source_route" -R /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv6.conf.default.accept_source_route\s*=\s*0$'
+     - 'c:grep -R net\.ipv6\.conf\.all\.accept_source_route /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv6.conf.all.accept_source_route\s*=\s*0$'
+     - 'c:grep -R net\.ipv6\.conf\.default\.accept_source_route /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv6.conf.default.accept_source_route\s*=\s*0$'
 
  - id: 5028
    title: "Ensure broadcast ICMP requests are ignored"
@@ -429,7 +429,7 @@ checks:
    condition: all
    rules:
      - 'c:sysctl net.ipv4.icmp_echo_ignore_broadcasts -> r:^net.ipv4.icmp_echo_ignore_broadcasts\s*=\s*1$'
-     - 'c:grep -R "net\.ipv4\.icmp_echo_ignore_broadcasts" /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.icmp_echo_ignore_broadcasts\s*=\s*1'
+     - 'c:grep -R net\.ipv4\.icmp_echo_ignore_broadcasts /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.icmp_echo_ignore_broadcasts\s*=\s*1'
 
 # Section 5.2 - SSH Server Configuration
  - id: 5029
