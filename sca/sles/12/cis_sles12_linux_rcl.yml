@@ -247,7 +247,7 @@ checks:
     rules:
       - 'c:sysctl fs.suid_dumpable -> r:\s0$'
       - 'c:ulimit -Hc -> 0'
-      - 'c:grep -R -e"^\*\s\+hard\s\+core\s\+" /etc/security/limits.conf /etc/security/limits.d -> r:\s0$|\t0$'
+      - 'c:grep -R ^\*\s\+hard\s\+core\s\+ /etc/security/limits.conf /etc/security/limits.d -> r:\s0$|\t0$'
 
 # 1.5.3 Enable Randomized Virtual Memory Region Placement (Scored)
   - id: 7517
@@ -261,7 +261,7 @@ checks:
     condition: all
     rules:
       - 'c:sysctl kernel.randomize_va_space -> r:\s2$|\t2$'
-      - 'c:grep -R -e"^\s*kernel\.randomize_va_space\s\+" /etc/sysctl.conf /etc/sysctl.d -> r:\s2$|\t2$'
+      - 'c:grep -R ^\s*kernel\.randomize_va_space\s\+ /etc/sysctl.conf /etc/sysctl.d -> r:\s2$|\t2$'
 
 ###############################################
 # 2 OS Services
@@ -624,7 +624,7 @@ checks:
     condition: all
     rules:
       - 'c:sysctl net.ipv4.ip_forward -> r:\s0$'
-      - 'c:grep "net\.ipv4\.ip_forward" -R /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4_forward\s*=\s*0$'
+      - 'c:grep -R net\.ipv4\.ip_forward /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4_forward\s*=\s*0$'
 
 # 3.1.2 Disable Send Packet Redirects (Scored)
   - id: 7545
@@ -640,8 +640,8 @@ checks:
     rules:
       - 'c:sysctl net.ipv4.conf.all.send_redirects -> r:^net.ipv4.conf.all.send_redirects\s*=\s*0$'
       - 'c:sysctl net.ipv4.conf.default.send_redirects -> r:^net.ipv4.conf.default.send_redirects\s*=\s*0$'
-      - 'c:grep -R "net\.ipv4\.conf\.all\.send_redirects" /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.conf.all.send_redirects\s*=\s*0$'
-      - 'c:grep -R "net\.ipv4\.conf\.default\.send_redirects" /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.conf.default.send_redirects\s*=\s*0$'
+      - 'c:grep -R net\.ipv4\.conf\.all\.send_redirects /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.conf.all.send_redirects\s*=\s*0$'
+      - 'c:grep -R net\.ipv4\.conf\.default\.send_redirects /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.conf.default.send_redirects\s*=\s*0$'
 
 ###############################################
 # 3.2 Modify Network Parameters (Host and Router)
@@ -660,8 +660,8 @@ checks:
     rules:
       - 'c:sysctl net.ipv4.conf.all.accept_source_route -> r:^net.ipv4.conf.all.accept_source_route\s*=\s*0$'
       - 'c:sysctl net.ipv4.conf.default.accept_source_route -> r:^net.ipv4.conf.default.accept_source_route\s*=\s*0$'
-      - 'c:grep -R "net\.ipv4\.conf\.all\.accept_source_route" /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.conf.all.accept_source_route\s*=\s*0$'
-      - 'c:grep -R "net\.ipv4\.conf\.default\.accept_source_route" /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.conf.default.accept_source_route\s*=\s*0$'
+      - 'c:grep -R net\.ipv4\.conf\.all\.accept_source_route /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.conf.all.accept_source_route\s*=\s*0$'
+      - 'c:grep -R net\.ipv4\.conf\.default\.accept_source_route /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.conf.default.accept_source_route\s*=\s*0$'
 
 # 3.2.2 Disable ICMP Redirect Acceptance (Scored)
   - id: 7547
@@ -677,8 +677,8 @@ checks:
     rules:
       - 'c:sysctl net.ipv4.conf.all.accept_redirects -> r:^net.ipv4.conf.all.accept_redirects\s*=\s*0$'
       - 'c:sysctl net.ipv4.conf.default.accept_redirects -> r:^net.ipv4.conf.default.accept_redirects\s*=\s*0$'
-      - 'c:grep -R "net\.ipv4\.conf\.all\.accept_redirects" /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.conf.all.accept_redirects\s*=\s*0$'
-      - 'c:grep -R "net\.ipv4\.conf\.default\.accept_redirects" /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.conf.default.accept_redirects\s*=\s*0$'
+      - 'c:grep -R net\.ipv4\.conf\.all\.accept_redirects /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.conf.all.accept_redirects\s*=\s*0$'
+      - 'c:grep -R net\.ipv4\.conf\.default\.accept_redirects /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.conf.default.accept_redirects\s*=\s*0$'
 
 # 3.2.3 Disable Secure ICMP Redirect Acceptance (Scored)
   - id: 7548
@@ -694,8 +694,8 @@ checks:
     rules:
       - 'c:sysctl net.ipv4.conf.all.secure_redirects -> r:^net.ipv4.conf.all.secure_redirects\s*=\s*0$'
       - 'c:sysctl net.ipv4.conf.default.secure_redirects -> r:^net.ipv4.conf.default.secure_redirects\s*=\s*0$'
-      - 'c:grep -R "net\.ipv4\.conf\.all\.secure_redirects" /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.conf.all.secure_redirects\s*=\s*0$'
-      - 'c:grep -R "net\.ipv4\.conf\.default\.secure_redirects" /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.conf.default.secure_redirects\s*=\s*0$'
+      - 'c:grep -R net\.ipv4\.conf\.all\.secure_redirects /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.conf.all.secure_redirects\s*=\s*0$'
+      - 'c:grep -R net\.ipv4\.conf\.default\.secure_redirects /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.conf.default.secure_redirects\s*=\s*0$'
 
   - id: 7549
     title: "Ensure suspicious packets are logged"
@@ -710,8 +710,8 @@ checks:
     rules:
       - 'c:sysctl net.ipv4.conf.all.log_martians -> r:^net.ipv4.conf.all.log_martians\s*=\s*1$'
       - 'c:sysctl net.ipv4.conf.default.log_martians -> r:^net.ipv4.conf.default.log_martians\s*=\s*1$'
-      - 'c:grep -R "net\.ipv4\.conf\.all\.log_martians" /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.conf.all.log_martians\s*=\s*1$'
-      - 'c:grep -R "net\.ipv4\.conf\.default\.log_martians" /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.conf.default.log_martians\s*=\s*1$'
+      - 'c:grep -R net\.ipv4\.conf\.all\.log_martians /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.conf.all.log_martians\s*=\s*1$'
+      - 'c:grep -R net\.ipv4\.conf\.default\.log_martians /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.conf.default.log_martians\s*=\s*1$'
 
 # 3.2.5 Enable Ignore Broadcast Requests (Scored)
   - id: 7550
@@ -726,7 +726,7 @@ checks:
     condition: all
     rules:
       - 'c:sysctl net.ipv4.icmp_ignore_bogus_error_responses -> r:^net.ipv4.icmp_ignore_bogus_error_responses\s*=\s*1$'
-      - 'c:grep -R "net\.ipv4\.icmp_ignore_bogus_error_responses" /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.icmp_ignore_bogus_error_responses\s*=\s*1$'
+      - 'c:grep -R net\.ipv4\.icmp_ignore_bogus_error_responses /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.icmp_ignore_bogus_error_responses\s*=\s*1$'
 
 # 3.2.6 Enable Bad Error Message Protection (Scored)
   - id: 7551
@@ -741,7 +741,7 @@ checks:
     condition: all
     rules:
       - 'c:sysctl net.ipv4.icmp_ignore_bogus_error_responses -> r:^net.ipv4.icmp_ignore_bogus_error_responses\s*=\s*1$'
-      - 'c:grep -R "net\.ipv4\.icmp_ignore_bogus_error_responses" /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.icmp_ignore_bogus_error_responses\s*=\s*1$'
+      - 'c:grep -R net\.ipv4\.icmp_ignore_bogus_error_responses /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.icmp_ignore_bogus_error_responses\s*=\s*1$'
 
 # 3.2.7 Ensure Reverse Path Filtering is enabled (Scored)
   - id: 7552
@@ -757,8 +757,8 @@ checks:
     rules:
       - 'c:sysctl net.ipv4.conf.all.rp_filter -> r:^net.ipv4.conf.all.rp_filter\s*=\s*1$'
       - 'c:sysctl net.ipv4.conf.default.rp_filter -> r:^net.ipv4.conf.default.rp_filter\s*=\s*1$'
-      - 'c:grep -R "net\.ipv4\.conf\.all\.rp_filter" /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.conf.all.rp_filter\s*=\s$*1$'
-      - 'c:grep -R "net\.ipv4\.conf\.default\.rp_filter" /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.conf.default.rp_filter\s*=\s*1$'
+      - 'c:grep -R net\.ipv4\.conf\.all\.rp_filter /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.conf.all.rp_filter\s*=\s$*1$'
+      - 'c:grep -R net\.ipv4\.conf\.default\.rp_filter /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.conf.default.rp_filter\s*=\s*1$'
 
 # 3.2.8 Enable TCP SYN Cookies (Scored)
   - id: 7553
@@ -773,8 +773,8 @@ checks:
     condition: all
     rules:
       - 'c:sysctl net.ipv4.tcp_syncookies -> r:^net.tcp_syncookies\s*=\s*1$'
-      - 'c:grep -R "net\.ipv4\.tcp_syncookies" /etc/sysctl.conf /etc/sysctl.d -> r:^net.tcp_syncookies\s*=\s*1$'
-
+      - 'c:grep -R net\.ipv4\.tcp_syncookies /etc/sysctl.conf /etc/sysctl.d -> r:^net.tcp_syncookies\s*=\s*1$'
+  
 ###############################################
 # 5 System Access, Authentication and Authorization
 ###############################################
