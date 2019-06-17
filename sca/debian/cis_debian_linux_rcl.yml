@@ -166,7 +166,7 @@ checks:
    rules:
      - 'f:/etc/gdm3/greeter.dconf-defaults -> r:^[org/gnome/login-screen]'
      - 'f:/etc/gdm3/greeter.dconf-defaults -> r:^banner-message-enable=true'
-     - 'f:/etc/gdm3/greeter.dconf-defaults -> r:^banner-message-text=\'\''
+     - 'f:/etc/gdm3/greeter.dconf-defaults -> r:^banner-message-text=\.*'
 
 # Section 2 - Filesystem Configuration - Debian 7
  - id: 5010
@@ -239,20 +239,7 @@ checks:
      - 'c:systemctl is-enabled vsftpd -> r:disabled'
 
  - id: 5015
-   title: "Ensure IMAP and POP3 server is not enabled (IMAP)"
-   description: "exim is an open source IMAP and POP3 server for Linux based systems."
-   rationale: "Unless POP3 and/or IMAP servers are to be provided by this system, it is recommended that the package be removed to reduce the potential attack surface."
-   remediation: "Run the following commands to remove exim: # apt-get remove exim4; # apt-get purge exim4"
-   compliance:
-    - cis_csc: "9.2"
-    - cis: "2.2.11"
-    - pci_dss: "2.2.2"
-   condition: none
-   rules:
-     - 'c:dpkg -s exim4 -> install ok installed'
-
- - id: 5016
-   title: "Ensure IMAP and POP3 server is not enabled (POP3)"
+   title: "Ensure IMAP and POP3 server is not enabled"
    description: "exim is an open source IMAP and POP3 server for Linux based systems."
    rationale: "Unless POP3 and/or IMAP servers are to be provided by this system, it is recommended that the package be removed to reduce the potential attack surface."
    remediation: "Run the following commands to remove exim: # apt-get remove exim4; # apt-get purge exim4"
