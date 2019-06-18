@@ -17,7 +17,7 @@ policy:
 requirements:
   title: "Check for Windows platform"
   description: "Requirements for running the audit policy under a Windows platform"
-  condition: "any required"
+  condition: "any"
   rules:
     - 'r:HKEY_LOCAL_MACHINE\SAM\SAM'
 
@@ -30,8 +30,10 @@ checks:
       - nist_800_53: "AU.6"
     condition: all
     rules:
+      - 'r:HKLM\Software\Microsoft\Windows\CurrentVersion\Policies\System'
       - 'r:HKLM\Software\Microsoft\Windows\CurrentVersion\Policies\System -> DisableRegistryTools'
       - 'r:HKLM\Software\Microsoft\Windows\CurrentVersion\Policies\System -> DisableRegistryTools -> 0'
+
   - id: 2501
     title: "Ensure DCOM is enabled"
     description: "The Distributed Component Object Model (DCOM) is a protocol that enables software components to communicate directly over a network."
@@ -43,18 +45,22 @@ checks:
       - https://support.microsoft.com/es-es/help/825750/how-to-disable-dcom-support-in-windows
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\Software\Microsoft\OLE'
       - 'r:HKEY_LOCAL_MACHINE\Software\Microsoft\OLE -> EnableDCOM'
       - 'r:HKEY_LOCAL_MACHINE\Software\Microsoft\OLE -> EnableDCOM -> Y'
+
   - id: 2502
-    title: "LM authentication allowed (disable weak passwords)"
+    title: "LM authentication not allowed (disable weak passwords)"
     compliance:
       - pci_dss: "10.6.1, 11.4"
       - hipaa: "164.312.b"
       - nist_800_53: "AU.6, IA.10"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\LSA'
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\LSA -> LMCompatibilityLevel'
       - 'not r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\LSA -> LMCompatibilityLevel -> r:^0$|^1$'
+
 # Disabled by some Malwares (sometimes by McAfee and Symantec
 # security center too).
   - id: 2503
@@ -65,6 +71,7 @@ checks:
       - nist_800_53: "AU.6"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Security Center'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Security Center -> FirewallDisableNotify'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Security Center -> antivirusoverride'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Security Center -> firewalldisablenotify'
@@ -73,19 +80,22 @@ checks:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Security Center -> antivirusoverride -> 0'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Security Center -> firewalldisablenotify -> 0'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Security Center -> firewalldisableoverride -> 0'
+
 # Checking for the microsoft firewall.
   - id: 2504
-    title: "Ensure Microsoft Firewall is disabled"
+    title: "Ensure Microsoft Firewall is enabled"
     compliance:
       - pci_dss: "10.6.1, 1.4"
       - hipaa: "164.312.b, 164.312.a.1"
       - nist_800_53: "AU.6, SC.7"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\software\policies\microsoft\windowsfirewall\domainprofile'
       - 'r:HKEY_LOCAL_MACHINE\software\policies\microsoft\windowsfirewall\domainprofile -> enablefirewall'
       - 'r:HKEY_LOCAL_MACHINE\software\policies\microsoft\windowsfirewall\standardprofile -> enablefirewall'
-      - 'r:HKEY_LOCAL_MACHINE\software\policies\microsoft\windowsfirewall\domainprofile -> enablefirewall -> 0'
-      - 'r:HKEY_LOCAL_MACHINE\software\policies\microsoft\windowsfirewall\standardprofile -> enablefirewall -> 0'
+      - 'r:HKEY_LOCAL_MACHINE\software\policies\microsoft\windowsfirewall\domainprofile -> enablefirewall -> 1'
+      - 'r:HKEY_LOCAL_MACHINE\software\policies\microsoft\windowsfirewall\standardprofile -> enablefirewall -> 1'
+
   - id: 2505
     title: "Ensure Null sessions are disallowed"
     compliance:
@@ -93,8 +103,10 @@ checks:
       - nist_800_53: "IA.10"
     condition: all
     rules:
+      - 'r:HKLM\System\CurrentControlSet\Control\Lsa'
       - 'r:HKLM\System\CurrentControlSet\Control\Lsa -> RestrictAnonymous'
       - 'r:HKLM\System\CurrentControlSet\Control\Lsa -> RestrictAnonymous -> 1'
+
   - id: 2506
     title: "Ensure Error reporting is enabled"
     compliance:
@@ -105,6 +117,7 @@ checks:
       - https://windowsir.blogspot.com/2007/04/something-new-to-look-for.html
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PCHealth\ErrorReporting'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PCHealth\ErrorReporting -> DoReport'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PCHealth\ErrorReporting -> IncludeKernelFaults'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PCHealth\ErrorReporting -> IncludeMicrosoftApps'
@@ -117,6 +130,7 @@ checks:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PCHealth\ErrorReporting -> IncludeWindowsApps -> 1'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PCHealth\ErrorReporting -> IncludeShutdownErrs -> 1'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PCHealth\ErrorReporting -> ShowUI -> 1'
+
   - id: 2507
     title: "Ensure Automatic Logon is disabled"
     compliance:
@@ -125,9 +139,11 @@ checks:
       - nist_800_53: "AU.6"
     condition: any
     rules:
+      - 'not r:HKLM\Software\Microsoft\Windows NT\CurrentVersion\Winlogon'
       - 'not r:HKLM\Software\Microsoft\Windows NT\CurrentVersion\Winlogon -> DefaultPassword'
       - 'r:HKLM\Software\Microsoft\Windows NT\CurrentVersion\Winlogon -> AutoAdminLogon'
       - 'r:HKLM\Software\Microsoft\Windows NT\CurrentVersion\Winlogon -> AutoAdminLogon -> 0'
+
   - id: 2508
     title: "Ensure Winpcap packet filter driver is not present"
     compliance:
