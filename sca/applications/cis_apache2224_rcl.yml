@@ -22,17 +22,26 @@ policy:
 requirements:
   title: "Check that Apache is installed on the system"
   description: "Requirements for running the SCA scan against the Apache policy."
-  condition: all
+  condition: any
   rules:
     - 'f:/etc/apache2/apache2.conf'
+    - 'f:/etc/httpd/conf/httpd.conf'
+
+# In case your installation is located in: /etc/apache2 use this block of variables
+# variables:
+#   $main-conf: /etc/apache2/apache2.conf
+#   $conf-dirs: /etc/apache2/conf-enabled,/etc/apache2/mods-enabled,/etc/apache2/sites-enabled
+#   $ssl-confs: /etc/apache2/mods-enabled/ssl.conf
+#   $request-confs: /etc/apache2/mods-enabled/reqtimeout.conf
+#   $traceen: /etc/apache2/apache2.conf,/etc/apache2/conf-enabled/security.conf
+
 
 variables:
-  $main-conf: /etc/apache2/apache2.conf,/etc/httpd/conf/httpd.conf
-  $conf-dirs: /etc/apache2/conf-enabled,/etc/apache2/mods-enabled,/etc/apache2/sites-enabled,/etc/httpd/conf.d,/etc/httpd/modsecurity.d
-  $ssl-confs: /etc/apache2/mods-enabled/ssl.conf,/etc/httpd/conf.d/ssl.conf
-  $mods-en: /etc/apache2/mods-enabled
-  $request-confs: /etc/httpd/conf/httpd.conf,/etc/apache2/mods-enabled/reqtimeout.conf
-  $traceen: /etc/apache2/apache2.conf,/etc/httpd/conf/httpd.conf,/etc/apache2/conf-enabled/security.conf
+  $main-conf: /etc/httpd/conf/httpd.conf
+  $conf-dirs: /etc/httpd/conf.d,/etc/httpd/modsecurity.d
+  $ssl-confs: /etc/httpd/conf.d/ssl.conf
+  $request-confs: /etc/httpd/conf/httpd.conf
+  $traceen: /etc/httpd/conf/httpd.conf
 
 #2.3 Disable WebDAV Modules
 checks:
@@ -49,10 +58,7 @@ checks:
       - https://httpd.apache.org/docs/2.4/mod/mod_dav.html
     condition: none
     rules:
-      - 'd:$conf-dirs -> conf -> !r:^# && r:loadmodule\sdav'
-      - 'd:$conf-dirs -> load -> !r:^# && r:loadmodule\sdav'
-      - 'f:/etc/httpd/conf.d -> !r:^# && r:loadmodule\sdav'
-      - 'd:$mods-en -> dav.load'
+      - 'c:httpd -M -> r:dav_\s*_module'
 
 #2.4 Disable Status Module
   - id: 3501
@@ -68,10 +74,7 @@ checks:
       - https://httpd.apache.org/docs/2.4/mod/mod_status.html
     condition: none
     rules:
-      - 'd:$conf-dirs -> conf -> !r:^# && r:loadmodule\sstatus'
-      - 'd:$conf-dirs -> load -> !r:^# && r:loadmodule\sstatus'
-      - 'f:/etc/httpd/conf.d -> !r:^# && r:loadmodule\sstatus'
-      - 'd:$mods-en -> status.load'
+      - 'c:httpd -M -> r:status_module'
 
 #2.5 Disable Autoindex Module
   - id: 3502
@@ -87,10 +90,7 @@ checks:
       - https://httpd.apache.org/docs/2.4/mod/mod_autoindex.html
     condition: none
     rules:
-      - 'd:$conf-dirs -> conf -> !r:^# && r:loadmodule\sautoindex'
-      - 'd:$conf-dirs -> load -> !r:^# && r:loadmodule\sautoindex'
-      - 'f:/etc/httpd/conf.d -> !r:^# && r:loadmodule\sautoindex'
-      - 'd:$mods-en -> autoindex.load'
+      - 'c:httpd -M -> r:autoindex_module'
 
 #2.6 Disable Proxy Modules
   - id: 3503
@@ -106,10 +106,7 @@ checks:
       - https://httpd.apache.org/docs/2.4/mod/mod_proxy.html
     condition: none
     rules:
-      - 'd:$conf-dirs -> conf -> !r:^# && r:loadmodule\sproxy'
-      - 'd:$conf-dirs -> load -> !r:^# && r:loadmodule\sproxy'
-      - 'f:/etc/httpd/conf.d -> !r:^# && r:loadmodule\sproxy'
-      - 'd:$mods-en -> proxy.load'
+      - 'c:httpd -M -> r:proxy_'
 
 #2.7 Disable User Directories Modules
   - id: 3504
@@ -125,10 +122,7 @@ checks:
       - https://httpd.apache.org/docs/2.4/mod/mod_userdir.html
     condition: none
     rules:
-      - 'd:$conf-dirs -> conf -> !r:^# && r:loadmodule\suserdir'
-      - 'd:$conf-dirs -> load -> !r:^# && r:loadmodule\suserdir'
-      - 'f:/etc/httpd/conf.d -> !r:^# && r:loadmodule\suserdir'
-      - 'd:$mods-en -> userdir.load'
+      - 'c:httpd -M -> userdir_'
 
 #2.8 Disable Info Module
   - id: 3505
@@ -144,10 +138,7 @@ checks:
       - https://httpd.apache.org/docs/2.4/mod/mod_info.html
     condition: none
     rules:
-      - 'd:$conf-dirs -> conf -> !r:^# && r:loadmodule\sinfo'
-      - 'd:$conf-dirs -> load -> !r:^# && r:loadmodule\sinfo'
-      - 'd:$conf-dirs -> conf -> !r:^# && r:loadmodule\sinfo'
-      - 'd:$mods-en -> info.load'
+      - 'c:httpd -M -> r:info_module'
 
 #3.2 Give the Apache User Account an Invalid Shell
   - id: 3506
@@ -158,9 +149,9 @@ checks:
     compliance:
       - cis: "3.2"
       - cis_csc: "16"
-    condition: all
+    condition: none
     rules:
-      - 'f:/etc/passwd -> r:/var/www && r:\.*/bin/false$|/sbin/nologin$'
+      - 'f:/etc/passwd -> r:apache'
 
 #3.3 Lock the Apache User Account
   - id: 3507
@@ -173,7 +164,7 @@ checks:
       - cis_csc: "16"
     condition: all
     rules:
-      - 'f:/etc/shadow -> r:^daemon|^wwwrun|^www-data|^apache && r:\p!\.*$'
+      - 'c:passwd -S apache -> r:Password locked'
 
 #4.4 Restrict Override for All Directories
   - id: 3508
@@ -192,7 +183,7 @@ checks:
     rules:
       - 'd:$conf-dirs -> conf -> !r:^# && r:\w+ && r:allowoverride && !r:none$'
       - 'd:$conf-dirs -> conf -> !r:^# && r:\w+ && r:allowoverridelist && !r:none$'
-      - 'f:$main-conf -> !r:^# && r:\w+ && r:allowoverride && r:none$'
+      - 'f:$main-conf -> !r:^# && r:\w+ && r:allowoverride && !r:none$'
       - 'f:$main-conf -> !r:^# && r:\w+ && r:allowoverridelist && !r:none$'
 
 #5.3 Minimize Options for Other Directories
@@ -239,8 +230,7 @@ checks:
       - cis_csc: "18.9"
     condition: none
     rules:
-      - 'd:/etc/httpd/conf.d -> manual.conf'
-      - 'd:/etc/apache2/conf-enabled -> apache2-doc.conf'
+      - 'd:$confdirs -> r:manual.conf|apache2-doc.conf'
 
 #5.4.5 Verify that no Handler is enabled
   - id: 3512
@@ -299,7 +289,8 @@ checks:
       - https://httpd.apache.org/docs/2.4/mod/core.html#limitexcept
     condition: all
     rules:
-      - 'f:$main-conf -> r:limitexcept && r:get && r:head && r:post && r:options'
+      - 'f:$main-conf -> r:^Order\s+allow,deny$'
+      - 'not f:$main-conf -> r:LimitExcept && r:DELETE|HEAD|PUT|CONNECT|TRACE'
 
 #5.8 Disable HTTP Trace Method
   - id: 3516
@@ -316,7 +307,7 @@ checks:
       - https://httpd.apache.org/docs/2.4/mod/core.html#traceenable
     condition: none
     rules:
-      - 'f:$traceen -> !r:^# && r:traceenable\s+on\s*$'
+      - 'f:$traceen -> !r:^# && r:TraceEnable\s+on\s*$'
 
 #5.13 Restrict Listen Directive
   - id: 3519
@@ -338,12 +329,6 @@ checks:
       - 'f:$main-conf -> !r:^# && r:listen\s(\d+)$'
       - 'f:$main-conf -> !r:^# && r:listen\s0.0.0.0\p(\d+)'
       - 'f:$main-conf -> !r:^# && r:listen\s[\p\pffff\p0.0.0.0]\p(\d+)'
-      - 'f:/etc/apache2/sites-enabled/000-default.conf -> !r:^# && r:listen\s(\d+)$'
-      - 'f:/etc/apache2/sites-enabled/000-default.conf -> !r:^# && r:listen\s0.0.0.0\p(\d+)'
-      - 'f:/etc/apache2/sites-enabled/000-default.conf -> !r:^# && r:listen\s[\p\pffff\p0.0.0.0]\p(\d+)'
-      - 'f:/etc/apache2/ports.conf -> !r:^# && r:listen\s(\d+)$'
-      - 'f:/etc/apache2/ports.conf -> !r:^# && r:listen\s0.0.0.0\p(\d+)'
-      - 'f:/etc/apache2/ports.conf -> !r:^# && r:listen\s[\p\pffff\p0.0.0.0]\p(\d+)'
 
 #5.14 Restrict Browser Frame Options
   - id: 3520
@@ -361,7 +346,7 @@ checks:
       - https://blogs.msdn.com/b/ie/archive/2009/01/27/ie8-security-part-vii-clickjacking-defenses.aspx
     condition: all
     rules:
-      - 'f:$main-conf -> r:header\salways\sappend\sx-frame-options && r:sameorigin|deny'
+      - 'f:$main-conf -> r:Header\salways\sappend\sX-Frame-Options && r:SAMEORIGIN'
 
 #6.1 Configure the Error Log to notice at least
   - id: 3521
@@ -402,7 +387,7 @@ checks:
       - https://httpd.apache.org/docs/2.4/mod/core.html#errorlog
     condition: all
     rules:
-      - 'f:$main-conf -> r:errorlog\s+\p*syslog\p\.*\p*'
+      - 'f:$main-conf -> r:ErrorLog\s+\p*syslog\p\.*\p*'
 
 #7.6 Disable SSL Insecure Renegotiation
   - id: 3523
@@ -436,9 +421,9 @@ checks:
       - https://httpd.apache.org/docs/2.4/mod/mod_ssl.html#sslcompression
       - https://en.wikipedia.org/wiki/CRIME_(security_exploit)
 
-    condition: none
+    condition: all
     rules:
-      - 'f:$ssl-confs -> !r:^\t*\s*# && r:sslcompression\s+on'
+      - 'f:$ssl-confs -> !r:^\t*\s*# && r:sslcompression\s+off'
 
 #8.1 Set ServerToken to Prod or ProductOnly
   - id: 3528
@@ -451,14 +436,10 @@ checks:
       - cis_csc: "18.9"
     references:
       - https://httpd.apache.org/docs/2.2/mod/core.html#servertokens
-    condition: none
+    condition: any
     rules:
-      - 'd:$conf-dirs -> conf -> !r:^# && r:servertokens\s+major'
-      - 'd:$conf-dirs -> conf -> !r:^# && r:servertokens\s+minor'
-      - 'd:$conf-dirs -> conf -> !r:^# && r:servertokens\s+min'
-      - 'd:$conf-dirs -> conf -> !r:^# && r:servertokens\s+minimal'
-      - 'd:$conf-dirs -> conf -> !r:^# && r:servertokens\s+os'
-      - 'd:$conf-dirs -> conf -> !r:^# && r:servertokens\s+full'
+      - 'd:$conf-dirs -> conf -> !r:^# && r:servertokens\s+Prod'
+      - 'd:$conf-dirs -> conf -> !r:^# && r:servertokens\s+ProductOnly'
 
 #8.2: Set ServerSignature to Off
   - id: 3529
@@ -521,7 +502,7 @@ checks:
       - https://httpd.apache.org/docs/2.4/mod/core.html#keepalive
     condition: none
     rules:
-      - 'f:$main-conf -> !r:^# && r:keepalive\s+off'
+      - 'f:$main-conf -> !r:^# && r:keepalive\s+Off'
 
 #9.3:Set MaxKeepAliveRequests to 100 or greater
   - id: 3533
@@ -535,9 +516,9 @@ checks:
     references:
       - https://httpd.apache.org/docs/2.2/mod/core.html#maxkeepaliverequests
       - https://httpd.apache.org/docs/2.4/mod/core.html#maxkeepaliverequests
-    condition: all
+    condition: none
     rules:
-      - 'f:$main-conf -> n:^maxkeepaliverequests\s+(\d+) compare >= 100'
+      - 'f:$main-conf -> n:^maxkeepaliverequests\s+(\d+) compare <= 100'
 
 #9.4: Set KeepAliveTimeout Low to Mitigate Denial of Service
   - id: 3534
@@ -551,9 +532,9 @@ checks:
     references:
       - https://httpd.apache.org/docs/2.2/mod/core.html#keepalivetimeout
       - https://httpd.apache.org/docs/2.4/mod/core.html#keepalivetimeout
-    condition: all
+    condition: none
     rules:
-      - 'f:$main-conf -> n:keepalivetimeout\s+(\d+) compare <= 15'
+      - 'f:$main-conf -> n:keepalivetimeout\s+(\d+) compare > 15'
 
 #9.5 Set Timeout Limits for Request Headers
   - id: 3535
@@ -571,8 +552,7 @@ checks:
       - https://httpd.apache.org/docs/2.4/mod/mod_reqtimeout.html
     condition: all
     rules:
-      - 'f:/etc/httpd/conf/httpd.conf -> r:^loadmodule\s+reqtimeout'
-      - 'd:$mods-en -> f:reqtimeout.load'
+      - 'f:$main-conf -> r:^loadmodule\s+reqtimeout'
       - 'f:$request-confs -> n:^\t*\s*requestreadtimeout\.+header\p(\d+) compare <= 40'
 
 #9.6 Set Timeout Limits for Request Body
@@ -589,8 +569,7 @@ checks:
       - https://httpd.apache.org/docs/2.4/mod/mod_reqtimeout.html
     condition: all
     rules:
-      - 'f:/etc/httpd/conf/httpd.conf -> r:^loadmodule\s+reqtimeout'
-      - 'd:$mods-en -> f:reqtimeout.load'
+      - 'f:$main-conf -> r:^loadmodule\s+reqtimeout'
       - 'f:$request-confs -> n:\t*\s*requestreadtimeout\.+body\p(\d+) compare <= 20'
 
 #10.1 Set the LimitRequestLine directive to 512 or less
@@ -607,7 +586,7 @@ checks:
       - https://httpd.apache.org/docs/2.4/mod/core.html#limitrequestline
     condition: all
     rules:
-      - 'f:$main-conf -> n:^limitrequestline\s+(\d+) compare <= 512'
+      - 'f:$main-conf -> n:^LimitRequestLine\s+(\d+) compare <= 512'
 
 #10.2 Set the LimitRequestFields directive to 100 or less
   - id: 3538
@@ -623,7 +602,7 @@ checks:
       - https://httpd.apache.org/docs/2.4/mod/core.html#limitrequestfields
     condition: all
     rules:
-      - 'f:$main-conf -> n:^limitrequestfields\s(\d+) compare <= 100'
+      - 'f:$main-conf -> n:^LimitRequestFields\s(\d+) compare <= 100'
 
 #10.3 Set the LimitRequestFieldsize directive to 1024 or less
   - id: 3539
@@ -639,7 +618,7 @@ checks:
       - https://httpd.apache.org/docs/2.4/mod/core.html#limitrequestfieldsize
     condition: all
     rules:
-      - 'f:$main-conf -> n:^limitrequestfieldsize\s+(\d+) compare <= 1024'
+      - 'f:$main-conf -> n:^LimitRequestFieldSize\s+(\d+) compare <= 1024'
 
 #10.4 Set the LimitRequestBody directive to 102400 or less
   - id: 3540
@@ -655,5 +634,5 @@ checks:
       - https://httpd.apache.org/docs/2.4/mod/core.html#limitrequestbody
     condition: all
     rules:
-      - 'f:$main-conf -> n:^limitrequestbody\s+(\d+) compare <= 102400'
+      - 'f:$main-conf -> n:^LimitRequestBody\s+(\d+) compare <= 102400'
 
