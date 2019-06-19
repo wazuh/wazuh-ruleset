@@ -56,7 +56,6 @@ checks:
     - pci_dss: "2.2.4"
    condition: all
    rules:
-     - 'not c:mount -> r:\s/tmp\s'
      - 'c:mount -> r:\s/tmp\s && r:nodev'
 
  - id: 5002
@@ -94,9 +93,8 @@ checks:
     - cis_csc: "5.1"
     - cis: "1.1.8"
     - pci_dss: "2.2.4"
-   condition: any
+   condition: all
    rules:
-     - 'not c:mount -> r:\s/var/tmp\s'
      - 'c:mount -> r:\s/var/tmp\s && r:nodev'
 
  - id: 5005
@@ -108,9 +106,8 @@ checks:
     - cis_csc: "5.1"
     - cis: "1.1.14"
     - pci_dss: "2.2.4"
-   condition: any
+   condition: all
    rules:
-     - 'not c:mount -> r:\s/home\s'
      - 'c:mount -> r:\s/home\s && r:nodev'
 
  - id: 5006
@@ -121,9 +118,8 @@ checks:
    compliance:
     - cis_csc: "5.1"
     - cis: "1.1.14"
-   condition: any
+   condition: all
    rules:
-     - 'not c:mount -> r:\s/dev/shm\s'
      - 'c:mount -> r:\s/dev/shm\s && r:nodev'
 
  - id: 5007
@@ -134,9 +130,8 @@ checks:
    compliance:
     - cis_csc: "5.1"
     - cis: "1.1.15"
-   condition: any
+   condition: all
    rules:
-     - 'not c:mount -> r:\s/dev/shm\s'
      - 'c:mount -> r:\s/dev/shm\s && r:nosuid'
 
  - id: 5008
@@ -147,9 +142,8 @@ checks:
    compliance:
     - cis_csc: "5.1"
     - cis: "1.1.16"
-   condition: any
+   condition: all
    rules:
-     - 'not c:mount -> r:\s/dev/shm\s'
      - 'c:mount -> r:\s/dev/shm\s && r:noexec'
 
 # Section 1.7 - Warning banners
@@ -178,9 +172,8 @@ checks:
     - cis_csc: "5.1"
     - cis: "2.14"
     - pci_dss: "2.2.4"
-   condition: any
+   condition: all
    rules:
-     - 'not c:mount -> r:\s/run/shm\s'
      - 'c:mount -> r:\s/run/shm\s && r:nodev'
 
  - id: 5011
@@ -191,9 +184,8 @@ checks:
    compliance:
     - cis_csc: "5.1"
     - cis: "2.15"
-   condition: any
+   condition: all
    rules:
-     - 'not c:mount -> r:\s/run/shm\s'
      - 'c:mount -> r:\s/run/shm\s && r:nosuid'
 
  - id: 5012
@@ -204,9 +196,8 @@ checks:
    compliance:
     - cis_csc: "5.1"
     - cis: "2.16"
-   condition: any
+   condition: all
    rules:
-     - 'not c:mount -> r:\s/run/shm\s'
      - 'c:mount -> r:\s/run/shm\s && r:noexec'
 
 # Section 2.1 - Inetd services
@@ -370,7 +361,7 @@ checks:
    condition: all
    rules:
      - 'c:sysctl net.ipv4.ip_forward -> r:=^net.ipv4_forward\s*=\s*0$'
-     - 'c:grep -R net\.ipv4\.ip_forward  /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4_forward\s*=\s*0$'
+     - 'c:grep -Rh net\.ipv4\.ip_forward  /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4_forward\s*=\s*0$'
 
  - id: 5026
    title: "Ensure IPv6 forwarding is disabled"
@@ -383,7 +374,7 @@ checks:
    condition: all
    rules:
      - 'c:sysctl net.ipv6.conf.all.forwarding -> r:=^net.ipv6_forward.conf.all.forwarding\s*=\s*0$'
-     - 'c:grep -R net\.ipv6\.ip_forward\.conf\.all\.forwarding /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv6_forward.conf.all.forwarding\s*=\s*0$'
+     - 'c:grep -Rh net\.ipv6\.ip_forward\.conf\.all\.forwarding /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv6_forward.conf.all.forwarding\s*=\s*0$'
 
 # Section 3.2 - Network Parameters (Host and Router)
  - id: 5027
@@ -398,12 +389,12 @@ checks:
     rules:
      - 'c:sysctl net.ipv4.conf.all.accept_source_route -> r:^net.ipv4.conf.all.accept_source_route\s*=\s*0$'
      - 'c:sysctl net.ipv4.conf.default.accept_source_route -> r:^net.ipv4.conf.default.accept_source_route\s*=\s*0$'
-     - 'c:grep -R net\.ipv4\.conf\.all\.accept_source_route /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.conf.all.accept_source_route\s*=\s*0$'
-     - 'c:grep -R net\.ipv4\.conf\.default\.accept_source_route /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.conf.default.accept_source_route\s*=\s*0$'
+     - 'c:grep -Rh net\.ipv4\.conf\.all\.accept_source_route /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.conf.all.accept_source_route\s*=\s*0$'
+     - 'c:grep -Rh net\.ipv4\.conf\.default\.accept_source_route /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.conf.default.accept_source_route\s*=\s*0$'
      - 'c:sysctl net.ipv6.conf.all.accept_source_route -> r:^net.ipv6.conf.all.accept_source_route\s*=\s*0$'
      - 'c:sysctl net.ipv6.conf.default.accept_source_route -> r:^net.ipv6.conf.default.accept_source_route\s*=\s*0$'
-     - 'c:grep -R net\.ipv6\.conf\.all\.accept_source_route /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv6.conf.all.accept_source_route\s*=\s*0$'
-     - 'c:grep -R net\.ipv6\.conf\.default\.accept_source_route /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv6.conf.default.accept_source_route\s*=\s*0$'
+     - 'c:grep -Rh net\.ipv6\.conf\.all\.accept_source_route /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv6.conf.all.accept_source_route\s*=\s*0$'
+     - 'c:grep -Rh net\.ipv6\.conf\.default\.accept_source_route /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv6.conf.default.accept_source_route\s*=\s*0$'
 
  - id: 5028
    title: "Ensure broadcast ICMP requests are ignored"
@@ -416,7 +407,7 @@ checks:
    condition: all
    rules:
      - 'c:sysctl net.ipv4.icmp_echo_ignore_broadcasts -> r:^net.ipv4.icmp_echo_ignore_broadcasts\s*=\s*1$'
-     - 'c:grep -R net\.ipv4\.icmp_echo_ignore_broadcasts /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.icmp_echo_ignore_broadcasts\s*=\s*1'
+     - 'c:grep -Rh net\.ipv4\.icmp_echo_ignore_broadcasts /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.icmp_echo_ignore_broadcasts\s*=\s*1'
 
 # Section 5.2 - SSH Server Configuration
  - id: 5029

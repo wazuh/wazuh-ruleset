@@ -1,5 +1,5 @@
 # Security Configuration assessment
-# Level 2 CIS Checks for Debian Linux 7 and Debian Linux 8
+# Level 2 CIS Checks for Debian Linux 8
 # Copyright (C) 2015-2019, Wazuh Inc.
 #
 # This program is a free software; you can redistribute it
@@ -8,14 +8,13 @@
 # Foundation
 #
 # Based on:
-# Center for Internet Security Debian Linux 7 Benchmark v1.0.0 - 12-31-2015
 # Center for Internet Security Debian Linux 8 Benchmark v2.0.0 - 12-28-2018
 
 policy:
-  id: "cis_debianlinux7-8_L2"
-  file: "cis_debianlinux7-8_L2_rcl.yml"
-  name: "CIS benchmark for Debian/Linux 7 and 8 L2"
-  description: "This document provides prescriptive guidance for establishing a secure configuration posture for Debian Linux 7 and 8."
+  id: "cis_debianlinux8_L2"
+  file: "cis_debianlinux8_L2_rcl.yml"
+  name: "CIS benchmark for Debian/Linux 8 L2"
+  description: "This document provides prescriptive guidance for establishing a secure configuration posture for Debian Linux 8."
   references:
     - https://www.cisecurity.org/cis-benchmarks/
 
@@ -28,104 +27,118 @@ requirements:
     - 'f:/proc/sys/kernel/ostype -> Linux'
 
 checks:
-# 2 Filesystem Configuration
-  - id: 11000
-    title: "Disable Mounting of cramfs Filesystems"
-    description: "The cramfs filesystem type is a compressed read-only Linux filesystem embedded in small footprint systems. A cramfs image can be used without having to first decompress the image."
-    rationale: "Removing support for unneeded filesystem types reduces the local attack surface of the server. If this filesystem type is not needed, disable it."
-    remediation: "Edit or create the file /etc/modprobe.d/CIS.conf and add the following line: install cramfs /bin/true"
-    compliance:
-      - cis: "2.18"
-    condition: all
-    rules:
-      - 'c:/sbin/modprobe -n -v cramfs -> r:^install /bin/true'
-      - 'not c:lsmod -> r:cramfs'
 
-  - id: 11001
-    title: "Disable Mounting of freevxfs Filesystems"
-    description: "The freevxfs filesystem type is a free version of the Veritas type filesystem. This is the primary filesystem type for HP-UX operating systems."
-    rationale: "Removing support for unneeded filesystem types reduces the local attack surface of the server. If this filesystem type is not needed, disable it."
-    remediation: "Edit or create the file /etc/modprobe.d/CIS.conf and add the following line: install freevxfs /bin/true"
+  - id: 10504
+    title: "Ensure separate partition exists for /var"
+    description: "The /var directory is used by daemons and other system services to temporarily store dynamic data. Some directories created by these processes may be world-writable."
+    rationale: "Since the /var directory may contain world-writable files and directories, there is a risk of resource exhaustion if it is not bound to a separate partition."
+    remediation: "For new installations, during installation create a custom partition setup and specify a separate partition for /var.  For systems that were previously installed, use the Logical Volume Manager (LVM) to create partitions."
     compliance:
-      - cis: "2.19"
+      - cis: "1.1.5"
+      - cis_csc: "13, 5.1"
+    references:
+      - http://tldp.org/HOWTO/LVM-HOWTO/
     condition: all
     rules:
-      - 'c:/sbin/modprobe -n -v freevxfs -> r:^install /bin/true'
-      - 'not c:lsmod -> r:freevxfs'
+      - 'c:mount -> r:\s/var\s'
 
-  - id: 11002
-    title: "Disable Mounting of jffs2 Filesystems"
-    description: "The jffs2 (journaling flash filesystem 2) filesystem type is a log-structured filesystem used in flash memory devices."
-    rationale: "Removing support for unneeded filesystem types reduces the local attack surface of the server. If this filesystem type is not needed, disable it."
-    remediation: "Edit or create the file /etc/modprobe.d/CIS.conf and add the following line: install jffs2 /bin/true"
+  - id: 10504
+    title: "Ensure separate partition exists for /var/tmp"
+    description: "The /var/tmp directory is a world-writable directory used for temporary storage by all users and some applications."
+    rationale: "Since the /var/tmp directory is intended to be world-writable, there is a risk of resource exhaustion if it is not bound to a separate partition. In addition, making /var/tmp its own file system allows an administrator to set the noexec option on the mount, making /var/tmp useless for an attacker to install executable code. It would also prevent an attacker from establishing a hardlink to a system setuid program and wait for it to be updated."
+    remediation: "For new installations, during installation create a custom partition setup and specify a separate partition for /var/tmp. For systems that were previously installed, create a new partition and configure /etc/fstab as appropriate."
     compliance:
-      - cis: "2.20"
+      - cis: "1.1.6"
+      - cis_csc: "13, 5.1"
+    references:
+      - http://tldp.org/HOWTO/LVM-HOWTO/
     condition: all
     rules:
-      - 'c:/sbin/modprobe -n -v jffs2 -> r:^install /bin/true'
-      - 'not c:lsmod -> r:jffs2'
+      - 'c:mount -> r:\s/var/tmp\s'
 
-  - id: 11003
-    title: "Disable Mounting of hfs Filesystems"
-    description: "The hfs filesystem type is a hierarchical filesystem that allows you to mount Mac OS filesystems."
-    rationale: "Removing support for unneeded filesystem types reduces the local attack surface of the server. If this filesystem type is not needed, disable it."
-    remediation: "Edit or create the file /etc/modprobe.d/CIS.conf and add the following line: install hfs /bin/true"
+  - id: 10506
+    title: "Ensure separate partition exists for /var/log"
+    description: "The /var/log directory is used by system services to store log data."
+    rationale: "There are two important reasons to ensure that system logs are stored on a separate partition: protection against resource exhaustion (since logs can grow quite large) and protection of audit data."
+    remediation: "For new installations, during installation create a custom partition setup and specify a separate partition for /var/log.  For systems that were previously installed, use the Logical Volume Manager (LVM) to create partitions."
     compliance:
-      - cis: "2.21"
+      - cis: "1.1.10"
+      - cis_csc: "6.3, 6.4"
+    references:
+      - http://tldp.org/HOWTO/LVM-HOWTO/
     condition: all
     rules:
-      - 'c:/sbin/modprobe -n -v hfs -> r:^install /bin/true'
-      - 'not c:lsmod -> r:hfs'
+      - 'c:mount -> r:\s/var/log\s'
 
-  - id: 11004
-    title: "Disable Mounting of hfsplus Filesystems"
-    description: "The hfsplus filesystem type is a hierarchical filesystem designed to replace hfs that allows you to mount Mac OS filesystems."
-    rationale: "Removing support for unneeded filesystem types reduces the local attack surface of the server. If this filesystem type is not needed, disable it."
-    remediation: "Edit or create the file /etc/modprobe.d/CIS.conf and add the following line: install hfsplus /bin/true"
+  - id: 10507
+    title: "Ensure separate partition exists for /var/log/audit"
+    description: "The auditing daemon, auditd, stores log data in the /var/log/audit directory."
+    rationale: "There are two important reasons to ensure that data gathered by auditd is stored on a separate partition: protection against resource exhaustion (since the audit.log file can grow quite large) and protection of audit data. The audit daemon calculates how much free space is left and performs actions based on the results. If other processes (such as syslog) consume space in the same partition as auditd, it may not perform as desired."
+    remediation: "For new installations, during installation create a custom partition setup and specify a separate partition for /var/log/audit.  For systems that were previously installed, use the Logical Volume Manager (LVM) to create partitions."
     compliance:
-      - cis: "2.22"
+      - cis: "1.1.11"
+      - cis_csc: "6.3, 6.4"
+    references:
+      - http://tldp.org/HOWTO/LVM-HOWTO/
     condition: all
     rules:
-      - 'c:/sbin/modprobe -n -v hfsplus -> r:^install /bin/true'
-      - 'not c:lsmod -> r:hfsplus'
+      - 'c:mount -> r:\s/var/log/audit\s'
 
-  - id: 11005
-    title: "Disable Mounting of squashfs Filesystems"
-    description: "The squashfs filesystem type is a compressed read-only Linux filesystem embedded in small footprint systems (similar to cramfs). A squashfs image can be used without having to first decompress the image."
-    rationale: "Removing support for unneeded filesystem types reduces the local attack surface of the server. If this filesystem type is not needed, disable it."
-    remediation: "Edit or create the file /etc/modprobe.d/CIS.conf and add the following line: install squashfs /bin/true"
+  - id: 10508
+    title: "Ensure separate partition exists for /home"
+    description: "The /home directory is used to support disk storage needs of local users."
+    rationale: "If the system is intended to support local users, create a separate partition for the /home directory to protect against resource exhaustion and restrict the type of files that can be stored under /home."
+    remediation: "For new installations, during installation create a custom partition setup and specify a separate partition for /home.  For systems that were previously installed, use the Logical Volume Manager (LVM) to create partitions."
     compliance:
-      - cis: "2.23"
+      - cis: "1.1.12"
+      - cis_csc: "13, 5.1"
+    references:
+      - http://tldp.org/HOWTO/LVM-HOWTO/
     condition: all
     rules:
-      - 'c:/sbin/modprobe -n -v squashfs -> r:^install /bin/true'
-      - 'not c:lsmod -> r:squashfs'
+      - 'c:mount -> r:\s/home\s'
 
-  - id: 11006
-    title: "Disable Mounting of udf Filesystems"
-    description: "The udf filesystem type is the universal disk format used to implement ISO/IEC 13346 and ECMA-167 specifications. This is an open vendor filesystem type for data storage on a broad range of media. This filesystem type is necessary to support writing DVDs and newer optical disc formats"
-    rationale: "Removing support for unneeded filesystem types reduces the local attack surface of the server. If this filesystem type is not needed, disable it."
-    remediation: "Edit or create the file /etc/modprobe.d/CIS.conf and add the following line: install udf /bin/true"
+  - id: 10513
+    title: "Disable Automounting"
+    description: "autofs allows automatic mounting of devices, typically including CD/DVDs and USB drives."
+    rationale: "With automounting enabled anyone with physical access could attach a USB drive or disc and have it's contents available in system even if they lacked permissions to mount it themselves."
+    remediation: "Disable autofs: # update-rc.d autofs disable"
     compliance:
-      - cis: "2.24"
-    condition: all
+      - cis: "1.1.21"
+      - cis_csc: "8.3, 8.4, 8.5"
+    condition: none
     rules:
-      - 'c:/sbin/modprobe -n -v udf -> r:^install /bin/true'
-      - 'not c:lsmod -> r:udf'
+      - 'c:systemctl is-enabled autofs -> r:^enabled'
 
 # 4 Additional Process Hardening
   - id: 11007
-    title: "Activate AppArmor"
-    description: "AppArmor provides a Mandatory Access Control (MAC) system that greatly augments the default Discretionary Access Control (DAC) model."
-    rationale: "For an action to occur, both the traditional DAC permissions must be satisfied as well as the AppArmor MAC rules. The action will not be allowed if either one of these models does not permit the action. In this way, AppArmor rules can only make a system's permissions more restrictive and secure."
-    remediation: "Install apparmor and apparmor-utils if missing (additional profiles can be found in the apparmor-profiles package): # apt-get install apparmor apparmor-profiles apparmor-utils Add apparmor=1 and security=apparmor to GRUB_CMDLINE_LINUX in /etc/default/grub: GRUB_CMDLINE_LINUX=\"apparmor=1 security=apparmor\"Update grub configuration (reboot will be required to apply changes): # update-grub Set all profiles to enforce mode: # aa-enforce /etc/apparmor.d/* Any unconfined processes may need to have a profile created or activated for them and then be restarted."
+    title: "Ensure SELinux or AppArmor are installed"
+    description: "SELinux and AppArmor provide Mandatory Access Controls."
+    rationale: "Without a Mandatory Access Control system installed only the default Discretionary Access Control system will be available."
+    remediation: "Run one of the following commands to install SELinux or apparmor: # apt-get install selinux-basics Or: # apt-get install apparmor apparmor-profiles apparmor-utils"
     compliance:
-      - cis: "4.5"
-    condition: all
+      - cis: "1.6.3"
+      - cis_csc: "14.4, 14.6"
+    condition: any
     rules:
-      - 'c:apparmor_status -> n:^(\d+)\s*profiles are loaded compare > 0'
-      - 'c:apparmor_status -> r:^0\s*processes are in complain mode'
-      - 'c:apparmor_status -> r:^0\s*processes are unconfined'
+      - 'c:dpkg -s selinux -> r:install ok installed'
+      - 'c:dpkg -s apparmor -> r:install ok installed'
+
+# 2 Services
+
+  - id: 10530
+    title: "Ensure CUPS is not enabled"
+    description: "The Common Unix Print System (CUPS) provides the ability to print to both local and network printers. A system running CUPS can also accept print jobs from remote systems and print them to local printers. It also provides a web based remote administration capability."
+    rationale: "If the system does not need to print jobs or accept print jobs from other systems, it is recommended that CUPS be disabled to reduce the potential attack surface."
+    remediation: "Run the following command to disable cups: # systemctl disable cups"
+    compliance:
+      - cis: "2.2.4"
+      - cis_csc: "9.1, 9.2"
+    condition: none
+    rules:
+      - 'c:systemctl is-enabled cups -> r:^enabled'
+
+--------------------------------------------------- #ToDo
 
 # 8.1 Configure System Accounting (auditd)
   - id: 11008
@@ -389,26 +402,3 @@ checks:
       - 'd:/etc/audit'
       - 'f:/etc/audit/audit.rules'
       - 'f:/etc/audit/audit.rules -> r:^-e 2$'
-
-# 8.3 Advanced Intrusion Detection Environment (AIDE)
-  - id: 11026
-    title: "Install AIDE"
-    description: "In some installations, AIDE is not installed automatically"
-    rationale: "Install AIDE to make use of the file integrity features to monitor critical files for changes that could affect the security of the system."
-    remediation: "Install AIDE: # apt-get install aide Initialize AIDE: # aideinit # cp /var/lib/aide/aide.db.new /var/lib/aide/aide.db Note: The prelinking feature can interfere with AIDE because it alters binaries to speed up their start up times. Run /usr/sbin/prelink -ua to restore the binaries to their prelinked state, thus avoiding false positives from AIDE."
-    compliance:
-      - cis: "8.3.1"
-    condition: all
-    rules:
-      - 'c:dpkg -s aide -> r:install ok installed'
-
-  - id: 11027
-    title: "Implement Periodic Execution of File Integrity"
-    description: "Implement periodic file checking, in compliance with site policy"
-    rationale: "Periodic file checking allows the system administrator to determine on a regular basis if critical files have been changed in an unauthorized fashion."
-    remediation: "Execute the following command: # crontab -u root -e Add the following line to the crontab: 0 5 * * * /usr/sbin/aide --check Note: The checking in this instance occurs every day at 5am. Alter the frequency and time of the checks in compliance with site policy."
-    compliance:
-      - cis: "8.3.2"
-    condition: all
-    rules:
-      - 'f:/etc/crontab -> r:\s*\t*/usr/sbin/aide\s*\t*--check'
