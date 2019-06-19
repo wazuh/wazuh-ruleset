@@ -20,7 +20,7 @@ policy:
 
 requirements:
   title: "Check RHEL5 version"
-  description: "Requirements for running the SCA scan against RHEL 5."
+  description: "Requirements for running the SCA scan against RHEL 5 family."
   condition: any
   rules:
     - 'f:/etc/redhat-release -> r:^Red Hat Enterprise Linux && r:release 5'
@@ -47,8 +47,7 @@ checks:
       - CCE-14161-4
     condition: all
     rules:
-      - 'd:/tmp'
-      - 'f:/etc/fstab -> !r:^# && r:/tmp'
+      - 'c:mount -> r:\s/tmp\s'
 
 # 1.1.2 /tmp: nodev
   - id: 5501
@@ -63,8 +62,7 @@ checks:
       - CCE-14412-1
     condition: all
     rules:
-      - 'd:/tmp'
-      - 'f:/etc/fstab -> !r:^# && r:/tmp && r:nodev'
+      - 'c:mount -> r:\s/tmp\s && r:nodev'
 
 # 1.1.3 /tmp: nosuid
   - id: 5502
@@ -79,7 +77,7 @@ checks:
       - CCE-14940-1
     condition: all
     rules:
-      - 'f:/etc/fstab -> !r:^# && r:/tmp && r:nosuid'
+      - 'c:mount -> r:\s/tmp\s && r:nosuid'
 
 # 1.1.4 /tmp: noexec
   - id: 5503
@@ -94,7 +92,7 @@ checks:
       - CCE-14412-1
     condition: all
     rules:
-      - 'f:/etc/fstab -> !r:^# && r:/tmp && r:noexec'
+      - 'c:mount -> r:\s/tmp\s && r:noexec'
 
 # 1.1.5 Build considerations - Partition scheme.
   - id: 5504
@@ -109,8 +107,7 @@ checks:
       - CCE-14777-7
     condition: all
     rules:
-      - 'd:/var'
-      - 'f:/etc/fstab -> !r^# && r:/var'
+      - 'c:mount -> r:\s/var\s'
 
 # 1.1.6 bind mount /var/tmp to /tmp
   - id: 5505
@@ -124,7 +121,7 @@ checks:
       - CCE-14584-7
     condition: all
     rules:
-      - 'f:/etc/fstab -> !r:^# && r:/var/tmp && r:bind'
+      - 'c:mount -> r:\s/var/tmp\s'
 
 # 1.1.7 /var/log: partition
   - id: 5506
@@ -139,7 +136,7 @@ checks:
       - CCE-14011-1
     condition: all
     rules:
-      - 'f:/etc/fstab -> !r:^# && r:/var/log'
+      - 'c:mount -> r:\s/var/log\s'
 
 # 1.1.8 /var/log/audit: partition
   - id: 5507
@@ -154,7 +151,7 @@ checks:
       - CCE-14171-3
     condition: all
     rules:
-      - 'f:/etc/fstab -> !r:^# && r:/var/log/audit'
+      - 'c:mount -> r:\s/var/log/audit\s'
 
 # 1.1.9 /home: partition
   - id: 5508
@@ -169,7 +166,7 @@ checks:
       - CCE-14559-9
     condition: all
     rules:
-      - 'f:/etc/fstab -> !r:^# && r:/home'
+      - 'c:mount -> r:\s/home\s'
 
 # 1.1.10 /home: nodev
   - id: 5509
@@ -184,50 +181,7 @@ checks:
       - CCE-4249-9
     condition: all
     rules:
-      - 'f:/etc/fstab -> !r:^# && r:/home && r:nodev'
-
-# 1.1.11 nodev on removable media partitions (not scored)
-  - id: 5510
-    title: "Add nodev Option to Removable Media Partitions"
-    description: "Set nodev on removable media to prevent character and block special devices that are present on the removable be treated as these device files."
-    rationale: "Removable media containing character and block special devices could be used to circumvent security controls by allowing non-root users to access sensitive device files such as /dev/kmem or the raw disk partitions."
-    remediation: "Edit the / etc/fstab file and add 'nodev' to the fourth field (mounting options). Look for entries that have mount points that contain words such as floppy or cdrom. See the fstab(5) manual page for more information."
-    compliance:
-      - cis: "1.1.11"
-      - pci_dss: "2.2.4"
-    condition: all
-    rules:
-      - 'f:/etc/fstab -> !r:^# && r:/media && r:nodev'
-
-# 1.1.13 nosuid on removable media partitions (not scored)
-  - id: 5511
-    title: "Add nosuid Option to Removable Media Partitions"
-    description: "Set nosuid on removable media to prevent setuid and setgid executable files that are on that media from being executed as setuid and setgid."
-    rationale: "Setting this option on a file system prevents users from introducing privileged programs onto the system and allowing non-root users to execute them."
-    remediation: "Edit the /etc/fstab file and add nosuid to the fourth field (mounting options). Look for entries that have mount points that contain words such as floppy or cdrom."
-    compliance:
-      - cis: "1.1.13"
-      - pci_dss: "2.2.4"
-    references:
-      - CCE-4042-8
-    condition: all
-    rules:
-      - 'f:/etc/fstab -> !r:^# && r:/media && r:nosuid'
-
-# 1.1.12 noexec on removable media partitions (not scored)
-  - id: 5512
-    title: "Add noexec Option to Removable Media Partitions"
-    description: "Set noexec on removable media to prevent programs from executing from the removable media."
-    rationale: "Setting this option on a file system prevents users from executing programs from the removable. This deters users from being to introduce potentially malicious software on the system."
-    remediation: "Edit the /etc/fstab file and add noexec to the fourth field (mounting options). Look for entries that have mount points that contain words such as floppy or cdrom."
-    compliance:
-      - cis: "1.1.12"
-      - pci_dss: "2.2.4"
-    references:
-      - CCE-4275-4
-    condition: all
-    rules:
-      - 'f:/etc/fstab -> !r:^# && r:/media && r:noexec'
+      - 'c:mount -> r:\s/home\s && r:nodev'
 
 # 1.1.14 /dev/shm: nodev
   - id: 5513
@@ -242,7 +196,7 @@ checks:
       - CCE-15007-8
     condition: all
     rules:
-      - 'f:/etc/fstab -> !r:^# && r:/dev/shm && r:nodev'
+      - 'c:mount -> r:\s/dev/shm\s && r:nodev'
 
 # 1.1.15 /dev/shm: nosuid
   - id: 5514
@@ -257,7 +211,7 @@ checks:
       - CCE-14306-5
     condition: all
     rules:
-      - 'f:/etc/fstab -> !r:^# && r:/dev/shm && r:nosuid'
+      - 'c:mount -> r:\s/dev/shm\s && r:nosuid'
 
 # 1.1.16 /dev/shm: noexec
   - id: 5515
@@ -272,7 +226,7 @@ checks:
       - CCE-14927-8
     condition: all
     rules:
-      - 'f:/etc/fstab -> !r:^# && r:/dev/shm && r:noexec'
+      - 'c:mount -> r:\s/dev/shm\s && r:noexec'
 
 ##########################################
 # 1.2 Software Updates
@@ -291,7 +245,7 @@ checks:
       - CCE-4218-4
     condition: none
     rules:
-      - 'p:yum-updatesd'
+      - 'c:/sbin/chkconfig --list -> r:yum-updatesd && r::on'
 
 ###############################################
 # 1.4 Configure SELinux
@@ -309,7 +263,7 @@ checks:
       - CCE-3977-6
     condition: none
     rules:
-      - 'f:/etc/grub.conf -> r:selinux=0'
+      - 'f:/etc/grub.conf -> r:selinux=0|enforcing=0'
 
 # 1.4.2 Set selinux state
   - id: 5518
@@ -324,7 +278,7 @@ checks:
       - CCE-3999-0
     condition: all
     rules:
-      - 'f:/etc/selinux/config -> r:SELINUX=enforcing'
+      - 'f:/etc/selinux/config -> r:^SELINUX=enforcing$'
 
 # 1.4.3 Set seliux policy
   - id: 5519
@@ -339,7 +293,7 @@ checks:
       - CCE-3624-4
     condition: all
     rules:
-      - 'f:/etc/selinux/config -> r:SELINUXTYPE=targeted'
+      - 'f:/etc/selinux/config -> r:^SELINUXTYPE=targeted$'
 
 # 1.4.4 Remove SETroubleshoot
   - id: 5520
@@ -352,7 +306,7 @@ checks:
       - pci_dss: "2.2.4"
     condition: none
     rules:
-      - 'd:$rc_dirs -> ^S\d\dsetroubleshoot$'
+      - 'c:/sbin/chkconfig --list -> r:setroubleshoot && r::on'
 
 # 1.4.5 Disable MCS Translation service mcstrans
   - id: 5521
@@ -367,7 +321,7 @@ checks:
       - CCE-3668-1
     condition: none
     rules:
-      - 'd:$rc_dirs -> ^S\d\dmctrans$'
+      - 'c:/sbin/chkconfig --list -> r:mctrans && r::on'
 
 ###############################################
 # 1.5  Secure Boot Settings
@@ -385,7 +339,7 @@ checks:
       - CCE-3818-2
     condition: all
     rules:
-      - 'f:/boot/grub/menu.lst -> !r:^# && r:password'
+      - 'f:/boot/grub/grub.cfg -> !r:^# && r:password --md5'
 
 # 1.5.4 Require Authentication for Single-User Mode (Scored)
   - id: 5523
@@ -400,7 +354,7 @@ checks:
       - CCE-4241-6
     condition: none
     rules:
-      - 'f:/etc/inittab -> !r:^# && r:S:wait'
+      - 'f:/etc/inittab -> r:^~:S:wait:/sbin/sulogin'
 
 # 1.5.5 Disable Interactive Boot (Scored)
   - id: 5524
@@ -415,7 +369,7 @@ checks:
       - CCE-4245-7
     condition: all
     rules:
-      - 'f:/etc/sysconfig/init -> !r:^# && r:PROMPT=no'
+      - 'f:/etc/sysconfig/init -> r:^PROMPT=no$'
 
 ###############################################
 # 1.6  Additional Process Hardening
@@ -431,7 +385,9 @@ checks:
       - pci_dss: "2.2.4"
     condition: all
     rules:
-      - 'f:/etc/security/limits.conf -> !r:^# && r:hard\.+core\.+0'
+      - 'c:grep -Rh *\s\+hard\s\+core\s\+ /etc/security/limits.conf /etc/security/limits.d -> r:\s0$|\t0$'
+      - 'c:/sbin/sysctl fs.suid_dumpable -> r:^fs.suid_dumpable\s*=\s*0\s*$'
+      - 'c:grep -Rh fs\.suid_dumpable /etc/sysctl.conf /etc/sysctl.d -> r:^\s*fs.suid_dumpable\s*=\s*0\s*$'
 
 # 1.6.3 Enable Randomized Virtual Memory Region Placement (Scored)
   - id: 5526
@@ -446,7 +402,8 @@ checks:
       - CCE-4146-7
     condition: all
     rules:
-      - 'f:/proc/sys/kernel/randomize_va_space -> r:^2$'
+      - 'c:grep -Rh ^\s*kernel\.randomize_va_space\s\+ /etc/sysctl.conf /etc/sysctl.d -> r:\s2$|\t2$'
+      - 'c:/sbin/sysctl kernel.randomize_va_space -> r:^\s*kernel.randomize_va_space\s*=\s*2'
 
 # 1.6.2 Configure ExecShield (Scored)
   - id: 5527
@@ -461,7 +418,7 @@ checks:
       - CCE-4168-1
     condition: all
     rules:
-      - 'f:/proc/sys/kernel/exec-shield -> 1'
+      - 'c:/sbin/sysctl kernel.exec-shield -> r:\s1$'
 
 # 1.6.4 Enable XD/NX Support on 32-bit x86 Systems (Scored)
 # TODO
@@ -498,9 +455,9 @@ checks:
       - CCE-4330-7
     condition: none
     rules:
-      - 'f:/etc/xinetd.d/telnet -> !r:^# && r:disable && r:no'
+      - 'c:rpm -qa telnet-server -> r:\.'
 
-# 2.1.2 Remove telnet Clients (Scored)
+# Remove rsh-server (Scored)
   - id: 5530
     title: "Remove rsh-server"
     description: "The Berkeley rsh-server ( rsh , rlogin , rcp ) package contains legacy services that exchange credentials in clear-text."
@@ -514,11 +471,8 @@ checks:
       - CCE-4308-3
     condition: none
     rules:
-      - 'f:/etc/xinetd.d/rlogin -> !r:^# && r:disable && r:no'
-      - 'f:/etc/xinetd.d/rsh -> !r:^# && r:disable && r:no'
-      - 'f:/etc/xinetd.d/shell -> !r:^# && r:disable && r:no'
+      - 'c:rpm -qa rsh-server -> r:\.'
 
-# 2.1.4 Remove rsh (Scored)
   - id: 5531
     title: "Remove NIS Client"
     description: "The Network Information Service (NIS), formerly known as Yellow Pages, is a client-server directory service protocol used to distribute system configuration files. The NIS client (ypbind) was used to bind a machine to an NIS server and receive the distributed configuration files"
@@ -533,7 +487,7 @@ checks:
       - CCE-4348-9 (uninstall)
     condition: none
     rules:
-      - 'd:$rc_dirs -> ^S\d\dypbind$'
+      - 'c:rpm -qa ypbind -> r:\.'
 
 # 2.1.6 Remove NIS Server (Scored)
   - id: 5532
@@ -550,7 +504,7 @@ checks:
       - CCE-4348-9 (uninstall)
     condition: none
     rules:
-      - 'd:$rc_dirs -> ^S\d\dypserv$'
+      - 'c:rpm -qa ypserv -> r:\.'
 
 # 2.1.7 Remove tftp (Scored)
   - id: 5533
@@ -567,7 +521,7 @@ checks:
       - CCE-3916-4 (uninstall)
     condition: none
     rules:
-      - 'f:/etc/xinetd.d/tftpd -> !r:^# && r:disable && r:no'
+      - 'c:rpm -qa tftpd -> r:\.'
 
 # 2.1.9 Remove talk (Scored)
   - id: 5534
@@ -581,7 +535,7 @@ checks:
       - nist_800_53: "CM.1"
     condition: none
     rules:
-      - 'f:/etc/xinetd.d/talk -> !r:^# && r:disable && r:no'
+      - 'c:rpm -qa talk-server -> r:\.'
 
 ###############################################
 # 3 Special Purpose Services
@@ -596,7 +550,7 @@ checks:
       - cis: "3.2"
     condition: all
     rules:
-      - 'f:/etc/init.d/functions -> !r:^# && r:file.umask 027'
+      - 'f:/etc/sysconfig/init -> umask 027'
 
 # 3.3 Remove X Windows (Scored)
   - id: 5536
@@ -607,9 +561,10 @@ checks:
     compliance:
       - cis: "3.3"
       - pci_dss: "2.2.2"
-    condition: none
+    condition: all
     rules:
-      - 'f:/etc/inittab -> !r:^# && r:id:5'
+      - 'f:/etc/inittab -> r:^\s*id:3:initdefault'
+      - 'not c:yum grouplist X?Window?System -> r:Installed Groups'
 
 # 3.1.1 Disable Avahi Server (Scored)
   - id: 5537
@@ -622,7 +577,7 @@ checks:
       - pci_dss: "2.2.2"
     condition: none
     rules:
-      - 'p:avahi-daemon'
+      - 'c:/sbin/chkconfig --list -> r:avahi-daemon && r::on'
 
 # 3.8 Disable NFS and RPC (Not Scored)
   - id: 5538
@@ -635,8 +590,7 @@ checks:
       - pci_dss: "2.2.2"
     condition: none
     rules:
-      - 'd:$rc_dirs -> ^S\d\dnfs$'
-      - 'd:$rc_dirs -> ^S\d\dnfslock$'
+      - 'c:/sbin/chkconfig --list -> r:nfslock|rpcgssd|rpcidmapd|portmap && r::on'
 
 # 3.10 Remove FTP Server (Not Scored)
   - id: 5539
@@ -650,7 +604,7 @@ checks:
       - nist_800_53: "CM.1"
     condition: none
     rules:
-      - 'f:/etc/xinetd.d/vsftpd -> !r:^# && r:disable && r:no'
+      - 'c:rpm -qa vsftpd -> r:\.'
 
 # 3.11 Remove HTTP Server (Not Scored)
   - id: 5540
@@ -663,7 +617,7 @@ checks:
       - pci_dss: "2.2.2"
     condition: none
     rules:
-      - 'd:$rc_dirs -> ^S\d\dhttpd$'
+      - 'c:rpm -qa httpd -> r:\.'
 
 # 3.12 Remove Dovecot (IMAP and POP3 services) (Not Scored)
   - id: 5541
@@ -676,19 +630,7 @@ checks:
       - pci_dss: "2.2.2"
     condition: none
     rules:
-      - 'f:/etc/xinetd.d/cyrus-imapd -> !r:^# && r:disable && r:no'
-
-  - id: 5542
-    title: "Remove Dovecot"
-    description: "Dovecot is an open source IMAP and POP3 server for Linux based systems."
-    rationale: "Unless POP3 and/or IMAP servers are to be provided to this server, it is recommended that the service be deleted to reduce the potential attack surface."
-    remediation: "# yum erase dovecot"
-    compliance:
-      - cis: "3.12"
-      - pci_dss: "2.2.2"
-    condition: none
-    rules:
-      - 'f:/etc/xinetd.d/dovecot -> !r:^# && r:disable && r:no'
+      - 'c:rpm -qa dovecot -> r:\.'
 
 # 3.13 Remove Samba (Not Scored)
   - id: 5543
@@ -701,8 +643,7 @@ checks:
       - pci_dss: "2.2.2"
     condition: none
     rules:
-      - 'd:$rc_dirs -> ^S\d\dsamba$'
-      - 'd:$rc_dirs -> ^S\d\dsmb$'
+      - 'c:rpm -qa samba -> r:\.'
 
 # 3.14 Remove HTTP Proxy Server (Not Scored)
   - id: 5544
@@ -715,7 +656,7 @@ checks:
       - pci_dss: "2.2.2"
     condition: none
     rules:
-      - 'd:$rc_dirs -> ^S\d\dsquid$'
+      - 'c:rpm -qa squid -> r:\.'
 
 # 3.15 Remove SNMP Server (Not Scored)
   - id: 5545
@@ -728,7 +669,7 @@ checks:
       - pci_dss: "2.2.2"
     condition: none
     rules:
-      - 'd:$rc_dirs -> ^S\d\dsnmpd$'
+      - 'c:rpm -qa net-snmp -> r:\.'
 
 ###############################################
 # 4 Network Configuration and Firewalls
@@ -749,7 +690,8 @@ checks:
       - CCE-3561-8
     condition: all
     rules:
-      - 'f:/proc/sys/net/ipv4/ip_forward -> 0'
+      - 'c:/sbin/sysctl net.ipv4.ip_forward -> r:^net.ipv4.ip_forward\s*=\s*0$'
+      - 'c:grep -Rh net\.ipv4\.ip_forward /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.ip_forward\s*=\s*0$'
 
 # 4.1.2 Disable Send Packet Redirects (Scored)
   - id: 5547
@@ -765,8 +707,10 @@ checks:
       - CCE-4155-8
     condition: all
     rules:
-      - 'f:/proc/sys/net/ipv4/conf/all/send_redirects -> 0'
-      - 'f:/proc/sys/net/ipv4/conf/default/send_redirects -> 0'
+      - 'c:/sbin/sysctl net.ipv4.conf.all.send_redirects -> r:^net.ipv4.conf.all.send_redirects\s*=\s*0$'
+      - 'c:/sbin/sysctl net.ipv4.conf.default.send_redirects -> r:^net.ipv4.conf.default.send_redirects\s*=\s*0$'
+      - 'c:grep -Rh net\.ipv4\.conf\.all\.send_redirects /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.conf.all.send_redirects\s*=\s*0$'
+      - 'c:grep -Rh net\.ipv4\.conf\.default\.send_redirects /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.conf.default.send_redirects\s*=\s*0$'
 
 ###############################################
 # 4.2 Modify Network Parameters (Host and Router)
@@ -785,7 +729,10 @@ checks:
       - CCE-4091-5
     condition: all
     rules:
-      - 'f:/proc/sys/net/ipv4/conf/all/accept_source_route -> 0'
+      - 'c:/sbin/sysctl net.ipv4.conf.all.accept_source_route -> r:^net.ipv4.conf.all.accept_source_route\s*=\s*0$'
+      - 'c:/sbin/sysctl net.ipv4.conf.default.accept_source_route -> r:^net.ipv4.conf.default.accept_source_route\s*=\s*0$'
+      - 'c:grep -Rh net\.ipv4\.conf\.all\.accept_source_route /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.conf.all.accept_source_route\s*=\s*0$'
+      - 'c:grep -Rh net\.ipv4\.conf\.default\.accept_source_route /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.conf.default.accept_source_route\s*=\s*0$'
 
 # 4.2.2 Disable ICMP Redirect Acceptance (Scored)
   - id: 5549
@@ -801,8 +748,10 @@ checks:
       - CCE-4186-3
     condition: all
     rules:
-      - 'f:/proc/sys/net/ipv4/conf/all/accept_redirects -> 0'
-      - 'f:/proc/sys/net/ipv4/conf/default/accept_redirects -> 0'
+      - 'c:/sbin/sysctl net.ipv4.conf.all.accept_redirects -> r:^net.ipv4.conf.all.accept_redirects\s*=\s*0$'
+      - 'c:/sbin/sysctl net.ipv4.conf.default.accept_redirects -> r:^net.ipv4.conf.default.accept_redirects\s*=\s*0$'
+      - 'c:grep -Rh net\.ipv4\.conf\.all\.accept_redirects /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.conf.all.accept_redirects\s*=\s*0$'
+      - 'c:grep -Rh net\.ipv4\.conf\.default\.accept_redirects /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.conf.default.accept_redirects\s*=\s*0$'
 
 # 4.2.3 Disable Secure ICMP Redirect Acceptance (Scored)
   - id: 5550
@@ -818,8 +767,10 @@ checks:
       - CCE-3339-9
     condition: all
     rules:
-      - 'f:/proc/sys/net/ipv4/conf/all/secure_redirects -> 0'
-      - 'f:/proc/sys/net/ipv4/conf/default/secure_redirects -> 0'
+      - 'c:/sbin/sysctl net.ipv4.conf.all.secure_redirects -> r:^net.ipv4.conf.all.secure_redirects\s*=\s*0$'
+      - 'c:/sbin/sysctl net.ipv4.conf.default.secure_redirects -> r:^net.ipv4.conf.default.secure_redirects\s*=\s*0$'
+      - 'c:grep -Rh net\.ipv4\.conf\.all\.secure_redirects /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.conf.all.secure_redirects\s*=\s*0$'
+      - 'c:grep -Rh net\.ipv4\.conf\.default\.secure_redirects /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.conf.default.secure_redirects\s*=\s*0$'
 
 # 4.2.4 Log Suspicious Packets (Scored)
   - id: 5551
@@ -834,7 +785,10 @@ checks:
       - CCE-4320-8
     condition: all
     rules:
-      - 'f:/proc/sys/net/ipv4/conf/all/log_martians -> 1'
+      - 'c:/sbin/sysctl net.ipv4.conf.all.log_martians -> r:^net.ipv4.conf.all.log_martians\s*=\s*1$'
+      - 'c:/sbin/sysctl net.ipv4.conf.default.log_martians -> r:^net.ipv4.conf.default.log_martians\s*=\s*1$'
+      - 'c:grep -Rh net\.ipv4\.conf\.all\.log_martians /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.conf.all.log_martians\s*=\s*1$'
+      - 'c:grep -Rh net\.ipv4\.conf\.default\.log_martians /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.conf.default.log_martians\s*=\s*1$'
 
 # 4.2.5 Enable Ignore Broadcast Requests (Scored)
   - id: 5552
@@ -849,7 +803,8 @@ checks:
       - CCE-3644-2
     condition: all
     rules:
-      - 'f:/proc/sys/net/ipv4/icmp_echo_ignore_broadcasts -> 1'
+      - 'c:/sbin/sysctl net.ipv4.icmp_echo_ignore_broadcasts -> r:^net.ipv4.icmp_echo_ignore_broadcasts\s*=\s*1$'
+      - 'c:grep -Rh net\.ipv4\.icmp_echo_ignore_broadcasts /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.icmp_echo_ignore_broadcasts\s*=\s*1$'
 
 # 4.2.6 Enable Bad Error Message Protection (Scored)
   - id: 5553
@@ -864,7 +819,8 @@ checks:
       - CCE-4133-5
     condition: all
     rules:
-      - 'f:/proc/sys/net/ipv4/icmp_ignore_bogus_error_responses -> 1'
+      - 'c:/sbin/sysctl net.ipv4.icmp_ignore_bogus_error_responses -> r:^net.ipv4.icmp_ignore_bogus_error_responses\s*=\s*1$'
+      - 'c:grep -Rh net\.ipv4\.icmp_ignore_bogus_error_responses /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.icmp_ignore_bogus_error_responses\s*=\s*1$'
 
 # 4.2.7 Enable RFC-recommended Source Route Validation (Scored)
   - id: 5554
@@ -880,8 +836,10 @@ checks:
       - CCE-3840-6
     condition: all
     rules:
-      - 'f:/proc/sys/net/ipv4/conf/all/rp_filter -> 1'
-      - 'f:/proc/sys/net/ipv4/conf/default/rp_filter -> 1'
+      - 'c:/sbin/sysctl net.ipv4.conf.all.rp_filter -> r:^net.ipv4.conf.all.rp_filter\s*=\s*1$'
+      - 'c:/sbin/sysctl net.ipv4.conf.default.rp_filter -> r:^net.ipv4.conf.default.rp_filter\s*=\s*1$'
+      - 'c:grep -Rh net\.ipv4\.conf\.all\.rp_filter /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.conf.all.rp_filter\s*=\s$*1$'
+      - 'c:grep -Rh net\.ipv4\.conf\.default\.rp_filter /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.conf.default.rp_filter\s*=\s*1$'
 
 # 4.2.8 Enable TCP SYN Cookies (Scored)
   - id: 5555
@@ -896,7 +854,8 @@ checks:
       - CCE-4265-5
     condition: all
     rules:
-      - 'f:/proc/sys/net/ipv4/tcp_syncookies -> 1'
+      - 'c:/sbin/sysctl net.ipv4.tcp_syncookies -> r:^net.tcp_syncookies\s*=\s*1$'
+      - 'c:grep -Rh net\.ipv4\.tcp_syncookies /etc/sysctl.conf /etc/sysctl.d -> r:^net.tcp_syncookies\s*=\s*1$'
 
 ###############################################
 # 6 System Access, Authentication and Authorization
@@ -920,7 +879,7 @@ checks:
       - https://www.ssh.com/ssh/
     condition: all
     rules:
-      - 'f:$sshd_file -> n:^\s*\t*Protocol\s*\t*(\d+) compare > 1'
+      - 'f:$sshd_file -> r:^\s*\t*Protocol\s*\t*2'
 
 # 6.2.2 Set LogLevel to INFO (Scored)
   - id: 5557
@@ -936,7 +895,7 @@ checks:
       - nist_800_53: "SC.8"
     condition: all
     rules:
-      - 'f:$sshd_file -> !r:^# && r:LogLevel\.+INFO'
+      - 'f:$sshd_file -> !r:^# && r:LogLevel\s*\t*INFO'
 
 # 6.2.5 Set SSH MaxAuthTries to 4 or Less (Scored)
   - id: 5558
@@ -950,7 +909,7 @@ checks:
       - pci_dss: "2.2.4"
     condition: all
     rules:
-      - 'f:$sshd_file -> n:^MaxAuthTries\s+(\d+) compare <= 4'
+      - 'f:$sshd_file -> !r:^# && n:^MaxAuthTries\s*\t*(\d+) compare <= 4'
 
 # 6.2.6 Set SSH IgnoreRhosts to Yes (Scored)
   - id: 5559
@@ -965,9 +924,9 @@ checks:
       - nist_800_53: "SC.8"
     references:
       - CCE-4250-7
-    condition: none
+    condition: all
     rules:
-      - 'f:$sshd_file -> !r:^# && r:IgnoreRhosts\.+no'
+      - 'f:$sshd_file -> !r:^# && r:IgnoreRhosts\s*\t*yes'
 
 # 6.2.7 Set SSH HostbasedAuthentication to No (Scored)
   - id: 5560
@@ -982,9 +941,9 @@ checks:
       - nist_800_53: "SC.8"
     references:
       - CCE-4251-5
-    condition: none
+    condition: all
     rules:
-      - 'f:$sshd_file -> r:^\s*\t*HostbasedAuthentication\.+yes'
+      - 'f:$sshd_file -> !r:^# && r:HostbasedAuthentication\s*\t*no'
 
 # 6.2.8 Disable SSH Root Login (Scored)
   - id: 5561
@@ -1001,7 +960,7 @@ checks:
       - CCE-4252-3
     condition: all
     rules:
-      - 'f:$sshd_file -> r:^\s*\t*PermitRootLogin\.+no'
+      - 'f:$sshd_file -> !r:^# && r:PermitRootLogin\s*\t*no'
 
 # 6.2.9 Set SSH PermitEmptyPasswords to No (Scored)
   - id: 5562
@@ -1016,9 +975,9 @@ checks:
       - nist_800_53: "SC.8"
     references:
       - CCE-4256-4
-    condition: none
+    condition: all
     rules:
-      - 'f:$sshd_file -> r:^\s*\t*PermitEmptyPasswords\.+yes'
+      - 'f:$sshd_file -> !r:^# && r:PermitEmptyPasswords\s*\t*no'
 
 ###############################################
 # 9 System Maintenance
@@ -1042,59 +1001,3 @@ checks:
     condition: none
     rules:
       - 'f:/etc/passwd -> !r:^# && !r:^\s*\t*root: && r:^\w+:\w+:0:'
-
-# Other/Legacy Tests
-  - id: 5564
-    title: "Account with empty password present"
-    compliance:
-      - pci_dss: "10.2.5"
-      - hipaa: "164.312.b"
-      - nist_800_53: "IA.10, AC.7"
-    condition: none
-    rules:
-      - 'f:/etc/shadow -> r:^\w+::'
-
-  - id: 5565
-    title: "User-mounted removable partition allowed on the console"
-    condition: none
-    rules:
-      - 'f:/etc/security/console.perms -> r:^<console>  \d+ <cdrom>'
-      - 'f:/etc/security/console.perms -> r:^<console>  \d+ <floppy>'
-
-  - id: 5566
-    title: "Disable standard boot services - Kudzu hardware detection Enabled"
-    condition: none
-    rules:
-      - 'd:$rc_dirs -> ^S\d\dkudzu$'
-
-  - id: 5567
-    title: "Disable standard boot services - PostgreSQL server Enabled"
-    compliance:
-      - pci_dss: "2.2.2"
-    condition: none
-    rules:
-      - 'd:$rc_dirs -> ^S\d\dpostgresql$'
-
-  - id: 5568
-    title: "Disable standard boot services - MySQL server Enabled"
-    compliance:
-      - pci_dss: "2.2.2"
-    condition: none
-    rules:
-      - 'd:$rc_dirs -> ^S\d\dmysqld$'
-
-  - id: 5569
-    title: "Disable standard boot services - DNS server Enabled"
-    compliance:
-      - pci_dss: "2.2.2"
-    condition: none
-    rules:
-      - 'd:$rc_dirs -> ^S\d\dnamed$'
-
-  - id: 5570
-    title: "Disable standard boot services - NetFS Enabled"
-    compliance:
-      - pci_dss: "2.2.2"
-    condition: none
-    rules:
-      - 'd:$rc_dirs -> ^S\d\dnetfs$'
