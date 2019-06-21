@@ -385,7 +385,7 @@ checks:
       - pci_dss: "2.2.4"
     condition: all
     rules:
-      - 'c:grep -Rh *\s\+hard\s\+core\s\+ /etc/security/limits.conf /etc/security/limits.d -> r:\s0$|\t0$'
+      - 'c:grep -Rh ^*[[:space:]]*hard[[:space:]][[:space:]]*core[[:space:]][[:space:]]* /etc/security/limits.conf /etc/security/limits.d -> r:\s*\t*0$'
       - 'c:/sbin/sysctl fs.suid_dumpable -> r:^fs.suid_dumpable\s*=\s*0\s*$'
       - 'c:grep -Rh fs\.suid_dumpable /etc/sysctl.conf /etc/sysctl.d -> r:^\s*fs.suid_dumpable\s*=\s*0\s*$'
 
@@ -838,7 +838,7 @@ checks:
     rules:
       - 'c:/sbin/sysctl net.ipv4.conf.all.rp_filter -> r:^net.ipv4.conf.all.rp_filter\s*=\s*1$'
       - 'c:/sbin/sysctl net.ipv4.conf.default.rp_filter -> r:^net.ipv4.conf.default.rp_filter\s*=\s*1$'
-      - 'c:grep -Rh net\.ipv4\.conf\.all\.rp_filter /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.conf.all.rp_filter\s*=\s$*1$'
+      - 'c:grep -Rh net\.ipv4\.conf\.all\.rp_filter /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.conf.all.rp_filter\s*=\s*1$'
       - 'c:grep -Rh net\.ipv4\.conf\.default\.rp_filter /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.conf.default.rp_filter\s*=\s*1$'
 
 # 4.2.8 Enable TCP SYN Cookies (Scored)
