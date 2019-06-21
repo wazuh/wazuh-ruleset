@@ -402,8 +402,8 @@ checks:
       - CCE-4146-7
     condition: all
     rules:
-      - 'c:grep -Rh ^\s*kernel\.randomize_va_space\s\+ /etc/sysctl.conf /etc/sysctl.d -> r:\s2$|\t2$'
-      - 'c:/sbin/sysctl kernel.randomize_va_space -> r:^\s*kernel.randomize_va_space\s*=\s*2'
+      - 'c:grep -Rh ^kernel\.randomize_va_space /etc/sysctl.conf /etc/sysctl.d -> r:^\s*kernel.randomize_va_space\s*=\s*2$'
+      - 'c:/sbin/sysctl kernel\.randomize_va_space -> r:^\s*kernel.randomize_va_space\s*=\s*2'
 
 # 1.6.2 Configure ExecShield (Scored)
   - id: 5524
@@ -432,7 +432,7 @@ checks:
       - cis: "1.6.5"
     condition: all
     rules:
-      - 'f:/etc/sysconfig/prelink -> r:PRELINKING=no'
+      - 'f:/etc/sysconfig/prelink -> r:^PRELINKING=no$'
 
 ###############################################
 # 2 OS Services
