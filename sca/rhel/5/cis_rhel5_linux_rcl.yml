@@ -263,7 +263,7 @@ checks:
       - CCE-3977-6
     condition: none
     rules:
-      - 'f:/etc/grub.conf -> r:selinux=0|enforcing=0'
+      - 'f:/boot/grub/grub.conf -> r:selinux=0|enforcing=0'
 
 # 1.4.2 Set selinux state
   - id: 5515
@@ -339,7 +339,7 @@ checks:
       - CCE-3818-2
     condition: all
     rules:
-      - 'f:/boot/grub/grub.cfg -> !r:^# && r:password --md5'
+      - 'f:/boot/grub/grub.conf -> !r:^# && r:password --md5'
 
 # 1.5.4 Require Authentication for Single-User Mode (Scored)
   - id: 5520
@@ -403,7 +403,7 @@ checks:
     condition: all
     rules:
       - 'c:grep -Rh ^kernel\.randomize_va_space /etc/sysctl.conf /etc/sysctl.d -> r:^\s*kernel.randomize_va_space\s*=\s*2$'
-      - 'c:/sbin/sysctl kernel\.randomize_va_space -> r:^\s*kernel.randomize_va_space\s*=\s*2'
+      - 'c:/sbin/sysctl kernel.randomize_va_space -> r:^\s*kernel.randomize_va_space\s*=\s*2'
 
 # 1.6.2 Configure ExecShield (Scored)
   - id: 5524
