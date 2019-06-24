@@ -37,6 +37,7 @@ checks:
       - cis_csc: "16"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System -> NoConnectedUser'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System -> NoConnectedUser -> r:^3$'
 
@@ -50,6 +51,7 @@ checks:
       - cis_csc: "16"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Lsa'
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Lsa -> LimitBlankPasswordUse'
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Lsa -> LimitBlankPasswordUse -> 1'
 
@@ -63,6 +65,7 @@ checks:
       - cis_csc: "6.2, 6.3"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Lsa'
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Lsa -> SCENoApplyLegacyAuditPolicy'
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Lsa -> SCENoApplyLegacyAuditPolicy -> 1'
 
@@ -76,6 +79,7 @@ checks:
       - cis_csc: "6"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Lsa'
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Lsa -> CrashOnAuditFail'
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Lsa -> CrashOnAuditFail -> 0'
 
@@ -102,6 +106,7 @@ checks:
       - cis_csc: "13"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\Netlogon\Parameters'
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\Netlogon\Parameters -> RequireSignOrSeal'
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\Netlogon\Parameters -> RequireSignOrSeal -> 1'
 
@@ -115,6 +120,7 @@ checks:
       - cis_csc: "13"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\Netlogon\Parameters'
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\Netlogon\Parameters -> SealSecureChannel'
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\Netlogon\Parameters -> SealSecureChannel -> 1'
 
@@ -128,6 +134,7 @@ checks:
       - cis_csc: "13"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\Netlogon\Parameters'
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\Netlogon\Parameters -> SignSecureChannel'
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\Netlogon\Parameters -> SignSecureChannel -> 1'
 
@@ -141,6 +148,7 @@ checks:
       - cis_csc: "16"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Netlogon\Parameters'
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Netlogon\Parameters -> DisablePasswordChange'
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Netlogon\Parameters -> DisablePasswordChange -> 0'
 
@@ -154,6 +162,7 @@ checks:
       - cis_csc: "13"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Netlogon\Parameters'
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Netlogon\Parameters -> RequireStrongKey'
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Netlogon\Parameters -> RequireStrongKey -> 1'
 
@@ -167,6 +176,7 @@ checks:
       - cis_csc: "8"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System -> DisableCAD'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System -> DisableCAD -> 0'
 
@@ -180,6 +190,7 @@ checks:
       - cis_csc: "16.5"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System'
       - 'r:HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System -> InactivityTimeoutSecs'
       - 'not r:HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System -> InactivityTimeoutSecs -> 0'
       - 'r:HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System -> InactivityTimeoutSecs -> n:^(\d+) compare <= 900'
@@ -194,6 +205,7 @@ checks:
       - cis_csc: "16"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\Software\Microsoft\Windows NT\CurrentVersion\Winlogon'
       - 'r:HKEY_LOCAL_MACHINE\Software\Microsoft\Windows NT\CurrentVersion\Winlogon -> PasswordExpiryWarning'
       - 'r:HKEY_LOCAL_MACHINE\Software\Microsoft\Windows NT\CurrentVersion\Winlogon -> PasswordExpiryWarning -> n:^(\d+) compare => 5 && n:^(\d+) compare <= 14'
 
@@ -207,6 +219,7 @@ checks:
       - cis_csc: "16.5"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\Software\Microsoft\Windows NT\CurrentVersion\Winlogon'
       - 'r:HKEY_LOCAL_MACHINE\Software\Microsoft\Windows NT\CurrentVersion\Winlogon -> ScRemoveOption'
       - 'r:HKEY_LOCAL_MACHINE\Software\Microsoft\Windows NT\CurrentVersion\Winlogon -> ScRemoveOption -> r:^1$|^2$'
 
@@ -220,6 +233,7 @@ checks:
       - cis_csc: "13"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\LanmanWorkstation\Parameters'
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\LanmanWorkstation\Parameters -> RequireSecuritySignature'
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\LanmanWorkstation\Parameters -> RequireSecuritySignature -> 1'
 
@@ -233,6 +247,7 @@ checks:
       - cis_csc: "13"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\LanmanWorkstation\Parameters'
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\LanmanWorkstation\Parameters -> EnableSecuritySignature'
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\LanmanWorkstation\Parameters -> EnableSecuritySignature -> 1'
 
@@ -246,6 +261,7 @@ checks:
       - cis_csc: "13"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\LanmanWorkstation\Parameters'
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\LanmanWorkstation\Parameters -> EnablePlainTextPassword'
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\LanmanWorkstation\Parameters -> EnablePlainTextPassword -> 0'
 
@@ -259,6 +275,7 @@ checks:
       - cis_csc: "3"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters'
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters -> AutoDisconnect'
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters -> AutoDisconnect -> n:^(\d+) compare <= 15'
 
@@ -272,6 +289,7 @@ checks:
       - cis_csc: "13"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters'
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters -> RequireSecuritySignature'
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters -> RequireSecuritySignature -> 1'
 
@@ -285,6 +303,7 @@ checks:
       - cis_csc: "13"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters'
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters -> EnableSecuritySignature'
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters -> EnableSecuritySignature -> 1'
 
@@ -298,6 +317,7 @@ checks:
       - cis_csc: "16"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters'
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters -> EnableForcedLogOff'
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters -> EnableForcedLogOff -> 1'
 
@@ -311,6 +331,7 @@ checks:
       - cis_csc: "14"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanManServer\Parameters'
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanManServer\Parameters -> SMBServerNameHardeningLevel'
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanManServer\Parameters -> SMBServerNameHardeningLevel -> n:^(\d+) compare >= 1'
 
@@ -324,6 +345,7 @@ checks:
       - cis_csc: "16"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa'
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa -> RestrictAnonymousSAM'
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa -> RestrictAnonymousSAM -> 1'
 
@@ -337,6 +359,7 @@ checks:
       - cis_csc: "16"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa'
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa -> RestrictAnonymous'
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa -> RestrictAnonymous -> 1'
 
@@ -350,6 +373,7 @@ checks:
       - cis_csc: "16.14"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa'
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa -> DisableDomainCreds'
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa -> DisableDomainCreds -> 1'
 
@@ -363,6 +387,7 @@ checks:
       - cis_csc: "14, 16"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Lsa'
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Lsa -> EveryoneIncludesAnonymous'
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Lsa -> EveryoneIncludesAnonymous -> 0'
 
@@ -376,6 +401,7 @@ checks:
       - cis_csc: "14.1, 14.2"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters'
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters -> NullSessionPipes'
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters -> NullSessionPipes -> None'
 
@@ -389,6 +415,7 @@ checks:
       - cis_csc: "14, 16"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\SecurePipeServers\Winreg\AllowedExactPaths'
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\SecurePipeServers\Winreg\AllowedExactPaths -> Machine'
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\SecurePipeServers\Winreg\AllowedExactPaths -> Machine -> r:System\\CurrentControlSet\\Control\\ProductOptions System\\CurrentControlSet\\Control\\Server Applications Software\\Microsoft\\Windows NT\\CurrentVersion'
 
@@ -402,6 +429,7 @@ checks:
       - cis_csc: "14, 16"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\SecurePipeServers\Winreg\AllowedPaths'
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\SecurePipeServers\Winreg\AllowedPaths -> Machine'
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\SecurePipeServers\Winreg\AllowedPaths -> Machine -> r:System\\CurrentControlSet\\Control\\Print\\Printers System\\CurrentControlSet\\Services\\Eventlog Software\\Microsoft\\OLAP Server|Software\\Microsoft\\Windows NT\\CurrentVersion\\Print Software\\Microsoft\\Windows NT\\CurrentVersion\\Windows System\\CurrentControlSet\\Control\\ContentIndex System\\CurrentControlSet\\Control\\Terminal Server System\\CurrentControlSet\\Control\\Terminal Server\\UserConfig System\\CurrentControlSet\\Control\\Terminal Server\\DefaultUserConfiguration Software\\Microsoft\\Windows NT\\CurrentVersion\\Perflib System\\CurrentControlSet\\Services\\SysmonLog'
 
@@ -415,6 +443,7 @@ checks:
       - cis_csc: "14, 16"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters'
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters -> RestrictNullSessAccess'
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters -> RestrictNullSessAccess -> 1'
 
@@ -428,6 +457,7 @@ checks:
       - cis_csc: "5.1, 9.1, 9.2"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa'
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa -> restrictremotesam'
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa -> restrictremotesam -> r:O:BAG:BAD:\(A;;RC;;;BA\)'
 
@@ -441,6 +471,7 @@ checks:
       - cis_csc: "14, 16"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters'
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters -> NullSessionShares'
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters -> NullSessionShares -> None'
 
@@ -454,6 +485,7 @@ checks:
       - cis_csc: "14, 16"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Lsa'
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Lsa -> ForceGuest'
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Lsa -> ForceGuest -> 0'
 
@@ -467,6 +499,7 @@ checks:
       - cis_csc: "14, 16"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Lsa'
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Lsa -> UseMachineId'
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Lsa -> UseMachineId -> 1'
 
@@ -480,6 +513,7 @@ checks:
       - cis_csc: "14"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Lsa\MSV1_0'
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Lsa\MSV1_0 -> allownullsessionfallback'
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Lsa\MSV1_0 -> allownullsessionfallback -> 0'
 
@@ -493,6 +527,7 @@ checks:
       - cis_csc: "16.9"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Lsa\pku2u'
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Lsa\pku2u -> AllowOnlineID'
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Lsa\pku2u -> AllowOnlineID -> 0'
 
@@ -506,6 +541,7 @@ checks:
       - cis_csc: "16.14"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\Kerberos\Parameters'
       - 'r:HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\Kerberos\Parameters -> SupportedEncryptionTypes'
       - 'r:HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\Kerberos\Parameters -> SupportedEncryptionTypes -> 2147483644'
 
@@ -519,6 +555,7 @@ checks:
       - cis_csc: "16.14"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Lsa'
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Lsa -> NoLMHash'
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Lsa -> NoLMHash -> 1'
 
@@ -531,6 +568,7 @@ checks:
       - cis: "2.3.11.6"
       - cis_csc: "16"
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanManServer\Parameters'
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanManServer\Parameters -> EnableForcedLogOff'
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanManServer\Parameters -> EnableForcedLogOff -> 1'
 
@@ -544,6 +582,7 @@ checks:
       - cis_csc: "13"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Lsa'
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Lsa -> LmCompatibilityLevel'
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Lsa -> LmCompatibilityLevel -> 5'
 
@@ -557,6 +596,7 @@ checks:
       - cis_csc: "13"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\LDAP'
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\LDAP -> LDAPClientIntegrity'
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\LDAP -> LDAPClientIntegrity -> 1'
 
@@ -570,6 +610,7 @@ checks:
       - cis_csc: "13"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Lsa\MSV1_0'
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Lsa\MSV1_0 -> NTLMMinClientSec'
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Lsa\MSV1_0 -> NTLMMinClientSec -> 537395200'
 
@@ -583,6 +624,7 @@ checks:
       - cis_csc: "13"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Lsa\MSV1_0'
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Lsa\MSV1_0 -> NTLMMinServerSec'
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Lsa\MSV1_0 -> NTLMMinServerSec -> 537395200'
 
@@ -595,6 +637,7 @@ checks:
       - cis: "2.3.15.1"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Kernel'
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Kernel -> ObCaseInsensitive'
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Kernel -> ObCaseInsensitive -> 1'
 
@@ -608,6 +651,7 @@ checks:
       - cis_csc: "14.4, 14.6"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager'
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager -> ProtectionMode'
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager -> ProtectionMode -> 1'
 
@@ -621,6 +665,7 @@ checks:
       - cis_csc: "5.1"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System'
       - 'r:HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System -> FilterAdministratorToken'
       - 'r:HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System -> FilterAdministratorToken -> 1'
 
@@ -634,6 +679,7 @@ checks:
       - cis_csc: "16"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System'
       - 'r:HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System -> EnableUIADesktopToggle'
       - 'r:HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System -> EnableUIADesktopToggle -> 0'
 
@@ -647,6 +693,7 @@ checks:
       - cis_csc: "5.1"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System'
       - 'r:HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System -> ConsentPromptBehaviorAdmin'
       - 'r:HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System -> ConsentPromptBehaviorAdmin -> 2'
 
@@ -660,6 +707,7 @@ checks:
       - cis_csc: "5.1"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System'
       - 'r:HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System -> ConsentPromptBehaviorUser'
       - 'r:HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System -> ConsentPromptBehaviorUser -> 0'
 
@@ -673,6 +721,7 @@ checks:
       - cis_csc: "5.1"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System'
       - 'r:HKEY_LOCAL_MACHINE\MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System -> EnableInstallerDetection'
       - 'r:HKEY_LOCAL_MACHINE\MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System -> EnableInstallerDetection -> 1'
 
@@ -686,6 +735,7 @@ checks:
       - cis_csc: "5.1"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System'
       - 'r:HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System -> EnableSecureUIAPaths'
       - 'r:HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System -> EnableSecureUIAPaths -> 1'
 
@@ -699,6 +749,7 @@ checks:
       - cis_csc: "5.1"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System'
       - 'r:HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System -> EnableLUA'
       - 'r:HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System -> EnableLUA -> 1'
 
@@ -712,6 +763,7 @@ checks:
       - cis_csc: "5.1"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System'
       - 'r:HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System -> PromptOnSecureDesktop'
       - 'r:HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System -> PromptOnSecureDesktop -> 1'
 
@@ -724,6 +776,7 @@ checks:
       - cis: "2.3.17.9"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System'
       - 'r:HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System -> EnableVirtualization'
       - 'r:HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System -> EnableVirtualization -> 1'
 
@@ -764,6 +817,7 @@ checks:
       - cis_csc: "9.1, 9.2"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\irmon'
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\irmon -> Start'
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\irmon -> Start -> 4'
 
@@ -777,6 +831,7 @@ checks:
       - cis_csc: "9.1, 9.2"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SharedAccess'
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SharedAccess -> Start'
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SharedAccess -> Start -> 4'
 
@@ -816,6 +871,7 @@ checks:
       - cis_csc: "9.1, 9.2"
     condition: any
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\RpcLocator'
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\RpcLocator -> Start'
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\RpcLocator -> Start -> 4'
 
@@ -829,6 +885,7 @@ checks:
       - cis_csc: "9.1, 9.2"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\RemoteAccess'
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\RemoteAccess -> Start'
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\RemoteAccess -> Start -> 4'
 
@@ -855,6 +912,7 @@ checks:
       - cis_csc: "9.1, 9.2"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SSDPSRV'
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SSDPSRV -> Start'
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SSDPSRV -> Start -> 4'
 
@@ -868,6 +926,7 @@ checks:
       - cis_csc: "9.1, 9.2"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\upnphost'
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\upnphost -> Start'
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\upnphost -> Start -> 4'
 
@@ -907,6 +966,7 @@ checks:
       - cis_csc: "9.1, 9.2"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\icssvc'
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\icssvc -> Start'
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\icssvc -> Start -> 4'
 
@@ -933,6 +993,7 @@ checks:
       - cis_csc: "9.1, 9.2"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\XboxGipSvc'
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\XboxGipSvc -> Start'
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\XboxGipSvc -> Start -> 4'
 
@@ -946,6 +1007,7 @@ checks:
       - cis_csc: "9.1, 9.2"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\xbgm'
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\xbgm -> Start'
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\xbgm -> Start -> 4'
 
@@ -959,6 +1021,7 @@ checks:
       - cis_csc: "9.1, 9.2"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\XblAuthManager'
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\XblAuthManager -> Start'
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\XblAuthManager -> Start -> 4'
 
@@ -972,6 +1035,7 @@ checks:
       - cis_csc: "9.1, 9.2"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\XblGameSave'
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\XblGameSave -> Start'
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\XblGameSave -> Start -> 4'
 
@@ -985,6 +1049,7 @@ checks:
       - cis_csc: "9.1, 9.2"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\XboxNetApiSvce'
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\XboxNetApiSvce -> Start'
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\XboxNetApiSvce -> Start -> 4'
 
@@ -999,6 +1064,7 @@ checks:
       - cis_csc: "9.2, 9.4"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\DomainProfile'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\DomainProfile -> EnableFirewall'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\DomainProfile -> EnableFirewall -> 1'
 
@@ -1012,6 +1078,7 @@ checks:
       - cis_csc: "9.2, 9.4"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\DomainProfile'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\DomainProfile -> DefaultInboundAction'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\DomainProfile -> DefaultInboundAction -> 1'
 
@@ -1025,6 +1092,7 @@ checks:
       - cis_csc: "9.2, 9.4"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\DomainProfile'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\DomainProfile -> DefaultOutboundAction'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\DomainProfile -> DefaultOutboundAction -> 0'
 
@@ -1037,6 +1105,7 @@ checks:
       - cis: "9.1.4"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\DomainProfile'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\DomainProfile -> DisableNotifications'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\DomainProfile -> DisableNotifications -> 0'
 
@@ -1050,6 +1119,7 @@ checks:
       - cis_csc: "6.2, 6.3"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\DomainProfile\Logging'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\DomainProfile\Logging -> LogFilePath'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\DomainProfile\Logging -> LogFilePath -> r:\psystemroot\p\\system32\logfiles\firewall\\w+\plog'
 
@@ -1063,6 +1133,7 @@ checks:
       - cis_csc: "6.3, 6.4"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\DomainProfile\Logging'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\DomainProfile\Logging -> LogFileSize'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\DomainProfile\Logging -> LogFileSize -> n:^(\d+) compare >= 16384'
 
@@ -1076,6 +1147,7 @@ checks:
       - cis_csc: "6.2, 6.3"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\DomainProfile\Logging'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\DomainProfile\Logging -> LogDroppedPackets'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\DomainProfile\Logging -> LogDroppedPackets -> 1'
 
@@ -1089,6 +1161,7 @@ checks:
       - cis_csc: "6.2, 6.3"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\DomainProfile\Logging'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\DomainProfile\Logging -> LogSuccessfulConnections'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\DomainProfile\Logging -> LogSuccessfulConnections -> 1'
 
@@ -1102,6 +1175,7 @@ checks:
       - cis_csc: "9.2, 9.4"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PrivateProfile'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PrivateProfile -> EnableFirewall'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PrivateProfile -> EnableFirewall -> 1'
 
@@ -1115,6 +1189,7 @@ checks:
       - cis_csc: "9.2, 9.4"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PrivateProfile'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PrivateProfile -> DefaultInboundAction'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PrivateProfile -> DefaultInboundAction -> 1'
 
@@ -1128,6 +1203,7 @@ checks:
       - cis_csc: "9.2, 9.4"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PrivateProfile'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PrivateProfile -> DefaultOutboundAction'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PrivateProfile -> DefaultOutboundAction -> 0'
 
@@ -1140,6 +1216,7 @@ checks:
       - cis: "9.2.4"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PrivateProfile'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PrivateProfile -> DisableNotifications'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PrivateProfile -> DisableNotifications -> 1'
 
@@ -1153,6 +1230,7 @@ checks:
       - cis_csc: "6.2, 6.3"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PrivateProfile\Logging'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PrivateProfile\Logging -> LogFilePath'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PrivateProfile\Logging -> LogFilePath -> r:\psystemroot\p\\system32\logfiles\firewall\\w+\plog'
 
@@ -1166,6 +1244,7 @@ checks:
       - cis_csc: "6.3, 6.4"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PrivateProfile\Logging'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PrivateProfile\Logging -> LogFileSize'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PrivateProfile\Logging -> LogFileSize -> n:^(\d+) compare >= 16384'
 
@@ -1179,6 +1258,7 @@ checks:
       - cis_csc: "6.2, 6.3"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PrivateProfile\Logging'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PrivateProfile\Logging -> LogDroppedPackets'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PrivateProfile\Logging -> LogDroppedPackets -> 1'
 
@@ -1192,6 +1272,7 @@ checks:
       - cis_csc: "6.2, 6.3"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PrivateProfile\Logging'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PrivateProfile\Logging -> LogSuccessfulConnections'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PrivateProfile\Logging -> LogSuccessfulConnections -> 1'
 
@@ -1205,6 +1286,7 @@ checks:
       - cis_csc: "9.2, 9.4"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PublicProfile'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PublicProfile -> EnableFirewall'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PublicProfile -> EnableFirewall -> 1'
 
@@ -1218,6 +1300,7 @@ checks:
       - cis_csc: "9.2, 9.4"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PublicProfile'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PublicProfile -> DefaultInboundAction'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PublicProfile -> DefaultInboundAction -> 1'
 
@@ -1231,6 +1314,7 @@ checks:
       - cis_csc: "9.2, 9.4"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PublicProfile'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PublicProfile -> DefaultOutboundAction'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PublicProfile -> DefaultOutboundAction -> 0'
 
@@ -1243,6 +1327,7 @@ checks:
       - cis: "9.3.4"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PublicProfile'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PublicProfile -> DisableNotifications'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PublicProfile -> DisableNotifications -> 1'
 
@@ -1256,6 +1341,7 @@ checks:
       - cis_csc: "5.1"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PublicProfile'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PublicProfile -> AllowLocalPolicyMerge'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PublicProfile -> AllowLocalPolicyMerge -> 0'
 
@@ -1269,6 +1355,7 @@ checks:
       - cis_csc: "5.1"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PublicProfile'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PublicProfile -> AllowLocalIPsecPolicyMerge'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PublicProfile -> AllowLocalIPsecPolicyMerge -> 0'
 
@@ -1282,6 +1369,7 @@ checks:
       - cis_csc: "6.2, 6.3"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PublicProfile\Logging'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PublicProfile\Logging -> LogFilePath'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PublicProfile\Logging -> LogFilePath -> r:\psystemroot\p\\system32\logfiles\firewall\\w+\plog'
 
@@ -1295,6 +1383,7 @@ checks:
       - cis_csc: "6.3, 6.4"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PublicProfile\Logging'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PublicProfile\Logging -> LogFileSize'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PublicProfile\Logging -> LogFileSize -> n:^(\d+) compare >= 16384'
 
@@ -1308,6 +1397,7 @@ checks:
       - cis_csc: "6.2, 6.3"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PublicProfile\Logging'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PublicProfile\Logging -> LogDroppedPackets'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PublicProfile\Logging -> LogDroppedPackets -> 1'
 
@@ -1321,6 +1411,7 @@ checks:
       - cis_csc: "6.2, 6.3"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PublicProfile\Logging'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PublicProfile\Logging -> LogSuccessfulConnections'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PublicProfile\Logging -> LogSuccessfulConnections -> 1'
 
@@ -1334,6 +1425,7 @@ checks:
       - cis: "18.1.1.1"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Personalization'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Personalization -> NoLockScreenCamera'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Personalization -> NoLockScreenCamera -> 1'
 
@@ -1346,6 +1438,7 @@ checks:
       - cis: "18.1.1.2"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Personalization'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Personalization -> NoLockScreenSlideshow'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Personalization -> NoLockScreenSlideshow -> 1'
 
@@ -1359,6 +1452,7 @@ checks:
       - cis_csc: "13"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\InputPersonalization'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\InputPersonalization -> AllowInputPersonalization'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\InputPersonalization -> AllowInputPersonalization -> 0'
 
@@ -1372,6 +1466,7 @@ checks:
       - cis_csc: "16.9"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon\GPExtensions\{D76B9641-3288-4f75-942D-087DE603E3EA}'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon\GPExtensions\{D76B9641-3288-4f75-942D-087DE603E3EA} -> DllName'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon\GPExtensions\{D76B9641-3288-4f75-942D-087DE603E3EA} -> DllName -> C:\\Program Files\\LAPS\\CSE\\AdmPwd.dll'
 
@@ -1385,6 +1480,7 @@ checks:
       - cis_csc: "16.2, 16.10"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft Services\AdmPwd'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft Services\AdmPwd -> PwdExpirationProtectionEnabled'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft Services\AdmPwd -> PwdExpirationProtectionEnabled -> 1'
 
@@ -1398,6 +1494,7 @@ checks:
       - cis_csc: "16.9"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft Services\AdmPwd'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft Services\AdmPwd -> AdmPwdEnabled'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft Services\AdmPwd -> AdmPwdEnabled -> 1'
 
@@ -1411,6 +1508,7 @@ checks:
       - cis_csc: "5.7"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft Services\AdmPwd'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft Services\AdmPwd -> PasswordComplexity'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft Services\AdmPwd -> PasswordComplexity -> 4'
 
@@ -1424,6 +1522,7 @@ checks:
       - cis_csc: "5.7"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft Services\AdmPwd'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft Services\AdmPwd -> PasswordLength'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft Services\AdmPwd -> PasswordLength -> n:^(\d+) compare >= 15'
 
@@ -1437,6 +1536,7 @@ checks:
       - cis_csc: "16.5"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft Services\AdmPwd'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft Services\AdmPwd -> PasswordAgeDays'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft Services\AdmPwd -> PasswordAgeDays -> n:^(\d+) compare <= 30'
 
@@ -1450,6 +1550,7 @@ checks:
       - cis_csc: "5.8, 4.3"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System -> LocalAccountTokenFilterPolicy'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System -> LocalAccountTokenFilterPolicy -> 1'
 
@@ -1463,6 +1564,7 @@ checks:
       - cis_csc: "9.1, 9.2"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\mrxsmb10'
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\mrxsmb10 -> Start'
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\mrxsmb10 -> Start -> 4'
 
@@ -1476,6 +1578,7 @@ checks:
       - cis_csc: "9.1, 9.2"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters'
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters -> SMB1'
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters -> SMB1 -> 0'
 
@@ -1489,6 +1592,7 @@ checks:
       - cis_csc: "8.4, 8.3"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\kernel'
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\kernel -> DisableExceptionChainValidation'
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\kernel -> DisableExceptionChainValidation -> 0'
 
@@ -1502,6 +1606,7 @@ checks:
       - cis_csc: "8.4, 8.3"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\MpEngine'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\MpEngine -> MpEnablePus'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\MpEngine -> MpEnablePus -> 1'
 
@@ -1515,6 +1620,7 @@ checks:
       - cis_csc: "16.14"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest'
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest -> UseLogonCredential'
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest -> UseLogonCredential -> 0'
 
@@ -1528,6 +1634,7 @@ checks:
       - cis_csc: "16"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon -> AutoAdminLogon'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon -> AutoAdminLogon -> 0'
 
@@ -1541,6 +1648,7 @@ checks:
       - cis_csc: "9"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip6\Parameters'
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip6\Parameters -> DisableIPSourceRouting'
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip6\Parameters -> DisableIPSourceRouting -> 2'
 
@@ -1554,6 +1662,7 @@ checks:
       - cis_csc: "9"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters'
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters -> DisableIPSourceRouting'
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters -> DisableIPSourceRouting -> 2'
 
@@ -1567,6 +1676,7 @@ checks:
       - cis_csc: "9"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters'
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters -> EnableICMPRedirect'
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters -> EnableICMPRedirect -> 0'
 
@@ -1580,6 +1690,7 @@ checks:
       - cis_csc: "9"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\NetBT\Parameters'
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\NetBT\Parameters -> NoNameReleaseOnDemand'
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\NetBT\Parameters -> NoNameReleaseOnDemand -> 1'
 
@@ -1593,6 +1704,7 @@ checks:
       - cis_csc: "8"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager'
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager -> SafeDllSearchMode'
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager -> SafeDllSearchMode -> 1'
 
@@ -1606,6 +1718,7 @@ checks:
       - cis_csc: "16.5"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon -> ScreenSaverGracePeriod'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon -> ScreenSaverGracePeriod -> n:^(\d+) compare <= 5'
 
@@ -1619,6 +1732,7 @@ checks:
       - cis_csc: "6.3, 6.4"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Eventlog\Security'
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Eventlog\Security -> WarningLevel'
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Eventlog\Security -> WarningLevel -> n:^(\d+) compare <= 90'
 
@@ -1632,6 +1746,7 @@ checks:
       - cis_csc: "9"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\NetBT\Parameters'
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\NetBT\Parameters -> NodeType'
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\NetBT\Parameters -> NodeType -> 2'
 
@@ -1645,6 +1760,7 @@ checks:
       - cis_csc: "9"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\DNSClient'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\DNSClient -> EnableMulticast'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\DNSClient -> EnableMulticast -> 0'
 
@@ -1658,6 +1774,7 @@ checks:
       - cis_csc: "9.1, 9.2"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\LanmanWorkstation'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\LanmanWorkstation -> AllowInsecureGuestAuth'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\LanmanWorkstation -> AllowInsecureGuestAuth -> 0'
 
@@ -1671,6 +1788,7 @@ checks:
       - cis_csc: "5.1"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Network Connections'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Network Connections -> NC_AllowNetBridge_NLA'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Network Connections -> NC_AllowNetBridge_NLA -> 0'
 
@@ -1684,6 +1802,7 @@ checks:
       - cis_csc: "9.1, 9.2"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Network Connections'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Network Connections -> NC_ShowSharedAccessUI'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Network Connections -> NC_ShowSharedAccessUI -> 0'
 
@@ -1697,6 +1816,7 @@ checks:
       - cis_csc: "5.1"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Network Connections'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Network Connections -> NC_StdDomainUserSetLocation'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Network Connections -> NC_StdDomainUserSetLocation -> 1'
 
@@ -1710,6 +1830,7 @@ checks:
       - cis_csc: "3"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\NetworkProvider\HardenedPaths'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\NetworkProvider\HardenedPaths -> \\\\*\\NETLOGON'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\NetworkProvider\HardenedPaths -> \\\\*\\NETLOGON -> r:RequireMutualAuthentication=1, RequireIntegrity=1'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\NetworkProvider\HardenedPaths -> \\\\*\\SYSVOL'
@@ -1725,6 +1846,7 @@ checks:
       - cis_csc: "12"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WcmSvc\GroupPolicy'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WcmSvc\GroupPolicy -> fMinimizeConnections'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WcmSvc\GroupPolicy -> fMinimizeConnections -> 1'
 
@@ -1738,6 +1860,7 @@ checks:
       - cis_csc: "12"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WcmSvc\GroupPolicy'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WcmSvc\GroupPolicy -> fBlockNonDomain'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WcmSvc\GroupPolicy -> fBlockNonDomain -> 1'
 
@@ -1751,6 +1874,7 @@ checks:
       - cis_csc: "15.4, 15.5"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WcmSvc\wifinetworkmanager\config'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WcmSvc\wifinetworkmanager\config -> AutoConnectAllowedOEM'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WcmSvc\wifinetworkmanager\config -> AutoConnectAllowedOEM -> 0'
 
@@ -1764,6 +1888,7 @@ checks:
       - cis_csc: "16.14"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\Audit'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\Audit -> ProcessCreationIncludeCmdLine_Enabled'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\Audit -> ProcessCreationIncludeCmdLine_Enabled -> 0'
 
@@ -1777,6 +1902,7 @@ checks:
       - cis_csc: "16"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\CredentialsDelegation'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\CredentialsDelegation -> AllowProtectedCreds'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\CredentialsDelegation -> AllowProtectedCreds -> 1'
 
@@ -1790,6 +1916,7 @@ checks:
       - cis_csc: "8"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Policies\EarlyLaunch'
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Policies\EarlyLaunch -> DriverLoadPolicy'
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Policies\EarlyLaunch -> DriverLoadPolicy -> 3'
 
@@ -1803,6 +1930,7 @@ checks:
       - cis_csc: "3.7, 5.4, 5.5"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Group Policy\{35378EAC-683F-11D2-A89A-00C04FBBCFA2}'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Group Policy\{35378EAC-683F-11D2-A89A-00C04FBBCFA2} -> NoBackgroundPolicy'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Group Policy\{35378EAC-683F-11D2-A89A-00C04FBBCFA2} -> NoBackgroundPolicy -> 0'
 
@@ -1816,6 +1944,7 @@ checks:
       - cis_csc: "3.7, 5.4, 5.5"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Group Policy\{35378EAC-683F-11D2-A89A-00C04FBBCFA2}'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Group Policy\{35378EAC-683F-11D2-A89A-00C04FBBCFA2} -> NoGPOListChanges'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Group Policy\{35378EAC-683F-11D2-A89A-00C04FBBCFA2} -> NoGPOListChanges -> 0'
 
@@ -1829,6 +1958,7 @@ checks:
       - cis_csc: "9.1, 9.2"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System -> EnableCdp'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System -> EnableCdp -> 0'
 
@@ -1842,6 +1972,7 @@ checks:
       - cis_csc: "3.7, 5.4, 5.5"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System -> DisableBkGndGroupPolicy'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System -> DisableBkGndGroupPolicy -> 0'
 
@@ -1855,6 +1986,7 @@ checks:
       - cis_csc: "2"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Printers'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Printers -> DisableWebPnPDownload'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Printers -> DisableWebPnPDownload -> 1'
 
@@ -1868,6 +2000,7 @@ checks:
       - cis_csc: "13.1"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Printers'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Printers -> DisableHTTPPrinting'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Printers -> DisableHTTPPrinting -> 1'
 
@@ -1881,6 +2014,7 @@ checks:
       - cis_csc: "16.5"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System -> BlockUserFromShowingAccountDetailsOnSignin'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System -> BlockUserFromShowingAccountDetailsOnSignin -> 1'
 
@@ -1894,6 +2028,7 @@ checks:
       - cis_csc: "5"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System -> DontDisplayNetworkSelectionUI'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System -> DontDisplayNetworkSelectionUI -> 1'
 
@@ -1907,6 +2042,7 @@ checks:
       - cis_csc: "16.9"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System -> DontEnumerateConnectedUsers'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System -> DontEnumerateConnectedUsers -> 1'
 
@@ -1920,6 +2056,7 @@ checks:
       - cis_csc: "16.9"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System -> EnumerateLocalUsers'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System -> EnumerateLocalUsers -> 0'
 
@@ -1933,6 +2070,7 @@ checks:
       - cis_csc: "16.5"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System -> DisableLockScreenAppNotifications'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System -> DisableLockScreenAppNotifications -> 1'
 
@@ -1946,6 +2084,7 @@ checks:
       - cis_csc: "16.5"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System -> BlockDomainPicturePassword'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System -> BlockDomainPicturePassword -> 1'
 
@@ -1959,6 +2098,7 @@ checks:
       - cis_csc: "16.5"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System -> AllowDomainPINLogon'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System -> AllowDomainPINLogon -> 0'
 
@@ -1972,6 +2112,7 @@ checks:
       - cis_csc: "9"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Power\PowerSettings\f15576e8-98b7-4186-b944-eafa664402d9'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Power\PowerSettings\f15576e8-98b7-4186-b944-eafa664402d9 -> DCSettingIndex'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Power\PowerSettings\f15576e8-98b7-4186-b944-eafa664402d9 -> DCSettingIndex -> 0'
 
@@ -1985,6 +2126,7 @@ checks:
       - cis_csc: "9"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Power\PowerSettings\f15576e8-98b7-4186-b944-eafa664402d9'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Power\PowerSettings\f15576e8-98b7-4186-b944-eafa664402d9 -> ACSettingIndex'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Power\PowerSettings\f15576e8-98b7-4186-b944-eafa664402d9 -> ACSettingIndex -> 0'
 
@@ -1998,6 +2140,7 @@ checks:
       - cis_csc: "13.2, 13.6"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Power\PowerSettings\0e796bdb-100d-47d6-a2d5-f7d2daa51f51'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Power\PowerSettings\0e796bdb-100d-47d6-a2d5-f7d2daa51f51 -> DCSettingIndex'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Power\PowerSettings\0e796bdb-100d-47d6-a2d5-f7d2daa51f51 -> DCSettingIndex -> 1'
 
@@ -2011,6 +2154,7 @@ checks:
       - cis_csc: "16.5"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Power\PowerSettings\0e796bdb-100d-47d6-a2d5-f7d2daa51f51'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Power\PowerSettings\0e796bdb-100d-47d6-a2d5-f7d2daa51f51 -> ACSettingIndex'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Power\PowerSettings\0e796bdb-100d-47d6-a2d5-f7d2daa51f51 -> ACSettingIndex -> 1'
 
@@ -2024,6 +2168,7 @@ checks:
       - cis_csc: "9.1, 9.2"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services -> fAllowUnsolicited'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services -> fAllowUnsolicited -> 0'
 
@@ -2037,6 +2182,7 @@ checks:
       - cis_csc: "5.1"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services -> fAllowToGetHelp'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services -> fAllowToGetHelp -> 0'
 
@@ -2050,6 +2196,7 @@ checks:
       - cis_csc: "9.1, 9.2"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Rpc'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Rpc -> EnableAuthEpResolution'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Rpc -> EnableAuthEpResolution -> 1'
 
@@ -2063,6 +2210,7 @@ checks:
       - cis_csc: "9.1, 9.2"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Rpc'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Rpc -> RestrictRemoteClients'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Rpc -> RestrictRemoteClients -> 1'
 
@@ -2076,6 +2224,7 @@ checks:
       - cis_csc: "16.9"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System -> MSAOptional'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System -> MSAOptional -> 1'
 
@@ -2089,6 +2238,7 @@ checks:
       - cis_csc: "8.3, 8.4, 8.5"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Explorer'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Explorer -> NoAutoplayfornonVolume'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Explorer -> NoAutoplayfornonVolume -> 1'
 
@@ -2102,6 +2252,7 @@ checks:
       - cis_csc: "8.3, 8.4, 8.5"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer -> NoAutorun'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer -> NoAutorun -> 1'
 
@@ -2128,6 +2279,7 @@ checks:
       - cis_csc: "16"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Biometrics\FacialFeatures'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Biometrics\FacialFeatures -> EnhancedAntiSpoofing'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Biometrics\FacialFeatures -> EnhancedAntiSpoofing -> 1'
 
@@ -2141,6 +2293,7 @@ checks:
       - cis_csc: "13"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\CloudContent'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\CloudContent -> DisableWindowsConsumerFeatures'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\CloudContent -> DisableWindowsConsumerFeatures -> 1'
 
@@ -2154,6 +2307,7 @@ checks:
       - cis_csc: "15.8, 15.9"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Connect'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Connect -> RequirePinForPairing'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Connect -> RequirePinForPairing -> 1'
 
@@ -2167,6 +2321,7 @@ checks:
       - cis_csc: "16"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\CredUI'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\CredUI -> DisablePasswordReveal'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\CredUI -> DisablePasswordReveal -> 1'
 
@@ -2180,6 +2335,7 @@ checks:
       - cis_csc: "16"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\CredUI'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\CredUI -> EnumerateAdministrators'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\CredUI -> EnumerateAdministrators -> 0'
 
@@ -2193,6 +2349,7 @@ checks:
       - cis_csc: "13"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\DataCollection'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\DataCollection -> AllowTelemetry'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\DataCollection -> AllowTelemetry -> r:^0$|^1$'
 
@@ -2206,6 +2363,7 @@ checks:
       - cis_csc: "13"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\DataCollection'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\DataCollection -> DoNotShowFeedbackNotifications'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\DataCollection -> DoNotShowFeedbackNotifications -> 1'
 
@@ -2219,6 +2377,7 @@ checks:
       - cis_csc: "3"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\PreviewBuilds'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\PreviewBuilds -> AllowBuildPreview'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\PreviewBuilds -> AllowBuildPreview -> 0'
 
@@ -2232,6 +2391,7 @@ checks:
       - cis_csc: "4.5, 3.4, 3.5"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\DeliveryOptimization'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\DeliveryOptimization -> DODownloadMode'
       - 'not r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\DeliveryOptimization -> DODownloadMode -> r:^3$'
 
@@ -2245,6 +2405,7 @@ checks:
       - cis_csc: "6.3, 6.4"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\EventLog\Application'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\EventLog\Application -> Retention'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\EventLog\Application -> Retention -> 0'
 
@@ -2258,6 +2419,7 @@ checks:
       - cis_csc: "6.3, 6.4"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\EventLog\Application'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\EventLog\Application -> MaxSize'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\EventLog\Application -> MaxSize -> n:^(\d+) compare >= 32768'
 
@@ -2271,6 +2433,7 @@ checks:
       - cis_csc: "6.3, 6.4"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\EventLog\Security'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\EventLog\Security -> Retention'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\EventLog\Security -> Retention -> 0'
 
@@ -2284,6 +2447,7 @@ checks:
       - cis_csc: "6.3, 6.4"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\EventLog\Security'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\EventLog\Security -> MaxSize'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\EventLog\Security -> MaxSize -> n:^(\d+) compare >= 196608'
 
@@ -2297,6 +2461,7 @@ checks:
       - cis_csc: "6.3, 6.4"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\EventLog\Setup'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\EventLog\Setup -> Retention'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\EventLog\Setup -> Retention -> 0'
 
@@ -2310,6 +2475,7 @@ checks:
       - cis_csc: "6.3, 6.4"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\EventLog\Setup'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\EventLog\Setup -> MaxSize'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\EventLog\Setup -> MaxSize -> n:^(\d+) compare >= 32768'
 
@@ -2323,6 +2489,7 @@ checks:
       - cis_csc: "6.3, 6.4"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\EventLog\System'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\EventLog\System -> Retention'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\EventLog\System -> Retention -> 0'
 
@@ -2336,6 +2503,7 @@ checks:
       - cis_csc: "6.3, 6.4"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\EventLog\System'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\EventLog\System -> MaxSize'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\EventLog\System -> MaxSize -> n:^(\d+) compare >= 32768'
 
@@ -2349,6 +2517,7 @@ checks:
       - cis_csc: "8.4, 8.3"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Explorer'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Explorer -> NoDataExecutionPrevention'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Explorer -> NoDataExecutionPrevention -> 0'
 
@@ -2362,6 +2531,7 @@ checks:
       - cis_csc: "8.4, 8.3"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Explorer'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Explorer -> NoHeapTerminationOnCorruption'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Explorer -> NoHeapTerminationOnCorruption -> 0'
 
@@ -2375,6 +2545,7 @@ checks:
       - cis_csc: "8.4, 8.3"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer -> PreXPSP2ShellProtocolBehavior'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer -> PreXPSP2ShellProtocolBehavior -> 0'
 
@@ -2388,6 +2559,7 @@ checks:
       - cis_csc: "14.1, 14.2"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\HomeGroup'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\HomeGroup -> DisableHomeGroup'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\HomeGroup -> DisableHomeGroup -> 1'
 
@@ -2401,6 +2573,7 @@ checks:
       - cis_csc: "16"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\MicrosoftAccount'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\MicrosoftAccount -> DisableUserAuth'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\MicrosoftAccount -> DisableUserAuth -> 1'
 
@@ -2414,6 +2587,7 @@ checks:
       - cis_csc: "13"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\MicrosoftEdge\Main'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\MicrosoftEdge\Main -> Cookies'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\MicrosoftEdge\Main -> Cookies -> r:^0$|^1$'
 
@@ -2427,6 +2601,7 @@ checks:
       - cis_csc: "16"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\MicrosoftEdge\Main'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\MicrosoftEdge\Main -> FormSuggest Passwords'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\MicrosoftEdge\Main -> FormSuggest Passwords -> no'
 
@@ -2440,6 +2615,7 @@ checks:
       - cis_csc: "7.2"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\MicrosoftEdge\Security'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\MicrosoftEdge\Security -> FlashClickToRunMode'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\MicrosoftEdge\Security -> FlashClickToRunMode -> 1'
 
@@ -2453,6 +2629,7 @@ checks:
       - cis_csc: "13"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\OneDrive'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\OneDrive -> DisableFileSyncNGSC'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\OneDrive -> DisableFileSyncNGSC -> 1'
 
@@ -2466,6 +2643,7 @@ checks:
       - cis_csc: "16.4"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services -> DisablePasswordSaving'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services -> DisablePasswordSaving -> 1'
 
@@ -2479,6 +2657,7 @@ checks:
       - cis_csc: "13"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services -> fDisableCdm'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services -> fDisableCdma -> 1'
 
@@ -2492,6 +2671,7 @@ checks:
       - cis_csc: "16.14"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services -> fPromptForPassword'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services -> fPromptForPassword -> 1'
 
@@ -2505,6 +2685,7 @@ checks:
       - cis_csc: "3.4"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services -> fEncryptRPCTraffic'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services -> fEncryptRPCTraffic -> 1'
 
@@ -2518,6 +2699,7 @@ checks:
       - cis_csc: "3.4"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services -> MinEncryptionLevel'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services -> MinEncryptionLevel -> 3'
 
@@ -2531,6 +2713,7 @@ checks:
       - cis_csc: "14.4, 14.6"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services -> DeleteTempDirsOnExit'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services -> DeleteTempDirsOnExit -> 1'
 
@@ -2544,6 +2727,7 @@ checks:
       - cis_csc: "14.4, 14.6"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services -> PerSessionTempDir'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services -> PerSessionTempDir -> 1'
 
@@ -2557,6 +2741,7 @@ checks:
       - cis_csc: "7.2"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Internet Explorer\Feeds'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Internet Explorer\Feeds -> DisableEnclosureDownload'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Internet Explorer\Feeds -> DisableEnclosureDownload -> 1'
 
@@ -2570,6 +2755,7 @@ checks:
       - cis_csc: "9.1, 9.2"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Windows Search'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Windows Search -> AllowCortana'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Windows Search -> AllowCortana -> 0'
 
@@ -2583,6 +2769,7 @@ checks:
       - cis_csc: "16.5"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Windows Search'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Windows Search -> AllowCortanaAboveLock'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Windows Search -> AllowCortanaAboveLock -> 0'
 
@@ -2596,6 +2783,7 @@ checks:
       - cis_csc: "13.1"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Windows Search'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Windows Search -> AllowIndexingEncryptedStoresOrItems'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Windows Search -> AllowIndexingEncryptedStoresOrItems -> 0'
 
@@ -2609,6 +2797,7 @@ checks:
       - cis_csc: "9.1, 9.2"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Windows Search'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Windows Search -> AllowSearchToUseLocation'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Windows Search -> AllowSearchToUseLocation -> 0'
 
@@ -2622,6 +2811,7 @@ checks:
       - cis_csc: "3.1, 3.4, 3.5, 4.5, 5.1"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsStore'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsStore -> AutoDownload'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsStore -> AutoDownload -> 4'
 
@@ -2635,6 +2825,7 @@ checks:
       - cis_csc: "3.1, 3.4, 3.5, 4.5, 5.1"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsStore'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsStore -> DisableOSUpgrade'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsStore -> DisableOSUpgrade -> 1'
 
@@ -2648,6 +2839,7 @@ checks:
       - cis_csc: "8"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\Spynet'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\Spynet -> LocalSettingOverrideSpynetReporting'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\Spynet -> LocalSettingOverrideSpynetReporting -> 0'
 
@@ -2661,6 +2853,7 @@ checks:
       - cis_csc: "8.1, 8.6"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\Real-Time Protection'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\Real-Time Protection -> DisableBehaviorMonitoring'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\Real-Time Protection -> DisableBehaviorMonitoring -> 0'
 
@@ -2674,6 +2867,7 @@ checks:
       - cis_csc: "13"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\Scan'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\Scan -> DisableRemovableDriveScanning'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\Scan -> DisableRemovableDriveScanning -> 0'
 
@@ -2687,6 +2881,7 @@ checks:
       - cis_csc: "13"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\Scan'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\Scan -> DisableEmailScanning'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\Scan -> DisableEmailScanning -> 0'
 
@@ -2700,6 +2895,7 @@ checks:
       - cis_csc: "8.4"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows Defender\Windows Defender Exploit Guard\ASR'
       - 'r:HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows Defender\Windows Defender Exploit Guard\ASR -> ExploitGuard_ASR_Rules'
       - 'r:HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows Defender\Windows Defender Exploit Guard\ASR -> ExploitGuard_ASR_Rules -> 1'
 
@@ -2713,6 +2909,7 @@ checks:
       - cis_csc: "8.4"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows Defender\Windows Defender Exploit Guard\ASR\Rules'
       - 'r:HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows Defender\Windows Defender Exploit Guard\ASR\Rules -> BE9BA2D9-53EA-4CDC-84E5-9B1EEEE46550'
       - 'r:HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows Defender\Windows Defender Exploit Guard\ASR\Rules -> BE9BA2D9-53EA-4CDC-84E5-9B1EEEE46550 -> 1'
       - 'r:HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows Defender\Windows Defender Exploit Guard\ASR\Rules -> D4F940AB-401B-4EFC-AADC-AD5F3C50688A'
@@ -2746,6 +2943,7 @@ checks:
       - cis_csc: "7"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\Windows Defender Exploit Guard\Network Protection'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\Windows Defender Exploit Guard\Network Protection -> EnableNetworkProtection'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\Windows Defender Exploit Guard\Network Protection -> EnableNetworkProtection -> 1'
 
@@ -2759,6 +2957,7 @@ checks:
       - cis_csc: "8.1, 8.6"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender -> DisableAntiSpyware'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender -> DisableAntiSpyware -> 0'
 
@@ -2772,6 +2971,7 @@ checks:
       - cis_csc: "8.4"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender Security Center\App and Browser protection'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender Security Center\App and Browser protection -> DisallowExploitProtectionOverride'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender Security Center\App and Browser protection -> DisallowExploitProtectionOverride -> 1'
 
@@ -2785,6 +2985,7 @@ checks:
       - cis_csc: "2"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System -> EnableSmartScreen'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System -> EnableSmartScreen -> 1'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System -> ShellSmartScreenLevel'
@@ -2800,6 +3001,7 @@ checks:
       - cis_csc: "2"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\MicrosoftEdge\PhishingFilter'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\MicrosoftEdge\PhishingFilter -> EnabledV9'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\MicrosoftEdge\PhishingFilter -> EnabledV9 -> 1'
 
@@ -2813,6 +3015,7 @@ checks:
       - cis_csc: "7"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\MicrosoftEdge\PhishingFilter'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\MicrosoftEdge\PhishingFilter -> PreventOverrideAppRepUnknown'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\MicrosoftEdge\PhishingFilter -> PreventOverrideAppRepUnknown -> 1'
 
@@ -2826,6 +3029,7 @@ checks:
       - cis_csc: "7"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\MicrosoftEdge\PhishingFilter'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\MicrosoftEdge\PhishingFilter -> PreventOverride'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\MicrosoftEdge\PhishingFilter -> PreventOverride -> 1'
 
@@ -2839,6 +3043,7 @@ checks:
       - cis_csc: "13"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\GameDVR'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\GameDVR -> AllowGameDVR'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\GameDVR -> AllowGameDVR -> 0'
 
@@ -2852,6 +3057,7 @@ checks:
       - cis_csc: "16.5"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsInkWorkspace'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsInkWorkspace -> AllowWindowsInkWorkspace'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsInkWorkspace -> AllowWindowsInkWorkspace -> r:^0$|^1$'
 
@@ -2865,6 +3071,7 @@ checks:
       - cis_csc: "5.1"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Installer'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Installer -> EnableUserControl'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Installer -> EnableUserControl -> 1'
 
@@ -2878,6 +3085,7 @@ checks:
       - cis_csc: "5.1"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Installer'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Installer -> AlwaysInstallElevated'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Installer -> AlwaysInstallElevated -> 0'
 
@@ -2891,6 +3099,7 @@ checks:
       - cis_csc: "16.5"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System -> DisableAutomaticRestartSignOn'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System -> DisableAutomaticRestartSignOn -> 1'
 
@@ -2904,6 +3113,7 @@ checks:
       - cis_csc: "16.4"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\PowerShell\ScriptBlockLogging'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\PowerShell\ScriptBlockLogging -> EnableScriptBlockLogging'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\PowerShell\ScriptBlockLogging -> EnableScriptBlockLogging -> 0'
 
@@ -2917,6 +3127,7 @@ checks:
       - cis_csc: "16.4"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\PowerShell\Transcription'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\PowerShell\Transcription -> EnableTranscripting'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\PowerShell\Transcription -> EnableTranscripting -> 01'
 
@@ -2930,6 +3141,7 @@ checks:
       - cis_csc: "16.13, 16.5"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WinRM\Client'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WinRM\Client -> AllowBasic'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WinRM\Client -> AllowBasic -> 0'
 
@@ -2943,6 +3155,7 @@ checks:
       - cis_csc: "16.5, 16.13"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WinRM\Client'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WinRM\Client -> AllowUnencryptedTraffic'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WinRM\Client -> AllowUnencryptedTraffic -> 0'
 
@@ -2956,6 +3169,7 @@ checks:
       - cis_csc: "16.5, 16.13"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WinRM\Client'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WinRM\Client -> AllowDigest'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WinRM\Client -> AllowDigest -> 0'
 
@@ -2969,6 +3183,7 @@ checks:
       - cis_csc: "16.5, 16.13"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WinRM\Service'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WinRM\Service -> AllowBasic'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WinRM\Service -> AllowBasic -> 0'
 
@@ -2982,6 +3197,7 @@ checks:
       - cis_csc: "3.4"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WinRM\Service'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WinRM\Service -> AllowUnencryptedTraffic'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WinRM\Service -> AllowUnencryptedTraffic -> 0'
 
@@ -2995,6 +3211,7 @@ checks:
       - cis_csc: "16.5, 16.13"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WinRM\Service'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WinRM\Service -> DisableRunAs'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WinRM\Service -> DisableRunAs -> 1'
 
@@ -3008,6 +3225,7 @@ checks:
       - cis_csc: "3"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate -> ManagePreviewBuilds'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate -> ManagePreviewBuilds -> 1'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate -> ManagePreviewBuildsPolicyValue'
@@ -3023,6 +3241,7 @@ checks:
       - cis_csc: "3"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate -> DeferFeatureUpdates'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate -> DeferFeatureUpdates -> 1'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate -> DeferFeatureUpdatesPeriodInDays'
@@ -3040,6 +3259,7 @@ checks:
       - cis_csc: "3.4, 3.5, 4.5"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate -> DeferQualityUpdates'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate -> DeferQualityUpdates -> 1'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate -> DeferQualityUpdatesPeriodInDays'
@@ -3055,6 +3275,7 @@ checks:
       - cis_csc: "3.4, 3.5, 4.5"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU -> NoAutoUpdate'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU -> NoAutoUpdate -> 1'
 
@@ -3068,6 +3289,7 @@ checks:
       - cis_csc: "3.4, 3.5, 4.5"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU -> ScheduledInstallDay'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU -> ScheduledInstallDay -> 0'
 
@@ -3081,5 +3303,6 @@ checks:
       - cis_csc: "3.4, 3.5, 4.5"
     condition: all
     rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU -> NoAutoRebootWithLoggedOnUsers'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU -> NoAutoRebootWithLoggedOnUsers -> 1'
