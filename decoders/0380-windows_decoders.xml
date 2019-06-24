@@ -481,7 +481,7 @@ Event ID 21: WmiEvent (WmiEventConsumerToFilter activity detected)
 Event ID 22: DNSEvent (DNS query)
 2019 Jun 24 05:14:53 WinEvtLog: Microsoft-Windows-Sysmon/Operational: INFORMATION(22): Microsoft-Windows-Sysmon: SYSTEM: NT AUTHORITY: WIN-S0GE7HFOP5K: Dns query:  RuleName:   UtcTime: 2019-06-24 15:14:52.542  ProcessGuid: {E6A6834E-90A7-5D10-0000-0010C98D5100}  ProcessId: 1152  QueryName: pipeline-edge-prod-25-561439127.us-west-2.elb.amazonaws.com  QueryStatus: 9501  QueryResults:   Image: C:\Program Files (x86)\Mozilla Firefox\firefox.exe
 -->
-<decoder name="Sysmon-EventID#15">
+<decoder name="Sysmon-EventID#22">
     <parent>windows</parent>
     <type>windows</type>
     <prematch>Microsoft-Windows-Sysmon/Operational: INFORMATION\(22\)</prematch>
@@ -489,10 +489,10 @@ Event ID 22: DNSEvent (DNS query)
     <order>id</order>
 </decoder>
 
-<decoder name="Sysmon-EventID#15">
+<decoder name="Sysmon-EventID#22">
     <parent>windows</parent>
     <type>windows</type>
-	  <regex offset="after_regex">QueryName: (\S+)  QueryStatus: (\d+)  QueryResults:   Image: (\.+):</regex>
+	  <regex offset="after_regex">QueryName: (\S+)  QueryStatus: (\d*)  QueryResults: \.* Image: (\.+)</regex>
     <order>sysmon.queryname, sysmon.querystatus, sysmon.image</order>
 </decoder>
 
