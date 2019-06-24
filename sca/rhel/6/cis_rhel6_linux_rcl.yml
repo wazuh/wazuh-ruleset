@@ -23,11 +23,11 @@ requirements:
   description: "Requirements for running the policy against RHEL 6 family."
   condition: any
   rules:
-    - 'c:cat /etc/redhat-release -> r:^Red Hat Enterprise Linux && r:release 6'
-    - 'c:cat /etc/redhat-release -> r:^CentOS && r:release 6'
-    - 'c:cat /etc/redhat-release -> r:^Cloud && r:release 6'
-    - 'c:cat /etc/redhat-release -> r:^Oracle && r:release 6'
-    - 'c:cat /etc/redhat-release -> r:^Better && r:release 6'
+    - 'f:/etc/redhat-release -> r:^Red Hat Enterprise Linux && r:release 6'
+    - 'f:/etc/redhat-release -> r:^CentOS && r:release 6'
+    - 'f:/etc/redhat-release -> r:^Cloud && r:release 6'
+    - 'f:/etc/redhat-release -> r:^Oracle && r:release 6'
+    - 'f:/etc/redhat-release -> r:^Better && r:release 6'
 
 variables:
   $sshd_file: /etc/ssh/sshd_config
@@ -226,7 +226,7 @@ checks:
       - pci_dss: "2.2.4"
     condition: none
     rules:
-      - 'f:/boot/grub/grub.conf -> r:selinux=0|enforcing=0'
+      - 'f:/etc/grub.conf -> r:selinux=0|enforcing=0'
 
 # 1.6.1.2 Set selinux state
   - id: 6014
@@ -296,7 +296,7 @@ checks:
       - pci_dss: "2.2.4"
     condition: all
     rules:
-      - 'f:/boot/grub/grub.conf -> !r:^# && r:password --md5'
+      - 'f:/boot/grub/grub.cfg -> !r:^# && r:password --md5'
 
 # 1.4.3 Require Authentication for Single-User Mode (Scored)
   - id: 6019
