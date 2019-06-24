@@ -415,6 +415,9 @@ Event ID 11:
 Event ID 12: RegistryEvent (Object create and delete)
 
 2017 Mar 27 10:38:48 WinEvtLog: Microsoft-Windows-Sysmon/Operational: INFORMATION(12): Microsoft-Windows-Sysmon: SYSTEM: NT AUTHORITY: WIN-P57C9KN929H: Registry object added or deleted:  EventType: CreateKey  UtcTime: 2017-03-27 08:38:48.108  ProcessGuid: {DB577E3B-C979-58D8-0000-001049540100}  ProcessId: 1288  Image: C:\Windows\Explorer.EXE  TargetObject: HKU\S-1-5-21-2895701376-138392475-4243184240-1000\Software\Microsoft\Windows\CurrentVersion\Explorer\FileExts\.com
+
+2019 Jun 24 05:36:25 WinEvtLog: Microsoft-Windows-Sysmon/Operational: INFORMATION(12): Microsoft-Windows-Sysmon: SYSTEM: NT AUTHORITY: WIN-S0GE7HFOP5K: Registry object added or deleted:  RuleName:   EventType: CreateKey  UtcTime: 2019-06-24 09:36:25.109  ProcessGuid: {E6A6834E-DDAE-5D10-0000-001011DD0000}  ProcessId: 852  Image: C:\Windows\System32\svchost.exe  TargetObject: HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\WINEVT\Publishers\{945a8954-c147-4acd-923f-40c45405a658}
+
 -->
 
 
@@ -422,6 +425,8 @@ Event ID 12: RegistryEvent (Object create and delete)
 Event ID 13: RegistryEvent (Value Set)
 
 2017 Mar 27 10:57:57 WinEvtLog: Microsoft-Windows-Sysmon/Operational: INFORMATION(13): Microsoft-Windows-Sysmon: SYSTEM: NT AUTHORITY: WIN-P57C9KN929H: Registry value set:  EventType: SetValue  UtcTime: 2017-03-27 08:57:57.885  ProcessGuid: {DB577E3B-D415-58D8-0000-00108ED53500}  ProcessId: 2040  Image: C:\Windows\system32\winsat.exe  TargetObject: HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce\WinSATRestorePower  Details: powercfg -setactive 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c
+
+2019 Jun 24 05:36:25 WinEvtLog: Microsoft-Windows-Sysmon/Operational: INFORMATION(13): Microsoft-Windows-Sysmon: SYSTEM: NT AUTHORITY: WIN-S0GE7HFOP5K: Registry value set:  RuleName:   EventType: SetValue  UtcTime: 2019-06-24 09:36:25.109  ProcessGuid: {E6A6834E-DDAE-5D10-0000-001011DD0000}  ProcessId: 852  Image: C:\Windows\System32\svchost.exe  TargetObject: HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\WINEVT\Publishers\{945a8954-c147-4acd-923f-40c45405a658}\Enabled  Details: DWORD (0x00000001)
 -->
 
 
@@ -451,6 +456,49 @@ Event ID 15: FileCreateStreamHash
 	<regex offset="after_regex">ProcessId: (\.*)\s+Image: (\.*)\s+TargetFilename: (\.*)\s+CreationUtcTime: (\.*)\s+Hash: \S+=(\S*)</regex>
     <order>sysmon.processId, sysmon.image, sysmon.targetfilename, sysmon.creationUtcTime, sysmon.hash</order>
 </decoder>
+
+<!-- 
+Event ID 17: PipeEvent (Pipe Created)
+-->
+
+<!-- 
+Event ID 18: PipeEvent (Pipe Connected)
+-->
+
+<!-- 
+Event ID 19: WmiEvent (WmiEventFilter activity detected)
+-->
+
+<!-- 
+Event ID 20: WmiEvent (WmiEventConsumer activity detected)
+-->
+
+<!-- 
+Event ID 21: WmiEvent (WmiEventConsumerToFilter activity detected)
+-->
+
+<!-- 
+Event ID 22: DNSEvent (DNS query)
+2019 Jun 24 05:14:53 WinEvtLog: Microsoft-Windows-Sysmon/Operational: INFORMATION(22): Microsoft-Windows-Sysmon: SYSTEM: NT AUTHORITY: WIN-S0GE7HFOP5K: Dns query:  RuleName:   UtcTime: 2019-06-24 15:14:52.542  ProcessGuid: {E6A6834E-90A7-5D10-0000-0010C98D5100}  ProcessId: 1152  QueryName: pipeline-edge-prod-25-561439127.us-west-2.elb.amazonaws.com  QueryStatus: 9501  QueryResults:   Image: C:\Program Files (x86)\Mozilla Firefox\firefox.exe
+-->
+<decoder name="Sysmon-EventID#15">
+    <parent>windows</parent>
+    <type>windows</type>
+    <prematch>Microsoft-Windows-Sysmon/Operational: INFORMATION\(22\)</prematch>
+    <regex>Microsoft-Windows-Sysmon/Operational: \S+\((\d+)\)</regex>
+    <order>id</order>
+</decoder>
+
+<decoder name="Sysmon-EventID#15">
+    <parent>windows</parent>
+    <type>windows</type>
+	  <regex offset="after_regex">QueryName: (\S+)  QueryStatus: (\d+)  QueryResults:   Image: (\.+):</regex>
+    <order>sysmon.queryname, sysmon.querystatus, sysmon.image</order>
+</decoder>
+
+<!-- 
+Event ID 255: Error
+-->
 
 <!-- sysmon decoder END -->
 
