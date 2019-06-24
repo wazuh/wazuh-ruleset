@@ -23,12 +23,12 @@ requirements:
   description: "Requirements for running the policy against RHEL 7 family."
   condition: any
   rules:
-    - 'c:cat /etc/redhat-release -> r:^Red Hat Enterprise Linux && r:release 7'
-    - 'c:cat /etc/redhat-release -> r:^CentOS && r:release 7'
-    - 'c:cat /etc/redhat-release -> r:^Cloud && r:release 7'
-    - 'c:cat /etc/redhat-release -> r:^Oracle && r:release 7'
-    - 'c:cat /etc/redhat-release -> r:^Better && r:release 7'
-    - 'c:cat /etc/redhat-release -> r:^OpenVZ && r:release 7'
+    - 'f:/etc/redhat-release -> r:^Red Hat Enterprise Linux && r:release 7'
+    - 'f:/etc/redhat-release -> r:^CentOS && r:release 7'
+    - 'f:/etc/redhat-release -> r:^Cloud && r:release 7'
+    - 'f:/etc/redhat-release -> r:^Oracle && r:release 7'
+    - 'f:/etc/redhat-release -> r:^Better && r:release 7'
+    - 'f:/etc/redhat-release -> r:^OpenVZ && r:release 7'
 
 variables:
   $sshd_file: /etc/ssh/sshd_config
