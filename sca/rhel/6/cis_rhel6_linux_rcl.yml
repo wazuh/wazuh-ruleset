@@ -264,9 +264,9 @@ checks:
     compliance:
       - cis: "1.6.1.4"
       - pci_dss: "2.2.4"
-    condition: all
+    condition: none
     rules:
-      - 'c:rpm -q setroubleshoot -> r:^package setroubleshoot is not installed$'
+      - 'c:rpm -qa setroubleshoot -> r:\.'
 
 # 1.6.1.5 Disable MCS Translation service mcstrans
   - id: 6017
@@ -277,9 +277,9 @@ checks:
     compliance:
       - cis: "1.6.1.5"
       - pci_dss: "2.2.4"
-    condition: all
+    condition: none
     rules:
-      - 'c:rpm -q mcstrans -> r:^package mcstrans is not installed$'
+      - 'c:rpm -qa mcstrans -> r:\.'
 
 ###############################################
 # 1.4  Secure Boot Settings
@@ -324,7 +324,7 @@ checks:
       - pci_dss: "2.2.4"
     condition: all
     rules:
-      - 'f:/etc/sysconfig/init -> !r:^# && r:PROMPT=no'
+      - 'f:/etc/sysconfig/init -> r:^PROMPT=no$'
 
 ###############################################
 # 1.5  Additional Process Hardening
@@ -438,7 +438,7 @@ checks:
       - nist_800_53: "CM.1"
     condition: none
     rules:
-      - 'c:chkconfig --list-> r:tftp && r::on'
+      - 'c:chkconfig --list -> r:tftp && r::on'
 
 # 2.1.7 Remove talk-server (Scored)
   - id: 6028
