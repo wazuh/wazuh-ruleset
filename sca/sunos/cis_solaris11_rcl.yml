@@ -46,9 +46,9 @@ checks:
     remediation: "Run the following to set sendmail to listen only local interfaces: # svccfg -v -s svc:/network/smtp:sendmail setprop config/local_only=false    # svcadm refresh sendmail    # svcadm restart sendmail"
     compliance:
       - cis: "2.2"
-    condition: all
+    condition: none
     rules:
-      - 'f:/etc/mail/local.cf'
+      - 'c:netstat -an -> r:.25\s*\t* && !r:127.0.0.1.25|::1'
 
   - id: 11502
     title: "Disable RPC Encryption Key"
@@ -173,6 +173,7 @@ checks:
       - ipfilter(5) man page
     condition: all
     rules:
+      - 'c:inetadm -p -> r:tcp_wrappers=TRUE'
       - 'f:/etc/hosts.allow'
       - 'f:/etc/hosts.deny'
 
@@ -309,6 +310,12 @@ checks:
       - cis: "4.5"
     condition: all
     rules:
+      - 'c:auditconfig -getcond -> audit condition = auditing'
+      - 'c:auditconfig -getpolicy -> r:active audit policies = argv,cnt,zonename'
+      - 'c:auditconfig -getflags -> r:active user default audit flags = lo(0x1000,0x1000)'
+      - 'c:auditconfig -getnaflags -> r:active non-attributable audit flags = lo(0x1000,0x1000)'
+      - 'c:auditconfig -getplugin audit_binfile -> r:audit_binfile (active)'
+      - 'c:userattr audit_flags root -> r:lo,ad,ft,ex,cis:no'
       - 'd:/var/spool/cron/crontabs -> r:/usr/sbin/audit -n'
 
 # 5 File/Directory Permissions/Access
@@ -321,7 +328,7 @@ checks:
       - cis: "5.1"
     condition: all
     rules:
-      - 'f:/etc/profile -> r:^umask\s*022'
+      - 'c:svcprop -p umask/umask svc:/system/environment:init -> 022'
 
 # 6 System Access, Authentication, and Authorization
   - id: 11522
@@ -334,7 +341,7 @@ checks:
     condition: all
     rules:
       - 'f:/etc/default/keyserv'
-      - 'f:/etc/default/keyserv -> r:^ENABLE\.NOBODY\.KEYS\pNO'
+      - 'f:/etc/default/keyserv -> r:^ENABLE\sNOBODY\sKEYS\pNO'
 
   - id: 11523
     title: "Disable X11 Forwarding for SSH"
