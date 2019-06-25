@@ -13,7 +13,7 @@
 policy:
   id: "cis_win10_enterprise_L1"
   file: "cis_win10_enterprise_L1_rcl.yml"
-  name: "CIS benchmark for Windows 10 Enterprise (Release 1709)"
+  name: "CIS benchmark for Windows 10 Enterprise (Release 1803)"
   description: "This document provides prescriptive guidance for establishing a secure configuration posture for Microsoft Windows (L1)."
   references:
     - https://www.cisecurity.org/cis-benchmarks/
@@ -21,7 +21,7 @@ policy:
 requirements:
   title: "Check that the Windows platform is Windows 10"
   description: "Requirements for running the CIS benchmark Domain Controller L1 under Windows 10"
-  condition: "any required"
+  condition: any
   rules:
     - 'r:HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion -> ProductName -> r:^Windows 10'
 
@@ -172,7 +172,7 @@ checks:
     rationale: "Microsoft developed this feature to make it easier for users with certain types of physical impairments to log on to computers that run Windows. If users are not required to press CTRL+ALT+DEL, they are susceptible to attacks that attempt to intercept their passwords. If CTRL+ALT+DEL is required before logon, user passwords are communicated by means of a trusted path. An attacker could install a Trojan horse program that looks like the standard Windows logon dialog box and capture the user's password. The attacker would then be able to log on to the compromised account with whatever level of privilege that user has."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Local Policies\\Security Options\\Interactive logon: Do not require CTRL+ALT+DEL"
     compliance:
-      - cis: "2.3.7.2"
+      - cis: "2.3.7.1"
       - cis_csc: "8"
     condition: all
     rules:
@@ -800,7 +800,7 @@ checks:
     rationale: "Hosting a website from a workstation is an increased security risk, as the attack surface of that workstation is then greatly increased. If proper security mitigations are not followed, the chance of successful attack increases significantly. Note: This security concern applies to any web server application installed on a workstation, not just IIS."
     remediation: "To establish the recommended configuration via GP, set the following UI path to: Disabled or ensure the service is not installed. Computer Configuration\\Policies\\Windows Settings\\Security Settings\\System Services\\IIS Admin Service"
     compliance:
-      - cis: "5.8"
+      - cis: "5.6"
       - cis_csc: "9.1, 9.2"
     condition: any
     rules:
@@ -813,7 +813,7 @@ checks:
     rationale: "Infrared connections can potentially be a source of data compromise - especially via the automatic \"file transfer application\" functionality. Enterprise-managed systems should utilize a more secure method of connection than infrared."
     remediation: "To establish the recommended configuration via GP, set the following UI path to: Disabled. Computer Configuration\\Policies\\Windows Settings\\Security Settings\\System Services\\Infrared monitor service"
     compliance:
-      - cis: "5.9"
+      - cis: "5.7"
       - cis_csc: "9.1, 9.2"
     condition: all
     rules:
@@ -827,7 +827,7 @@ checks:
     rationale: "Internet Connection Sharing (ICS) is a feature that allows someone to \"share\" their Internet connection with other machines on the network - it was designed for home or small office environments where only one machine has Internet access - it effectively turns that machine into an Internet router. This feature causes the bridging of networks and likely bypassing other, more secure pathways. It should not be used on any enterprise-managed system."
     remediation: "To establish the recommended configuration via GP, set the following UI path to: Disabled. Computer Configuration\\Policies\\Windows Settings\\Security Settings\\System Services\\Internet Connection Sharing (ICS)"
     compliance:
-      - cis: "5.10"
+      - cis: "5.8"
       - cis_csc: "9.1, 9.2"
     condition: all
     rules:
@@ -841,7 +841,7 @@ checks:
     rationale: "The Linux SubSystem (LXSS) Manager allows full system access to Linux applications on Windows, including the file system. While this can certainly have some functionality and performance benefits for running those applications, it also creates new security risks in the event that a hacker injects malicious code into a Linux application. For best security, it is preferred to run Linux applications on Linux, and Windows applications on Windows."
     remediation: "To establish the recommended configuration via GP, set the following UI path to: Disabled or ensure the service is not installed. Computer Configuration\\Policies\\Windows Settings\\Security Settings\\System Services\\LxssManager"
     compliance:
-      - cis: "5.12"
+      - cis: "5.10"
       - cis_csc: "9.1, 9.2"
     condition: any
     rules:
@@ -854,7 +854,7 @@ checks:
     rationale: "Hosting an FTP server (especially a non-secure FTP server) from a workstation is an increased security risk, as the attack surface of that workstation is then greatly increased. Note: This security concern applies to any FTP server application installed on a workstation, not just IIS."
     remediation: "To establish the recommended configuration via GP, set the following UI path to: Disabled or ensure the service is not installed. Computer Configuration\\Policies\\Windows Settings\\Security Settings\\System Services\\Microsoft FTP Service"
     compliance:
-      - cis: "5.13"
+      - cis: "5.11"
       - cis_csc: "9.1, 9.2"
     condition: any
     rules:
@@ -869,7 +869,7 @@ checks:
     compliance:
       - cis: "5.24"
       - cis_csc: "9.1, 9.2"
-    condition: any
+    condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\RpcLocator'
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\RpcLocator -> Start'
@@ -976,7 +976,7 @@ checks:
     rationale: "Hosting a website from a workstation is an increased security risk, as the attack surface of that workstation is then greatly increased. If proper security mitigations are not followed, the chance of successful attack increases significantly. Note: This security concern applies to any web server application installed on a workstation, not just IIS."
     remediation: "To establish the recommended configuration via GP, set the following UI path to: Disabled or ensure the service is not installed. Computer Configuration\\Policies\\Windows Settings\\Security Settings\\System Services\\World Wide Web Publishing Service"
     compliance:
-      - cis: "5.41"
+      - cis: "5.40"
       - cis_csc: "9.1, 9.2"
     condition: any
     rules:
@@ -989,7 +989,7 @@ checks:
     rationale: "Xbox Live is a gaming service and has no place in an enterprise managed environment (perhaps unless it is a gaming company)."
     remediation: "To establish the recommended configuration via GP, set the following UI path to: Disabled. Computer Configuration\\Policies\\Windows Settings\\Security Settings\\System Services\\Xbox Accessory Management Service"
     compliance:
-      - cis: "5.42"
+      - cis: "5.41"
       - cis_csc: "9.1, 9.2"
     condition: all
     rules:
@@ -1003,7 +1003,7 @@ checks:
     rationale: "Xbox Live is a gaming service and has no place in an enterprise managed environment (perhaps unless it is a gaming company)."
     remediation: "To establish the recommended configuration via GP, set the following UI path to: Disabled. Computer Configuration\\Policies\\Windows Settings\\Security Settings\\System Services\\Xbox Game Monitoring"
     compliance:
-      - cis: "5.43"
+      - cis: "5.42"
       - cis_csc: "9.1, 9.2"
     condition: all
     rules:
@@ -1017,7 +1017,7 @@ checks:
     rationale: "Xbox Live is a gaming service and has no place in an enterprise managed environment (perhaps unless it is a gaming company)."
     remediation: "To establish the recommended configuration via GP, set the following UI path to: Disabled. Computer Configuration\\Policies\\Windows Settings\\Security Settings\\System Services\\Xbox Live Auth Manager"
     compliance:
-      - cis: "5.44"
+      - cis: "5.43"
       - cis_csc: "9.1, 9.2"
     condition: all
     rules:
@@ -1031,7 +1031,7 @@ checks:
     rationale: "Xbox Live is a gaming service and has no place in an enterprise managed environment (perhaps unless it is a gaming company)."
     remediation: "To establish the recommended configuration via GP, set the following UI path to: Disabled. Computer Configuration\\Policies\\Windows Settings\\Security Settings\\System Services\\Xbox Live Game Save"
     compliance:
-      - cis: "5.45"
+      - cis: "5.44"
       - cis_csc: "9.1, 9.2"
     condition: all
     rules:
@@ -1045,7 +1045,7 @@ checks:
     rationale: "Xbox Live is a gaming service and has no place in an enterprise managed environment (perhaps unless it is a gaming company)."
     remediation: "To establish the recommended configuration via GP, set the following UI path to: Disabled. Computer Configuration\\Policies\\Windows Settings\\Security Settings\\System Services\\Xbox Live Networking Service"
     compliance:
-      - cis: "5.46"
+      - cis: "5.45"
       - cis_csc: "9.1, 9.2"
     condition: all
     rules:
@@ -1121,7 +1121,7 @@ checks:
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\DomainProfile\Logging'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\DomainProfile\Logging -> LogFilePath'
-      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\DomainProfile\Logging -> LogFilePath -> r:\psystemroot\p\\system32\logfiles\firewall\\w+\plog'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\DomainProfile\Logging -> LogFilePath -> r:%SYSTEMROOT%\\System32\\logfiles\\firewall\\domainfw.log'
 
   - id: 12079
     title: "Ensure 'Windows Firewall: Domain: Logging: Size limit (KB)' is set to '16,384 KB or greater'"
@@ -1232,7 +1232,7 @@ checks:
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PrivateProfile\Logging'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PrivateProfile\Logging -> LogFilePath'
-      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PrivateProfile\Logging -> LogFilePath -> r:\psystemroot\p\\system32\logfiles\firewall\\w+\plog'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PrivateProfile\Logging -> LogFilePath -> r:%SYSTEMROOT%\\System32\\logfiles\\firewall\\privatefw.log'
 
   - id: 12087
     title: "Ensure 'Windows Firewall: Private: Logging: Size limit (KB)' is set to '16,384 KB or greater'"
@@ -1371,7 +1371,7 @@ checks:
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PublicProfile\Logging'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PublicProfile\Logging -> LogFilePath'
-      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PublicProfile\Logging -> LogFilePath -> r:\psystemroot\p\\system32\logfiles\firewall\\w+\plog'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PublicProfile\Logging -> LogFilePath -> r:%SYSTEMROOT%\\System32\\logfiles\\firewall\\publicfw.log'
 
   - id: 12097
     title: "Ensure 'Windows Firewall: Public: Logging: Size limit (KB)' is set to '16,384 KB or greater'"
@@ -1552,7 +1552,7 @@ checks:
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System -> LocalAccountTokenFilterPolicy'
-      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System -> LocalAccountTokenFilterPolicy -> 1'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System -> LocalAccountTokenFilterPolicy -> 0'
 
   - id: 12110
     title: "Ensure 'Configure SMB v1 client driver' is set to 'Enabled: Disable driver'"
@@ -1831,10 +1831,10 @@ checks:
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\NetworkProvider\HardenedPaths'
-      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\NetworkProvider\HardenedPaths -> \\\\*\\NETLOGON'
-      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\NetworkProvider\HardenedPaths -> \\\\*\\NETLOGON -> r:RequireMutualAuthentication=1, RequireIntegrity=1'
-      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\NetworkProvider\HardenedPaths -> \\\\*\\SYSVOL'
-      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\NetworkProvider\HardenedPaths -> \\\\*\\SYSVOL -> r:RequireMutualAuthentication=1, RequireIntegrity=1'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\NetworkProvider\HardenedPaths -> \\*\NETLOGON'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\NetworkProvider\HardenedPaths -> \\*\NETLOGON -> r:RequireMutualAuthentication=1, RequireIntegrity=1'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\NetworkProvider\HardenedPaths -> \\*\SYSVOL'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\NetworkProvider\HardenedPaths -> \\*\SYSVOL -> r:RequireMutualAuthentication=1, RequireIntegrity=1'
 
   - id: 12130
     title: "Ensure 'Minimize the number of simultaneous connections to the Internet or a Windows Domain' is set to 'Enabled'"
@@ -1898,7 +1898,7 @@ checks:
     rationale: "Restricted Admin Mode was designed to help protect administrator accounts by ensuring that reusable credentials are not stored in memory on remote devices that could potentially be compromised. Windows Defender Remote Credential Guard helps you protect your credentials over a Remote Desktop connection by redirecting Kerberos requests back to the device that is requesting the connection. Both features should be enabled and supported, as they reduce the chance of credential theft."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\System\\Credentials Delegation\\Remote host allows delegation of non-exportable credentials"
     compliance:
-      - cis: "18.8.4.1"
+      - cis: "18.8.4.2"
       - cis_csc: "16"
     condition: all
     rules:
@@ -2359,7 +2359,7 @@ checks:
     rationale: "Users should not be sending any feedback to 3rd party vendors in an enterprise managed environment."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Data Collection and Preview Builds\\Do not show feedback notifications"
     compliance:
-      - cis: "18.9.16.4"
+      - cis: "18.9.16.3"
       - cis_csc: "13"
     condition: all
     rules:
@@ -2373,7 +2373,7 @@ checks:
     rationale: "It can be risky for experimental features to be allowed in an enterprise managed environment because this can introduce bugs and security holes into systems, making it easier for an attacker to gain access. It is generally preferred to only use production-ready builds."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Data Collection and Preview Builds\\Toggle user control over Insider builds"
     compliance:
-      - cis: "18.9.16.5"
+      - cis: "18.9.16.4"
       - cis_csc: "3"
     condition: all
     rules:
@@ -2695,7 +2695,7 @@ checks:
     rationale: "If Remote Desktop client connections that use low level encryption are allowed, it is more likely that an attacker will be able to decrypt any captured Remote Desktop Services network traffic."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: High Level: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Remote Desktop Services\\Remote Desktop Session Host\\Security\\Set client connection encryption level"
     compliance:
-      - cis: "18.9.58.3.9.3"
+      - cis: "18.9.58.3.9.5"
       - cis_csc: "3.4"
     condition: all
     rules:
@@ -2807,7 +2807,7 @@ checks:
     rationale: "Keeping your system properly patched can help protect against 0 day vulnerabilities."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Store\\Turn off Automatic Download and Install of updates"
     compliance:
-      - cis: "18.9.68.2"
+      - cis: "18.9.68.3"
       - cis_csc: "3.1, 3.4, 3.5, 4.5, 5.1"
     condition: all
     rules:
@@ -2821,7 +2821,7 @@ checks:
     rationale: "Unplanned OS upgrades can lead to more preventable support calls. The IT department should be managing and approving all upgrades and updates."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Store\\Turn off the offer to update to the latest version of Windows"
     compliance:
-      - cis: "18.9.68.3"
+      - cis: "18.9.68.4"
       - cis_csc: "3.1, 3.4, 3.5, 4.5, 5.1"
     condition: all
     rules:
@@ -2967,7 +2967,7 @@ checks:
     rationale: "Only authorized IT staff should be able to make changes to the exploit protection settings in order to ensure the organizations specific configuration is not modified."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Windows Defender Security Center\\App and browser protection\\Prevent users from modifying settings"
     compliance:
-      - cis: "18.9.79.1.1"
+      - cis: "18.9.79.2.1"
       - cis_csc: "8.4"
     condition: all
     rules:
@@ -3129,7 +3129,7 @@ checks:
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\PowerShell\Transcription'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\PowerShell\Transcription -> EnableTranscripting'
-      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\PowerShell\Transcription -> EnableTranscripting -> 01'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\PowerShell\Transcription -> EnableTranscripting -> 0'
 
   - id: 12221
     title: "Ensure 'Allow Basic authentication' is set to 'Disabled'"
@@ -3277,7 +3277,7 @@ checks:
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU -> NoAutoUpdate'
-      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU -> NoAutoUpdate -> 1'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU -> NoAutoUpdate -> 0'
 
   - id: 12231
     title: "Ensure 'Configure Automatic Updates: Scheduled install day' is set to '0 - Every day'"
@@ -3305,4 +3305,4 @@ checks:
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU -> NoAutoRebootWithLoggedOnUsers'
-      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU -> NoAutoRebootWithLoggedOnUsers -> 1'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU -> NoAutoRebootWithLoggedOnUsers -> 0'
