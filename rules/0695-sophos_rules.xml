@@ -1,0 +1,46 @@
+<!--
+  -  Sophos Antivirus rules
+  -  Created by Wazuh, Inc.
+  -  Copyright (C) 2015-2019, Wazuh Inc.
+  -  This program is a free software; you can redistribute it and/or modify it under the terms of GPLv2.
+-->
+
+<group name="sophos_rules">
+
+  <rule id="64270" level="0">
+	<decoded_as>sophos-av</decoded_as>
+    <field name="category">savscan.log</field>
+    <description>savscan category</description>
+  </rule>
+
+  <rule id="64271" level="3">
+    <if_sid>64270</if_sid>
+    <field name="msg">SAVSCAN-DETAILS</field>
+    <description>SAVSCAN-DETAILS alert</description>
+  </rule>
+
+  <rule id="64272" level="6">
+    <if_sid>64270</if_sid>
+    <field name="msg">NOTIFY_ONDEMANDTHREAT_INFECTED</field>
+    <description>NOTIFY_ONDEMANDTHREAT_INFECTED alert</description>
+  </rule>
+
+  <rule id="64273" level="6">
+    <if_sid>64270</if_sid>
+    <field name="msg">SCANNER_DIED_KILLED</field>
+    <description>SCANNER_DIED_KILLED alert</description>
+  </rule>
+
+  <rule id="64274" level="0">
+	<decoded_as>sophos-av</decoded_as>
+    <field name="category">update.check</field>
+    <description>Update category</description>
+  </rule>
+
+  <rule id="64275" level="3">
+    <if_sid>64274</if_sid>
+    <field name="msg">NO_UPDATED_FROM</field>
+    <description>NO_UPDATED_FROM alert</description>
+  </rule>
+
+</group>
