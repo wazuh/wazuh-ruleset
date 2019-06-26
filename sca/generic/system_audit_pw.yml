@@ -46,8 +46,8 @@ checks:
       - https://linux-audit.com/configure-the-minimum-password-length-on-linux-systems/
     condition: all
     rules:
-      - 'f:$pam_d_files -> r:^password\s*\t*requisite\s*\t*pam_cracklib.so\.+try_first_pass|^password\s*\t*requisite\s*\t*pam_pwquality.so\.+try_first_pass|^password\s*\t*required\s*\t*pam_cracklib.so\.+try_first_pass|^password\s*\t*required\s*\t*pam_pwquality.so\.+try_first_pass'
-      - 'f:$pam_d_files -> r:^password\s*\t*requisite\s*\t*pam_cracklib.so\.+retry=|^password\s*\t*requisite\s*\t*pam_pwquality.so\.+retry=|^password\s*\t*required\s*\t*pam_cracklib.so\.+retry=|^password\s*\t*required\s*\t*pam_pwquality.so\.+retry= && n:retry=(\d+) compare < 3'
+      - 'f:/etc/pam.d/common-password -> r:^password\s*\t*requisite\s*\t*pam_cracklib.so\.+try_first_pass|^password\s*\t*requisite\s*\t*pam_pwquality.so\.+try_first_pass|^password\s*\t*required\s*\t*pam_cracklib.so\.+try_first_pass|^password\s*\t*required\s*\t*pam_pwquality.so\.+try_first_pass'
+      - 'f:/etc/pam.d/common-password -> r:^password\s*\t*requisite\s*\t*pam_cracklib.so\.+retry=|^password\s*\t*requisite\s*\t*pam_pwquality.so\.+retry=|^password\s*\t*required\s*\t*pam_cracklib.so\.+retry=|^password\s*\t*required\s*\t*pam_pwquality.so\.+retry= && n:retry=(\d+) compare < 3'
 
   - id: 13001
     title: "Ensure passwords are longer than 13 characters"
@@ -61,8 +61,7 @@ checks:
       - https://linux-audit.com/configure-the-minimum-password-length-on-linux-systems/
     condition: any
     rules:
-      - 'f:$pam_d_files -> r:pam_cracklib.so && n:minlen=(\d+) compare >= 14'
-      - 'f:/etc/security/pwquality.conf -> n:minlen=(\d+) compare >= 14'
+      - 'f:/etc/pam.d/common-password -> r:pam_cracklib.so && n:minlen=(\d+) compare >= 14'
 
   - id: 13002
     title: "Ensure passwords contain at least one digit"
@@ -76,8 +75,7 @@ checks:
       - https://linux-audit.com/configure-the-minimum-password-length-on-linux-systems/
     condition: any
     rules:
-      - 'f:$pam_d_files -> r:pam_cracklib.so && r:dcredit=\p*\d'
-      - 'f:/etc/security/pwquality.conf -> r:^dcredit=\p*\d'
+      - 'f:/etc/pam.d/common-password -> r:pam_cracklib.so && r:dcredit=-1'
 
   - id: 13003
     title: "Ensure passwords contain at least one lowercase character"
@@ -91,8 +89,7 @@ checks:
       - https://linux-audit.com/configure-the-minimum-password-length-on-linux-systems/
     condition: any
     rules:
-      - 'f:$pam_d_files -> r:pam_cracklib.so && r:lcredit=\p*\d'
-      - 'f:/etc/security/pwquality.conf -> r:^lcredit=\p*\d'
+      - 'f:/etc/pam.d/common-password -> r:pam_cracklib.so && r:lcredit=-1'
 
   - id: 13004
     title: "Ensure passwords contain at least one uppercase character"
@@ -106,25 +103,9 @@ checks:
       - https://linux-audit.com/configure-the-minimum-password-length-on-linux-systems/
     condition: any
     rules:
-      - 'f:$pam_d_files -> r:pam_cracklib.so && r:lcredit=\p*\d'
-      - 'f:/etc/security/pwquality.conf -> r:^lcredit=\p*\d'
+      - 'f:/etc/pam.d/common-password -> r:pam_cracklib.so && r:ucredit=-1'
 
   - id: 13005
-    title: "Ensure passwords contain at least one uppercase character"
-    description: "The pam_pwquality.so module and pam_cracklib.so module (depending on the Linux distribution used) checks the strength of passwords. It performs checks such as making sure a password is not a dictionary word, it is a certain length, contains a mix of characters (e.g. alphabet, numeric, other) and more."
-    rationale: "Strong passwords protect systems from being hacked through brute force methods."
-    remediation: "Edit the /etc/pam.d/common-password and /etc/security/pwquality.conf files, or the /etc/pam.d/password-auth and /etc/pam.d/system-auth files, to include the appropriate options for pam_pwquality.so or pam_cracklib.so and to conform to site policy"
-    compliance:
-      - cis: "5.3.1"
-      - cis_csc: "4.4, 5.7, 16.12"
-    references:
-      - https://linux-audit.com/configure-the-minimum-password-length-on-linux-systems/
-    condition: any
-    rules:
-      - 'f:$pam_d_files -> r:pam_cracklib.so && r:ucredit=\p*\d'
-      - 'f:/etc/security/pwquality.conf -> r:^ucredit=\p*\d'
-
-  - id: 13006
     title: "Ensure passwords contain at least one special character"
     description: "The pam_pwquality.so module and pam_cracklib.so module (depending on the Linux distribution used) checks the strength of passwords. It performs checks such as making sure a password is not a dictionary word, it is a certain length, contains a mix of characters (e.g. alphabet, numeric, other) and more."
     rationale: "Strong passwords protect systems from being hacked through brute force methods."
@@ -136,27 +117,21 @@ checks:
       - https://linux-audit.com/configure-the-minimum-password-length-on-linux-systems/
     condition: any
     rules:
-      - 'f:$pam_d_files -> r:pam_cracklib.so && r:ocredit=\p*\d'
-      - 'f:/etc/security/pwquality.conf -> r:^ocredit=\p*\d'
+      - 'f:/etc/pam.d/common-password -> r:pam_cracklib.so && r:ocredit=-1'
 
-  - id: 13007
-    title: "Ensure password hashing algorithm is SHA-256 or higher"
-    description: "Password hashing should use a cryptographically secure algorithm such as SHA-256 or SHA-512 instead of MD5."
-    rationale: "The SHA-512 algorithm provides much stronger hashing than MD5, thus providing additional protection to the system by increasing the level of effort for an attacker to successfully determine passwords."
-    remediation: "Edit the /etc/pam.d/common-password file or /etc/pam.d/password-auth and /etc/pam.d/system-auth files (depending on the Linux distribution used) to include the sha512 option for pam_unix.so."
+  - id: 13006
+    title: "Ensure password hashing algorithm is SHA-512"
+    description: "The commands below change password encryption from md5 to sha512 (a much stronger hashing algorithm). All existing accounts will need to perform a password change to upgrade the stored hashes to the new algorithm."
+    rationale: "The SHA-512 algorithm provides much stronger hashing than MD5, thus providing additional protection to the system by increasing the level of effort for an attacker to successfully determine passwords. Note that these change only apply to accounts configured on the local system."
+    remediation: "Edit the /etc/pam.d/common-password file to include the sha512 option for pam_unix.so as shown: password required pam_unix.so sha512"
     compliance:
       - cis: "5.3.4"
-      - cis_csc: "16.4, 16.14"
-    references:
-      - https://security.stackexchange.com/questions/77349/how-can-i-find-out-the-password-hashing-schemes-used-by-the-specific-unix-accoun
-      - https://docs.oracle.com/cd/E26505_01/html/E27224/secsystask-42.html
+      - cis_csc: "16.14"
     condition: any
     rules:
-      - 'f:/etc/security/policy.conf -> r:^CRYPT_DEFAULT=\d && !r:^CRYPT_DEFAULT=1|^CRYPT_DEFAULT=2|^CRYPT_DEFAULT=2a|^CRYPT_DEFAULT=2x|^CRYPT_DEFAULT=2y|^CRYPT_DEFAULT=md5|^CRYPT_DEFAULT=__unix__'
-      - 'f:$pam_d_files -> n:^password\.+pam_unix.so\.+sha(\d+) compare >= 256'
-      - 'f:/etc/login.defs -> r:^ENCRYPT_METHOD\s+ && n:SHA(\d+) compare >= 256'
+      - 'f:/etc/pam.d/common-password -> r:^password\.+pam_unix.so\.+sha512'
 
-  - id: 13008
+  - id: 13007
     title: "Ensure passwords in /etc/shadow are hashed with SHA-512 or SHA-256"
     description: "SHA-512 and SHA-256 are much stronger hashing algorithms than MD5."
     rationale: "The SHA-512 algorithm provides much stronger hashing than MD5, thus providing additional protection to the system by increasing the level of effort for an attacker to successfully determine passwords."
@@ -169,7 +144,7 @@ checks:
       - 'f:/etc/shadow -> r:^\w+:\$1\$|^\w+:\$2\$|^\w+:\$md5\$|^\w+:\$md5\$|^\w+:\$__unix__\$'
 
 # 5.4 User accounts and Environment
-  - id: 13009
+  - id: 13008
     title: "Ensure password expiration is 365 days or less"
     description: "The PASS_MAX_DAYS parameter in /etc/login.defs allows an administrator to force passwords to expire once they reach a defined age. It is recommended that the PASS_MAX_DAYS parameter be set to less than or equal to 365 days."
     rationale: "The window of opportunity for an attacker to leverage compromised credentials or successfully compromise credentials via an online brute force attack is limited by the age of the password. Therefore, reducing the maximum age of a password also reduces an attacker's window of opportunity."
@@ -182,4 +157,4 @@ checks:
     condition: any
     rules:
       - 'f:/etc/default/passwd -> n:^MAXWEEKS=(\d+)$ compare <= 52'
-      - 'f:/etc/login.defs -> n:PASS_MAX_DAYS\s*\t*(\d+)$ compare <= 365'
+      - 'f:/etc/login.defs -> n:^PASS_MAX_DAYS\s*\t*(\d+)$ compare <= 365'
