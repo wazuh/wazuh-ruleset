@@ -86,9 +86,9 @@ checks:
     remediation: "Change the PermitEmptyPasswords option value in the sshd_config file."
     compliance:
       - pci_dss: "2.2.4"
-    condition: none
+    condition: all
     rules:
-      - 'f:$sshd_file -> r:^\s*PermitEmptyPasswords\.+yes'
+      - 'f:$sshd_file -> r:^\s*PermitEmptyPasswords\.+no'
 
   - id: 1506
     title: "SSH Hardening - 7: Rhost or shost should not be used for authentication"
@@ -97,9 +97,9 @@ checks:
     remediation: "Change the IgnoreRhosts option value in the sshd_config file."
     compliance:
       - pci_dss: "2.2.4"
-    condition: none
+    condition: all
     rules:
-      - 'f:$sshd_file -> r:^\s*\t*IgnoreRhosts\.+no'
+      - 'f:$sshd_file -> r:^\s*\t*IgnoreRhosts\.+yes'
 
   - id: 1507
     title: "SSH Hardening - 8: Grace Time should be 30 or less."
@@ -132,6 +132,6 @@ checks:
       - pci_dss: "4.1"
       - hipaa: "164.312.a.2.IV, 164.312.e.1, 164.312.e.2.I, 164.312.e.2.II"
       - nist_800_53: "SC.8"
-    condition: none
+    condition: all
     rules:
-      - 'f:$sshd_file -> r:^\s*\t*HostbasedAuthentication\.+yes'
+      - 'f:$sshd_file -> r:^\s*\t*HostbasedAuthentication\.+no'
