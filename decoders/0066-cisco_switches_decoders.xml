@@ -1,0 +1,33 @@
+<!--
+  -  Cisco switches decoders
+  -  Created by Wazuh, Inc.
+  -  Copyright (C) 2015-2019, Wazuh Inc.
+  -  This program is a free software; you can redistribute it and/or modify it under the terms of GPLv2.
+-->
+
+<!--
+HOSTNAME-1: 2019 May 22 11:29:33.251 GMT: %DAEMON-3-SYSTEM_MSG: NTP: Peer 11.22.33.44 with stratum 1 selected - ntpd[29424] dst:"10.20.30.40
+-->
+<decoder name="cisco-sw-ntp">
+<prematch>\S+: \d+ \w+ \d+ \d+:\d+:\d+.\d+ \w+: %\S+: NTP: Peer \d+.\d+.\d+.\d+ \.+ - \w+[\d+]</prematch>
+<regex>(\S+): (\d+ \w+ \d+ \d+:\d+:\d+.\d+ \w+): %(\S+): (NTP): Peer (\d+.\d+.\d+.\d+) \.+ - \w+[(\d+)]</regex>
+<order>hostname, timestamp, program, protocol, srcip, pid</order>
+</decoder>
+
+<!--
+3387: HOSTNAME-2: May 22 19:04:20.424 GMT: %LINEPROTO-5-UPDOWN: Line protocol on Interface FastEthernet0/7, changed state to down-INT-TR Applicat
+-->
+<decoder name="cisco-sw-interface-change">
+<prematch>\d+: \S+: \w+ \d+ \d+:\d+:\d+.\d+ \w+: %\S+: \.*Interface \S+\p*\s*\.+</prematch>
+<regex>(\d+): (\S+): (\w+ \d+ \d+:\d+:\d+.\d+ \w+): %(\S+): \.*Interface (\S+)\p*\s*(\.+)</regex>
+<order>pid, hostname, timestamp, program, interface, data</order>
+</decoder>
+
+<!--
+HOSTNAME-3: 2019 May 22 12:33:09.614 GMT: %ETHPORT-5-IF_DOWN_LINK_FAILURE: Interface Ethernet1/17 is down (Link failure)1 2019-05-22T17:
+-->
+<decoder name="cisco-sw-interface-down">
+<prematch>\S+: \d+ \w+ \d+ \d+:\d+:\d+.\d+ \w+: %\S+:\.+Interface \S+\s*\.+</prematch>
+<regex>(\S+): (\d+ \w+ \d+ \d+:\d+:\d+.\d+ \w+): %(\S+):\.+Interface (\S+)\s*(\.+)</regex>
+<order>hostname, timestamp, program, interface, data</order>
+</decoder>

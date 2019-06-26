@@ -1,0 +1,26 @@
+<!--
+  -  Cisco switches rules
+  -  Created by Wazuh, Inc.
+  -  Copyright (C) 2015-2019, Wazuh Inc.
+  -  This program is a free software; you can redistribute it and/or modify it under the terms of GPLv2.
+-->
+
+<group name="prosa-cisco-ntp,">
+
+    <rule id="64250" level="3">
+        <decoded_as>cisco-sw-ntp</decoded_as>
+        <description>Cisco devices NTP events: $(hostname)</description>
+    </rule>
+
+    <rule id="64251" level="3">
+        <decoded_as>cisco-sw-interface-change</decoded_as>
+        <description>Cisco device: $(hostname), interface: $(interface)</description>
+    </rule>
+
+    <rule id="64252" level="3">
+        <decoded_as>cisco-sw-interface-down</decoded_as>
+        <description>Cisco device: $(hostname), interface down: $(interface)</description>
+    </rule>	
+
+
+</group>
