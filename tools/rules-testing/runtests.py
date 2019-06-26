@@ -137,10 +137,10 @@ if __name__ == "__main__":
             selective_test += '.ini'
     else:
         selective_test = False
-        ossec_init = {}
-        initconfigpath = "/etc/ossec-init.conf"
-        getOssecConfig(ossec_init, initconfigpath)
-        provisionDR(ossec_init["DIRECTORY"])
-        OT = OssecTester(ossec_init["DIRECTORY"])
-        OT.run(selective_test)
-        cleanDR(ossec_init["DIRECTORY"])
+    ossec_init = {}
+    initconfigpath = "/etc/ossec-init.conf"
+    getOssecConfig(ossec_init, initconfigpath)
+    provisionDR(ossec_init["DIRECTORY"])
+    OT = OssecTester(ossec_init["DIRECTORY"])
+    OT.run(selective_test)
+    cleanDR(ossec_init["DIRECTORY"])
