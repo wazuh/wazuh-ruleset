@@ -18,7 +18,7 @@ policy:
 requirements:
   title: "Check that the SSH service is installed on the system"
   description: "Requirements for running the SCA scan against the SSH policy."
-  condition: "all"
+  condition: all
   rules:
     - 'f:/etc/ssh/sshd_config'
 
@@ -46,7 +46,7 @@ checks:
       - pci_dss: "2.2.4"
     condition: all
     rules:
-      - 'f:$sshd_file -> r:^\s*\t*Protocol\s*\t*\D2\D*$'
+      - 'f:$sshd_file -> r:^\s*\t*Protocol\D+2\D*$'
 
   - id: 1502
     title: "SSH Hardening - 3: Root account should not be able to log in"
@@ -110,7 +110,7 @@ checks:
       - pci_dss: "2.2.4"
     condition: all
     rules:
-      - 'f:$sshd_file -> n:^\s*LoginGraceTime\s+(\d+) compare <= 30'
+      - 'f:$sshd_file -> n:^\s*LoginGraceTime\s+(\d+)s compare <= 30'
 
   - id: 1508
     title: "SSH Hardening - 9: Wrong Maximum number of authentication attempts"
