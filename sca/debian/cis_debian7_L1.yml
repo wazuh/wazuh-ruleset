@@ -530,8 +530,6 @@ checks:
     rules:
       - 'c:find /etc/rc* -name *snmpd* -> r:S\.'
 
-# ToDo
-
   - id: 10542
     title: "Configure Mail Transfer Agent for Local-Only Mode"
     description: "Mail Transfer Agents (MTA), such as sendmail and Postfix, are used to listen for incoming mail and transfer the messages to the appropriate user or mail server. If the system is not intended to be a mail server, it is recommended that the MTA be configured to only process local mail."
@@ -541,7 +539,7 @@ checks:
       - cis: "6.15"
     condition: all
     rules:
-      - 'f:/etc/exim4/update-exim4.conf.conf -> r:^dc_local_interfaces= && r:''127.0.0.1\s*\p\s*::1''$|''::1\s*\p\s*127.0.0.1''$|''127.0.0.1''$|''::1''$'
+      - 'f:/etc/exim4/update-exim4.conf.conf -> r:^dc_local_interfaces= && r:\p127.0.0.1\s*\p\s*::1\p$|\p::1\s*\p\s*127.0.0.1\p$|\p127.0.0.1\p$|\p::1\p$'
 
   - id: 10543
     title: "Ensure rsync service is not enabled"
@@ -553,9 +551,10 @@ checks:
     condition: none
     rules:
       - 'c:dpkg -s rsync -> install ok installed'
-      - 'f:/etc/default/rsync -> !r:^# && r:RSYNC_ENABLE\s*\t*=\s*\t*false'
+      - 'not f:/etc/default/rsync -> !r:^# && r:RSYNC_ENABLE\s*\t*=\s*\t*false'
 
 # 7 Network Configuration and Firewall
+
   - id: 10544
     title: "Disable IP Forwarding"
     description: "The net.ipv4.ip_forward flag is used to tell the server whether it can forward packets or not. If the server is not to be used as a router, set the flag to 0."
@@ -703,7 +702,7 @@ checks:
     remediation: "Create or edit the file /etc/sysctl.conf and add the following lines: net.ipv6.conf.all.disable_ipv6=1    net.ipv6.conf.default.disable_ipv6=1    net.ipv6.conf.lo.disable_ipv6=1    Run the following command or reboot to apply the changes: # sysctl -p"
     compliance:
       - cis: "7.3.3"
-    condition: none
+    condition: all
     rules:
       - 'c:sysctl net.ipv6.conf.all.disable_ipv6 -> r:=\s*\t*1$'
       - 'c:sysctl net.ipv6.conf.default.disable_ipv6 -> r:=\s*\t*1$'
@@ -793,6 +792,7 @@ checks:
       - 'c:find /etc/rc* -name *iptables-persistent* -> r:S\.'
 
 # 8 Logging and Auditing
+
   - id: 10564
     title: "Ensure the rsyslog Service is activated"
     description: "Once the rsyslog package is installed it needs to be activated."
@@ -803,33 +803,6 @@ checks:
     condition: all
     rules:
       - 'c:find /etc/rc* -name *rsyslog* -> r:S\.'
-
-  - id: 10565
-    title: "Configure /etc/rsyslog.conf"
-    description: "The /etc/rsyslog.conf file specifies rules for logging and which files are to be used to log certain classes of messages."
-    rationale: "A great deal of important security-related information is sent via rsyslog (e.g., successful and failed su attempts, failed login attempts, root login attempts, etc.)."
-    remediation: "Edit the following lines in the /etc/rsyslog.conf or /etc/rsyslog.d/* file as appropriate for your environment: *.emerg :omusrmsg:*    mail.* -/var/log/mail    mail.info -/var/log/mail.info    mail.warning -/var/log/mail.warn    mail.err -/var/log/news/news.crit    news.err -/var/log/news/news.err    news.notice -/var/log/news/news.notice    *.=warning;*.=err -/var/log/warn    *.crit /var/log/warn    *.*;mail.none;news.none -/var/log/messages    local0,local1.* -/var/log/localmessages    local2,local3.* -/var/log/localmessages    local4,local5.* -/var/log/localmessages    local6,local7.* -/var/log/localmessages    Execute the following command to restart rsyslogd # pkill -HUP rsyslogd"
-    compliance:
-      - cis: "8.2.3"
-    references:
-      - rsyslog.conf(5) man page
-    condition: all
-    rules:
-      - 'c:grep -R ^*.emerg\s*\t*\s*\S /etc/rsyslog.conf /etc/rsyslog.d/'
-      - 'c:grep -R ^mail.*\s*\t*\s*\S /etc/rsyslog.conf /etc/rsyslog.d/'
-      - 'c:grep -R ^mail.info\s*\t*\s*\S /etc/rsyslog.conf /etc/rsyslog.d/'
-      - 'c:grep -R ^mail.warning\s*\t*\s*\S /etc/rsyslog.conf /etc/rsyslog.d/'
-      - 'c:grep -R ^mail.err\s*\t*\s*\S /etc/rsyslog.conf /etc/rsyslog.d/'
-      - 'c:grep -R ^news.crit\s*\t*\s*\S /etc/rsyslog.conf /etc/rsyslog.d/'
-      - 'c:grep -R ^news.err\s*\t*\s*\S /etc/rsyslog.conf /etc/rsyslog.d/'
-      - 'c:grep -R ^news.notice\s*\t*\s*\S /etc/rsyslog.conf /etc/rsyslog.d/'
-      - 'c:grep -R ^*.=warning;*.=err\s*\t*\s*\S /etc/rsyslog.conf /etc/rsyslog.d/'
-      - 'c:grep -R ^*.crit\s*\t*\s*\S /etc/rsyslog.conf /etc/rsyslog.d/'
-      - 'c:grep -R ^*.*;mail.none;news.none\s*\t*\s*\S /etc/rsyslog.conf /etc/rsyslog.d/'
-      - 'c:grep -R ^local0,local1.*\s*\t*\s*\S /etc/rsyslog.conf /etc/rsyslog.d/'
-      - 'c:grep -R ^local2,local3.*\s*\t*\s*\S /etc/rsyslog.conf /etc/rsyslog.d/'
-      - 'c:grep -R ^local4,local5.*\s*\t*\s*\S /etc/rsyslog.conf /etc/rsyslog.d/'
-      - 'c:grep -R ^local6,local7.*\s*\t*\s*\S /etc/rsyslog.conf /etc/rsyslog.d/'
 
   - id: 10566
     title: "Configure rsyslog to Send Logs to a Remote Log Host"
@@ -842,7 +815,7 @@ checks:
       - rsyslog.conf(5) man page
     condition: all
     rules:
-      - 'f:/etc/rsyslog.conf -> r:^*.* @@\w+.\w+.\w+'
+      - 'c:grep -Rh ^*.*[^I][^I]*@ /etc/rsyslog.conf /etc/rsyslog.d/ -> r:^*.* @@\.+'
 
   - id: 10567
     title: "Accept Remote rsyslog Messages Only on Designated Log Hosts"
@@ -855,22 +828,11 @@ checks:
       - rsyslog.conf(8) man page
     condition: all
     rules:
-      - 'c:grep -R ^\$ModLoad imtcp.so /etc/rsyslog.conf /etc/rsyslog.d/ -> r:^$ModLoad\s*\t*imtcp.so'
-      - 'c:grep -R ^\$InputTCPServerRun 514 /etc/rsyslog.conf /etc/rsyslog.d/ -> r:^$InputTCPServerRun\s*\t*514'
-
-  - id: 10568
-    title: "Configure logrotate"
-    description: "The system includes the capability of rotating log files regularly to avoid filling up the system with logs or making the logs unmanageable large. The file /etc/logrotate.d/rsyslog is the configuration file used to rotate log files created by rsyslog."
-    rationale: "By keeping the log files smaller and more manageable, a system administrator can easily archive these files to another system and spend less time looking through inordinately large log files."
-    remediation: "Edit the /etc/logrotate.d/rsyslog file to include appropriate system logs according to your site policy."
-    compliance:
-      - cis: "8.4"
-    condition: all
-    rules:
-      - 'f:/etc/logrotate.d/rsyslog'
-      - 'f:/etc/logrotate.d/rsyslog -> r:\S+'
+      - 'c:grep -Rh ^\$ModLoad[[:space:]][[:space:]]*imtcp.so /etc/rsyslog.conf /etc/rsyslog.d/ -> r:^$ModLoad\s*\t*imtcp.so'
+      - 'c:grep -Rh ^\$InputTCPServerRun[[:space:]][[:space:]]*514 /etc/rsyslog.conf /etc/rsyslog.d/ -> r:^$InputTCPServerRun\s*\t*514'
 
 # 9 System Access, Authentication and Authorization
+
   - id: 10569
     title: "Enable cron Daemon"
     description: "The cron daemon is used to execute batch jobs on the system."
@@ -880,22 +842,16 @@ checks:
       - cis: "9.1.1"
     condition: all
     rules:
-      - 'f:/etc/rc2.d/S15anacron'
-      - 'f:/etc/rc2.d/S15cron'
-      - 'f:/etc/rc3.d/S15anacron'
-      - 'f:/etc/rc3.d/S15cron'
-      - 'f:/etc/rc4.d/S15anacron'
-      - 'f:/etc/rc4.d/S15cron'
-      - 'f:/etc/rc5.d/S15anacron'
-      - 'f:/etc/rc5.d/S15cron'
+      - 'c:find /etc/rc* -name *cron* -> r:S\.'
+      - 'c:find /etc/rc* -name *anacron* -> r:S\.'
 
   - id: 10570
-    title: "Ensure at/cron is restricted to authorized users"
+    title: "Restrict at/cron to Authorized Users"
     description: "Configure /etc/cron.allow and /etc/at.allow to allow specific users to use these services. If /etc/cron.allow or /etc/at.allow do not exist, then /etc/at.deny and /etc/cron.deny are checked. Any user not specifically defined in those files is allowed to use at and cron. By removing the files, only users in /etc/cron.allow and /etc/at.allow are allowed to use at and cron. Note that even though a given user is not listed in cron.allow, cron jobs can still be run as that user. The cron.allow file only controls administrative access to the crontab command for scheduling and modifying cron jobs."
     rationale: "On many systems, only the system administrator is authorized to schedule cron jobs. Using the cron.allow file to control who can run cron jobs enforces this policy. It is easier to manage an allow list than a deny list. In a deny list, you could potentially add a user ID to the system and forget to add it to the deny files."
     remediation: "# /bin/rm /etc/cron.deny    # /bin/rm /etc/at.deny    # touch /etc/cron.allow    # touch /etc/at.allow    # chmod og-rwx /etc/cron.allow    # chmod og-rwx /etc/at.allow    # chown root:root /etc/cron.allow    # chown root:root /etc/at.allow"
     compliance:
-      - cis: "5.1.8"
+      - cis: "9.1.8"
     condition: all
     rules:
       - 'f:/etc/cron.allow'
@@ -904,6 +860,8 @@ checks:
       - 'not f:/etc/at.deny'
       - 'c:stat -c%u-%g-%a /etc/cron.allow -> r:^0-0-600'
       - 'c:stat -c%u-%g-%a /etc/at.allow -> r:^0-0-600'
+
+# ToDo
 
   - id: 10571
     title: "Set Password Creation Requirement Parameters Using pam_cracklib"
