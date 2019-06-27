@@ -28,32 +28,28 @@ requirements:
 # PHP checks
 checks:
   - id: 1000
-    title: "PHP - Register globals are enabled"
+    title: "PHP - Ensure 'Register globals' are not enabled"
     condition: all
     rules:
       - 'f:$php.ini -> r:^register_globals\s*\t*=\s*\t*Off|register_globals\s*\t*=\s*\t*off'
-      - 'not f:$php.ini -> r:^register_globals\s*\t*=\s*\t*On|register_globals\s*\t*=\s*\t*on'
 
   - id: 1001
-    title: "PHP - Expose PHP is enabled"
+    title: "PHP - Ensure 'Expose PHP' is not enabled"
     condition: all
     rules:
       - 'f:$php.ini -> r:^expose_php\s*\t*=\s*\t*Off|^expose_php\s*\t*=\s*\t*off'
-      - 'not f:$php.ini -> r:^expose_php\s*\t*=\s*\t*On|^expose_php\s*\t*=\s*\t*on'
 
   - id: 1002
-    title: "PHP - Allow URL fopen is enabled"
+    title: "PHP - Ensure 'Allow URL fopen' is not enabled"
     condition: all
     rules:
       - 'f:$php.ini -> r:^allow_url_fopen\s*\t*=\s*\t*Off|^allow_url_fopen\s*\t*=\s*\t*off'
-      - 'not f:$php.ini -> r:^allow_url_fopen\s*\t*=\s*\t*On|^allow_url_fopen\s*\t*=\s*\t*on'
 
   - id: 1003
-    title: "PHP - Displaying of errors is enabled"
+    title: "PHP - Ensure 'Displaying of errors' is not enabled"
     condition: all
     rules:
       - 'f:$php.ini -> r:^display_errors\s*\t*=\s*\t*Off|^display_errors\s*\t*=\s*\t*off'
-      - 'not f:$php.ini -> r:^display_errors\s*\t*=\s*\t*On|^display_errors\s*\t*=\s*\t*on'
 
 # WEB checks
   - id: 1004
@@ -157,7 +153,7 @@ checks:
       - https://blog.sucuri.net/2011/05/understanding-htaccess-attacks-part-1.html
     condition: none
     rules:
-      - 'd:$web_dirs -> ^.htaccess$ -> r:RewriteCond \S+HTTP_REFERERS \S+google'
+      - 'd:$web_dirs -> ^.htaccess$ -> r:RewriteCond\s+\S+HTTP_REFERERS\s+\S+google'
 
   - id: 1015
     title: "Web vulnerability - .htaccess file compromised - auto append"
@@ -168,4 +164,4 @@ checks:
       - https://blog.sucuri.net/2011/05/understanding-htaccess-attacks-part-1.html
     condition: none
     rules:
-      - 'd:$web_dirs -> ^.htaccess$ -> r:php_value auto_append_file'
+      - 'd:$web_dirs -> ^.htaccess$ -> r:^php_value\s*auto_append_file'

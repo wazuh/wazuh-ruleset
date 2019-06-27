@@ -18,7 +18,7 @@ policy:
 requirements:
   title: "Check that the SSH service is installed on the system"
   description: "Requirements for running the SCA scan against the SSH policy."
-  condition: "all"
+  condition: all
   rules:
     - 'f:/etc/ssh/sshd_config'
 
@@ -46,7 +46,7 @@ checks:
       - pci_dss: "2.2.4"
     condition: all
     rules:
-      - 'f:$sshd_file -> r:^\s*\t*Protocol\s*\t*\D2\D*$'
+      - 'f:$sshd_file -> r:^\s*\t*Protocol\D+2\D*$'
 
   - id: 1502
     title: "SSH Hardening - 3: Root account should not be able to log in"
@@ -86,9 +86,9 @@ checks:
     remediation: "Change the PermitEmptyPasswords option value in the sshd_config file."
     compliance:
       - pci_dss: "2.2.4"
-    condition: none
+    condition: all
     rules:
-      - 'f:$sshd_file -> r:^\s*PermitEmptyPasswords\.+yes'
+      - 'f:$sshd_file -> r:^\s*PermitEmptyPasswords\.+no'
 
   - id: 1506
     title: "SSH Hardening - 7: Rhost or shost should not be used for authentication"
@@ -97,9 +97,9 @@ checks:
     remediation: "Change the IgnoreRhosts option value in the sshd_config file."
     compliance:
       - pci_dss: "2.2.4"
-    condition: none
+    condition: all
     rules:
-      - 'f:$sshd_file -> r:^\s*\t*IgnoreRhosts\.+no'
+      - 'f:$sshd_file -> r:^\s*\t*IgnoreRhosts\.+yes'
 
   - id: 1507
     title: "SSH Hardening - 8: Grace Time should be 30 or less."
@@ -110,7 +110,7 @@ checks:
       - pci_dss: "2.2.4"
     condition: all
     rules:
-      - 'f:$sshd_file -> n:^\s*LoginGraceTime\s+(\d+) compare <= 30'
+      - 'f:$sshd_file -> n:^\s*LoginGraceTime\s+(\d+)s compare <= 30'
 
   - id: 1508
     title: "SSH Hardening - 9: Wrong Maximum number of authentication attempts"
@@ -132,6 +132,6 @@ checks:
       - pci_dss: "4.1"
       - hipaa: "164.312.a.2.IV, 164.312.e.1, 164.312.e.2.I, 164.312.e.2.II"
       - nist_800_53: "SC.8"
-    condition: none
+    condition: all
     rules:
-      - 'f:$sshd_file -> r:^\s*\t*HostbasedAuthentication\.+yes'
+      - 'f:$sshd_file -> r:^\s*\t*HostbasedAuthentication\.+no'
