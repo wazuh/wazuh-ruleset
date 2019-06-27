@@ -280,7 +280,7 @@ checks:
       - cis_csc: "9.1"
     condition: none
     rules:
-      - 'c:chkconfig --list -> r:chargen:|chargen-udp: && r:on'
+      - 'c:chkconfig --list -> r:chargen:|chargen-udp: && r::on'
 
   - id: 7519
     title: "Ensure daytime services are not enabled"
@@ -292,7 +292,7 @@ checks:
       - cis_csc: "9.1"
     condition: none
     rules:
-      - 'c:chkconfig --list -> r:daytime:|daytime-udp && r:on'
+      - 'c:chkconfig --list -> r:daytime:|daytime-udp && r::on'
 
   - id: 7520
     title: "Ensure discard services are not enabled"
@@ -304,7 +304,7 @@ checks:
       - cis_csc: "9.1"
     condition: none
     rules:
-      - 'c:chkconfig --list -> r:discard:|discard-udp: && r:on'
+      - 'c:chkconfig --list -> r:discard:|discard-udp: && r::on'
 
   - id: 7521
     title: "Ensure echo services are not enabled"
@@ -316,7 +316,7 @@ checks:
       - cis_csc: "9.1"
     condition: none
     rules:
-      - 'c:chkconfig --list -> r:echo:|echo-udp: && r:on'
+      - 'c:chkconfig --list -> r:echo:|echo-udp: && r::on'
 
   - id: 7522
     title: "Ensure time services are not enabled"
@@ -328,7 +328,7 @@ checks:
       - cis_csc: "9.1"
     condition: none
     rules:
-      - 'c:chkconfig --list -> r:time:|time-udp && r:on'
+      - 'c:chkconfig --list -> r:time:|time-udp && r::on'
 
   - id: 7523
     title: "Ensure rsh server is not enabled"
@@ -342,7 +342,7 @@ checks:
       - nist_800_53: "CM.1"
     condition: none
     rules:
-      - 'c:chkconfig --list -> r:rexec:|rlogin:|rsh: && r:on'
+      - 'c:chkconfig --list -> r:rexec:|rlogin:|rsh: && r::on'
 
   - id: 7524
     title: "Ensure talk server is not enabled"
@@ -356,7 +356,7 @@ checks:
       - nist_800_53: "CM.1"
     condition: none
     rules:
-      - 'c:chkconfig --list -> r:talk: && r:on'
+      - 'c:chkconfig --list -> r:talk: && r::on'
 
   - id: 7525
     title: "Ensure telnet server is not enabled"
@@ -370,7 +370,7 @@ checks:
       - nist_800_53: "CM.1"
     condition: none
     rules:
-      - 'c:chkconfig --list -> r:telnet: && r:on'
+      - 'c:chkconfig --list -> r:telnet: && r::on'
 
   - id: 7526
     title: "Ensure tftp server is not enabled"
@@ -384,7 +384,7 @@ checks:
       - nist_800_53: "CM.1"
     condition: none
     rules:
-      - 'c:chkconfig --list -> r:tftp: && r:on'
+      - 'c:chkconfig --list -> r:tftp: && r::on'
 
   - id: 7527
     title: "Ensure rsync service is not enabled"
@@ -396,7 +396,7 @@ checks:
       - pci_dss: "2.2.2"
     condition: none
     rules:
-      - 'c:chkconfig --list -> r:rsync: && r:on'
+      - 'c:chkconfig --list -> r:rsync: && r::on'
 
   - id: 7528
     title: "Ensure xinetd is not enabled"
