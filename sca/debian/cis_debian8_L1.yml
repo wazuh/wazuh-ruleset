@@ -389,7 +389,19 @@ checks:
       - 'f:/etc/ntp.conf -> r:^restrict\s+-6\s+default && r:\s+kod\s+ && r:\s+nomodify\s+ && r:\s+notrap\s+ && r:\s+nopeer\s+ && r:\s+noquery\s+'
       - 'f:/etc/ntp.conf -> r:^server\.+$|^pool\.+$'
       - 'f:/etc/ntp.conf -> r:^server\s\.+'
-      - 'f:/etc/init.d/ntp -> r:^RUNASUSER\s*\t*=\s*\t*ntp'
+      - 'f:/etc/init.d/ntp -> r:^RUNASUSER\s*\t*=\s*\t*ntp'      
+      
+  - id: 11027
+    title: "Ensure chrony is configured"
+    description: "chrony is a daemon which implements the Network Time Protocol (NTP) is designed to synchronize system clocks across a variety of systems and use a source that is highly accurate. More information on chrony can be found at http://chrony.tuxfamily.org/. chrony can be configured to be a client and/or a server."
+    rationale: "If chrony is in use on the system proper configuration is vital to ensuring time synchronization is working properly. This recommendation only applies if chrony is in use on the system."
+    remediation: "Add or edit server or pool lines to /etc/chrony/chrony.conf as appropriate: server <remote-server>"
+    compliance:
+      - cis: "2.2.1.3"
+      - cis_csc: "6.1"
+    condition: all
+    rules:
+      - 'f:/etc/chrony.conf -> r:^server\.+$|^pool\.+$'
 
   - id: 11028
     title: "Ensure Avahi Server is not enabled"
@@ -411,6 +423,8 @@ checks:
     compliance:
       - cis: "2.2.4"
       - cis_csc: "9.1, 9.2"
+    references:
+      - https://www.cups.org
     condition: none
     rules:
       - 'c:systemctl is-enabled cups -> r:^enabled'
