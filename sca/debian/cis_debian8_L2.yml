@@ -134,6 +134,8 @@ checks:
     compliance:
       - cis: "2.2.4"
       - cis_csc: "9.1, 9.2"
+    references:
+      - 'http://www.cups.org'
     condition: none
     rules:
       - 'c:systemctl is-enabled cups -> r:^enabled'
@@ -228,7 +230,7 @@ checks:
 
   - id: 10514
     title: "Ensure events that modify user/group information are collected"
-    description: "Record events affecting the group , passwd (user IDs), shadow and gshadow (passwords) or /etc/security/opasswd (old passwords, based on remember parameter in the PAM configuration) files. The parameters in this section will watch the files to see if they have been opened for write or have had attribute changes (e.g. permissions) and tag them with the identifier "identity" in the audit log file."
+    description: "Record events affecting the group , passwd (user IDs), shadow and gshadow (passwords) or /etc/security/opasswd (old passwords, based on remember parameter in the PAM configuration) files. The parameters in this section will watch the files to see if they have been opened for write or have had attribute changes (e.g. permissions) and tag them with the identifier \"identity\" in the audit log file."
     rationale: "Unexpected changes to these files could be an indication that the system has been compromised and that an unauthorized user is attempting to hide their activities or compromise additional accounts."
     remediation: "Add the following lines to the /etc/audit/audit.rules file: -w /etc/group -p wa -k identity | -w /etc/passwd -p wa -k identity | -w /etc/gshadow -p wa -k identity | -w /etc/shadow -p wa -k identity | -w /etc/security/opasswd -p wa -k identity Notes: Reloading the auditd config to set active settings may require a system reboot."
     compliance:
