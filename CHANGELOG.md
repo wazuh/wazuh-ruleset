@@ -1,14 +1,23 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [v3.9.2]
+## [v3.9.3]
+
+### Fixed
+
+- NGINX Decoder: make "server" field optional. Thanks to @iasdeoupxe. ([#243](https://github.com/wazuh/wazuh-ruleset/pull/243))
+- Remove tailing quote from field "res" in Auditd decoder. Thanks to @branchnetconsulting. ([#412](https://github.com/wazuh/wazuh-ruleset/pull/412))
+- Fix conflict between fields "uid" and "auid" in Auditd decoder. Thanks to @tokibi. ([#246](https://github.com/wazuh/wazuh-ruleset/pull/246))
+
+
+## [v3.9.2] 2019-06-10
 
 ### Fixed
 
 - Fixed Windows rule about audit log. ([#408](https://github.com/wazuh/wazuh-ruleset/pull/408))
 - Fixed check 11522 of Solaris SCA policy. ([#420](https://github.com/wazuh/wazuh-ruleset/pull/420))
 
-## [v3.9.1]
+## [v3.9.1] 2019-05-21
 
 ### Fixed
 
@@ -20,7 +29,7 @@ All notable changes to this project will be documented in this file.
 - Fixed Windows EventChannel rules for Eventlog and Security Essentials. ([#397](https://github.com/wazuh/wazuh-ruleset/pull/397))
 - Fixed Windows rules to avoid filtering by erroneous provider names. ([#403](https://github.com/wazuh/wazuh-ruleset/pull/403))
 
-## [v3.9.0]
+## [v3.9.0] 2019-05-02
 
 ### Added
 
@@ -52,19 +61,19 @@ All notable changes to this project will be documented in this file.
   - Generalize description for rule 83201. ([#241](https://github.com/wazuh/wazuh-ruleset/pull/241))
 - Fixed the flow for Windows rule 18230. ([#253](https://github.com/wazuh/wazuh-ruleset/pull/253)) (Thanks to @wiredaem0n)
 
-## [v3.8.2]
+## [v3.8.2] 2019-01-30
 
 ### Changed
 
 - Rework of the rules for Windows Eventchannel. ([#277](https://github.com/wazuh/wazuh-ruleset/pull/277))
 
 
-## [v3.8.1]
+## [v3.8.1] 2019-01-25
 
 There are no changes for Wazuh Ruleset in this version.
 
 
-## [v3.8.0]
+## [v3.8.0] 2019-01-19
 
 ### Added
 
@@ -153,7 +162,7 @@ There are no changes for Wazuh Ruleset in this version.
   - Windows decoders: Match "Subject :" format ([#128](https://github.com/wazuh/wazuh-ruleset/pull/128)).
 
 
-## [v3.4.0]
+## [v3.4.0] 2018-07-24
 
 ### Added
 
@@ -164,23 +173,23 @@ There are no changes for Wazuh Ruleset in this version.
   - Removed offset of the `frequency` attribute in rules. ([#145](https://github.com/wazuh/wazuh-ruleset/pull/145))
 
 
-## [v3.3.1]
+## [v3.3.1] 2018-06-18
 
 ### Added
 
   - Rule to detect when agents are unable to unmerge shared files. ([#143](https://github.com/wazuh/wazuh-ruleset/pull/143))
 
-## [v3.3.0]
+## [v3.3.0] 2018-06-06
 
 There are no changes for Wazuh Ruleset in this version.
 
 
-## [v3.2.4]
+## [v3.2.4] 2018-06-01
 
 There are no changes for Wazuh Ruleset in this version.
 
 
-## [v3.2.3]
+## [v3.2.3] 2018-05-28
 
 ### Added
   - GDPR (General Data Protection Regulation) mapping.
@@ -191,7 +200,7 @@ There are no changes for Wazuh Ruleset in this version.
   - Error handling in update ruleset script using python3.
 
 
-## [v3.2.2]
+## [v3.2.2] 2018-05-07
 ### Fixed
   - Syntax error in cis_rhel7_linux_rcl.txt.
   - OpenLDAP decoders to extract the IP address properly.
@@ -212,14 +221,14 @@ There are no changes for Wazuh Ruleset in this version.
   - Rules to detect USB devices disconnected.
 
 
-## [v3.2.1]
+## [v3.2.1] 2018-03-03
 ### Fixed
   - Silence rules about OpenSCAP and CIS-CAT scan status.
   - Add compatibility between versions for CIS-CAT rules.
   - Sudo decoders extract commands with spaces.
 
 
-## [v3.2.0]
+## [v3.2.0] 2018-02-13
 ### Added
   - Added new rules for _Vulnerability detector_.
 
@@ -230,12 +239,12 @@ There are no changes for Wazuh Ruleset in this version.
   - Fixed `update_ruleset` script.
 
 
-## [v3.1.0]
+## [v3.1.0] 2017-12-22
 ### Added
   - New rules for VULS integration
   - New rules for CIS-CAT integration
 
-## [v3.0.0]
+## [v3.0.0] 2017-12-12
 ### Added
   - New features for "update_ruleset.py": custom URL and branch name
   - New users added to list of known malicious user agents
