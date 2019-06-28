@@ -33,8 +33,8 @@ checks:
     rationale: "Organizations that want to effectively implement identity management policies and maintain firm control of what accounts are used to log onto their computers will probably in order to meet the requirements of compliance standards that apply to their information systems."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Users can't add or log on with Microsoft accounts: Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Local Policies\\Security Options\\Accounts: Block Microsoft accounts"
     compliance:
-      - cis: "2.3.1.2"
-      - cis_csc: "16"
+      - cis: ["2.3.1.2"]
+      - cis_csc: ["16"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System'
@@ -47,8 +47,8 @@ checks:
     rationale: "Blank passwords are a serious threat to computer security and should be forbidden through both organizational policy and suitable technical measures. In fact, the default settings for Active Directory domains require complex passwords of at least seven characters. However, if users with the ability to create new accounts bypass your domainbased password policies, they could create accounts with blank passwords. For example, a user could build a stand-alone computer, create one or more accounts with blank passwords, and then join the computer to the domain. The local accounts with blank passwords would still function. Anyone who knows the name of one of these unprotected accounts could then use it to log on."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Local Policies\\Security Options\\Accounts: Limit local account use of blank passwords to console logon only"
     compliance:
-      - cis: "2.3.1.4"
-      - cis_csc: "16"
+      - cis: ["2.3.1.4"]
+      - cis_csc: ["16"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Lsa'
@@ -61,8 +61,8 @@ checks:
     rationale: "If the computer is unable to record events to the Security log, critical evidence or important troubleshooting information may not be available for review after a security incident. Also, an attacker could potentially generate a large volume of Security log events to purposely force a computer shutdown."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Local Policies\\Security Options\\Audit: Shut down system immediately if unable to log security audits"
     compliance:
-      - cis: "2.3.2.1"
-      - cis_csc: "6.2, 6.3"
+      - cis: ["2.3.2.1"]
+      - cis_csc: ["6.2","6.3"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Lsa'
@@ -75,8 +75,8 @@ checks:
     rationale: "If the computer is unable to record events to the Security log, critical evidence or important troubleshooting information may not be available for review after a security incident. Also, an attacker could potentially generate a large volume of Security log events to purposely force a computer shutdown."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Local Policies\\Security Options\\Audit: Shut down system immediately if unable to log security audits"
     compliance:
-      - cis: "2.3.2.2"
-      - cis_csc: "6"
+      - cis: ["2.3.2.2"]
+      - cis_csc: ["6"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Lsa'
@@ -89,8 +89,8 @@ checks:
     rationale: "Users may be able to move data on removable disks to a different computer where they have administrative privileges. The user could then take ownership of any file, grant themselves full control, and view or modify any file. The fact that most removable storage devices will eject media by pressing a mechanical button diminishes the advantage of this policy setting."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Administrators and Interactive Users: Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Local Policies\\Security Options\\Devices: Allowed to format and eject removable media"
     compliance:
-      - cis: "2.3.4.1"
-      - cis_csc: "5.1"
+      - cis: ["2.3.4.1"]
+      - cis_csc: ["5.1"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\Software\Microsoft\Windows NT\CurrentVersion\Winlogon'
@@ -102,8 +102,8 @@ checks:
     rationale: "When a computer joins a domain, a computer account is created. After it joins the domain, the computer uses the password for that account to create a secure channel with the Domain Controller for its domain every time that it restarts. Requests that are sent on the secure channel are authenticated—and sensitive information such as passwords are encrypted—but the channel is not integrity-checked, and not all information is encrypted. Digital encryption and signing of the secure channel is a good idea where it is supported. The secure channel protects domain credentials as they are sent to the Domain Controller."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Local Policies\\Security Options\\Domain member: Digitally encrypt or sign secure channel data (always)"
     compliance:
-      - cis: "2.3.6.1"
-      - cis_csc: "13"
+      - cis: ["2.3.6.1"]
+      - cis_csc: ["13"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\Netlogon\Parameters'
@@ -116,8 +116,8 @@ checks:
     rationale: "When a computer joins a domain, a computer account is created. After it joins the domain, the computer uses the password for that account to create a secure channel with the Domain Controller for its domain every time that it restarts. Requests that are sent on the secure channel are authenticated—and sensitive information such as passwords are encrypted—but the channel is not integrity-checked, and not all information is encrypted. Digital encryption and signing of the secure channel is a good idea where it is supported. The secure channel protects domain credentials as they are sent to the Domain Controller."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Local Policies\\Security Options\\Domain member: Digitally encrypt secure channel data (when possible)"
     compliance:
-      - cis: "2.3.6.2"
-      - cis_csc: "13"
+      - cis: ["2.3.6.2"]
+      - cis_csc: ["13"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\Netlogon\Parameters'
@@ -130,8 +130,8 @@ checks:
     rationale: "When a computer joins a domain, a computer account is created. After it joins the domain, the computer uses the password for that account to create a secure channel with the Domain Controller for its domain every time that it restarts. Requests that are sent on the secure channel are authenticated—and sensitive information such as passwords are encrypted—but the channel is not integrity-checked, and not all information is encrypted. Digital encryption and signing of the secure channel is a good idea where it is supported. The secure channel protects domain credentials as they are sent to the Domain Controller."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Local Policies\\Security Options\\Domain member: Digitally sign secure channel data (when possible)"
     compliance:
-      - cis: "2.3.6.3"
-      - cis_csc: "13"
+      - cis: ["2.3.6.3"]
+      - cis_csc: ["13"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\Netlogon\Parameters'
@@ -144,8 +144,8 @@ checks:
     rationale: "The default configuration for Windows Server 2003-based computers that belong to a domain is that they are automatically required to change the passwords for their accounts every 30 days. If you disable this policy setting, computers that run Windows Server 2003 will retain the same passwords as their computer accounts. Computers that are no longer able to automatically change their account password are at risk from an attacker who could determine the password for the computer's domain account."
     remediation: "Remediation: To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Local Policies\\Security Options\\Domain member: Disable machine account password changes"
     compliance:
-      - cis: "2.3.6.4"
-      - cis_csc: "16"
+      - cis: ["2.3.6.4"]
+      - cis_csc: ["16"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Netlogon\Parameters'
@@ -158,8 +158,8 @@ checks:
     rationale: "Session keys that are used to establish secure channel communications between Domain Controllers and member computers are much stronger in Windows 2000 than they were in previous Microsoft operating systems. Whenever possible, you should take advantage of these stronger session keys to help protect secure channel communications from attacks that attempt to hijack network sessions and eavesdropping. (Eavesdropping is a form of hacking in which network data is read or altered in transit. The data can be modified to hide or change the sender, or be redirected.)"
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Local Policies\\Security Options\\Domain member: Require strong (Windows 2000 or later) session key"
     compliance:
-      - cis: "2.3.6.6"
-      - cis_csc: "13"
+      - cis: ["2.3.6.6"]
+      - cis_csc: ["13"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Netlogon\Parameters'
@@ -172,8 +172,8 @@ checks:
     rationale: "Microsoft developed this feature to make it easier for users with certain types of physical impairments to log on to computers that run Windows. If users are not required to press CTRL+ALT+DEL, they are susceptible to attacks that attempt to intercept their passwords. If CTRL+ALT+DEL is required before logon, user passwords are communicated by means of a trusted path. An attacker could install a Trojan horse program that looks like the standard Windows logon dialog box and capture the user's password. The attacker would then be able to log on to the compromised account with whatever level of privilege that user has."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Local Policies\\Security Options\\Interactive logon: Do not require CTRL+ALT+DEL"
     compliance:
-      - cis: "2.3.7.1"
-      - cis_csc: "8"
+      - cis: ["2.3.7.1"]
+      - cis_csc: ["8"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System'
@@ -186,8 +186,8 @@ checks:
     rationale: "If a user forgets to lock their computer when they walk away it's possible that a passerby will hijack it."
     remediation: "To establish the recommended configuration via GP, set the following UI path to 900 or fewer seconds, but not 0: Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Local Policies\\Security Options\\Interactive logon: Machine inactivity limit"
     compliance:
-      - cis: "2.3.7.4"
-      - cis_csc: "16.5"
+      - cis: ["2.3.7.4"]
+      - cis_csc: ["16.5"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System'
@@ -201,8 +201,8 @@ checks:
     rationale: "Users will need to be warned that their passwords are going to expire, or they may inadvertently be locked out of the computer when their passwords expire. This condition could lead to confusion for users who access the network locally, or make it impossible for users to access your organization's network through dial-up or virtual private network (VPN) connections."
     remediation: "To establish the recommended configuration via GP, set the following UI path to a value between 5 and 14 days: Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Local Policies\\Security Options\\Interactive logon: Prompt user to change password before expiration"
     compliance:
-      - cis: "2.3.7.8"
-      - cis_csc: "16"
+      - cis: ["2.3.7.8"]
+      - cis_csc: ["16"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\Software\Microsoft\Windows NT\CurrentVersion\Winlogon'
@@ -215,8 +215,8 @@ checks:
     rationale: "Users sometimes forget to lock their workstations when they are away from them, allowing the possibility for malicious users to access their computers. If smart cards are used for authentication, the computer should automatically lock itself when the card is removed to ensure that only the user with the smart card is accessing resources using those credentials."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Lock Workstation (or, if applicable for your environment, Force Logoff or Disconnect if a Remote Desktop Services session): Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Local Policies\\Security Options\\Interactive logon: Smart card removal behavior"
     compliance:
-      - cis: "2.3.7.9"
-      - cis_csc: "16.5"
+      - cis: ["2.3.7.9"]
+      - cis_csc: ["16.5"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\Software\Microsoft\Windows NT\CurrentVersion\Winlogon'
@@ -229,8 +229,8 @@ checks:
     rationale: "Session hijacking uses tools that allow attackers who have access to the same network as the client or server to interrupt, end, or steal a session in progress. Attackers can potentially intercept and modify unsigned SMB packets and then modify the traffic and forward it so that the server might perform undesirable actions. Alternatively, the attacker could pose as the server or client after legitimate authentication and gain unauthorized access to data. SMB is the resource sharing protocol that is supported by many Windows operating systems. It is the basis of NetBIOS and many other protocols. SMB signatures authenticate both users and the servers that host the data. If either side fails the authentication process, data transmission will not take place."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Local Policies\\Security Options\\Microsoft network client: Digitally sign communications (always)"
     compliance:
-      - cis: "2.3.8.1"
-      - cis_csc: "13"
+      - cis: ["2.3.8.1"]
+      - cis_csc: ["13"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\LanmanWorkstation\Parameters'
@@ -243,8 +243,8 @@ checks:
     rationale: "Session hijacking uses tools that allow attackers who have access to the same network as the client or server to interrupt, end, or steal a session in progress. Attackers can potentially intercept and modify unsigned SMB packets and then modify the traffic and forward it so that the server might perform undesirable actions. Alternatively, the attacker could pose as the server or client after legitimate authentication and gain unauthorized access to data. SMB is the resource sharing protocol that is supported by many Windows operating systems. It is the basis of NetBIOS and many other protocols. SMB signatures authenticate both users and the servers that host the data. If either side fails the authentication process, data transmission will not take place."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Local Policies\\Security Options\\Microsoft network client: Digitally sign communications (if server agrees)"
     compliance:
-      - cis: "2.3.8.2"
-      - cis_csc: "13"
+      - cis: ["2.3.8.2"]
+      - cis_csc: ["13"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\LanmanWorkstation\Parameters'
@@ -257,8 +257,8 @@ checks:
     rationale: "If you enable this policy setting, the server can transmit passwords in plaintext across the network to other computers that offer SMB services, which is a significant security risk. These other computers may not use any of the SMB security mechanisms that are included with Windows Server 2003."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Local Policies\\Security Options\\Microsoft network client: Send unencrypted password to third-party SMB servers"
     compliance:
-      - cis: "2.3.8.3"
-      - cis_csc: "13"
+      - cis: ["2.3.8.3"]
+      - cis_csc: ["13"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\LanmanWorkstation\Parameters'
@@ -271,8 +271,8 @@ checks:
     rationale: "Each SMB session consumes server resources, and numerous null sessions will slow the server or possibly cause it to fail. An attacker could repeatedly establish SMB sessions until the server's SMB services become slow or unresponsive."
     remediation: "To establish the recommended configuration via GP, set the following UI path to 15 or fewer minute(s), but not 0: Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Local Policies\\Security Options\\Microsoft network server: Amount of idle time required before suspending session"
     compliance:
-      - cis: "2.3.9.1"
-      - cis_csc: "3"
+      - cis: ["2.3.9.1"]
+      - cis_csc: ["3"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters'
@@ -285,8 +285,8 @@ checks:
     rationale: "Session hijacking uses tools that allow attackers who have access to the same network as the client or server to interrupt, end, or steal a session in progress. Attackers can potentially intercept and modify unsigned SMB packets and then modify the traffic and forward it so that the server might perform undesirable actions. Alternatively, the attacker could pose as the server or client after legitimate authentication and gain unauthorized access to data. SMB is the resource sharing protocol that is supported by many Windows operating systems. It is the basis of NetBIOS and many other protocols. SMB signatures authenticate both users and the servers that host the data. If either side fails the authentication process, data transmission will not take place."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Local Policies\\Security Options\\Microsoft network server: Digitally sign communications (always)"
     compliance:
-      - cis: "2.3.9.2"
-      - cis_csc: "13"
+      - cis: ["2.3.9.2"]
+      - cis_csc: ["13"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters'
@@ -299,8 +299,8 @@ checks:
     rationale: "Session hijacking uses tools that allow attackers who have access to the same network as the client or server to interrupt, end, or steal a session in progress. Attackers can potentially intercept and modify unsigned SMB packets and then modify the traffic and forward it so that the server might perform undesirable actions. Alternatively, the attacker could pose as the server or client after legitimate authentication and gain unauthorized access to data. SMB is the resource sharing protocol that is supported by many Windows operating systems. It is the basis of NetBIOS and many other protocols. SMB signatures authenticate both users and the servers that host the data. If either side fails the authentication process, data transmission will not take place."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Local Policies\\Security Options\\Microsoft network server: Digitally sign communications (if client agrees)"
     compliance:
-      - cis: "2.3.9.3"
-      - cis_csc: "13"
+      - cis: ["2.3.9.3"]
+      - cis_csc: ["13"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters'
@@ -313,8 +313,8 @@ checks:
     rationale: "If your organization configures logon hours for users, then it makes sense to enable this policy setting. Otherwise, users who should not have access to network resources outside of their logon hours may actually be able to continue to use those resources with sessions that were established during allowed hours."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Local Policies\\Security Options\\Microsoft network server: Disconnect clients when logon hours expire"
     compliance:
-      - cis: "2.3.9.4"
-      - cis_csc: "16"
+      - cis: ["2.3.9.4"]
+      - cis_csc: ["16"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters'
@@ -327,8 +327,8 @@ checks:
     rationale: "The identity of a computer can be spoofed to gain unauthorized access to network resources."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Accept if provided by client (configuring to Required from client also conforms to the benchmark): Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Local Policies\\Security Options\\Microsoft network server: Server SPN target name validation level"
     compliance:
-      - cis: "2.3.9.5"
-      - cis_csc: "14"
+      - cis: ["2.3.9.5"]
+      - cis_csc: ["14"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanManServer\Parameters'
@@ -341,8 +341,8 @@ checks:
     rationale: "An unauthorized user could anonymously list account names and use the information to attempt to guess passwords or perform social engineering attacks. (Social engineering attacks try to deceive users in some way to obtain passwords or some form of security information.)"
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Local Policies\\Security Options\\Network access: Do not allow anonymous enumeration of SAM accounts"
     compliance:
-      - cis: "2.3.10.2"
-      - cis_csc: "16"
+      - cis: ["2.3.10.2"]
+      - cis_csc: ["16"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa'
@@ -355,8 +355,8 @@ checks:
     rationale: "An unauthorized user could anonymously list account names and shared resources and use the information to attempt to guess passwords or perform social engineering attacks. (Social engineering attacks try to deceive users in some way to obtain passwords or some form of security information.)"
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Local Policies\\Security Options\\Network access: Do not allow anonymous enumeration of SAM accounts and shares"
     compliance:
-      - cis: "2.3.10.3"
-      - cis_csc: "16"
+      - cis: ["2.3.10.3"]
+      - cis_csc: ["16"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa'
@@ -369,8 +369,8 @@ checks:
     rationale: "Passwords that are cached can be accessed by the user when logged on to the computer. Although this information may sound obvious, a problem can arise if the user unknowingly executes hostile code that reads the passwords and forwards them to another, unauthorized user."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Local Policies\\Security Options\\Network access: Do not allow storage of passwords and credentials for network authentication"
     compliance:
-      - cis: "2.3.10.4"
-      - cis_csc: "16.14"
+      - cis: ["2.3.10.4"]
+      - cis_csc: ["16.14"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa'
@@ -383,8 +383,8 @@ checks:
     rationale: "An unauthorized user could anonymously list account names and shared resources and use the information to attempt to guess passwords, perform social engineering attacks, or launch DoS attacks."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Local Policies\\Security Options\\Network access: Let Everyone permissions apply to anonymous users"
     compliance:
-      - cis: "2.3.10.5"
-      - cis_csc: "14, 16"
+      - cis: ["2.3.10.5"]
+      - cis_csc: ["14","16"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Lsa'
@@ -397,8 +397,8 @@ checks:
     rationale: "Limiting named pipes that can be accessed anonymously will reduce the attack surface of the system."
     remediation: "To establish the recommended configuration via GP, set the following UI path to <blank> (i.e. None): Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Local Policies\\Security Options\\Network access: Named Pipes that can be accessed anonymously"
     compliance:
-      - cis: "2.3.10.6"
-      - cis_csc: "14.1, 14.2"
+      - cis: ["2.3.10.6"]
+      - cis_csc: ["14.1","14.2"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters'
@@ -411,8 +411,8 @@ checks:
     rationale: "The registry is a database that contains computer configuration information, and much of the information is sensitive. An attacker could use this information to facilitate unauthorized activities. To reduce the risk of such an attack, suitable ACLs are assigned throughout the registry to help protect it from access by unauthorized users."
     remediation: "To establish the recommended configuration via GP, set the following UI path to: System\\CurrentControlSet\\Control\\ProductOptions System\\CurrentControlSet\\Control\\Server Applications SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Local Policies\\Security Options\\Network access: Remotely accessible registry paths"
     compliance:
-      - cis: "2.3.10.7"
-      - cis_csc: "14, 16"
+      - cis: ["2.3.10.7"]
+      - cis_csc: ["14","16"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\SecurePipeServers\Winreg\AllowedExactPaths'
@@ -425,8 +425,8 @@ checks:
     rationale: "The registry contains sensitive computer configuration information that could be used by an attacker to facilitate unauthorized activities. The fact that the default ACLs assigned throughout the registry are fairly restrictive and help to protect the registry from access by unauthorized users reduces the risk of such an attack."
     remediation: "To establish the recommended configuration via GP, set the following UI path to: System\\CurrentControlSet\\Control\\Print\\Printers System\\CurrentControlSet\\Services\\Eventlog SOFTWARE\\Microsoft\\OLAP Server SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Print SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Windows System\\CurrentControlSet\\Control\\ContentIndex System\\CurrentControlSet\\Control\\Terminal Server System\\CurrentControlSet\\Control\\Terminal Server\\UserConfig System\\CurrentControlSet\\Control\\Terminal Server\\DefaultUserConfiguration SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Perflib System\\CurrentControlSet\\Services\\SysmonLog Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Local Policies\\Security Options\\Network access: Remotely accessible registry paths and sub-paths"
     compliance:
-      - cis: "2.3.10.8"
-      - cis_csc: "14, 16"
+      - cis: ["2.3.10.8"]
+      - cis_csc: ["14","16"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\SecurePipeServers\Winreg\AllowedPaths'
@@ -439,8 +439,8 @@ checks:
     rationale: "Null sessions are a weakness that can be exploited through shares (including the default shares) on computers in your environment."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Local Policies\\Security Options\\Network access: Restrict anonymous access to Named Pipes and Shares"
     compliance:
-      - cis: "2.3.10.9"
-      - cis_csc: "14, 16"
+      - cis: ["2.3.10.9"]
+      - cis_csc: ["14","16"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters'
@@ -453,8 +453,8 @@ checks:
     rationale: "To ensure that an unauthorized user cannot anonymously list local account names or groups and use the information to attempt to guess passwords or perform social engineering attacks. (Social engineering attacks try to deceive users in some way to obtain passwords or some form of security information.)"
     remediation: "To establish the recommended configuration via GP, set the following UI path to Administrators: Remote Access: Allow: Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Local Policies\\Security Options\\Network access: Restrict clients allowed to make remote calls to SAM"
     compliance:
-      - cis: "2.3.10.10"
-      - cis_csc: "5.1, 9.1, 9.2"
+      - cis: ["2.3.10.10"]
+      - cis_csc: ["5.1","9.1","9.2"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa'
@@ -467,8 +467,8 @@ checks:
     rationale: "It is very dangerous to allow any values in this setting. Any shares that are listed can be accessed by any network user, which could lead to the exposure or corruption of sensitive data"
     remediation: "To establish the recommended configuration via GP, set the following UI path to <blank> (i.e. None): Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Local Policies\\Security Options\\Network access: Shares that can be accessed anonymously"
     compliance:
-      - cis: "2.3.10.11"
-      - cis_csc: "14, 16"
+      - cis: ["2.3.10.11"]
+      - cis_csc: ["14","16"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters'
@@ -481,8 +481,8 @@ checks:
     rationale: "With the Guest only model, any user who can authenticate to your computer over the network does so with guest privileges, which probably means that they will not have write access to shared resources on that computer. Although this restriction does increase security, it makes it more difficult for authorized users to access shared resources on those computers because ACLs on those resources must include access control entries (ACEs) for the Guest account. With the Classic model, local accounts should be password protected. Otherwise, if Guest access is enabled, anyone can use those user accounts to access shared system resources."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Classic - local users authenticate as themselves: Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Local Policies\\Security Options\\Network access: Sharing and security model for local accounts"
     compliance:
-      - cis: "2.3.10.12"
-      - cis_csc: "14, 16"
+      - cis: ["2.3.10.12"]
+      - cis_csc: ["14","16"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Lsa'
@@ -495,8 +495,8 @@ checks:
     rationale: "When connecting to computers running versions of Windows earlier than Windows Vista or Windows Server 2008 (non-R2), services running as Local System and using SPNEGO (Negotiate) that revert to NTLM use the computer identity. In Windows 7, if you are connecting to a computer running Windows Server 2008 or Windows Vista, then a system service uses either the computer identity or a NULL session. When connecting with a NULL session, a system-generated session key is created, which provides no protection but allows applications to sign and encrypt data without errors. When connecting with the computer identity, both signing and encryption is supported in order to provide data protection."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Local Policies\\Security Options\\Network security: Allow Local System to use computer identity for NTLM"
     compliance:
-      - cis: "2.3.11.1"
-      - cis_csc: "14, 16"
+      - cis: ["2.3.11.1"]
+      - cis_csc: ["14","16"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Lsa'
@@ -509,8 +509,8 @@ checks:
     rationale: "NULL sessions are less secure because by definition they are unauthenticated."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Local Policies\\Security Options\\Network security: Allow LocalSystem NULL session fallback"
     compliance:
-      - cis: "2.3.11.2"
-      - cis_csc: "14"
+      - cis: ["2.3.11.2"]
+      - cis_csc: ["14"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Lsa\MSV1_0'
@@ -523,8 +523,8 @@ checks:
     rationale: "The PKU2U protocol is a peer-to-peer authentication protocol - authentication should be managed centrally in most managed networks."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Local Policies\\Security Options\\Network Security: Allow PKU2U authentication requests to this computer to use online identities"
     compliance:
-      - cis: "2.3.11.3"
-      - cis_csc: "16.9"
+      - cis: ["2.3.11.3"]
+      - cis_csc: ["16.9"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Lsa\pku2u'
@@ -537,8 +537,8 @@ checks:
     rationale: "The strength of each encryption algorithm varies from one to the next, choosing stronger algorithms will reduce the risk of compromise however doing so may cause issues when the computer attempts to authenticate with systems that do not support them."
     remediation: "To establish the recommended configuration via GP, set the following UI path to AES128_HMAC_SHA1, AES256_HMAC_SHA1, Future encryption types: Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Local Policies\\Security Options\\Network security: Configure encryption types allowed for Kerberos"
     compliance:
-      - cis: "2.3.11.4"
-      - cis_csc: "16.14"
+      - cis: ["2.3.11.4"]
+      - cis_csc: ["16.14"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\Kerberos\Parameters'
@@ -551,8 +551,8 @@ checks:
     rationale: "The SAM file can be targeted by attackers who seek access to username and password hashes. Such attacks use special tools to crack passwords, which can then be used to impersonate users and gain access to resources on your network. These types of attacks will not be prevented if you enable this policy setting, but it will be much more difficult for these types of attacks to succeed."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Local Policies\\Security Options\\Network security: Do not store LAN Manager hash value on next password change"
     compliance:
-      - cis: "2.3.11.5"
-      - cis_csc: "16.14"
+      - cis: ["2.3.11.5"]
+      - cis_csc: ["16.14"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Lsa'
@@ -565,8 +565,8 @@ checks:
     rationale: "If this setting is disabled, a user could remain connected to the computer outside of their allotted logon hours."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled. Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Local Policies\\Security Options\\Network security: Force logoff when logon hours expire"
     compliance:
-      - cis: "2.3.11.6"
-      - cis_csc: "16"
+      - cis: ["2.3.11.6"]
+      - cis_csc: ["16"]
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanManServer\Parameters'
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanManServer\Parameters -> EnableForcedLogOff'
@@ -578,8 +578,8 @@ checks:
     rationale: "Windows 2000 and Windows XP clients were configured by default to send LM and NTLM authentication responses (Windows 95-based and Windows 98-based clients only send LM). The default settings in OSes predating Windows Vista / Windows Server 2008 (nonR2) allowed all clients to authenticate with servers and use their resources. However, this meant that LM responses - the weakest form of authentication response - were sent over the network, and it was potentially possible for attackers to sniff that traffic to more easily reproduce the user's password. The Windows 95, Windows 98, and Windows NT operating systems cannot use the Kerberos version 5 protocol for authentication. For this reason, in a Windows Server 2003 domain, these computers authenticate by default with both the LM and NTLM protocols for network authentication. You can enforce a more secure authentication protocol for Windows 95, Windows 98, and Windows NT by using NTLMv2. For the logon process, NTLMv2 uses a secure channel to protect the authentication process. Even if you use NTLMv2 for older clients and servers, Windows-based clients and servers that are members of the domain will use the Kerberos authentication protocol to authenticate with Windows Server 2003 or newer Domain Controllers. For these reasons, it is strongly preferred to restrict the use of LM & NTLM (non-v2) as much as possible."
     remediation: "To establish the recommended configuration via GP, set the following UI path to: Send NTLMv2 response only. Refuse LM & NTLM: Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Local Policies\\Security Options\\Network security: LAN Manager authentication level"
     compliance:
-      - cis: "2.3.11.7"
-      - cis_csc: "13"
+      - cis: ["2.3.11.7"]
+      - cis_csc: ["13"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Lsa'
@@ -592,8 +592,8 @@ checks:
     rationale: "Unsigned network traffic is susceptible to man-in-the-middle attacks in which an intruder captures the packets between the client and server, modifies them, and then forwards them to the server. For an LDAP server, this susceptibility means that an attacker could cause a server to make decisions that are based on false or altered data from the LDAP queries. To lower this risk in your network, you can implement strong physical security measures to protect the network infrastructure. Also, you can make all types of man-in-the-middle attacks extremely difficult if you require digital signatures on all network packets by means of IPsec authentication headers."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Negotiate signing (configuring to Require signing also conforms to the benchmark): Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Local Policies\\Security Options\\Network security: LDAP client signing requirements"
     compliance:
-      - cis: "2.3.11.8"
-      - cis_csc: "13"
+      - cis: ["2.3.11.8"]
+      - cis_csc: ["13"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\LDAP'
@@ -606,8 +606,8 @@ checks:
     rationale: "You can enable both options for this policy setting to help protect network traffic that uses the NTLM Security Support Provider (NTLM SSP) from being exposed or tampered with by an attacker who has gained access to the same network. In other words, these options help protect against man-in-the-middle attacks."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Require NTLMv2 session security, Require 128-bit encryption: Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Local Policies\\Security Options\\Network security: Minimum session security for NTLM SSP based (including secure RPC) clients"
     compliance:
-      - cis: "2.3.11.9"
-      - cis_csc: "13"
+      - cis: ["2.3.11.9"]
+      - cis_csc: ["13"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Lsa\MSV1_0'
@@ -620,8 +620,8 @@ checks:
     rationale: "You can enable all of the options for this policy setting to help protect network traffic that uses the NTLM Security Support Provider (NTLM SSP) from being exposed or tampered with by an attacker who has gained access to the same network. That is, these options help protect against man-in-the-middle attacks."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Require NTLMv2 session security, Require 128-bit encryption: Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Local Policies\\Security Options\\Network security: Minimum session security for NTLM SSP based (including secure RPC) servers"
     compliance:
-      - cis: "2.3.11.10"
-      - cis_csc: "13"
+      - cis: ["2.3.11.10"]
+      - cis_csc: ["13"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Lsa\MSV1_0'
@@ -634,7 +634,7 @@ checks:
     rationale: "Because Windows is case-insensitive but the POSIX subsystem will support case sensitivity, failure to enable this policy setting would make it possible for a user of that subsystem to create a file with the same name as another file but with a different mix of upper and lower case letters. Such a situation could potentially confuse users when they try to access such files from normal Win32 tools because only one of the files will be available"
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Local Policies\\Security Options\\System objects: Require case insensitivity for nonWindows subsystems"
     compliance:
-      - cis: "2.3.15.1"
+      - cis: ["2.3.15.1"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Kernel'
@@ -647,8 +647,8 @@ checks:
     rationale: "This setting determines the strength of the default DACL for objects. Windows maintains a global list of shared computer resources so that objects can be located and shared among processes. Each type of object is created with a default DACL that specifies who can access the objects and with what permissions."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Local Policies\\Security Options\\System objects: Strengthen default permissions of internal system objects (e.g. Symbolic Links)"
     compliance:
-      - cis: "2.3.15.2"
-      - cis_csc: "14.4, 14.6"
+      - cis: ["2.3.15.2"]
+      - cis_csc: ["14.4","14.6"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager'
@@ -661,8 +661,8 @@ checks:
     rationale: "One of the risks that the User Account Control feature introduced with Windows Vista is trying to mitigate is that of malicious software running under elevated credentials without the user or administrator being aware of its activity. An attack vector for these programs was to discover the password of the account named Administrator because that user account was created for all installations of Windows. To address this risk, in Windows Vista and newer, the built-in Administrator account is now disabled by default. In a default installation of a new computer, accounts with administrative control over the computer are initially set up in one of two ways:  If the computer is not joined to a domain, the first user account you create has the equivalent permissions as a local administrator.  If the computer is joined to a domain, no local administrator accounts are created. The Enterprise or Domain Administrator must log on to the computer and create one if a local administrator account is warranted. Once Windows is installed, the built-in Administrator account may be manually enabled, but we strongly recommend that this account remain disabled."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Local Policies\\Security Options\\User Account Control: Admin Approval Mode for the Built-in Administrator account"
     compliance:
-      - cis: "2.3.17.1"
-      - cis_csc: "5.1"
+      - cis: ["2.3.17.1"]
+      - cis_csc: ["5.1"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System'
@@ -675,8 +675,8 @@ checks:
     rationale: "One of the risks that the UAC feature introduced with Windows Vista is trying to mitigate is that of malicious software running under elevated credentials without the user or administrator being aware of its activity. This setting allows the administrator to perform operations that require elevated privileges while connected via Remote Assistance. This increases security in that organizations can use UAC even when end user support is provided remotely. However, it also reduces security by adding the risk that an administrator might allow an unprivileged user to share elevated privileges for an application that the administrator needs to use during the Remote Desktop session."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Local Policies\\Security Options\\User Account Control: Allow UIAccess applications to prompt for elevation without using the secure desktop"
     compliance:
-      - cis: "2.3.17.2"
-      - cis_csc: "16"
+      - cis: ["2.3.17.2"]
+      - cis_csc: ["16"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System'
@@ -689,8 +689,8 @@ checks:
     rationale: "One of the risks that the UAC feature introduced with Windows Vista is trying to mitigate is that of malicious software running under elevated credentials without the user or administrator being aware of its activity. This setting raises awareness to the administrator of elevated privilege operations and permits the administrator to prevent a malicious program from elevating its privilege when the program attempts to do so."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Prompt for consent on the secure desktop: Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Local Policies\\Security Options\\User Account Control: Behavior of the elevation prompt for administrators in Admin Approval Mode"
     compliance:
-      - cis: "2.3.17.3"
-      - cis_csc: "5.1"
+      - cis: ["2.3.17.3"]
+      - cis_csc: ["5.1"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System'
@@ -703,8 +703,8 @@ checks:
     rationale: "One of the risks that the User Account Control feature introduced with Windows Vista is trying to mitigate is that of malicious programs running under elevated credentials without the user or administrator being aware of their activity. This setting raises awareness to the user that a program requires the use of elevated privilege operations and requires that the user be able to supply administrative credentials in order for the program to run."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Automatically deny elevation requests: Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Local Policies\\Security Options\\User Account Control: Behavior of the elevation prompt for standard users"
     compliance:
-      - cis: "2.3.17.4"
-      - cis_csc: "5.1"
+      - cis: ["2.3.17.4"]
+      - cis_csc: ["5.1"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System'
@@ -717,8 +717,8 @@ checks:
     rationale: "Some malicious software will attempt to install itself after being given permission to run. For example, malicious software with a trusted application shell. The user may have given permission for the program to run because the program is trusted, but if they are then prompted for installation of an unknown component this provides another way of trapping the software before it can do damage"
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Local Policies\\Security Options\\User Account Control: Detect application installations and prompt for elevation"
     compliance:
-      - cis: "2.3.17.5"
-      - cis_csc: "5.1"
+      - cis: ["2.3.17.5"]
+      - cis_csc: ["5.1"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System'
@@ -731,8 +731,8 @@ checks:
     rationale: "UIAccess Integrity allows an application to bypass User Interface Privilege Isolation (UIPI) restrictions when an application is elevated in privilege from a standard user to an administrator. This is required to support accessibility features such as screen readers that are transmitting user interfaces to alternative forms. A process that is started with UIAccess rights has the following abilities:  To set the foreground window.  To drive any application window using SendInput function.  To use read input for all integrity levels using low-level hooks, raw input, GetKeyState, GetAsyncKeyState, and GetKeyboardInput.  To set journal hooks.  To uses AttachThreadInput to attach a thread to a higher integrity input queue."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Local Policies\\Security Options\\User Account Control: Only elevate UIAccess applications that are installed in secure locations"
     compliance:
-      - cis: "2.3.17.6"
-      - cis_csc: "5.1"
+      - cis: ["2.3.17.6"]
+      - cis_csc: ["5.1"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System'
@@ -745,8 +745,8 @@ checks:
     rationale: "This is the setting that turns on or off UAC. If this setting is disabled, UAC will not be used and any security benefits and risk mitigations that are dependent on UAC will not be present on the system."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Local Policies\\Security Options\\User Account Control: Run all administrators in Admin Approval Mode"
     compliance:
-      - cis: "2.3.17.7"
-      - cis_csc: "5.1"
+      - cis: ["2.3.17.7"]
+      - cis_csc: ["5.1"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System'
@@ -759,8 +759,8 @@ checks:
     rationale: "Standard elevation prompt dialog boxes can be spoofed, which may cause users to disclose their passwords to malicious software. The secure desktop presents a very distinct appearance when prompting for elevation, where the user desktop dims, and the elevation prompt UI is more prominent. This increases the likelihood that users who become accustomed to the secure desktop will recognize a spoofed elevation prompt dialog box and not fall for the trick."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Local Policies\\Security Options\\User Account Control: Switch to the secure desktop when prompting for elevation"
     compliance:
-      - cis: "2.3.17.8"
-      - cis_csc: "5.1"
+      - cis: ["2.3.17.8"]
+      - cis_csc: ["5.1"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System'
@@ -773,7 +773,7 @@ checks:
     rationale: "This setting reduces vulnerabilities by ensuring that legacy applications only write data to permitted locations."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Local Policies\\Security Options\\User Account Control: Virtualize file and registry write failures to per-user locations"
     compliance:
-      - cis: "2.3.17.9"
+      - cis: ["2.3.17.9"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System'
@@ -787,8 +787,8 @@ checks:
     rationale: "This is a legacy service - its sole purpose is to maintain a list of computers and their network shares in the environment (i.e. \"Network Neighborhood\"). If enabled, it generates a lot of unnecessary traffic, including \"elections\" to see who gets to be the \"master browser\". This noisy traffic could also aid malicious attackers in discovering online machines, because the service also allows anyone to \"browse\" for shared resources without any authentication. This service used to be running by default in older Windows versions (e.g. Windows XP), but today it only remains for backward compatibility for very old software that requires it."
     remediation: "To establish the recommended configuration via GP, set the following UI path to: Disabled. Computer Configuration\\Policies\\Windows Settings\\Security Settings\\System Services\\Computer Browser"
     compliance:
-      - cis: "5.3"
-      - cis_csc: "9.1, 9.2"
+      - cis: ["5.3"]
+      - cis_csc: ["9.1","9.2"]
     condition: any
     rules:
       - 'not r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Browser'
@@ -800,8 +800,8 @@ checks:
     rationale: "Hosting a website from a workstation is an increased security risk, as the attack surface of that workstation is then greatly increased. If proper security mitigations are not followed, the chance of successful attack increases significantly. Note: This security concern applies to any web server application installed on a workstation, not just IIS."
     remediation: "To establish the recommended configuration via GP, set the following UI path to: Disabled or ensure the service is not installed. Computer Configuration\\Policies\\Windows Settings\\Security Settings\\System Services\\IIS Admin Service"
     compliance:
-      - cis: "5.6"
-      - cis_csc: "9.1, 9.2"
+      - cis: ["5.6"]
+      - cis_csc: ["9.1","9.2"]
     condition: any
     rules:
       - 'not r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\IISADMIN'
@@ -813,8 +813,8 @@ checks:
     rationale: "Infrared connections can potentially be a source of data compromise - especially via the automatic \"file transfer application\" functionality. Enterprise-managed systems should utilize a more secure method of connection than infrared."
     remediation: "To establish the recommended configuration via GP, set the following UI path to: Disabled. Computer Configuration\\Policies\\Windows Settings\\Security Settings\\System Services\\Infrared monitor service"
     compliance:
-      - cis: "5.7"
-      - cis_csc: "9.1, 9.2"
+      - cis: ["5.7"]
+      - cis_csc: ["9.1","9.2"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\irmon'
@@ -827,8 +827,8 @@ checks:
     rationale: "Internet Connection Sharing (ICS) is a feature that allows someone to \"share\" their Internet connection with other machines on the network - it was designed for home or small office environments where only one machine has Internet access - it effectively turns that machine into an Internet router. This feature causes the bridging of networks and likely bypassing other, more secure pathways. It should not be used on any enterprise-managed system."
     remediation: "To establish the recommended configuration via GP, set the following UI path to: Disabled. Computer Configuration\\Policies\\Windows Settings\\Security Settings\\System Services\\Internet Connection Sharing (ICS)"
     compliance:
-      - cis: "5.8"
-      - cis_csc: "9.1, 9.2"
+      - cis: ["5.8"]
+      - cis_csc: ["9.1","9.2"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SharedAccess'
@@ -841,8 +841,8 @@ checks:
     rationale: "The Linux SubSystem (LXSS) Manager allows full system access to Linux applications on Windows, including the file system. While this can certainly have some functionality and performance benefits for running those applications, it also creates new security risks in the event that a hacker injects malicious code into a Linux application. For best security, it is preferred to run Linux applications on Linux, and Windows applications on Windows."
     remediation: "To establish the recommended configuration via GP, set the following UI path to: Disabled or ensure the service is not installed. Computer Configuration\\Policies\\Windows Settings\\Security Settings\\System Services\\LxssManager"
     compliance:
-      - cis: "5.10"
-      - cis_csc: "9.1, 9.2"
+      - cis: ["5.10"]
+      - cis_csc: ["9.1","9.2"]
     condition: any
     rules:
       - 'not r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LxssManager'
@@ -854,8 +854,8 @@ checks:
     rationale: "Hosting an FTP server (especially a non-secure FTP server) from a workstation is an increased security risk, as the attack surface of that workstation is then greatly increased. Note: This security concern applies to any FTP server application installed on a workstation, not just IIS."
     remediation: "To establish the recommended configuration via GP, set the following UI path to: Disabled or ensure the service is not installed. Computer Configuration\\Policies\\Windows Settings\\Security Settings\\System Services\\Microsoft FTP Service"
     compliance:
-      - cis: "5.11"
-      - cis_csc: "9.1, 9.2"
+      - cis: ["5.11"]
+      - cis_csc: ["9.1","9.2"]
     condition: any
     rules:
       - 'not r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\FTPSVC'
@@ -867,8 +867,8 @@ checks:
     rationale: "This is a legacy service that has no value or purpose other than application compatibility for very old software. It should be disabled unless there is a specific old application still in use on the system that requires it."
     remediation: "To establish the recommended configuration via GP, set the following UI path to: Disabled. Computer Configuration\\Policies\\Windows Settings\\Security Settings\\System Services\\Remote Procedure Call (RPC) Locator"
     compliance:
-      - cis: "5.24"
-      - cis_csc: "9.1, 9.2"
+      - cis: ["5.24"]
+      - cis_csc: ["9.1","9.2"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\RpcLocator'
@@ -881,8 +881,8 @@ checks:
     rationale: "This service's main purpose is to provide Windows router functionality - this is not an appropriate use of workstations in an enterprise managed environment."
     remediation: "To establish the recommended configuration via GP, set the following UI path to: Disabled.  Computer Configuration\\Policies\\Windows Settings\\Security Settings\\System Services\\Routing and Remote Access"
     compliance:
-      - cis: "5.26"
-      - cis_csc: "9.1, 9.2"
+      - cis: ["5.26"]
+      - cis_csc: ["9.1","9.2"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\RemoteAccess'
@@ -895,8 +895,8 @@ checks:
     rationale: "The Simple TCP/IP Services have very little purpose in a modern enterprise environment - allowing them might increase exposure and risk for attack."
     remediation: "To establish the recommended configuration via GP, set the following UI path to: Disabled or ensure the service is not installed. Computer Configuration\\Policies\\Windows Settings\\Security Settings\\System Services\\Simple TCP/IP Services"
     compliance:
-      - cis: "5.28"
-      - cis_csc: "9.1, 9.2"
+      - cis: ["5.28"]
+      - cis_csc: ["9.1","9.2"]
     condition: any
     rules:
       - 'not r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\simptcp'
@@ -908,8 +908,8 @@ checks:
     rationale: "Universal Plug n Play (UPnP) is a real security risk - it allows automatic discovery and attachment to network devices. Notes that UPnP is different than regular Plug n Play (PnP). Workstations should not be advertising their services (or automatically discovering and connecting to networked services) in a security-conscious enterprise managed environment."
     remediation: "To establish the recommended configuration via GP, set the following UI path to: Disabled. Computer Configuration\\Policies\\Windows Settings\\Security Settings\\System Services\\SSDP Discovery"
     compliance:
-      - cis: "5.30"
-      - cis_csc: "9.1, 9.2"
+      - cis: ["5.30"]
+      - cis_csc: ["9.1","9.2"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SSDPSRV'
@@ -922,8 +922,8 @@ checks:
     rationale: "Universal Plug n Play (UPnP) is a real security risk - it allows automatic discovery and attachment to network devices. Notes that UPnP is different than regular Plug n Play (PnP). Workstations should not be advertising their services (or automatically discovering and connecting to networked services) in a security-conscious enterprise managed environment."
     remediation: "To establish the recommended configuration via GP, set the following UI path to: Disabled. Computer Configuration\\Policies\\Windows Settings\\Security Settings\\System Services\\UPnP Device Host"
     compliance:
-      - cis: "5.31"
-      - cis_csc: "9.1, 9.2"
+      - cis: ["5.31"]
+      - cis_csc: ["9.1","9.2"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\upnphost'
@@ -936,8 +936,8 @@ checks:
     rationale: "Remote web administration of IIS on a workstation is an increased security risk, as the attack surface of that workstation is then greatly increased. If proper security mitigations are not followed, the chance of successful attack increases significantly."
     remediation: "To establish the recommended configuration via GP, set the following UI path to: Disabled or ensure the service is not installed. Computer Configuration\\Policies\\Windows Settings\\Security Settings\\System Services\\Web Management Service"
     compliance:
-      - cis: "5.32"
-      - cis_csc: "9.1, 9.2"
+      - cis: ["5.32"]
+      - cis_csc: ["9.1","9.2"]
     condition: any
     rules:
       - 'not r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\WMSvc'
@@ -949,8 +949,8 @@ checks:
     rationale: "Network sharing of media from Media Player has no place in an enterprise managed environment."
     remediation: "To establish the recommended configuration via GP, set the following UI path to: Disabled. Computer Configuration\\Policies\\Windows Settings\\Security Settings\\System Services\\Windows Media Player Network Sharing Service"
     compliance:
-      - cis: "5.35"
-      - cis_csc: "9.1, 9.2"
+      - cis: ["5.35"]
+      - cis_csc: ["9.1","9.2"]
     condition: any
     rules:
       - 'not r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\WMPNetworkSvc'
@@ -962,8 +962,8 @@ checks:
     rationale: "The capability to run a mobile hotspot from a domain-connected computer could easily expose the internal network to wardrivers or other hackers."
     remediation: "To establish the recommended configuration via GP, set the following UI path to: Disabled. Computer Configuration\\Policies\\Windows Settings\\Security Settings\\System Services\\Windows Mobile Hotspot Service"
     compliance:
-      - cis: "5.36"
-      - cis_csc: "9.1, 9.2"
+      - cis: ["5.36"]
+      - cis_csc: ["9.1","9.2"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\icssvc'
@@ -976,8 +976,8 @@ checks:
     rationale: "Hosting a website from a workstation is an increased security risk, as the attack surface of that workstation is then greatly increased. If proper security mitigations are not followed, the chance of successful attack increases significantly. Note: This security concern applies to any web server application installed on a workstation, not just IIS."
     remediation: "To establish the recommended configuration via GP, set the following UI path to: Disabled or ensure the service is not installed. Computer Configuration\\Policies\\Windows Settings\\Security Settings\\System Services\\World Wide Web Publishing Service"
     compliance:
-      - cis: "5.40"
-      - cis_csc: "9.1, 9.2"
+      - cis: ["5.40"]
+      - cis_csc: ["9.1","9.2"]
     condition: any
     rules:
       - 'not r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\W3SVC'
@@ -989,8 +989,8 @@ checks:
     rationale: "Xbox Live is a gaming service and has no place in an enterprise managed environment (perhaps unless it is a gaming company)."
     remediation: "To establish the recommended configuration via GP, set the following UI path to: Disabled. Computer Configuration\\Policies\\Windows Settings\\Security Settings\\System Services\\Xbox Accessory Management Service"
     compliance:
-      - cis: "5.41"
-      - cis_csc: "9.1, 9.2"
+      - cis: ["5.41"]
+      - cis_csc: ["9.1","9.2"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\XboxGipSvc'
@@ -1003,8 +1003,8 @@ checks:
     rationale: "Xbox Live is a gaming service and has no place in an enterprise managed environment (perhaps unless it is a gaming company)."
     remediation: "To establish the recommended configuration via GP, set the following UI path to: Disabled. Computer Configuration\\Policies\\Windows Settings\\Security Settings\\System Services\\Xbox Game Monitoring"
     compliance:
-      - cis: "5.42"
-      - cis_csc: "9.1, 9.2"
+      - cis: ["5.42"]
+      - cis_csc: ["9.1","9.2"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\xbgm'
@@ -1017,8 +1017,8 @@ checks:
     rationale: "Xbox Live is a gaming service and has no place in an enterprise managed environment (perhaps unless it is a gaming company)."
     remediation: "To establish the recommended configuration via GP, set the following UI path to: Disabled. Computer Configuration\\Policies\\Windows Settings\\Security Settings\\System Services\\Xbox Live Auth Manager"
     compliance:
-      - cis: "5.43"
-      - cis_csc: "9.1, 9.2"
+      - cis: ["5.43"]
+      - cis_csc: ["9.1","9.2"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\XblAuthManager'
@@ -1031,8 +1031,8 @@ checks:
     rationale: "Xbox Live is a gaming service and has no place in an enterprise managed environment (perhaps unless it is a gaming company)."
     remediation: "To establish the recommended configuration via GP, set the following UI path to: Disabled. Computer Configuration\\Policies\\Windows Settings\\Security Settings\\System Services\\Xbox Live Game Save"
     compliance:
-      - cis: "5.44"
-      - cis_csc: "9.1, 9.2"
+      - cis: ["5.44"]
+      - cis_csc: ["9.1","9.2"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\XblGameSave'
@@ -1045,8 +1045,8 @@ checks:
     rationale: "Xbox Live is a gaming service and has no place in an enterprise managed environment (perhaps unless it is a gaming company)."
     remediation: "To establish the recommended configuration via GP, set the following UI path to: Disabled. Computer Configuration\\Policies\\Windows Settings\\Security Settings\\System Services\\Xbox Live Networking Service"
     compliance:
-      - cis: "5.45"
-      - cis_csc: "9.1, 9.2"
+      - cis: ["5.45"]
+      - cis_csc: ["9.1","9.2"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\XboxNetApiSvce'
@@ -1060,8 +1060,8 @@ checks:
     rationale: "If the firewall is turned off all traffic will be able to access the system and an attacker may be more easily able to remotely exploit a weakness in a network service."
     remediation: "To establish the recommended configuration via GP, set the following UI path to On (recommended): Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Windows Firewall with Advanced Security\\Windows Firewall with Advanced Security\\Windows Firewall Properties\\Domain Profile\\Firewall state"
     compliance:
-      - cis: "9.1.1"
-      - cis_csc: "9.2, 9.4"
+      - cis: ["9.1.1"]
+      - cis_csc: ["9.2","9.4"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\DomainProfile'
@@ -1074,8 +1074,8 @@ checks:
     rationale: "If the firewall allows all traffic to access the system then an attacker may be more easily able to remotely exploit a weakness in a network service."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Block (default): Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Windows Firewall with Advanced Security\\Windows Firewall with Advanced Security\\Windows Firewall Properties\\Domain Profile\\Inbound connections"
     compliance:
-      - cis: "9.1.2"
-      - cis_csc: "9.2, 9.4"
+      - cis: ["9.1.2"]
+      - cis_csc: ["9.2","9.4"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\DomainProfile'
@@ -1088,8 +1088,8 @@ checks:
     rationale: "Some people believe that it is prudent to block all outbound connections except those specifically approved by the user or administrator. Microsoft disagrees with this opinion, blocking outbound connections by default will force users to deal with a large number of dialog boxes prompting them to authorize or block applications such as their web browser or instant messaging software. Additionally, blocking outbound traffic has little value because if an attacker has compromised the system they can reconfigure the firewall anyway."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Allow (default): Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Windows Firewall with Advanced Security\\Windows Firewall with Advanced Security\\Windows Firewall Properties\\Domain Profile\\Outbound connections"
     compliance:
-      - cis: "9.1.3"
-      - cis_csc: "9.2, 9.4"
+      - cis: ["9.1.3"]
+      - cis_csc: ["9.2","9.4"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\DomainProfile'
@@ -1102,7 +1102,7 @@ checks:
     rationale: "Firewall notifications can be complex and may confuse the end users, who would not be able to address the alert."
     remediation: "To establish the recommended configuration via GP, set the following UI path to No: Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Windows Firewall with Advanced Security\\Windows Firewall with Advanced Security\\Windows Firewall Properties\\Domain Profile\\Settings Customize\\Display a notification"
     compliance:
-      - cis: "9.1.4"
+      - cis: ["9.1.4"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\DomainProfile'
@@ -1115,8 +1115,8 @@ checks:
     rationale: "If events are not recorded it may be difficult or impossible to determine the root cause of system problems or the unauthorized activities of malicious users."
     remediation: "To establish the recommended configuration via GP, set the following UI path to %SYSTEMROOT%\\System32\\logfiles\\firewall\\domainfw.log: Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Windows Firewall with Advanced Security\\Windows Firewall with Advanced Security\\Windows Firewall Properties\\Domain Profile\\Logging Customize\\Name"
     compliance:
-      - cis: "9.1.5"
-      - cis_csc: "6.2, 6.3"
+      - cis: ["9.1.5"]
+      - cis_csc: ["6.2","6.3"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\DomainProfile\Logging'
@@ -1129,8 +1129,8 @@ checks:
     rationale: "If events are not recorded it may be difficult or impossible to determine the root cause of system problems or the unauthorized activities of malicious users."
     remediation: "To establish the recommended configuration via GP, set the following UI path to 16,384 KB or greater: Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Windows Firewall with Advanced Security\\Windows Firewall with Advanced Security\\Windows Firewall Properties\\Domain Profile\\Logging Customize\\Size limit (KB)"
     compliance:
-      - cis: "9.1.6"
-      - cis_csc: "6.3, 6.4"
+      - cis: ["9.1.6"]
+      - cis_csc: ["6.3","6.4"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\DomainProfile\Logging'
@@ -1143,8 +1143,8 @@ checks:
     rationale: "If events are not recorded it may be difficult or impossible to determine the root cause of system problems or the unauthorized activities of malicious users."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Yes: Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Windows Firewall with Advanced Security\\Windows Firewall with Advanced Security\\Windows Firewall Properties\\Domain Profile\\Logging Customize\\Log dropped packets"
     compliance:
-      - cis: "9.1.7"
-      - cis_csc: "6.2, 6.3"
+      - cis: ["9.1.7"]
+      - cis_csc: ["6.2","6.3"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\DomainProfile\Logging'
@@ -1157,8 +1157,8 @@ checks:
     rationale: "If events are not recorded it may be difficult or impossible to determine the root cause of system problems or the unauthorized activities of malicious users."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Yes: Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Windows Firewall with Advanced Security\\Windows Firewall with Advanced Security\\Windows Firewall Properties\\Domain Profile\\Logging Customize\\Log successful connections"
     compliance:
-      - cis: "9.1.8"
-      - cis_csc: "6.2, 6.3"
+      - cis: ["9.1.8"]
+      - cis_csc: ["6.2","6.3"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\DomainProfile\Logging'
@@ -1171,8 +1171,8 @@ checks:
     rationale: "If the firewall is turned off all traffic will be able to access the system and an attacker may be more easily able to remotely exploit a weakness in a network service."
     remediation: "To establish the recommended configuration via GP, set the following UI path to On (recommended): Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Windows Firewall with Advanced Security\\Windows Firewall with Advanced Security\\Windows Firewall Properties\\Private Profile\\Firewall state"
     compliance:
-      - cis: "9.2.1"
-      - cis_csc: "9.2, 9.4"
+      - cis: ["9.2.1"]
+      - cis_csc: ["9.2","9.4"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PrivateProfile'
@@ -1185,8 +1185,8 @@ checks:
     rationale: "If the firewall allows all traffic to access the system then an attacker may be more easily able to remotely exploit a weakness in a network service."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Block (default): Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Windows Firewall with Advanced Security\\Windows Firewall with Advanced Security\\Windows Firewall Properties\\Private Profile\\Inbound connections"
     compliance:
-      - cis: "9.2.2"
-      - cis_csc: "9.2, 9.4"
+      - cis: ["9.2.2"]
+      - cis_csc: ["9.2","9.4"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PrivateProfile'
@@ -1199,8 +1199,8 @@ checks:
     rationale: "Some people believe that it is prudent to block all outbound connections except those specifically approved by the user or administrator. Microsoft disagrees with this opinion, blocking outbound connections by default will force users to deal with a large number of dialog boxes prompting them to authorize or block applications such as their web browser or instant messaging software. Additionally, blocking outbound traffic has little value because if an attacker has compromised the system they can reconfigure the firewall anyway."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Allow (default): Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Windows Firewall with Advanced Security\\Windows Firewall with Advanced Security\\Windows Firewall Properties\\Private Profile\\Outbound connections"
     compliance:
-      - cis: "9.2.3"
-      - cis_csc: "9.2, 9.4"
+      - cis: ["9.2.3"]
+      - cis_csc: ["9.2","9.4"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PrivateProfile'
@@ -1213,7 +1213,7 @@ checks:
     rationale: "Firewall notifications can be complex and may confuse the end users, who would not be able to address the alert."
     remediation: "To establish the recommended configuration via GP, set the following UI path to No: Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Windows Firewall with Advanced Security\\Windows Firewall with Advanced Security\\Windows Firewall Properties\\Private Profile\\Settings Customize\\Display a notification"
     compliance:
-      - cis: "9.2.4"
+      - cis: ["9.2.4"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PrivateProfile'
@@ -1226,8 +1226,8 @@ checks:
     rationale: "If events are not recorded it may be difficult or impossible to determine the root cause of system problems or the unauthorized activities of malicious users."
     remediation: "To establish the recommended configuration via GP, set the following UI path to %SYSTEMROOT%\\System32\\logfiles\\firewall\\privatefw.log: Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Windows Firewall with Advanced Security\\Windows Firewall with Advanced Security\\Windows Firewall Properties\\Private Profile\\Logging Customize\\Name"
     compliance:
-      - cis: "9.2.5"
-      - cis_csc: "6.2, 6.3"
+      - cis: ["9.2.5"]
+      - cis_csc: ["6.2","6.3"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PrivateProfile\Logging'
@@ -1240,8 +1240,8 @@ checks:
     rationale: "If events are not recorded it may be difficult or impossible to determine the root cause of system problems or the unauthorized activities of malicious users."
     remediation: "To establish the recommended configuration via GP, set the following UI path to 16,384 KB or greater: Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Windows Firewall with Advanced Security\\Windows Firewall with Advanced Security\\Windows Firewall Properties\\Private Profile\\Logging Customize\\Size limit (KB)"
     compliance:
-      - cis: "9.2.6"
-      - cis_csc: "6.3, 6.4"
+      - cis: ["9.2.6"]
+      - cis_csc: ["6.3","6.4"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PrivateProfile\Logging'
@@ -1254,8 +1254,8 @@ checks:
     rationale: "If events are not recorded it may be difficult or impossible to determine the root cause of system problems or the unauthorized activities of malicious users."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Yes: Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Windows Firewall with Advanced Security\\Windows Firewall with Advanced Security\\Windows Firewall Properties\\Private Profile\\Logging Customize\\Log dropped packets"
     compliance:
-      - cis: "9.2.7"
-      - cis_csc: "6.2, 6.3"
+      - cis: ["9.2.7"]
+      - cis_csc: ["6.2","6.3"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PrivateProfile\Logging'
@@ -1268,8 +1268,8 @@ checks:
     rationale: "If events are not recorded it may be difficult or impossible to determine the root cause of system problems or the unauthorized activities of malicious users."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Yes: Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Windows Firewall with Advanced Security\\Windows Firewall with Advanced Security\\Windows Firewall Properties\\Private Profile\\Logging Customize\\Log successful connections"
     compliance:
-      - cis: "9.2.8"
-      - cis_csc: "6.2, 6.3"
+      - cis: ["9.2.8"]
+      - cis_csc: ["6.2","6.3"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PrivateProfile\Logging'
@@ -1282,8 +1282,8 @@ checks:
     rationale: "If the firewall is turned off all traffic will be able to access the system and an attacker may be more easily able to remotely exploit a weakness in a network service"
     remediation: "To establish the recommended configuration via GP, set the following UI path to On (recommended): Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Windows Firewall with Advanced Security\\Windows Firewall with Advanced Security\\Windows Firewall Properties\\Public Profile\\Firewall state"
     compliance:
-      - cis: "9.3.1"
-      - cis_csc: "9.2, 9.4"
+      - cis: ["9.3.1"]
+      - cis_csc: ["9.2","9.4"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PublicProfile'
@@ -1296,8 +1296,8 @@ checks:
     rationale: "If the firewall allows all traffic to access the system then an attacker may be more easily able to remotely exploit a weakness in a network service."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Block (default): Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Windows Firewall with Advanced Security\\Windows Firewall with Advanced Security\\Windows Firewall Properties\\Public Profile\\Inbound connections"
     compliance:
-      - cis: "9.3.2"
-      - cis_csc: "9.2, 9.4"
+      - cis: ["9.3.2"]
+      - cis_csc: ["9.2","9.4"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PublicProfile'
@@ -1310,8 +1310,8 @@ checks:
     rationale: "Some people believe that it is prudent to block all outbound connections except those specifically approved by the user or administrator. Microsoft disagrees with this opinion, blocking outbound connections by default will force users to deal with a large number of dialog boxes prompting them to authorize or block applications such as their web browser or instant messaging software. Additionally, blocking outbound traffic has little value because if an attacker has compromised the system they can reconfigure the firewall anyway."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Allow (default): Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Windows Firewall with Advanced Security\\Windows Firewall with Advanced Security\\Windows Firewall Properties\\Public Profile\\Outbound connections"
     compliance:
-      - cis: "9.3.3"
-      - cis_csc: "9.2, 9.4"
+      - cis: ["9.3.3"]
+      - cis_csc: ["9.2","9.4"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PublicProfile'
@@ -1324,7 +1324,7 @@ checks:
     rationale: "Some organizations may prefer to avoid alarming users when firewall rules block certain types of network activity. However, notifications can be helpful when troubleshooting network issues involving the firewall."
     remediation: "To establish the recommended configuration via GP, set the following UI path to 'No': Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Windows Firewall with Advanced Security\\Windows Firewall with Advanced Security\\Windows Firewall Properties\\Public Profile\\Settings Customize\\Display a notification"
     compliance:
-      - cis: "9.3.4"
+      - cis: ["9.3.4"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PublicProfile'
@@ -1337,8 +1337,8 @@ checks:
     rationale: "When in the Public profile, there should be no special local firewall exceptions per computer. These settings should be managed by a centralized policy."
     remediation: "To establish the recommended configuration via GP, set the following UI path to No: Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Windows Firewall with Advanced Security\\Windows Firewall with Advanced Security\\Windows Firewall Properties\\Public Profile\\Settings Customize\\Apply local firewall rules"
     compliance:
-      - cis: "9.3.5"
-      - cis_csc: "5.1"
+      - cis: ["9.3.5"]
+      - cis_csc: ["5.1"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PublicProfile'
@@ -1351,8 +1351,8 @@ checks:
     rationale: "Users with administrative privileges might create firewall rules that expose the system to remote attack"
     remediation: "To establish the recommended configuration via GP, set the following UI path to No: Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Windows Firewall with Advanced Security\\Windows Firewall with Advanced Security\\Windows Firewall Properties\\Public Profile\\Settings Customize\\Apply local connection security rules"
     compliance:
-      - cis: "9.3.6"
-      - cis_csc: "5.1"
+      - cis: ["9.3.6"]
+      - cis_csc: ["5.1"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PublicProfile'
@@ -1365,8 +1365,8 @@ checks:
     rationale: "If events are not recorded it may be difficult or impossible to determine the root cause of system problems or the unauthorized activities of malicious users."
     remediation: "To establish the recommended configuration via GP, set the following UI path to %SYSTEMROOT%\\System32\\logfiles\\firewall\\publicfw.log: Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Windows Firewall with Advanced Security\\Windows Firewall with Advanced Security\\Windows Firewall Properties\\Public Profile\\Logging Customize\\Name"
     compliance:
-      - cis: "9.3.7"
-      - cis_csc: "6.2, 6.3"
+      - cis: ["9.3.7"]
+      - cis_csc: ["6.2","6.3"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PublicProfile\Logging'
@@ -1379,8 +1379,8 @@ checks:
     rationale: "If events are not recorded it may be difficult or impossible to determine the root cause of system problems or the unauthorized activities of malicious users."
     remediation: "To establish the recommended configuration via GP, set the following UI path to 16,384 KB or greater: Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Windows Firewall with Advanced Security\\Windows Firewall with Advanced Security\\Windows Firewall Properties\\Public Profile\\Logging Customize\\Size limit (KB)"
     compliance:
-      - cis: "9.3.8"
-      - cis_csc: "6.3, 6.4"
+      - cis: ["9.3.8"]
+      - cis_csc: ["6.3","6.4"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PublicProfile\Logging'
@@ -1393,8 +1393,8 @@ checks:
     rationale: "If events are not recorded it may be difficult or impossible to determine the root cause of system problems or the unauthorized activities of malicious users."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Yes: Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Windows Firewall with Advanced Security\\Windows Firewall with Advanced Security\\Windows Firewall Properties\\Public Profile\\Logging Customize\\Log dropped packets"
     compliance:
-      - cis: "9.3.9"
-      - cis_csc: "6.2, 6.3"
+      - cis: ["9.3.9"]
+      - cis_csc: ["6.2","6.3"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PublicProfile\Logging'
@@ -1407,8 +1407,8 @@ checks:
     rationale: "If events are not recorded it may be difficult or impossible to determine the root cause of system problems or the unauthorized activities of malicious users."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Yes. Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Windows Firewall with Advanced Security\\Windows Firewall with Advanced Security\\Windows Firewall Properties\\Public Profile\\Logging Customize\\Log successful connections"
     compliance:
-      - cis: "9.3.10"
-      - cis_csc: "6.2, 6.3"
+      - cis: ["9.3.10"]
+      - cis_csc: ["6.2","6.3"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PublicProfile\Logging'
@@ -1422,7 +1422,7 @@ checks:
     rationale: "Disabling the lock screen camera extends the protection afforded by the lock screen to camera features."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\Control Panel\\Personalization\\Prevent enabling lock screen camera"
     compliance:
-      - cis: "18.1.1.1"
+      - cis: ["18.1.1.1"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Personalization'
@@ -1435,7 +1435,7 @@ checks:
     rationale: "Disabling the lock screen slide show extends the protection afforded by the lock screen to slide show contents."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\Control Panel\\Personalization\\Prevent enabling lock screen slide show"
     compliance:
-      - cis: "18.1.1.2"
+      - cis: ["18.1.1.2"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Personalization'
@@ -1448,8 +1448,8 @@ checks:
     rationale: "If this setting is Enabled sensitive information could be stored in the cloud or sent to Microsoft."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Administrative Templates\\Control Panel\\Regional and Language Options\\Allow input personalization"
     compliance:
-      - cis: "18.1.2.2"
-      - cis_csc: "13"
+      - cis: ["18.1.2.2"]
+      - cis_csc: ["13"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\InputPersonalization'
@@ -1462,8 +1462,8 @@ checks:
     rationale: "Due to the difficulty in managing local Administrator passwords, many organizations choose to use the same password on all workstations and/or Member Servers when deploying them. This creates a serious attack surface security risk because if an attacker manages to compromise one system and learn the password to its local Administrator account, then they can leverage that account to instantly gain access to all other computers that also use that password for their local Administrator account."
     remediation: "In order to utilize LAPS, a minor Active Directory Schema update is required, and a Group Policy Client Side Extension (CSE) must be installed on each managed computer. When LAPS is installed, the file AdmPwd.dll must be present in the following location and registered in Windows (the LAPS AdmPwd GPO Extension / CSE installation does this for you): C:\\Program Files\\LAPS\\CSE\\AdmPwd.dll"
     compliance:
-      - cis: "18.2.1"
-      - cis_csc: "16.9"
+      - cis: ["18.2.1"]
+      - cis_csc: ["16.9"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon\GPExtensions\{D76B9641-3288-4f75-942D-087DE603E3EA}'
@@ -1476,8 +1476,8 @@ checks:
     rationale: "Due to the difficulty in managing local Administrator passwords, many organizations choose to use the same password on all workstations and/or Member Servers when deploying them. This creates a serious attack surface security risk because if an attacker manages to compromise one system and learn the password to its local Administrator account, then they can leverage that account to instantly gain access to all other computers that also use that password for their local Administrator account."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\LAPS\\Do not allow password expiration time longer than required by policy"
     compliance:
-      - cis: "18.2.2"
-      - cis_csc: "16.2, 16.10"
+      - cis: ["18.2.2"]
+      - cis_csc: ["16.2","16.10"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft Services\AdmPwd'
@@ -1490,8 +1490,8 @@ checks:
     rationale: "Due to the difficulty in managing local Administrator passwords, many organizations choose to use the same password on all workstations and/or Member Servers when deploying them. This creates a serious attack surface security risk because if an attacker manages to compromise one system and learn the password to its local Administrator account, then they can leverage that account to instantly gain access to all other computers that also use that password for their local Administrator account."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\LAPS\\Enable Local Admin Password Management"
     compliance:
-      - cis: "18.2.3"
-      - cis_csc: "16.9"
+      - cis: ["18.2.3"]
+      - cis_csc: ["16.9"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft Services\AdmPwd'
@@ -1504,8 +1504,8 @@ checks:
     rationale: "Due to the difficulty in managing local Administrator passwords, many organizations choose to use the same password on all workstations and/or Member Servers when deploying them. This creates a serious attack surface security risk because if an attacker manages to compromise one system and learn the password to its local Administrator account, then they can leverage that account to instantly gain access to all other computers that also use that password for their local Administrator account."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled, and configure the Password Complexity option to Large letters + small letters + numbers + special characters: Computer Configuration\\Policies\\Administrative Templates\\LAPS\\Password Settings"
     compliance:
-      - cis: "18.2.4"
-      - cis_csc: "5.7"
+      - cis: ["18.2.4"]
+      - cis_csc: ["5.7"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft Services\AdmPwd'
@@ -1518,8 +1518,8 @@ checks:
     rationale: "Due to the difficulty in managing local Administrator passwords, many organizations choose to use the same password on all workstations and/or Member Servers when deploying them. This creates a serious attack surface security risk because if an attacker manages to compromise one system and learn the password to its local Administrator account, then they can leverage that account to instantly gain access to all other computers that also use that password for their local Administrator account."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled, and configure the Password Length option to 15 or more: Computer Configuration\\Policies\\Administrative Templates\\LAPS\\Password Settings"
     compliance:
-      - cis: "18.2.5"
-      - cis_csc: "5.7"
+      - cis: ["18.2.5"]
+      - cis_csc: ["5.7"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft Services\AdmPwd'
@@ -1532,8 +1532,8 @@ checks:
     rationale: "Due to the difficulty in managing local Administrator passwords, many organizations choose to use the same password on all workstations and/or Member Servers when deploying them. This creates a serious attack surface security risk because if an attacker manages to compromise one system and learn the password to its local Administrator account, then they can leverage that account to instantly gain access to all other computers that also use that password for their local Administrator account."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled, and configure the Password Age (Days) option to 30 or fewer: Computer Configuration\\Policies\\Administrative Templates\\LAPS\\Password Settings"
     compliance:
-      - cis: "18.2.6"
-      - cis_csc: "16.5"
+      - cis: ["18.2.6"]
+      - cis_csc: ["16.5"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft Services\AdmPwd'
@@ -1546,8 +1546,8 @@ checks:
     rationale: "Local accounts are at high risk for credential theft when the same account and password is configured on multiple systems. Ensuring this policy is Enabled significantly reduces that risk."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\MS Security Guide\\Apply UAC restrictions to local accounts on network logons"
     compliance:
-      - cis: "18.3.1"
-      - cis_csc: "5.8, 4.3"
+      - cis: ["18.3.1"]
+      - cis_csc: ["5.8","4.3"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System'
@@ -1560,8 +1560,8 @@ checks:
     rationale: "Since September 2016, Microsoft has strongly encouraged that SMBv1 be disabled and no longer used on modern networks, as it is a 30 year old design that is much more vulnerable to attacks then much newer designs such as SMBv2 and SMBv3."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Disable driver: Computer Configuration\\Policies\\Administrative Templates\\MS Security Guide\\Configure SMB v1 client driver"
     compliance:
-      - cis: "18.3.2"
-      - cis_csc: "9.1, 9.2"
+      - cis: ["18.3.2"]
+      - cis_csc: ["9.1","9.2"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\mrxsmb10'
@@ -1574,8 +1574,8 @@ checks:
     rationale: "Since September 2016, Microsoft has strongly encouraged that SMBv1 be disabled and no longer used on modern networks, as it is a 30 year old design that is much more vulnerable to attacks then much newer designs such as SMBv2 and SMBv3."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Administrative Templates\\MS Security Guide\\Configure SMB v1 server"
     compliance:
-      - cis: "18.3.3"
-      - cis_csc: "9.1, 9.2"
+      - cis: ["18.3.3"]
+      - cis_csc: ["9.1","9.2"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters'
@@ -1588,8 +1588,8 @@ checks:
     rationale: "This feature is designed to block exploits that use the Structured Exception Handler (SEH) overwrite technique. This protection mechanism is provided at run-time. Therefore, it helps protect applications regardless of whether they have been compiled with the latest improvements, such as the /SAFESEH option."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\MS Security Guide\\Enable Structured Exception Handling Overwrite Protection (SEHOP)"
     compliance:
-      - cis: "18.3.4"
-      - cis_csc: "8.4, 8.3"
+      - cis: ["18.3.4"]
+      - cis_csc: ["8.4","8.3"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\kernel'
@@ -1602,8 +1602,8 @@ checks:
     rationale: "This opt-in feature is free and could prevent malicious software from being installed."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\MS Security Guide\\Turn on Windows Defender protection against Potentially Unwanted Applications"
     compliance:
-      - cis: "18.3.5"
-      - cis_csc: "8.4, 8.3"
+      - cis: ["18.3.5"]
+      - cis_csc: ["8.4","8.3"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\MpEngine'
@@ -1616,8 +1616,8 @@ checks:
     rationale: "Preventing the plaintext storage of credentials in memory may reduce opportunity for credential theft."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Administrative Templates\\MS Security Guide\\WDigest Authentication (disabling may require KB2871997)"
     compliance:
-      - cis: "18.3.6"
-      - cis_csc: "16.14"
+      - cis: ["18.3.6"]
+      - cis_csc: ["16.14"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest'
@@ -1630,8 +1630,8 @@ checks:
     rationale: "If you configure a computer for automatic logon, anyone who can physically gain access to the computer can also gain access to everything that is on the computer, including any network or networks that the computer is connected to. Also, if you enable automatic logon, the password is stored in the registry in plaintext. The specific registry key that stores this setting is remotely readable by the Authenticated Users group. As a result, this entry is appropriate only if the computer is physically secured and if you ensure that untrusted users cannot remotely see the registry."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Administrative Templates\\MSS (Legacy)\\MSS: (AutoAdminLogon) Enable Automatic Logon (not recommended)"
     compliance:
-      - cis: "18.4.1"
-      - cis_csc: "16"
+      - cis: ["18.4.1"]
+      - cis_csc: ["16"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon'
@@ -1644,8 +1644,8 @@ checks:
     rationale: "An attacker could use source routed packets to obscure their identity and location. Source routing allows a computer that sends a packet to specify the route that the packet takes"
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Highest protection, source routing is completely disabled: Computer Configuration\\Policies\\Administrative Templates\\MSS (Legacy)\\MSS: (DisableIPSourceRouting IPv6) IP source routing protection level (protects against packet spoofing)"
     compliance:
-      - cis: "18.4.2"
-      - cis_csc: "9"
+      - cis: ["18.4.2"]
+      - cis_csc: ["9"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip6\Parameters'
@@ -1658,8 +1658,8 @@ checks:
     rationale: "An attacker could use source routed packets to obscure their identity and location. Source routing allows a computer that sends a packet to specify the route that the packet takes."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Highest protection, source routing is completely disabled: Computer Configuration\\Policies\\Administrative Templates\\MSS (Legacy)\\MSS: (DisableIPSourceRouting) IP source routing protection level (protects against packet spoofing)"
     compliance:
-      - cis: "18.4.3"
-      - cis_csc: "9"
+      - cis: ["18.4.3"]
+      - cis_csc: ["9"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters'
@@ -1672,8 +1672,8 @@ checks:
     rationale: "This behavior is expected. The problem is that the 10 minute time-out period for the ICMP redirect-plumbed routes temporarily creates a network situation in which traffic will no longer be routed properly for the affected host. Ignoring such ICMP redirects will limit the system's exposure to attacks that will impact its ability to participate on the network."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Administrative Templates\\MSS (Legacy)\\MSS: (EnableICMPRedirect) Allow ICMP redirects to override OSPF generated routes"
     compliance:
-      - cis: "18.4.5"
-      - cis_csc: "9"
+      - cis: ["18.4.5"]
+      - cis_csc: ["9"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters'
@@ -1686,8 +1686,8 @@ checks:
     rationale: "The NetBT protocol is designed not to use authentication, and is therefore vulnerable to spoofing. Spoofing makes a transmission appear to come from a user other than the user who performed the action. A malicious user could exploit the unauthenticated nature of the protocol to send a name-conflict datagram to a target computer, which would cause the computer to relinquish its name and not respond to queries. An attacker could send a request over the network and query a computer to release its NetBIOS name. As with any change that could affect applications, it is recommended that you test this change in a non-production environment before you change the production environment. The result of such an attack could be to cause intermittent connectivity issues on the target computer, or even to prevent the use of Network Neighborhood, domain logons, the NET SEND command, or additional NetBIOS name resolution."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\MSS (Legacy)\\MSS: (NoNameReleaseOnDemand) Allow the computer to ignore NetBIOS name release requests except from WINS servers"
     compliance:
-      - cis: "18.4.7"
-      - cis_csc: "9"
+      - cis: ["18.4.7"]
+      - cis_csc: ["9"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\NetBT\Parameters'
@@ -1700,8 +1700,8 @@ checks:
     rationale: "If a user unknowingly executes hostile code that was packaged with additional files that include modified versions of system DLLs, the hostile code could load its own versions of those DLLs and potentially increase the type and degree of damage the code can render."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\MSS (Legacy)\\MSS: (SafeDllSearchMode) Enable Safe DLL search mode (recommended)"
     compliance:
-      - cis: "18.4.9"
-      - cis_csc: "8"
+      - cis: ["18.4.9"]
+      - cis_csc: ["8"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager'
@@ -1714,8 +1714,8 @@ checks:
     rationale: "The default grace period that is allowed for user movement before the screen saver lock takes effect is five seconds. If you leave the default grace period configuration, your computer is vulnerable to a potential attack from someone who could approach the console and attempt to log on to the computer before the lock takes effect. An entry to the registry can be made to adjust the length of the grace period."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: 5 or fewer seconds: Computer Configuration\\Policies\\Administrative Templates\\MSS (Legacy)\\MSS: (ScreenSaverGracePeriod) The time in seconds before the screen saver grace period expires (0 recommended)"
     compliance:
-      - cis: "18.4.10"
-      - cis_csc: "16.5"
+      - cis: ["18.4.10"]
+      - cis_csc: ["16.5"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon'
@@ -1728,8 +1728,8 @@ checks:
     rationale: "If the Security log reaches 90 percent of its capacity and the computer has not been configured to overwrite events as needed, more recent events will not be written to the log. If the log reaches its capacity and the computer has been configured to shut down when it can no longer record events to the Security log, the computer will shut down and will no longer be available to provide network services."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: 90% or less: Computer Configuration\\Policies\\Administrative Templates\\MSS (Legacy)\\MSS: (WarningLevel) Percentage threshold for the security event log at which the system will generate a warning"
     compliance:
-      - cis: "18.4.13"
-      - cis_csc: "6.3, 6.4"
+      - cis: ["18.4.13"]
+      - cis_csc: ["6.3","6.4"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Eventlog\Security'
@@ -1742,8 +1742,8 @@ checks:
     rationale: "In order to help mitigate the risk of NetBIOS Name Service (NBT-NS) poisoning attacks, setting the node type to P-node will prevent the system from sending out NetBIOS broadcasts."
     remediation: "To establish the recommended configuration, set the following Registry value to 0x2 (2) (DWORD): HKEY_LOCAL_MACHINE\\System\\CurrentControlSet\\Services\\NetBT\\Parameters:NodeTyp e"
     compliance:
-      - cis: "18.5.4.1"
-      - cis_csc: "9"
+      - cis: ["18.5.4.1"]
+      - cis_csc: ["9"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\NetBT\Parameters'
@@ -1756,8 +1756,8 @@ checks:
     rationale: "An attacker can listen on a network for these LLMNR (UDP/5355) or NBT-NS (UDP/137) broadcasts and respond to them, tricking the host into thinking that it knows the location of the requested system."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\Network\\DNS Client\\Turn off multicast name resolution"
     compliance:
-      - cis: "18.5.4.2"
-      - cis_csc: "9"
+      - cis: ["18.5.4.2"]
+      - cis_csc: ["9"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\DNSClient'
@@ -1770,8 +1770,8 @@ checks:
     rationale: "Insecure guest logons are used by file servers to allow unauthenticated access to shared folders."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Administrative Templates\\Network\\Lanman Workstation\\Enable insecure guest logons"
     compliance:
-      - cis: "18.5.8.1"
-      - cis_csc: "9.1, 9.2"
+      - cis: ["18.5.8.1"]
+      - cis_csc: ["9.1","9.2"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\LanmanWorkstation'
@@ -1784,8 +1784,8 @@ checks:
     rationale: "The Network Bridge setting, if enabled, allows users to create a Layer 2 Media Access Control (MAC) bridge, enabling them to connect two or more physical network segments together. A Network Bridge thus allows a computer that has connections to two different networks to share data between those networks. In an enterprise managed environment, where there is a need to control network traffic to only authorized paths, allowing users to create a Network Bridge increases the risk and attack surface from the bridged network."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\Network\\Network Connections\\Prohibit installation and configuration of Network Bridge on your DNS domain network"
     compliance:
-      - cis: "18.5.11.2"
-      - cis_csc: "5.1"
+      - cis: ["18.5.11.2"]
+      - cis_csc: ["5.1"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Network Connections'
@@ -1798,8 +1798,8 @@ checks:
     rationale: "Non-administrators should not be able to turn on the Mobile Hotspot feature and open their Internet connectivity up to nearby mobile devices."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\Network\\Network Connections\\Prohibit use of Internet Connection Sharing on your DNS domain network"
     compliance:
-      - cis: "18.5.11.3"
-      - cis_csc: "9.1, 9.2"
+      - cis: ["18.5.11.3"]
+      - cis_csc: ["9.1","9.2"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Network Connections'
@@ -1812,8 +1812,8 @@ checks:
     rationale: "Allowing regular users to set a network location increases the risk and attack surface."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\Network\\Network Connections\\Require domain users to elevate when setting a network's location"
     compliance:
-      - cis: "18.5.11.4"
-      - cis_csc: "5.1"
+      - cis: ["18.5.11.4"]
+      - cis_csc: ["5.1"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Network Connections'
@@ -1826,8 +1826,8 @@ checks:
     rationale: "In February 2015, Microsoft released a new control mechanism to mitigate a security risk in Group Policy as part of the MS15-011 / MSKB 3000483 security update. This mechanism requires both the installation of the new security update and also the deployment of specific group policy settings to all computers on the domain from Windows Vista / Server 2008 (non-R2) or newer (the associated security patch to enable this feature was not released for Server 2003). A new group policy template (NetworkProvider.admx/adml) was also provided with the security update. Once the new GPO template is in place, the following are the minimum requirements to remediate the Group Policy security risk: \\*\\NETLOGON RequireMutualAuthentication=1, RequireIntegrity=1 \\*\\SYSVOL RequireMutualAuthentication=1, RequireIntegrity=1 Note: A reboot may be required after the setting is applied to a client machine to access the above paths."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled with the following paths configured, at a minimum: \\*\\NETLOGON RequireMutualAuthentication=1, RequireIntegrity=1 \\*\\SYSVOL RequireMutualAuthentication=1, RequireIntegrity=1 Computer Configuration\\Policies\\Administrative Templates\\Network\\Network Provider\\Hardened UNC Paths"
     compliance:
-      - cis: "18.5.14.1"
-      - cis_csc: "3"
+      - cis: ["18.5.14.1"]
+      - cis_csc: ["3"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\NetworkProvider\HardenedPaths'
@@ -1842,8 +1842,8 @@ checks:
     rationale: "Blocking simultaneous connections can help prevent a user unknowingly allowing network traffic to flow between the Internet and the enterprise managed network."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\Network\\Windows Connection Manager\\Minimize the number of simultaneous connections to the Internet or a Windows Domain"
     compliance:
-      - cis: "18.5.21.1"
-      - cis_csc: "12"
+      - cis: ["18.5.21.1"]
+      - cis_csc: ["12"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WcmSvc\GroupPolicy'
@@ -1856,8 +1856,8 @@ checks:
     rationale: "The potential concern is that a user would unknowingly allow network traffic to flow between the insecure public network and the enterprise managed network."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\Network\\Windows Connection Manager\\Prohibit connection to non-domain networks when connected to domain authenticated network"
     compliance:
-      - cis: "18.5.21.2"
-      - cis_csc: "12"
+      - cis: ["18.5.21.2"]
+      - cis_csc: ["12"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WcmSvc\GroupPolicy'
@@ -1870,8 +1870,8 @@ checks:
     rationale: "Automatically connecting to an open hotspot or network can introduce the system to a rogue network with malicious intent."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Administrative Templates\\Network\\WLAN Service\\WLAN Settings\\Allow Windows to automatically connect to suggested open hotspots, to networks shared by contacts, and to hotspots offering paid services"
     compliance:
-      - cis: "18.5.23.2.1"
-      - cis_csc: "15.4, 15.5"
+      - cis: ["18.5.23.2.1"]
+      - cis_csc: ["15.4","15.5"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WcmSvc\wifinetworkmanager\config'
@@ -1884,8 +1884,8 @@ checks:
     rationale: "When this policy setting is enabled, any user who has read access to the security events can read the command-line arguments for any successfully created process. Command-line arguments may contain sensitive or private information such as passwords or user data."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Administrative Templates\\System\\Audit Process Creation\\Include command line in process creation events"
     compliance:
-      - cis: "18.8.3.1"
-      - cis_csc: "16.14"
+      - cis: ["18.8.3.1"]
+      - cis_csc: ["16.14"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\Audit'
@@ -1898,8 +1898,8 @@ checks:
     rationale: "Restricted Admin Mode was designed to help protect administrator accounts by ensuring that reusable credentials are not stored in memory on remote devices that could potentially be compromised. Windows Defender Remote Credential Guard helps you protect your credentials over a Remote Desktop connection by redirecting Kerberos requests back to the device that is requesting the connection. Both features should be enabled and supported, as they reduce the chance of credential theft."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\System\\Credentials Delegation\\Remote host allows delegation of non-exportable credentials"
     compliance:
-      - cis: "18.8.4.2"
-      - cis_csc: "16"
+      - cis: ["18.8.4.2"]
+      - cis_csc: ["16"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\CredentialsDelegation'
@@ -1912,8 +1912,8 @@ checks:
     rationale: "This policy setting helps reduce the impact of malware that has already infected your system."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Good, unknown and bad but critical: Computer Configuration\\Policies\\Administrative Templates\\System\\Early Launch Antimalware\\Boot-Start Driver Initialization Policy"
     compliance:
-      - cis: "18.8.14.1"
-      - cis_csc: "8"
+      - cis: ["18.8.14.1"]
+      - cis_csc: ["8"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Policies\EarlyLaunch'
@@ -1926,8 +1926,8 @@ checks:
     rationale: "Setting this option to false (unchecked) will ensure that domain policy changes take effect more quickly, as compared to waiting until the next user logon or system restart."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled, then set the Do not apply during periodic background processing option to FALSE (unchecked): Computer Configuration\\Policies\\Administrative Templates\\System\\Group Policy\\Configure registry policy processing"
     compliance:
-      - cis: "18.8.21.2"
-      - cis_csc: "3.7, 5.4, 5.5"
+      - cis: ["18.8.21.2"]
+      - cis_csc: ["3.7","5.4","5.5"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Group Policy\{35378EAC-683F-11D2-A89A-00C04FBBCFA2}'
@@ -1940,8 +1940,8 @@ checks:
     rationale: "Setting this option to true (checked) will ensure unauthorized changes that might have been configured locally are forced to match the domain-based Group Policy settings again."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled, then set the Process even if the Group Policy objects have not changed option to TRUE (checked): Computer Configuration\\Policies\\Administrative Templates\\System\\Group Policy\\Configure registry policy processing"
     compliance:
-      - cis: "18.8.21.3"
-      - cis_csc: "3.7, 5.4, 5.5"
+      - cis: ["18.8.21.3"]
+      - cis_csc: ["3.7","5.4","5.5"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Group Policy\{35378EAC-683F-11D2-A89A-00C04FBBCFA2}'
@@ -1954,8 +1954,8 @@ checks:
     rationale: "A cross-device experience is when a system can access app and send messages to other devices. In an enterprise managed environment only trusted systems should be communicating within the network. Access to any other system should be prohibited."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Administrative Templates\\System\\Group Policy\\Continue experiences on this device"
     compliance:
-      - cis: "18.8.21.4"
-      - cis_csc: "9.1, 9.2"
+      - cis: ["18.8.21.4"]
+      - cis_csc: ["9.1","9.2"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System'
@@ -1968,8 +1968,8 @@ checks:
     rationale: "This setting ensures that group policy changes take effect more quickly, as compared to waiting until the next user logon or system restart."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Administrative Templates\\System\\Group Policy\\Turn off background refresh of Group Policy"
     compliance:
-      - cis: "18.8.21.5"
-      - cis_csc: "3.7, 5.4, 5.5"
+      - cis: ["18.8.21.5"]
+      - cis_csc: ["3.7","5.4","5.5"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System'
@@ -1982,8 +1982,8 @@ checks:
     rationale: "The Store service is a retail outlet built into Windows, primarily for consumer use. In an enterprise managed environment the IT department should be managing the installation of all applications to reduce the risk of the installation of vulnerable software."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\System\\Internet Communication Management\\Internet Communication settings\\Turn off access to the Store"
     compliance:
-      - cis: "18.8.22.1.2"
-      - cis_csc: "2"
+      - cis: ["18.8.22.1.2"]
+      - cis_csc: ["2"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Printers'
@@ -1996,8 +1996,8 @@ checks:
     rationale: "Information that is transmitted over HTTP through this capability is not protected and can be intercepted by malicious users. For this reason, it is not often used in enterprise managed environments."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\System\\Internet Communication Management\\Internet Communication settings\\Turn off printing over HTTP"
     compliance:
-      - cis: "18.8.22.1.7"
-      - cis_csc: "13.1"
+      - cis: ["18.8.22.1.7"]
+      - cis_csc: ["13.1"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Printers'
@@ -2010,8 +2010,8 @@ checks:
     rationale: "An attacker with access to the console (for example, someone with physical access or someone who is able to connect to the workstation through Remote Desktop Services) could view the name of the last user who logged on to the server. The attacker could then try to guess the password, use a dictionary, or use a brute-force attack to try and log on."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\System\\Logon\\Block user from showing account details on sign-in"
     compliance:
-      - cis: "18.8.27.1"
-      - cis_csc: "16.5"
+      - cis: ["18.8.27.1"]
+      - cis_csc: ["16.5"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System'
@@ -2024,8 +2024,8 @@ checks:
     rationale: "An unauthorized user could disconnect the PC from the network or can connect the PC to other available networks without signing into Windows."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\System\\Logon\\Do not display network selection UI"
     compliance:
-      - cis: "18.8.27.2"
-      - cis_csc: "5"
+      - cis: ["18.8.27.2"]
+      - cis_csc: ["5"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System'
@@ -2038,8 +2038,8 @@ checks:
     rationale: "A malicious user could use this feature to gather account names of other users, that information could then be used in conjunction with other types of attacks such as guessing passwords or social engineering. The value of this countermeasure is small because a user with domain credentials could gather the same account information using other methods."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\System\\Logon\\Do not enumerate connected users on domain-joined computers"
     compliance:
-      - cis: "18.8.27.3"
-      - cis_csc: "16.9"
+      - cis: ["18.8.27.3"]
+      - cis_csc: ["16.9"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System'
@@ -2052,8 +2052,8 @@ checks:
     rationale: "A malicious user could use this feature to gather account names of other users, that information could then be used in conjunction with other types of attacks such as guessing passwords or social engineering. The value of this countermeasure is small because a user with domain credentials could gather the same account information using other methods."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Administrative Templates\\System\\Logon\\Enumerate local users on domain-joined computers"
     compliance:
-      - cis: "18.8.27.4"
-      - cis_csc: "16.9"
+      - cis: ["18.8.27.4"]
+      - cis_csc: ["16.9"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System'
@@ -2066,8 +2066,8 @@ checks:
     rationale: "App notifications might display sensitive business or personal data"
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\System\\Logon\\Turn off app notifications on the lock screen"
     compliance:
-      - cis: "18.8.27.5"
-      - cis_csc: "16.5"
+      - cis: ["18.8.27.5"]
+      - cis_csc: ["16.5"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System'
@@ -2080,8 +2080,8 @@ checks:
     rationale: "Picture passwords bypass the requirement for a typed complex password. In a shared work environment, a simple shoulder surf where someone observed the on-screen gestures would allow that person to gain access to the system without the need to know the complex password. Vertical monitor screens with an image are much more visible at a distance than horizontal key strokes, increasing the likelihood of a successful observation of the mouse gestures."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\System\\Logon\\Turn off picture password sign-in"
     compliance:
-      - cis: "18.8.27.6"
-      - cis_csc: "16.5"
+      - cis: ["18.8.27.6"]
+      - cis_csc: ["16.5"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System'
@@ -2094,8 +2094,8 @@ checks:
     rationale: "A PIN is created from a much smaller selection of characters than a password, so in most cases a PIN will be much less robust than a password."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Administrative Templates\\System\\Logon\\Turn on convenience PIN sign-in"
     compliance:
-      - cis: "18.8.27.7"
-      - cis_csc: "16.5"
+      - cis: ["18.8.27.7"]
+      - cis_csc: ["16.5"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System'
@@ -2108,8 +2108,8 @@ checks:
     rationale: "Disabling this setting ensures that the computer will not be accessible to attackers over a WLAN network while left unattended, on battery and in a sleep state."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Administrative Templates\\System\\Power Management\\Sleep Settings\\Allow network connectivity during connected-standby (on battery)"
     compliance:
-      - cis: "18.8.33.6.1"
-      - cis_csc: "9"
+      - cis: ["18.8.33.6.1"]
+      - cis_csc: ["9"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Power\PowerSettings\f15576e8-98b7-4186-b944-eafa664402d9'
@@ -2122,8 +2122,8 @@ checks:
     rationale: "Disabling this setting ensures that the computer will not be accessible to attackers over a WLAN network while left unattended, plugged in and in a sleep state."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Administrative Templates\\System\\Power Management\\Sleep Settings\\Allow network connectivity during connected-standby (plugged in)"
     compliance:
-      - cis: "18.8.33.6.2"
-      - cis_csc: "9"
+      - cis: ["18.8.33.6.2"]
+      - cis_csc: ["9"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Power\PowerSettings\f15576e8-98b7-4186-b944-eafa664402d9'
@@ -2136,8 +2136,8 @@ checks:
     rationale: "System sleep states (S1-S3) keep power to the RAM which may contain secrets, such as the BitLocker volume encryption key. An attacker finding a computer in sleep states (S1-S3) could directly attack the memory of the computer and gain access to the secrets through techniques such as RAM reminisce and direct memory access (DMA)."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Administrative Templates\\System\\Power Management\\Sleep Settings\\Allow standby states (S1-S3) when sleeping (on battery)"
     compliance:
-      - cis: "18.8.33.6.5"
-      - cis_csc: "13.2, 13.6"
+      - cis: ["18.8.33.6.5"]
+      - cis_csc: ["13.2","13.6"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Power\PowerSettings\0e796bdb-100d-47d6-a2d5-f7d2daa51f51'
@@ -2150,8 +2150,8 @@ checks:
     rationale: "Enabling this setting ensures that anyone who wakes an unattended computer from sleep state will have to provide logon credentials before they can access the system."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\System\\Power Management\\Sleep Settings\\Require a password when a computer wakes (plugged in)"
     compliance:
-      - cis: "18.8.33.6.6"
-      - cis_csc: "16.5"
+      - cis: ["18.8.33.6.6"]
+      - cis_csc: ["16.5"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Power\PowerSettings\0e796bdb-100d-47d6-a2d5-f7d2daa51f51'
@@ -2164,8 +2164,8 @@ checks:
     rationale: "A user might be tricked and accept an unsolicited Remote Assistance offer from a malicious user."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Administrative Templates\\System\\Remote Assistance\\Configure Offer Remote Assistance"
     compliance:
-      - cis: "18.8.35.1"
-      - cis_csc: "9.1, 9.2"
+      - cis: ["18.8.35.1"]
+      - cis_csc: ["9.1","9.2"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services'
@@ -2178,8 +2178,8 @@ checks:
     rationale: "There is slight risk that a rogue administrator will gain access to another user's desktop session, however, they cannot connect to a user's computer unannounced or control it without permission from the user. When an expert tries to connect, the user can still choose to deny the connection or give the expert view-only privileges. The user must explicitly click the Yes button to allow the expert to remotely control the workstation."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Administrative Templates\\System\\Remote Assistance\\Configure Solicited Remote Assistance"
     compliance:
-      - cis: "18.8.35.2"
-      - cis_csc: "5.1"
+      - cis: ["18.8.35.2"]
+      - cis_csc: ["5.1"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services'
@@ -2192,8 +2192,8 @@ checks:
     rationale: "Anonymous access to RPC services could result in accidental disclosure of information to unauthenticated users."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\System\\Remote Procedure Call\\Enable RPC Endpoint Mapper Client Authentication"
     compliance:
-      - cis: "18.8.36.1"
-      - cis_csc: "9.1, 9.2"
+      - cis: ["18.8.36.1"]
+      - cis_csc: ["9.1","9.2"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Rpc'
@@ -2206,8 +2206,8 @@ checks:
     rationale: "Unauthenticated RPC communication can create a security vulnerability."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Authenticated: Computer Configuration\\Policies\\Administrative Templates\\System\\Remote Procedure Call\\Restrict Unauthenticated RPC clients"
     compliance:
-      - cis: "18.8.36.2"
-      - cis_csc: "9.1, 9.2"
+      - cis: ["18.8.36.2"]
+      - cis_csc: ["9.1","9.2"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Rpc'
@@ -2220,8 +2220,8 @@ checks:
     rationale: "Enabling this setting allows an organization to use their enterprise user accounts instead of using their Microsoft accounts when accessing Windows store apps. This provides the organization with greater control over relevant credentials. Microsoft accounts cannot be centrally managed and as such enterprise credential security policies cannot be applied to them, which could put any information accessed by using Microsoft accounts at risk."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\App runtime\\Allow Microsoft accounts to be optional"
     compliance:
-      - cis: "18.9.6.1"
-      - cis_csc: "16.9"
+      - cis: ["18.9.6.1"]
+      - cis_csc: ["16.9"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System'
@@ -2234,8 +2234,8 @@ checks:
     rationale: "An attacker could use this feature to launch a program to damage a client computer or data on the computer."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\AutoPlay Policies\\Disallow Autoplay for non-volume devices"
     compliance:
-      - cis: "18.9.8.1"
-      - cis_csc: "8.3, 8.4, 8.5"
+      - cis: ["18.9.8.1"]
+      - cis_csc: ["8.3","8.4","8.5"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Explorer'
@@ -2248,8 +2248,8 @@ checks:
     rationale: "Prior to Windows Vista, when media containing an autorun command is inserted, the system will automatically execute the program without user intervention. This creates a major security concern as code may be executed without user's knowledge. The default behavior starting with Windows Vista is to prompt the user whether autorun command is to be run. The autorun command is represented as a handler in the Autoplay dialog"
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Do not execute any autorun commands: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\AutoPlay Policies\\Set the default behavior for AutoRun"
     compliance:
-      - cis: "18.9.8.2"
-      - cis_csc: "8.3, 8.4, 8.5"
+      - cis: ["18.9.8.2"]
+      - cis_csc: ["8.3","8.4","8.5"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer'
@@ -2262,8 +2262,8 @@ checks:
     rationale: "An attacker could use this feature to launch a program to damage a client computer or data on the computer."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: All drives: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\AutoPlay Policies\\Turn off Autoplay"
     compliance:
-      - cis: "18.9.8.3"
-      - cis_csc: "8.3, 8.4, 8.5"
+      - cis: ["18.9.8.3"]
+      - cis_csc: ["8.3","8.4","8.5"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer-> NoDriveTypeAutoRun'
@@ -2275,8 +2275,8 @@ checks:
     rationale: "Enterprise managed environments are now supporting a wider range of mobile devices, increasing the security on these devices will help protect against unauthorized access on your network."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Biometrics\\Facial Features\\Configure enhanced anti-spoofing"
     compliance:
-      - cis: "18.9.10.1.1"
-      - cis_csc: "16"
+      - cis: ["18.9.10.1.1"]
+      - cis_csc: ["16"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Biometrics\FacialFeatures'
@@ -2289,8 +2289,8 @@ checks:
     rationale: "Having apps silently install in an enterprise managed environment is not good security practice - especially if the apps send data back to a 3rd party."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Cloud Content\\Turn off Microsoft consumer experiences"
     compliance:
-      - cis: "18.9.13.1"
-      - cis_csc: "13"
+      - cis: ["18.9.13.1"]
+      - cis_csc: ["13"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\CloudContent'
@@ -2303,8 +2303,8 @@ checks:
     rationale: "If this setting is not configured or disabled then a PIN would not be required when pairing wireless display devices to the system, increasing the risk of unauthorized use."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Connect\\Require pin for pairing"
     compliance:
-      - cis: "18.9.14.1"
-      - cis_csc: "15.8, 15.9"
+      - cis: ["18.9.14.1"]
+      - cis_csc: ["15.8","15.9"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Connect'
@@ -2317,8 +2317,8 @@ checks:
     rationale: "This is a useful feature when entering a long and complex password, especially when using a touchscreen. The potential risk is that someone else may see your password while surreptitiously observing your screen."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Credential User Interface\\Do not display the password reveal button"
     compliance:
-      - cis: "18.9.15.1"
-      - cis_csc: "16"
+      - cis: ["18.9.15.1"]
+      - cis_csc: ["16"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\CredUI'
@@ -2331,8 +2331,8 @@ checks:
     rationale: "Users could see the list of administrator accounts, making it slightly easier for a malicious user who has logged onto a console session to try to crack the passwords of those accounts."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Credential User Interface\\Enumerate administrator accounts on elevation"
     compliance:
-      - cis: "18.9.15.2"
-      - cis_csc: "16"
+      - cis: ["18.9.15.2"]
+      - cis_csc: ["16"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\CredUI'
@@ -2345,8 +2345,8 @@ checks:
     rationale: "Sending any data to a 3rd party vendor is a security concern and should only be done on an as needed basis."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: 0 - Security [Enterprise Only] or Enabled: 1 - Basic: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Data Collection and Preview Builds\\Allow Telemetry"
     compliance:
-      - cis: "18.9.16.1"
-      - cis_csc: "13"
+      - cis: ["18.9.16.1"]
+      - cis_csc: ["13"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\DataCollection'
@@ -2359,8 +2359,8 @@ checks:
     rationale: "Users should not be sending any feedback to 3rd party vendors in an enterprise managed environment."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Data Collection and Preview Builds\\Do not show feedback notifications"
     compliance:
-      - cis: "18.9.16.3"
-      - cis_csc: "13"
+      - cis: ["18.9.16.3"]
+      - cis_csc: ["13"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\DataCollection'
@@ -2373,8 +2373,8 @@ checks:
     rationale: "It can be risky for experimental features to be allowed in an enterprise managed environment because this can introduce bugs and security holes into systems, making it easier for an attacker to gain access. It is generally preferred to only use production-ready builds."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Data Collection and Preview Builds\\Toggle user control over Insider builds"
     compliance:
-      - cis: "18.9.16.4"
-      - cis_csc: "3"
+      - cis: ["18.9.16.4"]
+      - cis_csc: ["3"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\PreviewBuilds'
@@ -2387,8 +2387,8 @@ checks:
     rationale: "Due to privacy concerns and security risks, updates should only be downloaded directly from Microsoft, or from a trusted machine on the internal network that received its updates from a trusted source and approved by the network administrator."
     remediation: "To establish the recommended configuration via GP, set the following UI path to any value other than Enabled: Internet: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Delivery Optimization\\Download Mode"
     compliance:
-      - cis: "18.9.17.1"
-      - cis_csc: "4.5, 3.4, 3.5"
+      - cis: ["18.9.17.1"]
+      - cis_csc: ["4.5","3.4","3.5"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\DeliveryOptimization'
@@ -2401,8 +2401,8 @@ checks:
     rationale: "If new events are not recorded it may be difficult or impossible to determine the root cause of system problems or the unauthorized activities of malicious users."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Event Log Service\\Application\\Control Event Log behavior when the log file reaches its maximum size"
     compliance:
-      - cis: "18.9.26.1.1"
-      - cis_csc: "6.3, 6.4"
+      - cis: ["18.9.26.1.1"]
+      - cis_csc: ["6.3","6.4"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\EventLog\Application'
@@ -2415,8 +2415,8 @@ checks:
     rationale: "If events are not recorded it may be difficult or impossible to determine the root cause of system problems or the unauthorized activities of malicious users."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: 32,768 or greater: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Event Log Service\\Application\\Specify the maximum log file size (KB)"
     compliance:
-      - cis: "18.9.26.1.2"
-      - cis_csc: "6.3, 6.4"
+      - cis: ["18.9.26.1.2"]
+      - cis_csc: ["6.3","6.4"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\EventLog\Application'
@@ -2429,8 +2429,8 @@ checks:
     rationale: "If new events are not recorded it may be difficult or impossible to determine the root cause of system problems or the unauthorized activities of malicious users."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Event Log Service\\Security\\Control Event Log behavior when the log file reaches its maximum size"
     compliance:
-      - cis: "18.9.26.2.1"
-      - cis_csc: "6.3, 6.4"
+      - cis: ["18.9.26.2.1"]
+      - cis_csc: ["6.3","6.4"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\EventLog\Security'
@@ -2443,8 +2443,8 @@ checks:
     rationale: "If events are not recorded it may be difficult or impossible to determine the root cause of system problems or the unauthorized activities of malicious users."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: 196,608 or greater: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Event Log Service\\Security\\Specify the maximum log file size (KB)"
     compliance:
-      - cis: "18.9.26.2.2"
-      - cis_csc: "6.3, 6.4"
+      - cis: ["18.9.26.2.2"]
+      - cis_csc: ["6.3","6.4"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\EventLog\Security'
@@ -2457,8 +2457,8 @@ checks:
     rationale: "If new events are not recorded it may be difficult or impossible to determine the root cause of system problems or the unauthorized activities of malicious users."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Event Log Service\\Setup\\Control Event Log behavior when the log file reaches its maximum size"
     compliance:
-      - cis: "18.9.26.3.1"
-      - cis_csc: "6.3, 6.4"
+      - cis: ["18.9.26.3.1"]
+      - cis_csc: ["6.3","6.4"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\EventLog\Setup'
@@ -2471,8 +2471,8 @@ checks:
     rationale: "If events are not recorded it may be difficult or impossible to determine the root cause of system problems or the unauthorized activities of malicious users"
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: 32,768 or greater: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Event Log Service\\Setup\\Specify the maximum log file size (KB)"
     compliance:
-      - cis: "18.9.26.3.2"
-      - cis_csc: "6.3, 6.4"
+      - cis: ["18.9.26.3.2"]
+      - cis_csc: ["6.3","6.4"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\EventLog\Setup'
@@ -2485,8 +2485,8 @@ checks:
     rationale: "If new events are not recorded it may be difficult or impossible to determine the root cause of system problems or the unauthorized activities of malicious users."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Event Log Service\\System\\Control Event Log behavior when the log file reaches its maximum size"
     compliance:
-      - cis: "18.9.26.4.1"
-      - cis_csc: "6.3, 6.4"
+      - cis: ["18.9.26.4.1"]
+      - cis_csc: ["6.3","6.4"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\EventLog\System'
@@ -2499,8 +2499,8 @@ checks:
     rationale: "If events are not recorded it may be difficult or impossible to determine the root cause of system problems or the unauthorized activities of malicious users"
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: 32,768 or greater: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Event Log Service\\System\\Specify the maximum log file size (KB)"
     compliance:
-      - cis: "18.9.26.4.2"
-      - cis_csc: "6.3, 6.4"
+      - cis: ["18.9.26.4.2"]
+      - cis_csc: ["6.3","6.4"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\EventLog\System'
@@ -2513,8 +2513,8 @@ checks:
     rationale: "Data Execution Prevention is an important security feature supported by Explorer that helps to limit the impact of certain types of malware."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\File Explorer\\Turn off Data Execution Prevention for Explorer"
     compliance:
-      - cis: "18.9.30.2"
-      - cis_csc: "8.4, 8.3"
+      - cis: ["18.9.30.2"]
+      - cis_csc: ["8.4","8.3"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Explorer'
@@ -2527,8 +2527,8 @@ checks:
     rationale: "Allowing an application to function after its session has become corrupt increases the risk posture to the system."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\File Explorer\\Turn off heap termination on corruption"
     compliance:
-      - cis: "18.9.30.3"
-      - cis_csc: "8.4, 8.3"
+      - cis: ["18.9.30.3"]
+      - cis_csc: ["8.4","8.3"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Explorer'
@@ -2541,8 +2541,8 @@ checks:
     rationale: "Limiting the opening of files and folders to a limited set reduces the attack surface of the system."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\File Explorer\\Turn off shell protocol protected mode"
     compliance:
-      - cis: "18.9.30.4"
-      - cis_csc: "8.4, 8.3"
+      - cis: ["18.9.30.4"]
+      - cis_csc: ["8.4","8.3"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer'
@@ -2555,8 +2555,8 @@ checks:
     rationale: "While resources on a domain-joined computer cannot be shared with a HomeGroup, information from the domain-joined computer can be leaked to other computers in the HomeGroup."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\HomeGroup\\Prevent the computer from joining a homegroup"
     compliance:
-      - cis: "18.9.35.1"
-      - cis_csc: "14.1, 14.2"
+      - cis: ["18.9.35.1"]
+      - cis_csc: ["14.1","14.2"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\HomeGroup'
@@ -2569,8 +2569,8 @@ checks:
     rationale: "Organizations that want to effectively implement identity management policies and maintain firm control of what accounts are used on their computers will probably want to block Microsoft accounts. Organizations may also need to block Microsoft accounts in order to meet the requirements of compliance standards that apply to their information systems."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Microsoft accounts\\Block all consumer Microsoft account user authentication"
     compliance:
-      - cis: "18.9.44.1"
-      - cis_csc: "16"
+      - cis: ["18.9.44.1"]
+      - cis_csc: ["16"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\MicrosoftAccount'
@@ -2583,8 +2583,8 @@ checks:
     rationale: "Cookies can pose a serious privacy concern, although many websites depend on them for operation. It is recommended when possible to block 3rd party cookies in order to reduce tracking"
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Block only 3rd-party cookies (or, if applicable for your environment, Enabled: Block all cookies): Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Microsoft Edge\\Configure cookies"
     compliance:
-      - cis: "18.9.45.4"
-      - cis_csc: "13"
+      - cis: ["18.9.45.4"]
+      - cis_csc: ["13"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\MicrosoftEdge\Main'
@@ -2597,8 +2597,8 @@ checks:
     rationale: "Using Password Manager can potentially makes it easier for an unauthorized user who gains access to the user’s desktop (including a coworker who sits down at a user’s desk soon after the user walks away and forgets to lock their workstation), to log in to sites as the user, without needing to know or enter the password."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Microsoft Edge\\Configure Password Manager"
     compliance:
-      - cis: "18.9.45.5"
-      - cis_csc: "16"
+      - cis: ["18.9.45.5"]
+      - cis_csc: ["16"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\MicrosoftEdge\Main'
@@ -2611,8 +2611,8 @@ checks:
     rationale: "Adobe Flash is a very insecure product and has been a frequent attack vector on the web. However, disabling it completely may not be a practical option for many organizations, as it is still used frequently on many websites. This feature at least makes Adobe Flash content \"opt-in\", so the user has to choose to click on each specific piece of Flash content before it will run."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Microsoft Edge\\Configure the Adobe Flash Click-to-Run setting"
     compliance:
-      - cis: "18.9.45.8"
-      - cis_csc: "7.2"
+      - cis: ["18.9.45.8"]
+      - cis_csc: ["7.2"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\MicrosoftEdge\Security'
@@ -2625,8 +2625,8 @@ checks:
     rationale: "Enabling this setting prevents users from accidentally uploading confidential or sensitive corporate information to the OneDrive cloud service using the Next Generation Sync Client."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\OneDrive\\Prevent the usage of OneDrive for file storage"
     compliance:
-      - cis: "18.9.52.1"
-      - cis_csc: "13"
+      - cis: ["18.9.52.1"]
+      - cis_csc: ["13"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\OneDrive'
@@ -2639,8 +2639,8 @@ checks:
     rationale: "An attacker with physical access to the computer may be able to break the protection guarding saved passwords. An attacker who compromises a user's account and connects to their computer could use saved passwords to gain access to additional hosts"
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Remote Desktop Services\\Remote Desktop Connection Client\\Do not allow passwords to be saved"
     compliance:
-      - cis: "18.9.58.2.2"
-      - cis_csc: "16.4"
+      - cis: ["18.9.58.2.2"]
+      - cis_csc: ["16.4"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services'
@@ -2653,8 +2653,8 @@ checks:
     rationale: "Data could be forwarded from the user's Remote Desktop Services session to the user's local computer without any direct user interaction. Malicious software already present on a compromised server would have direct and stealthy disk access to the user's local computer during the Remote Desktop session."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Remote Desktop Services\\Remote Desktop Session Host\\Device and Resource Redirection\\Do not allow drive redirection"
     compliance:
-      - cis: "18.9.58.3.3.2"
-      - cis_csc: "13"
+      - cis: ["18.9.58.3.3.2"]
+      - cis_csc: ["13"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services'
@@ -2667,8 +2667,8 @@ checks:
     rationale: "Users have the option to store both their username and password when they create a new Remote Desktop Connection shortcut. If the server that runs Remote Desktop Services allows users who have used this feature to log on to the server but not enter their password, then it is possible that an attacker who has gained physical access to the user's computer could connect to a Remote Desktop Server through the Remote Desktop Connection shortcut, even though they may not know the user's password."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Remote Desktop Services\\Remote Desktop Session Host\\Security\\Always prompt for password upon connection"
     compliance:
-      - cis: "18.9.58.3.9.1"
-      - cis_csc: "16.14"
+      - cis: ["18.9.58.3.9.1"]
+      - cis_csc: ["16.14"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services'
@@ -2681,8 +2681,8 @@ checks:
     rationale: "Allowing unsecure RPC communication can exposes the server to man in the middle attacks and data disclosure attacks."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Remote Desktop Services\\Remote Desktop Session Host\\Security\\Require secure RPC communication"
     compliance:
-      - cis: "18.9.58.3.9.2"
-      - cis_csc: "3.4"
+      - cis: ["18.9.58.3.9.2"]
+      - cis_csc: ["3.4"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services'
@@ -2695,8 +2695,8 @@ checks:
     rationale: "If Remote Desktop client connections that use low level encryption are allowed, it is more likely that an attacker will be able to decrypt any captured Remote Desktop Services network traffic."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: High Level: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Remote Desktop Services\\Remote Desktop Session Host\\Security\\Set client connection encryption level"
     compliance:
-      - cis: "18.9.58.3.9.5"
-      - cis_csc: "3.4"
+      - cis: ["18.9.58.3.9.5"]
+      - cis_csc: ["3.4"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services'
@@ -2709,8 +2709,8 @@ checks:
     rationale: "Sensitive information could be contained inside the temporary folders and visible to other administrators that log into the system."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Remote Desktop Services\\Remote Desktop Session Host\\Temporary Folders\\Do not delete temp folders upon exit"
     compliance:
-      - cis: "18.9.58.3.11.1"
-      - cis_csc: "14.4, 14.6"
+      - cis: ["18.9.58.3.11.1"]
+      - cis_csc: ["14.4","14.6"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services'
@@ -2723,8 +2723,8 @@ checks:
     rationale: "Disabling this setting keeps the cached data independent for each session, both reducing the chance of problems from shared cached data between sessions, and keeping possibly sensitive data separate to each user session."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Remote Desktop Services\\Remote Desktop Session Host\\Temporary Folders\\Do not use temporary folders per session"
     compliance:
-      - cis: "18.9.58.3.11.2"
-      - cis_csc: "14.4, 14.6"
+      - cis: ["18.9.58.3.11.2"]
+      - cis_csc: ["14.4","14.6"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services'
@@ -2737,8 +2737,8 @@ checks:
     rationale: "Allowing attachments to be downloaded through the RSS feed can introduce files that could have malicious intent."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\RSS Feeds\\Prevent downloading of enclosures"
     compliance:
-      - cis: "18.9.59.1"
-      - cis_csc: "7.2"
+      - cis: ["18.9.59.1"]
+      - cis_csc: ["7.2"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Internet Explorer\Feeds'
@@ -2751,8 +2751,8 @@ checks:
     rationale: "If Cortana is enabled, sensitive information could be contained in search history and sent out to Microsoft."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Search\\Allow Cortana"
     compliance:
-      - cis: "18.9.60.3"
-      - cis_csc: "9.1, 9.2"
+      - cis: ["18.9.60.3"]
+      - cis_csc: ["9.1","9.2"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Windows Search'
@@ -2765,8 +2765,8 @@ checks:
     rationale: "Access to any computer resource should not be allowed when the device is locked."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Search\\Allow Cortana above lock screen"
     compliance:
-      - cis: "18.9.60.4"
-      - cis_csc: "16.5"
+      - cis: ["18.9.60.4"]
+      - cis_csc: ["16.5"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Windows Search'
@@ -2779,8 +2779,8 @@ checks:
     rationale: "Indexing and allowing users to search encrypted files could potentially reveal confidential data stored within the encrypted files."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Search\\Allow indexing of encrypted files"
     compliance:
-      - cis: "18.9.60.5"
-      - cis_csc: "13.1"
+      - cis: ["18.9.60.5"]
+      - cis_csc: ["13.1"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Windows Search'
@@ -2793,8 +2793,8 @@ checks:
     rationale: "In an enterprise managed environment, allowing Cortana and Search to have access to location data is unnecessary. Organizations likely do not want this information shared out"
     remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Search\\Allow search and Cortana to use location"
     compliance:
-      - cis: "18.9.60.6"
-      - cis_csc: "9.1, 9.2"
+      - cis: ["18.9.60.6"]
+      - cis_csc: ["9.1","9.2"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Windows Search'
@@ -2807,8 +2807,8 @@ checks:
     rationale: "Keeping your system properly patched can help protect against 0 day vulnerabilities."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Store\\Turn off Automatic Download and Install of updates"
     compliance:
-      - cis: "18.9.68.3"
-      - cis_csc: "3.1, 3.4, 3.5, 4.5, 5.1"
+      - cis: ["18.9.68.3"]
+      - cis_csc: ["3.1","3.4","3.5","4.5","5.1"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsStore'
@@ -2821,8 +2821,8 @@ checks:
     rationale: "Unplanned OS upgrades can lead to more preventable support calls. The IT department should be managing and approving all upgrades and updates."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Store\\Turn off the offer to update to the latest version of Windows"
     compliance:
-      - cis: "18.9.68.4"
-      - cis_csc: "3.1, 3.4, 3.5, 4.5, 5.1"
+      - cis: ["18.9.68.4"]
+      - cis_csc: ["3.1","3.4","3.5","4.5","5.1"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsStore'
@@ -2835,8 +2835,8 @@ checks:
     rationale: "The decision on whether or not to participate in Microsoft MAPS / Windows Defender Antivirus Cloud Protection Service for malicious software reporting should be made centrally in an enterprise managed environment, so that all computers within it behave consistently in that regard. Configuring this setting to Disabled ensures that the decision remains centrally managed."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Windows Defender Antivirus\\MAPS\\Configure local setting override for reporting to Microsoft MAPS"
     compliance:
-      - cis: "18.9.76.3.1"
-      - cis_csc: "8"
+      - cis: ["18.9.76.3.1"]
+      - cis_csc: ["8"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\Spynet'
@@ -2849,8 +2849,8 @@ checks:
     rationale: "When running an antivirus solution such as Windows Defender Antivirus, it is important to ensure that it is configured to heuristically monitor in real-time for suspicious and known malicious activity."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Windows Defender Antivirus\\Real-Time Protection\\Turn on behavior monitoring"
     compliance:
-      - cis: "18.9.76.7.1"
-      - cis_csc: "8.1, 8.6"
+      - cis: ["18.9.76.7.1"]
+      - cis_csc: ["8.1","8.6"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\Real-Time Protection'
@@ -2863,8 +2863,8 @@ checks:
     rationale: "It is important to ensure that any present removable drives are always included in any type of scan, as removable drives are more likely to contain malicious software brought in to the enterprise managed environment from an external, unmanaged computer."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Windows Defender Antivirus\\Scan\\Scan removable drives"
     compliance:
-      - cis: "18.9.76.10.1"
-      - cis_csc: "13"
+      - cis: ["18.9.76.10.1"]
+      - cis_csc: ["13"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\Scan'
@@ -2877,8 +2877,8 @@ checks:
     rationale: "Incoming e-mails should be scanned by an antivirus solution such as Windows Defender Antivirus, as email attachments are a commonly used attack vector to infiltrate computers with malicious software."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Windows Defender Antivirus\\Scan\\Turn on e-mail scanning"
     compliance:
-      - cis: "18.9.76.10.2"
-      - cis_csc: "13"
+      - cis: ["18.9.76.10.2"]
+      - cis_csc: ["13"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\Scan'
@@ -2891,8 +2891,8 @@ checks:
     rationale: "Attack surface reduction helps prevent actions and apps that are typically used by exploitseeking malware to infect machines."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Windows Defender Antivirus\\Windows Defender Exploit Guard\\Attack Surface Reduction\\Configure Attack Surface Reduction rules"
     compliance:
-      - cis: "18.9.76.13.1.1"
-      - cis_csc: "8.4"
+      - cis: ["18.9.76.13.1.1"]
+      - cis_csc: ["8.4"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows Defender\Windows Defender Exploit Guard\ASR'
@@ -2905,8 +2905,8 @@ checks:
     rationale: "Attack surface reduction helps prevent actions and apps that are typically used by exploitseeking malware to infect machines."
     remediation: "To establish the recommended configuration via GP, set the following UI path so that 26190899-1602-49e8-8b27-eb1d0a1ce869, 3b576869-a4ec-4529-8536-b80a7769e899, 5beb7efe-fd9a-4556-801d-275e5ffc04cc, 75668c1f-73b5-4cf0-bb93-3ecf5cb7cc84, 7674ba52-37eb-4a4f-a9a1-f0f9a1619a2c, 92e97fa1-2edf-4476-bdd6-9dd0b4dddc7b, 9e6c4e1f-7d60-472f-ba1a-a39ef669e4b2, b2b3f03d-6a65-4f7b-a9c7-1c7ef74a9ba4, be9ba2d9-53ea-4cdc-84e5-9b1eeee46550, d3e037e1-3eb8-44c8-a917-57927947596d and d4f940ab-401b-4efc-aadc-ad5f3c50688a are each set to a value of 1: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Windows Defender Antivirus\\Windows Defender Exploit Guard\\Attack Surface Reduction\\Configure Attack Surface Reduction rules: Set the state for each ASR rule"
     compliance:
-      - cis: "18.9.76.13.1.2"
-      - cis_csc: "8.4"
+      - cis: ["18.9.76.13.1.2"]
+      - cis_csc: ["8.4"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows Defender\Windows Defender Exploit Guard\ASR\Rules'
@@ -2939,8 +2939,8 @@ checks:
     rationale: "This setting can help prevent employees from using any application to access dangerous domains that may host phishing scams, exploit-hosting sites, and other malicious content on the Internet."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Block: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Windows Defender Antivirus\\Windows Defender Exploit Guard\\Network Protection\\Prevent users and apps from accessing dangerous websites"
     compliance:
-      - cis: "18.9.76.13.3.1"
-      - cis_csc: "7"
+      - cis: ["18.9.76.13.3.1"]
+      - cis_csc: ["7"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\Windows Defender Exploit Guard\Network Protection'
@@ -2953,8 +2953,8 @@ checks:
     rationale: "It is important to ensure a current, updated antivirus product is scanning each computer for malicious file activity. Microsoft provides a competent solution out of the box in Windows Defender Antivirus. Organizations that choose to purchase a reputable 3rd-party antivirus solution may choose to exempt themselves from this recommendation in lieu of the commercial alternative."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Windows Defender Antivirus\\Turn off Windows Defender AntiVirus"
     compliance:
-      - cis: "18.9.76.14"
-      - cis_csc: "8.1, 8.6"
+      - cis: ["18.9.76.14"]
+      - cis_csc: ["8.1","8.6"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender'
@@ -2967,8 +2967,8 @@ checks:
     rationale: "Only authorized IT staff should be able to make changes to the exploit protection settings in order to ensure the organizations specific configuration is not modified."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Windows Defender Security Center\\App and browser protection\\Prevent users from modifying settings"
     compliance:
-      - cis: "18.9.79.2.1"
-      - cis_csc: "8.4"
+      - cis: ["18.9.79.2.1"]
+      - cis_csc: ["8.4"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender Security Center\App and Browser protection'
@@ -2981,8 +2981,8 @@ checks:
     rationale: "Windows SmartScreen helps keep PCs safer by warning users before running unrecognized programs downloaded from the Internet. However, due to the fact that some information is sent to Microsoft about files and programs run on PCs some organizations may prefer to disable it."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Warn and prevent bypass: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Windows Defender SmartScreen\\Explorer\\Configure Windows Defender SmartScreen"
     compliance:
-      - cis: "18.9.80.1.1"
-      - cis_csc: "2"
+      - cis: ["18.9.80.1.1"]
+      - cis_csc: ["2"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System'
@@ -2997,8 +2997,8 @@ checks:
     rationale: "SmartScreen serves an important purpose as it helps to warn users of possible malicious sites and files. Allowing users to turn off this setting can make the browser become more vulnerable to compromise."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Windows Defender SmartScreen\\Microsoft Edge\\Configure Windows Defender SmartScreen"
     compliance:
-      - cis: "18.9.80.2.1"
-      - cis_csc: "2"
+      - cis: ["18.9.80.2.1"]
+      - cis_csc: ["2"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\MicrosoftEdge\PhishingFilter'
@@ -3011,8 +3011,8 @@ checks:
     rationale: "SmartScreen will warn an employee if a file is potentially malicious. Enabling this setting prevents these warnings from being bypassed."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: In the Windows 10 Release 1703 Administrative Templates the setting was in the following location: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Windows Defender SmartScreen\\Microsoft Edge\\Prevent bypassing Windows Defender SmartScreen prompts for files In the Windows 10 Release 1709 Administrative Templates the setting was removed from the new location above and left in the old location: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Microsoft Edge\\Prevent bypassing Windows Defender SmartScreen prompts for files"
     compliance:
-      - cis: "18.9.80.2.2"
-      - cis_csc: "7"
+      - cis: ["18.9.80.2.2"]
+      - cis_csc: ["7"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\MicrosoftEdge\PhishingFilter'
@@ -3025,8 +3025,8 @@ checks:
     rationale: "SmartScreen will warn an employee if a website is potentially malicious. Enabling this setting prevents these warnings from being bypassed."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Windows Defender SmartScreen\\Microsoft Edge\\Prevent bypassing Windows Defender SmartScreen prompts for sites"
     compliance:
-      - cis: "18.9.80.2.3"
-      - cis_csc: "7"
+      - cis: ["18.9.80.2.3"]
+      - cis_csc: ["7"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\MicrosoftEdge\PhishingFilter'
@@ -3039,8 +3039,8 @@ checks:
     rationale: "If this setting is allowed users could record and broadcast session info to external sites which is a privacy concern."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Windows Game Recording and Broadcasting\\Enables or disables Windows Game Recording and Broadcasting"
     compliance:
-      - cis: "18.9.82.1"
-      - cis_csc: "13"
+      - cis: ["18.9.82.1"]
+      - cis_csc: ["13"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\GameDVR'
@@ -3053,8 +3053,8 @@ checks:
     rationale: "Allowing any apps to be accessed while system is locked is not recommended. If this feature is permitted, it should only be accessible once a user authenticates with the proper credentials."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: On, but disallow access above lock OR Disabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Windows Ink Workspace\\Allow Windows Ink Workspace"
     compliance:
-      - cis: "18.9.84.2"
-      - cis_csc: "16.5"
+      - cis: ["18.9.84.2"]
+      - cis_csc: ["16.5"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsInkWorkspace'
@@ -3067,8 +3067,8 @@ checks:
     rationale: "In an enterprise managed environment, only IT staff with administrative rights should be installing or changing software on a system. Allowing users the ability to have any control over installs can risk unapproved software from being installed or removed from a system, which could cause the system to become vulnerable to compromise."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Windows Installer\\Allow user control over installs"
     compliance:
-      - cis: "18.9.85.1"
-      - cis_csc: "5.1"
+      - cis: ["18.9.85.1"]
+      - cis_csc: ["5.1"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Installer'
@@ -3081,8 +3081,8 @@ checks:
     rationale: "Users with limited privileges can exploit this feature by creating a Windows Installer installation package that creates a new local account that belongs to the local built-in Administrators group, adds their current account to the local built-in Administrators group, installs malicious software, or performs other unauthorized activities."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Windows Installer\\Always install with elevated privileges"
     compliance:
-      - cis: "18.9.85.2"
-      - cis_csc: "5.1"
+      - cis: ["18.9.85.2"]
+      - cis_csc: ["5.1"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Installer'
@@ -3095,8 +3095,8 @@ checks:
     rationale: "Disabling this feature will prevent the caching of user's credentials and unauthorized use of the device, and also ensure the user is aware of the restart."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Windows Logon Options\\Sign-in last interactive user automatically after a system-initiated restart"
     compliance:
-      - cis: "18.9.86.1"
-      - cis_csc: "16.5"
+      - cis: ["18.9.86.1"]
+      - cis_csc: ["16.5"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System'
@@ -3109,8 +3109,8 @@ checks:
     rationale: "There are potential risks of capturing passwords in the PowerShell logs. This setting should only be needed for debugging purposes, and not in normal operation, it is important to ensure this is set to Disabled."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Windows PowerShell\\Turn on PowerShell Script Block Logging"
     compliance:
-      - cis: "18.9.95.1"
-      - cis_csc: "16.4"
+      - cis: ["18.9.95.1"]
+      - cis_csc: ["16.4"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\PowerShell\ScriptBlockLogging'
@@ -3123,8 +3123,8 @@ checks:
     rationale: "If this setting is enabled there is a risk that passwords could get stored in plain text in the PowerShell_transcript output file"
     remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Windows PowerShell\\Turn on PowerShell Transcription"
     compliance:
-      - cis: "18.9.95.2"
-      - cis_csc: "16.4"
+      - cis: ["18.9.95.2"]
+      - cis_csc: ["16.4"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\PowerShell\Transcription'
@@ -3137,8 +3137,8 @@ checks:
     rationale: "Basic authentication is less robust than other authentication methods available in WinRM because credentials including passwords are transmitted in plain text. An attacker who is able to capture packets on the network where WinRM is running may be able to determine the credentials used for accessing remote hosts via WinRM."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Windows Remote Management (WinRM)\\WinRM Client\\Allow Basic authentication"
     compliance:
-      - cis: "18.9.97.1.1"
-      - cis_csc: "16.13, 16.5"
+      - cis: ["18.9.97.1.1"]
+      - cis_csc: ["16.13","16.5"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WinRM\Client'
@@ -3151,8 +3151,8 @@ checks:
     rationale: "Encrypting WinRM network traffic reduces the risk of an attacker viewing or modifying WinRM messages as they transit the network."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Windows Remote Management (WinRM)\\WinRM Client\\Allow unencrypted traffic"
     compliance:
-      - cis: "18.9.97.1.2"
-      - cis_csc: "16.5, 16.13"
+      - cis: ["18.9.97.1.2"]
+      - cis_csc: ["16.5","16.13"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WinRM\Client'
@@ -3165,8 +3165,8 @@ checks:
     rationale: "Digest authentication is less robust than other authentication methods available in WinRM, an attacker who is able to capture packets on the network where WinRM is running may be able to determine the credentials used for accessing remote hosts via WinRM."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Windows Remote Management (WinRM)\\WinRM Client\\Disallow Digest authentication"
     compliance:
-      - cis: "18.9.97.1.3"
-      - cis_csc: "16.5, 16.13"
+      - cis: ["18.9.97.1.3"]
+      - cis_csc: ["16.5","16.13"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WinRM\Client'
@@ -3179,8 +3179,8 @@ checks:
     rationale: "Basic authentication is less robust than other authentication methods available in WinRM because credentials including passwords are transmitted in plain text. An attacker who is able to capture packets on the network where WinRM is running may be able to determine the credentials used for accessing remote hosts via WinRM."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Windows Remote Management (WinRM)\\WinRM Service\\Allow Basic authentication"
     compliance:
-      - cis: "18.9.97.2.1"
-      - cis_csc: "16.5, 16.13"
+      - cis: ["18.9.97.2.1"]
+      - cis_csc: ["16.5","16.13"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WinRM\Service'
@@ -3193,8 +3193,8 @@ checks:
     rationale: "Any feature is a potential avenue of attack, those that enable inbound network connections are particularly risky. Only enable the use of the Windows Remote Management (WinRM) service on trusted networks and when feasible employ additional controls such as IPsec."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Administrative Templates\\Windows Components\\Windows Remote Management (WinRM)\\WinRM Service\\Allow remote server management through WinRM"
     compliance:
-      - cis: "18.9.97.2.3"
-      - cis_csc: "3.4"
+      - cis: ["18.9.97.2.3"]
+      - cis_csc: ["3.4"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WinRM\Service'
@@ -3207,8 +3207,8 @@ checks:
     rationale: "Encrypting WinRM network traffic reduces the risk of an attacker viewing or modifying WinRM messages as they transit the network."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Windows Remote Management (WinRM)\\WinRM Service\\Allow unencrypted traffic"
     compliance:
-      - cis: "18.9.97.2.4"
-      - cis_csc: "16.5, 16.13"
+      - cis: ["18.9.97.2.4"]
+      - cis_csc: ["16.5","16.13"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WinRM\Service'
@@ -3221,8 +3221,8 @@ checks:
     rationale: "It can be risky for experimental features to be allowed in an enterprise managed environment because this can introduce bugs and security holes into systems, making it easier for an attacker to gain access. It is generally preferred to only use production-ready builds."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Disable preview builds: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Windows Update\\Windows Update for Business\\Manage preview builds"
     compliance:
-      - cis: "18.9.101.1.1"
-      - cis_csc: "3"
+      - cis: ["18.9.101.1.1"]
+      - cis_csc: ["3"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate'
@@ -3237,8 +3237,8 @@ checks:
     rationale: "Forcing new features without prior testing in your environment could cause software incompatibilities as well as introducing new bugs into the operating system. In an enterprise managed environment, it is generally preferred to delay Feature Updates until thorough testing and a deployment plan is in place. This recommendation delays the automatic installation of new features as long as possible."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Semi-Annual Channel, 180 or more days: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Windows Update\\Windows Update for Business\\Select when Preview Builds and Feature Updates are received"
     compliance:
-      - cis: "18.9.101.1.2"
-      - cis_csc: "3"
+      - cis: ["18.9.101.1.2"]
+      - cis_csc: ["3"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate'
@@ -3255,8 +3255,8 @@ checks:
     rationale: "Quality Updates can contain important bug fixes and/or security patches, and should be installed as soon as possible."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled:0 days: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Windows Update\\Windows Update for Business\\Select when Quality Updates are received"
     compliance:
-      - cis: "18.9.101.1.3"
-      - cis_csc: "3.4, 3.5, 4.5"
+      - cis: ["18.9.101.1.3"]
+      - cis_csc: ["3.4","3.5","4.5"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate'
@@ -3271,8 +3271,8 @@ checks:
     rationale: "Although each version of Windows is thoroughly tested before release, it is possible that problems will be discovered after the products are shipped. The Configure Automatic Updates setting can help you ensure that the computers in your environment will always have the most recent critical operating system updates and service packs installed."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Windows Update\\Configure Automatic Updates"
     compliance:
-      - cis: "18.9.101.2"
-      - cis_csc: "3.4, 3.5, 4.5"
+      - cis: ["18.9.101.2"]
+      - cis_csc: ["3.4","3.5","4.5"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU'
@@ -3285,8 +3285,8 @@ checks:
     rationale: "Although each version of Windows is thoroughly tested before release, it is possible that problems will be discovered after the products are shipped. The Configure Automatic Updates setting can help you ensure that the computers in your environment will always have the most recent critical operating system updates and service packs installed."
     remediation: "To establish the recommended configuration via GP, set the following UI path to 0 - Every day: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Windows Update\\Configure Automatic Updates: Scheduled install day"
     compliance:
-      - cis: "18.9.101.3"
-      - cis_csc: "3.4, 3.5, 4.5"
+      - cis: ["18.9.101.3"]
+      - cis_csc: ["3.4","3.5","4.5"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU'
@@ -3299,8 +3299,8 @@ checks:
     rationale: "Some security updates require that the computer be restarted to complete an installation. If the computer cannot restart automatically, then the most recent update will not completely install and no new updates will download to the computer until it is restarted. Without the auto-restart functionality, users who are not security-conscious may choose to indefinitely delay the restart, therefore keeping the computer in a less secure state."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Windows Update\\No auto-restart with logged on users for scheduled automatic updates installations"
     compliance:
-      - cis: "18.9.101.4"
-      - cis_csc: "3.4, 3.5, 4.5"
+      - cis: ["18.9.101.4"]
+      - cis_csc: ["3.4","3.5","4.5"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU'

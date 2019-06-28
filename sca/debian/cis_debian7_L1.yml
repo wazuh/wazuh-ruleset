@@ -36,7 +36,7 @@ checks:
     rationale: "Since the /tmp directory is intended to be world-writable, there is a risk of resource exhaustion if it is not bound to a separate partition. In addition, making /tmp its own file system allows an administrator to set the noexec option on the mount, making /tmp useless for an attacker to install executable code. It would also prevent an attacker from establishing a hardlink to a system setuid program and wait for it to be updated. Once the program was updated, the hardlink would be broken and the attacker would have his own copy of the program. If the program happened to have a security vulnerability, the attacker could continue to exploit the known flaw."
     remediation: "Configure /etc/fstab as appropiate or Run the following commands to enable systemd /tmp mounting: systemctl umask tmp.mount; systemctl enable tmp.mount. Edit /etc/systemd/system/local-fs.target.wants/tmp.mount to configure the /tmp mount."
     compliance:
-      - cis: "2.1"
+      - cis: ["2.1"]
     references:
       - http://tldp.org/HOWTO/LVM-HOWTO/
     condition: all
@@ -49,7 +49,7 @@ checks:
     rationale: "Since the /tmp filesystem is not intended to support devices, set this option to ensure that users cannot attempt to create block or character special devices in /tmp."
     remediation: "Edit the /etc/fstab file and add nodev to the fourth field (mounting options). See the fstab(5) manual page for more information.  # mount -o remount,nodev /tmp"
     compliance:
-      - cis: "2.2"
+      - cis: ["2.2"]
     condition: all
     rules:
       - 'not c:mount -> r:\s/tmp\s'
@@ -61,7 +61,7 @@ checks:
     rationale: "Since the /tmp filesystem is only intended for temporary file storage, set this option to ensure that users cannot create set userid files in /tmp."
     remediation: "Edit the /etc/fstab file and add nosuid to the fourth field (mounting options). See the fstab(5) manual page for more information.  # mount -o remount,nosuid /tmp"
     compliance:
-      - cis: "2.3"
+      - cis: ["2.3"]
     condition: all
     rules:
       - 'not c:mount -> r:\s/tmp\s'
@@ -73,7 +73,7 @@ checks:
     rationale: "Since the /tmp filesystem is only intended for temporary file storage, set this option to ensure that users cannot run executable binaries from /tmp."
     remediation: "Edit the /etc/fstab file and add noexec to the fourth field (mounting options). See the fstab(5) manual page for more information.  # mount -o remount,noexec /tmp"
     compliance:
-      - cis: "2.4"
+      - cis: ["2.4"]
     condition: all
     rules:
       - 'not c:mount -> r:\s/tmp\s'
@@ -85,7 +85,7 @@ checks:
     rationale: "Since the /var directory may contain world-writable files and directories, there is a risk of resource exhaustion if it is not bound to a separate partition."
     remediation: "For new installations, during installation create a custom partition setup and specify a separate partition for /var. For systems that were previously installed, use the Logical Volume Manager (LVM) to create partitions."
     compliance:
-      - cis: "2.5"
+      - cis: ["2.5"]
     references:
       - http://tldp.org/HOWTO/LVM-HOWTO/
     condition: all
@@ -98,7 +98,7 @@ checks:
     rationale: "All programs that use /var/tmp and /tmp to read/write temporary files will always be write to tmp file system, preventing a user from running the /var file system out of space or trying to perform operations that have been blocked in the /tmp filesystem."
     remediation: "# mount --bind /tmp /var/tmp  and edit the /etc/fstab file to contain the following line: /tmp /var/tmp none bind 0 0"
     compliance:
-      - cis: "2.6"
+      - cis: ["2.6"]
     condition: all
     rules:
       - 'c:findmnt -> r:/var/tmp && r:[/tmp]'
@@ -110,7 +110,7 @@ checks:
     rationale: "There are two important reasons to ensure that system logs are stored on a separate partition: protection against resource exhaustion (since logs can grow quite large) and protection of audit data."
     remediation: "For new installations, during installation create a custom partition setup and specify a separate partition for /var/log. For systems that were previously installed, use the Logical Volume Manager (LVM) to create partitions."
     compliance:
-      - cis: "2.7"
+      - cis: ["2.7"]
     references:
       - http://tldp.org/HOWTO/LVM-HOWTO/
     condition: all
@@ -123,7 +123,7 @@ checks:
     rationale: "There are two important reasons to ensure that data gathered by auditd is stored on a separate partition: protection against resource exhaustion (since the audit.log file can grow quite large) and protection of audit data. The audit daemon calculates how much free space is left and performs actions based on the results. If other processes (such as syslog) consume space in the same partition as auditd, it may not perform as desired."
     remediation: "For new installations, during installation create a custom partition setup and specify a separate partition for /var/log/audit. For systems that were previously installed, use the Logical Volume Manager (LVM) to create partitions."
     compliance:
-      - cis: "2.8"
+      - cis: ["2.8"]
     references:
       - http://tldp.org/HOWTO/LVM-HOWTO/
     condition: all
@@ -136,7 +136,7 @@ checks:
     rationale: "If the system is intended to support local users, create a separate partition for the /home directory to protect against resource exhaustion and restrict the type of files that can be stored under /home."
     remediation: "For new installations, during installation create a custom partition setup and specify a separate partition for /home.  For systems that were previously installed, use the Logical Volume Manager (LVM) to create partitions."
     compliance:
-      - cis: "2.9"
+      - cis: ["2.9"]
     references:
       - http://tldp.org/HOWTO/LVM-HOWTO/
     condition: all
@@ -149,7 +149,7 @@ checks:
     rationale: "Since the user partitions are not intended to support devices, set this option to ensure that users cannot attempt to create block or character special devices.  Note: The actions in the item refer to the /home partition, which is the default user partition that is defined in many distributions. If you have created other user partitions, it is recommended that the Remediation and Audit steps be applied to these partitions as well."
     remediation: "Edit the /etc/fstab file and add nodev to the fourth field (mounting options). See the fstab(5) manual page for more information. # mount -o remount,nodev /home"
     compliance:
-      - cis: "2.10"
+      - cis: ["2.10"]
     condition: all
     rules:
       - 'not c:mount -> r:\s/home\s'
@@ -161,7 +161,7 @@ checks:
     rationale: "Since the /run/shm filesystem is not intended to support devices, set this option to ensure that users cannot attempt to create special devices in /run/shm partitions."
     remediation: "Edit the /etc/fstab file and add nodev to the fourth field (mounting options of entries that have mount points that contain /run/shm. See the fstab(5) manual page for more information.  # mount -o remount,nodev /run/shm"
     compliance:
-      - cis: "2.14"
+      - cis: ["2.14"]
     condition: all
     rules:
       - 'not c:mount -> r:\s/run/shm\s'
@@ -173,7 +173,7 @@ checks:
     rationale: "Setting this option on a file system prevents users from introducing privileged programs onto the system and allowing non-root users to execute them."
     remediation: "Edit the /etc/fstab file and add nosuid to the fourth field (mounting options). Look for entries that have mount points that contain /run/shm. See the fstab(5) manual page for more information.  # mount -o remount,nosuid /run/shm"
     compliance:
-      - cis: "2.15"
+      - cis: ["2.15"]
     condition: all
     rules:
       - 'not c:mount -> r:\s/run/shm\s'
@@ -185,7 +185,7 @@ checks:
     rationale: "Setting this option on a file system prevents users from executing programs from shared memory. This deters users from introducing potentially malicious software on the system."
     remediation: "Edit the /etc/fstab file and add noexec to the fourth field (mounting options). Look for entries that have mount points that contain /run/shm. See the fstab(5) manual page for more information. # mount -o remount,noexec /run/shm"
     compliance:
-      - cis: "2.16"
+      - cis: ["2.16"]
     condition: all
     rules:
       - 'not c:mount -> r:\s/run/shm\s'
@@ -197,7 +197,7 @@ checks:
     rationale: "With automounting enabled anyone with physical access could attach a USB drive or disc and have it's contents available in system even if they lacked permissions to mount it themselves."
     remediation: "Disable autofs: # update-rc.d autofs disable"
     compliance:
-      - cis: "2.25"
+      - cis: ["2.25"]
     condition: none
     rules:
       - 'c:find /etc/rc* -name *autofsc* -> r:S\.'
@@ -210,7 +210,7 @@ checks:
     rationale: "Requiring a boot password upon execution of the boot loader will prevent an unauthorized user from entering boot parameters or changing the boot partition. This prevents users from weakening security (e.g. turning off SELinux at boot time)."
     remediation: "Create an encrypted password with grub-md5-crypt: # grub-mkpasswd-pbkdf2 Enter password: <password> Reenter password: <password> Your PBKDF2 is <encrypted-password>  Add the following into /etc/grub.d/00_header or a custom /etc/grub.d configuration file: cat <<EOF set superusers=\"<user-list>\" password_pbkdf2 <user> <encrypted-password> EOF Unless the --unrestricted option is added to CLASS in /etc/grub.d/10_linux a password will be required to boot in addition to editing boot parameters: CLASS=\"--class gnu-linux --class gnu --class os --unrestricted\" Run the following to update the grub configuration: # update-grub"
     compliance:
-      - cis: "3.3"
+      - cis: ["3.3"]
     condition: all
     rules:
       - 'f:/boot/grub/grub.cfg -> r:^\s*\t*set superusers'
@@ -222,7 +222,7 @@ checks:
     rationale: "Requiring authentication in single user mode prevents an unauthorized user from rebooting the system into single user to gain root privileges without credentials."
     remediation: "Run the following command and follow the prompts to set a password for the root user: # passwd root"
     compliance:
-      - cis: "3.4"
+      - cis: ["3.4"]
     condition: none
     rules:
       - 'f:/etc/shadow -> r:^root:*:|^root:!:'
@@ -234,7 +234,7 @@ checks:
     rationale: "Setting a hard limit on core dumps prevents users from overriding the soft variable. If core dumps are required, consider setting limits for user groups (see limits.conf(5)). In addition, setting the fs.suid_dumpable variable to 0 will prevent setuid programs from dumping core."
     remediation: "Add the following line to the /etc/security/limits.conf file.  * hard core 0     Add the following line to the /etc/sysctl.conf file.  fs.suid_dumpable = 0"
     compliance:
-      - cis: "4.1"
+      - cis: ["4.1"]
     condition: all
     rules:
       - 'c:sysctl fs.suid_dumpable -> r:=\s*0$'
@@ -246,7 +246,7 @@ checks:
     rationale: "Randomly placing virtual memory regions will make it difficult to write memory page exploits as the memory placement will be consistently shifting."
     remediation: "Add the following line to the /etc/sysctl.conf file.  kernel.randomize_va_space = 2"
     compliance:
-      - cis: "4.3"
+      - cis: ["4.3"]
     condition: all
     rules:
       - 'c:sysctl kernel.randomize_va_space -> r:^kernel.randomize_va_space\s*\t*=\s*\t*2'
@@ -259,7 +259,7 @@ checks:
     rationale: "The NIS service is inherently an insecure system that has been vulnerable to DOS attacks, buffer overflows and has poor authentication for querying NIS maps. NIS generally has been replaced by such protocols as Lightweight Directory Access Protocol (LDAP). It is recommended that the service be removed."
     remediation: "Uninstall the nis package: # apt-get purge nis"
     compliance:
-      - cis: "5.1.1"
+      - cis: ["5.1.1"]
     condition: none
     rules:
       - 'c:dpkg -s nis -> r:install ok installed'
@@ -270,7 +270,7 @@ checks:
     rationale: "These legacy service contain numerous security exposures and have been replaced with the more secure SSH package."
     remediation: "Remove or comment out any shell, login, or exec lines in /etc/inetd.conf: #shell stream tcp nowait root /usr/sbin/tcpd /usr/sbin/in.rshd    #login stream tcp nowait root /usr/sbin/tcpd /usr/sbin/in.rlogind    #exec stream tcp nowait root /usr/sbin/tcpd /usr/sbin/in.rexecd"
     compliance:
-      - cis: "5.1.2"
+      - cis: ["5.1.2"]
     condition: none
     rules:
       - 'f:/etc/inetd.conf -> !r:^# && r:^shell|^login|^exec'
@@ -281,7 +281,7 @@ checks:
     rationale: "The software presents a security risk as it uses unencrypted protocols for communication."
     remediation: "Remove or comment out any talk or ntalk lines in /etc/inetd.conf: #talk dgram udp wait nobody.tty /usr/sbin/in.talkd in.talkd    #ntalk dgram udp wait nobody.tty /usr/sbin/in.ntalkd in.ntalkd"
     compliance:
-      - cis: "5.1.4"
+      - cis: ["5.1.4"]
     condition: none
     rules:
       - 'f:/etc/inetd.conf -> !r:^# && r:^talk|^ntalk'
@@ -292,7 +292,7 @@ checks:
     rationale: "The telnet protocol is insecure and unencrypted. The use of an unencrypted transmission medium could allow a user with access to sniff network traffic the ability to steal credentials. The ssh package provides an encrypted session and stronger security."
     remediation: "Remove or comment out any telnet lines in /etc/inetd.conf: #telnet stream tcp nowait telnetd /usr/sbin/tcpd /usr/sbin/in.telnetd"
     compliance:
-      - cis: "5.1.6"
+      - cis: ["5.1.6"]
     condition: none
     rules:
       - 'f:/etc/inetd.conf -> !r:^# && r:telnet'
@@ -303,7 +303,7 @@ checks:
     rationale: "TFTP does not support authentication nor does it ensure the confidentiality or integrity of data. It is recommended that TFTP be removed, unless there is a specific need for TFTP. In that case, extreme caution must be used when configuring the services."
     remediation: "Remove or comment out any tftp lines in /etc/inetd.conf: #tftp stream tcp nowait root internal"
     compliance:
-      - cis: "5.1.7"
+      - cis: ["5.1.7"]
     condition: none
     rules:
       - 'f:/etc/inetd.conf -> !r:^# && r:tftp'
@@ -314,7 +314,7 @@ checks:
     rationale: "If there are no xinetd services required, it is recommended that the daemon be disabled."
     remediation: "Disable xinetd: # update-rc.d xinetd disable"
     compliance:
-      - cis: "5.1.8"
+      - cis: ["5.1.8"]
     condition: none
     rules:
       - 'c:find /etc/rc* -name *xinetd* -> r:S\.'
@@ -325,7 +325,7 @@ checks:
     rationale: "Disabling this service will reduce the remote attack surface of the system."
     remediation: "Remove or comment out any chargen lines in /etc/inetd.conf: #chargen stream tcp nowait root internal"
     compliance:
-      - cis: "5.2"
+      - cis: ["5.2"]
     condition: none
     rules:
       - 'f:/etc/inetd.conf -> !r:^# && r:chargen'
@@ -336,7 +336,7 @@ checks:
     rationale: "Disabling this service will reduce the remote attack surface of the system."
     remediation: "Remove or comment out any daytime lines in /etc/inetd.conf: #daytime stream tcp nowait root internal"
     compliance:
-      - cis: "5.3"
+      - cis: ["5.3"]
     condition: none
     rules:
       - 'f:/etc/inetd.conf -> !r:^# && r:daytime'
@@ -347,7 +347,7 @@ checks:
     rationale: "Disabling this service will reduce the remote attack surface of the system."
     remediation: "Remove or comment out any echo lines in /etc/inetd.conf: #echo stream tcp nowait root internal"
     compliance:
-      - cis: "5.4"
+      - cis: ["5.4"]
     condition: none
     rules:
       - 'f:/etc/inetd.conf -> !r:^# && r:echo'
@@ -358,7 +358,7 @@ checks:
     rationale: "Disabling this service will reduce the remote attack surface of the system."
     remediation: "Remove or comment out any discard lines in /etc/inetd.conf: #discard stream tcp nowait root internal"
     compliance:
-      - cis: "5.5"
+      - cis: ["5.5"]
     condition: none
     rules:
       - 'f:/etc/inetd.conf -> !r:^# && r:discard'
@@ -369,7 +369,7 @@ checks:
     rationale: "Disabling this service will reduce the remote attack surface of the system."
     remediation: "Remove or comment out any time lines in /etc/inetd.conf: #time stream tcp nowait root internal"
     compliance:
-      - cis: "5.6"
+      - cis: ["5.6"]
     condition: none
     rules:
       - 'f:/etc/inetd.conf -> !r:^# && r:time'
@@ -382,7 +382,7 @@ checks:
     rationale: "Since servers are not normally used for printing, this service is not needed unless dependencies require it. If this is the case, disable the service to reduce the potential attack surface."
     remediation: "Disable avahi-daemon: # update-rc.d avahi-daemon disable"
     compliance:
-      - cis: "6.2"
+      - cis: ["6.2"]
     condition: none
     rules:
       - 'c:find /etc/rc* -name *avahi-daemon* -> r:S\.'
@@ -393,7 +393,7 @@ checks:
     rationale: "If the system does not need to print jobs or accept print jobs from other systems, it is recommended that CUPS be disabled to reduce the potential attack surface."
     remediation: "Disable cups: # update-rc.d cups disable"
     compliance:
-      - cis: "6.3"
+      - cis: ["6.3"]
     condition: none
     rules:
       - 'c:find /etc/rc* -name *cups* -> r:S\.'
@@ -406,7 +406,7 @@ checks:
     references:
       - "https://www.isc.org/dhcp/"
     compliance:
-      - cis: "6.4"
+      - cis: ["6.4"]
     condition: none
     rules:
       - 'c:find /etc/rc* -name *isc-dhcp-server* -> r:S\.'
@@ -417,7 +417,7 @@ checks:
     rationale: "It is recommended that physical systems and virtual guests lacking direct access to the physical host's clock be configured as NTP clients to synchronize their clocks (especially to support time sensitive security mechanisms like Kerberos). This also ensures log files have consistent time records across the enterprise, which aids in forensic investigations."
     remediation: "Install ntp: # apt-get install ntp    Ensure the following lines are in /etc/ntp.conf: restrict -4 default kod nomodify notrap nopeer noquery     restrict -6 default kod nomodify notrap nopeer noquery    Also, make sure /etc/ntp.conf has at least one NTP server specified: server <ntp-server>    Note: <ntp-server> is the IP address or hostname of a trusted time server. Configuring an NTP server is outside the scope of this benchmark."
     compliance:
-      - cis: "6.5"
+      - cis: ["6.5"]
     references:
       - http://www.ntp.org/
     condition: all
@@ -434,7 +434,7 @@ checks:
     rationale: "If the server will not need to act as an LDAP client or server, it is recommended that the software be disabled to reduce the potential attack surface."
     remediation: "Uninstall the slapd package: # apt-get purge slapd"
     compliance:
-      - cis: "6.6"
+      - cis: ["6.6"]
     references:
       - http://www.openldap.org
     condition: none
@@ -447,7 +447,7 @@ checks:
     rationale: "If the server does not export NFS shares or act as an NFS client, it is recommended that these services be disabled to reduce remote attack surface."
     remediation: "Disable rpcbind: # update-rc.d rpcbind disable    Disable nfs-kernel-server: # update-rc.d nfs-kernel-server disable"
     compliance:
-      - cis: "6.7"
+      - cis: ["6.7"]
     condition: none
     rules:
       - 'c:find /etc/rc* -name *rpcbind* -> r:S\.'
@@ -459,7 +459,7 @@ checks:
     rationale: "Unless a server is specifically designated to act as a DNS server, it is recommended that the package be deleted to reduce the potential attack surface."
     remediation: "Disable bind9: # update-rc.d bind9 disable"
     compliance:
-      - cis: "6.8"
+      - cis: ["6.8"]
     condition: none
     rules:
       - 'c:find /etc/rc* -name *bind9* -> r:S\.'
@@ -470,7 +470,7 @@ checks:
     rationale: "FTP does not protect the confidentiality of data or authentication credentials. It is recommended sftp be used if file transfer is required. Unless there is a need to run the system as a FTP server (for example, to allow anonymous downloads), it is recommended that the package be deleted to reduce the potential attack surface."
     remediation: "Disable vsftpd: # update-rc.d vsftpd disable"
     compliance:
-      - cis: "6.9"
+      - cis: ["6.9"]
     condition: none
     rules:
       - 'c:find /etc/rc* -name *vsftpd* -> r:S\.'
@@ -481,7 +481,7 @@ checks:
     rationale: "Unless there is a need to run the system as a web server, it is recommended that the package be deleted to reduce the potential attack surface."
     remediation: "Disable apache2: # update-rc.d apache2 disable"
     compliance:
-      - cis: "6.10"
+      - cis: ["6.10"]
     condition: none
     rules:
      - 'c:find /etc/rc* -name *apache2* -> r:S\.'
@@ -492,7 +492,7 @@ checks:
     rationale: "Unless POP3 and/or IMAP servers are to be provided to this server, it is recommended that the service be deleted to reduce the potential attack surface."
     remediation: "Disable dovecot: # update-rc.d dovecot disable"
     compliance:
-      - cis: "6.11"
+      - cis: ["6.11"]
     condition: none
     rules:
       - 'c:find /etc/rc* -name *dovecot* -> r:S\.'
@@ -503,7 +503,7 @@ checks:
     rationale: "If there is no need to mount directories and file systems to Windows systems, then this service can be deleted to reduce the potential attack surface."
     remediation: "Disable samba: # update-rc.d samba disable"
     compliance:
-      - cis: "6.12"
+      - cis: ["6.12"]
     condition: none
     rules:
      - 'c:find /etc/rc* -name *smb* -> r:S\.'
@@ -514,7 +514,7 @@ checks:
     rationale: "If there is no need for a proxy server, it is recommended that the squid proxy be deleted to reduce the potential attack surface."
     remediation: "Disable squid3: # update-rc.d squid3 disable"
     compliance:
-      - cis: "6.13"
+      - cis: ["6.13"]
     condition: none
     rules:
      - 'c:find /etc/rc* -name *squid3* -> r:S\.'
@@ -525,7 +525,7 @@ checks:
     rationale: "The SNMP server communicates using SNMP v1, which transmits data in the clear and does not require authentication to execute commands. Unless absolutely necessary, it is recommended that the SNMP service not be used."
     remediation: "Disable snmpd: # update-rc.d snmpd disable"
     compliance:
-      - cis: "6.14"
+      - cis: ["6.14"]
     condition: none
     rules:
       - 'c:find /etc/rc* -name *snmpd* -> r:S\.'
@@ -536,7 +536,7 @@ checks:
     rationale: "The software for all Mail Transfer Agents is complex and most have a long history of security issues. While it is important to ensure that the system can process local mail messages, it is not necessary to have the MTA's daemon listening on a port unless the server is intended to be a mail server that receives and processes mail from other systems. Note: The remediation given here provides instructions for configuring the postfix mail server, depending on your environment you may have an alternative MTA installed such as sendmail.  If this is the case consult the documentation for your installed MTA to configure the recommended state."
     remediation: "Edit /etc/exim4/update-exim4.conf.conf and edit the dc_local_interfaces line to remove non loopback addresses: dc_local_interfaces='127.0.0.1 ; ::1'    Run update-exim4.conf: # update-exim4.conf    Reload exim4 configuration: # service exim4 reload"
     compliance:
-      - cis: "6.15"
+      - cis: ["6.15"]
     condition: all
     rules:
       - 'f:/etc/exim4/update-exim4.conf.conf -> r:^dc_local_interfaces= && r:\p127.0.0.1\s*\p\s*::1\p$|\p::1\s*\p\s*127.0.0.1\p$|\p127.0.0.1\p$|\p::1\p$'
@@ -547,7 +547,7 @@ checks:
     rationale: "The rsyncd service presents a security risk as it uses unencrypted protocols for communication."
     remediation: "Set RSYNC_ENABLE to false in /etc/default/rsync: RSYNC_ENABLE=false"
     compliance:
-      - cis: "6.16"
+      - cis: ["6.16"]
     condition: none
     rules:
       - 'c:dpkg -s rsync -> install ok installed'
@@ -561,7 +561,7 @@ checks:
     rationale: "Setting the flag to 0 ensures that a server with multiple interfaces (for example, a hard proxy), will never be able to forward packets, and therefore, never serve as a router."
     remediation: "Set the net.ipv4.ip_forward parameter to 0 in /etc/sysctl.conf: net.ipv4.ip_forward=0    Modify active kernel parameters to match: # /sbin/sysctl -w net.ipv4.ip_forward=0    # /sbin/sysctl -w net.ipv4.route.flush=1"
     compliance:
-      - cis: "7.1.1"
+      - cis: ["7.1.1"]
     condition: all
     rules:
       - 'c:/sbin/sysctl net.ipv4.ip_forward -> r:=\s*\t*0$'
@@ -572,7 +572,7 @@ checks:
     rationale: "An attacker could use a compromised host to send invalid ICMP redirects to other router devices in an attempt to corrupt routing and have users access a system set up by the attacker as opposed to a valid system."
     remediation: "Set the net.ipv4.conf.all.send_redirects and net.ipv4.conf.default.send_redirects parameters to 0 in /etc/sysctl.conf: net.ipv4.conf.all.send_redirects=0    net.ipv4.conf.default.send_redirects=0    Modify active kernel parameters to match: # /sbin/sysctl -w net.ipv4.conf.all.send_redirects=0    # /sbin/sysctl -w net.ipv4.conf.default.send_redirects=0    # /sbin/sysctl -w net.ipv4.route.flush=1"
     compliance:
-      - cis: "7.1.2"
+      - cis: ["7.1.2"]
     condition: all
     rules:
       - 'c:/sbin/sysctl net.ipv4.conf.all.send_redirects -> r:=\s*\t*0$'
@@ -584,7 +584,7 @@ checks:
     rationale: "Setting net.ipv4.conf.all.accept_source_route and net.ipv4.conf.default.accept_source_route to 0 disables the system from accepting source routed packets. Assume this server was capable of routing packets to Internet routable addresses on one interface and private addresses on another interface. Assume that the private addresses were not routable to the Internet routable addresses and vice versa. Under normal routing circumstances, an attacker from the Internet routable addresses could not use the server as a way to reach the private address servers. If, however, source routed packets were allowed, they could be used to gain access to the private address systems as the route could be specified, rather than rely on routing protocols that did not allow this routing."
     remediation: "Set the net.ipv4.conf.all.accept_source_route and net.ipv4.conf.default.accept_source_route parameters to 0 in /etc/sysctl.conf: net.ipv4.conf.all.accept_source_route=0    net.ipv4.conf.default.accept_source_route=0    Modify active kernel parameters to match: # /sbin/sysctl -w net.ipv4.conf.all.accept_source_route=0    # /sbin/sysctl -w net.ipv4.conf.default.accept_source_route=0    # /sbin/sysctl -w net.ipv4.route.flush=1"
     compliance:
-      - cis: "7.2.1"
+      - cis: ["7.2.1"]
     condition: all
     rules:
       - 'c:/sbin/sysctl net.ipv4.conf.all.accept_source_route -> r:=\s*\t*0$'
@@ -596,7 +596,7 @@ checks:
     rationale: "Attackers could use bogus ICMP redirect messages to maliciously alter the system routing tables and get them to send packets to incorrect networks and allow your system packets to be captured."
     remediation: "Set the net.ipv4.conf.all.accept_redirects and net.ipv4.conf.default.accept_redirects parameters to 0 in /etc/sysctl.conf: net.ipv4.conf.all.accept_redirects=0    net.ipv4.conf.default.accept_redirects=0    Modify active kernel parameters to match: # /sbin/sysctl -w net.ipv4.conf.all.accept_redirects=0    # /sbin/sysctl -w net.ipv4.conf.default.accept_redirects=0    # /sbin/sysctl -w net.ipv4.route.flush=1"
     compliance:
-      - cis: "7.2.2"
+      - cis: ["7.2.2"]
     condition: all
     rules:
       - 'c:/sbin/sysctl net.ipv4.conf.all.accept_redirects -> r:=\s*\t*0$'
@@ -608,7 +608,7 @@ checks:
     rationale: "It is still possible for even known gateways to be compromised. Setting net.ipv4.conf.all.secure_redirects to 0 protects the system from routing table updates by possibly compromised known gateways."
     remediation: "Set the net.ipv4.conf.all.secure_redirects and net.ipv4.conf.default.secure_redirects parameters to 0 in /etc/sysctl.conf: net.ipv4.conf.all.secure_redirects=0    net.ipv4.conf.default.secure_redirects=0    Modify active kernel parameters to match: # /sbin/sysctl -w net.ipv4.conf.all.secure_redirects=0    # /sbin/sysctl -w net.ipv4.conf.default.secure_redirects=0    # /sbin/sysctl -w net.ipv4.route.flush=1"
     compliance:
-      - cis: "7.2.3"
+      - cis: ["7.2.3"]
     condition: all
     rules:
       - 'c:/sbin/sysctl net.ipv4.conf.all.secure_redirects -> r:=\s*\t*0$'
@@ -620,7 +620,7 @@ checks:
     rationale: "Enabling this feature and logging these packets allows an administrator to investigate the possibility that an attacker is sending spoofed packets to their server."
     remediation: "Set the net.ipv4.conf.all.log_martians and net.ipv4.conf.default.log_martians parameters to 1 in /etc/sysctl.conf: net.ipv4.conf.all.log_martians=1    net.ipv4.conf.default.log_martians=1    Modify active kernel parameters to match: # /sbin/sysctl -w net.ipv4.conf.all.log_martians=1    # /sbin/sysctl -w net.ipv4.conf.default.log_martians=1    # /sbin/sysctl -w net.ipv4.route.flush=1"
     compliance:
-      - cis: "7.2.4"
+      - cis: ["7.2.4"]
     condition: all
     rules:
       - 'c:/sbin/sysctl net.ipv4.conf.all.log_martians -> r:=\s*\t*1$'
@@ -632,7 +632,7 @@ checks:
     rationale: "Accepting ICMP echo and timestamp requests with broadcast or multicast destinations for your network could be used to trick your host into starting (or participating) in a Smurf attack. A Smurf attack relies on an attacker sending large amounts of ICMP broadcast messages with a spoofed source address. All hosts receiving this message and responding would send echo-reply messages back to the spoofed address, which is probably not routable. If many hosts respond to the packets, the amount of traffic on the network could be significantly multiplied."
     remediation: "Set the net.ipv4.icmp_echo_ignore_broadcasts parameter to 1 in /etc/sysctl.conf: net.ipv4.icmp_echo_ignore_broadcasts=1    Modify active kernel parameters to match: # /sbin/sysctl -w net.ipv4.icmp_echo_ignore_broadcasts=1    # /sbin/sysctl -w net.ipv4.route.flush=1"
     compliance:
-      - cis: "7.2.5"
+      - cis: ["7.2.5"]
     condition: all
     rules:
       - 'c:/sbin/sysctl net.ipv4.icmp_echo_ignore_broadcasts -> r:=\s*\t*1$'
@@ -643,7 +643,7 @@ checks:
     rationale: "Some routers (and some attackers) will send responses that violate RFC-1122 and attempt to fill up a log file system with many useless error messages."
     remediation: "Set the net.ipv4.icmp_ignore_bogus_error_responses parameter to 1 in /etc/sysctl.conf: net.ipv4.icmp_ignore_bogus_error_responses=1    Modify active kernel parameters to match: # /sbin/sysctl -w net.ipv4.icmp_ignore_bogus_error_responses=1    # /sbin/sysctl -w net.ipv4.route.flush=1"
     compliance:
-      - cis: "7.2.6"
+      - cis: ["7.2.6"]
     condition: all
     rules:
       - 'c:/sbin/sysctl net.ipv4.icmp_ignore_bogus_error_responses -> r:=\s*\t*1$'
@@ -654,7 +654,7 @@ checks:
     rationale: "Setting these flags is a good way to deter attackers from sending your server bogus packets that cannot be responded to. One instance where this feature breaks down is if asymmetrical routing is employed. This would occur when using dynamic routing protocols (bgp, ospf, etc) on your system. If you are using asymmetrical routing on your server, you will not be able to enable this feature without breaking the routing."
     remediation: "Set the net.ipv4.conf.all.rp_filter and net.ipv4.conf.default.rp_filter parameters to 1 in /etc/sysctl.conf: net.ipv4.conf.all.rp_filter=1    net.ipv4.conf.default.rp_filter=1    Modify active kernel parameters to match: # /sbin/sysctl -w net.ipv4.conf.all.rp_filter=1    # /sbin/sysctl -w net.ipv4.conf.default.rp_filter=1    # /sbin/sysctl -w net.ipv4.route.flush=1"
     compliance:
-      - cis: "7.2.7"
+      - cis: ["7.2.7"]
     condition: all
     rules:
       - 'c:/sbin/sysctl net.ipv4.conf.all.rp_filter -> r:=\s*\t*1$'
@@ -666,7 +666,7 @@ checks:
     rationale: "Attackers use SYN flood attacks to perform a denial of service attacked on a server by sending many SYN packets without completing the three way handshake. This will quickly use up slots in the kernel's half-open connection queue and prevent legitimate connections from succeeding. SYN cookies allow the server to keep accepting valid connections, even if under a denial of service attack."
     remediation: "Set the net.ipv4.tcp_syncookies parameter to 1 in /etc/sysctl.conf: net.ipv4.tcp_syncookies=1    Modify active kernel parameters to match: # /sbin/sysctl -w net.ipv4.tcp_syncookies=1    # /sbin/sysctl -w net.ipv4.route.flush=1"
     compliance:
-      - cis: "7.2.8"
+      - cis: ["7.2.8"]
     condition: all
     rules:
       - 'c:/sbin/sysctl net.ipv4.tcp_syncookies -> r:=\s*\t*1$'
@@ -677,7 +677,7 @@ checks:
     rationale: "It is recommended that systems not accept router advertisements as they could be tricked into routing traffic to compromised machines. Setting hard routes within the system (usually a single default route to a trusted router) protects the system from bad routes."
     remediation: "Set the net.ipv6.conf.all.accept_ra and net.ipv6.conf.default.accept_ra parameter to 0 in /etc/sysctl.conf: net.ipv6.conf.all.accept_ra=0    net.ipv6.conf.default.accept_ra=0    Modify active kernel parameters to match: # /sbin/sysctl -w net.ipv6.conf.all.accept_ra=0    # /sbin/sysctl -w net.ipv6.conf.default.accept_ra=0    # /sbin/sysctl -w net.ipv6.route.flush=1"
     compliance:
-      - cis: "7.3.1"
+      - cis: ["7.3.1"]
     condition: all
     rules:
       - 'c:/sbin/sysctl net.ipv6.conf.all.accept_ra -> r:=\s*\t*0$'
@@ -689,7 +689,7 @@ checks:
     rationale: "It is recommended that systems not accept ICMP redirects as they could be tricked into routing traffic to compromised machines. Setting hard routes within the system (usually a single default route to a trusted router) protects the system from bad routes."
     remediation: "Set the net.ipv6.conf.all.accept_redirects and net.ipv6.conf.default.accept_redirects parameters to 0 in /etc/sysctl.conf: net.ipv6.conf.all.accept_redirects=0    net.ipv6.conf.default.accept_redirects=0    Modify active kernel parameters to match: # /sbin/sysctl -w net.ipv6.conf.all.accept_redirects=0    # /sbin/sysctl -w net.ipv6.conf.default.accept_redirects=0    # /sbin/sysctl -w net.ipv6.route.flush=1"
     compliance:
-      - cis: "7.3.2"
+      - cis: ["7.3.2"]
     condition: all
     rules:
       - 'c:/sbin/sysctl net.ipv6.conf.all.accept_redirects -> r:=\s*\t*0$'
@@ -701,7 +701,7 @@ checks:
     rationale: "If IPv6 is not to be used, it is recommended that it be disabled to reduce the attack surface of the system."
     remediation: "Create or edit the file /etc/sysctl.conf and add the following lines: net.ipv6.conf.all.disable_ipv6=1    net.ipv6.conf.default.disable_ipv6=1    net.ipv6.conf.lo.disable_ipv6=1    Run the following command or reboot to apply the changes: # sysctl -p"
     compliance:
-      - cis: "7.3.3"
+      - cis: ["7.3.3"]
     condition: all
     rules:
       - 'c:sysctl net.ipv6.conf.all.disable_ipv6 -> r:=\s*\t*1$'
@@ -717,7 +717,7 @@ checks:
     rationale: "The /etc/hosts.allow file supports access control by IP and helps ensure that only authorized systems can connect to the server."
     remediation: "Create /etc/hosts.allow: # echo \"ALL: <net>/<mask>, <net>/<mask>, ...\" >/etc/hosts.allow  where each <net>/<mask> combination  (for example, \"192.168.1.0/255.255.255.0\") represents one network block in use by your organization that requires access to this system."
     compliance:
-      - cis: "7.4.2"
+      - cis: ["7.4.2"]
     condition: all
     rules:
       - 'f:/etc/hosts.allow'
@@ -728,7 +728,7 @@ checks:
     rationale: "The /etc/hosts.deny file serves as a failsafe so that any host not specified in /etc/hosts.allow is denied access to the server."
     remediation: "Create /etc/hosts.deny: # echo \"ALL: ALL\" >> /etc/hosts.deny"
     compliance:
-      - cis: "7.4.4"
+      - cis: ["7.4.4"]
     condition: all
     rules:
       - 'f:/etc/hosts.deny'
@@ -740,7 +740,7 @@ checks:
     rationale: "If the protocol is not required, it is recommended that the drivers not be installed  to reduce the potential attack surface."
     remediation: "# echo \"install dccp /bin/true\" >> /etc/modprobe.d/CIS.conf"
     compliance:
-      - cis: "7.5.1"
+      - cis: ["7.5.1"]
     condition: none
     rules:
       - 'c:lsmod -> r:dccp'
@@ -751,7 +751,7 @@ checks:
     rationale: "If the protocol is not being used, it is recommended that kernel module not be loaded, disabling the service to reduce the potential attack surface."
     remediation: "# echo \"install sctp /bin/true\" >> /etc/modprobe.d/CIS.conf"
     compliance:
-      - cis: "7.5.2"
+      - cis: ["7.5.2"]
     condition: none
     rules:
       - 'c:lsmod -> r:sctp'
@@ -762,7 +762,7 @@ checks:
     rationale: "If the protocol is not being used, it is recommended that kernel module not be loaded, disabling the service to reduce the potential attack surface."
     remediation: "# echo \"install rds /bin/true\" >> /etc/modprobe.d/CIS.conf"
     compliance:
-      - cis: "7.5.3"
+      - cis: ["7.5.3"]
     condition: none
     rules:
       - 'c:lsmod -> r:rds'
@@ -773,7 +773,7 @@ checks:
     rationale: "If the protocol is not being used, it is recommended that kernel module not be loaded, disabling the service to reduce the potential attack surface."
     remediation: "# echo \"install tipc /bin/true\" >> /etc/modprobe.d/CIS.conf"
     compliance:
-      - cis: "7.5.4"
+      - cis: ["7.5.4"]
     condition: none
     rules:
       - 'c:lsmod -> r:tipc'
@@ -784,7 +784,7 @@ checks:
     rationale: "IPtables provides extra protection for the Linux system by limiting communications in and out of the box to specific IPv4 addresses and ports."
     remediation: "Install the iptables and iptables-persistent packages: # apt-get install iptables iptables-persistent    Enable the iptables-persistent service: # update-rc.d iptables-persistent enable"
     compliance:
-      - cis: "7.7"
+      - cis: ["7.7"]
     condition: all
     rules:
       - 'c:dpkg -s iptables -> r:install ok installed'
@@ -799,7 +799,7 @@ checks:
     rationale: "If the rsyslog service is not activated the system will not have a syslog service running."
     remediation: "Enable rsyslog: # update-rc.d rsyslog enable"
     compliance:
-      - cis: "8.2.2"
+      - cis: ["8.2.2"]
     condition: all
     rules:
       - 'c:find /etc/rc* -name *rsyslog* -> r:S\.'
@@ -810,7 +810,7 @@ checks:
     rationale: "Storing log data on a remote host protects log integrity from local attacks. If an attacker gains root access on the local system, they could tamper with or remove log data that is stored on the local system"
     remediation: "Edit the /etc/rsyslog.conf file and add the following line (where logfile.example.com is the name of your central log host).  *.* @@loghost.example.com    # Execute the following command to restart rsyslogd    # pkill -HUP rsyslogd    Note: The double \"at\" sign (@@) directs rsyslog to use TCP to send log messages to the server, which is a more reliable transport mechanism than the default UDP protocol."
     compliance:
-      - cis: "8.2.5"
+      - cis: ["8.2.5"]
     references:
       - rsyslog.conf(5) man page
     condition: all
@@ -823,7 +823,7 @@ checks:
     rationale: "The guidance in the section ensures that remote log hosts are configured to only accept rsyslog data from hosts within the specified domain and that those systems that are not designed to be log hosts do not accept any remote rsyslog messages. This provides protection from spoofed log data and ensures that system administrators are reviewing reasonably complete syslog data in a central location."
     remediation: "For hosts that are designated as log hosts, edit the /etc/rsyslog.conf file and un-comment the following lines: $ModLoad imtcp.so    $InputTCPServerRun 514    Execute the following command to restart rsyslogd: # pkill -HUP rsyslogd"
     compliance:
-      - cis: "8.2.6"
+      - cis: ["8.2.6"]
     references:
       - rsyslog.conf(8) man page
     condition: all
@@ -839,7 +839,7 @@ checks:
     rationale: "While there may not be user jobs that need to be run on the system, the system does have maintenance jobs that may include security monitoring that have to run and cron is used to execute them."
     remediation: "Enable cron: # update-rc.d cron enable    Enable anacron: # update-rc.d anacron enable"
     compliance:
-      - cis: "9.1.1"
+      - cis: ["9.1.1"]
     condition: all
     rules:
       - 'c:find /etc/rc* -name *cron* -> r:S\.'
@@ -851,7 +851,7 @@ checks:
     rationale: "On many systems, only the system administrator is authorized to schedule cron jobs. Using the cron.allow file to control who can run cron jobs enforces this policy. It is easier to manage an allow list than a deny list. In a deny list, you could potentially add a user ID to the system and forget to add it to the deny files."
     remediation: "# /bin/rm /etc/cron.deny    # /bin/rm /etc/at.deny    # touch /etc/cron.allow    # touch /etc/at.allow    # chmod og-rwx /etc/cron.allow    # chmod og-rwx /etc/at.allow    # chown root:root /etc/cron.allow    # chown root:root /etc/at.allow"
     compliance:
-      - cis: "9.1.8"
+      - cis: ["9.1.8"]
     condition: all
     rules:
       - 'f:/etc/cron.allow'
@@ -867,7 +867,7 @@ checks:
     rationale: "Strong passwords protect systems from being hacked through brute force methods."
     remediation: "1) Install the libpam-cracklib package: # apt-get install libpam-cracklib 2) Set the pam_cracklib.so parameters as follows in /etc/pam.d/common-password: password required pam_cracklib.so retry=3 minlen=14 dcredit=-1 ucredit=-1 ocredit=-1 lcredit=-1"
     compliance:
-      - cis: "9.2.1"
+      - cis: ["9.2.1"]
     condition: all
     rules:
       - 'c:dpkg -s libpam-cracklib -> install ok installed'
@@ -879,7 +879,7 @@ checks:
     rationale: "Locking out userIDs after n unsuccessful consecutive login attempts mitigates brute force password attacks against your systems."
     remediation: "Edit the /etc/pam.d/login file and add the auth line below: auth required pam_tally2.so onerr=fail audit silent deny=5 unlock_time=900    Note: If a user has been locked out because they have reached the maximum consecutive failure count defined by deny= in the pam_tally2.so module, the user can be unlocked by issuing the command /sbin/pam_tally2 -u <username> --reset. This command sets the failed count to 0, effectively unlocking the user."
     compliance:
-      - cis: "9.2.2"
+      - cis: ["9.2.2"]
     condition: all
     rules:
       - 'f:/etc/pam.d/login -> !r:^# && r:auth\s*\t*required\s*\t*pam_tally2.so && r:onerr=fail && r:audit && r:silent && r:deny=\d && r:unlock_time=\d\d\d+'
@@ -890,7 +890,7 @@ checks:
     rationale: "Forcing users not to reuse their past 5 passwords make it less likely that an attacker will be able to guess the password.  Note that these change only apply to accounts configured on the local system."
     remediation: "Set the pam_unix.so remember parameter to 5 in /etc/pam.d/common-password: password [success=1 default=ignore]  pam_unix.so obscure sha512 remember=5    Note: The default password setting in this document is the last 5 passwords. Change this number to conform to your site's password policy."
     compliance:
-      - cis: "9.2.3"
+      - cis: ["9.2.3"]
     condition: all
     rules:
       - 'f:/etc/pam.d/common-password -> !r:^# && r:password && r:pam_unix.so && n:remember\s*\t*=\s*\t*(\d+) compare >= 5'
@@ -901,7 +901,7 @@ checks:
     rationale: "SSH v1 suffers from insecurities that do not affect SSH v2."
     remediation: "Edit the /etc/ssh/sshd_config file to set the parameter as follows: Protocol 2"
     compliance:
-      - cis: "9.3.1"
+      - cis: ["9.3.1"]
     condition: all
     rules:
       - 'f:/etc/ssh/sshd_config -> !r:^# && r:Protocol\s*\t*2'
@@ -912,7 +912,7 @@ checks:
     rationale: "SSH provides several logging levels with varying amounts of verbosity. DEBUG is specifically not recommended other than strictly for debugging SSH communications since it provides so much data that it is difficult to identify important security information. INFO level is the basic level that only records login activity of SSH users. In many situations, such as Incident Response, it is important to determine when a particular user was active on a system. The logout record can eliminate those users who disconnected, which helps narrow the field."
     remediation: "Edit the /etc/ssh/sshd_config file to set the parameter as follows: LogLevel INFO"
     compliance:
-      - cis: "9.3.2"
+      - cis: ["9.3.2"]
     condition: all
     rules:
       - 'f:/etc/ssh/sshd_config -> !r:^# && r:^\s*\t*LogLevel\s+INFO'
@@ -923,7 +923,7 @@ checks:
     rationale: "Disable X11 forwarding unless there is an operational requirement to use X11 applications directly. There is a small risk that the remote X11 servers of users who are logged in via SSH with X11 forwarding could be compromised by other users on the X11 server. Note that even if X11 forwarding is disabled, users can always install their own forwarders."
     remediation: "Edit the /etc/ssh/sshd_config file to set the parameter as follows: X11Forwarding no"
     compliance:
-      - cis: "9.3.4"
+      - cis: ["9.3.4"]
     condition: all
     rules:
       - 'f:/etc/ssh/sshd_config -> r:^X11Forwarding\s+no'
@@ -934,7 +934,7 @@ checks:
     rationale: "Setting the MaxAuthTries parameter to a low number will minimize the risk of successful brute force attacks to the SSH server. While the recommended setting is 4, it is set the number based on site policy."
     remediation: "Edit the /etc/ssh/sshd_config file to set the parameter as follows: MaxAuthTries 4"
     compliance:
-      - cis: "9.3.5"
+      - cis: ["9.3.5"]
     condition: all
     rules:
       - 'f:/etc/ssh/sshd_config -> n:^MaxAuthTries\s*\t*(\d+) compare <= 4'
@@ -945,7 +945,7 @@ checks:
     rationale: "Setting this parameter forces users to enter a password when authenticating with ssh."
     remediation: "Edit the /etc/ssh/sshd_config file to set the parameter as follows: IgnoreRhosts yes"
     compliance:
-      - cis: "9.3.6"
+      - cis: ["9.3.6"]
     condition: all
     rules:
       - 'f:/etc/ssh/sshd_config -> !r:^# && r:IgnoreRhosts\s+yes'
@@ -956,7 +956,7 @@ checks:
     rationale: "Even though the .rhosts files are ineffective if support is disabled in /etc/pam.conf, disabling the ability to use .rhosts files in SSH provides an additional layer of protection."
     remediation: "Edit the /etc/ssh/sshd_config file to set the parameter as follows: HostbasedAuthentication no"
     compliance:
-      - cis: "9.3.7"
+      - cis: ["9.3.7"]
     condition: all
     rules:
       - 'f:/etc/ssh/sshd_config -> !r:^# && r:HostbasedAuthentication\s+no'
@@ -967,7 +967,7 @@ checks:
     rationale: "Disallowing root logins over SSH requires server admins to authenticate using their own individual account, then escalating to root via sudo or su. This in turn limits opportunity for non-repudiation and provides a clear audit trail in the event of a security incident."
     remediation: "Edit the /etc/ssh/sshd_config file to set the parameter as follows: PermitRootLogin no"
     compliance:
-      - cis: "9.3.8"
+      - cis: ["9.3.8"]
     condition: all
     rules:
       - 'f:/etc/ssh/sshd_config -> !r:^# && r:PermitRootLogin\s+no'
@@ -978,7 +978,7 @@ checks:
     rationale: "Disallowing remote shell access to accounts that have an empty password reduces the probability of unauthorized access to the system."
     remediation: "Edit the /etc/ssh/sshd_config file to set the parameter as follows: PermitEmptyPasswords no"
     compliance:
-      - cis: "9.3.9"
+      - cis: ["9.3.9"]
     condition: all
     rules:
       - 'f:/etc/ssh/sshd_config -> !r:^# && r:PermitEmptyPasswords\s+no'
@@ -989,7 +989,7 @@ checks:
     rationale: "Permitting users the ability to set environment variables through the SSH daemon could potentially allow users to bypass security controls (e.g. setting an execution path that has ssh executing trojan'd programs)"
     remediation: "Edit the /etc/ssh/sshd_config file to set the parameter as follows: PermitUserEnvironment no"
     compliance:
-      - cis: "9.3.10"
+      - cis: ["9.3.10"]
     condition: all
     rules:
       - 'f:/etc/ssh/sshd_config -> !r:^# && r:PermitUserEnvironment\s+no'
@@ -1000,7 +1000,7 @@ checks:
     rationale: "Having no timeout value associated with a connection could allow an unauthorized user access to another user's ssh session (e.g. user walks away from their computer and doesn't lock the screen). Setting a timeout value at least reduces the risk of this happening..  While the recommended setting is 300 seconds (5 minutes), set this timeout value based on site policy. The recommended setting for ClientAliveCountMax is 0. In this case, the client session will be terminated after 5 minutes of idle time and no keepalive messages will be sent."
     remediation: "Edit the /etc/ssh/sshd_config file to set the parameter as follows: ClientAliveInterval 300    ClientAliveCountMax 0"
     compliance:
-      - cis: "9.3.12"
+      - cis: ["9.3.12"]
     condition: all
     rules:
       - 'f:/etc/ssh/sshd_config -> !r:^# && n:ClientAliveInterval\s*\t*(\d+) compare <= 300'
@@ -1012,7 +1012,7 @@ checks:
     rationale: "Restricting which users can remotely access the system via SSH will help ensure that only authorized users access the system."
     remediation: "Edit the /etc/ssh/sshd_config file to set one or more of the parameter as follows: AllowUsers <userlist>    AllowGroups <grouplist>    DenyUsers <userlist>    DenyGroups <grouplist>"
     compliance:
-      - cis: "9.3.13"
+      - cis: ["9.3.13"]
     condition: all
     rules:
       - 'f:/etc/ssh/sshd_config -> !r:^# && r:AllowUsers\s+\w+|AllowGroups\s+\w+|DenyUsers\s+\w+|DenyGroups\s+\w+'
@@ -1023,7 +1023,7 @@ checks:
     rationale: "Banners are used to warn connecting users of the particular site's policy regarding connection. Consult with your legal department for the appropriate warning banner for your site."
     remediation: "Edit the /etc/ssh/sshd_config file to set the parameter as follows: Banner /etc/issue.net"
     compliance:
-      - cis: "9.3.14"
+      - cis: ["9.3.14"]
     condition: all
     rules:
       - 'f:/etc/ssh/sshd_config -> !r:^# && r:Banner\s*\t*/etc/issue.net|^Banner\s\t*/etc/issue'
@@ -1034,7 +1034,7 @@ checks:
     rationale: "Restricting the use of su, and using sudo in its place, provides system administrators better control of the escalation of user privileges to execute privileged commands. The sudo utility also provides a better logging and audit mechanism, as it can log each command executed via sudo, whereas su can only record that a user executed the su program."
     remediation: "1) Add the following line to the /etc/pam.d/su file: auth required pam_wheel.so use_uid 2) Once this is done, create a comma separated list of users in the wheel statement in the /etc/group file."
     compliance:
-      - cis: "9.5"
+      - cis: ["9.5"]
     condition: all
     rules:
       - 'f:/etc/pam.d/su -> !r:^# && r:auth && r:required && r:pam_wheel.so && r:use_uid'
@@ -1048,7 +1048,7 @@ checks:
     rationale: "The window of opportunity for an attacker to leverage compromised credentials or successfully compromise credentials via an online brute force attack is limited by the age of the password. Therefore, reducing the maximum age of a password also reduces an attacker's window of opportunity."
     remediation: "Set the PASS_MAX_DAYS parameter to 90 in /etc/login.defs: PASS_MAX_DAYS 90    Modify user parameters for all users with a password set to match: # chage --maxdays 90 <user>"
     compliance:
-      - cis: "10.1.1"
+      - cis: ["10.1.1"]
     condition: all
     rules:
       - 'f:/etc/login.defs -> n:^PASS_MAX_DAYS\s*\t*(\d+) compare <= 90'
@@ -1059,7 +1059,7 @@ checks:
     rationale: "By restricting the frequency of password changes, an administrator can prevent users from repeatedly changing their password in an attempt to circumvent password reuse controls."
     remediation: "Set the PASS_MIN_DAYS parameter to 7 in /etc/login.defs: PASS_MIN_DAYS 7    Modify user parameters for all users with a password set to match: # chage --mindays 7 <user>"
     compliance:
-      - cis: "10.1.2"
+      - cis: ["10.1.2"]
     condition: all
     rules:
       - 'f:/etc/login.defs -> n:^PASS_MIN_DAYS\s*\t*(\d+) compare >= 7'
@@ -1070,7 +1070,7 @@ checks:
     rationale: "Providing an advance warning that a password will be expiring gives users time to think of a secure password. Users caught unaware may choose a simple password or write it down where it may be discovered."
     remediation: "Set the PASS_WARN_AGE parameter to 7 in /etc/login.defs: PASS_WARN_AGE 7    Modify user parameters for all users with a password set to match: # chage --warndays 7 <user>"
     compliance:
-      - cis: "10.1.3"
+      - cis: ["10.1.3"]
     condition: all
     rules:
       - 'f:/etc/login.defs -> n:^PASS_WARN_AGE\s*\t*(\d+) compare >= 7'
@@ -1081,7 +1081,7 @@ checks:
     rationale: "Using GID 0 for the root account helps prevent root-owned files from accidentally becoming accessible to non-privileged users."
     remediation: "# usermod -g 0 root"
     compliance:
-      - cis: "10.3"
+      - cis: ["10.3"]
     condition: all
     rules:
       - 'f:/etc/passwd -> !r:^# && r:root:\w+:\w+:0:'
@@ -1092,7 +1092,7 @@ checks:
     rationale: "Setting a very secure default value for umask ensures that users make a conscious choice about their file permissions. A default umask setting of 077 causes files and directories created by users to not be readable by any other user on the system. A umask of 027 would make files and directories readable by users in the same Unix group, while a umask of 022 would make files readable by every user on the system.  Note: The directives in this section apply to bash and shell. If other shells are supported on the system, it is recommended that their configuration files also are checked."
     remediation: "Edit the /etc/bash.bashrc and /etc/profile.d/cis.sh files (and the appropriate files for any other shell supported on your system) and add the following the UMASK parameter as shown: umask 077"
     compliance:
-      - cis: "10.4"
+      - cis: ["10.4"]
     condition: all
     rules:
       - 'c:grep -Rh ^umask[[:space:]][[:space:]]*077 /etc/profile.d/ -> !r:^# && r:umask\s*\t*077'
@@ -1104,7 +1104,7 @@ checks:
     rationale: "Inactive accounts pose a threat to system security since the users are not logging in to notice failed login attempts or other anomalies."
     remediation: "# useradd -D -f 35"
     compliance:
-      - cis: "10.5"
+      - cis: ["10.5"]
     condition: all
     rules:
       - 'f:/etc/default/useradd -> n:^INACTIVE=(\d+) compare <= 35'
@@ -1116,7 +1116,7 @@ checks:
     rationale: "Warning messages inform users who are attempting to login to the system of their legal status regarding the system and must include the name of the organization that owns the system and any monitoring policies that are in place. Consult with your organization's legal counsel for the appropriate wording for your specific organization."
     remediation: "# touch /etc/motd    # echo \"Authorized uses only. All activity may be monitored and reported.\" > /etc/issue    # echo \"Authorized uses only. All activity may be monitored and reported.\" > /etc/issue.net    # chown root:root /etc/motd    # chmod 644 /etc/motd    # chown root:root /etc/issue    # chmod 644 /etc/issue    # chown root:root /etc/issue.net    # chmod 644 /etc/issue.net"
     compliance:
-      - cis: "11.1"
+      - cis: ["11.1"]
     condition: all
     rules:
       - 'f:/etc/motd'
@@ -1132,7 +1132,7 @@ checks:
     rationale: "Displaying OS and patch level information in login banners also has the side effect of providing detailed system information to attackers attempting to target specific exploits of a system. Authorized users can easily get this information by running the \"uname -a\" command once they have logged in."
     remediation: "Edit the /etc/motd, /etc/issue and /etc/issue.net files and remove any lines containing \\m, \\r, \\s or \\v."
     compliance:
-      - cis: "11.2"
+      - cis: ["11.2"]
     condition: none
     rules:
       - 'f:/etc/issue -> r:\v|\r|\m|\s'
@@ -1147,7 +1147,7 @@ checks:
     rationale: "All accounts must have passwords or be locked to prevent the account from being used by an unauthorized user."
     remediation: "If any accounts in the /etc/shadow file do not have a password, run the following command to lock the account until it can be determined why it does not have a password: # /usr/bin/passwd -l <username>    Also, check to see if the account is logged in and investigate what it is being used for to determine if it needs to be forced off."
     compliance:
-      - cis: "13.1"
+      - cis: ["13.1"]
     condition: none
     rules:
       - 'f:/etc/shadow -> r:^\w+::'
@@ -1158,7 +1158,7 @@ checks:
     rationale: "These entries may provide an avenue for attackers to gain privileged access on the system."
     remediation: "Delete these entries if they exist."
     compliance:
-      - cis: "13.2"
+      - cis: ["13.2"]
     condition: none
     rules:
       - 'f:/etc/passwd -> !r:^# && r:^+:'
@@ -1169,7 +1169,7 @@ checks:
     rationale: "These entries may provide an avenue for attackers to gain privileged access on the system."
     remediation: "Delete these entries if they exist."
     compliance:
-      - cis: "13.3"
+      - cis: ["13.3"]
     condition: none
     rules:
       - 'f:/etc/shadow -> !r:^# && r:^+:'
@@ -1179,7 +1179,7 @@ checks:
     rationale: "These entries may provide an avenue for attackers to gain privileged access on the system."
     remediation: "Delete these entries if they exist."
     compliance:
-      - cis: "13.4"
+      - cis: ["13.4"]
     condition: none
     rules:
       - 'f:/etc/group -> !r:^# && r:^+:'
@@ -1190,18 +1190,51 @@ checks:
     rationale: "This access must be limited to only the default root account and only from the system console. Administrative access must be through an unprivileged account using an approved mechanism as noted in Item 9.4 Restrict root Login to System Console."
     remediation: "Delete any other entries that are displayed."
     compliance:
-      - cis: "13.5"
+      - cis: ["13.5"]
     condition: none
     rules:
-      - 'f:/etc/passwd -> !r:^# && !r:^root: && r:^\w+:\w+:0:'
+      - 'f:/etc/passwd -> !r:^# && not r:^\s*\t*root: && r:^\w+:\w+:0:'
 
-  - id: 10598
+  - id: 10600
+    title: "Check for Presence of User .rhosts Files"
+    description: "While no .rhosts files are shipped by default, users can easily create them."
+    rationale: "This action is only meaningful if .rhosts support is permitted in the file /etc/pam.conf.  Even though the .rhosts files are ineffective if support is disabled in /etc/pam.conf, they may have been brought over from other systems and could contain information useful to an attacker for those other systems."
+    remediation: "If any users have .rhosts files determine why they have them."
+    compliance:
+      - cis: ["13.10"]
+    condition: none
+    rules:
+      - 'd:/home -> r:^.rhosts$'
+
+  - id: 10601
+    title: "Check for Presence of User .netrc Files"
+    description: "The .netrc file contains data for logging into a remote host for file transfers via FTP."
+    rationale: "The .netrc file presents a significant security risk since it stores passwords in unencrypted form. Even if FTP is disabled, user accounts may have brought over .netrc files from other systems which could pose a risk to those systems."
+    remediation: "Making global modifications to users' files without alerting the user community can result in unexpected outages and unhappy users. Therefore, it is recommended that a monitoring policy be established to report user .netrc files and determine the action to be taken in accordance with site policy."
+    compliance:
+      - cis: ["13.18"]
+    condition: none
+    rules:
+      - 'd:/home -> r:^.netrc$'
+
+  - id: 10602
+    title: "Check for Presence of User .forward Files"
+    description: "The .forward file specifies an email address to forward the user's mail to."
+    rationale: "Use of the .forward file poses a security risk in that sensitive data may be inadvertently transferred outside the organization. The .forward file also poses a risk as it can be used to execute commands that may perform unintended actions."
+    remediation: "Making global modifications to users' files without alerting the user community can result in unexpected outages and unhappy users. Therefore, it is recommended that a monitoring policy be established to report user .forward files and determine the action to be taken in accordance with site policy."
+    compliance:
+      - cis: ["13.19"]
+    condition: none
+    rules:
+      - 'd:/home -> r:^.forward$'
+
+  - id: 10603
     title: "Ensure shadow group is empty"
     description: "The shadow group allows system programs which require access the ability to read the /etc/shadow file. No users should be assigned to the shadow group."
     rationale: "Any users assigned to the shadow group would be granted read access to the /etc/shadow file. If attackers can gain read access to the /etc/shadow file, they can easily run a password cracking program against the hashed passwords to break them. Other security information that is stored in the /etc/shadow file (such as expiration) could also be useful to subvert additional user accounts."
     remediation: "Remove all users from the shadow group, and change the primary group of any users with shadow as their primary group."
     compliance:
-      - cis: "13.20"
+      - cis: ["13.20"]
     condition: none
     rules:
       - 'f:/etc/group -> !r:^# && r:shadow:\w*:\w*:\S+'
