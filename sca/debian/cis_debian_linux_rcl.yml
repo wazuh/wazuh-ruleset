@@ -36,8 +36,8 @@ checks:
    rationale: "Making /tmp its own file system allows an administrator to set the noexec option on the mount, making /tmp useless for an attacker to install executable code. It would also prevent an attacker from establishing a hardlink to a system setuid program and wait for it to be updated. Once the program was updated, the hardlink would be broken and the attacker would have his own copy of the program. If the program happened to have a security vulnerability, the attacker could continue to exploit the known flaw. This can be accomplished by either mounting tmpfs to /tmp, or creating a separate partition for /tmp."
    remediation: "Configure /etc/fstab as appropiate or enable systemd /tmp mounting and edit /etc/systemd/system/local-fs.target.wants/tmp.mount to configure the /tmp mount."
    compliance:
-    - cis_csc: "5.1"
-    - cis: "1.1.2"
+    - cis_csc: ["5.1"]
+    - cis: ["1.1.2"]
    references:
     - https://tldp.org/HOWTO/LVM-HOWTO/
     - https://www.freedesktop.org/wiki/Software/systemd/APIFileSystems/
@@ -51,9 +51,9 @@ checks:
    rationale: "Since the /tmp filesystem is not intended to support devices, set this option to ensure that users cannot attempt to create block or character special devices in /tmp ."
    remediation: "Edit /etc/systemd/system/local-fs.target.wants/tmp.mount to configure the /tmp and enable systemd /tmp mounting."
    compliance:
-    - cis_csc: "5.1"
-    - cis: "1.1.3"
-    - pci_dss: "2.2.4"
+    - cis_csc: ["5.1"]
+    - cis: ["1.1.3"]
+    - pci_dss: ["2.2.4"]
    condition: all
    rules:
      - 'c:mount -> r:\s/tmp\s && r:nodev'
@@ -64,8 +64,8 @@ checks:
    rationale: "Since the /var directory may contain world-writable files and directories, there is a risk of resource exhaustion if it is not bound to a separate partition."
    remediation: "For new installations, during installation create a custom partition setup and specify a separate partition for /var. For systems that were previously installed, create a new partition and configure /etc/fstab as appropriate."
    compliance:
-    - cis_csc: "5.1"
-    - cis: "1.1.6"
+    - cis_csc: ["5.1"]
+    - cis: ["1.1.6"]
    references:
     - https://tldp.org/HOWTO/LVM-HOWTO/
    condition: all
@@ -78,8 +78,8 @@ checks:
    rationale: "Since the /var/tmp directory is intended to be world-writable, there is a risk of resource exhaustion if it is not bound to a separate partition. In addition, making /var/tmp its own file system allows an administrator to set the noexec option on the mount, making /var/tmp useless for an attacker to install executable code. It would also prevent an attacker from establishing a hardlink to a system setuid program and wait for it to be updated. Once the program was updated, the hardlink would be broken and the attacker would have his own copy of the program. If the program happened to have a security vulnerability, the attacker could continue to exploit the known flaw."
    remediation: "For new installations, during installation create a custom partition setup and specify a separate partition for /var/tmp . For systems that were previously installed, create a new partition and configure /etc/fstab as appropriate."
    compliance:
-    - cis_csc: "5.1"
-    - cis: "1.1.7"
+    - cis_csc: ["5.1"]
+    - cis: ["1.1.7"]
    condition: all
    rules:
      - 'c:mount -> r:\s/var/tmp\s'
@@ -90,9 +90,9 @@ checks:
    rationale: "Since the /var/tmp filesystem is not intended to support devices, set this option to ensure that users cannot attempt to create block or character special devices in /var/tmp ."
    remediation: "Edit the /etc/fstab file and add nodev to the fourth field (mounting options) for the /var/tmp partition. See the fstab(5) manual page for more information. Run the following command to remount /var/tmp: # mount -o remount,nodev /var/tmp"
    compliance:
-    - cis_csc: "5.1"
-    - cis: "1.1.8"
-    - pci_dss: "2.2.4"
+    - cis_csc: ["5.1"]
+    - cis: ["1.1.8"]
+    - pci_dss: ["2.2.4"]
    condition: all
    rules:
      - 'c:mount -> r:\s/var/tmp\s && r:nodev'
@@ -103,9 +103,9 @@ checks:
    rationale: "Since the user partitions are not intended to support devices, set this option to ensure that users cannot attempt to create block or character special devices."
    remediation: "Edit the /etc/fstab file and add nodev to the fourth field (mounting options) for the /home partition. See the fstab(5) manual page for more information. # mount -o remount,nodev /home"
    compliance:
-    - cis_csc: "5.1"
-    - cis: "1.1.14"
-    - pci_dss: "2.2.4"
+    - cis_csc: ["5.1"]
+    - cis: ["1.1.14"]
+    - pci_dss: ["2.2.4"]
    condition: all
    rules:
      - 'c:mount -> r:\s/home\s && r:nodev'
@@ -116,8 +116,8 @@ checks:
    rationale: "Since the /run/shm filesystem is not intended to support devices, set this option to ensure that users cannot attempt to create special devices in /dev/shm partitions."
    remediation: "Edit the /etc/fstab file and add nodev to the fourth field (mounting options) for the /dev/shm partition. See the fstab(5) manual page for more information. Run the following command to remount /dev/shm : # mount -o remount,nodev /dev/shm."
    compliance:
-    - cis_csc: "5.1"
-    - cis: "1.1.14"
+    - cis_csc: ["5.1"]
+    - cis: ["1.1.14"]
    condition: all
    rules:
      - 'c:mount -> r:\s/dev/shm\s && r:nodev'
@@ -128,8 +128,8 @@ checks:
    rationale: "Setting this option on a file system prevents users from introducing privileged programs onto the system and allowing non-root users to execute them."
    remediation: "Edit the /etc/fstab file and add nosuid to the fourth field (mounting options) for the /dev/shm partition. See the fstab(5) manual page for more information. Run the following command to remount /dev/shm: # mount -o remount,nosuid /dev/shm."
    compliance:
-    - cis_csc: "5.1"
-    - cis: "1.1.15"
+    - cis_csc: ["5.1"]
+    - cis: ["1.1.15"]
    condition: all
    rules:
      - 'c:mount -> r:\s/dev/shm\s && r:nosuid'
@@ -140,8 +140,8 @@ checks:
    rationale: "Setting this option on a file system prevents users from executing programs from shared memory. This deters users from introducing potentially malicious software on the system."
    remediation: "Edit the /etc/fstab file and add noexec to the fourth field (mounting options) for the /dev/shm partition. See the fstab(5) manual page for more information. Run the following command to remount /dev/shm: # mount -o remount,noexec /dev/shm."
    compliance:
-    - cis_csc: "5.1"
-    - cis: "1.1.16"
+    - cis_csc: ["5.1"]
+    - cis: ["1.1.16"]
    condition: all
    rules:
      - 'c:mount -> r:\s/dev/shm\s && r:noexec'
@@ -153,9 +153,9 @@ checks:
    rationale: "Warning messages inform users who are attempting to login to the system of their legal status regarding the system and must include the name of the organization that owns the system and any monitoring policies that are in place."
    remediation: "Edit or create the file /etc/gdm3/greeter.dconf-defaults and add: banner-message-enable=true, banner-message-text='Authorized uses only. All activity may be monitored and reported.'"
    compliance:
-    - cis_csc: "5.1"
-    - cis: "1.7.2"
-    - pci_dss: "2.2.2"
+    - cis_csc: ["5.1"]
+    - cis: ["1.7.2"]
+    - pci_dss: ["2.2.2"]
    condition: all
    rules:
      - 'f:/etc/gdm3/greeter.dconf-defaults -> r:^[org/gnome/login-screen]'
@@ -169,9 +169,9 @@ checks:
    rationale: "Since the /run/shm filesystem is not intended to support devices, set this option to ensure that users cannot attempt to create special devices in /run/shm partitions."
    remediation: "Edit the /etc/fstab file and add nodev to the fourth field (mounting options of entries that have mount points that contain /run/shm . See the fstab(5) manual page for more information. # mount -o remount,nodev /run/shm"
    compliance:
-    - cis_csc: "5.1"
-    - cis: "2.14"
-    - pci_dss: "2.2.4"
+    - cis_csc: ["5.1"]
+    - cis: ["2.14"]
+    - pci_dss: ["2.2.4"]
    condition: all
    rules:
      - 'c:mount -> r:\s/run/shm\s && r:nodev'
@@ -182,8 +182,8 @@ checks:
    rationale: "Setting this option on a file system prevents users from introducing privileged programs onto the system and allowing non-root users to execute them."
    remediation: "Edit the /etc/fstab file and add nosuid to the fourth field (mounting options). Look for entries that have mount points that contain /run/shm . See the fstab(5) manual page for more information. # mount -o remount,nosuid /run/shm."
    compliance:
-    - cis_csc: "5.1"
-    - cis: "2.15"
+    - cis_csc: ["5.1"]
+    - cis: ["2.15"]
    condition: all
    rules:
      - 'c:mount -> r:\s/run/shm\s && r:nosuid'
@@ -194,8 +194,8 @@ checks:
    rationale: "Setting this option on a file system prevents users from executing programs from shared memory. This deters users from introducing potentially malicious software on the system."
    remediation: "Edit the /etc/fstab file and add noexec to the fourth field (mounting options). Look for entries that have mount points that contain /run/shm . See the fstab(5) manual page for more information. # mount -o remount,noexec /run/shm."
    compliance:
-    - cis_csc: "5.1"
-    - cis: "2.16"
+    - cis_csc: ["5.1"]
+    - cis: ["2.16"]
    condition: all
    rules:
      - 'c:mount -> r:\s/run/shm\s && r:noexec'
@@ -207,9 +207,9 @@ checks:
    rationale: "If there are no inetd services required, it is recommended that the daemon be removed."
    remediation: "Run the following commands to uninstall openbsd-inetd and inetutils-inetd: apt-get remove openbsd-inetd; apt-get remove inetutils-inetd"
    compliance:
-    - cis_csc: "9.2"
-    - cis: "2.1.2"
-    - pci_dss: "2.2.2"
+    - cis_csc: ["9.2"]
+    - cis: ["2.1.2"]
+    - pci_dss: ["2.2.2"]
    condition: none
    rules:
      - 'c:dpkg -s inetutils-inetd -> r:install ok installed'
@@ -222,9 +222,9 @@ checks:
    rationale: "FTP does not protect the confidentiality of data or authentication credentials. It is recommended sftp be used if file transfer is required. Unless there is a need to run the system as a FTP server (for example, to allow anonymous downloads), it is recommended that the package be deleted to reduce the potential attack surface."
    remediation: "Run the following command to disable vsftpd: # systemctl disable vsftpd"
    compliance:
-    - cis_csc: "9.2"
-    - cis: "2.2.9"
-    - pci_dss: "2.2.3"
+    - cis_csc: ["9.2"]
+    - cis: ["2.2.9"]
+    - pci_dss: ["2.2.3"]
    condition: any
    rules:
      - 'c:systemctl is-enabled vsftpd -> r:disabled'
@@ -235,9 +235,9 @@ checks:
    rationale: "Unless POP3 and/or IMAP servers are to be provided by this system, it is recommended that the package be removed to reduce the potential attack surface."
    remediation: "Run the following commands to remove exim: # apt-get remove exim4; # apt-get purge exim4"
    compliance:
-    - cis_csc: "9.2"
-    - cis: "2.2.11"
-    - pci_dss: "2.2.2"
+    - cis_csc: ["9.2"]
+    - cis: ["2.2.11"]
+    - pci_dss: ["2.2.2"]
    condition: none
    rules:
      - 'c:dpkg -s exim4 -> install ok installed'
@@ -248,9 +248,9 @@ checks:
    rationale: "If there is no need to mount directories and file systems to Windows systems, then this service can be deleted to reduce the potential attack surface."
    remediation: "Run the following command to disable smbd: # systemctl disable smbd"
    compliance:
-    - cis_csc: "9.2"
-    - cis: "2.2.12"
-    - pci_dss: "2.2.2"
+    - cis_csc: ["9.2"]
+    - cis: ["2.2.12"]
+    - pci_dss: ["2.2.2"]
    condition: none
    rules:
      - 'c:systemctl is-enabled smb -> r:^enabled'
@@ -261,9 +261,9 @@ checks:
    rationale: "If the system does not export NFS shares or act as an NFS client, it is recommended that these services be disabled to reduce remote attack surface."
    remediation: "Run the following commands to disable nfs and rpcbind : # systemctl disable nfs-server; # systemctl disable rpcbind"
    compliance:
-    - cis_csc: "9.2"
-    - cis: "2.2.7"
-    - pci_dss: "2.2.2"
+    - cis_csc: ["9.2"]
+    - cis: ["2.2.7"]
+    - pci_dss: ["2.2.2"]
    condition: none
    rules:
      - 'c:systemctl is-enabled nfs-server -> r:^enabled'
@@ -275,9 +275,9 @@ checks:
    rationale: "The NIS service is inherently an insecure system that has been vulnerable to DOS attacks, buffer overflows and has poor authentication for querying NIS maps. NIS generally been replaced by such protocols as Lightweight Directory Access Protocol (LDAP). It is recommended that the service be disabled and other, more secure services be used"
    remediation: "Run the following command to disable nis: # systemctl disable nis"
    compliance:
-    - cis_csc: "9.2"
-    - cis: "2.2.17"
-    - pci_dss: "2.2.2"
+    - cis_csc: ["9.2"]
+    - cis: ["2.2.17"]
+    - pci_dss: ["2.2.2"]
    condition: none
    rules:
      - 'c:systemctl is-enabled nis -> r:^enabled'
@@ -288,9 +288,9 @@ checks:
    rationale: "Unless there is a need to run the system as a web server, it is recommended that the package be deleted to reduce the potential attack surface."
    remediation: "Run the following command to disable apache2: # systemctl disable apache2"
    compliance:
-    - cis_csc: "9.2"
-    - cis: "2.2.10"
-    - pci_dss: "2.2.2"
+    - cis_csc: ["9.2"]
+    - cis: ["2.2.10"]
+    - pci_dss: ["2.2.2"]
    condition: none
    rules:
      - 'c:systemctl is-enabled apache2 -> r:^enabled'
@@ -301,9 +301,9 @@ checks:
    rationale: "Unless a system is specifically designated to act as a DNS server, it is recommended that the package be deleted to reduce the potential attack surface."
    remediation: "Run the following command to disable named: # systemctl disable bind9"
    compliance:
-    - cis_csc: "9.2"
-    - cis: "2.2.8"
-    - pci_dss: "2.2.2"
+    - cis_csc: ["9.2"]
+    - cis: ["2.2.8"]
+    - pci_dss: ["2.2.2"]
    condition: none
    rules:
      - 'c:systemctl is-enabled bind9 -> r:^enabled'
@@ -314,9 +314,9 @@ checks:
    rationale: "If there is no need for a proxy server, it is recommended that the squid proxy be deleted to reduce the potential attack surface."
    remediation: "Run the following command to disable squid: # systemctl disable squid"
    compliance:
-    - cis_csc: "9.2"
-    - cis: "2.2.13"
-    - pci_dss: "2.2.2"
+    - cis_csc: ["9.2"]
+    - cis: ["2.2.13"]
+    - pci_dss: ["2.2.2"]
    condition: none
    rules:
      - 'c:systemctl is-enabled squid -> r:^enabled'
@@ -328,9 +328,9 @@ checks:
    rationale: "These legacy clients contain numerous security exposures and have been replaced with the more secure SSH package. Even if the server is removed, it is best to ensure the clients are also removed to prevent users from inadvertently attempting to use these commands and therefore exposing their credentials. Note that removing the rsh package removes the clients for rsh , rcp and rlogin ."
    remediation: "Run the following command to uninstall rsh: apt-get remove rsh-client rsh-redone-client"
    compliance:
-    - cis_csc: "2.6, 4.5"
-    - cis: "2.3.2"
-    - pci_dss: "2.2.2"
+    - cis_csc: ["2.6","4.5"]
+    - cis: ["2.3.2"]
+    - pci_dss: ["2.2.2"]
    condition: none
    rules:
      - 'c:dpkg -s rsh-client -> install ok installed'
@@ -342,9 +342,9 @@ checks:
    rationale: "The telnet protocol is insecure and unencrypted. The use of an unencrypted transmission medium could allow an unauthorized user to steal credentials. The ssh package provides an encrypted session and stronger security and is included in most Linux distributions."
    remediation: "Run the following command to uninstall telnet: # apt-get remove telnet"
    compliance:
-    - cis_csc: "2.6, 4.5"
-    - cis: "2.3.4"
-    - pci_dss: "2.2.3"
+    - cis_csc: ["2.6","4.5"]
+    - cis: ["2.3.4"]
+    - pci_dss: ["2.2.3"]
    condition: none
    rules:
      - 'c:dpkg -s telnet -> install ok installed'
@@ -356,8 +356,8 @@ checks:
    rationale: "Setting the flags to 0 ensures that a system with multiple interfaces (for example, a hard proxy), will never be able to forward packets, and therefore, never serve as a router."
    remediation: "Set the following parameter in /etc/sysctl.conf or a /etc/sysctl.d/* file: net.ipv4.ip_forward = 0"
    compliance:
-     - cis_csc: "5.1"
-     - cis: "3.1.1"
+     - cis_csc: ["5.1"]
+     - cis: ["3.1.1"]
    condition: all
    rules:
      - 'c:sysctl net.ipv4.ip_forward -> r:=^net.ipv4_forward\s*=\s*0$'
@@ -369,8 +369,8 @@ checks:
    rationale: "Setting the flags to 0 ensures that a system with multiple interfaces (for example, a hard proxy), will never be able to forward packets, and therefore, never serve as a router."
    remediation: "Set the following parameter in /etc/sysctl.conf or a /etc/sysctl.d/*, net.ipv6.conf.all.forwarding = 0"
    compliance:
-     - cis_csc: "5.1"
-     - cis: "3.1.1"
+     - cis_csc: ["5.1"]
+     - cis: ["3.1.1"]
    condition: all
    rules:
      - 'c:sysctl net.ipv6.conf.all.forwarding -> r:=^net.ipv6_forward.conf.all.forwarding\s*=\s*0$'
@@ -383,8 +383,8 @@ checks:
    rationale: "Setting net.ipv4.conf.all.accept_source_route, net.ipv4.conf.default.accept_source_route, net.ipv6.conf.all.accept_source_route and net.ipv6.conf.default.accept_source_route to 0 disables the system from accepting source routed packets. Assume this system was capable of routing packets to Internet routable addresses on one interface and private addresses on another interface. Assume that the private addresses were not routable to the Internet routable addresses and vice versa. Under normal routing circumstances, an attacker from the Internet routable addresses could not use the system as a way to reach the private address systems. If, however, source routed packets were allowed, they could be used to gain access to the private address systems as the route could be specified, rather than rely on routing protocols that did not allow this routing."
    remediation: "Set the following parameters in /etc/sysctl.conf or a /etc/sysctl.d/* file: net.ipv4.conf.all.accept_source_route = 0, net.ipv4.conf.default.accept_source_route = 0, net.ipv6.conf.all.accept_source_route = 0, net.ipv6.conf.default.accept_source_route = 0"
    compliance:
-    - cis_csc: "5.1"
-    - cis: "3.2.1"
+    - cis_csc: ["5.1"]
+    - cis: ["3.2.1"]
     condition: all
     rules:
      - 'c:sysctl net.ipv4.conf.all.accept_source_route -> r:^net.ipv4.conf.all.accept_source_route\s*=\s*0$'
@@ -402,8 +402,8 @@ checks:
    rationale: "Accepting ICMP echo and timestamp requests with broadcast or multicast destinations for your network could be used to trick your host into starting (or participating) in a Smurf attack. A Smurf attack relies on an attacker sending large amounts of ICMP broadcast messages with a spoofed source address. All hosts receiving this message and responding would send echo-reply messages back to the spoofed address, which is probably not routable. If many hosts respond to the packets, the amount of traffic on the network could be significantly multiplied."
    remediation: "Set the following parameters in /etc/sysctl.conf or a /etc/sysctl.d/* file: net.ipv4.icmp_echo_ignore_broadcasts = 1"
    compliance:
-    - cis_csc: "5.1"
-    - cis: "3.2.5"
+    - cis_csc: ["5.1"]
+    - cis: ["3.2.5"]
    condition: all
    rules:
      - 'c:sysctl net.ipv4.icmp_echo_ignore_broadcasts -> r:^net.ipv4.icmp_echo_ignore_broadcasts\s*=\s*1$'
@@ -416,11 +416,11 @@ checks:
    rationale: "SSH v1 suffers from insecurities that do not affect SSH v2."
    remediation: "Edit the /etc/ssh/sshd_config file to set the parameter as follows: Protocol 2"
    compliance:
-     - cis_csc: "14.4"
-     - cis: "5.2.4"
-     - pci_dss: "4.1"
-     - hipaa: "164.312.a.2.IV, 164.312.e.1, 164.312.e.2.I, 164.312.e.2.II"
-     - nist_800_53: "SC.8"
+     - cis_csc: ["14.4"]
+     - cis: ["5.2.4"]
+     - pci_dss: ["4.1"]
+     - hipaa: ["164.312.a.2.IV","164.312.e.1","164.312.e.2.I","164.312.e.2.II"]
+     - nist_800_53: ["SC.8"]
    condition: all
    rules:
      - 'f:/etc/ssh/sshd_config -> !r:^# && r:Protocol\s*\t*2'
@@ -431,11 +431,11 @@ checks:
    rationale: "Setting this parameter forces users to enter a password when authenticating with ssh."
    remediation: "Edit the /etc/ssh/sshd_config file to set the parameter as follows: IgnoreRhosts yes"
    compliance:
-     - cis_csc: "9.2"
-     - cis: "5.2.8"
-     - pci_dss: "4.1"
-     - hipaa: "164.312.a.2.IV, 164.312.e.1, 164.312.e.2.I, 164.312.e.2.II"
-     - nist_800_53: "SC.8"
+     - cis_csc: ["9.2"]
+     - cis: ["5.2.8"]
+     - pci_dss: ["4.1"]
+     - hipaa: ["164.312.a.2.IV","164.312.e.1","164.312.e.2.I","164.312.e.2.II"]
+     - nist_800_53: ["SC.8"]
    condition: all
    rules:
      - 'f:/etc/ssh/sshd_config -> r:^\s*\t*IgnoreRhosts\.+yes'
@@ -446,11 +446,11 @@ checks:
    rationale: "Even though the .rhosts files are ineffective if support is disabled in /etc/pam.conf, disabling the ability to use .rhosts files in SSH provides an additional layer of protection."
    remediation: "Edit the /etc/ssh/sshd_config file to set the parameter as follows: HostbasedAuthentication no"
    compliance:
-     - cis_csc: "16.3"
-     - cis: "5.2.9"
-     - pci_dss: "4.1"
-     - hipaa: "164.312.a.2.IV, 164.312.e.1, 164.312.e.2.I, 164.312.e.2.II"
-     - nist_800_53: "SC.8"
+     - cis_csc: ["16.3"]
+     - cis: ["5.2.9"]
+     - pci_dss: ["4.1"]
+     - hipaa: ["164.312.a.2.IV","164.312.e.1","164.312.e.2.I","164.312.e.2.II"]
+     - nist_800_53: ["SC.8"]
    condition: all
    rules:
      - 'f:/etc/ssh/sshd_config -> r:^\s*\t*HostbasedAuthentication\.+no'
@@ -461,11 +461,11 @@ checks:
    rationale: "Disallowing root logins over SSH requires system admins to authenticate using their own individual account, then escalating to root via sudo or su . This in turn limits opportunity for non-repudiation and provides a clear audit trail in the event of a security incident"
    remediation: "Edit the /etc/ssh/sshd_config file to set the parameter as follows: PermitRootLogin no"
    compliance:
-     - cis_csc: "4.3"
-     - cis: "5.2.10"
-     - pci_dss: "4.1"
-     - hipaa: "164.312.a.2.IV, 164.312.e.1, 164.312.e.2.I, 164.312.e.2.II"
-     - nist_800_53: "SC.8"
+     - cis_csc: ["4.3"]
+     - cis: ["5.2.10"]
+     - pci_dss: ["4.1"]
+     - hipaa: ["164.312.a.2.IV","164.312.e.1","164.312.e.2.I","164.312.e.2.II"]
+     - nist_800_53: ["SC.8"]
    condition: all
    rules:
      - 'f:/etc/ssh/sshd_config -> r:^\s*\t*PermitRootLogin\.+no'
@@ -476,11 +476,11 @@ checks:
    rationale: "Disallowing remote shell access to accounts that have an empty password reduces the probability of unauthorized access to the system"
    remediation: "Edit the /etc/ssh/sshd_config file to set the parameter as follows: PermitEmptyPasswords no"
    compliance:
-     - cis_csc: "16.3"
-     - cis: "5.2.11"
-     - pci_dss: "4.1"
-     - hipaa: "164.312.a.2.IV, 164.312.e.1, 164.312.e.2.I, 164.312.e.2.II"
-     - nist_800_53: "SC.8"
+     - cis_csc: ["16.3"]
+     - cis: ["5.2.11"]
+     - pci_dss: ["4.1"]
+     - hipaa: ["164.312.a.2.IV","164.312.e.1","164.312.e.2.I","164.312.e.2.II"]
+     - nist_800_53: ["SC.8"]
    condition: all
    rules:
      - 'f:/etc/ssh/sshd_config -> r:^\s*\t*PermitEmptyPasswords\.+no'
@@ -492,11 +492,11 @@ checks:
    rationale: "All accounts must have passwords or be locked to prevent the account from being used by an unauthorized user."
    remediation: "If any accounts in the /etc/shadow file do not have a password, run the following command to lock the account until it can be determined why it does not have a password: # passwd -l <username>"
    compliance:
-     - cis_csc: "4.4"
-     - cis: "6.2.1"
-     - pci_dss: "10.2.5"
-     - hipaa: "164.312.b"
-     - nist_800_53: "IA.10, AC.7"
+     - cis_csc: ["4.4"]
+     - cis: ["6.2.1"]
+     - pci_dss: ["10.2.5"]
+     - hipaa: ["164.312.b"]
+     - nist_800_53: ["IA.10","AC.7"]
    condition: none
    rules:
      - 'f:/etc/shadow -> r:^\w+::'
@@ -507,11 +507,11 @@ checks:
    rationale: "This access must be limited to only the default root account and only from the system console. Administrative access must be through an unprivileged account using an approved mechanism as noted in Item 5.6 Ensure access to the su command is restricted."
    remediation: "Remove any users other than root with UID 0 or assign them a new UID if appropriate."
    compliance:
-     - cis_csc: "5.1"
-     - cis: "6.2.5"
-     - pci_dss: "10.2.5"
-     - hipaa: "164.312.b"
-     - nist_800_53: "IA.10, AC.7"
+     - cis_csc: ["5.1"]
+     - cis: ["6.2.5"]
+     - pci_dss: ["10.2.5"]
+     - hipaa: ["164.312.b"]
+     - nist_800_53: ["IA.10","AC.7"]
    condition: none
    rules:
      - 'f:/etc/passwd -> !r:^# && !r:^\s*\t*root: && r:^\w+:\w+:0:'

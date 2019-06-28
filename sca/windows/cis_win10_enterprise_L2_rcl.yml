@@ -33,8 +33,8 @@ checks:
     rationale: "It may be appropriate in some organizations to allow users to install printer drivers on their own workstations. However, in a high security environment, you should allow only Administrators, not users, to do this, because printer driver installation may unintentionally cause the computer to become less stable. A malicious user could install inappropriate printer drivers in a deliberate attempt to damage the computer, or a user might accidentally install malicious software that masquerades as a printer driver. It is feasible for an attacker to disguise a Trojan horse program as a printer driver. The program may appear to users as if they must use it to print, but such a program could unleash malicious code on your computer network."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Local Policies\\Security Options\\Devices: Prevent users from installing printer drivers"
     compliance:
-      - cis: "2.3.4.2"
-      - cis_csc: "5.1"
+      - cis: ["2.3.4.2"]
+      - cis_csc: ["5.1"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Print\Providers\LanMan Print Services\Servers'
@@ -47,8 +47,8 @@ checks:
     rationale: "The number that is assigned to this policy setting indicates the number of users whose logon information the computer will cache locally. If the number is set to 4, then the computer caches logon information for 4 users. When a 5th user logs on to the computer, the server overwrites the oldest cached logon session.  Users who access the computer console will have their logon credentials cached on that computer. An attacker who is able to access the file system of the computer could locate this cached information and use a brute force attack to attempt to determine user passwords. To mitigate this type of attack, Windows encrypts the information and obscures its physical location."
     remediation: "To establish the recommended configuration via GP, set the following UI path to 4 or fewer logon(s): Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Local Policies\\Security Options\\Interactive logon: Number of previous logons to cache (in case domain controller is not available)"
     compliance:
-      - cis: "2.3.7.7"
-      - cis_csc: "16"
+      - cis: ["2.3.7.7"]
+      - cis_csc: ["16"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon'
@@ -61,8 +61,8 @@ checks:
     rationale: "If a user's account is compromised or their computer is inadvertently left unsecured the malicious user can use the keys stored for the user to access protected resources. You can configure this policy setting so that users must provide a password that is distinct from their domain password every time they use a key. This configuration makes it more difficult for an attacker to access locally stored user keys, even if the attacker takes control of the user's computer and determines their logon password."
     remediation: "To establish the recommended configuration via GP, set the following UI path to User is prompted when the key is first used (configuring to User must enter a password each time they use a key also conforms to the benchmark): Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Local Policies\\Security Options\\System cryptography: Force strong key protection for user keys stored on the computer"
     compliance:
-      - cis: "2.3.14.1"
-      - cis_csc: "16.14"
+      - cis: ["2.3.14.1"]
+      - cis_csc: ["16.14"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Cryptography'
@@ -76,8 +76,8 @@ checks:
     rationale: "Bluetooth technology has inherent security risks - especially prior to the v2.1 standard.  Wireless Bluetooth traffic is not well encrypted (if at all), so in a high-security environment, it should not be permitted, in spite of the added inconvenience of not being able to use Bluetooth devices."
     remediation: "To establish the recommended configuration via GP, set the following UI path to: Disabled.  Computer Configuration\\Policies\\Windows Settings\\Security Settings\\System Services\\Bluetooth Support Service"
     compliance:
-      - cis: "5.2"
-      - cis_csc: "9.1, 9.2"
+      - cis: ["5.2"]
+      - cis_csc: ["9.1","9.2"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\bthserv'
@@ -90,8 +90,8 @@ checks:
     rationale: "Mapping technologies can unwillingly reveal your location to attackers and other software that picks up the information. In addition, automatic downloads of data from 3rd-party sources should be minimized when not needed. Therefore this service should not be needed in high security environments."
     remediation: "To establish the recommended configuration via GP, set the following UI path to: Disabled.  Computer Configuration\\Policies\\Windows Settings\\Security Settings\\System Services\\Downloaded Maps Manager"
     compliance:
-      - cis: "5.4"
-      - cis_csc: "9.1, 9.2"
+      - cis: ["5.4"]
+      - cis_csc: ["9.1","9.2"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\MapsBroker'
@@ -104,8 +104,8 @@ checks:
     rationale: "This setting affects the location feature (e.g. GPS or other location tracking). From a security perspective, it’s not a good idea to reveal your location to software in most cases, but there are legitimate uses, such as mapping software. However, they should not be used in high security environments."
     remediation: "To establish the recommended configuration via GP, set the following UI path to: Disabled.  Computer Configuration\\Policies\\Windows Settings\\Security Settings\\System Services\\Geolocation Service"
     compliance:
-      - cis: "5.5"
-      - cis_csc: "9.1, 9.2"
+      - cis: ["5.5"]
+      - cis_csc: ["9.1","9.2"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\lfsvc'
@@ -118,8 +118,8 @@ checks:
     rationale: "The feature that this service enables could potentially be used for unauthorized discovery and connection to network devices. Disabling the service helps to prevent responses to requests for network topology discovery in high security environments."
     remediation: "To establish the recommended configuration via GP, set the following UI path to: Disabled.  Computer Configuration\\Policies\\Windows Settings\\Security Settings\\System Services\\Link-Layer Topology Discovery Mapper"
     compliance:
-      - cis: "5.9"
-      - cis_csc: "9.1, 9.2"
+      - cis: ["5.9"]
+      - cis_csc: ["9.1","9.2"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\lltdsvc'
@@ -132,8 +132,8 @@ checks:
     rationale: "This service is critically necessary in order to directly attach to an iSCSI device. However, iSCSI itself uses a very weak authentication protocol (CHAP), which means that the passwords for iSCSI communication are easily exposed, unless all of the traffic is isolated and/or encrypted using another technology like IPsec. This service is generally more appropriate for servers in a controlled environment then on workstations requiring high security."
     remediation: "To establish the recommended configuration via GP, set the following UI path to: Disabled.  Computer Configuration\\Policies\\Windows Settings\\Security Settings\\System Services\\Microsoft iSCSI Initiator Service"
     compliance:
-      - cis: "5.12"
-      - cis_csc: "9.1, 9.2"
+      - cis: ["5.12"]
+      - cis_csc: ["9.1","9.2"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\MSiSCSI'
@@ -146,8 +146,8 @@ checks:
     rationale: "Peer Name Resolution Protocol is a distributed and (mostly) serverless way to handle name resolution of clients with each other. In a high security environment, it is more secure to rely on centralized name resolution methods maintained by authorized staff."
     remediation: "To establish the recommended configuration via GP, set the following UI path to: Disabled.  Computer Configuration\\Policies\\Windows Settings\\Security Settings\\System Services\\Peer Name Resolution Protocol"
     compliance:
-      - cis: "5.15"
-      - cis_csc: "9.1, 9.2"
+      - cis: ["5.15"]
+      - cis_csc: ["9.1","9.2"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\PNRPsvc'
@@ -160,8 +160,8 @@ checks:
     rationale: "Peer Name Resolution Protocol is a distributed and (mostly) serverless way to handle name resolution of clients with each other. In a high security environment, it is more secure to rely on centralized name resolution methods maintained by authorized staff."
     remediation: "To establish the recommended configuration via GP, set the following UI path to: Disabled.  Computer Configuration\\Policies\\Windows Settings\\Security Settings\\System Services\\Peer Networking Grouping"
     compliance:
-      - cis: "5.16"
-      - cis_csc: "9.1, 9.2"
+      - cis: ["5.16"]
+      - cis_csc: ["9.1","9.2"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\p2psvc'
@@ -174,8 +174,8 @@ checks:
     rationale: "Peer Name Resolution Protocol is a distributed and (mostly) serverless way to handle name resolution of clients with each other. In a high security environment, it is more secure to rely on centralized name resolution methods maintained by authorized staff."
     remediation: "To establish the recommended configuration via GP, set the following UI path to: Disabled.  Computer Configuration\\Policies\\Windows Settings\\Security Settings\\System Services\\Peer Networking Identity Manager"
     compliance:
-      - cis: "5.17"
-      - cis_csc: "9.1, 9.2"
+      - cis: ["5.17"]
+      - cis_csc: ["9.1","9.2"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\p2pimsvc'
@@ -188,8 +188,8 @@ checks:
     rationale: "Peer Name Resolution Protocol is a distributed and (mostly) serverless way to handle name resolution of clients with each other. In a high security environment, it is more secure to rely on centralized name resolution methods maintained by authorized staff."
     remediation: "To establish the recommended configuration via GP, set the following UI path to: Disabled.  Computer Configuration\\Policies\\Windows Settings\\Security Settings\\System Services\\PNRP Machine Name Publication Service"
     compliance:
-      - cis: "5.18"
-      - cis_csc: "9.1, 9.2"
+      - cis: ["5.18"]
+      - cis_csc: ["9.1","9.2"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\PNRPAutoReg'
@@ -202,8 +202,8 @@ checks:
     rationale: "This service is involved in the process of displaying/reporting issues & solutions to/from Microsoft. In a high security environment, preventing this information from being sent can help reduce privacy concerns for sensitive corporate information."
     remediation: "To establish the recommended configuration via GP, set the following UI path to: Disabled.  Computer Configuration\\Policies\\Windows Settings\\Security Settings\\System Services\\Problem Reports and Solutions Control Panel Support"
     compliance:
-      - cis: "5.19"
-      - cis_csc: "9.1, 9.2"
+      - cis: ["5.19"]
+      - cis_csc: ["9.1","9.2"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\wercplsupport'
@@ -216,8 +216,8 @@ checks:
     rationale: "The function of this service is to provide a \"demand dial\" type of functionality. In a high security environment, it is preferred that any remote \"dial\" connections (whether they be legacy dial-in POTS or VPN) are initiated by the user, not automatically by the system."
     remediation: "To establish the recommended configuration via GP, set the following UI path to: Disabled.  Computer Configuration\\Policies\\Windows Settings\\Security Settings\\System Services\\Remote Access Auto Connection Manager"
     compliance:
-      - cis: "5.20"
-      - cis_csc: "9.1, 9.2"
+      - cis: ["5.20"]
+      - cis_csc: ["9.1","9.2"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\RasAuto'
@@ -230,8 +230,8 @@ checks:
     rationale: "In a high security environment, Remote Desktop access is an increased security risk. For these environments, only local console access should be permitted."
     remediation: "To establish the recommended configuration via GP, set the following UI path to: Disabled.  Computer Configuration\\Policies\\Windows Settings\\Security Settings\\System Services\\Remote Desktop Configuration"
     compliance:
-      - cis: "5.21"
-      - cis_csc: "9.1, 9.2"
+      - cis: ["5.21"]
+      - cis_csc: ["9.1","9.2"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SessionEnv'
@@ -244,8 +244,8 @@ checks:
     rationale: "In a high security environment, Remote Desktop access is an increased security risk. For these environments, only local console access should be permitted."
     remediation: "To establish the recommended configuration via GP, set the following UI path to: Disabled.  Computer Configuration\\Policies\\Windows Settings\\Security Settings\\System Services\\Remote Desktop Services"
     compliance:
-      - cis: "5.22"
-      - cis_csc: "9.1, 9.2"
+      - cis: ["5.22"]
+      - cis_csc: ["9.1","9.2"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TermService'
@@ -258,8 +258,8 @@ checks:
     rationale: "In a security-sensitive environment, it is desirable to reduce the possible attack surface - preventing the redirection of COM, LPT and PnP ports will reduce the number of unexpected avenues for data exfiltration and/or malicious code transfer within an RDP session."
     remediation: "To establish the recommended configuration via GP, set the following UI path to: Disabled.  Computer Configuration\\Policies\\Windows Settings\\Security Settings\\System Services\\Remote Desktop Services UserMode Port Redirector"
     compliance:
-      - cis: "5.23"
-      - cis_csc: "9.1, 9.2"
+      - cis: ["5.23"]
+      - cis_csc: ["9.1","9.2"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\UmRdpService'
@@ -272,8 +272,8 @@ checks:
     rationale: "In a high security environment, exposing the registry to remote access is an increased security risk."
     remediation: "To establish the recommended configuration via GP, set the following UI path to: Disabled.  Computer Configuration\\Policies\\Windows Settings\\Security Settings\\System Services\\Remote Registry"
     compliance:
-      - cis: "5.25"
-      - cis_csc: "9.1, 9.2"
+      - cis: ["5.25"]
+      - cis_csc: ["9.1","9.2"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\RemoteRegistry'
@@ -286,8 +286,8 @@ checks:
     rationale: "In a high security environment, a secure workstation should only be a client, not a server.  Sharing workstation resources for remote access increases security risk as the attack surface is notably higher."
     remediation: "To establish the recommended configuration via GP, set the following UI path to: Disabled.  Computer Configuration\\Policies\\Windows Settings\\Security Settings\\System Services\\Server"
     compliance:
-      - cis: "5.27"
-      - cis_csc: "9.1, 9.2"
+      - cis: ["5.27"]
+      - cis_csc: ["9.1","9.2"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanServer'
@@ -300,8 +300,8 @@ checks:
     rationale: "Features that enable inbound network connections increase the attack surface. In a high security environment, management of secure workstations should be handled locally."
     remediation: "To establish the recommended configuration via GP, set the following UI path to: Disabled or ensure the service is not installed.  Computer Configuration\\Policies\\Windows Settings\\Security Settings\\System Services\\SNMP Service"
     compliance:
-      - cis: "5.29"
-      - cis_csc: "9.1, 9.2"
+      - cis: ["5.29"]
+      - cis_csc: ["9.1","9.2"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SNMP'
@@ -314,8 +314,8 @@ checks:
     rationale: "If a Windows Error occurs in a secure, enterprise managed environment, the error should be reported directly to IT staff for troubleshooting and remediation. There is no benefit to the corporation to report these errors directly to Microsoft, and there is some risk of unknowingly exposing sensitive data as part of the error."
     remediation: "To establish the recommended configuration via GP, set the following UI path to: Disabled.  Computer Configuration\\Policies\\Windows Settings\\Security Settings\\System Services\\Windows Error Reporting Service"
     compliance:
-      - cis: "5.33"
-      - cis_csc: "9.1, 9.2"
+      - cis: ["5.33"]
+      - cis_csc: ["9.1","9.2"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\WerSvc'
@@ -328,8 +328,8 @@ checks:
     rationale: "In a high security environment, remote connections to secure workstations should be minimized, and management functions should be done locally."
     remediation: "To establish the recommended configuration via GP, set the following UI path to: Disabled.  Computer Configuration\\Policies\\Windows Settings\\Security Settings\\System Services\\Windows Event Collector"
     compliance:
-      - cis: "5.34"
-      - cis_csc: "9.1, 9.2"
+      - cis: ["5.34"]
+      - cis_csc: ["9.1","9.2"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Wecsvc'
@@ -342,8 +342,8 @@ checks:
     rationale: "Windows Push Notification Services (WNS) is a mechanism to receive 3rd-party notifications and updates from the cloud/Internet. In a high security environment, external systems, especially those hosted outside the organization, should be prevented from having an impact on the secure workstations."
     remediation: "To establish the recommended configuration via GP, set the following UI path to: Disabled.  Computer Configuration\\Policies\\Windows Settings\\Security Settings\\System Services\\Windows Push Notifications System Service"
     compliance:
-      - cis: "5.37"
-      - cis_csc: "9.1, 9.2"
+      - cis: ["5.37"]
+      - cis_csc: ["9.1","9.2"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\WpnService'
@@ -356,8 +356,8 @@ checks:
     rationale: "In a high security managed environment, application installations should be managed centrally by IT staff, not by end users."
     remediation: "To establish the recommended configuration via GP, set the following UI path to: Disabled.  Computer Configuration\\Policies\\Windows Settings\\Security Settings\\System Services\\Windows PushToInstall Service (PushToInstall)"
     compliance:
-      - cis: "5.38"
-      - cis_csc: "9.1, 9.2"
+      - cis: ["5.38"]
+      - cis_csc: ["9.1","9.2"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\PushToInstall'
@@ -370,8 +370,8 @@ checks:
     rationale: "Features that enable inbound network connections increase the attack surface. In a high security environment, management of secure workstations should be handled locally."
     remediation: "To establish the recommended configuration via GP, set the following UI path to: Disabled.  Computer Configuration\\Policies\\Windows Settings\\Security Settings\\System Services\\Windows Remote Management (WS-Management)"
     compliance:
-      - cis: "5.39"
-      - cis_csc: "9.1, 9.2"
+      - cis: ["5.39"]
+      - cis_csc: ["9.1","9.2"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\WinRM'
@@ -385,8 +385,8 @@ checks:
     rationale: "Due to privacy concerns, data should never be sent to any 3rd party since this data could contain sensitive information."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Administrative Templates\\Control Panel\\Allow Online Tips    Note: This Group Policy path may not exist by default. It is provided by the Group Policy template ControlPanel.admx/adml that is included with the Microsoft Windows 10 Release 1709 Administrative Templates (or newer)."
     compliance:
-      - cis: "18.1.3"
-      - cis_csc: "9.1"
+      - cis: ["18.1.3"]
+      - cis_csc: ["9.1"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer'
@@ -400,8 +400,8 @@ checks:
     rationale: "An attacker who steals a mobile user's computer could automatically connect to the organization's network if the Save This Password check box is selected for the dial-up or VPN networking entry used to connect to your organization's network."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\MSS (Legacy)\\MSS:(DisableSavePassword) Prevent the dial-up password from being saved    Note: This Group Policy path does not exist by default. An additional Group Policy template (MSS-legacy.admx/adml) is required - it is available from this TechNet blog post: The MSS settings - Microsoft Security Guidance blog"
     compliance:
-      - cis: "18.4.4"
-      - cis_csc: "9"
+      - cis: ["18.4.4"]
+      - cis_csc: ["9"]
     references:
       - https://blogs.technet.microsoft.com/secguide/2016/10/02/the-mss-settings/
     condition: all
@@ -416,8 +416,8 @@ checks:
     rationale: "An attacker who is able to connect to network applications could establish numerous connections to cause a DoS condition."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: 300,000 or 5 minutes (recommended): Computer Configuration\\Policies\\Administrative Templates\\MSS (Legacy)\\MSS: (KeepAliveTime) How often keep-alive packets are sent in milliseconds    Note: This Group Policy path does not exist by default. An additional Group Policy template (MSS-legacy.admx/adml) is required - it is available from this TechNet blog post: The MSS settings - Microsoft Security Guidance blog"
     compliance:
-      - cis: "18.4.6"
-      - cis_csc: "9"
+      - cis: ["18.4.6"]
+      - cis_csc: ["9"]
     references:
       - https://blogs.technet.microsoft.com/secguide/2016/10/02/the-mss-settings/
     condition: all
@@ -432,8 +432,8 @@ checks:
     rationale: "An attacker who has gained control of a computer on the same network segment could configure a computer on the network to impersonate a router. Other computers with IRDP enabled would then attempt to route their traffic through the already compromised computer."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Administrative Templates\\MSS (Legacy)\\MSS: (PerformRouterDiscovery) Allow IRDP to detect and configure Default Gateway addresses (could lead to DoS)    Note: This Group Policy path does not exist by default. An additional Group Policy template (MSS-legacy.admx/adml) is required - it is available from this TechNet blog post: The MSS settings - Microsoft Security Guidance blog"
     compliance:
-      - cis: "18.4.8"
-      - cis_csc: "9"
+      - cis: ["18.4.8"]
+      - cis_csc: ["9"]
     references:
       - https://blogs.technet.microsoft.com/secguide/2016/10/02/the-mss-settings/
     condition: all
@@ -448,8 +448,8 @@ checks:
     rationale: "A malicious user could exhaust a target computer's resources if it never sent any acknowledgment messages for data that was transmitted by the target computer."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: 3: Computer Configuration\\Policies\\Administrative Templates\\MSS (Legacy)\\MSS:(TcpMaxDataRetransmissions IPv6) How many times unacknowledged data is retransmitted Note: This Group Policy path does not exist by default. An additional Group Policy template (MSS-legacy.admx/adml) is required - it is available from this TechNet blog post: The MSS settings - Microsoft Security Guidance blog"
     compliance:
-      - cis: "18.4.11"
-      - cis_csc: "9"
+      - cis: ["18.4.11"]
+      - cis_csc: ["9"]
     references:
       - https://blogs.technet.microsoft.com/secguide/2016/10/02/the-mss-settings/
     condition: all
@@ -464,8 +464,8 @@ checks:
     rationale: "A malicious user could exhaust a target computer's resources if it never sent any acknowledgment messages for data that was transmitted by the target computer."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: 3: Computer Configuration\\Policies\\Administrative Templates\\MSS (Legacy)\\MSS:(TcpMaxDataRetransmissions) How many times unacknowledged data is retransmitted    Note: This Group Policy path does not exist by default. An additional Group Policy template (MSS-legacy.admx/adml) is required - it is available from this TechNet blog post: The MSS settings - Microsoft Security Guidance blog"
     compliance:
-      - cis: "18.4.12"
-      - cis_csc: "9"
+      - cis: ["18.4.12"]
+      - cis_csc: ["9"]
     references:
       - https://blogs.technet.microsoft.com/secguide/2016/10/02/the-mss-settings/
     condition: all
@@ -481,8 +481,8 @@ checks:
     rationale: "In an enterprise managed environment the IT department should be managing the changes to the system configuration, to ensure all changes are tested and approved."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Administrative Templates\\Network\\Fonts\\Enable Font Providers Note: This Group Policy path may not exist by default. It is provided by the Group Policy template GroupPolicy.admx/adml that is included with the Microsoft Windows 10 Release 1607 & Server 2016 Administrative Templates (or newer)."
     compliance:
-      - cis: "18.5.5.1"
-      - cis_csc: "3, 13"
+      - cis: ["18.5.5.1"]
+      - cis_csc: ["3","13"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System'
@@ -495,8 +495,8 @@ checks:
     rationale: "To help protect from potentially discovering and connecting to unauthorized devices, this setting should be disabled to prevent responding to network traffic for network topology discovery."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Administrative Templates\\Network\\Link-Layer Topology Discovery\\Turn on Mapper I/O (LLTDIO) driver    Note: This Group Policy path is provided by the Group Policy template LinkLayerTopologyDiscovery.admx/adml that is included with all versions of the Microsoft Windows Administrative Templates."
     compliance:
-      - cis: "18.5.9.1"
-      - cis_csc: "9"
+      - cis: ["18.5.9.1"]
+      - cis_csc: ["9"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\LLTD'
@@ -515,8 +515,8 @@ checks:
     rationale: "To help protect from potentially discovering and connecting to unauthorized devices, this setting should be disabled to prevent responding to network traffic for network topology discovery."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Administrative Templates\\Network\\Link-Layer Topology Discovery\\Turn on Responder (RSPNDR) driver Note: This Group Policy path is provided by the Group Policy template LinkLayerTopologyDiscovery.admx/adml that is included with all versions of the Microsoft Windows Administrative Templates."
     compliance:
-      - cis: "18.5.9.2"
-      - cis_csc: "9"
+      - cis: ["18.5.9.2"]
+      - cis_csc: ["9"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\LLTD'
@@ -535,8 +535,8 @@ checks:
     rationale: "This setting enhances the security of the environment and reduces the overall risk exposure related to peer-to-peer networking."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\Network\\Microsoft Peer-to-Peer Networking Services\\Turn off Microsoft Peer-to-Peer Networking Services    Note: This Group Policy path is provided by the Group Policy template P2P- pnrp.admx/adml that is included with all versions of the Microsoft Windows Administrative Templates."
     compliance:
-      - cis: "18.5.10.2"
-      - cis_csc: "9.1, 9.2"
+      - cis: ["18.5.10.2"]
+      - cis_csc: ["9.1","9.2"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Peernet'
@@ -549,8 +549,8 @@ checks:
     rationale: "Since the vast majority of private enterprise managed networks have no need to utilize IPv6 (because they have access to private IPv4 addressing), disabling IPv6 components reduces a possible attack surface that is also harder to monitor the traffic on. As a result, we recommend configuring IPv6 to a Disabled state when it is not needed."
     remediation: "To establish the recommended configuration, set the following Registry value to 0xff (255) (DWORD): HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Services\\TCPIP6\\Parameters:Disabl edComponents    Note: This change does not take effect until the computer has been restarted.     Note #2: Although Microsoft does not provide an ADMX template to configure this registry value, a custom .ADM template (Disable-IPv6-Components-KB929852.adm) is provided in the CIS Benchmark Remediation Kit to facilitate its configuration. Be aware though that simply turning off the group policy setting in the .ADM template will not \"undo\" the change once applied. Instead, the opposite setting must be applied to change the registry value to the opposite state."
     compliance:
-      - cis: "18.5.19.2.1"
-      - cis_csc: "9"
+      - cis: ["18.5.19.2.1"]
+      - cis_csc: ["9"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP6\Parameters'
@@ -563,8 +563,8 @@ checks:
     rationale: "This setting enhances the security of the environment and reduces the overall risk exposure related to user configuration of wireless settings."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Administrative Templates\\Network\\Windows Connect Now\\Configuration of wireless settings using Windows Connect Now Note: This Group Policy path is provided by the Group Policy template WindowsConnectNow.admx/adml that is included with all versions of the Microsoft Windows Administrative Templates."
     compliance:
-      - cis: "18.5.20.1"
-      - cis_csc: "15.4, 15.5"
+      - cis: ["18.5.20.1"]
+      - cis_csc: ["15.4","15.5"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WCN\Registrars'
@@ -585,8 +585,8 @@ checks:
     rationale: "Allowing standard users to access the Windows Connect Now wizard increases the risk and attack surface."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\Network\\Network\\Windows Connect Now\\Prohibit access of the Windows Connect Now wizards Note: This Group Policy path may not exist by default. It is provided by the Group Policy template WindowsConnectNow.admx/adml that is included with the Microsoft Windows 8.0 & Server 2012 (non-R2) Administrative Templates (or newer)."
     compliance:
-      - cis: "18.5.20.2"
-      - cis_csc: "15.4, 15.5"
+      - cis: ["18.5.20.2"]
+      - cis_csc: ["15.4","15.5"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WCN\UI'
@@ -600,8 +600,8 @@ checks:
     rationale: "The Store service is a retail outlet built into Windows, primarily for consumer use. In an enterprise managed environment the IT department should be managing the installation of all applications to reduce the risk of the installation of vulnerable software."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\System\\Internet Communication Management\\Internet Communication settings\\Turn off access to the Store    Note: This Group Policy path may not exist by default. It is provided by the Group Policy template ICM.admx/adml that is included with the Microsoft Windows 8.0 & Server 2012 (non-R2) Administrative Templates (or newer)."
     compliance:
-      - cis: "18.8.22.1.1"
-      - cis_csc: "2"
+      - cis: ["18.8.22.1.1"]
+      - cis_csc: ["2"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Explorer'
@@ -614,8 +614,8 @@ checks:
     rationale: "Users might download drivers that include malicious code."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\System\\Internet Communication Management\\Internet Communication settings\\Turn off downloading of print drivers over HTTP"
     compliance:
-      - cis: "18.8.22.1.2"
-      - cis_csc: "7"
+      - cis: ["18.8.22.1.2"]
+      - cis_csc: ["7"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Printers'
@@ -628,8 +628,8 @@ checks:
     rationale: "A person's handwriting is Personally Identifiable Information (PII), especially when it comes to your signature. As such, it is unacceptable in many environments to automatically upload PII to a website without explicit approval by the user."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\System\\Internet Communication Management\\Internet Communication settings\\Turn off handwriting personalization data sharing Note: This Group Policy path may not exist by default. It is provided by the Group Policy template ShapeCollector.admx/adml that is included with the Microsoft Windows 7 & Server 2008 R2 Administrative Templates (or newer)."
     compliance:
-      - cis: "18.8.22.1.3"
-      - cis_csc: "13"
+      - cis: ["18.8.22.1.3"]
+      - cis_csc: ["13"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\TabletPC'
@@ -642,8 +642,8 @@ checks:
     rationale: "A person's handwriting is Personally Identifiable Information (PII), especially when it comes to your signature. As such, it is unacceptable in many environments to automatically upload PII to a website without explicit approval by the user."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\System\\Internet Communication Management\\Internet Communication settings\\Turn off handwriting recognition error reporting    Note: This Group Policy path is provided by the Group Policy template InkWatson.admx/adml that is included with all versions of the Microsoft Windows Administrative Templates."
     compliance:
-      - cis: "18.8.22.1.4"
-      - cis_csc: "13"
+      - cis: ["18.8.22.1.4"]
+      - cis_csc: ["13"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\HandwritingErrorReports'
@@ -656,8 +656,8 @@ checks:
     rationale: "In an enterprise managed environment we want to lower the risk of a user unknowingly exposing sensitive data."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\System\\Internet Communication Management\\Internet Communication settings\\Turn off Internet Connection Wizard if URL connection is referring to Microsoft.com    Note: This Group Policy path is provided by the Group Policy template ICM.admx/adml that is included with all versions of the Microsoft Windows Administrative Templates."
     compliance:
-      - cis: "18.8.22.1.5"
-      - cis_csc: "13"
+      - cis: ["18.8.22.1.5"]
+      - cis_csc: ["13"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Internet Connection Wizard'
@@ -670,7 +670,7 @@ checks:
     rationale: "Users in an enterprise managed environment should not be registering their own copies of Windows, providing their own PII in the process."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\System\\Internet Communication Management\\Internet Communication settings\\Turn off Registration if URL connection is referring to Microsoft.com    Note: This Group Policy path is provided by the Group Policy template ICM.admx/adml that is included with all versions of the Microsoft Windows Administrative Templates."
     compliance:
-      - cis: "18.8.22.1.8"
+      - cis: ["18.8.22.1.8"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\Policies\Microsoft\Windows\Registration Wizard Control'
@@ -683,8 +683,8 @@ checks:
     rationale: "There is a small risk that users will unknowingly reveal sensitive information because of the topics they are searching for. This risk is very low because even if this setting is enabled users still must submit search queries to the desired search engine in order to perform searches."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\System\\Internet Communication Management\\Internet Communication settings\\Turn off Search Companion content file updates    Note: This Group Policy path is provided by the Group Policy template ICM.admx/adml that is included with all versions of the Microsoft Windows Administrative Templates."
     compliance:
-      - cis: "18.8.22.1.9"
-      - cis_csc: "13"
+      - cis: ["18.8.22.1.9"]
+      - cis_csc: ["13"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\SearchCompanion'
@@ -697,8 +697,8 @@ checks:
     rationale: "In an enterprise managed environment we want to lower the risk of a user unknowingly exposing sensitive data."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\System\\Internet Communication Management\\Internet Communication settings\\Turn off the \"Order Prints\" picture task    Note: This Group Policy path is provided by the Group Policy template ICM.admx/adml that is included with all versions of the Microsoft Windows Administrative Templates."
     compliance:
-      - cis: "18.8.22.1.10"
-      - cis_csc: "13"
+      - cis: ["18.8.22.1.10"]
+      - cis_csc: ["13"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer'
@@ -711,8 +711,8 @@ checks:
     rationale: "Users may publish confidential or sensitive information to a public service outside of the control of the organization."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\System\\Internet Communication Management\\Internet Communication settings\\Turn off the \"Publish to Web\" task for files and folders Note: This Group Policy path is provided by the Group Policy template ICM.admx/adml that is included with all versions of the Microsoft Windows Administrative Templates."
     compliance:
-      - cis: "18.8.22.1.11"
-      - cis_csc: "13"
+      - cis: ["18.8.22.1.11"]
+      - cis_csc: ["13"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer'
@@ -725,8 +725,8 @@ checks:
     rationale: "Large enterprise managed environments may not want to have information collected by Microsoft from managed client computers."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\System\\Internet Communication Management\\Internet Communication settings\\Turn off the Windows Messenger Customer Experience Improvement Program    Note: This Group Policy path is provided by the Group Policy template ICM.admx/adml that is included with all versions of the Microsoft Windows Administrative Templates."
     compliance:
-      - cis: "18.8.22.1.12"
-      - cis_csc: "13"
+      - cis: ["18.8.22.1.12"]
+      - cis_csc: ["13"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Messenger\Client'
@@ -739,8 +739,8 @@ checks:
     rationale: "Large enterprise managed environments may not want to have information collected by Microsoft from managed client computers."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\System\\Internet Communication Management\\Internet Communication settings\\Turn off Windows Customer Experience Improvement Program    Note: This Group Policy path is provided by the Group Policy template ICM.admx/adml that is included with all versions of the Microsoft Windows Administrative Templates."
     compliance:
-      - cis: "18.8.22.1.13"
-      - cis_csc: "13"
+      - cis: ["18.8.22.1.13"]
+      - cis_csc: ["13"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\SQMClient\Windows'
@@ -753,8 +753,8 @@ checks:
     rationale: "If a Windows Error occurs in a secure, enterprise managed environment, the error should be reported directly to IT staff for troubleshooting and remediation. There is no benefit to the corporation to report these errors directly to Microsoft, and there is some risk of unknowingly exposing sensitive data as part of the error."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\System\\Internet Communication Management\\Internet Communication settings\\Turn off Windows Error Reporting    Note: This Group Policy path is provided by the Group Policy template ICM.admx/adml that is included with all versions of the Microsoft Windows Administrative Templates."
     compliance:
-      - cis: "18.8.22.1.14"
-      - cis_csc: "13"
+      - cis: ["18.8.22.1.14"]
+      - cis_csc: ["13"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Windows Error Reporting'
@@ -770,8 +770,8 @@ checks:
     rationale: "Having stronger device authentication with the use of certificates is strongly encouraged over standard username and password authentication. Having this set to Automatic will allow certificate based authentication to be used whenever possible."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Automatic: Computer Configuration\\Policies\\Administrative Templates\\System\\Kerberos\\Support device authentication using certificate    Note: This Group Policy path may not exist by default. It is provided by the Group Policy template Kerberos.admx/adml that is included with the Microsoft Windows 10 RTM (Release 1507) Administrative Templates (or newer)."
     compliance:
-      - cis: "18.8.25.1"
-      - cis_csc: "1.6"
+      - cis: ["18.8.25.1"]
+      - cis_csc: ["1.6"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\kerberos\parameters'
@@ -786,8 +786,8 @@ checks:
     rationale: "This is a way to increase the security of the system account."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\System\\Locale Services\\Disallow copying of user input methods to the system account for sign-in    Note: This Group Policy path may not exist by default. It is provided by the Group Policy template Globalization.admx/adml that is included with the Microsoft Windows 8.0 & Server 2012 (non-R2) Administrative Templates (or newer)."
     compliance:
-      - cis: "18.8.26.1"
-      - cis_csc: "16.5"
+      - cis: ["18.8.26.1"]
+      - cis_csc: ["16.5"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Control Panel\International'
@@ -800,8 +800,8 @@ checks:
     rationale: "Due to privacy concerns, data should never be sent to any 3rd party since this data could contain sensitive information."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Administrative Templates\\System\\Troubleshooting and Diagnostics\\Microsoft Support Diagnostic Tool\\Microsoft Support Diagnostic Tool: Turn on MSDT interactive communication with support provider    Note: This Group Policy path may not exist by default. It is provided by the Group Policy template MSDT.admx/adml that is included with the Microsoft Windows 8.0 & Server 2012 (non-R2) Administrative Templates (or newer)."
     compliance:
-      - cis: "18.8.44.5.1"
-      - cis_csc: "13"
+      - cis: ["18.8.44.5.1"]
+      - cis_csc: ["13"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\ScriptedDiagnosticsProvider\Policy'
@@ -814,8 +814,8 @@ checks:
     rationale: "When enabled the aggregated data of a given event will be transmitted to Microsoft. The option exists to restrict this feature for a specific user, set the consent level, and designate specific programs for which error reports could be sent. However, centrally restricting the ability to execute PerfTrack to limit the potential for unauthorized or undesired usage, data leakage, or unintentional communications is highly recommended."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Administrative Templates\\System\\Troubleshooting and Diagnostics\\Windows Performance PerfTrack\\Enable/Disable PerfTrack    Note: This Group Policy path may not exist by default. It is provided by the Group Policy template PerformancePerftrack.admx/adml that is included with the Microsoft Windows 7 & Server 2008 R2 Administrative Templates (or newer)."
     compliance:
-      - cis: "18.8.44.11.1"
-      - cis_csc: "13"
+      - cis: ["18.8.44.11.1"]
+      - cis_csc: ["13"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WDI\{9c5a40da-b965-4fc3-8781-88dd50a6299d}'
@@ -828,8 +828,8 @@ checks:
     rationale: "Tracking user activity for advertising purposes, even anonymously, may be a privacy concern. In an enterprise managed environment, applications should not need or require tracking for targeted advertising."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\System\\User Profiles\\Turn off the advertising ID    Note: This Group Policy path may not exist by default. It is provided by the Group Policy template UserProfiles.admx/adml that is included with the Microsoft Windows 8.1 & Server 2012 R2 Administrative Templates (or newer)."
     compliance:
-      - cis: "18.8.46.1"
-      - cis_csc: "13"
+      - cis: ["18.8.46.1"]
+      - cis_csc: ["13"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\AdvertisingInfo'
@@ -842,8 +842,8 @@ checks:
     rationale: "A reliable and accurate account of time is important for a number of services and security requirements, including but not limited to distributed applications, authentication services, multi-user databases and logging services. The use of an NTP client (with secure operation) establishes functional accuracy and is a focal point when reviewing security relevant events."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\System\\Windows Time Service\\Time Providers\\Enable Windows NTP Client    Note: This Group Policy path is provided by the Group Policy template W32Time.admx/adml that is included with all versions of the Microsoft Windows Administrative Templates."
     compliance:
-      - cis: "18.8.49.1.1"
-      - cis_csc: "6.1"
+      - cis: ["18.8.49.1.1"]
+      - cis_csc: ["6.1"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\W32Time\TimeProviders\NtpClient'
@@ -856,8 +856,8 @@ checks:
     rationale: "The configuration of proper time synchronization is critically important in an enterprise managed environment both due to the sensitivity of Kerberos authentication timestamps and also to ensure accurate security logging."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Administrative Templates\\System\\Windows Time Service\\Time Providers\\Enable Windows NTP Server    Note: This Group Policy path is provided by the Group Policy template W32Time.admx/adml that is included with all versions of the Microsoft Windows Administrative Templates."
     compliance:
-      - cis: "18.8.49.1.2"
-      - cis_csc: "9.1, 9.2"
+      - cis: ["18.8.49.1.2"]
+      - cis_csc: ["9.1","9.2"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\W32Time\TimeProviders\NtpServer'
@@ -871,8 +871,8 @@ checks:
     rationale: "Users of a system could accidentally share sensitive data with other users on the same system."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\App Package Deployment\\Allow a Windows app to share application data between users    Note: This Group Policy path may not exist by default. It is provided by the Group Policy template AppxPackageManager.admx/adml that is included with the Microsoft Windows 10 RTM (Release 1507) Administrative Templates (or newer)."
     compliance:
-      - cis: "18.9.4.1"
-      - cis_csc: "14.4, 14.6"
+      - cis: ["18.9.4.1"]
+      - cis_csc: ["14.4","14.6"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\CurrentVersion\AppModel\StateManager'
@@ -885,8 +885,8 @@ checks:
     rationale: "Cameras in a high security environment can pose serious privacy and data exfiltration risks - they should be disabled to help mitigate that risk."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Camera\\Allow Use of Camera    Note: This Group Policy path may not exist by default. It is provided by the Group Policy template Camera.admx/adml that is included with the Microsoft Windows 10 Release 1607 & Server 2016 Administrative Templates (or newer)."
     compliance:
-      - cis: "18.9.12.1"
-      - cis_csc: "13"
+      - cis: ["18.9.12.1"]
+      - cis_csc: ["13"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Camera'
@@ -899,8 +899,8 @@ checks:
     rationale: "Sending any data to a 3rd party vendor is a security concern and should only be done on an as needed basis."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Disable Authenticated Proxy usage: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Configure Authenticated Proxy usage for the Connected User Experience and Telemetry service    Note: This Group Policy path may not exist by default. It is provided by the Group Policy template DataCollection.admx/adml that is included with the Microsoft Windows 10 Release 1703 Administrative Templates (or newer)."
     compliance:
-      - cis: "18.9.16.2"
-      - cis_csc: "13"
+      - cis: ["18.9.16.2"]
+      - cis_csc: ["13"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\DataCollection'
@@ -913,8 +913,8 @@ checks:
     rationale: "This setting affects the location feature (e.g. GPS or other location tracking). From a security perspective, it’s not a good idea to reveal your location to software in most cases, but there are legitimate uses, such as mapping software. However, they should not be used in high security environments."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Location and Sensors\\Turn off location    Note: This Group Policy path may not exist by default. It is provided by the Group Policy template Sensors.admx/adml that is included with the Microsoft Windows 7 & Server 2008 R2 Administrative Templates (or newer)."
     compliance:
-      - cis: "18.9.39.2"
-      - cis_csc: "13"
+      - cis: ["18.9.39.2"]
+      - cis_csc: ["13"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\LocationAndSensors'
@@ -927,8 +927,8 @@ checks:
     rationale: "In a high security environment, data should never be sent to any 3rd party since this data could contain sensitive information."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Messaging\\Allow Message Service Cloud Sync Note: This Group Policy path may not exist by default. It is provided by the Group Policy template Messaging.admx/adml that is included with the Microsoft Windows 10 Release 1709 Administrative Templates (or newer)."
     compliance:
-      - cis: "18.9.43.1"
-      - cis_csc: "9.1, 9.2, 13"
+      - cis: ["18.9.43.1"]
+      - cis_csc: ["9.1","9.2","13"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Messaging'
@@ -941,8 +941,8 @@ checks:
     rationale: "Having Address bar drop-down list suggestions sent out to be processed is considered a privacy concern."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Microsoft Edge\\Allow Address bar drop-down list suggestions    Note: This Group Policy path may not exist by default. It is provided by the Group Policy template MicrosoftEdge.admx/adml that is included with the Microsoft Windows 10 Release 1703 Administrative Templates (or newer)."
     compliance:
-      - cis: "18.9.45.1"
-      - cis_csc: "13"
+      - cis: ["18.9.45.1"]
+      - cis_csc: ["13"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\MicrosoftEdge\ServiceUI'
@@ -955,8 +955,8 @@ checks:
     rationale: "Adobe Flash is a very insecure product and has been a frequent attack vector on the web. In more highly security-sensitive environments, Adobe Flash should be disabled completely to eliminate this attack vector.    Note: This setting will not prevent or remove Adobe Flash usage from other web browsers, so we recommend also uninstalling Adobe Flash completely from all systems in highly security-sensitive environments."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Microsoft Edge\\Allow Adobe Flash    Note: This Group Policy path may not exist by default. It is provided by the Group Policy template MicrosoftEdge.admx/adml that is included with the Microsoft Windows 10 Release 1703 Administrative Templates (or newer)."
     compliance:
-      - cis: "18.9.45.2"
-      - cis_csc: "7.2"
+      - cis: ["18.9.45.2"]
+      - cis_csc: ["7.2"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\MicrosoftEdge\Addons'
@@ -969,8 +969,8 @@ checks:
     rationale: "Even though web filter logs can monitor traffic to and from websites, it is always a good practice to try and keep multiple source of logs. It can also be helpful to keep user from privately browsing in order to troubleshoot malicious site visits if a machine has become compromised."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Microsoft Edge\\Allow InPrivate Browsing    Note: This Group Policy path may not exist by default. It is provided by the Group Policy template MicrosoftEdge.admx/adml that is included with the Microsoft Windows 10 Release 1511 Administrative Templates (or newer).    Note #2: In the Microsoft Windows 10 Release 1511 Administrative Templates, this setting was named Turn off InPrivate browsing, but it was renamed starting with the Windows 10 Release 1607 & Server 2016 Administrative Templates."
     compliance:
-      - cis: "18.9.45.3"
-      - cis_csc: "7"
+      - cis: ["18.9.45.3"]
+      - cis_csc: ["7"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\MicrosoftEdge\Main'
@@ -983,8 +983,8 @@ checks:
     rationale: "The Pop-up Blocker serves an important purpose by blocking malicious popups and helping prevent the machine from being compromised."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Microsoft Edge\\Configure Pop-up Blocker    Note: This Group Policy path may not exist by default. It is provided by the Group Policy template MicrosoftEdge.admx/adml that is included with the Microsoft Windows 10 Release 1511 Administrative Templates (or newer).    Note #2: In the Microsoft Windows 10 Release 1511 Administrative Templates, this setting was named Turn off Pop-up Blocker, but it was renamed starting with the Windows 10 Release 1607 & Server 2016 Administrative Templates."
     compliance:
-      - cis: "18.9.45.6"
-      - cis_csc: "7"
+      - cis: ["18.9.45.6"]
+      - cis_csc: ["7"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\MicrosoftEdge\Main'
@@ -997,8 +997,8 @@ checks:
     rationale: "Having search suggestions sent out to be processed is considered a privacy concern."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Microsoft Edge\\Configure search suggestions in Address bar    Note: This Group Policy path may not exist by default. It is provided by the Group Policy template MicrosoftEdge.admx/adml that is included with the Microsoft Windows 10 Release 1507 Administrative Templates (or newer).    Note #2: In the Microsoft Windows 10 Release 1507 Administrative Templates, this setting was named Stops address bar from showing search suggestions. In the Microsoft Windows 10 Release 1511 Administrative Templates, this setting was renamed to Turn off address bar search suggestions, but it was finally renamed to Configure search suggestions in Address bar starting with the Windows 10 Release 1607 & Server 2016 Administrative Templates."
     compliance:
-      - cis: "18.9.45.7"
-      - cis_csc: "13"
+      - cis: ["18.9.45.7"]
+      - cis_csc: ["13"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\MicrosoftEdge\SearchScopes'
@@ -1011,8 +1011,8 @@ checks:
     rationale: "Users should not have access to developer settings and experimental features.  Vulnerabilities could be introduced if these settings are not properly managed."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Microsoft Edge\\Prevent access to the about:flags page in Microsoft Edge    Note: This Group Policy path may not exist by default. It is provided by the Group Policy template MicrosoftEdge.admx/adml that is included with the Microsoft Windows 10 Release 1607 & Server 2016 Administrative Templates (or newer)."
     compliance:
-      - cis: "18.9.45.9"
-      - cis_csc: "3"
+      - cis: ["18.9.45.9"]
+      - cis_csc: ["3"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\MicrosoftEdge\Main'
@@ -1025,8 +1025,8 @@ checks:
     rationale: "WebRTC is a Real-Time Communications open source project supported by all major browsers. Allowing a system's local IP address to be shared may be considered a privacy concern."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Microsoft Edge\\Prevent using Localhost IP address for WebRTC    Note: This Group Policy path may not exist by default. It is provided by the Group Policy template MicrosoftEdge.admx/adml that is included with the Microsoft Windows 10 Release 1511 Administrative Templates (or newer).    Note #2: In the Microsoft Windows 10 Release 1511 Administrative Templates, this setting was named Don't allow WebRTC to share the LocalHost IP address, but it was renamed starting with the Windows 10 Release 1607 & Server 2016 Administrative Templates."
     compliance:
-      - cis: "18.9.45.10"
-      - cis_csc: "7.2"
+      - cis: ["18.9.45.10"]
+      - cis_csc: ["7.2"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\MicrosoftEdge\Main'
@@ -1039,8 +1039,8 @@ checks:
     rationale: "In a high security managed environment, application installations should be managed centrally by IT staff, not by end users."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Push to Install\\Turn off Push To Install service    Note: This Group Policy path may not exist by default. It is provided by the Group Policy template PushToInstall.admx/adml that is included with the Microsoft Windows 10 Release 1709 Administrative Templates (or newer)."
     compliance:
-      - cis: "18.9.57.1"
-      - cis_csc: "9.1, 9.2"
+      - cis: ["18.9.57.1"]
+      - cis_csc: ["9.1","9.2"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\PushToInstall'
@@ -1053,7 +1053,7 @@ checks:
     rationale: "Any account with the Allow log on through Remote Desktop Services user right can log on to the remote console of the computer. If you do not restrict access to legitimate users who need to log on to the console of the computer, unauthorized users could download and execute malicious code to elevate their privileges."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Remote Desktop Services\\Remote Desktop Session Host\\Connections\\Allow users to connect remotely by using Remote Desktop Services    Note: This Group Policy path is provided by the Group Policy template TerminalServer.admx/adml that is included with all versions of the Microsoft Windows Administrative Templates.    Note #2: In older Microsoft Windows Administrative Templates, this setting was named Allow users to connect remotely using Terminal Services, but it was renamed to Allow users to connect remotely using Remote Desktop Services in the Windows 7 & Server 2008 R2 Administrative Templates. It was renamed again to Allow users to connect remotely by using Remote Desktop Services in the Windows 8.0 & Server 2012 (non-R2) Administrative Templates."
     compliance:
-      - cis: "18.9.58.3.2.1"
+      - cis: ["18.9.58.3.2.1"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services'
@@ -1066,8 +1066,8 @@ checks:
     rationale: "In a more security-sensitive environment, it is desirable to reduce the possible attack surface. The need for COM port redirection within a Remote Desktop session is very rare, so makes sense to reduce the number of unexpected avenues for data exfiltration and/or malicious code transfer."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Remote Desktop Services\\Remote Desktop Session Host\\Device and Resource Redirection\\Do not allow COM port redirection    Note: This Group Policy path is provided by the Group Policy template TerminalServer.admx/adml that is included with all versions of the Microsoft Windows Administrative Templates."
     compliance:
-      - cis: "18.9.58.3.3.1"
-      - cis_csc: "9.1, 9.2"
+      - cis: ["18.9.58.3.3.1"]
+      - cis_csc: ["9.1","9.2"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services'
@@ -1080,8 +1080,8 @@ checks:
     rationale: "In a more security-sensitive environment, it is desirable to reduce the possible attack surface. The need for LPT port redirection within a Remote Desktop session is very rare, so makes sense to reduce the number of unexpected avenues for data exfiltration and/or malicious code transfer."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Remote Desktop Services\\Remote Desktop Session Host\\Device and Resource Redirection\\Do not allow LPT port redirection    Note: This Group Policy path is provided by the Group Policy template TerminalServer.admx/adml that is included with all versions of the Microsoft Windows Administrative Templates."
     compliance:
-      - cis: "18.9.58.3.3.3"
-      - cis_csc: "9.1, 9.2"
+      - cis: ["18.9.58.3.3.3"]
+      - cis_csc: ["9.1","9.2"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services'
@@ -1094,8 +1094,8 @@ checks:
     rationale: "In a more security-sensitive environment, it is desirable to reduce the possible attack surface. The need for Plug and Play device redirection within a Remote Desktop session is very rare, so makes sense to reduce the number of unexpected avenues for data exfiltration and/or malicious code transfer."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Remote Desktop Services\\Remote Desktop Session Host\\Device and Resource Redirection\\Do not allow supported Plug and Play device redirection    Note: This Group Policy path is provided by the Group Policy template TerminalServer.admx/adml that is included with all versions of the Microsoft Windows Administrative Templates."
     compliance:
-      - cis: "18.9.58.3.3.4"
-      - cis_csc: "9.1, 9.2"
+      - cis: ["18.9.58.3.3.4"]
+      - cis_csc: ["9.1","9.2"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services'
@@ -1108,8 +1108,8 @@ checks:
     rationale: "This setting helps to prevent active Remote Desktop sessions from tying up the computer for long periods of time while not in use, preventing computing resources from being consumed by large numbers of inactive sessions. In addition, old, forgotten Remote Desktop sessions that are still active can cause password lockouts if the user's password has changed but the old session is still running. For systems that limit the number of connected users (e.g. servers in the default Administrative mode - 2 sessions only), other users' old but still active sessions can prevent another user from connecting, resulting in an effective denial of service."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: 15 minutes or less: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Remote Desktop Services\\Remote Desktop Session Host\\Session Time Limits\\Set time limit for active but idle Remote Desktop Services sessions    Note: This Group Policy path is provided by the Group Policy template TerminalServer.admx/adml that is included with all versions of the Microsoft Windows Administrative Templates.    Note #2: In older Microsoft Windows Administrative Templates, this setting was named Set time limit for active but idle Terminal Services sessions, but it was renamed starting with the Windows 7 & Server 2008 R2 Administrative Templates."
     compliance:
-      - cis: "18.9.58.3.10.1"
-      - cis_csc: "16.5"
+      - cis: ["18.9.58.3.10.1"]
+      - cis_csc: ["16.5"]
     references:
       - https://workbench.cisecurity.org/benchmarks/766
     condition: all
@@ -1124,8 +1124,8 @@ checks:
     rationale: "This setting helps to prevent active Remote Desktop sessions from tying up the computer for long periods of time while not in use, preventing computing resources from being consumed by large numbers of disconnected but still active sessions. In addition, old, forgotten Remote Desktop sessions that are still active can cause password lockouts if the user's password has changed but the old session is still running. For systems that limit the number of connected users (e.g. servers in the default Administrative mode - 2 sessions only), other users' old but still active sessions can prevent another user from connecting, resulting in an effective denial of service. This setting is important to ensure a disconnected session is properly terminated."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: 1 minute: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Remote Desktop Services\\Remote Desktop Session Host\\Session Time Limits\\Set time limit for disconnected sessions    Note: This Group Policy path is provided by the Group Policy template TerminalServer.admx/adml that is included with all versions of the Microsoft Windows Administrative Templates."
     compliance:
-      - cis: "18.9.58.3.10.2"
-      - cis_csc: "16.5"
+      - cis: ["18.9.58.3.10.2"]
+      - cis_csc: ["16.5"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services'
@@ -1138,8 +1138,8 @@ checks:
     rationale: "Due to privacy concerns, data should never be sent to any 3rd party since this data could contain sensitive information."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Disable Cloud Search: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Search\\Allow Cloud Search    Note: This Group Policy path may not exist by default. It is provided by the Group Policy template Search.admx/adml that is included with the Microsoft Windows 10 Release 1709 Administrative Templates (or newer)."
     compliance:
-      - cis: "18.9.60.2"
-      - cis_csc: "9.1, 9.2"
+      - cis: ["18.9.60.2"]
+      - cis_csc: ["9.1","9.2"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Windows Search'
@@ -1152,7 +1152,7 @@ checks:
     rationale: "Even though the KMS licensing method does not require KMS clients to connect to Microsoft, they still send KMS client activation state data to Microsoft automatically.  Preventing this information from being sent can help reduce privacy concerns in high security environments."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Software Protection Platform\\Turn off KMS Client Online AVS Validation Note: This Group Policy path may not exist by default. It is provided by the Group Policy template AVSValidationGP.admx/adml that is included with the Microsoft Windows 10 RTM (Release 1507) Administrative Templates (or newer)."
     compliance:
-      - cis: "18.9.65.1"
+      - cis: ["18.9.65.1"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\CurrentVersion\Software Protection Platform'
@@ -1165,8 +1165,8 @@ checks:
     rationale: "Only applications approved by an IT department should be installed. Allowing users to install 3rd party applications can lead to missed patches and potential zero day vulnerabilities."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Store\\Turn off the Store application    Note: This Group Policy path may not exist by default. It is provided by the Group Policy template WinStoreUI.admx/adml that is included with the Microsoft Windows 8.0 & Server 2012 (non-R2) Administrative Templates, or by the Group Policy template WindowsStore.admx/adml that is included with the Microsoft Windows 10 Release 1511 Administrative Templates (or newer)."
     compliance:
-      - cis: "18.9.68.5"
-      - cis_csc: "2"
+      - cis: ["18.9.68.5"]
+      - cis_csc: ["2"]
     references:
       - https://docs.microsoft.com/en-us/windows/client-management/group-policies-for-enterprise-and-education-editions
       - https://support.microsoft.com/en-us/help/3135657/can-t-disable-windows-store-in-windows-10-pro-through-group-policy
@@ -1182,7 +1182,7 @@ checks:
     rationale: "The information that would be sent can include things like location of detected items on your computer if harmful software was removed. The information would be automatically collected and sent. In some instances personal information might unintentionally be sent to Microsoft. However, Microsoft states that it will not use this information to identify you or contact you.  For privacy reasons in high security environments, it is best to prevent these data submissions altogether."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Windows Defender Antivirus\\MAPS\\Join Microsoft MAPS Note: This Group Policy path may not exist by default. It is provided by the Group Policy template WindowsDefender.admx/adml that is included with the Microsoft Windows 8.1 & Server 2012 R2 Administrative Templates (or newer)."
     compliance:
-      - cis: "18.9.76.3.2"
+      - cis: ["18.9.76.3.2"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\Spynet'
@@ -1195,8 +1195,8 @@ checks:
     rationale: "Watson events are the reports that get sent to Microsoft when a program or service crashes or fails, including the possibility of automatic submission. Preventing this information from being sent can help reduce privacy concerns."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Windows Defender Antivirus\\Reporting\\Configure Watson events    Note: This Group Policy path may not exist by default. It is provided by the Group Policy template WindowsDefender.admx/adml that is included with the Microsoft Windows 8.1 & Server 2012 R2 Administrative Templates (or newer)."
     compliance:
-      - cis: "18.9.76.9.1"
-      - cis_csc: "13"
+      - cis: ["18.9.76.9.1"]
+      - cis_csc: ["13"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\Reporting'
@@ -1209,8 +1209,8 @@ checks:
     rationale: "This Microsoft feature is designed to collect data and suggest apps based on that data collected. Disabling this setting will help ensure your data is not shared with any third party."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Windows Ink Workspace\\Allow suggested apps in Windows Ink Workspace    Note: This Group Policy path may not exist by default. It is provided by the Group Policy template WindowsInkWorkspace.admx/adml that is included with the Microsoft Windows 10 Release 1607 & Server 2016 Administrative Templates (or newer)."
     compliance:
-      - cis: "18.9.84.1"
-      - cis_csc: "13"
+      - cis: ["18.9.84.1"]
+      - cis_csc: ["13"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsInkWorkspace'
@@ -1223,8 +1223,8 @@ checks:
     rationale: "Suppressing the system warning can pose a security risk and increase the attack surface on the system."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Windows Installer\\Prevent Internet Explorer security prompt for Windows Installer scripts    Note: This Group Policy path is provided by the Group Policy template MSI.admx/adml that is included with all versions of the Microsoft Windows Administrative Templates.    Note #2: In older Microsoft Windows Administrative Templates, this setting was initially named Disable IE security prompt for Windows Installer scripts, but it was renamed starting with the Windows 8.0 & Server 2012 (non-R2) Administrative Templates."
     compliance:
-      - cis: "18.9.85.3"
-      - cis_csc: "7"
+      - cis: ["18.9.85.3"]
+      - cis_csc: ["7"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Installer'
@@ -1237,8 +1237,8 @@ checks:
     rationale: "Any feature is a potential avenue of attack, those that enable inbound network connections are particularly risky. Only enable the use of the Windows Remote Management (WinRM) service on trusted networks and when feasible employ additional controls such as IPsec."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Administrative Templates\\Windows Components\\Windows Remote Management (WinRM)\\WinRM Service\\Allow remote server management through WinRM    Note: This Group Policy path is provided by the Group Policy template WindowsRemoteManagement.admx/adml that is included with all versions of the Microsoft Windows Administrative Templates.    Note #2: In older Microsoft Windows Administrative Templates, this setting was initially named Allow automatic configuration of listeners, but it was renamed starting with the Windows 8.0 & Server 2012 (non-R2) Administrative Templates."
     compliance:
-      - cis: "18.9.97.2.2"
-      - cis_csc: "3.4"
+      - cis: ["18.9.97.2.2"]
+      - cis_csc: ["3.4"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WinRM\Service'
@@ -1251,8 +1251,8 @@ checks:
     rationale: "Any feature is a potential avenue of attack, those that enable inbound network connections are particularly risky. Only enable the use of the Windows Remote Shell on trusted networks and when feasible employ additional controls such as IPsec."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Administrative Templates\\Windows Components\\Windows Remote Shell\\Allow Remote Shell Access Note: This Group Policy path is provided by the Group Policy template WindowsRemoteShell.admx/adml that is included with all versions of the Microsoft Windows Administrative Templates."
     compliance:
-      - cis: "18.9.98.1"
-      - cis_csc: "3.4"
+      - cis: ["18.9.98.1"]
+      - cis_csc: ["3.4"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WinRM\Service\WinRS'

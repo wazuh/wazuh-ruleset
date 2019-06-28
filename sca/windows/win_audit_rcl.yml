@@ -25,9 +25,9 @@ checks:
   - id: 2500
     title: "Ensure Registry tools set is enabled"
     compliance:
-      - pci_dss: "10.6.1"
-      - hipaa: "164.312.b"
-      - nist_800_53: "AU.6"
+      - pci_dss: ["10.6.1"]
+      - hipaa: ["164.312.b"]
+      - nist_800_53: ["AU.6"]
     condition: all
     rules:
       - 'r:HKLM\Software\Microsoft\Windows\CurrentVersion\Policies\System'
@@ -38,9 +38,9 @@ checks:
     title: "Ensure DCOM is enabled"
     description: "The Distributed Component Object Model (DCOM) is a protocol that enables software components to communicate directly over a network."
     compliance:
-      - pci_dss: "10.6.1"
-      - hipaa: "164.312.b"
-      - nist_800_53: "AU.6"
+      - pci_dss: ["10.6.1"]
+      - hipaa: ["164.312.b"]
+      - nist_800_53: ["AU.6"]
     references:
       - https://support.microsoft.com/es-es/help/825750/how-to-disable-dcom-support-in-windows
     condition: all
@@ -52,9 +52,9 @@ checks:
   - id: 2502
     title: "LM authentication not allowed (disable weak passwords)"
     compliance:
-      - pci_dss: "10.6.1, 11.4"
-      - hipaa: "164.312.b"
-      - nist_800_53: "AU.6, IA.10"
+      - pci_dss: ["10.6.1","11.4"]
+      - hipaa: ["164.312.b"]
+      - nist_800_53: ["AU.6","IA.10"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\LSA'
@@ -66,9 +66,9 @@ checks:
   - id: 2503
     title: "Ensure Firewall/Anti Virus notifications are enabled"
     compliance:
-      - pci_dss: "10.6.1"
-      - hipaa: "164.312.b"
-      - nist_800_53: "AU.6"
+      - pci_dss: ["10.6.1"]
+      - hipaa: ["164.312.b"]
+      - nist_800_53: ["AU.6"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Security Center'
@@ -85,9 +85,9 @@ checks:
   - id: 2504
     title: "Ensure Microsoft Firewall is enabled"
     compliance:
-      - pci_dss: "10.6.1, 1.4"
-      - hipaa: "164.312.b, 164.312.a.1"
-      - nist_800_53: "AU.6, SC.7"
+      - pci_dss: ["10.6.1","1.4"]
+      - hipaa: ["164.312.b","164.312.a.1"]
+      - nist_800_53: ["AU.6","SC.7"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\software\policies\microsoft\windowsfirewall\domainprofile'
@@ -97,8 +97,8 @@ checks:
   - id: 2505
     title: "Ensure Null sessions are not allowed"
     compliance:
-      - pci_dss: "11.4"
-      - nist_800_53: "IA.10"
+      - pci_dss: ["11.4"]
+      - nist_800_53: ["IA.10"]
     condition: all
     rules:
       - 'r:HKLM\System\CurrentControlSet\Control\Lsa'
@@ -108,9 +108,9 @@ checks:
   - id: 2506
     title: "Ensure Turn off Windows Error reporting is enabled"
     compliance:
-      - pci_dss: "10.6.1"
-      - hipaa: "164.312.b"
-      - nist_800_53: "AU.6"
+      - pci_dss: ["10.6.1"]
+      - hipaa: ["164.312.b"]
+      - nist_800_53: ["AU.6"]
     references:
       - https://windowsir.blogspot.com/2007/04/something-new-to-look-for.html
     condition: all
@@ -125,9 +125,9 @@ checks:
   - id: 2507
     title: "Ensure Automatic Logon is disabled"
     compliance:
-      - pci_dss: "10.6.1"
-      - hipaa: "164.312.b"
-      - nist_800_53: "AU.6"
+      - pci_dss: ["10.6.1"]
+      - hipaa: ["164.312.b"]
+      - nist_800_53: ["AU.6"]
     condition: any
     rules:
       - 'not r:HKLM\Software\Microsoft\Windows NT\CurrentVersion\Winlogon -> DefaultPassword'
@@ -137,9 +137,9 @@ checks:
   - id: 2508
     title: "Ensure Winpcap packet filter driver is not present"
     compliance:
-      - pci_dss: "10.6.1"
-      - hipaa: "164.312.b"
-      - nist_800_53: "AU.6"
+      - pci_dss: ["10.6.1"]
+      - hipaa: ["164.312.b"]
+      - nist_800_53: ["AU.6"]
     condition: none
     rules:
       - 'f:%WINDIR%\System32\drivers\npf.sys'

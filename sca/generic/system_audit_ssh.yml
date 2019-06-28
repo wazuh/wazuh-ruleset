@@ -32,7 +32,7 @@ checks:
     rationale: "Changing the default port you may reduce the number of successful attacks from zombie bots, an attacker or bot doing port-scanning can quickly identify your SSH port."
     remediation: "Change the Port option value in the sshd_config file."
     compliance:
-      - pci_dss: "2.2.4"
+      - pci_dss: ["2.2.4"]
     condition: all
     rules:
       - 'f:$sshd_file -> !r:^# && r:Port && !r:\D22\D*$'
@@ -43,7 +43,7 @@ checks:
     rationale: "The Protocol parameter dictates which version of the SSH communication and encryption protocols are in use. Version 1 of the SSH protocol has weaknesses."
     remediation: "Change the Protocol option value in the sshd_config file."
     compliance:
-      - pci_dss: "2.2.4"
+      - pci_dss: ["2.2.4"]
     condition: all
     rules:
       - 'f:$sshd_file -> r:^\s*\t*Protocol\D+2\D*$'
@@ -63,7 +63,7 @@ checks:
     rationale: "Access only by public key. Generally people will use weak passwords and have poor password practices. Keys are considered stronger than password."
     remediation: "Change the PubkeyAuthentication option value in the sshd_config file."
     compliance:
-      - pci_dss: "2.2.4"
+      - pci_dss: ["2.2.4"]
     condition: all
     rules:
       - 'f:$sshd_file -> r:^\s*PubkeyAuthentication\.+yes'
@@ -74,7 +74,7 @@ checks:
     rationale: "The option PasswordAuthentication specifies whether we should use password-based authentication. Use public key authentication instead of passwords."
     remediation: "Change the PasswordAuthentication option value in the sshd_config file."
     compliance:
-      - pci_dss: "2.2.4"
+      - pci_dss: ["2.2.4"]
     condition: all
     rules:
       - 'f:$sshd_file -> r:^\s*PasswordAuthentication\.+no'
@@ -85,7 +85,7 @@ checks:
     rationale: "The option PermitEmptyPasswords specifies whether the server allows logging in to accounts with a null password. Accounts with null passwords are a bad practice."
     remediation: "Change the PermitEmptyPasswords option value in the sshd_config file."
     compliance:
-      - pci_dss: "2.2.4"
+      - pci_dss: ["2.2.4"]
     condition: all
     rules:
       - 'f:$sshd_file -> r:^\s*PermitEmptyPasswords\.+no'
@@ -96,7 +96,7 @@ checks:
     rationale: "The option IgnoreRhosts specifies whether rhosts or shosts files should not be used in authentication. For security reasons it is recommended to no use rhosts or shosts files for authentication."
     remediation: "Change the IgnoreRhosts option value in the sshd_config file."
     compliance:
-      - pci_dss: "2.2.4"
+      - pci_dss: ["2.2.4"]
     condition: all
     rules:
       - 'f:$sshd_file -> r:^\s*\t*IgnoreRhosts\.+yes'
@@ -107,7 +107,7 @@ checks:
     rationale: "The option LoginGraceTime specifies how long in seconds after a connection request the server will wait before disconnecting if the user has not successfully logged in. 30 seconds is the recommended time for avoiding open connections without authenticate."
     remediation: "Change the LoginGraceTime option value in the sshd_config file."
     compliance:
-      - pci_dss: "2.2.4"
+      - pci_dss: ["2.2.4"]
     condition: all
     rules:
       - 'f:$sshd_file -> n:^\s*LoginGraceTime\s+(\d+)s compare <= 30'
@@ -118,7 +118,7 @@ checks:
     rationale: "The MaxAuthTries parameter specifies the maximum number of authentication attempts permitted per connection. Once the number of failures reaches half this value, additional failures are logged. This should be set to 4."
     remediation: "Change the MaxAuthTries option value in the sshd_config file."
     compliance:
-      - pci_dss: "2.2.4"
+      - pci_dss: ["2.2.4"]
     condition: all
     rules:
       - 'f:$sshd_file -> n:^\s*MaxAuthTries\s+(\d+) compare <= 4'
@@ -129,9 +129,9 @@ checks:
     rationale: "Even though the .rhosts files are ineffective if support is disabled in /etc/pam.conf, disabling the ability to use .rhosts files in SSH provides an additional layer of protection."
     remediation: "Edit the /etc/ssh/sshd_config file to set the parameter as follows: HostbasedAuthentication no"
     compliance:
-      - pci_dss: "4.1"
-      - hipaa: "164.312.a.2.IV, 164.312.e.1, 164.312.e.2.I, 164.312.e.2.II"
-      - nist_800_53: "SC.8"
+      - pci_dss: ["4.1"]
+      - hipaa: ["164.312.a.2.IV","164.312.e.1","164.312.e.2.I","164.312.e.2.II"]
+      - nist_800_53: ["SC.8"]
     condition: all
     rules:
       - 'f:$sshd_file -> r:^\s*\t*HostbasedAuthentication\.+no'
