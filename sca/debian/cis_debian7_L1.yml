@@ -861,19 +861,17 @@ checks:
       - 'c:stat -c%u-%g-%a /etc/cron.allow -> r:^0-0-600'
       - 'c:stat -c%u-%g-%a /etc/at.allow -> r:^0-0-600'
 
-# ToDo
-
   - id: 10571
     title: "Set Password Creation Requirement Parameters Using pam_cracklib"
-    description: "The pam_cracklib module checks the strength of passwords. It performs checks such as making sure a password is not a dictionary word, it is a certain length, contains a mix of characters (e.g. alphabet, numeric, other) and more. The following are definitions of the pam_cracklib.so options.   retry=3 - Allow 3 tries before sending back a failure.   minlen=14 - password must be 14 characters or more  dcredit=-1 - provide at least one digit  ucredit=-1 - provide at least one uppercase character  ocredit=-1 - provide at least one special character  lcredit=-1 - provide at least one lowercase character    The setting shown above is one possible policy. Alter these values to conform to your own organization's password policies."
+    description: "The pam_cracklib module checks the strength of passwords. It performs checks such as making sure a password is not a dictionary word, it is a certain length, contains a mix of characters (e.g. alphabet, numeric, other) and more. The following are definitions of the pam_cracklib.so options.  # retry=3 - Allow 3 tries before sending back a failure.  # minlen=14 - password must be 14 characters or more # dcredit=-1 - provide at least one digit # ucredit=-1 - provide at least one uppercase character # ocredit=-1 - provide at least one special character # lcredit=-1 - provide at least one lowercase character    The setting shown above is one possible policy. Alter these values to conform to your own organization's password policies."
     rationale: "Strong passwords protect systems from being hacked through brute force methods."
-    remediation: "Install the libpam-cracklib package: # apt-get install libpam-cracklib    Set the pam_cracklib.so parameters as follows in /etc/pam.d/common-password: password required pam_cracklib.so retry=3 minlen=14 dcredit=-1 ucredit=-1 ocredit=-1 lcredit=-1"
+    remediation: "1) Install the libpam-cracklib package: # apt-get install libpam-cracklib 2) Set the pam_cracklib.so parameters as follows in /etc/pam.d/common-password: password required pam_cracklib.so retry=3 minlen=14 dcredit=-1 ucredit=-1 ocredit=-1 lcredit=-1"
     compliance:
       - cis: "9.2.1"
     condition: all
     rules:
       - 'c:dpkg -s libpam-cracklib -> install ok installed'
-      - 'f:/etc/pam.d/common-password -> !r:^# && r:password\s*\t*required\s*\t*pam_cracklib.so\s*\t*retry=\d\s*\t*minlen=\d\d+\s*\t*dcredit=-\d+\s*\t*ucredit=-\d+\s*\t*ocredit=-\d+\s*\t*lcredit=-\d+'
+      - 'f:/etc/pam.d/common-password -> !r:^# && r:password\s*\t*required\s*\t*pam_cracklib.so && r:retry=\d && n:minlen=(\d+) compare >= 14 && r:dcredit=-\d+ && r:ucredit=-\d+ && r:ocredit=-\d+ && r:lcredit=-\d+'
 
   - id: 10572
     title: "Set Lockout for Failed Password Attempts"
@@ -884,7 +882,7 @@ checks:
       - cis: "9.2.2"
     condition: all
     rules:
-      - 'f:/etc/pam.d/login -> !r:^# && r:auth\s*\t*required\s*\t*pam_tally2.so\s*\t*onerr=fail\s*\t*audit\s*\t*silent\s*\t*deny=\d\s*\t*unlock_time=\d\d\d+'
+      - 'f:/etc/pam.d/login -> !r:^# && r:auth\s*\t*required\s*\t*pam_tally2.so && r:onerr=fail && r:audit && r:silent && r:deny=\d && r:unlock_time=\d\d\d+'
 
   - id: 10573
     title: "Limit Password Reuse"
@@ -895,7 +893,7 @@ checks:
       - cis: "9.2.3"
     condition: all
     rules:
-      - 'f:/etc/pam.d/common-password -> !r:^# && r:password\s*\t*[success=1 default=ignore]\s*\t*pam_unix.so\s*\t*obscure\s*\t*sha512\s*\t*remember=\d'
+      - 'f:/etc/pam.d/common-password -> !r:^# && r:password && r:pam_unix.so && n:remember\s*\t*=\s*\t*(\d+) compare >= 5'
 
   - id: 10574
     title: "Set SSH Protocol to 2"
@@ -906,7 +904,7 @@ checks:
       - cis: "9.3.1"
     condition: all
     rules:
-      - 'f:/etc/ssh/sshd_config -> !r:^# && r:^\s*\t*Protocol\s*\t*2'
+      - 'f:/etc/ssh/sshd_config -> !r:^# && r:Protocol\s*\t*2'
 
   - id: 10575
     title: "Set LogLevel to INFO"
@@ -966,7 +964,7 @@ checks:
   - id: 10580
     title: "Disable SSH Root Login"
     description: "The PermitRootLogin parameter specifies if the root user can log in using ssh(1). The default is no."
-    rationale: "Disallowing root logins over SSH requires server admins to authenticate using their own individual account, then escalating to root via sudo or su. This in turn limits opportunity for non-repudiation and provides a clear audit trail in the event of a security incident"
+    rationale: "Disallowing root logins over SSH requires server admins to authenticate using their own individual account, then escalating to root via sudo or su. This in turn limits opportunity for non-repudiation and provides a clear audit trail in the event of a security incident."
     remediation: "Edit the /etc/ssh/sshd_config file to set the parameter as follows: PermitRootLogin no"
     compliance:
       - cis: "9.3.8"
@@ -977,7 +975,7 @@ checks:
   - id: 10581
     title: "Set SSH PermitEmptyPasswords to No"
     description: "The PermitEmptyPasswords parameter specifies if the server allows login to accounts with empty password strings."
-    rationale: "Disallowing remote shell access to accounts that have an empty password reduces the probability of unauthorized access to the system"
+    rationale: "Disallowing remote shell access to accounts that have an empty password reduces the probability of unauthorized access to the system."
     remediation: "Edit the /etc/ssh/sshd_config file to set the parameter as follows: PermitEmptyPasswords no"
     compliance:
       - cis: "9.3.9"
@@ -1017,7 +1015,7 @@ checks:
       - cis: "9.3.13"
     condition: all
     rules:
-      - 'f:/etc/ssh/sshd_config -> !r:^# && r:AllowUsers\s+\w+|^AllowGroups\s+\w+|^DenyUsers\s+\w+|^DenyGroups\s+\w+'
+      - 'f:/etc/ssh/sshd_config -> !r:^# && r:AllowUsers\s+\w+|AllowGroups\s+\w+|DenyUsers\s+\w+|DenyGroups\s+\w+'
 
   - id: 10585
     title: "Set SSH Banner"
@@ -1034,15 +1032,16 @@ checks:
     title: "Restrict Access to the su Command"
     description: "The su command allows a user to run a command or shell as another user. The program has been superseded by sudo, which allows for more granular control over privileged access. Normally, the su command can be executed by any user. By uncommenting the pam_wheel.so statement in /etc/pam.d/su, the su command will only allow users in the wheel group to execute su."
     rationale: "Restricting the use of su, and using sudo in its place, provides system administrators better control of the escalation of user privileges to execute privileged commands. The sudo utility also provides a better logging and audit mechanism, as it can log each command executed via sudo, whereas su can only record that a user executed the su program."
-    remediation: "Add the following line to the /etc/pam.d/su file.  auth required pam_wheel.so use_uid    Once this is done, create a comma separated list of users in the wheel statement in the /etc/group file."
+    remediation: "1) Add the following line to the /etc/pam.d/su file: auth required pam_wheel.so use_uid 2) Once this is done, create a comma separated list of users in the wheel statement in the /etc/group file."
     compliance:
       - cis: "9.5"
     condition: all
     rules:
-      - 'f:/etc/pam.d/su -> !r:^# && r:auth\s*\t*required\s*\t*pam_wheel.so\s*\t*use_uid'
-      - 'f:/etc/group -> !r:^# && r:wheel'
+      - 'f:/etc/pam.d/su -> !r:^# && r:auth && r:required && r:pam_wheel.so && r:use_uid'
+      - 'f:/etc/group -> !r:^# && r:wheel:'
 
 # 10 User Accounts and Environment
+
   - id: 10587
     title: "Set Password Expiration Days"
     description: "The PASS_MAX_DAYS parameter in /etc/login.defs allows an administrator to force passwords to expire once they reach a defined age. It is recommended that the PASS_MAX_DAYS parameter be set to less than or equal to 90 days."
@@ -1063,7 +1062,7 @@ checks:
       - cis: "10.1.2"
     condition: all
     rules:
-      - 'f:/etc/login.defs -> n:^PASS_MIN_DAYS\s*\t*(\d+) compare <= 7'
+      - 'f:/etc/login.defs -> n:^PASS_MIN_DAYS\s*\t*(\d+) compare >= 7'
 
   - id: 10589
     title: "Set Password Expiring Warning Days"
@@ -1074,7 +1073,7 @@ checks:
       - cis: "10.1.3"
     condition: all
     rules:
-      - 'f:/etc/login.defs -> n:^PASS_WARN_AGE\s*\t*(\d+) compare <= 7'
+      - 'f:/etc/login.defs -> n:^PASS_WARN_AGE\s*\t*(\d+) compare >= 7'
 
   - id: 10590
     title: "Set Default Group for root Account"
@@ -1096,8 +1095,8 @@ checks:
       - cis: "10.4"
     condition: all
     rules:
-      - 'c:grep -R ^umask 077 /etc/profile.d/'
-      - 'f:/etc/bash.bashrc -> !r:^# && r:umask 077'
+      - 'c:grep -Rh ^umask[[:space:]][[:space:]]*077 /etc/profile.d/ -> !r:^# && r:umask\s*\t*077'
+      - 'f:/etc/bash.bashrc -> !r:^# && r:umask\s*\t*077'
 
   - id: 10592
     title: "Lock Inactive User Accounts"
@@ -1141,6 +1140,7 @@ checks:
       - 'c:grep (\\v|\\r|\\m|\\s) /etc/issue.net'
 
 # 13 Review User and Group Settings
+
   - id: 10595
     title: "Ensure Password Fields are Not Empty"
     description: "An account with an empty password field means that anybody may log in as that user without providing a password."
@@ -1193,45 +1193,12 @@ checks:
       - cis: "13.5"
     condition: none
     rules:
-      - 'f:/etc/passwd -> !r:^# && not r:^\s*\t*root: && r:^\w+:\w+:0:'
-
-  - id: 10600
-    title: "Check for Presence of User .rhosts Files"
-    description: "While no .rhosts files are shipped by default, users can easily create them."
-    rationale: "This action is only meaningful if .rhosts support is permitted in the file /etc/pam.conf.  Even though the .rhosts files are ineffective if support is disabled in /etc/pam.conf, they may have been brought over from other systems and could contain information useful to an attacker for those other systems."
-    remediation: "If any users have .rhosts files determine why they have them."
-    compliance:
-      - cis: "13.10"
-    condition: none
-    rules:
-      - 'd:/home -> r:^.rhosts$'
-
-  - id: 10601
-    title: "Check for Presence of User .netrc Files"
-    description: "The .netrc file contains data for logging into a remote host for file transfers via FTP."
-    rationale: "The .netrc file presents a significant security risk since it stores passwords in unencrypted form. Even if FTP is disabled, user accounts may have brought over .netrc files from other systems which could pose a risk to those systems."
-    remediation: "Making global modifications to users' files without alerting the user community can result in unexpected outages and unhappy users. Therefore, it is recommended that a monitoring policy be established to report user .netrc files and determine the action to be taken in accordance with site policy."
-    compliance:
-      - cis: "13.18"
-    condition: none
-    rules:
-      - 'd:/home -> r:^.netrc$'
-
-  - id: 10602
-    title: "Check for Presence of User .forward Files"
-    description: "The .forward file specifies an email address to forward the user's mail to."
-    rationale: "Use of the .forward file poses a security risk in that sensitive data may be inadvertently transferred outside the organization. The .forward file also poses a risk as it can be used to execute commands that may perform unintended actions."
-    remediation: "Making global modifications to users' files without alerting the user community can result in unexpected outages and unhappy users. Therefore, it is recommended that a monitoring policy be established to report user .forward files and determine the action to be taken in accordance with site policy."
-    compliance:
-      - cis: "13.19"
-    condition: none
-    rules:
-      - 'd:/home -> r:^.forward$'
+      - 'f:/etc/passwd -> !r:^# && !r:^root: && r:^\w+:\w+:0:'
 
   - id: 10603
     title: "Ensure shadow group is empty"
-    description: "The shadow group allows system programs which require access the ability to read the /etc/shadow file.  No users should be assigned to the shadow group."
-    rationale: "Any users assigned to the shadow group would be granted read access to the /etc/shadow file.  If attackers can gain read access to the /etc/shadow file, they can easily run a password cracking program against the hashed passwords to break them. Other security information that is stored in the /etc/shadow file (such as expiration) could also be useful to subvert additional user accounts."
+    description: "The shadow group allows system programs which require access the ability to read the /etc/shadow file. No users should be assigned to the shadow group."
+    rationale: "Any users assigned to the shadow group would be granted read access to the /etc/shadow file. If attackers can gain read access to the /etc/shadow file, they can easily run a password cracking program against the hashed passwords to break them. Other security information that is stored in the /etc/shadow file (such as expiration) could also be useful to subvert additional user accounts."
     remediation: "Remove all users from the shadow group, and change the primary group of any users with shadow as their primary group."
     compliance:
       - cis: "13.20"
