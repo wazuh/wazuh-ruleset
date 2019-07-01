@@ -278,7 +278,7 @@ checks:
       - cis_csc: "3.5, 14.9"
     condition: all
     rules:
-      - 'f:/etc/crontab -> r:\s*\t*/usr/sbin/aide\s*\t*|\s*\t*/usr/bin/aide\s*\t* && r:\s*\t*--check'
+      - 'c:grep -Rh aide /etc/cron.d /etc/cron.daily /etc/cron.hourly /etc/cron.monthly /etc/cron.weekly /etc/crontab -> r:\.+'
 
 # 1.4 Secure Boot Settings
   - id: 11020
@@ -345,7 +345,7 @@ checks:
       - cis_csc: "13, 5.1"
     condition: none
     rules:
-      - 'c:grep (\\v|\\r|\\m|\\s) /etc/issue'
+      - 'f:/etc/issue -> r:\v|\r|\m|\s|Debian'
 
 # 2 Services
   - id: 11025
