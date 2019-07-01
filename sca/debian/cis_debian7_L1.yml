@@ -1135,9 +1135,9 @@ checks:
       - cis: "11.2"
     condition: none
     rules:
-      - 'c:grep (\\v|\\r|\\m|\\s) /etc/issue'
-      - 'c:grep (\\v|\\r|\\m|\\s) /etc/motd'
-      - 'c:grep (\\v|\\r|\\m|\\s) /etc/issue.net'
+      - 'f:/etc/issue -> r:\v|\r|\m|\s'
+      - 'f:/etc/motd -> r:\v|\r|\m|\s'
+      - 'f:/etc/issue.net -> r:\v|\r|\m|\s'
 
 # 13 Review User and Group Settings
 
