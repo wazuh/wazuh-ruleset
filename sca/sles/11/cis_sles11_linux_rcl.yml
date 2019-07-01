@@ -266,7 +266,7 @@ checks:
     rationale: "Disabling this service will reduce the remote attack surface of the system."
     remediation: "Run the following commands to disable daytime - and daytime-udp: # chkconfig daytime-off # chkconfig daytime-udp off"
     compliance:
-      - cis: "2.1.2"
+      - cis: "2.1.2,3.1"
       - cis_csc: "9.1"
     condition: none
     rules:
@@ -394,7 +394,7 @@ checks:
       - 'f:/etc/ntp.conf -> r:restrict -4 default && r:kod && r:limited && r:nomodify && r:notrap && r:nopeer && r:noquery'
       - 'f:/etc/ntp.conf -> r:restrict -6 default && r:kod && r:limited && r:nomodify && r:notrap && r:nopeer && r:noquery'
       - 'f:/etc/ntp.conf -> r:^server|^pool'
-      - 'f:/etc/sysconfig/ntpd -> r:NTPD_OPTIONS="-u ntp:ntp"'
+      - 'f:/etc/sysconfig/ntp -> r:NTPD_OPTIONS= && r:-u && r:ntp:ntp'
 
 # 2.2.2 Remove X Windows (Scored)
   - id: 7029
