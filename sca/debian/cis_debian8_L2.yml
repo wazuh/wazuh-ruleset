@@ -452,3 +452,15 @@ checks:
       - 'd:/etc/audit'
       - 'f:/etc/audit/audit.rules'
       - 'f:/etc/audit/audit.rules -> r:^\s*\t*-e 2$'
+
+  - id: 10528
+    title: "Ensure SSH X11 forwarding is disabled"
+    description: "The X11Forwarding parameter provides the ability to tunnel X11 traffic through the connection to enable remote graphic connections."
+    rationale: "Disable X11 forwarding unless there is an operational requirement to use X11 applications directly. There is a small risk that the remote X11 servers of users who are logged in via SSH with X11 forwarding could be compromised by other users on the X11 server. Note that even if X11 forwarding is disabled, users can always install their own forwarders."
+    remediation: "Edit the /etc/ssh/sshd_configfile to set the parameter as follows: X11Forwarding no"
+    compliance:
+      - cis: "5.2.6"
+      - cis_csc: "16, 9.2"
+    condition: all
+    rules:
+      - 'f:/etc/ssh/sshd_config -> !r:^# && r:X11Forwarding\s+no'
