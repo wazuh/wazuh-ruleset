@@ -119,7 +119,7 @@ checks:
       - cis_csc: "14.6"
     condition: any
     rules:
-      - 'c:dpkg -s selinux -> r:install ok installed'
+      - 'c:dpkg -s selinux-basics -> r:install ok installed'
       - 'c:dpkg -s apparmor -> r:install ok installed'
 
 # 2 Services
@@ -222,7 +222,7 @@ checks:
       - 'f:/etc/audit/audit.rules'
       - 'f:/etc/audit/audit.rules -> r:^-a && r:always,exit|exit,always && r:-F arch=b32 && r:-S adjtimex && r:-S settimeofday && r:-S stime && r:-k time-change'
       - 'f:/etc/audit/audit.rules -> r:^-a && r:always,exit|exit,always && r:-F arch=b32 && r:-S clock_settime && r:-k time-change'
-      - 'f:/etc/audit/audit.rules -> r:^-a && r:always,exit|exit,always && r:-F arch=b64 && r:-S adjtimex && r:-S settimeofday && r:-S stime && r:-k time-change'
+      - 'f:/etc/audit/audit.rules -> r:^-a && r:always,exit|exit,always && r:-F arch=b64 && r:-S adjtimex && r:-S settimeofday && r:-k time-change'
       - 'f:/etc/audit/audit.rules -> r:^-a && r:always,exit|exit,always && r:-F arch=b64 && r:-S clock_settime && r:-k time-change'
       - 'f:/etc/audit/audit.rules -> r:^-w && r:/etc/localtime && r:-p wa && r:-k time-change'
 
@@ -254,14 +254,14 @@ checks:
       - cis_csc: "5.5"
     condition: all
     rules:
-      - 'f:/etc/audit'
+      - 'd:/etc/audit'
       - 'f:/etc/audit/audit.rules'
       - 'f:/etc/audit/audit.rules -> r:^-a && r:exit,always|always,exit && r:-F arch=b32 && r:-S sethostname && r:-S setdomainname && r:-k system-locale'
       - 'f:/etc/audit/audit.rules -> r:^-a && r:exit,always|always,exit && r:-F arch=b64 && r:-S sethostname && r:-S setdomainname && r:-k system-locale'
       - 'f:/etc/audit/audit.rules -> r:^-w && r:/etc/issue && r:-p wa && r:-k system-locale'
       - 'f:/etc/audit/audit.rules -> r:^-w && r:/etc/issue.net && r:-p wa && r:-k system-locale'
       - 'f:/etc/audit/audit.rules -> r:^-w && r:/etc/hosts && r:-p wa && r:-k system-locale'
-      - 'f:/etc/audit/audit.rules -> r:^-w && r:/etc/network && r:-p wa && r:-k system-locale'
+      - 'f:/etc/audit/audit.rules -> r:^-w && r:/etc/sysconfig/network && r:-p wa && r:-k system-locale'
 
   - id: 16516
     title: "Ensure events that modify the system's Mandatory Access Controls are collected (SELinux)"
