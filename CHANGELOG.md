@@ -8,7 +8,7 @@ All notable changes to this project will be documented in this file.
 - NGINX Decoder: make "server" field optional. Thanks to @iasdeoupxe. ([#243](https://github.com/wazuh/wazuh-ruleset/pull/243))
 - Remove tailing quote from field "res" in Auditd decoder. Thanks to @branchnetconsulting. ([#412](https://github.com/wazuh/wazuh-ruleset/pull/412))
 - Fix conflict between fields "uid" and "auid" in Auditd decoder. Thanks to @tokibi. ([#246](https://github.com/wazuh/wazuh-ruleset/pull/246))
-
+- Prevent rules for AWS, Suricata, VirusTotal, OwnCloud, Vuls, CIS-CAT, Vulnerability Detector, MySQL, Osquery, and Azure from including the full log in JSON format. ([#443](https://github.com/wazuh/wazuh-ruleset/pull/443))
 
 ## [v3.9.2] 2019-06-10
 
