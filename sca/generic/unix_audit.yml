@@ -6,22 +6,19 @@
 # and/or modify it under the terms of the GNU General Public
 # License (version 2) as published by the FSF - Free Software
 # Foundation
-#
-# Mostly based on
-# Center for Internet Security Debian Linux 9 Benchmark v1.0.0 - 12-21-2018
 
 policy:
   id: "unix_audit"
   file: "unix_audit.yml"
   name: "System audit for Unix based systems"
-  description: "Guidance for establishing a secure configuration for SSH service vulnerabilities and secure passwords."
+  description: "Guidance for establishing a secure configuration for Unix based systems."
   references:
     - https://www.ssh.com/ssh/
 
 requirements:
   title: "Check that the SSH service is installed on the system and password-related files are present on the system"
-  description: "Requirements for running the SCA scan against the Unix policy."
-  condition: all
+  description: "Requirements for running the SCA scan against the Unix based systems policy."
+  condition: any
   rules:
     - 'f:/etc/ssh/sshd_config'
     - 'f:/etc/passwd'
@@ -149,7 +146,6 @@ checks:
     rationale: "Strong passwords protect systems from being hacked through brute force methods."
     remediation: "Edit the /etc/pam.d/common-password and /etc/security/pwquality.conf files, or the /etc/pam.d/password-auth and /etc/pam.d/system-auth files, to include the appropriate options for pam_pwquality.so or pam_cracklib.so and to conform to site policy"
     compliance:
-      - cis: ["5.3.1"]
       - cis_csc: ["4.4","5.7","16.12"]
     references:
       - https://linux-audit.com/configure-the-minimum-password-length-on-linux-systems/
@@ -164,7 +160,6 @@ checks:
     rationale: "Strong passwords protect systems from being hacked through brute force methods."
     remediation: "Edit the /etc/pam.d/common-password and /etc/security/pwquality.conf files, or the /etc/pam.d/password-auth and /etc/pam.d/system-auth files, to include the appropriate options for pam_pwquality.so or pam_cracklib.so and to conform to site policy"
     compliance:
-      - cis: ["5.3.1"]
       - cis_csc: ["4.4","5.7","16.12"]
     references:
       - https://linux-audit.com/configure-the-minimum-password-length-on-linux-systems/
@@ -178,7 +173,6 @@ checks:
     rationale: "Strong passwords protect systems from being hacked through brute force methods."
     remediation: "Edit the /etc/pam.d/common-password and /etc/security/pwquality.conf files, or the /etc/pam.d/password-auth and /etc/pam.d/system-auth files, to include the appropriate options for pam_pwquality.so or pam_cracklib.so and to conform to site policy"
     compliance:
-      - cis: ["5.3.1"]
       - cis_csc: ["4.4","5.7","16.12"]
     references:
       - https://linux-audit.com/configure-the-minimum-password-length-on-linux-systems/
@@ -192,7 +186,6 @@ checks:
     rationale: "Strong passwords protect systems from being hacked through brute force methods."
     remediation: "Edit the /etc/pam.d/common-password and /etc/security/pwquality.conf files, or the /etc/pam.d/password-auth and /etc/pam.d/system-auth files, to include the appropriate options for pam_pwquality.so or pam_cracklib.so and to conform to site policy"
     compliance:
-      - cis: ["5.3.1"]
       - cis_csc: ["4.4","5.7","16.12"]
     references:
       - https://linux-audit.com/configure-the-minimum-password-length-on-linux-systems/
@@ -206,7 +199,6 @@ checks:
     rationale: "Strong passwords protect systems from being hacked through brute force methods."
     remediation: "Edit the /etc/pam.d/common-password and /etc/security/pwquality.conf files, or the /etc/pam.d/password-auth and /etc/pam.d/system-auth files, to include the appropriate options for pam_pwquality.so or pam_cracklib.so and to conform to site policy"
     compliance:
-      - cis: ["5.3.1"]
       - cis_csc: ["4.4","5.7","16.12"]
     references:
       - https://linux-audit.com/configure-the-minimum-password-length-on-linux-systems/
@@ -220,7 +212,6 @@ checks:
     rationale: "Strong passwords protect systems from being hacked through brute force methods."
     remediation: "Edit the /etc/pam.d/common-password and /etc/security/pwquality.conf files, or the /etc/pam.d/password-auth and /etc/pam.d/system-auth files, to include the appropriate options for pam_pwquality.so or pam_cracklib.so and to conform to site policy"
     compliance:
-      - cis: ["5.3.1"]
       - cis_csc: ["4.4","5.7","16.12"]
     references:
       - https://linux-audit.com/configure-the-minimum-password-length-on-linux-systems/
@@ -233,8 +224,6 @@ checks:
     description: "Lock out users after n unsuccessful consecutive login attempts. The first sets of changes are made to the PAM configuration files. The second set of changes are applied to the program specific PAM configuration file. The second set of changes must be applied to each program that will lock out users."
     rationale: "Locking out user IDs after n unsuccessful consecutive login attempts mitigates brute force password attacks against your systems."
     remediation: "Edit the /etc/pam.d/common-auth file and add the auth line below: #auth required pam_tally2.so onerr=fail audit silent deny=5 unlock_time=900"
-    compliance:
-      - cis: ["5.3.2"]
     condition: all
     rules:
       - 'f:/etc/pam.d/common-auth -> r:^auth\s*\t*required\s*\t*pam_tally2.so\s*\t*onerr=fail\s*\t*audit\s*\t*silent\s*\t*deny=\d+\s*\t*unlock_time=\d+$'
@@ -245,7 +234,6 @@ checks:
     rationale: "The SHA-512 algorithm provides much stronger hashing than MD5, thus providing additional protection to the system by increasing the level of effort for an attacker to successfully determine passwords. Note that these change only apply to accounts configured on the local system."
     remediation: "Edit the /etc/pam.d/common-password file to include the sha512 option for pam_unix.so as shown: password required pam_unix.so sha512"
     compliance:
-      - cis: ["5.3.4"]
       - cis_csc: ["16.14"]
     condition: all
     rules:
@@ -263,14 +251,12 @@ checks:
     rules:
       - 'f:/etc/shadow -> r:^\w+:\$1\$|^\w+:\$2\$|^\w+:\$md5\$|^\w+:\$md5\$|^\w+:\$__unix__\$'
 
-# 5.4 User accounts and Environment
   - id: 1519
     title: "Ensure password expiration is 365 days or less"
     description: "The PASS_MAX_DAYS parameter in /etc/login.defs allows an administrator to force passwords to expire once they reach a defined age. It is recommended that the PASS_MAX_DAYS parameter be set to less than or equal to 365 days."
     rationale: "The window of opportunity for an attacker to leverage compromised credentials or successfully compromise credentials via an online brute force attack is limited by the age of the password. Therefore, reducing the maximum age of a password also reduces an attacker's window of opportunity."
     remediation: "Set the PASS_MAX_DAYS parameter to conform to site policy in /etc/login.defs or /etc/default/passwd (Solaris)."
     compliance:
-      - cis: ["5.4.1.1"]
       - cis_csc: ["4.4","16"]
     references:
       - https://www.thegeekdiary.com/understanding-etclogin-defs-file
@@ -285,23 +271,32 @@ checks:
     rationale: "Without a Mandatory Access Control system installed only the default Discretionary Access Control system will be available."
     remediation: "Run one of the following commands to install SELinux or apparmor: # apt-get install selinux-basics Or: # apt-get install apparmor apparmor-profiles apparmor-utils"
     compliance:
-      - cis: ["1.6.3"]
       - cis_csc: ["14.4","14.6"]
     condition: any
     rules:
       - 'c:dpkg -s selinux-basics -> r:install ok installed'
       - 'c:dpkg -s apparmor -> r:install ok installed'
 
-  - id: 10507
+  - id: 1521
     title: "Ensure CUPS is not enabled"
     description: "The Common Unix Print System (CUPS) provides the ability to print to both local and network printers. A system running CUPS can also accept print jobs from remote systems and print them to local printers. It also provides a web based remote administration capability."
     rationale: "If the system does not need to print jobs or accept print jobs from other systems, it is recommended that CUPS be disabled to reduce the potential attack surface."
     remediation: "Run the following command to disable cups: # systemctl disable cups"
     compliance:
-      - cis: ["2.2.4"]
       - cis_csc: ["9.1","9.2"]
     references:
       - 'https://www.cups.org'
     condition: none
     rules:
       - 'c:systemctl is-enabled cups -> r:^enabled'
+
+  - id: 1522
+    title: "Ensure auditd service is enabled"
+    description: "Turn on the auditd daemon to record system events."
+    rationale: "The capturing of system events provides system administrators with information to allow them to determine if unauthorized access to their system is occurring."
+    remediation: "Run the following command to enable auditd: # systemctl enable auditd"
+    compliance:
+      - cis_csc: ["6.2","6.3"]
+    condition: all
+    rules:
+      - 'c:systemctl is-enabled auditd -> r:^enabled'
