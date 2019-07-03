@@ -1195,39 +1195,6 @@ checks:
     rules:
       - 'f:/etc/passwd -> !r:^# && not r:^\s*\t*root: && r:^\w+:\w+:0:'
 
-  - id: 10600
-    title: "Check for Presence of User .rhosts Files"
-    description: "While no .rhosts files are shipped by default, users can easily create them."
-    rationale: "This action is only meaningful if .rhosts support is permitted in the file /etc/pam.conf.  Even though the .rhosts files are ineffective if support is disabled in /etc/pam.conf, they may have been brought over from other systems and could contain information useful to an attacker for those other systems."
-    remediation: "If any users have .rhosts files determine why they have them."
-    compliance:
-      - cis: ["13.10"]
-    condition: none
-    rules:
-      - 'd:/home -> r:^.rhosts$'
-
-  - id: 10601
-    title: "Check for Presence of User .netrc Files"
-    description: "The .netrc file contains data for logging into a remote host for file transfers via FTP."
-    rationale: "The .netrc file presents a significant security risk since it stores passwords in unencrypted form. Even if FTP is disabled, user accounts may have brought over .netrc files from other systems which could pose a risk to those systems."
-    remediation: "Making global modifications to users' files without alerting the user community can result in unexpected outages and unhappy users. Therefore, it is recommended that a monitoring policy be established to report user .netrc files and determine the action to be taken in accordance with site policy."
-    compliance:
-      - cis: ["13.18"]
-    condition: none
-    rules:
-      - 'd:/home -> r:^.netrc$'
-
-  - id: 10602
-    title: "Check for Presence of User .forward Files"
-    description: "The .forward file specifies an email address to forward the user's mail to."
-    rationale: "Use of the .forward file poses a security risk in that sensitive data may be inadvertently transferred outside the organization. The .forward file also poses a risk as it can be used to execute commands that may perform unintended actions."
-    remediation: "Making global modifications to users' files without alerting the user community can result in unexpected outages and unhappy users. Therefore, it is recommended that a monitoring policy be established to report user .forward files and determine the action to be taken in accordance with site policy."
-    compliance:
-      - cis: ["13.19"]
-    condition: none
-    rules:
-      - 'd:/home -> r:^.forward$'
-
   - id: 10603
     title: "Ensure shadow group is empty"
     description: "The shadow group allows system programs which require access the ability to read the /etc/shadow file. No users should be assigned to the shadow group."

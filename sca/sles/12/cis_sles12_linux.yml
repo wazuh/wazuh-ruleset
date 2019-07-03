@@ -151,46 +151,6 @@ checks:
     rules:
       - 'c:mount -> r:\s/home\s && r:nodev'
 
-# 1.1.18 nodev on removable media partitions (not scored)
-  - id: 7512
-    title: "Ensure nodev option set on removable media partitions"
-    description: "The nodev mount option specifies that the filesystem cannot contain special devices."
-    rationale: "Removable media containing character and block special devices could be used to circumvent security controls by allowing non-root users to access sensitive device files such as /dev/kmem or the raw disk partitions."
-    remediation: "Edit the /etc/fstab file and add nodev to the fourth field (mounting options) of all removable media partitions. Look for entries that have mount points that contain words such as floppy or cdrom. See the fstab(5) manual page for more information."
-    compliance:
-      - cis: ["1.1.18"]
-      - pci_dss: ["2.2.4"]
-    condition: all
-    rules:
-      - 'c:mount -> r:\s/media\s && r:nodev'
-
-# 1.1.19 nosuid on removable media partitions (not scored)
-  - id: 7513
-    title: "Ensure nosuid option set on removable media partitions"
-    description: "The nosuid mount option specifies that the filesystem cannot contain setuid files."
-    rationale: "Setting this option on a file system prevents users from introducing privileged programs onto the system and allowing non-root users to execute them."
-    remediation: "Edit the /etc/fstab file and add nosuid to the fourth field (mounting options) of all removable media partitions. Look for entries that have mount points that contain words such as floppy or cdrom. See the fstab(5) manual page for more information."
-    compliance:
-      - cis: ["1.1.19"]
-      - pci_dss: ["2.2.4"]
-    condition: all
-    rules:
-      - 'c:mount -> r:\s/media\s && r:nosuid'
-
-# 1.1.20 noexec on removable media partitions (not scored)
-  - id: 7514
-    title: "Ensure noexec option set on removable media partitions"
-    description: "The noexec mount option specifies that the filesystem cannot contain executable binaries."
-    rationale: "Setting this option on a file system prevents users from executing programs from the removable media. This deters users from being able to introduce potentially malicious software on the system."
-    remediation: "Edit the /etc/fstab file and add noexec to the fourth field (mounting options) of all removable media partitions. Look for entries that have mount points that contain words such as floppy or cdrom. See the fstab(5) manual page for more information."
-    compliance:
-      - cis: ["1.1.20"]
-      - cis_csc: ["8"]
-      - pci_dss: ["2.2.4"]
-    condition: all
-    rules:
-      - 'c:mount -> r:\s/media\s && r:noexec'
-
 # 1.1.15 /dev/shm: nodev
   - id: 7509
     title: "Ensure nodev option set on /dev/shm partition"

@@ -34,8 +34,8 @@ checks:
     rationale: "Since the /var directory may contain world-writable files and directories, there is a risk of resource exhaustion if it is not bound to a separate partition."
     remediation: "For new installations, during installation create a custom partition setup and specify a separate partition for /var. For systems that were previously installed, create a new partition and configure /etc/fstab as appropriate."
     compliance:
-      - cis: "1.1.6"
-      - cis_csc: "5.1"
+     - cis: ["1.1.6"]
+     - cis_csc: ["5.1"]
     references:
       - http://tldp.org/HOWTO/LVM-HOWTO/
     condition: all
@@ -48,8 +48,8 @@ checks:
     rationale: "Since the /var/tmp directory is intended to be world-writable, there is a risk of resource exhaustion if it is not bound to a separate partition. In addition, making /var/tmp its own file system allows an administrator to set the noexec option on the mount, making /var/tmp useless for an attacker to install executable code. It would also prevent an attacker from establishing a hardlink to a system setuid program and wait for it to be updated."
     remediation: "For new installations, during installation create a custom partition setup and specify a separate partition for /var/tmp. For systems that were previously installed, create a new partition and configure /etc/fstab as appropriate."
     compliance:
-      - cis: "1.1.7"
-      - cis_csc: "5.1"
+     - cis: ["1.1.7"]
+     - cis_csc: ["5.1"]
     condition: all
     rules:
       - 'c:mount -> r:\s/var/tmp\s'
@@ -60,8 +60,8 @@ checks:
     rationale: "There are two important reasons to ensure that system logs are stored on a separate partition: protection against resource exhaustion (since logs can grow quite large) and protection of audit data."
     remediation: "For new installations, during installation create a custom partition setup and specify a separate partition for /var/log. For systems that were previously installed, create a new partition and configure /etc/fstab as appropriate."
     compliance:
-      - cis: "1.1.11"
-      - cis_csc: "6.4"
+     - cis: ["1.1.11"]
+     - cis_csc: ["6.4"]
     references:
       - http://tldp.org/HOWTO/LVM-HOWTO/
     condition: all
@@ -74,8 +74,8 @@ checks:
     rationale: "There are two important reasons to ensure that data gathered by auditd is stored on a separate partition: protection against resource exhaustion (since the audit.log file can grow quite large) and protection of audit data. The audit daemon calculates how much free space is left and performs actions based on the results. If other processes (such as syslog) consume space in the same partition as auditd, it may not perform as desired."
     remediation: "For new installations, during installation create a custom partition setup and specify a separate partition for /var/log/audit. For systems that were previously installed, create a new partition and configure /etc/fstab as appropriate."
     compliance:
-      - cis: "1.1.12"
-      - cis_csc: "6.4"
+     - cis: ["1.1.12"]
+     - cis_csc: ["6.4"]
     references:
       - http://tldp.org/HOWTO/LVM-HOWTO/
     condition: all
@@ -88,8 +88,8 @@ checks:
     rationale: "If the system is intended to support local users, create a separate partition for the /home directory to protect against resource exhaustion and restrict the type of files that can be stored under /home."
     remediation: "For new installations, during installation create a custom partition setup and specify a separate partition for /home. For systems that were previously installed, create a new partition and configure /etc/fstab as appropriate."
     compliance:
-      - cis: "1.1.13"
-      - cis_csc: "5.1"
+     - cis: ["1.1.13"]
+     - cis_csc: ["5.1"]
     references:
       - http://tldp.org/HOWTO/LVM-HOWTO/
     condition: all
@@ -102,8 +102,8 @@ checks:
     rationale: "With automounting enabled anyone with physical access could attach a USB drive or disc and have it's contents available in system even if they lacked permissions to mount it themselves."
     remediation: "Run the following command to disable autofs: # systemctl disable autofs"
     compliance:
-      - cis: "1.1.22"
-      - cis_csc: "8.3, 8.5"
+     - cis: ["1.1.22"]
+     - cis_csc: ["8.3","8.5"]
     condition: none
     rules:
       - 'c:systemctl is-enabled autofs -> r:^enabled'
@@ -115,8 +115,8 @@ checks:
     rationale: "Without a Mandatory Access Control system installed only the default Discretionary Access Control system will be available."
     remediation: "Run one of the following commands to install SELinux or apparmor: # apt-get install selinux-basics Or: # apt-get install apparmor apparmor-profiles apparmor-utils"
     compliance:
-      - cis: "1.6.3"
-      - cis_csc: "14.6"
+     - cis: ["1.6.3"]
+     - cis_csc: ["14.6"]
     condition: any
     rules:
       - 'c:dpkg -s selinux-basics -> r:install ok installed'
@@ -130,8 +130,8 @@ checks:
     rationale: "If the system does not need to print jobs or accept print jobs from other systems, it is recommended that CUPS be disabled to reduce the potential attack surface."
     remediation: "Run the following command to disable cups: # systemctl disable cups"
     compliance:
-      - cis: "2.2.4"
-      - cis_csc: "9.2"
+     - cis: ["2.2.4"]
+     - cis_csc: ["9.2"]
     references:
       - 'http://www.cups.org'
     condition: none
@@ -146,8 +146,8 @@ checks:
     rationale: "It is important that an appropriate size is determined for log files so that they do not impact the system and audit data is not lost."
     remediation: "Set the following parameter in /etc/audit/auditd.conf in accordance with site policy: max_log_file = <MB> Notes: The max_log_file parameter is measured in megabytes."
     compliance:
-      - cis: "4.1.1.1"
-      - cis_csc: "6.4"
+     - cis: ["4.1.1.1"]
+     - cis_csc: ["6.4"]
     condition: all
     rules:
       - 'd:/etc/audit'
@@ -160,8 +160,8 @@ checks:
     rationale: "In high security contexts, the risk of detecting unauthorized access or nonrepudiation exceeds the benefit of the system's availability."
     remediation: "Set the following parameters in /etc/audit/auditd.conf: space_left_action = email action_mail_acct = root admin_space_left_action = halt"
     compliance:
-      - cis: "4.1.1.2"
-      - cis_csc: "6.4"
+     - cis: ["4.1.1.2"]
+     - cis_csc: ["6.4"]
     condition: all
     rules:
       - 'd:/etc/audit'
@@ -176,8 +176,8 @@ checks:
     rationale: "In high security contexts, the benefits of maintaining a long audit history exceed the cost of storing the audit history."
     remediation: "Set the following parameter in /etc/audit/auditd.conf: max_log_file_action = keep_logs"
     compliance:
-      - cis: "4.1.1.3"
-      - cis_csc: "6.4"
+     - cis: ["4.1.1.3"]
+     - cis_csc: ["6.4"]
     condition: all
     rules:
       - 'd:/etc/audit'
@@ -190,8 +190,8 @@ checks:
     rationale: "The capturing of system events provides system administrators with information to allow them to determine if unauthorized access to their system is occurring."
     remediation: "Run the following command to enable auditd: # systemctl enable auditd"
     compliance:
-      - cis: "4.1.2"
-      - cis_csc: "6.2, 6.3"
+     - cis: ["4.1.2"]
+     - cis_csc: ["6.2","6.3"]
     condition: all
     rules:
       - 'c:systemctl is-enabled auditd -> r:^enabled'
@@ -202,8 +202,8 @@ checks:
     rationale: "Audit events need to be captured on processes that start up prior to auditd, so that potential malicious activity cannot go undetected."
     remediation: "Edit /etc/default/grub and add audit=1 to GRUB_CMDLINE_LINUX: GRUB_CMDLINE_LINUX=\"audit=1\" Run the following command to update the grub2 configuration: # update-grub Notes: This recommendation is designed around the grub bootloader, if LILO or another bootloader is in use in your environment enact equivalent settings."
     compliance:
-      - cis: "4.1.3"
-      - cis_csc: "6.2, 6.3"
+     - cis: ["4.1.3"]
+     - cis_csc: ["6.2","6.3"]
     condition: all
     rules:
       - 'f:/etc/default/grub -> r:^GRUB_CMDLINE_LINUX\s*=\s*\.*audit\s*=\s*1\.*'
@@ -214,8 +214,8 @@ checks:
     rationale: "Unexpected changes in system date and/or time could be a sign of malicious activity on the system."
     remediation: "For 32 bit systems add the following lines to the /etc/audit/audit.rules file: -a always,exit -F arch=b32 -S adjtimex -S settimeofday -S stime -k time- change | -a always,exit -F arch=b32 -S clock_settime -k time-change | -w /etc/localtime -p wa -k time-change. For 64 bit systems add the following lines to the /etc/audit/audit.rules file: -a always,exit -F arch=b64 -S adjtimex -S settimeofday -k time-change | -a always,exit -F arch=b32 -S adjtimex -S settimeofday -S stime -k time-change | -a always,exit -F arch=b64 -S clock_settime -k time-change -a always,exit -F arch=b32 -S clock_settime -k time-change | -w /etc/localtime -p wa -k time-change"
     compliance:
-      - cis: "4.1.4"
-      - cis_csc: "5.5"
+     - cis: ["4.1.4"]
+     - cis_csc: ["5.5"]
     condition: all
     rules:
       - 'd:/etc/audit'
@@ -232,8 +232,8 @@ checks:
     rationale: "Unexpected changes to these files could be an indication that the system has been compromised and that an unauthorized user is attempting to hide their activities or compromise additional accounts."
     remediation: "Add the following lines to the /etc/audit/audit.rules file: -w /etc/group -p wa -k identity | -w /etc/passwd -p wa -k identity | -w /etc/gshadow -p wa -k identity | -w /etc/shadow -p wa -k identity | -w /etc/security/opasswd -p wa -k identity Notes: Reloading the auditd config to set active settings may require a system reboot."
     compliance:
-      - cis: "4.1.5"
-      - cis_csc: "4.8"
+     - cis: ["4.1.5"]
+     - cis_csc: ["4.8"]
     condition: all
     rules:
       - 'd:/etc/audit'
@@ -250,8 +250,8 @@ checks:
     rationale: "Monitoring sethostname and setdomainname will identify potential unauthorized changes to host and domainname of a system. The changing of these names could potentially break security parameters that are set based on those names. The /etc/hosts file is monitored for changes in the file that can indicate an unauthorized intruder is trying to change machine associations with IP addresses and trick users and processes into connecting to unintended machines. Monitoring /etc/issue and /etc/issue.net is important, as intruders could put disinformation into those files and trick users into providing information to the intruder. Monitoring /etc/sysconfig/network is important as it can show if network interfaces or scripts are being modified in a way that can lead to the machine becoming unavailable or compromised. All audit records will be tagged with the identifier \"system-locale.\""
     remediation: "For 64 bit systems add the following lines to the /etc/audit/audit.rules file: -a always,exit -F arch=b64 -S sethostname -S setdomainname -k system-locale | -a always,exit -F arch=b32 -S sethostname -S setdomainname -k system-locale | -w /etc/issue -p wa -k system-locale | -w /etc/issue.net -p wa -k system-locale | -w /etc/hosts -p wa -k system-locale | -w /etc/sysconfig/network -p wa -k system-locale Notes: /etc/sysconfig/network is common to Red Hat and SUSE based distributions. You should expand or replace this coverage to any network configuration files on your system such as /etc/network on Debian based distributions. Reloading the auditd config to set active settings may require a system reboot."
     compliance:
-      - cis: "4.1.6"
-      - cis_csc: "5.5"
+     - cis: ["4.1.6"]
+     - cis_csc: ["5.5"]
     condition: all
     rules:
       - 'd:/etc/audit'
@@ -269,8 +269,8 @@ checks:
     rationale: "Changes to files in that directory could indicate that an unauthorized user is attempting to modify access controls and change security contexts, leading to a compromise of the system."
     remediation: "On systems using SELinux add the following line to the /etc/audit/audit.rules file: -w /etc/selinux/ -p wa -k MAC-policy | -w /usr/share/selinux/ -p wa -k MAC-policy. Notes: Reloading the auditd config to set active settings may require a system reboot."
     compliance:
-      - cis: "4.1.7"
-      - cis_csc: "5.5"
+     - cis: ["4.1.7"]
+     - cis_csc: ["5.5"]
     condition: all
     rules:
       - 'd:/etc/audit'
@@ -284,8 +284,8 @@ checks:
     rationale: "Changes to files in these directories could indicate that an unauthorized user is attempting to modify access controls and change security contexts, leading to a compromise of the system."
     remediation: "On systems using AppArmor add the following line to the /etc/audit/audit.rules file: -w /etc/apparmor/ -p wa -k MAC-policy | -w /etc/apparmor.d/ -p wa -k MAC-policy. Notes: Reloading the auditd config to set active settings may require a system reboot."
     compliance:
-      - cis: "4.1.7"
-      - cis_csc: "5.5"
+     - cis: ["4.1.7"]
+     - cis_csc: ["5.5"]
     condition: all
     rules:
       - 'd:/etc/audit'
@@ -299,8 +299,8 @@ checks:
     rationale: "Monitoring login/logout events could provide a system administrator with information associated with brute force attacks against user logins."
     remediation: "Add the following lines to the /etc/audit/audit.rules file: -w /var/log/faillog -p wa -k logins | -w /var/log/lastlog -p wa -k logins | -w /var/log/tallylog -p wa -k logins. Notes: Reloading the auditd config to set active settings may require a system reboot."
     compliance:
-      - cis: "4.1.8"
-      - cis_csc: "4.9, 16.11, 16.13"
+     - cis: ["4.1.8"]
+     - cis_csc: ["4.9, 16.11","16.13"]
     condition: all
     rules:
       - 'd:/etc/audit'
@@ -315,8 +315,8 @@ checks:
     rationale: "Monitoring these files for changes could alert a system administrator to logins occurring at unusual hours, which could indicate intruder activity (i.e. a user logging in at a time when they do not normally log in)."
     remediation: "Add the following lines to the /etc/audit/audit.rules file: -w /var/run/utmp -p wa -k session | -w /var/log/wtmp -p wa -k logins | -w /var/log/btmp -p wa -k logins. Notes: The last command can be used to read /var/log/wtmp (last with no parameters) and /var/run/utmp (last -f /var/run/utmp). Reloading the auditd config to set active settings may require a system reboot."
     compliance:
-      - cis: "4.1.9"
-      - cis_csc: "4.9, 16.11, 16.13"
+     - cis: ["4.1.9"]
+     - cis_csc: ["4.9, 16.11","16.13"]
     condition: all
     rules:
       - 'd:/etc/audit'
@@ -331,8 +331,8 @@ checks:
     rationale: "Monitoring for changes in file attributes could alert a system administrator to activity that could indicate intruder activity or policy violation."
     remediation: "For 64 bit systems add the following lines to the /etc/audit/audit.rules file: -a always,exit -F arch=b64 -S chmod -S fchmod -S fchmodat -F auid>=1000 -F auid!=4294967295 -k perm_mod | -a always,exit -F arch=b32 -S chmod -S fchmod -S fchmodat -F auid>=1000 -F auid!=4294967295 -k perm_mod | -a always,exit -F arch=b64 -S chown -S fchown -S fchownat -S lchown -F auid>=1000 -F auid!=4294967295 -k perm_mod | -a always,exit -F arch=b32 -S chown -S fchown -S fchownat -S lchown -F auid>=1000 -F auid!=4294967295 -k perm_mod | -a always,exit -F arch=b64 -S setxattr -S lsetxattr -S fsetxattr -S removexattr -S lremovexattr -S fremovexattr -F auid>=1000 -F auid!=4294967295 -k perm_mod | -a always,exit -F arch=b32 -S setxattr -S lsetxattr -S fsetxattr -S removexattr -S lremovexattr -S fremovexattr -F auid>=1000 -F auid!=4294967295 -k perm_mod. Notes: Reloading the auditd config to set active settings may require a system reboot."
     compliance:
-      - cis: "4.1.10"
-      - cis_csc: "5.5"
+     - cis: ["4.1.10"]
+     - cis_csc: ["5.5"]
     condition: all
     rules:
       - 'd:/etc/audit'
@@ -350,8 +350,8 @@ checks:
     rationale: "Failed attempts to open, create or truncate files could be an indication that an individual or process is trying to gain unauthorized access to the system."
     remediation: "For 64 bit systems add the following lines to the /etc/audit/audit.rules file: -a always,exit -F arch=b64 -S creat -S open -S openat -S truncate -S ftruncate -F exit=-EACCES -F auid>=1000 -F auid!=4294967295 -k access | -a always,exit -F arch=b32 -S creat -S open -S openat -S truncate -S ftruncate -F exit=-EACCES -F auid>=1000 -F auid!=4294967295 -k access | -a always,exit -F arch=b64 -S creat -S open -S openat -S truncate -S ftruncate -F exit=-EPERM -F auid>=1000 -F auid!=4294967295 -k access | -a always,exit -F arch=b32 -S creat -S open -S openat -S truncate -S ftruncate -F exit=-EPERM -F auid>=1000 -F auid!=4294967295 -k access. Notes: Reloading the auditd config to set active settings may require a system reboot."
     compliance:
-      - cis: "4.1.11"
-      - cis_csc: "14.9"
+     - cis: ["4.1.11"]
+     - cis_csc: ["14.9"]
     condition: all
     rules:
       - 'd:/etc/audit'
@@ -367,8 +367,8 @@ checks:
     rationale: "It is highly unusual for a non privileged user to mount file systems to the system. While tracking mount commands gives the system administrator evidence that external media may have been mounted (based on a review of the source of the mount and confirming it's an external media type), it does not conclusively indicate that data was exported to the media. System administrators who wish to determine if data were exported, would also have to track successful open , creat and truncate system calls requiring write access to a file under the mount point of the external media file system. This could give a fair indication that a write occurred. The only way to truly prove it, would be to track successful writes to the external media. Tracking write system calls could quickly fill up the audit log and is not recommended. Recommendations on configuration options to track data export to media is beyond the scope of this document."
     remediation: "For 32 bit systems add the following lines to the /etc/audit/audit.rules file: -a always,exit -F arch=b32 -S mount -F auid>=1000 -F auid!=4294967295 -k mounts. For 64 bit systems add the following lines to the /etc/audit/audit.rules file: -a always,exit -F arch=b64 -S mount -F auid>=1000 -F auid!=4294967295 -k mounts | -a always,exit -F arch=b32 -S mount -F auid>=1000 -F auid!=4294967295 -k mounts. Notes: This tracks successful and unsuccessful mount commands. File system mounts do not have to come from external media and this action still does not verify write (e.g. CD ROMS). Reloading the auditd config to set active settings may require a system reboot."
     compliance:
-      - cis: "4.1.13"
-      - cis_csc: "13"
+     - cis: ["4.1.13"]
+     - cis_csc: ["13"]
     condition: all
     rules:
       - 'd:/etc/audit'
@@ -382,8 +382,8 @@ checks:
     rationale: "Monitoring these calls from non-privileged users could provide a system administrator with evidence that inappropriate removal of files and file attributes associated with protected files is occurring. While this audit option will look at all events, system administrators will want to look for specific privileged files that are being deleted or altered."
     remediation: "For 32 bit systems add the following lines to the /etc/audit/audit.rules file: -a always,exit -F arch=b32 -S unlink -S unlinkat -S rename -S renameat -F auid>=1000 -F auid!=4294967295 -k delete. For 64 bit systems add the following lines to the /etc/audit/audit.rules file: -a always,exit -F arch=b64 -S unlink -S unlinkat -S rename -S renameat -F auid>=1000 -F auid!=4294967295 -k delete | -a always,exit -F arch=b32 -S unlink -S unlinkat -S rename -S renameat -F auid>=1000 -F auid!=4294967295 -k delete. Notes: At a minimum, configure the audit system to collect file deletion events for all users and root. Reloading the auditd config to set active settings may require a system reboot."
     compliance:
-      - cis: "4.1.14"
-      - cis_csc: "6.2, 13"
+     - cis: ["4.1.14"]
+     - cis_csc: ["6.2","13"]
     condition: all
     rules:
       - 'd:/etc/audit'
@@ -397,8 +397,8 @@ checks:
     rationale: "Changes in the /etc/sudoers file can indicate that an unauthorized change has been made to scope of system administrator activity."
     remediation: "Add the following line to the /etc/audit/audit.rules file: -w /etc/sudoers -p wa -k scope | -w /etc/sudoers.d/ -p wa -k scope. Notes: Reloading the auditd config to set active settings may require a system reboot."
     compliance:
-      - cis: "4.1.15"
-      - cis_csc: "4.8"
+     - cis: ["4.1.15"]
+     - cis_csc: ["4.8"]
     condition: all
     rules:
       - 'd:/etc/audit'
@@ -412,8 +412,8 @@ checks:
     rationale: "Changes in /var/log/sudo.log indicate that an administrator has executed a command or the log file itself has been tampered with. Administrators will want to correlate the events written to the audit trail with the records written to /var/log/sudo.log to verify if unauthorized commands have been executed."
     remediation: "Add the following lines to the /etc/audit/audit.rules file: -w /var/log/sudo.log -p wa -k actions. Notes: The system must be configured with sudisabled (See Item 5.6 Ensure access to the su command is restricted) to force all command execution through sudo. This will not be effective on the console, as administrators can log in as root. Reloading the auditd config to set active settings may require a system reboot."
     compliance:
-      - cis: "4.1.16"
-      - cis_csc: "4.9"
+     - cis: ["4.1.16"]
+     - cis_csc: ["4.9"]
     condition: all
     rules:
       - 'd:/etc/audit'
@@ -426,8 +426,8 @@ checks:
     rationale: "Monitoring the use of insmod, rmmod and modprobe could provide system administrators with evidence that an unauthorized user loaded or unloaded a kernel module, possibly compromising the security of the system. Monitoring of the init_module and delete_module system calls would reflect an unauthorized user attempting to use a different program to load and unload modules."
     remediation: "For 32 bit systems add the following lines to the /etc/audit/audit.rules file: -w /sbin/insmod -p x -k modules | -w /sbin/rmmod -p x -k modules | -w /sbin/modprobe -p x -k modules | -a always,exit -F arch=b32 -S init_module -S delete_module -k modules. For 64 bit systems add the following lines to the /etc/audit/audit.rules file: -w /sbin/insmod -p x -k modules | -w /sbin/rmmod -p x -k modules | -w /sbin/modprobe -p x -k modules | -a always,exit -F arch=b64 -S init_module -S delete_module -k modules. Notes: Reloading the auditd config to set active settings may require a system reboot."
     compliance:
-      - cis: "4.1.17"
-      - cis_csc: "5.1"
+     - cis: ["4.1.17"]
+     - cis_csc: ["5.1"]
     condition: all
     rules:
       - 'd:/etc/audit'
@@ -443,8 +443,8 @@ checks:
     rationale: "In immutable mode, unauthorized users cannot execute changes to the audit system to potentially hide malicious activity and then put the audit rules back. Users would most likely notice a system reboot and that could alert administrators of an attempt to make unauthorized audit changes."
     remediation: "Add the following line to the end of the /etc/audit/audit.rules file: -e 2. Notes: This setting will ensure reloading the auditd config to set active settings requires a system reboot."
     compliance:
-      - cis: "4.1.18"
-      - cis_csc: "6.2, 6.3"
+     - cis: ["4.1.18"]
+     - cis_csc: ["6.2","6.3"]
     condition: all
     rules:
       - 'd:/etc/audit'
@@ -457,8 +457,8 @@ checks:
     rationale: "Disable X11 forwarding unless there is an operational requirement to use X11 applications directly. There is a small risk that the remote X11 servers of users who are logged in via SSH with X11 forwarding could be compromised by other users on the X11 server. Note that even if X11 forwarding is disabled, users can always install their own forwarders."
     remediation: "Disable X11 forwarding unless there is an operational requirement to use X11 applications directly. There is a small risk that the remote X11 servers of users who are logged in via SSH with X11 forwarding could be compromised by other users on the X11 server. Note that even if X11 forwarding is disabled, users can always install their own forwarders."
     compliance:
-      - cis: "5.2.6"
-      - cis_csc: "9.2"
+     - cis: ["5.2.6"]
+     - cis_csc: ["9.2"]
     condition: all
     rules:
       - 'f:/etc/ssh/sshd_config -> !r:^# && r:X11Forwarding\s+no'
