@@ -740,17 +740,6 @@ checks:
       - 'f:/.bash_profile -> r::$'
       - 'f:/.bashrc -> r::$'
 
-  - id: 11551
-    title: "Check for Presence of User .rhosts Files"
-    description: "While no .rhosts files are shipped with Solaris, users can easily create them."
-    rationale: "This action is only meaningful if .rhosts support is permitted in the file /etc/pam.conf.  Even though the .rhosts files are ineffective if support is disabled in /etc/pam.conf, they may have been brought over from other systems and could contain information useful to an attacker for those other systems."
-    remediation: "Correct or justify any items discovered in the Audit step. Determine if any user .rhosts files are present in user directories and work with those users to determine the best course of action in accordance with site policy."
-    compliance:
-      - cis: ["9.10"]
-    condition: none
-    rules:
-      - 'd:/home -> ^.rhosts$'
-
   - id: 11552
     title: "Check That Users Are Assigned Home Directories"
     description: "passwd(4) defines a home directory that each user is placed in upon login. If there is no defined home directory, a user will be placed in / and will not be able to write any files or have local environment variables set."
@@ -761,25 +750,3 @@ checks:
     condition: none
     rules:
       - 'f:/etc/passwd -> r:\w+:\.*:\d*:\d*:\.*:\S+:\.*'
-
-  - id: 11553
-    title: "Check for Presence of User .netrc Files"
-    description: "The .netrc file contains data for logging into a remote host for file transfers via FTP."
-    rationale: "The .netrc file presents a significant security risk since it stores passwords in unencrypted form."
-    remediation: "Correct or justify any items discovered in the Audit step. Determine if any .netrc files exist, and work with the owner to determine the best course of action in accordance with site policy."
-    compliance:
-      - cis: ["9.20"]
-    condition: none
-    rules:
-      - 'd:/home -> ^.netrc$'
-
-  - id: 11554
-    title: "Check for Presence of User .forward Files"
-    description: "The .forward file specifies an email address to which a user's mail is forwarded."
-    rationale: "Use of the .forward file poses a security risk in that sensitive data may be inadvertently transferred outside the organization. The .forward file also poses a secondary risk as it can be used to execute commands that may perform unintended actions."
-    remediation: "Correct or justify any items discovered in the Audit step. Determine if any .forward files exist, and work with the owner to determine the best course of action in accordance with site policy."
-    compliance:
-      - cis: ["9.21"]
-    condition: none
-    rules:
-      - 'd:/home -> ^.forward$'
