@@ -15,19 +15,19 @@ policy:
   references:
     - https://www.ssh.com/ssh/
 
+variables:
+  $sshd_file: /etc/ssh/sshd_config,/opt/ssh/etc/sshd_config
+  $pam_d_files: /etc/pam.d/common-password,/etc/pam.d/password-auth,/etc/pam.d/system-auth,/etc/pam.d/system-auth-ac,/etc/pam.d/passwd
+
 requirements:
   title: "Check that the SSH service is installed on the system and password-related files are present on the system"
   description: "Requirements for running the SCA scan against the Unix based systems policy."
   condition: any
   rules:
-    - 'f:/etc/ssh/sshd_config'
+    - 'f:$sshd_file'
     - 'f:/etc/passwd'
     - 'f:/etc/shadow'
 
-
-variables:
-  $sshd_file: /etc/ssh/sshd_config
-  $pam_d_files: /etc/pam.d/common-password,/etc/pam.d/password-auth,/etc/pam.d/system-auth,/etc/pam.d/system-auth-ac,/etc/pam.d/passwd
 
 checks:
   - id: 4000
