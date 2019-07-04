@@ -31,7 +31,7 @@ checks:
     title: "Disable MySQL Command History"
     description: "On Linux/UNIX, the MySQL client logs statements executed interactively to a history file. By default, this file is named .mysql_history in the user's home directory. Most interactive commands run in the MySQL client application are saved to a history file. The MySQL command history should be disabled."
     rationale: "Disabling the MySQL command history reduces the probability of exposing sensitive information, such as passwords and encryption keys."
-    remediation: "Perform the folowwing steps: 1. Remove .mysql_history if it exists. And 2. Set the MYSQL_HISTFILE environment variable to /dev/null. This will need to be placed in the shell's startup script. Or Create $HOME/.mysql_history as a symbolic to /dev/null."
+    remediation: "Perform the following steps: 1. Remove .mysql_history if it exists. And 2. Set the MYSQL_HISTFILE environment variable to /dev/null. This will need to be placed in the shell's startup script. Or Create $HOME/.mysql_history as a symbolic to /dev/null."
     compliance:
       - cis: ["1.3"]
     references:
@@ -48,9 +48,9 @@ checks:
     remediation: "Execute one of the following commands in a terminal: 'usermod -s /bin/false mysql' or 'usermod -s /sbin/nologin mysql'"
     compliance:
       - cis: ["1.5"]
-    condition: none
+    condition: all
     rules:
-      - 'c:getent passwd mysql -> r:^\s$'
+      - 'c:getent passwd mysql -> r:\/bin\/false|\/sbin\/nologin'
 
   - id: 9502
     title: "Verify That 'MYSQL_PWD' Is Not Set In Users' Profiles"
