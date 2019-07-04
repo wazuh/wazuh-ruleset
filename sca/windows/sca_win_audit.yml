@@ -9,15 +9,15 @@
 #
 
 policy:
-  id: "win_audit"
-  file: "win_audit.yml"
+  id: "sca_win_audit"
+  file: "sca_win_audit.yml"
   name: "Benchmark for Windows audit"
   description: "This document provides a way of ensuring the security of the Windows systems."
 
 requirements:
   title: "Check for Windows platform"
   description: "Requirements for running the audit policy under a Windows platform"
-  condition: "any"
+  condition: all
   rules:
     - 'r:HKEY_LOCAL_MACHINE\SAM\SAM'
 
