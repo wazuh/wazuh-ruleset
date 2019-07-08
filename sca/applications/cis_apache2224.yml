@@ -52,7 +52,7 @@ checks:
     remediation: "For source builds with static modules run the Apache ./configure script without including the mod_dav , and mod_dav_fs in the --enable-modules=configure script options. For dynamically loaded modules comment out the LoadModule directive for mod_dav, and mod_dav_fs modules from the httpd.conf file."
     compliance:
       - cis: ["2.3"]
-      - cis_csc: ["9.1"]
+      - cis_csc: ["9.1","9.2"]
     references:
       - https://httpd.apache.org/docs/2.2/mod/mod_dav.html
       - https://httpd.apache.org/docs/2.4/mod/mod_dav.html
@@ -68,7 +68,7 @@ checks:
     remediation: "For source builds with static modules, run the Apache ./configure script with the --disable-status configure script options. For dynamically loaded modules, comment out or remove the LoadModule directive for the mod_status module from the httpd.conf file."
     compliance:
       - cis: ["2.4"]
-      - cis_csc: ["9.1"]
+      - cis_csc: ["9.1","9.2"]
     references:
       - https://httpd.apache.org/docs/2.2/mod/mod_status.html
       - https://httpd.apache.org/docs/2.4/mod/mod_status.html
@@ -84,7 +84,7 @@ checks:
     remediation: "For source builds with static modules, run the Apache ./configure script with the - -disable-autoindex configure script options. For dynamically loaded modules, comment out or remove the LoadModule directive for the mod_autoindex module from the httpd.conf file."
     compliance:
       - cis: ["2.5"]
-      - cis_csc: ["18"]
+      - cis_csc: ["18","5.1"]
     references:
       - https://httpd.apache.org/docs/2.2/mod/mod_autoindex.html
       - https://httpd.apache.org/docs/2.4/mod/mod_autoindex.html
@@ -100,7 +100,7 @@ checks:
     remediation: "For source builds with static modules, run the Apache ./configure script without including the mod_proxy and all other proxy modules in the --enable- modules=configure script options. For dynamically loaded modules, comment out or remove the LoadModule directive for the mod_proxy module and all other proxy modules from the httpd.conf file."
     compliance:
       - cis: ["2.6"]
-      - cis_csc: ["9.1"]
+      - cis_csc: ["9.1,"9.2"]
     references:
       - https://httpd.apache.org/docs/2.2/mod/mod_proxy.html
       - https://httpd.apache.org/docs/2.4/mod/mod_proxy.html
@@ -116,7 +116,7 @@ checks:
     remediation: "For source builds with static modules, run the Apache ./configure script with the --disable-userdir configure script option. For dynamically loaded modules, comment out or remove the LoadModule directive for the mod_userdir module from the httpd.conf file."
     compliance:
       - cis: ["2.7"]
-      - cis_csc: ["18"]
+      - cis_csc: ["18","5.1"]
     references:
       - https://httpd.apache.org/docs/2.2/mod/mod_userdir.html
       - https://httpd.apache.org/docs/2.4/mod/mod_userdir.html
@@ -132,7 +132,7 @@ checks:
     remediation: "For source builds with static modules, run the Apache ./configure script without including mod_info in the --enable-modules= configure script options. For dynamically loaded modules, comment out or remove the LoadModule directive for the mod_info module from the httpd.conf file."
     compliance:
       - cis: ["2.8"]
-      - cis_csc: ["9.1"]
+      - cis_csc: ["9.1","9.2"]
     references:
       - https://httpd.apache.org/docs/2.2/mod/mod_info.html
       - https://httpd.apache.org/docs/2.4/mod/mod_info.html
@@ -148,10 +148,10 @@ checks:
     remediation: "Change the apache account to use the nologin shell or an invalid shell such as /dev/null: # chsh -s /sbin/nologin apache"
     compliance:
       - cis: ["3.2"]
-      - cis_csc: ["16"]
+      - cis_csc: ["16","4.3"]
     condition: none
     rules:
-      - 'f:/etc/passwd -> r:apache'
+      - 'f:/etc/passwd -> r:apache && r:/sbin/nologin$|/dev/null$'
 
 #3.3 Lock the Apache User Account
   - id: 9007
@@ -161,7 +161,7 @@ checks:
     remediation: "Use the passwd command to lock the apache account: # passwd -l apache"
     compliance:
       - cis: ["3.3"]
-      - cis_csc: ["16"]
+      - cis_csc: ["16","16.8"]
     condition: all
     rules:
       - 'c:passwd -S apache -> r:Password locked'
@@ -173,8 +173,8 @@ checks:
     rationale: "While the functionality of htaccess files is sometimes convenient, usage decentralizes the access controls and increases the risk of configurations being changed or viewed inappropriately by an unintended or rogue .htaccess file. Consider also that some of the more common vulnerabilities in web servers and web applications allow the web files to be viewed or to be modified."
     remediation: "Search the Apache configuration files (httpd.conf and any included configuration files) to find AllowOverride directives. Set the value for all AllowOverride directives to None."
     compliance:
-      - cis: ["4.4"]
-      - cis_csc: ["14.4"]
+      - cis: ["4.3"]
+      - cis_csc: ["14.4","14.6"]
     references:
       - https://httpd.apache.org/docs/2.2/mod/core.html#allowoverride
       - https://httpd.apache.org/docs/2.4/mod/core.html#allowoverride
@@ -194,7 +194,7 @@ checks:
     remediation: "Search the Apache configuration files (httpd.conf and any included configuration files) to find all <Directory> elements. Add or modify any existing Options directive to NOT have a value of Includes. Other options may be set if necessary and appropriate as described above."
     compliance:
       - cis: ["5.3"]
-      - cis_csc: ["18"]
+      - cis_csc: ["18","5.1"]
     references:
       - https://httpd.apache.org/docs/2.2/mod/mod_include.html
       - https://httpd.apache.org/docs/2.2/mod/core.html#options
@@ -213,7 +213,7 @@ checks:
     remediation: "Review all pre-installed content and remove content which is not required. In particular, look for unnecessary content in the document root directory, in a configuration directory such as conf/extra directory, or as a Unix/Linux package."
     compliance:
       - cis: ["5.4"]
-      - cis_csc: ["18.9"]
+      - cis_csc: ["18.9","5.1"]
     condition: none
     rules:
       - 'd:/var/www -> index.html'
@@ -227,7 +227,7 @@ checks:
     remediation: "Review all pre-installed content and remove content which is not required. In particular, look for unnecessary content in the document root directory, in a configuration directory such as conf/extra directory, or as a Unix/Linux package."
     compliance:
       - cis: ["5.4"]
-      - cis_csc: ["18.9"]
+      - cis_csc: ["18.9","5.1"]
     condition: none
     rules:
       - 'd:$confdirs -> r:manual.conf|apache2-doc.conf'
@@ -240,7 +240,7 @@ checks:
     remediation: "Review all pre-installed content and remove content which is not required. In particular, look for unnecessary content in the document root directory, in a configuration directory such as conf/extra directory, or as a Unix/Linux package."
     compliance:
       - cis: ["5.4"]
-      - cis_csc: ["18.9"]
+      - cis_csc: ["18.9","5.1"]
     condition: none
     rules:
       - 'd:$conf-dirs -> conf -> !r:^# && r:/wsethandler'
@@ -254,7 +254,7 @@ checks:
     remediation: "Locate cgi-bin files and directories enabled in the Apache configuration via the Script , ScriptAlias , ScriptAliasMatch , or ScriptInterpreterSource directives. Remove the printenv default CGI in the cgi-bin directory if it is installed."
     compliance:
       - cis: ["5.5"]
-      - cis_csc: ["18"]
+      - cis_csc: ["18","4.7"]
     condition: none
     rules:
       - 'd:/var/www/cgi-bin -> printenv'
@@ -268,7 +268,7 @@ checks:
     remediation: "Locate cgi-bin files and directories enabled in the Apache configuration via Script, ScriptAlias, ScriptAliasMatch, or ScriptInterpreterSource directives. Remove the test-cgi default CGI in the cgi-bin directory if it is installed."
     compliance:
       - cis: ["5.6"]
-      - cis_csc: ["18.9"]
+      - cis_csc: ["18.9","4.7"]
     condition: none
     rules:
       - 'd:/var/www/cgi-bin -> test-cgi'
@@ -282,7 +282,7 @@ checks:
     remediation: "Search for the directive on the document root directory, ensure that the access control order within the <Directory> directive is deny, allow. Add a directive within the group of document root directives and search in other Apache configuration files in places other than de root directory."
     compliance:
       - cis: ["5.7"]
-      - cis_csc: ["9.1"]
+      - cis_csc: ["9.1","9.2"]
     references:
       - https://httpd.apache.org/docs/2.2/mod/core.html#limitexcept
       - https://www.ietf.org/rfc/rfc2616.txt
@@ -300,7 +300,7 @@ checks:
     remediation: "Locate the main Apache configuration file such as httpd.conf. Add a TraceEnable directive to the server level configuration with a value of off. Server level configuration is the top level configuration, not nested within any other directives like <Directory> or <Location>."
     compliance:
       - cis: ["5.8"]
-      - cis_csc: ["9.1"]
+      - cis_csc: ["9.1","9.2"]
     references:
       - https://www.ietf.org/rfc/rfc2616.txt
       - https://httpd.apache.org/docs/2.2/mod/core.html#traceenable
@@ -317,7 +317,7 @@ checks:
     remediation: "Find any Listen directives in the Apache configuration file with no IP address specified or with an IP address of all zeroes similar to the examples below. Keep in mind there may be both IPv4 and IPv6 addresses on the system. Modify the Listen directives in the Apache configuration file to have explicit IP addresses according to the intended usage. Multiple Listen directives may be specified for each IP address and port."
     compliance:
       - cis: ["5.13"]
-      - cis_csc: ["9.1"]
+      - cis_csc: ["9.1","9.2"]
     references:
       - https://httpd.apache.org/docs/2.2/mod/mpm_common.html#listen
       - https://httpd.apache.org/docs/2.4/mod/mpm_common.html#listen
@@ -338,7 +338,7 @@ checks:
     remediation: "Perform the following to implement the recommended state: Add or modify the Header directive for the X-Frame-Options header in the Apache configuration to have the condition always , an action of append , and a value of SAMEORIGIN , as shown: Header always append X-Frame-Options SAMEORIGIN"
     compliance:
       - cis: ["5.14"]
-      - cis_csc: ["18"]
+      - cis_csc: ["18","5.1"]
     references:
       - https://httpd.apache.org/docs/2.2/mod/mod_headers.html#header
       - https://httpd.apache.org/docs/2.4/mod/mod_headers.html#header
@@ -356,7 +356,7 @@ checks:
     remediation: "Add or modify the LogLevel in the Apache configuration to have a value of info or lower for the core module and notice or lower for all other modules. The recommended value is notice core:info. Add an ErrorLog and a similar one for each virtual host configured if the virtual host will have different people responsible for the web site."
     compliance:
       - cis: ["6.1"]
-      - cis_csc: ["6.2"]
+      - cis_csc: ["6.2","6.3"]
     references:
       - https://httpd.apache.org/docs/2.2/logs.html
       - https://httpd.apache.org/docs/2.2/mod/core.html#loglevel
@@ -377,7 +377,7 @@ checks:
     remediation: "Add an ErrorLog directive if not already configured. Any appropriate syslog facility may be used in place of local1. Add a similar ErrorLog directive for each virtual host if necessary."
     compliance:
       - cis: ["6.2"]
-      - cis_csc: ["6.6"]
+      - cis_csc: ["6.6","6.8"]
     references:
       - https://httpd.apache.org/docs/2.2/logs.html
       - https://httpd.apache.org/docs/2.2/mod/core.html#loglevel
@@ -397,7 +397,7 @@ checks:
     remediation: "Search the Apache configuration files for the SSLInsecureRenegotiation directive. If the directive is present, modify the value to be off. If the directive is not present, no action is required: SSLInsecureRenegotiation off"
     compliance:
       - cis: ["7.6"]
-      - cis_csc: ["14.2"]
+      - cis_csc: ["14.2","14.4"]
     references:
       - https://httpd.apache.org/docs/2.2/mod/mod_ssl.html#sslinsecurerenegotiation
       - https://httpd.apache.org/docs/2.4/mod/mod_ssl.html#sslinsecurerenegotiation
@@ -415,7 +415,7 @@ checks:
     remediation: "Verify the Apache version is 2.2.24 or later with httpd -v. Search the Apache configuration files for the SSLCompression directive. Update the directive to have a value of off."
     compliance:
       - cis: ["7.7"]
-      - cis_csc: ["14.2"]
+      - cis_csc: ["14.2","14.4"]
     references:
       - https://httpd.apache.org/docs/2.2/mod/mod_ssl.html#sslcompression
       - https://httpd.apache.org/docs/2.4/mod/mod_ssl.html#sslcompression
@@ -427,13 +427,13 @@ checks:
 
 #8.1 Set ServerToken to Prod or ProductOnly
   - id: 9023
-    title: "Ensure ServerTokens Provides Minimal Information"
+    title: "Ensure ServerTokens is Set to 'Prod' or 'ProductOnly'"
     description: "Configure the Apache ServerTokens directive to provide minimal information by setting the value to Prod or ProductOnly."
     rationale: "Excessive probing and requests may cause too much 'noise' being generated and may tip off an administrator. If an attacker can accurately target exploits, the chances of successful compromise prior to detection increase dramatically."
     remediation: "Add or modify the ServerTokens directive as shown below to have the value of Prod or ProductOnly: ServerTokens Prod"
     compliance:
       - cis: ["8.1"]
-      - cis_csc: ["18.9"]
+      - cis_csc: ["18.9","14.7"]
     references:
       - https://httpd.apache.org/docs/2.2/mod/core.html#servertokens
     condition: any
@@ -449,7 +449,7 @@ checks:
     remediation: "Add or modify the ServerSignature directive to have the value of Off: ServerSignature Off"
     compliance:
       - cis: ["8.2"]
-      - cis_csc: ["18"]
+      - cis_csc: ["18","13.2"]
     references:
       - https://httpd.apache.org/docs/2.2/mod/core.html#serversignature
       - https://httpd.apache.org/docs/2.4/mod/core.html#serversignature
@@ -465,8 +465,8 @@ checks:
     rationale: "To identify the type of web servers and versions software installed, it is common for attackers to scan for icons or special content specific to the server type and version. Many icons are used primarily for auto indexing, which is recommended to be disabled."
     remediation: "The default source build places the auto-index and icon configurations in the extra/httpd-autoindex.conf file, so it can be disabled by leaving the include line commented out in the main httpd.conf file. Alternatively, the icon alias directive and the directory access control configuration can be commented out."
     compliance:
-      - cis: ["8.4"]
-      - cis_csc: ["18.9"]
+      - cis: ["8.3"]
+      - cis_csc: ["18.9","13.2"]
     condition: none
     rules:
       - 'd:$conf-dirs -> conf -> !r:^\t*\s*# && r:include\s*\w*httpd-autoindex.conf'
@@ -474,13 +474,13 @@ checks:
 
 #9.1:Set TimeOut to 10 or less
   - id: 9026
-    title: "Ensure the TimeOut Is Set Properly"
+    title: "Ensure the TimeOut Is Set to 10 or Less"
     description: "The TimeOut directive controls the maximum time in seconds that Apache HTTP server will wait for an Input/Output call to complete. It is recommended that the TimeOut directive be set to 10 or less."
     rationale: "One common technique for DoS is to initiate many connections to the server. By decreasing the timeout for old connections, the server can free resources more quickly and be more responsive."
     remediation: "Add or modify the Timeout directive in the Apache configuration files to have a value of 10 seconds or less."
     compliance:
       - cis: ["9.1"]
-      - cis_csc: ["9"]
+      - cis_csc: ["9","5.1"]
     references:
       - https://httpd.apache.org/docs/2.2/mod/core.html#timeout
       - https://httpd.apache.org/docs/2.4/mod/core.html#timeout
@@ -496,7 +496,7 @@ checks:
     remediation: "Add or modify the KeepAlive directive in the Apache configuration to have a value of On."
     compliance:
       - cis: ["9.2"]
-      - cis_csc: ["9"]
+      - cis_csc: ["9","5.1"]
     references:
       - https://httpd.apache.org/docs/2.2/mod/core.html#keepalive
       - https://httpd.apache.org/docs/2.4/mod/core.html#keepalive
@@ -506,13 +506,13 @@ checks:
 
 #9.3:Set MaxKeepAliveRequests to 100 or greater
   - id: 9028
-    title: "The MaxKeepAliveRequests directive limits the number of requests allowed per connection when KeepAlive is on. If it is set to 0 , unlimited requests will be allowed. It is recommended that the MaxKeepAliveRequests directive be set to 100 or greater."
-    description: "Set MaxKeepAliveRequest to 100 or greater"
-    rationale: "Limiting the number of requests per connection may improve a server's resiliency to DoS attacks."
+    title: "Ensure MaxKeepAliveRequests is Set to a Value of 100 or Greater"
+    description: "The MaxKeepAliveRequests directive limits the number of requests allowed per connection when KeepAlive is on. If it is set to 0 , unlimited requests will be allowed."
+    rationale: "The MaxKeepAliveRequests directive is important to be used to mitigate the risk of Denial of Service (DoS) attack technique by reducing the overhead imposed on the server. The KeepAlive directive must be enabled before it is effective. Enabling KeepAlives allows for multiple HTTP requests to be sent while keeping the same TCP connection alive. This reduces the overhead of having to setup and tear down TCP connections for each request. By making the server more efficient, it will be more resilient to DoS conditions."
     remediation: "Add or modify the MaxKeepAliveRequests directive in the Apache configuration to have a value of 100 or more."
     compliance:
       - cis: ["9.3"]
-      - cis_csc: ["9"]
+      - cis_csc: ["9","5.1"]
     references:
       - https://httpd.apache.org/docs/2.2/mod/core.html#maxkeepaliverequests
       - https://httpd.apache.org/docs/2.4/mod/core.html#maxkeepaliverequests
@@ -522,29 +522,29 @@ checks:
 
 #9.4: Set KeepAliveTimeout Low to Mitigate Denial of Service
   - id: 9029
-    title: "Ensure the KeepAliveTimeout Is Set Properly"
+    title: "Ensure KeepAliveTimeout is Set to a Value of 15 or Less"
     description: "The KeepAliveTimeout directive specifies the number of seconds Apache will wait for a subsequent request before closing a connection that is being kept alive."
     rationale: "Reducing the number of seconds that Apache HTTP server will keep unused resources allocated will increase the availability of resources to serve other requests. This efficiency gain may improve a server's resiliency to DoS attacks."
     remediation: "Add or modify the KeepAliveTimeout directive in the Apache configuration to have a value of 15 or less."
     compliance:
       - cis: ["9.4"]
-      - cis_csc: ["9"]
+      - cis_csc: ["9","5.1"]
     references:
       - https://httpd.apache.org/docs/2.2/mod/core.html#keepalivetimeout
       - https://httpd.apache.org/docs/2.4/mod/core.html#keepalivetimeout
-    condition: none
+    condition: all
     rules:
-      - 'f:$main-conf -> n:keepalivetimeout\s+(\d+) compare > 15'
+      - 'f:$main-conf -> n:keepalivetimeout\s+(\d+) compare <= 15'
 
 #9.5 Set Timeout Limits for Request Headers
   - id: 9030
-    title: "Ensure Timeout Limits for Request Headers Are Set Properly"
+    title: "Ensure the Timeout Limits for Request Headers is Set to 40 or Less"
     description: "The RequestReadTimeout directive allows configuration of timeout limits for client requests. The header portion of the directive provides for an initial timeout value, a maximum timeout, and a minimum rate."
     rationale: "Setting a request header timeout is vital for mitigating DoS attacks based on slow requests. The slow request attacks are particularly lethal and relative easy to perform, because they require very little bandwidth and can easily be done through anonymous proxies."
     remediation: "Load the mod_requesttimeout module in the Apache configuration. Add a RequestReadTimeout directive similar to the one below with the maximum request header timeout value of 40 seconds or less."
     compliance:
       - cis: ["9.5"]
-      - cis_csc: ["9"]
+      - cis_csc: ["9","5.1"]
     references:
       - https://ha.ckers.org/slowloris/
       - https://www.owasp.org/index.php/H.....t.....t....p.......p....o....s....t
@@ -557,13 +557,13 @@ checks:
 
 #9.6 Set Timeout Limits for Request Body
   - id: 9031
-    title: "Ensure Timeout Limits for the Request Body Are Set Properly"
+    title: "Ensure Timeout Limits for the Request Body is Set to 20 or Less"
     description: "The RequestReadTimeout directive allows setting timeout values for the body portion of a request. The directive provides for an initial timeout value, a maximum timeout, and a minimum rate."
     rationale: "It is not sufficient to timeout only on the header portion of the request, as the server will still be vulnerable to attacks."
     remediation: "Load the mod_requesttimeout module in the Apache configuration and add a RequestReadTimeout directive similar to the one below with the maximum request body timeout value of 20 seconds or less."
     compliance:
       - cis: ["9.6"]
-      - cis_csc: ["9"]
+      - cis_csc: ["9","5.1"]
     references:
       - https://httpd.apache.org/docs/2.2/mod/mod_reqtimeout.html
       - https://httpd.apache.org/docs/2.4/mod/mod_reqtimeout.html
@@ -574,13 +574,13 @@ checks:
 
 #10.1 Set the LimitRequestLine directive to 512 or less
   - id: 9032
-    title: "Ensure the Maximum Request Line Length Is Set Properly"
+    title: "Ensure the LimitRequestLine directive is Set to 512 or less"
     description: "The LimitRequestLine directive sets the maximum number of bytes that Apache will read for each line of an HTTP request. It is recommended that the LimitRequestLine be set to 512 or less."
     rationale: "Limiting request line size may reduce the exposure of a buffer-related vulnerability potentially present in a code base hosted by Apache HTTP server."
     remediation: "Add or modify the LimitRequestLine directive in the Apache configuration to have a value of 512 or less."
     compliance:
       - cis: ["10.1"]
-      - cis_csc: ["9"]
+      - cis_csc: ["9","5.1"]
     references:
       - https://httpd.apache.org/docs/2.2/mod/core.html#limitrequestline
       - https://httpd.apache.org/docs/2.4/mod/core.html#limitrequestline
@@ -590,13 +590,13 @@ checks:
 
 #10.2 Set the LimitRequestFields directive to 100 or less
   - id: 9033
-    title: "Ensure the Maximum Request Headers Per Request Is Set Properly"
+    title: "Ensure the LimitRequestFields Directive is Set to 100 or Less"
     description: "The LimitRequestFields directive sets the maximum limit on the number of HTTP request headers allowed per request. It is recommended that the LimitRequestFields directive be set to 100 or less."
     rationale: "Limiting the number of headers per request may reduce the exposure of a buffer-related vulnerability potentially present in a code base hosted by Apache HTTP server."
     remediation: "Add or modify the LimitRequestFields directive in the Apache configuration to have a value of 100 or less. If the directive is not present, the default depends on a compile time configuration, but defaults to a value of 100."
     compliance:
       - cis: ["10.2"]
-      - cis_csc: ["9"]
+      - cis_csc: ["9","5.1"]
     references:
       - https://httpd.apache.org/docs/2.2/mod/core.html#limitrequestfields
       - https://httpd.apache.org/docs/2.4/mod/core.html#limitrequestfields
@@ -606,13 +606,13 @@ checks:
 
 #10.3 Set the LimitRequestFieldsize directive to 1024 or less
   - id: 9034
-    title: "Ensure the Maximum Request Header Field Size Is Set Properly"
+    title: "Ensure the LimitRequestFieldsize Directive is Set to 1024 or Less"
     description: "The LimitRequestFieldSize directive sets the maximum size of an HTTP request header field. It is recommended that the LimitRequestFieldSize directive be set to 1024 or less."
     rationale: "Limiting header field size may reduce the exposure of a buffer-related vulnerability potentially present in a code base hosted by Apache HTTP server."
     remediation: "Add or modify the LimitRequestFieldSize directive in the Apache configuration to have a value of 1024 or less."
     compliance:
       - cis: ["10.3"]
-      - cis_csc: ["9"]
+      - cis_csc: ["9","5.1"]
     references:
       - https://httpd.apache.org/docs/2.2/mod/core.html#limitrequestfieldsize
       - https://httpd.apache.org/docs/2.4/mod/core.html#limitrequestfieldsize
@@ -622,13 +622,13 @@ checks:
 
 #10.4 Set the LimitRequestBody directive to 102400 or less
   - id: 9035
-    title: "Ensure the Maximum Request Body Size Is Set Properly"
+    title: "Ensure the LimitRequestBody Directive is Set to 102400 or Less"
     description: "The LimitRequestBody directive sets the maximum size of an HTTP request body. It is recommended that the LimitRequestBody directive be set to 102400 or less."
     rationale: "Limiting request body size may reduce the exposure of a buffer-related vulnerability potentially present in a code base hosted by Apache HTTP server."
     remediation: "Add or modify the LimitRequestBody directive in the Apache configuration to have a value of 102400 (100K) or less. Please read the Apache documentation so it is understood this directive will limit the size of file uploads to the web server."
     compliance:
       - cis: ["10.4"]
-      - cis_csc: ["9"]
+      - cis_csc: ["9","5.1"]
     references:
       - https://httpd.apache.org/docs/2.2/mod/core.html#limitrequestbody
       - https://httpd.apache.org/docs/2.4/mod/core.html#limitrequestbody
