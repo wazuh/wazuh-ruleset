@@ -350,9 +350,9 @@ checks:
     remediation: "Perform the following to implement the recommended state: # awk '/^X11Forwarding / { $2 = \"no\" } { print }' /etc/ssh/sshd_config > /etc/ssh/sshd_config.CIS # mv /etc/ssh/sshd_config.CIS /etc/ssh/sshd_config    # svcadm restart svc:/network/ssh"
     compliance:
       - cis: ["6.3"]
-    condition: none
+    condition: all
     rules:
-      - 'f:/etc/ssh/sshd_config -> r:^X11Forwarding\s*yes'
+      - 'f:/etc/ssh/sshd_config -> r:^X11Forwarding\s*no'
 
   - id: 7024
     title: "Limit Consecutive Login Attempts for SSH"
@@ -394,9 +394,9 @@ checks:
     remediation: "Perform the following to implement the recommended state: # awk '/^PermitEmptyPasswords/ { $2 = \"no\" } { print }' /etc/ssh/sshd_config > /etc/ssh/sshd_config.CIS    # mv /etc/ssh/sshd_config.CIS /etc/ssh/sshd_config    # svcadm restart svc:/network/ssh"
     compliance:
       - cis: ["6.7"]
-    condition: none
+    condition: all
     rules:
-      - 'f:/etc/ssh/sshd_config -> r:^\s*\t*PermitEmptyPasswords\.+yes'
+      - 'f:/etc/ssh/sshd_config -> r:^\s*\t*PermitEmptyPasswords\.+no'
 
   - id: 7028
     title: "Disable Host-based Authentication for Login-based Services"
@@ -458,9 +458,11 @@ checks:
     remediation: "Perform the following to implement the recommended state: # cd /etc    # awk '/^gdm-autologin/ { $1=\"   #gdm-autologin\" } { print }' /etc/pam.conf > /etc/pam.conf.CIS    # mv pam.conf.CIS pam.conf"
     compliance:
       - cis: ["6.11"]
-    condition: none
+    condition: all
     rules:
-      - 'f:/etc/pam.conf -> !r:^# && r:gdm-autologin'
+      - 'f:/etc/pam.conf -> !r:^# && r:gdm-autologin\s*\t*auth\s*\t*required\s*\t*pam_unix_cred.so.1'
+      - 'f:/etc/pam.conf -> !r:^# && r:gdm-autologin\s*\t*auth\s*\t*sufficient\s*\t*pam_allow.so.1'
+      - 'f:/etc/pam.conf -> !r:^# && r:gdm-autologin\s*\t*account\s*\t*sufficient\s*\t*pam_allow.so.1'
 
   - id: 7032
     title: "Set Default Screen Lock for GNOME Users"
