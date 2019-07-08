@@ -31,7 +31,7 @@ checks:
     title: "Disable MySQL Command History"
     description: "On Linux/UNIX, the MySQL client logs statements executed interactively to a history file. By default, this file is named .mysql_history in the user's home directory. Most interactive commands run in the MySQL client application are saved to a history file. The MySQL command history should be disabled."
     rationale: "Disabling the MySQL command history reduces the probability of exposing sensitive information, such as passwords and encryption keys."
-    remediation: "Perform the folowwing steps: 1. Remove .mysql_history if it exists. And 2. Set the MYSQL_HISTFILE environment variable to /dev/null. This will need to be placed in the shell's startup script. Or Create $HOME/.mysql_history as a symbolic to /dev/null."
+    remediation: "Perform the following steps: 1. Remove .mysql_history if it exists. And 2. Set the MYSQL_HISTFILE environment variable to /dev/null. This will need to be placed in the shell's startup script. Or Create $HOME/.mysql_history as a symbolic to /dev/null."
     compliance:
       - cis: ["1.3"]
     references:
@@ -48,9 +48,9 @@ checks:
     remediation: "Execute one of the following commands in a terminal: 'usermod -s /bin/false mysql' or 'usermod -s /sbin/nologin mysql'"
     compliance:
       - cis: ["1.5"]
-    condition: none
+    condition: all
     rules:
-      - 'c:getent passwd mysql -> r:^\s$'
+      - 'c:getent passwd mysql -> r:/bin/false|/sbin/nologin'
 
   - id: 9502
     title: "Verify That 'MYSQL_PWD' Is Not Set In Users' Profiles"
@@ -63,7 +63,7 @@ checks:
       - https://dev.mysql.com/doc/refman/5.6/en/environment-variables.html
     condition: none
     rules:
-      - 'c:find /home -maxdepth 2 -type f -regex "/home/.*/\(\.bashrc\|\.profile\|.bash_profile\)" -exec grep MYSQL_PWD {} + -> r:MYSQL_PWD'
+      - 'c:find /home -maxdepth 2 -type f -exec grep MYSQL_PWD {} + -> r:.profile|.bashrc|.bash_profile && r:$MYSQL_PWD'
 
 #4 General
   - id: 9503
@@ -92,7 +92,7 @@ checks:
       - https://dev.mysql.com/doc/refman/5.6/en/load-data.html
     condition: all
     rules:
-      - 'c:grep -Rh local-infile /etc/mysql/my.cnf /etc/mysql/mariadb.cnf /etc/mysql/conf.d /etc/mysql/mariadb.conf.d -> r:local-infile\s+=\s+0'
+      - 'c:grep -Rh local-infile /etc/mysql/my.cnf /etc/mysql/mariadb.cnf /etc/mysql/conf.d /etc/mysql/mariadb.conf.d -> r:local-infile\s*=\s*0'
 
   - id: 9505
     title: "Ensure 'mysqld' Is Not Started with '--skip-grant-tables'"
