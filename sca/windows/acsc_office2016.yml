@@ -118,7 +118,7 @@ checks:
       - 'r:HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows Defender\Windows Defender Exploit Guard\ASR\Rules -> 92E97FA1-2EDF-4476-BDD6-9DD0B4DDDC7B -> 1'
 
 # ACSC - Active X
-  - id: 14508 #*
+  - id: 14508
     title: "Ensure 'Disable All Active X' is set to 'Enabled'"
     description: "While ActiveX controls can be used for legitimate business purposes to provide additional functionality for Microsoft Office, they can also be used by an adversary to gain unauthorised access to sensitive information or to execute malicious code. To reduce this risk, ActiveX controls should be disabled for Microsoft Office."
     references:
@@ -337,7 +337,7 @@ checks:
       - 'r:HKEY_CURRENT_USER\software\policies\microsoft\office\16.0\excel\security\fileblock -> htmlandxmlssfiles -> 2'
 
 # CIS 2.22 - Office Converters
-  - id: 14529 #*
+  - id: 14529
     title: "Ensure 'Block Opening of Pre-Release Versions of File Formats New to PowerPoint Through the Compatibility Pack for Office and PowerPoint Converter' is set to Enabled"
     description: "This policy setting controls whether users with the Microsoft Office Compatibility Pack for Word, Excel, and PowerPoint File Formats installed can open Office Open XML files saved with pre-release versions of PowerPoint. PowerPoint Open XML files usually have the following extensions: .pptx, .pptm, .potx, .potm, .ppsx, .ppsm, .ppam, .thmx, .xml.  The recommended state for this setting is: Enabled."
     rationale: "The Microsoft Office Compatibility Pack for Word, Excel, and PowerPoint File Formats enables users of Microsoft PowerPoint 2000, PowerPoint 2002, and Office PowerPoint 2003 to open files saved in the Office Open XML format used by PowerPoint. PowerPoint Open XML files usually have the following extensions: .pptx, .pptm, .potx, .potm, .ppsx, .ppsm, .ppam, .thmx, .xml. By default, the Compatibility Pack does not open files that were saved in pre-release versions of the new Office Open XML format, which underwent some minor changes prior to the final release of PowerPoint. If this configuration is changed through a registry modification or by some other mechanism, users with the Compatibility Pack installed can open files saved by some pre-release versions of PowerPoint, but not by others, which can lead to inconsistent file opening functionality."
