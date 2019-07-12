@@ -347,20 +347,20 @@ checks:
     rules:
       - 'f:/etc/issue -> r:\v|\r|\m|\s|Debian'
 
- - id: 2025
-   title: "Ensure GDM login banner is configured"
-   description: "GDM is the GNOME Display Manager which handles graphical login for GNOME based systems."
-   rationale: "Warning messages inform users who are attempting to login to the system of their legal status regarding the system and must include the name of the organization that owns the system and any monitoring policies that are in place."
-   remediation: "Edit or create the file /etc/gdm3/greeter.dconf-defaults and add: [org/gnome/login-screen], banner-message-enable=true, banner-message-text='Authorized uses only. All activity may be monitored and reported.'"
-   compliance:
-    - cis_csc: ["5.1"]
-    - cis: ["1.7.2"]
-    - pci_dss: ["2.2.2"]
-   condition: all
-   rules:
-     - 'f:/etc/gdm3/greeter.dconf-defaults -> r:^[org/gnome/login-screen]'
-     - 'f:/etc/gdm3/greeter.dconf-defaults -> r:^banner-message-enable=true'
-     - 'f:/etc/gdm3/greeter.dconf-defaults -> r:^banner-message-text=\.+'
+  - id: 2025
+    title: "Ensure GDM login banner is configured"
+    description: "GDM is the GNOME Display Manager which handles graphical login for GNOME based systems."
+    rationale: "Warning messages inform users who are attempting to login to the system of their legal status regarding the system and must include the name of the organization that owns the system and any monitoring policies that are in place."
+    remediation: "Edit or create the file /etc/gdm3/greeter.dconf-defaults and add: [org/gnome/login-screen], banner-message-enable=true, banner-message-text='Authorized uses only. All activity may be monitored and reported.'"
+    compliance:
+      - cis_csc: ["5.1"]
+      - cis: ["1.7.2"]
+      - pci_dss: ["2.2.2"]
+    condition: all
+    rules:
+      - 'f:/etc/gdm3/greeter.dconf-defaults -> r:^[org/gnome/login-screen]'
+      - 'f:/etc/gdm3/greeter.dconf-defaults -> r:^banner-message-enable=true'
+      - 'f:/etc/gdm3/greeter.dconf-defaults -> r:^banner-message-text=\.+'
 
 # 2 Services
   - id: 2026
@@ -523,17 +523,17 @@ checks:
       - 'c:systemctl is-enabled apache2 -> r:^enabled'
 
   - id: 2038
-   title: "Ensure IMAP and POP3 server is not enabled"
-   description: "exim is an open source IMAP and POP3 server for Linux based systems."
-   rationale: "Unless POP3 and/or IMAP servers are to be provided by this system, it is recommended that the package be removed to reduce the potential attack surface."
-   remediation: "Run the following commands to remove exim: # apt-get remove exim4; # apt-get purge exim4"
-   compliance:
-    - cis_csc: ["9.2"]
-    - cis: ["2.2.11"]
-    - pci_dss: ["2.2.2"]
-   condition: none
-   rules:
-     - 'c:dpkg -s exim4 -> install ok installed'
+    title: "Ensure IMAP and POP3 server is not enabled"
+    description: "exim is an open source IMAP and POP3 server for Linux based systems."
+    rationale: "Unless POP3 and/or IMAP servers are to be provided by this system, it is recommended that the package be removed to reduce the potential attack surface."
+    remediation: "Run the following commands to remove exim: # apt-get remove exim4; # apt-get purge exim4"
+    compliance:
+      - cis_csc: ["9.2"]
+      - cis: ["2.2.11"]
+      - pci_dss: ["2.2.2"]
+    condition: none
+    rules:
+      - 'c:dpkg -s exim4 -> install ok installed'
 
   - id: 2039
     title: "Ensure Samba is not enabled"
@@ -583,18 +583,18 @@ checks:
     rules:
       - 'c:systemctl is-enabled rsync -> r:^enabled'
 
- - id: 2043
-   title: "Ensure NIS Server is not enabled"
-   description: "The Network Information Service (NIS) (formally known as Yellow Pages) is a client-server directory service protocol for distributing system configuration files. The NIS server is a collection of programs that allow for the distribution of configuration files."
-   rationale: "The NIS service is inherently an insecure system that has been vulnerable to DOS attacks, buffer overflows and has poor authentication for querying NIS maps. NIS generally been replaced by such protocols as Lightweight Directory Access Protocol (LDAP). It is recommended that the service be disabled and other, more secure services be used"
-   remediation: "Run the following command to disable nis: # systemctl disable nis"
-   compliance:
-    - cis_csc: ["9.2"]
-    - cis: ["2.2.17"]
-    - pci_dss: ["2.2.2"]
-   condition: none
-   rules:
-     - 'c:systemctl is-enabled nis -> r:^enabled'
+  - id: 2043
+    title: "Ensure NIS Server is not enabled"
+    description: "The Network Information Service (NIS) (formally known as Yellow Pages) is a client-server directory service protocol for distributing system configuration files. The NIS server is a collection of programs that allow for the distribution of configuration files."
+    rationale: "The NIS service is inherently an insecure system that has been vulnerable to DOS attacks, buffer overflows and has poor authentication for querying NIS maps. NIS generally been replaced by such protocols as Lightweight Directory Access Protocol (LDAP). It is recommended that the service be disabled and other, more secure services be used"
+    remediation: "Run the following command to disable nis: # systemctl disable nis"
+    compliance:
+      - cis_csc: ["9.2"]
+      - cis: ["2.2.17"]
+      - pci_dss: ["2.2.2"]
+    condition: none
+    rules:
+      - 'c:systemctl is-enabled nis -> r:^enabled'
 
   - id: 2044
     title: "Ensure NIS Client is not installed"
