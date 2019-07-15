@@ -5,11 +5,24 @@ import argparse
 import os
 import json
 import glob
+import re
 import ruamel.yaml
 from collections import OrderedDict
 
 
 # Return a dict with key (cis, pci, pci_dss...) and version
+
+class FlowList(list):
+    pass
+
+
+
+def represent_flow_seq(dumper, data):
+    """
+    Dump sequences in flow style
+    """
+    return dumper.represent_sequence(u'tag:yaml.org,2002:seq', data, flow_style=True)
+
 
 def get_standards(schema):
     with open(schema) as f:
@@ -31,45 +44,51 @@ def get_standards(schema):
 
 
 def add_standard(actual_compliances, schema, schema_total):
+    comma_sep = re.compile('\s*,\s*')
+
     for actual_compliance in actual_compliances:
         for key, values in actual_compliance.items():
             try:
-                for value in values.split(', '):
+                for value in values:
                     for version in schema[key]:
                         if version == value:
                             new_key = OrderedDict()
                             new_key_v = None
-                            for v in schema_total[key + '_' + value].strip().split(','):
+                            for v in comma_sep.split(schema_total[key + '_' + value].strip()):
                                 new_key_v = v.split('_')[0:len(v.split('_'))-1]
                                 new_key_v = '_'.join(new_key_v)
-                            new_values = ''
-                            for index_c, ver_c in enumerate(schema_total[key + '_' + value].split(',')):
+                            new_values = []
+                            for index_c, ver_c in enumerate(comma_sep.split(schema_total[key + '_' + value])):
                                 new_values += \
-                                    ruamel.yaml.scalarstring.DoubleQuotedScalarString(','+ver_c.split('_')[-1])
-                            for split in new_values.split(','):
-                                try:
-                                    if new_key[new_key_v] != '':
-                                        new_key[new_key_v] += ', '+split
-                                    else:
-                                        new_key[new_key_v] = split
-                                except:
-                                    new_key[new_key_v] = split
+                                    [ruamel.yaml.scalarstring.DoubleQuotedScalarString(ver_c.split('_')[-1])]
+
+                            try:
+                                if isinstance(new_key[new_key_v], list):
+                                    new_key[new_key_v] += new_values
+                                else:
+                                    new_key[new_key_v] = new_values
+                            except KeyError:
+                                new_key[new_key_v] = new_values
+
+                            new_key[new_key_v] = FlowList(new_key[new_key_v])
+
                             try:
                                 if actual_compliances[-1].keys() == new_key.keys():
                                     for ke in actual_compliances[-1].keys():
-                                        for new_vaa in new_key[ke].split(', '):
+                                        for new_vaa in new_key[ke]:
                                             if new_vaa not in actual_compliances[-1][ke]:
-                                                actual_compliances[-1][ke] = \
-                                                    ruamel.yaml.scalarstring.DoubleQuotedScalarString(
-                                                        actual_compliances[-1][ke]+', '+new_vaa)
+                                                actual_compliances[-1][ke] += \
+                                                    [ruamel.yaml.scalarstring.DoubleQuotedScalarString(new_vaa)]
+
                                 else:
-                                    for k, v in new_key.items():
-                                        new_key[k] = ruamel.yaml.scalarstring.DoubleQuotedScalarString(v)
+                                    #for k, v in new_key.items():
+                                    #    new_key[k] = v
+                                    pass
 
                                     actual_compliances.append(new_key)
-                            except:
+                            except Exception as e:
                                 pass
-            except:
+            except Exception as e:
                 pass
 
 
@@ -94,6 +113,7 @@ def standard_to_any(path, schema):
             yaml = ruamel.yaml.YAML()
             yaml.width = 4096
             yaml.Representer.add_representer(OrderedDict, yaml.Representer.represent_dict)
+            yaml.Representer.add_representer(FlowList, represent_flow_seq)
             yaml.indent(mapping=2, sequence=4, offset=2)
             yaml.dump(yaml_file, f)
 
@@ -120,6 +140,7 @@ def delete_standard(path, standard):
             yaml = ruamel.yaml.YAML()
             yaml.width = 4096
             yaml.Representer.add_representer(OrderedDict, yaml.Representer.represent_dict)
+            yaml.Representer.add_representer(FlowList, represent_flow_seq)
             yaml.indent(mapping=2, sequence=4, offset=2)
             yaml.dump(yaml_file, f)
 
@@ -128,6 +149,7 @@ def delete_standard(path, standard):
 
 
 if __name__ == '__main__':
+
     parser = argparse.ArgumentParser()
 
     parser.add_argument('-p', '--path', type=str, default='../../sca/', help='Sca path')
@@ -140,3 +162,4 @@ if __name__ == '__main__':
         standard_to_any(args.path, args.mapping)
     else:
         delete_standard(args.path, args.delete)
+
