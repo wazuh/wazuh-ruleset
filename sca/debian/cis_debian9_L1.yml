@@ -212,7 +212,7 @@ checks:
     remediation: "Edit the /etc/fstab file and add noexec to the fourth field (mounting options) for the /dev/shm partition. See the fstab(5) manual page for more information. Run the following command to remount /dev/shm: # mount -o remount,noexec /dev/shm"
     compliance:
       - cis: ["1.1.17"]
-      - cis_csc: ["2.6","8"]
+      - cis_csc: ["2.6", "8"]
     condition: all
     rules:
       - 'c:mount -> r:\s/dev/shm\s && r:noexec'
@@ -224,7 +224,7 @@ checks:
     remediation: "Run the following command to disable autofs: # systemctl disable autofs"
     compliance:
       - cis: ["1.1.21"]
-      - cis_csc: ["8.4","8.5"]
+      - cis_csc: ["8.4", "8.5"]
     condition: none
     rules:
       - 'c:systemctl is-enabled autofs -> r:^enabled'
@@ -330,6 +330,7 @@ checks:
       - cis_csc: ["5.1"]
       - cis: ["1.7.2"]
       - pci_dss: ["2.2.2"]
+      - nist_800_53: ["CM.1"]
     condition: all
     rules:
       - 'f:/etc/gdm3/greeter.dconf-defaults -> r:^[org/gnome/login-screen]'
@@ -378,8 +379,7 @@ checks:
       - 'f:/etc/ntp.conf -> r:^restrict\s+-6\s+default && r:\s+kod\s+ && r:\s+nomodify\s+ && r:\s+notrap\s+ && r:\s+nopeer\s+ && r:\s+noquery\s+'
       - 'f:/etc/ntp.conf -> r:^server\.+$|^pool\.+$'
       - 'f:/etc/ntp.conf -> r:^server\s\.+'
-      - 'f:/etc/init.d/ntp -> r:^RUNASUSER\s*\t*=\s*\t*ntp'      
-      
+      - 'f:/etc/init.d/ntp -> r:^RUNASUSER\s*\t*=\s*\t*ntp'
   - id: 3027
     title: "Ensure chrony is configured"
     description: "chrony is a daemon which implements the Network Time Protocol (NTP) is designed to synchronize system clocks across a variety of systems and use a source that is highly accurate. More information on chrony can be found at http://chrony.tuxfamily.org/. chrony can be configured to be a client and/or a server."
@@ -505,6 +505,7 @@ checks:
       - cis_csc: ["9.2"]
       - cis: ["2.2.11"]
       - pci_dss: ["2.2.2"]
+      - nist_800_53: ["CM.1"]
     condition: none
     rules:
       - 'c:dpkg -s exim4 -> install ok installed'
@@ -566,6 +567,7 @@ checks:
       - cis_csc: ["9.2"]
       - cis: ["2.2.17"]
       - pci_dss: ["2.2.2"]
+      - nist_800_53: ["CM.1"]
     condition: none
     rules:
       - 'c:systemctl is-enabled nis -> r:^enabled'
@@ -589,7 +591,7 @@ checks:
     remediation: "Run the following command to uninstall rsh: apt-get remove rsh-client rsh-redone-client"
     compliance:
       - cis: ["2.3.2"]
-      - cis_csc: ["2.6","4.5"]
+      - cis_csc: ["2.6", "4.5"]
     condition: none
     rules:
       - 'c:dpkg -s rsh-client -> r:install ok installed'
@@ -614,7 +616,7 @@ checks:
     remediation: "Run the following command to uninstall telnet: # apt-get remove telnet"
     compliance:
       - cis: ["2.3.4"]
-      - cis_csc: ["2.6","4.5"]
+      - cis_csc: ["2.6", "4.5"]
     condition: none
     rules:
       - 'c:dpkg -s telnet -> r:install ok installed'
@@ -710,7 +712,7 @@ checks:
     remediation: "Set the following parameters in /etc/sysctl.conf or a /etc/sysctl.d/* file: net.ipv4.conf.all.log_martians = 1 net.ipv4.conf.default.log_martians = 1. Run the following commands to set the active kernel parameters: # sysctl -w net.ipv4.conf.all.log_martians=1 # sysctl -w net.ipv4.conf.default.log_martians=1 # sysctl -w net.ipv4.route.flush=1"
     compliance:
       - cis: ["3.2.4"]
-      - cis_csc: ["6.2","6.3"]
+      - cis_csc: ["6.2", "6.3"]
     condition: all
     rules:
       - 'c:sysctl net.ipv4.conf.all.log_martians -> r:=\s*\t*1$'
@@ -914,7 +916,7 @@ checks:
     remediation: "Run the following command to enable rsyslog: # systemctl enable rsyslog"
     compliance:
       - cis: ["4.2.1.1"]
-      - cis_csc: ["6.2","6.3"]
+      - cis_csc: ["6.2", "6.3"]
     condition: all
     rules:
       - 'c:systemctl is-enabled rsyslog -> r:^enabled'
@@ -926,7 +928,7 @@ checks:
     remediation: "Edit the /etc/rsyslog.conf and /etc/rsyslog.d/*.conf files and add the following line (where loghost.example.com is the name of your central log host): *.* @@loghost.example.com. Run the following command to reload the rsyslogd configuration: # pkill -HUP rsyslogd"
     compliance:
       - cis: ["4.2.1.4"]
-      - cis_csc: ["6.6","6.8"]
+      - cis_csc: ["6.6", "6.8"]
     references:
       - rsyslog.conf(5) man page
     condition: all
@@ -1011,7 +1013,7 @@ checks:
       - https://www.ssh.com/ssh/sshd_config/
     compliance:
       - cis: ["5.2.5"]
-      - cis_csc: ["6.2","6.3"]
+      - cis_csc: ["6.2", "6.3"]
     condition: all
     rules:
       - 'f:/etc/ssh/sshd_config -> !r:^# && r:LogLevel\s+INFO|LogLevel\s+VERBOSE'
@@ -1192,7 +1194,7 @@ checks:
     remediation: "Set the PASS_MAX_DAYS parameter to conform to site policy in /etc/login.defs: PASS_MAX_DAYS 90. Modify user parameters for all users with a password set to match: # chage --maxdays 90 <user>. Notes: You can also check this setting in /etc/shadow directly. The 5th field should be 365 or less for all users with a password. A value of -1 will disable password expiration. Additionally the password expiration must be greater than the minimum days between password changes or users will be unable to change their password."
     compliance:
       - cis: ["5.4.1.1"]
-      - cis_csc: ["4.4","16"]
+      - cis_csc: ["4.4", "16"]
     condition: all
     rules:
       - 'f:/etc/login.defs -> n:^\s*\t*PASS_MAX_DAYS\s*\t*(\d+) compare <= 365'
@@ -1204,7 +1206,7 @@ checks:
     remediation: "Set the PASS_MIN_DAYS parameter to 7 in /etc/login.defs: PASS_MIN_DAYS 7. Modify user parameters for all users with a password set to match: # chage --mindays 7 <user>. Notes: You can also check this setting in /etc/shadow directly. The 4th field should be 7 or more for all users with a password."
     compliance:
       - cis: ["5.4.1.2"]
-      - cis_csc: ["4.4","16"]
+      - cis_csc: ["4.4", "16"]
     condition: all
     rules:
       - 'f:/etc/login.defs -> n:^\s*\t*PASS_MIN_DAYS\s*\t*(\d+) compare >= 7'
@@ -1216,7 +1218,7 @@ checks:
     remediation: "Set the PASS_WARN_AGE parameter to 7 in /etc/login.defs: PASS_WARN_AGE 7. Modify user parameters for all users with a password set to match: # chage --warndays 7 <user>. Notes: You can also check this setting in /etc/shadow directly. The 6th field should be 7 or more for all users with a password."
     compliance:
       - cis: ["5.4.1.3"]
-      - cis_csc: ["4.4","16"]
+      - cis_csc: ["4.4", "16"]
     condition: all
     rules:
       - 'f:/etc/login.defs -> n:^\s*\t*PASS_WARN_AGE\s*\t*(\d+) compare >= 7'
@@ -1228,7 +1230,7 @@ checks:
     remediation: "Run the following command to set the default password inactivity period to 30 days: # useradd -D -f 30. Modify user parameters for all users with a password set to match: # chage --inactive 30 <user>. Notes: You can also check this setting in /etc/shadow directly. The 7th field should be 30 or less for all users with a password. A value of -1 would disable this setting."
     compliance:
       - cis: ["5.4.1.4"]
-      - cis_csc: ["4.4","16"]
+      - cis_csc: ["4.4", "16"]
     condition: all
     rules:
       - 'c:useradd -D -> n:^INACTIVE=(\d+) compare <= 30'

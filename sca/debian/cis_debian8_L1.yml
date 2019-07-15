@@ -48,7 +48,7 @@ checks:
     remediation: "1) Edit or create a file in the /etc/modprobe.d/ directory ending in .conf and add the following line: install freevxfs /bin/true. 2) Run the following command to unload the freevxfs module: # rmmod freevxfs"
     compliance:
       - cis: ["1.1.1.2"]
-      - cis_csc: ["13","5.1"]
+      - cis_csc: ["13", "5.1"]
     condition: all
     rules:
       - 'c:/sbin/modprobe -n -v freevxfs -> r:^install /bin/true'
@@ -61,7 +61,7 @@ checks:
     remediation: "Edit or create a file in the /etc/modprobe.d/ directory ending in .conf and add the following line: install jffs2 /bin/true. 2) Run the following command to unload the jffs2 module: # rmmod jffs2"
     compliance:
       - cis: ["1.1.1.3"]
-      - cis_csc: ["13","5.1"]
+      - cis_csc: ["13", "5.1"]
     condition: all
     rules:
       - 'c:/sbin/modprobe -n -v jffs2 -> r:^install /bin/true'
@@ -74,7 +74,7 @@ checks:
     remediation: "1) Edit or create a file in the /etc/modprobe.d/ directory ending in .conf and add the following line: install hfs /bin/true. 2) Run the following command to unload the hfs module: # rmmod hfs"
     compliance:
       - cis: ["1.1.1.4"]
-      - cis_csc: ["13","5.1"]
+      - cis_csc: ["13", "5.1"]
     condition: all
     rules:
       - 'c:/sbin/modprobe -n -v hfs -> r:^install /bin/true'
@@ -87,7 +87,7 @@ checks:
     remediation: "1) Edit or create a file in the /etc/modprobe.d/ directory ending in .conf and add the following line: install hfsplus /bin/true. 2) Run the following command to unload the hfsplus module: # rmmod hfsplus"
     compliance:
       - cis: ["1.1.1.5"]
-      - cis_csc: ["13","5.1"]
+      - cis_csc: ["13", "5.1"]
     condition: all
     rules:
       - 'c:/sbin/modprobe -n -v hfsplus -> r:^install /bin/true'
@@ -113,7 +113,7 @@ checks:
     remediation: "1) Edit or create a file in the /etc/modprobe.d/ directory ending in .conf and add the following line: install udf /bin/true. 2) Run the following command to unload the udf module: # rmmod udf"
     compliance:
       - cis: ["1.1.1.7"]
-      - cis_csc: ["13","5.1"]
+      - cis_csc: ["13", "5.1"]
     condition: all
     rules:
       - 'c:/sbin/modprobe -n -v udf -> r:^install /bin/true'
@@ -127,7 +127,7 @@ checks:
     remediation: "Configure /etc/fstab as appropiate or Run the following commands to enable systemd /tmp mounting: systemctl umask tmp.mount; systemctl enable tmp.mount. Edit /etc/systemd/system/local-fs.target.wants/tmp.mount to configure the /tmp mount."
     compliance:
       - cis: ["1.1.2"]
-      - cis_csc: ["13","5.1"]
+      - cis_csc: ["13", "5.1"]
     references:
       - http://tldp.org/HOWTO/LVM-HOWTO/
       - https://www.freedesktop.org/wiki/Software/systemd/APIFileSystems/
@@ -142,7 +142,7 @@ checks:
     remediation: "Edit the /etc/fstab file and add nodev to the fourth field (mounting options). See the fstab(5) manual page for more information.  # mount -o remount,nodev /tmp"
     compliance:
       - cis: ["1.1.3"]
-      - cis_csc: ["13","5.1"]
+      - cis_csc: ["13", "5.1"]
     condition: all
     rules:
       - 'c:mount -> r:\s/tmp\s && r:nodev'
@@ -154,7 +154,7 @@ checks:
     remediation: "Edit the /etc/fstab file and add nosuid to the fourth field (mounting options). See the fstab(5) manual page for more information.  # mount -o remount,nosuid /tmp"
     compliance:
       - cis: ["1.1.4"]
-      - cis_csc: ["13","5.1"]
+      - cis_csc: ["13", "5.1"]
     condition: all
     rules:
       - 'c:mount -> r:\s/tmp\s && r:nosuid'
@@ -166,7 +166,7 @@ checks:
     remediation: "Edit the /etc/fstab file and add nodev to the fourth field (mounting options) for the /var/tmp partition. See the fstab(5) manual page for more information. Run the following command to remount /var/tmp: # mount -o remount,nodev /var/tmp"
     compliance:
       - cis: ["1.1.7"]
-      - cis_csc: ["13","5.1"]
+      - cis_csc: ["13", "5.1"]
     condition: all
     rules:
       - 'c:mount -> r:\s/var/tmp\s && r:nodev'
@@ -178,7 +178,7 @@ checks:
     remediation: "Edit the /etc/fstab file and add nosuid to the fourth field (mounting options) for the /var/tmp partition. See the fstab(5) manual page for more information. Run the following command to remount /var/tmp: # mount -o remount,nosuid /var/tmp"
     compliance:
       - cis: ["1.1.8"]
-      - cis_csc: ["13","5.1"]
+      - cis_csc: ["13", "5.1"]
     condition: all
     rules:
       - 'c:mount -> r:\s/var/tmp\s && r:nosuid'
@@ -190,7 +190,7 @@ checks:
     remediation: "Edit the /etc/fstab file and add noexec to the fourth field (mounting options) for the /var/tmp partition. See the fstab(5) manual page for more information. Run the following command to remount /var/tmp: # mount -o remount,noexec /var/tmp"
     compliance:
       - cis: ["1.1.9"]
-      - cis_csc: ["2","2.6"]
+      - cis_csc: ["2", "2.6"]
     condition: all
     rules:
       - 'c:mount -> r:\s/var/tmp\s && r:noexec'
@@ -202,7 +202,7 @@ checks:
     remediation: "Edit the /etc/fstab file and add nodev to the fourth field (mounting options). See the fstab(5) manual page for more information. # mount -o remount,nodev /home"
     compliance:
       - cis: ["1.1.13"]
-      - cis_csc: ["13","15.1","5.1"]
+      - cis_csc: ["13", "15.1", "5.1"]
     condition: all
     rules:
       - 'c:mount -> r:\s/home\s && r:nodev'
@@ -214,7 +214,7 @@ checks:
     remediation: "Edit the /etc/fstab file and add nodev to the fourth field (mounting options) for the /dev/shm partition. See the fstab(5) manual page for more information. Run the following command to remount /dev/shm: # mount -o remount,nodev /dev/shm"
     compliance:
       - cis: ["1.1.14"]
-      - cis_csc: ["13","5.1"]
+      - cis_csc: ["13", "5.1"]
     condition: all
     rules:
       - 'c:mount -> r:\s/dev/shm\s && r:nodev'
@@ -226,7 +226,7 @@ checks:
     remediation: "Edit the /etc/fstab file and add nosuid to the fourth field (mounting options) for the /dev/shm partition. See the fstab(5) manual page for more information. Run the following command to remount /dev/shm: # mount -o remount,nosuid /dev/shm"
     compliance:
       - cis: ["1.1.15"]
-      - cis_csc: ["13","5.1"]
+      - cis_csc: ["13", "5.1"]
     condition: all
     rules:
       - 'c:mount -> r:\s/dev/shm\s && r:nosuid'
@@ -238,7 +238,7 @@ checks:
     remediation: "Edit the /etc/fstab file and add noexec to the fourth field (mounting options) for the /dev/shm partition. See the fstab(5) manual page for more information. Run the following command to remount /dev/shm: # mount -o remount,noexec /run/shm"
     compliance:
       - cis: ["1.1.16"]
-      - cis_csc: ["13","5.1"]
+      - cis_csc: ["13", "5.1"]
     condition: all
     rules:
       - 'c:mount -> r:\s/dev/shm\s && r:noexec'
@@ -250,7 +250,7 @@ checks:
     remediation: "Disable autofs: # update-rc.d autofs disable"
     compliance:
       - cis: ["1.1.21"]
-      - cis_csc: ["8.3","8.4","8.5"]
+      - cis_csc: ["8.3", "8.4", "8.5"]
     condition: none
     rules:
       - 'c:systemctl is-enabled autofs -> r:^enabled'
@@ -263,7 +263,7 @@ checks:
     remediation: "Install AIDE: # apt-get install aide aide-common. Configure AIDE as appropriate for your environment. Consult the AIDE documentation for options. Initialize AIDE: # aideinit"
     compliance:
       - cis: ["1.3.1"]
-      - cis_csc: ["3.5","14.9"]
+      - cis_csc: ["3.5", "14.9"]
     condition: all
     rules:
       - 'c:dpkg -s aide -> r:install ok installed'
@@ -275,7 +275,7 @@ checks:
     remediation: "Execute the following command: # crontab -u root -e Add the following line to the crontab: 0 5 * * * /usr/sbin/aide --check. Note: The checking in this instance occurs every day at 5am. Alter the frequency and time of the checks in compliance with site policy."
     compliance:
       - cis: ["1.3.2"]
-      - cis_csc: ["3.5","14.9"]
+      - cis_csc: ["3.5", "14.9"]
     condition: all
     rules:
       - 'c:grep -Rh aide /etc/cron.d /etc/cron.daily /etc/cron.hourly /etc/cron.monthly /etc/cron.weekly /etc/crontab -> r:\.+'
@@ -328,7 +328,7 @@ checks:
     remediation: "Add the following line to the /etc/sysctl.conf file: kernel.randomize_va_space = 2 and run the following command to set the active kernel parameter: # sysctl -w kernel.randomize_va_space=2"
     compliance:
       - cis: ["1.5.3"]
-      - cis_csc: ["8.3","8.4"]
+      - cis_csc: ["8.3", "8.4"]
     condition: all
     rules:
       - 'c:grep -Rh ^kernel\.randomize_va_space /etc/sysctl.conf /etc/sysctl.d -> r:\s*\t*2$'
@@ -342,7 +342,7 @@ checks:
     remediation: "Edit the /etc/issue file with the appropriate contents according to your site policy, remove any instances of \\m,\\r,\\s, or \\v: # echo \"Authorized uses only. All activity may be monitored and reported.\" > /etc/issue"
     compliance:
       - cis: ["1.7.1.2"]
-      - cis_csc: ["13","5.1"]
+      - cis_csc: ["13", "5.1"]
     condition: none
     rules:
       - 'f:/etc/issue -> r:\v|\r|\m|\s|Debian'
@@ -356,6 +356,7 @@ checks:
       - cis_csc: ["5.1"]
       - cis: ["1.7.2"]
       - pci_dss: ["2.2.2"]
+      - nist_800_53: ["CM.1"]
     condition: all
     rules:
       - 'f:/etc/gdm3/greeter.dconf-defaults -> r:^[org/gnome/login-screen]'
@@ -370,7 +371,7 @@ checks:
     remediation: "Run the following command to disable xinetd: # apt-get remove xinetd"
     compliance:
       - cis: ["2.1.1"]
-      - cis_csc: ["9.1","9.2"]
+      - cis_csc: ["9.1", "9.2"]
     condition: none
     rules:
       - 'c:dpkg -s xinetd -> r:install ok installed'
@@ -382,7 +383,7 @@ checks:
     remediation: "Run the following commands to uninstall openbsd-inetd and inetutils-inetd: # apt-get remove openbsd-inetd # apt-get remove inetutils-inetd"
     compliance:
       - cis: ["2.1.2"]
-      - cis_csc: ["9.1","9.2"]
+      - cis_csc: ["9.1", "9.2"]
     condition: none
     rules:
       - 'c:dpkg -s openbsd-inetd -> r:install ok installed'
@@ -425,7 +426,7 @@ checks:
     remediation: "Run the following command to disable avahi-daemon: # systemctl disable avahi-daemon"
     compliance:
       - cis: ["2.2.3"]
-      - cis_csc: ["9.1","9.2"]
+      - cis_csc: ["9.1", "9.2"]
     condition: none
     rules:
       - 'c:systemctl is-enabled avahi-daemon -> r:^enabled'
@@ -437,7 +438,7 @@ checks:
     remediation: "Run the following command to disable cups: # systemctl disable cups"
     compliance:
       - cis: ["2.2.4"]
-      - cis_csc: ["9.1","9.2"]
+      - cis_csc: ["9.1", "9.2"]
     references:
       - https://www.cups.org
     condition: none
@@ -453,7 +454,7 @@ checks:
       - https://www.isc.org/dhcp/
     compliance:
       - cis: ["2.2.5"]
-      - cis_csc: ["9.1","9.2"]
+      - cis_csc: ["9.1", "9.2"]
     condition: none
     rules:
       - 'c:systemctl is-enabled isc-dhcp-server -> r:^enabled'
@@ -466,7 +467,7 @@ checks:
     remediation: "Run the following command to disable slapd: # systemctl disable slapd"
     compliance:
       - cis: ["2.2.6"]
-      - cis_csc: ["9.1","9.2"]
+      - cis_csc: ["9.1", "9.2"]
     references:
       - https://www.openldap.org
     condition: none
@@ -480,7 +481,7 @@ checks:
     remediation: "Run the following commands to disable nfs and rpcbind: # systemctl disable nfs-server # systemctl disable rpcbind"
     compliance:
       - cis: ["2.2.7"]
-      - cis_csc: ["9.1","9.2"]
+      - cis_csc: ["9.1", "9.2"]
     condition: none
     rules:
       - 'c:systemctl is-enabled nfs-server -> r:^enabled'
@@ -493,7 +494,7 @@ checks:
     remediation: "Run the following command to disable named: # systemctl disable bind9"
     compliance:
       - cis: ["2.2.8"]
-      - cis_csc: ["9.1","9.2"]
+      - cis_csc: ["9.1", "9.2"]
     condition: none
     rules:
       - 'c:systemctl is-enabled bind9 -> r:^enabled'
@@ -505,7 +506,7 @@ checks:
     remediation: "Run the following command to disable vsftpd: # systemctl disable vsftpd"
     compliance:
       - cis: ["2.2.9"]
-      - cis_csc: ["9.1","9.2"]
+      - cis_csc: ["9.1", "9.2"]
     condition: none
     rules:
       - 'c:systemctl is-enabled vsftpd -> r:^enabled'
@@ -517,7 +518,7 @@ checks:
     remediation: "Run the following command to disable apache2: # systemctl disable apache2"
     compliance:
       - cis: ["2.2.10"]
-      - cis_csc: ["9.1","9.2"]
+      - cis_csc: ["9.1", "9.2"]
     condition: none
     rules:
       - 'c:systemctl is-enabled apache2 -> r:^enabled'
@@ -531,6 +532,7 @@ checks:
       - cis_csc: ["9.2"]
       - cis: ["2.2.11"]
       - pci_dss: ["2.2.2"]
+      - nist_800_53: ["CM.1"]
     condition: none
     rules:
       - 'c:dpkg -s exim4 -> install ok installed'
@@ -542,7 +544,7 @@ checks:
     remediation: "Run the following command to disable smbd: # systemctl disable smbd"
     compliance:
       - cis: ["2.2.12"]
-      - cis_csc: ["9.1","9.2"]
+      - cis_csc: ["9.1", "9.2"]
     condition: none
     rules:
       - 'c:systemctl is-enabled smbd -> r:^enabled'
@@ -554,7 +556,7 @@ checks:
     remediation: "Run the following command to disable squid: # systemctl disable squid"
     compliance:
       - cis: ["2.2.13"]
-      - cis_csc: ["9.1","9.2"]
+      - cis_csc: ["9.1", "9.2"]
     condition: none
     rules:
       - 'c:systemctl is-enabled squid -> r:^enabled'
@@ -566,7 +568,7 @@ checks:
     remediation: "Run the following command to disable snmpd: # systemctl disable snmpd"
     compliance:
       - cis: ["2.2.14"]
-      - cis_csc: ["9.1","9.2"]
+      - cis_csc: ["9.1", "9.2"]
     condition: none
     rules:
       - 'c:systemctl is-enabled snmpd -> r:^enabled'
@@ -578,7 +580,7 @@ checks:
     remediation: "Run the following command to disable rsync: # systemctl disable rsync"
     compliance:
       - cis: ["2.2.16"]
-      - cis_csc: ["9.1","9.2"]
+      - cis_csc: ["9.1", "9.2"]
     condition: none
     rules:
       - 'c:systemctl is-enabled rsync -> r:^enabled'
@@ -592,6 +594,7 @@ checks:
       - cis_csc: ["9.2"]
       - cis: ["2.2.17"]
       - pci_dss: ["2.2.2"]
+      - nist_800_53: ["CM.1"]
     condition: none
     rules:
       - 'c:systemctl is-enabled nis -> r:^enabled'
@@ -603,7 +606,7 @@ checks:
     remediation: "Uninstall the nis package: # apt-get remove nis"
     compliance:
       - cis: ["2.3.1"]
-      - cis_csc: ["2","2.6"]
+      - cis_csc: ["2", "2.6"]
     condition: none
     rules:
       - 'c:dpkg -s nis -> r:install ok installed'
@@ -615,7 +618,7 @@ checks:
     remediation: "Run the following command to uninstall rsh: apt-get remove rsh-client rsh-redone-client"
     compliance:
       - cis: ["2.3.2"]
-      - cis_csc: ["3.4","4.5"]
+      - cis_csc: ["3.4", "4.5"]
     condition: none
     rules:
       - 'c:dpkg -s rsh-client -> r:install ok installed'
@@ -628,7 +631,7 @@ checks:
     remediation: "Run the following command to uninstall talk: apt-get remove talk"
     compliance:
       - cis: ["2.3.3"]
-      - cis_csc: ["2","2.6"]
+      - cis_csc: ["2", "2.6"]
     condition: none
     rules:
       - 'c:dpkg -s talk -> r:install ok installed'
@@ -640,7 +643,7 @@ checks:
     remediation: "Run the following command to uninstall telnet: # apt-get remove telnet"
     compliance:
       - cis: ["2.3.4"]
-      - cis_csc: ["3.4","4.5"]
+      - cis_csc: ["3.4", "4.5"]
     condition: none
     rules:
       - 'c:dpkg -s telnet -> r:install ok installed'
@@ -653,7 +656,7 @@ checks:
     remediation: "Set the following parameter in /etc/sysctl.conf or a /etc/sysctl.d/* file: net.ipv4.ip_forward = 0 net.ipv6.conf.all.forwarding = 0. Run the following commands to set the active kernel parameters: # sysctl -w net.ipv4.ip_forward=0 # sysctl -w net.ipv6.conf.all.forwarding=0 # sysctl -w net.ipv4.route.flush=1 # sysctl -w net.ipv6.route.flush=1"
     compliance:
       - cis: ["3.1.1"]
-      - cis_csc: ["3","11","5.1"]
+      - cis_csc: ["3", "11", "5.1"]
     condition: all
     rules:
       - 'c:sysctl net.ipv4.ip_forward -> r:=\s*\t*0$'
@@ -668,7 +671,7 @@ checks:
     remediation: "Set the net.ipv4.conf.all.send_redirects and net.ipv4.conf.default.send_redirects parameters to 0 in /etc/sysctl.conf: net.ipv4.conf.all.send_redirects=0    net.ipv4.conf.default.send_redirects=0    Modify active kernel parameters to match: # sysctl -w net.ipv4.conf.all.send_redirects=0    # sysctl -w net.ipv4.conf.default.send_redirects=0    # sysctl -w net.ipv4.route.flush=1"
     compliance:
       - cis: ["3.1.2"]
-      - cis_csc: ["3","11","5.1"]
+      - cis_csc: ["3", "11", "5.1"]
     condition: all
     rules:
       - 'c:sysctl net.ipv4.conf.all.send_redirects -> r:=\s*\t*0$'
@@ -683,7 +686,7 @@ checks:
     remediation: "Set the following parameters in /etc/sysctl.conf or a /etc/sysctl.d/* file: net.ipv4.conf.all.accept_source_route = 0 net.ipv4.conf.default.accept_source_route = 0 net.ipv6.conf.all.accept_source_route = 0 net.ipv6.conf.default.accept_source_route = 0. Run the following commands to set the active kernel parameters: # sysctl -w net.ipv4.conf.all.accept_source_route=0 # sysctl -w net.ipv4.conf.default.accept_source_route=0 # sysctl -w net.ipv6.conf.all.accept_source_route=0 # sysctl -w net.ipv6.conf.default.accept_source_route=0 # sysctl -w net.ipv4.route.flush=1 # sysctl -w net.ipv6.route.flush=1"
     compliance:
       - cis: ["3.2.1"]
-      - cis_csc: ["3","11","5.1"]
+      - cis_csc: ["3", "11", "5.1"]
     condition: all
     rules:
       - 'c:sysctl net.ipv4.conf.all.accept_source_route -> r:=\s*\t*0$'
@@ -702,7 +705,7 @@ checks:
     remediation: "Set the following parameters in /etc/sysctl.conf or a /etc/sysctl.d/* file: net.ipv4.conf.all.accept_redirects = 0 net.ipv4.conf.default.accept_redirects = 0 net.ipv6.conf.all.accept_redirects = 0 net.ipv6.conf.default.accept_redirects = 0. Run the following commands to set the active kernel parameters: # sysctl -w net.ipv4.conf.all.accept_redirects=0 # sysctl -w net.ipv4.conf.default.accept_redirects=0 # sysctl -w net.ipv6.conf.all.accept_redirects=0 # sysctl -w net.ipv6.conf.default.accept_redirects=0 # sysctl -w net.ipv4.route.flush=1 # sysctl -w net.ipv6.route.flush=1"
     compliance:
       - cis: ["3.2.2"]
-      - cis_csc: ["3","11","5.1"]
+      - cis_csc: ["3", "11", "5.1"]
     condition: all
     rules:
       - 'c:sysctl net.ipv4.conf.all.accept_redirects -> r:=\s*\t*0$'
@@ -721,7 +724,7 @@ checks:
     remediation: "Set the following parameters in /etc/sysctl.conf or a /etc/sysctl.d/* file: net.ipv4.conf.all.secure_redirects = 0 net.ipv4.conf.default.secure_redirects = 0. Run the following commands to set the active kernel parameters: # sysctl -w net.ipv4.conf.all.secure_redirects=0 # sysctl -w net.ipv4.conf.default.secure_redirects=0 # sysctl -w net.ipv4.route.flush=1"
     compliance:
       - cis: ["3.2.3"]
-      - cis_csc: ["3","11","5.1"]
+      - cis_csc: ["3", "11", "5.1"]
     condition: all
     rules:
       - 'c:sysctl net.ipv4.conf.all.secure_redirects -> r:=\s*\t*0$'
@@ -736,7 +739,7 @@ checks:
     remediation: "Set the following parameters in /etc/sysctl.conf or a /etc/sysctl.d/* file: net.ipv4.conf.all.log_martians = 1 net.ipv4.conf.default.log_martians = 1. Run the following commands to set the active kernel parameters: # sysctl -w net.ipv4.conf.all.log_martians=1 # sysctl -w net.ipv4.conf.default.log_martians=1 # sysctl -w net.ipv4.route.flush=1"
     compliance:
       - cis: ["3.2.4"]
-      - cis_csc: ["6","6.2","6.3"]
+      - cis_csc: ["6", "6.2", "6.3"]
     condition: all
     rules:
       - 'c:sysctl net.ipv4.conf.all.log_martians -> r:=\s*\t*1$'
@@ -751,7 +754,7 @@ checks:
     remediation: "Set the following parameters in /etc/sysctl.conf or a /etc/sysctl.d/* file: net.ipv4.icmp_echo_ignore_broadcasts = 1. Run the following commands to set the active kernel parameters: # sysctl -w net.ipv4.icmp_echo_ignore_broadcasts=1 # sysctl -w net.ipv4.route.flush=1"
     compliance:
       - cis: ["3.2.5"]
-      - cis_csc: ["3","11","5.1"]
+      - cis_csc: ["3", "11", "5.1"]
     condition: all
     rules:
       - 'c:sysctl net.ipv4.icmp_echo_ignore_broadcasts -> r:=\s*\t*1$'
@@ -764,7 +767,7 @@ checks:
     remediation: "Set the following parameter in /etc/sysctl.conf or a /etc/sysctl.d/* file: net.ipv4.icmp_ignore_bogus_error_responses = 1. Run the following commands to set the active kernel parameters: # sysctl -w net.ipv4.icmp_ignore_bogus_error_responses=1 # sysctl -w net.ipv4.route.flush=1"
     compliance:
       - cis: ["3.2.6"]
-      - cis_csc: ["3","11","5.1"]
+      - cis_csc: ["3", "11", "5.1"]
     condition: all
     rules:
       - 'c:sysctl net.ipv4.icmp_ignore_bogus_error_responses -> r:=\s*\t*1$'
@@ -777,7 +780,7 @@ checks:
     remediation: "Set the following parameters in /etc/sysctl.conf or a /etc/sysctl.d/* file: net.ipv4.conf.all.rp_filter = 1 net.ipv4.conf.default.rp_filter = 1. Run the following commands to set the active kernel parameters: # sysctl -w net.ipv4.conf.all.rp_filter=1 # sysctl -w net.ipv4.conf.default.rp_filter=1 # sysctl -w net.ipv4.route.flush=1"
     compliance:
       - cis: ["3.2.7"]
-      - cis_csc: ["3","11","5.1"]
+      - cis_csc: ["3", "11", "5.1"]
     condition: all
     rules:
       - 'c:sysctl net.ipv4.conf.all.rp_filter -> r:=\s*\t*1$'
@@ -792,7 +795,7 @@ checks:
     remediation: "Set the following parameters in /etc/sysctl.conf or a /etc/sysctl.d/* file: net.ipv4.tcp_syncookies = 1. Run the following commands to set the active kernel parameters: # sysctl -w net.ipv4.tcp_syncookies=1 # sysctl -w net.ipv4.route.flush=1"
     compliance:
       - cis: ["3.2.8"]
-      - cis_csc: ["3","11","5.1"]
+      - cis_csc: ["3", "11", "5.1"]
     condition: all
     rules:
       - 'c:sysctl net.ipv4.tcp_syncookies -> r:=\s*\t*1$'
@@ -805,7 +808,7 @@ checks:
     remediation: "Set the following parameters in /etc/sysctl.conf or a /etc/sysctl.d/* file: net.ipv6.conf.all.accept_ra = 0 net.ipv6.conf.default.accept_ra = 0. Run the following commands to set the active kernel parameters: # sysctl -w net.ipv6.conf.all.accept_ra=0 # sysctl -w net.ipv6.conf.default.accept_ra=0 # sysctl -w net.ipv6.route.flush=1"
     compliance:
       - cis: ["3.2.9"]
-      - cis_csc: ["3","11","5.1"]
+      - cis_csc: ["3", "11", "5.1"]
     condition: all
     rules:
       - 'c:sysctl net.ipv6.conf.all.accept_ra -> r:=\s*\t*0$'
@@ -820,7 +823,7 @@ checks:
     remediation: "Run the following command to create /etc/hosts.allow: # echo \"ALL: <net>/<mask>, <net>/<mask>, ...\" >/etc/hosts.allow. Where each <net>/<mask> combination  (for example, \"192.168.1.0/255.255.255.0\") represents one network block in use by your organization that requires access to this system."
     compliance:
       - cis: ["3.3.2"]
-      - cis_csc: ["9.2","9.4"]
+      - cis_csc: ["9.2", "9.4"]
     condition: all
     rules:
       - 'f:/etc/hosts.allow'
@@ -832,7 +835,7 @@ checks:
     remediation: "Run the following command to create /etc/hosts.deny: # echo \"ALL: ALL\" >> /etc/hosts.deny"
     compliance:
       - cis: ["3.3.3"]
-      - cis_csc: ["9.2","9.4"]
+      - cis_csc: ["9.2", "9.4"]
     condition: all
     rules:
       - 'f:/etc/hosts.deny'
@@ -845,7 +848,7 @@ checks:
     remediation: "Edit or create a file in the /etc/modprobe.d/ directory ending in .conf Example: vim /etc/modprobe.d/dccp.conf and add the following line: install dccp /bin/true"
     compliance:
       - cis: ["3.4.1"]
-      - cis_csc: ["9.1","9.2"]
+      - cis_csc: ["9.1", "9.2"]
     condition: none
     rules:
       - 'not c:modprobe -n -v dccp -> r:install /bin/true'
@@ -858,7 +861,7 @@ checks:
     remediation: "Edit or create a file in the /etc/modprobe.d/ directory ending in .conf Example: vim /etc/modprobe.d/sctp.conf and add the following line: install sctp /bin/true"
     compliance:
       - cis: ["3.4.2"]
-      - cis_csc: ["9.1","9.2"]
+      - cis_csc: ["9.1", "9.2"]
     condition: none
     rules:
       - 'not c:modprobe -n -v sctp -> r:install /bin/true'
@@ -871,7 +874,7 @@ checks:
     remediation: "Edit or create a file in the /etc/modprobe.d/ directory ending in .conf Example: vim /etc/modprobe.d/rds.conf and add the following line: install rds /bin/true"
     compliance:
       - cis: ["3.4.3"]
-      - cis_csc: ["9.1","9.2"]
+      - cis_csc: ["9.1", "9.2"]
     condition: none
     rules:
       - 'not c:modprobe -n -v rds -> r:install /bin/true'
@@ -884,7 +887,7 @@ checks:
     remediation: "Edit or create a file in the /etc/modprobe.d/ directory ending in .conf Example: vim /etc/modprobe.d/tipc.conf and add the following line: install tipc /bin/true"
     compliance:
       - cis: ["3.4.4"]
-      - cis_csc: ["9.1","9.2"]
+      - cis_csc: ["9.1", "9.2"]
     condition: none
     rules:
       - 'not c:modprobe -n -v tipc -> r:install /bin/true'
@@ -899,7 +902,7 @@ checks:
     remediation: "Run the following commands to implement a default DROP policy: # iptables -P INPUT DROP # iptables -P OUTPUT DROP # iptables -P FORWARD DROP. Notes: Changing firewall settings while connected over network can result in being locked out of the system. Remediation will only affect the active system firewall, be sure to configure the default policy in your firewall management to apply on boot as well."
     compliance:
       - cis: ["3.5.1.1"]
-      - cis_csc: ["9.1","9.4"]
+      - cis_csc: ["9.1", "9.4"]
     condition: all
     rules:
       - 'c:iptables -L -> r:^Chain INPUT && r:policy DROP'
@@ -913,7 +916,7 @@ checks:
     remediation: "Run the following commands to implement a default DROP policy: # ip6tables -P INPUT DROP # ip6tables -P OUTPUT DROP # ip6tables -P FORWARD DROP. Notes: Changing firewall settings while connected over network can result in being locked out of the system. Remediation will only affect the active system firewall, be sure to configure the default policy in your firewall management to apply on boot as well."
     compliance:
       - cis: ["3.5.2.1"]
-      - cis_csc: ["9.1","9.4"]
+      - cis_csc: ["9.1", "9.4"]
     condition: all
     rules:
       - 'c:ip6tables -L -> r:^Chain INPUT && r:policy DROP'
@@ -927,7 +930,7 @@ checks:
     remediation: "Run the following command to install iptables: # apt-get install iptables"
     compliance:
       - cis: ["3.5.3"]
-      - cis_csc: ["9.2","9.4"]
+      - cis_csc: ["9.2", "9.4"]
     condition: all
     rules:
       - 'c:dpkg -s iptables -> r:install ok installed'
@@ -940,7 +943,7 @@ checks:
     remediation: "Run the following command to enable rsyslog: # systemctl enable rsyslog"
     compliance:
       - cis: ["4.2.1.1"]
-      - cis_csc: ["6.2","6.3"]
+      - cis_csc: ["6.2", "6.3"]
     condition: all
     rules:
       - 'c:systemctl is-enabled rsyslog -> r:^enabled'
@@ -952,7 +955,7 @@ checks:
     remediation: "Edit the /etc/rsyslog.conf and /etc/rsyslog.d/*.conf files and add the following line (where loghost.example.com is the name of your central log host): *.* @@loghost.example.com. Run the following command to reload the rsyslogd configuration: # pkill -HUP rsyslogd"
     compliance:
       - cis: ["4.2.1.4"]
-      - cis_csc: ["6.6","6.8"]
+      - cis_csc: ["6.6", "6.8"]
     references:
       - rsyslog.conf(5) man page
     condition: all
@@ -966,7 +969,7 @@ checks:
     remediation: "For hosts that are designated as log hosts, edit the /etc/rsyslog.conf file and un-comment or add the following lines:$ModLoad imtcp & $InputTCPServerRun 514. For hosts that are not designated as log hosts, edit the /etc/rsyslog.conf file and comment or remove the following lines: # $ModLoad imtcp # $InputTCPServerRun 514. Run the following command to reload the rsyslogd configuration: # pkill -HUP rsyslogd"
     compliance:
       - cis: ["4.2.1.5"]
-      - cis_csc: ["9.1","9.2"]
+      - cis_csc: ["9.1", "9.2"]
     references:
       - rsyslog.conf(8) man page
     condition: all
@@ -982,7 +985,7 @@ checks:
     remediation: "Run the following command to enable cron: systemctl enable cron"
     compliance:
       - cis: ["5.1.1"]
-      - cis_csc: ["6","5.1"]
+      - cis_csc: ["6", "5.1"]
     condition: all
     rules:
       - 'c:systemctl is-enabled cron -> r:^enabled$'
@@ -1023,7 +1026,7 @@ checks:
     remediation: "Edit the /etc/ssh/sshd_config file to set the parameter as follows: Protocol 2"
     compliance:
       - cis: ["5.2.4"]
-      - cis_csc: ["3.4","4.5"]
+      - cis_csc: ["3.4", "4.5"]
     condition: all
     rules:
       - 'f:/etc/ssh/sshd_config -> !r:^# && r:Protocol\s*\t*2'
@@ -1037,7 +1040,7 @@ checks:
       - https://www.ssh.com/ssh/sshd_config/
     compliance:
       - cis: ["5.2.5"]
-      - cis_csc: ["16","6.2","6.3"]
+      - cis_csc: ["16", "6.2", "6.3"]
     condition: all
     rules:
       - 'f:/etc/ssh/sshd_config -> !r:^# && r:LogLevel\s+INFO|LogLevel\s+VERBOSE'
@@ -1049,7 +1052,7 @@ checks:
     remediation: "Edit the /etc/ssh/sshd_configfile to set the parameter as follows: X11Forwarding no"
     compliance:
       - cis: ["5.2.6"]
-      - cis_csc: ["16","9.2"]
+      - cis_csc: ["16", "9.2"]
     condition: all
     rules:
       - 'f:/etc/ssh/sshd_config -> !r:^# && r:X11Forwarding\s+no'
@@ -1061,7 +1064,7 @@ checks:
     remediation: "Edit the /etc/ssh/sshd_config file to set the parameter as follows: MaxAuthTries 4"
     compliance:
       - cis: ["5.2.7"]
-      - cis_csc: ["16","16.13"]
+      - cis_csc: ["16", "16.13"]
     condition: all
     rules:
       - 'f:/etc/ssh/sshd_config -> !r:^# && n:^MaxAuthTries\s*\t*(\d+) compare <= 4'
@@ -1073,7 +1076,7 @@ checks:
     remediation: "Edit the /etc/ssh/sshd_config file to set the parameter as follows: IgnoreRhosts yes"
     compliance:
       - cis: ["5.2.8"]
-      - cis_csc: ["9","9.2"]
+      - cis_csc: ["9", "9.2"]
     condition: all
     rules:
       - 'f:/etc/ssh/sshd_config -> !r:^# && r:IgnoreRhosts\s+yes'
@@ -1085,7 +1088,7 @@ checks:
     remediation: "Edit the /etc/ssh/sshd_config file to set the parameter as follows: HostbasedAuthentication no"
     compliance:
       - cis: ["5.2.9"]
-      - cis_csc: ["9","16.3"]
+      - cis_csc: ["9", "16.3"]
     condition: all
     rules:
       - 'f:/etc/ssh/sshd_config -> !r:^# && r:HostbasedAuthentication\s+no'
@@ -1097,7 +1100,7 @@ checks:
     remediation: "Edit the /etc/ssh/sshd_config file to set the parameter as follows: PermitRootLogin no"
     compliance:
       - cis: ["5.2.10"]
-      - cis_csc: ["5.8","4.3"]
+      - cis_csc: ["5.8", "4.3"]
     condition: all
     rules:
       - 'f:/etc/ssh/sshd_config -> !r:^# && r:PermitRootLogin\s+no'
@@ -1111,7 +1114,7 @@ checks:
     remediation: "Edit the /etc/ssh/sshd_config file to set the parameter as follows: PermitEmptyPasswords no"
     compliance:
       - cis: ["5.2.11"]
-      - cis_csc: ["16","16.3"]
+      - cis_csc: ["16", "16.3"]
     condition: all
     rules:
       - 'f:/etc/ssh/sshd_config -> !r:^# && r:PermitEmptyPasswords\s+no'
@@ -1123,7 +1126,7 @@ checks:
     remediation: "Edit the /etc/ssh/sshd_config file to set the parameter as follows: PermitUserEnvironment no"
     compliance:
       - cis: ["5.2.12"]
-      - cis_csc: ["16","5.1"]
+      - cis_csc: ["16", "5.1"]
     condition: all
     rules:
       - 'f:/etc/ssh/sshd_config -> !r:^# && r:PermitUserEnvironment\s+no'
@@ -1135,7 +1138,7 @@ checks:
     remediation: "Edit the /etc/ssh/sshd_config file to set the parameters according to site policy: ClientAliveInterval 300    ClientAliveCountMax 0"
     compliance:
       - cis: ["5.2.16"]
-      - cis_csc: ["16.4","16.11"]
+      - cis_csc: ["16.4", "16.11"]
     condition: all
     rules:
       - 'f:/etc/ssh/sshd_config -> !r:^# && n:ClientAliveInterval\s*\t*(\d+) compare <= 300 && n:ClientAliveInterval\s*\t*(\d+) compare != 0'
@@ -1148,7 +1151,7 @@ checks:
     remediation: "Edit the /etc/ssh/sshd_config file to set one or more of the parameter as follows: AllowUsers <userlist>    AllowGroups <grouplist>    DenyUsers <userlist>    DenyGroups <grouplist>"
     compliance:
       - cis: ["5.2.18"]
-      - cis_csc: ["5.1","5.8","4.3"]
+      - cis_csc: ["5.1", "5.8", "4.3"]
     condition: all
     rules:
       - 'f:/etc/ssh/sshd_config -> !r:^# && r:AllowUsers\s+\w+|AllowGroups\s+\w+|DenyUsers\s+\w+|DenyGroups\s+\w+'
@@ -1174,7 +1177,7 @@ checks:
     remediation: "1) Run the following command to install the pam_pwquality module: apt-get install libpam-pwquality 2) Edit the /etc/pam.d/common-password file to include the appropriate options for pam_pwquality.so and to conform to site policy: password requisite pam_pwquality.so retry=3 3) Edit /etc/security/pwquality.conf to add or update the following settings to conform to site policy: minlen = 14 dcredit = -1 ucredit = -1 ocredit = -1 lcredit = -1. Notes: Additional module options may be set, recommendation requirements only cover including try_first_pass and minlen set to 14 or more. Settings in /etc/security/pwquality.conf must use spaces around the = symbol."
     compliance:
       - cis: ["5.3.1"]
-      - cis_csc: ["5.7","16.12","4.4"]
+      - cis_csc: ["5.7", "16.12", "4.4"]
     condition: all
     rules:
       - 'c:dpkg -s libpam-pwquality -> r:install ok installed'
@@ -1218,7 +1221,7 @@ checks:
     remediation: "Set the PASS_MAX_DAYS parameter to conform to site policy in /etc/login.defs: PASS_MAX_DAYS 90. Modify user parameters for all users with a password set to match: # chage --maxdays 90 <user>. Notes: You can also check this setting in /etc/shadow directly. The 5th field should be 365 or less for all users with a password. A value of -1 will disable password expiration. Additionally the password expiration must be greater than the minimum days between password changes or users will be unable to change their password."
     compliance:
       - cis: ["5.4.1.1"]
-      - cis_csc: ["4.4","16"]
+      - cis_csc: ["4.4", "16"]
     condition: all
     rules:
       - 'f:/etc/login.defs -> n:^\s*\t*PASS_MAX_DAYS\s*\t*(\d+) compare <= 365'
@@ -1230,7 +1233,7 @@ checks:
     remediation: "Set the PASS_MIN_DAYS parameter to 7 in /etc/login.defs: PASS_MIN_DAYS 7. Modify user parameters for all users with a password set to match: # chage --mindays 7 <user>. Notes: You can also check this setting in /etc/shadow directly. The 4th field should be 7 or more for all users with a password."
     compliance:
       - cis: ["5.4.1.2"]
-      - cis_csc: ["4.4","16"]
+      - cis_csc: ["4.4", "16"]
     condition: all
     rules:
       - 'f:/etc/login.defs -> n:^\s*\t*PASS_MIN_DAYS\s*\t*(\d+) compare >= 7'
@@ -1242,7 +1245,7 @@ checks:
     remediation: "Set the PASS_WARN_AGE parameter to 7 in /etc/login.defs: PASS_WARN_AGE 7. Modify user parameters for all users with a password set to match: # chage --warndays 7 <user>. Notes: You can also check this setting in /etc/shadow directly. The 6th field should be 7 or more for all users with a password."
     compliance:
       - cis: ["5.4.1.3"]
-      - cis_csc: ["4.4","16"]
+      - cis_csc: ["4.4", "16"]
     condition: all
     rules:
       - 'f:/etc/login.defs -> n:^\s*\t*PASS_WARN_AGE\s*\t*(\d+) compare >= 7'
@@ -1254,7 +1257,7 @@ checks:
     remediation: "Run the following command to set the default password inactivity period to 30 days: # useradd -D -f 30. Modify user parameters for all users with a password set to match: # chage --inactive 30 <user>. Notes: You can also check this setting in /etc/shadow directly. The 7th field should be 30 or less for all users with a password. A value of -1 would disable this setting."
     compliance:
       - cis: ["5.4.1.4"]
-      - cis_csc: ["4.4","16"]
+      - cis_csc: ["4.4", "16"]
     condition: all
     rules:
       - 'c:useradd -D -> n:^INACTIVE=(\d+) compare <= 30'
@@ -1266,7 +1269,7 @@ checks:
     remediation: "Run the following command to set the root user default group to GID 0: # usermod -g 0 root"
     compliance:
       - cis: ["5.4.3"]
-      - cis_csc: ["5","5.1"]
+      - cis_csc: ["5", "5.1"]
     condition: all
     rules:
       - 'f:/etc/passwd -> !r:^# && r:root:\w+:\w+:0:'
@@ -1293,7 +1296,7 @@ checks:
     remediation: "If any accounts in the /etc/shadow file do not have a password, run the following command to lock the account until it can be determined why it does not have a password: # passwd -l <em><username></em>. Also, check to see if the account is logged in and investigate what it is being used for to determine if it needs to be forced off."
     compliance:
       - cis: ["6.2.1"]
-      - cis_csc: ["16","4.4"]
+      - cis_csc: ["16", "4.4"]
     condition: none
     rules:
       - 'f:/etc/shadow -> r:^\w+::'
@@ -1305,7 +1308,7 @@ checks:
     remediation: "Remove any legacy + entries from /etc/passwd if they exist."
     compliance:
       - cis: ["6.2.2"]
-      - cis_csc: ["16.9","16.2"]
+      - cis_csc: ["16.9", "16.2"]
     condition: none
     rules:
       - 'f:/etc/passwd -> !r:^# && r:^+:'
@@ -1317,7 +1320,7 @@ checks:
     remediation: "Remove any legacy + entries from /etc/shadow if they exist."
     compliance:
       - cis: ["6.2.3"]
-      - cis_csc: ["16.9","16.2"]
+      - cis_csc: ["16.9", "16.2"]
     condition: none
     rules:
       - 'f:/etc/shadow -> !r:^# && r:^+:'
@@ -1329,7 +1332,7 @@ checks:
     remediation: "Remove any legacy + entries from /etc/group if they exist."
     compliance:
       - cis: ["6.2.4"]
-      - cis_csc: ["16.9","16.2"]
+      - cis_csc: ["16.9", "16.2"]
     condition: none
     rules:
       - 'f:/etc/group -> !r:^# && r:^+:'

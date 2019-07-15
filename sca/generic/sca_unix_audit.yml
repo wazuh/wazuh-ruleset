@@ -37,6 +37,7 @@ checks:
     remediation: "Change the Port option value in the sshd_config file."
     compliance:
       - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
     condition: all
     rules:
       - 'f:$sshd_file -> !r:^# && r:Port && !r:\s*\t*22\s\t*$'
@@ -48,6 +49,7 @@ checks:
     remediation: "Change the Protocol option value in the sshd_config file."
     compliance:
       - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
     condition: all
     rules:
       - 'f:$sshd_file -> r:^\s*\t*Protocol\s*\t*2\s*\t*$'
@@ -68,6 +70,7 @@ checks:
     remediation: "Change the PubkeyAuthentication option value in the sshd_config file."
     compliance:
       - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
     condition: all
     rules:
       - 'f:$sshd_file -> r:^\s*PubkeyAuthentication\s*\t*yes'
@@ -79,6 +82,7 @@ checks:
     remediation: "Change the PasswordAuthentication option value in the sshd_config file."
     compliance:
       - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
     condition: all
     rules:
       - 'f:$sshd_file -> r:^\s*PasswordAuthentication\s*\t*no'
@@ -90,6 +94,7 @@ checks:
     remediation: "Change the PermitEmptyPasswords option value in the sshd_config file."
     compliance:
       - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
     condition: all
     rules:
       - 'f:$sshd_file -> r:^\s*PermitEmptyPasswords\s*\t*no'
@@ -101,6 +106,7 @@ checks:
     remediation: "Change the IgnoreRhosts option value in the sshd_config file."
     compliance:
       - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
     condition: all
     rules:
       - 'f:$sshd_file -> r:^\s*\t*IgnoreRhosts\s*\t*yes'
@@ -112,6 +118,7 @@ checks:
     remediation: "Change the LoginGraceTime option value in the sshd_config file."
     compliance:
       - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
     condition: all
     rules:
       - 'f:$sshd_file -> n:^\s*LoginGraceTime\s*\t*(\d+)s compare <= 60'
@@ -123,6 +130,7 @@ checks:
     remediation: "Change the MaxAuthTries option value in the sshd_config file."
     compliance:
       - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
     condition: all
     rules:
       - 'f:$sshd_file -> n:^\s*MaxAuthTries\s*\t*(\d+) compare <= 4'
@@ -134,19 +142,18 @@ checks:
     remediation: "Edit the /etc/ssh/sshd_config file to set the parameter as follows: HostbasedAuthentication no"
     compliance:
       - pci_dss: ["4.1"]
-      - hipaa: ["164.312.a.2.IV","164.312.e.1","164.312.e.2.I","164.312.e.2.II"]
+      - hipaa: ["164.312.a.2.IV", "164.312.e.1", "164.312.e.2.I", "164.312.e.2.II"]
       - nist_800_53: ["SC.8"]
     condition: all
     rules:
       - 'f:$sshd_file -> r:^\s*\t*HostbasedAuthentication\s*\t*no'
-    
   - id: 4010
     title: "Ensure password creation requirements are configured"
     description: "The pam_pwquality.so module and pam_cracklib.so module (depending on the Linux distribution used) checks the strength of passwords. It performs checks such as making sure a password is not a dictionary word, it is a certain length, contains a mix of characters (e.g. alphabet, numeric, other) and more."
     rationale: "Strong passwords protect systems from being hacked through brute force methods."
     remediation: "Edit the /etc/pam.d/common-password and /etc/security/pwquality.conf files, or the /etc/pam.d/password-auth and /etc/pam.d/system-auth files, to include the appropriate options for pam_pwquality.so or pam_cracklib.so and to conform to site policy"
     compliance:
-      - cis_csc: ["4.4","5.7","16.12"]
+      - cis_csc: ["4.4", "5.7", "16.12"]
     references:
       - https://linux-audit.com/configure-the-minimum-password-length-on-linux-systems/
     condition: all
@@ -160,7 +167,7 @@ checks:
     rationale: "Strong passwords protect systems from being hacked through brute force methods."
     remediation: "Edit the /etc/pam.d/common-password and /etc/security/pwquality.conf files, or the /etc/pam.d/password-auth and /etc/pam.d/system-auth files, to include the appropriate options for pam_pwquality.so or pam_cracklib.so and to conform to site policy"
     compliance:
-      - cis_csc: ["4.4","5.7","16.12"]
+      - cis_csc: ["4.4", "5.7", "16.12"]
     references:
       - https://linux-audit.com/configure-the-minimum-password-length-on-linux-systems/
     condition: all
@@ -173,7 +180,7 @@ checks:
     rationale: "Strong passwords protect systems from being hacked through brute force methods."
     remediation: "Edit the /etc/pam.d/common-password and /etc/security/pwquality.conf files, or the /etc/pam.d/password-auth and /etc/pam.d/system-auth files, to include the appropriate options for pam_pwquality.so or pam_cracklib.so and to conform to site policy"
     compliance:
-      - cis_csc: ["4.4","5.7","16.12"]
+      - cis_csc: ["4.4", "5.7", "16.12"]
     references:
       - https://linux-audit.com/configure-the-minimum-password-length-on-linux-systems/
     condition: all
@@ -186,7 +193,7 @@ checks:
     rationale: "Strong passwords protect systems from being hacked through brute force methods."
     remediation: "Edit the /etc/pam.d/common-password and /etc/security/pwquality.conf files, or the /etc/pam.d/password-auth and /etc/pam.d/system-auth files, to include the appropriate options for pam_pwquality.so or pam_cracklib.so and to conform to site policy"
     compliance:
-      - cis_csc: ["4.4","5.7","16.12"]
+      - cis_csc: ["4.4", "5.7", "16.12"]
     references:
       - https://linux-audit.com/configure-the-minimum-password-length-on-linux-systems/
     condition: all
@@ -199,7 +206,7 @@ checks:
     rationale: "Strong passwords protect systems from being hacked through brute force methods."
     remediation: "Edit the /etc/pam.d/common-password and /etc/security/pwquality.conf files, or the /etc/pam.d/password-auth and /etc/pam.d/system-auth files, to include the appropriate options for pam_pwquality.so or pam_cracklib.so and to conform to site policy"
     compliance:
-      - cis_csc: ["4.4","5.7","16.12"]
+      - cis_csc: ["4.4", "5.7", "16.12"]
     references:
       - https://linux-audit.com/configure-the-minimum-password-length-on-linux-systems/
     condition: all
@@ -212,7 +219,7 @@ checks:
     rationale: "Strong passwords protect systems from being hacked through brute force methods."
     remediation: "Edit the /etc/pam.d/common-password and /etc/security/pwquality.conf files, or the /etc/pam.d/password-auth and /etc/pam.d/system-auth files, to include the appropriate options for pam_pwquality.so or pam_cracklib.so and to conform to site policy"
     compliance:
-      - cis_csc: ["4.4","5.7","16.12"]
+      - cis_csc: ["4.4", "5.7", "16.12"]
     references:
       - https://linux-audit.com/configure-the-minimum-password-length-on-linux-systems/
     condition: all
@@ -257,7 +264,7 @@ checks:
     rationale: "The window of opportunity for an attacker to leverage compromised credentials or successfully compromise credentials via an online brute force attack is limited by the age of the password. Therefore, reducing the maximum age of a password also reduces an attacker's window of opportunity."
     remediation: "Set the PASS_MAX_DAYS parameter to conform to site policy in /etc/login.defs or /etc/default/passwd (Solaris)."
     compliance:
-      - cis_csc: ["4.4","16"]
+      - cis_csc: ["4.4", "16"]
     references:
       - https://www.thegeekdiary.com/understanding-etclogin-defs-file
     condition: any
@@ -271,7 +278,7 @@ checks:
     rationale: "Without a Mandatory Access Control system installed only the default Discretionary Access Control system will be available."
     remediation: "Run one of the following commands to install SELinux or apparmor: # apt-get install selinux-basics Or: # apt-get install apparmor apparmor-profiles apparmor-utils"
     compliance:
-      - cis_csc: ["14.4","14.6"]
+      - cis_csc: ["14.4", "14.6"]
     condition: any
     rules:
       - 'c:dpkg -s selinux-basics -> r:install ok installed'
@@ -283,7 +290,7 @@ checks:
     rationale: "If the system does not need to print jobs or accept print jobs from other systems, it is recommended that CUPS be disabled to reduce the potential attack surface."
     remediation: "Run the following command to disable cups: # systemctl disable cups"
     compliance:
-      - cis_csc: ["9.1","9.2"]
+      - cis_csc: ["9.1", "9.2"]
     references:
       - 'https://www.cups.org'
     condition: none
@@ -296,7 +303,7 @@ checks:
     rationale: "The capturing of system events provides system administrators with information to allow them to determine if unauthorized access to their system is occurring."
     remediation: "Run the following command to enable auditd: # systemctl enable auditd"
     compliance:
-      - cis_csc: ["6.2","6.3"]
+      - cis_csc: ["6.2", "6.3"]
     condition: all
     rules:
       - 'c:systemctl is-enabled auditd -> r:^enabled'

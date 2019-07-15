@@ -51,6 +51,7 @@ checks:
     compliance:
       - cis: ["1.1.3"]
       - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
     condition: all
     rules:
       - 'c:mount -> r:\s/tmp\s && r:nodev'
@@ -63,6 +64,7 @@ checks:
     compliance:
       - cis: ["1.1.4"]
       - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
     condition: all
     rules:
       - 'c:mount -> r:\s/tmp\s && r:nosuid'
@@ -77,6 +79,7 @@ checks:
       - cis: ["1.1.5"]
       - cis_csc: ["2"]
       - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
     condition: all
     rules:
       - 'c:mount -> r:\s/tmp\s && r:noexec'
@@ -147,6 +150,7 @@ checks:
     compliance:
       - cis: ["1.1.14"]
       - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
     condition: all
     rules:
       - 'c:mount -> r:\s/home\s && r:nodev'
@@ -160,6 +164,7 @@ checks:
     compliance:
       - cis: ["1.1.15"]
       - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
     condition: all
     rules:
       - 'c:mount -> r:\s/dev/shm\s && r:nodev'
@@ -173,6 +178,7 @@ checks:
     compliance:
       - cis: ["1.1.16"]
       - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
     condition: all
     rules:
       - 'c:mount -> r:\s/dev/shm\s && r:nosuid'
@@ -187,6 +193,7 @@ checks:
       - cis: ["1.1.17"]
       - cis_csc: ["2"]
       - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
     condition: all
     rules:
       - 'c:mount -> r:\s/dev/shm\s && r:noexec'
@@ -298,7 +305,7 @@ checks:
     remediation: "Run the following commands to disable rsh , rlogin , and rexec : # chkconfig rexec off # chkconfig rlogin off # chkconfig rsh off"
     compliance:
       - cis: ["2.1.6"]
-      - cis_csc: ["3.4","9.1"]
+      - cis_csc: ["3.4", "9.1"]
       - pci_dss: ["2.2.3"]
       - nist_800_53: ["CM.1"]
     condition: none
@@ -326,7 +333,7 @@ checks:
     remediation: "Run the following command to disable telnet: # chkconfig telnet off"
     compliance:
       - cis: ["2.1.8"]
-      - cis_csc: ["3.4","9.1"]
+      - cis_csc: ["3.4", "9.1"]
       - pci_dss: ["2.2.3"]
       - nist_800_53: ["CM.1"]
     condition: none
@@ -339,7 +346,7 @@ checks:
     rationale: "TFTP does not support authentication nor does it ensure the confidentiality or integrity of data. It is recommended that TFTP be removed, unless there is a specific need for TFTP. In that case, extreme caution must be used when configuring the services."
     remediation: "Run the following command to disable tftp: # systemctl disable atftpd"
     compliance:
-      - cis: ["2.1.9","2.2.17"]
+      - cis: ["2.1.9", "2.2.17"]
       - cis_csc: ["9.1"]
       - pci_dss: ["2.2.3"]
       - nist_800_53: ["CM.1"]
@@ -353,8 +360,9 @@ checks:
     rationale: "The rsyncd service presents a security risk as it uses unencrypted protocols for communication."
     remediation: "Run the following command to disable rsyncd: # systemctl disable rsyncd"
     compliance:
-      - cis: ["2.1.10","2.2.18"]
+      - cis: ["2.1.10", "2.2.18"]
       - pci_dss: ["2.2.2"]
+      - nist_800_53: ["CM.1"]
     condition: none
     rules:
       - 'c:chkconfig --list -> r:rsync: && r::on'
@@ -383,6 +391,7 @@ checks:
       - cis: ["2.2.1.2"]
       - cis_csc: ["6.1"]
       - pci_dss: ["2.2.2"]
+      - nist_800_53: ["CM.1"]
     condition: all
     rules:
       - 'f:/etc/ntp.conf -> r:^restrict\s+-4\s+default|^restrict\s+default && r:\s+kod && r:\s+nomodify && r:\s+notrap && r:\s+nopeer && r:\s+noquery'
@@ -400,6 +409,7 @@ checks:
       - cis: ["2.2.2"]
       - cis_csc: ["2"]
       - pci_dss: ["2.2.2"]
+      - nist_800_53: ["CM.1"]
     condition: none
     rules:
       - 'c:rpm -qa xorg-x11* -> r:\.'
@@ -414,6 +424,7 @@ checks:
       - cis: ["2.2.3"]
       - cis_csc: ["9.1"]
       - pci_dss: ["2.2.2"]
+      - nist_800_53: ["CM.1"]
     condition: none
     rules:
       - 'c:systemctl is-enabled avahi-daemon -> r:enabled'
@@ -440,6 +451,7 @@ checks:
       - cis: ["2.2.7"]
       - cis_csc: ["9.1"]
       - pci_dss: ["2.2.2"]
+      - nist_800_53: ["CM.1"]
     condition: none
     rules:
       - 'c:systemctl is-enabled nfs -> r:enabled'
@@ -454,6 +466,7 @@ checks:
       - cis: ["2.2.8"]
       - cis_csc: ["9.1"]
       - pci_dss: ["2.2.2"]
+      - nist_800_53: ["CM.1"]
     condition: none
     rules:
       - 'c:systemctl is-enabled named -> r:enabled'
@@ -467,6 +480,7 @@ checks:
       - cis: ["2.2.9"]
       - cis_csc: ["9.1"]
       - pci_dss: ["2.2.2"]
+      - nist_800_53: ["CM.1"]
     condition: none
     rules:
       - 'c:systemctl is-enabled vsftpd -> r:enabled'
@@ -493,6 +507,7 @@ checks:
       - cis: ["2.2.11"]
       - cis_csc: ["9.1"]
       - pci_dss: ["2.2.2"]
+      - nist_800_53: ["CM.1"]
     condition: none
     rules:
       - 'c:systemctl is-enabled dovecot -> r:enabled'
@@ -507,6 +522,7 @@ checks:
       - cis: ["2.2.12"]
       - cis_csc: ["9.1"]
       - pci_dss: ["2.2.2"]
+      - nist_800_53: ["CM.1"]
     condition: none
     rules:
       - 'c:systemctl is-enabled smb -> r:enabled'
@@ -520,6 +536,7 @@ checks:
       - cis: ["2.2.13"]
       - cis_csc: ["9.1"]
       - pci_dss: ["2.2.2"]
+      - nist_800_53: ["CM.1"]
     condition: none
     rules:
       - 'c:systemctl is-enabled squid -> r:enabled'
@@ -533,6 +550,7 @@ checks:
       - cis: ["2.2.14"]
       - cis_csc: ["9.1"]
       - pci_dss: ["2.2.2"]
+      - nist_800_53: ["CM.1"]
     condition: none
     rules:
       - 'c:systemctl is-enabled snmpd -> r:enabled'
@@ -580,8 +598,9 @@ checks:
     remediation: "Set the following parameter in /etc/sysctl.conf or a /etc/sysctl.d/* file: net.ipv4.ip_forward = 0.  Run the following commands to set the active kernel parameters: # sysctl -w net.ipv4.ip_forward=0 # sysctl -w net.ipv4.route.flush=1"
     compliance:
       - cis: ["3.1.1"]
-      - cis_csc: ["3","11"]
+      - cis_csc: ["3", "11"]
       - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
     condition: all
     rules:
       - 'c:sysctl net.ipv4.ip_forward -> r:\s0$'
@@ -595,8 +614,9 @@ checks:
     remediation: "Set the following parameters in /etc/sysctl.conf or a /etc/sysctl.d/* file: net.ipv4.conf.all.send_redirects = 0    net.ipv4.conf.default.send_redirects = 0. Run the following commands to set the active kernel parameters: # sysctl -w net.ipv4.conf.all.send_redirects=0 # sysctl -w net.ipv4.conf.default.send_redirects=0 # sysctl -w net.ipv4.route.flush=1"
     compliance:
       - cis: ["3.1.2"]
-      - cis_csc: ["3","11"]
+      - cis_csc: ["3", "11"]
       - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
     condition: all
     rules:
       - 'c:sysctl net.ipv4.conf.all.send_redirects -> r:^net.ipv4.conf.all.send_redirects\s*=\s*0$'
@@ -615,8 +635,9 @@ checks:
     remediation: "Set the following parameters in /etc/sysctl.conf or a /etc/sysctl.d/* file: net.ipv4.conf.all.accept_source_route = 0    net.ipv4.conf.default.accept_source_route = 0.  Run the following commands to set the active kernel parameters: # sysctl -w net.ipv4.conf.all.accept_source_route=0 # sysctl -w net.ipv4.conf.default.accept_source_route=0 # sysctl -w net.ipv4.route.flush=1"
     compliance:
       - cis: ["3.2.1"]
-      - cis_csc: ["3","11"]
+      - cis_csc: ["3", "11"]
       - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
     condition: all
     rules:
       - 'c:sysctl net.ipv4.conf.all.accept_source_route -> r:^net.ipv4.conf.all.accept_source_route\s*=\s*0$'
@@ -632,8 +653,9 @@ checks:
     remediation: "Set the following parameters in /etc/sysctl.conf or a /etc/sysctl.d/* file: net.ipv4.conf.all.accept_redirects = 0    net.ipv4.conf.default.accept_redirects = 0.  Run the following commands to set the active kernel parameters: # sysctl -w net.ipv4.conf.all.accept_redirects=0 # sysctl -w net.ipv4.conf.default.accept_redirects=0 # sysctl -w net.ipv4.route.flush=1."
     compliance:
       - cis: ["3.2.2"]
-      - cis_csc: ["3","11"]
+      - cis_csc: ["3", "11"]
       - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
     condition: all
     rules:
       - 'c:sysctl net.ipv4.conf.all.accept_redirects -> r:^net.ipv4.conf.all.accept_redirects\s*=\s*0$'
@@ -649,8 +671,9 @@ checks:
     remediation: "Set the following parameters in /etc/sysctl.conf or a /etc/sysctl.d/* file: net.ipv4.conf.all.secure_redirects = 0    net.ipv4.conf.default.secure_redirects = 0.  Run the following commands to set the active kernel parameters: # sysctl -w net.ipv4.conf.all.secure_redirects=0 # sysctl -w net.ipv4.conf.default.secure_redirects=0 # sysctl -w net.ipv4.route.flush=1."
     compliance:
       - cis: ["3.2.3"]
-      - cis_csc: ["3","11"]
+      - cis_csc: ["3", "11"]
       - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
     condition: all
     rules:
       - 'c:sysctl net.ipv4.conf.all.secure_redirects -> r:^net.ipv4.conf.all.secure_redirects\s*=\s*0$'
@@ -667,6 +690,7 @@ checks:
       - cis: ["3.2.4"]
       - cis_csc: ["6"]
       - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
     condition: all
     rules:
       - 'c:sysctl net.ipv4.conf.all.log_martians -> r:^net.ipv4.conf.all.log_martians\s*=\s*1$'
@@ -682,8 +706,9 @@ checks:
     remediation: "Set the following parameter in /etc/sysctl.conf or a /etc/sysctl.d/* file: net.ipv4.icmp_echo_ignore_broadcasts = 1    Run the following commands to set the active kernel parameters: # sysctl -w net.ipv4.icmp_echo_ignore_broadcasts=1 # sysctl -w net.ipv4.route.flush=1."
     compliance:
       - cis: ["3.2.5"]
-      - cis_csc: ["3","11"]
+      - cis_csc: ["3", "11"]
       - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
     condition: all
     rules:
       - 'c:sysctl net.ipv4.icmp_ignore_bogus_error_responses -> r:^net.ipv4.icmp_ignore_bogus_error_responses\s*=\s*1$'
@@ -697,8 +722,9 @@ checks:
     remediation: "Set the following parameter in /etc/sysctl.conf or a /etc/sysctl.d/* file: net.ipv4.icmp_ignore_bogus_error_responses = 1. Run the following commands to set the active kernel parameters: # sysctl -w net.ipv4.icmp_ignore_bogus_error_responses=1 # sysctl -w net.ipv4.route.flush=1."
     compliance:
       - cis: ["3.2.6"]
-      - cis_csc: ["3","11"]
+      - cis_csc: ["3", "11"]
       - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
     condition: all
     rules:
       - 'c:sysctl net.ipv4.icmp_ignore_bogus_error_responses -> r:^net.ipv4.icmp_ignore_bogus_error_responses\s*=\s*1$'
@@ -712,8 +738,9 @@ checks:
     remediation: "Set the following parameters in /etc/sysctl.conf or a /etc/sysctl.d/* file: net.ipv4.conf.all.rp_filter = 1    net.ipv4.conf.default.rp_filter = 1. Run the following commands to set the active kernel parameters: # sysctl -w net.ipv4.conf.all.rp_filter=1 # sysctl -w net.ipv4.conf.default.rp_filter=1 # sysctl -w net.ipv4.route.flush=1"
     compliance:
       - cis: ["3.2.7"]
-      - cis_csc: ["3","11"]
+      - cis_csc: ["3", "11"]
       - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
     condition: all
     rules:
       - 'c:sysctl net.ipv4.conf.all.rp_filter -> r:^net.ipv4.conf.all.rp_filter\s*=\s*1$'
@@ -729,8 +756,9 @@ checks:
     remediation: "Set the following parameter in /etc/sysctl.conf or a /etc/sysctl.d/* file: net.ipv4.tcp_syncookies = 1. Run the following commands to set the active kernel parameters: # sysctl -w net.ipv4.tcp_syncookies=1 # sysctl -w net.ipv4.route.flush=1"
     compliance:
       - cis: ["3.2.8"]
-      - cis_csc: ["3","11"]
+      - cis_csc: ["3", "11"]
       - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
     condition: all
     rules:
       - 'c:grep -Rh net\.ipv4\.tcp_syncookies /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.tcp_syncookies\s*=\s*1$'
@@ -752,7 +780,7 @@ checks:
       - cis: ["5.2.2"]
       - cis_csc: ["3.4"]
       - pci_dss: ["4.1"]
-      - hipaa: ["164.312.a.2.IV","164.312.e.1","164.312.e.2.I","164.312.e.2.II"]
+      - hipaa: ["164.312.a.2.IV", "164.312.e.1", "164.312.e.2.I", "164.312.e.2.II"]
       - nist_800_53: ["SC.8"]
     condition: all
     rules:
@@ -768,7 +796,7 @@ checks:
       - cis: ["5.2.3"]
       - cis_csc: ["16"]
       - pci_dss: ["4.1"]
-      - hipaa: ["164.312.a.2.IV","164.312.e.1","164.312.e.2.I","164.312.e.2.II"]
+      - hipaa: ["164.312.a.2.IV", "164.312.e.1", "164.312.e.2.I", "164.312.e.2.II"]
       - nist_800_53: ["SC.8"]
     condition: all
     rules:
@@ -784,6 +812,7 @@ checks:
       - cis: ["5.2.5"]
       - cis_csc: ["16"]
       - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
     condition: all
     rules:
       - 'f:$sshd_file -> !r:^\s*\t*# && n:^MaxAuthTries\s*\t*(\d+) compare <= 4'
@@ -798,7 +827,7 @@ checks:
       - cis: ["5.2.6"]
       - cis_csc: ["9"]
       - pci_dss: ["4.1"]
-      - hipaa: ["164.312.a.2.IV","164.312.e.1","164.312.e.2.I","164.312.e.2.II"]
+      - hipaa: ["164.312.a.2.IV", "164.312.e.1", "164.312.e.2.I", "164.312.e.2.II"]
       - nist_800_53: ["SC.8"]
     condition: all
     rules:
@@ -814,7 +843,7 @@ checks:
       - cis: ["5.2.7"]
       - cis_csc: ["9"]
       - pci_dss: ["4.1"]
-      - hipaa: ["164.312.a.2.IV","164.312.e.1","164.312.e.2.I","164.312.e.2.II"]
+      - hipaa: ["164.312.a.2.IV", "164.312.e.1", "164.312.e.2.I", "164.312.e.2.II"]
       - nist_800_53: ["SC.8"]
     condition: all
     rules:
@@ -830,7 +859,7 @@ checks:
       - cis: ["5.2.8"]
       - cis_csc: ["5.8"]
       - pci_dss: ["4.1"]
-      - hipaa: ["164.312.a.2.IV","164.312.e.1","164.312.e.2.I","164.312.e.2.II"]
+      - hipaa: ["164.312.a.2.IV", "164.312.e.1", "164.312.e.2.I", "164.312.e.2.II"]
       - nist_800_53: ["SC.8"]
     condition: all
     rules:
@@ -846,7 +875,7 @@ checks:
       - cis: ["5.2.9"]
       - cis_csc: ["16"]
       - pci_dss: ["4.1"]
-      - hipaa: ["164.312.a.2.IV","164.312.e.1","164.312.e.2.I","164.312.e.2.II"]
+      - hipaa: ["164.312.a.2.IV", "164.312.e.1", "164.312.e.2.I", "164.312.e.2.II"]
       - nist_800_53: ["SC.8"]
     condition: none
     rules:
@@ -869,7 +898,7 @@ checks:
       - cis_csc: ["5.1"]
       - pci_dss: ["10.2.5"]
       - hipaa: ["164.312.b"]
-      - nist_800_53: ["IA.10","AC.7"]
+      - nist_800_53: ["AU.14", "AC.7"]
     condition: none
     rules:
       - 'f:/etc/passwd -> !r:^\s*\t*# && !r:^\s*\t*root: && r:^\w+:\w+:0:'
@@ -884,7 +913,7 @@ checks:
       - cis_csc: ["16"]
       - pci_dss: ["10.2.5"]
       - hipaa: ["164.312.b"]
-      - nist_800_53: ["IA.10","AC.7"]
+      - nist_800_53: ["AU.14", "AC.7"]
     condition: none
     rules:
       - 'f:/etc/shadow -> r:^\w+::'
