@@ -26,12 +26,20 @@ requirements:
     - 'f:/etc/apache2/apache2.conf'
     - 'f:/etc/httpd/conf/httpd.conf'
 
+# In case your installation is located in: /etc/apache2 use this block of variables
+#variables:
+#  $main-conf: /etc/apache2/apache2.conf
+#  $conf-dirs: /etc/apache2/conf-enabled,/etc/apache2/mods-enabled,/etc/apache2/sites-enabled
+#  $ssl-confs: /etc/apache2/mods-enabled/ssl.conf
+#  $request-confs: /etc/apache2/mods-enabled/reqtimeout.conf
+#  $traceen: /etc/apache2/apache2.conf,/etc/apache2/conf-enabled/security.conf
+
 variables:
-  $main-conf: /etc/httpd/conf/httpd.conf,/etc/apache2/apache2.conf
-  $conf-dirs: /etc/httpd/conf.d,/etc/httpd/modsecurity.d,/etc/apache2/conf-enabled,/etc/apache2/mods-enabled,/etc/apache2/sites-enabled
-  $ssl-confs: /etc/httpd/conf.d/ssl.conf,/etc/apache2/mods-enabled/ssl.conf
-  $request-confs: /etc/httpd/conf/httpd.conf,/etc/apache2/mods-enabled/reqtimeout.conf
-  $traceen: /etc/httpd/conf/httpd.conf,/etc/apache2/apache2.conf,/etc/apache2/conf-enabled/security.conf
+  $main-conf: /etc/httpd/conf/httpd.conf
+  $conf-dirs: /etc/httpd/conf.d,/etc/httpd/modsecurity.d
+  $ssl-confs: /etc/httpd/conf.d/ssl.conf
+  $request-confs: /etc/httpd/conf/httpd.conf
+  $traceen: /etc/httpd/conf/httpd.conf
 
 #2.3 Disable WebDAV Modules
 checks:
