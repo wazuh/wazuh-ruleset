@@ -9,7 +9,7 @@
 
 policy:
   id: "unix_audit"
-  file: "unix_audit.yml"
+  file: "sca_unix_audit.yml"
   name: "System audit for Unix based systems"
   description: "Guidance for establishing a secure configuration for Unix based systems."
   references:
@@ -233,7 +233,7 @@ checks:
     remediation: "Edit the /etc/pam.d/common-auth file and add the auth line below: #auth required pam_tally2.so onerr=fail audit silent deny=5 unlock_time=900"
     condition: all
     rules:
-      - 'f:/etc/pam.d/common-auth -> r:^auth\s*\t*required\s*\t*pam_tally2.so\s*\t*onerr=fail\s*\t*audit\s*\t*silent\s*\t*deny=\d+\s*\t*unlock_time=\d+$'
+      - 'f:/etc/pam.d/common-auth -> !r:^# && r:auth\s*\t*required\s*\t*pam_tally2.so && r:onerr=fail && r:audit && r:silent && r:deny\s*=\s*\d && r:unlock_time\s*=\s*\d\d\d+'
 
   - id: 4017
     title: "Ensure password hashing algorithm is SHA-512"
