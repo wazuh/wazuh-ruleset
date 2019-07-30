@@ -1,12 +1,13 @@
 <!--
   -  Active response decoders
   -  Author: Daniel Cid.
+  -  Updated by Wazuh, Inc.
+  -  Copyright (C) 2015-2019, Wazuh Inc.
   -  Copyright (C) 2009 Trend Micro Inc.
-  -  Updated by Wazuh, Inc. <support@wazuh.com>.
   -  This program is a free software; you can redistribute it and/or modify it under the terms of GPLv2.
 -->
 
-<!-- 
+<!--
 - Examples
 Sat May  7 03:17:27 CDT 2011 /var/ossec/active-response/bin/firewall-drop.sh add - 172.16.0.1 1304756247.60385 31151
 Sat May  7 03:27:57 CDT 2011 /var/ossec/active-response/bin/firewall-drop.sh delete - 172.16.0.1 1304756247.60385 31151
@@ -27,7 +28,7 @@ Wed 12/07/2016 16:48:15.37 "active-response/bin/route-null.cmd" delete "-" "192.
 
 
 <decoder name="ar_log">
-  <prematch>^\w\w\w \w+\s+\d+ \d\d:\d\d:\d\d \w+ \d+ /\S+/active-response/bin/|^\w\w\w \d\d/\d\d/\d\d\d\d \.+"active-response/bin/|^\d\d/\d\d/\d\d\d\d \.+"active-response/bin/</prematch>
+  <prematch>^\w\w\w \w+\s+\d+ \d\d:\d\d:\d\d \p*\w+ \d+ /\S+/active-response/bin/|^\w\w\w \d\d/\d\d/\d\d\d\d \.+"active-response/bin/|^\d\d/\d\d/\d\d\d\d \.+"active-response/bin/</prematch>
 </decoder>
 
 <decoder name="ar_log_fields">
