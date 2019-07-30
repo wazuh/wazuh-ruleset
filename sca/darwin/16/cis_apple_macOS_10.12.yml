@@ -23,8 +23,8 @@ requirements:
   description: "Requirements for running the SCA scan against MacOS 10.12 (Sierra)."
   condition: any
   rules:
-    - 'c:sw_vers -> r:^ProductVersion:\t*10\p12'
-    - 'c:system_profiler SPSoftwareDataType -> r:^\s*System Version:\.*10\p12'
+    - 'c:sw_vers -> r:^ProductVersion:\t*\s*10\p12'
+    - 'c:system_profiler SPSoftwareDataType -> r:System Version:\.*10\p12'
     - 'c:defaults read loginwindow SystemVersionStampAsString -> r:^\s*10\p12'
 
 checks:

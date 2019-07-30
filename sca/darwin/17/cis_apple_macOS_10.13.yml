@@ -19,13 +19,13 @@ policy:
     - https://www.cisecurity.org/cis-benchmarks/
 
 requirements:
-  title: "Check MacOS version"
+  title: "Check MacOS version (is 10.13 or higher?)"
   description: "Requirements for running the SCA scan against MacOS 10.13 (High Sierra)."
   condition: any
   rules:
-    - 'c:sw_vers -> r:^ProductVersion:\t*10\p13'
-    - 'c:system_profiler SPSoftwareDataType -> r:^\s*System Version:\.*10\p13'
-    - 'c:defaults read loginwindow SystemVersionStampAsString -> r:^\s*10\p13'
+    - 'c:sw_vers -> r:^ProductVersion:\t*\s*10\p\d+'
+    - 'c:system_profiler SPSoftwareDataType -> r:System Version:\.*10\p\d+'
+    - 'c:defaults read loginwindow SystemVersionStampAsString -> r:^\t*\s*10\p\d+'
 
 checks:
 # 1.1 Verify all Apple provided software is current (Scored)

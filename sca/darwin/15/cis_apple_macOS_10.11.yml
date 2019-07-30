@@ -13,8 +13,8 @@
 policy:
   id: "cis_apple_macos_10_11"
   file: "cis_apple_macOS_10.11.yml"
-  name: "CIS Apple OSX 10.11 Benchmark"
-  description: "This document, CIS Apple OSX 10.11 Benchmark, provides prescriptive guidance for establishing a secure configuration posture for Apple OSX 10.11. This guide was tested against Apple OSX 10.11."
+  name: "CIS Apple macOS 10.11 Benchmark"
+  description: "This document, CIS Apple macOS 10.11 Benchmark, provides prescriptive guidance for establishing a secure configuration posture for Apple macOS 10.11. This guide was tested against Apple macOS 10.11."
   references:
     - https://www.cisecurity.org/cis-benchmarks/
 
@@ -23,8 +23,8 @@ requirements:
   description: "Requirements for running the SCA scan against MacOS 10.11 (El Capitan)."
   condition: any
   rules:
-    - 'c:sw_vers -> r:^ProductVersion:\t*10\p11'
-    - 'c:system_profiler SPSoftwareDataType -> r:^\s*System Version:.*10\p11'
+    - 'c:sw_vers -> r:^ProductVersion:\t*\s*10\p11'
+    - 'c:system_profiler SPSoftwareDataType -> r:System Version:.*10\p11'
     - 'c:defaults read loginwindow SystemVersionStampAsString -> r:^\s*10\p11'
 
 checks:
@@ -379,7 +379,7 @@ checks:
       - cis: ["5.11"]
     condition: none
     rules:
-      - 'f:/etc/pam.d/screensaver -> r:group=admin,wheel && r:fail_safe'
+      - 'f:/etc/pam.d/screensaver -> r:group=admin,wheel|group=wheel,admin && r:fail_safe'
 
 # 5.18 System Integrity Protection status (Scored)
   - id: 7528
