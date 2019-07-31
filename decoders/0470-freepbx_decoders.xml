@@ -1,0 +1,68 @@
+<decoder name="FreePBX">
+    <prematch>\S+ \d\d* \d\d:\d\d:\d\d \w+[\d+]</prematch>
+</decoder>
+<decoder name="FreePBX">
+    <prematch>[\S+ \d\d* \d\d:\d\d:\d\d] \w+[\d+]</prematch>
+</decoder>
+<decoder name="FreePBX">
+    <prematch>[\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d] Asterisk \d+.\d.\d</prematch>
+</decoder>
+<decoder name="FreePBX">
+    <prematch>[\d\d\d\d-\w+-\d\d \d\d:\d\d:\d\d] [\.+] (\.+) - (\.+)</prematch>
+</decoder>
+<decoder name="FreePBX">
+    <prematch>[\d\d\d\d-\w+-\d\d \d\d:\d\d:\d\d] [\.+]: (\.+)</prematch>
+</decoder>
+<decoder name="FreePBX">
+    <prematch>[\.+] [\w+] [\w+] \S+ \S+ \.+: \w+</prematch>
+</decoder>
+<decoder name="FreePBX">
+    <prematch>[\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d] \w+ \w+ \S+ \w+ \S+ \d+.\d+.\d+.\d+</prematch>
+</decoder>
+<decoder name="FreePBX">
+    <prematch>[\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d] \w+[\d+] \.+.c: \.+</prematch>
+</decoder>
+<decoder name="FreePBX">
+    <program_name>lrmd|crmd|pacemakerd</program_name>
+</decoder>
+
+<decoder name="FreePBX_child">
+    <parent>FreePBX</parent>
+    <regex>(\S+ \d\d* \d\d:\d\d:\d\d) (\w+)[(\d+)] (\.+).c: (\.+)</regex>
+    <order>timestamp,msg_type,code,origin,msg</order>
+</decoder>
+<decoder name="FreePBX_child">
+    <parent>FreePBX</parent>
+    <regex>[(\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d)] (\w+)[(\d+)] (\w+).c: (\.+)</regex>
+    <order>timestamp,msg_type,code,origin,msg</order>n
+</decoder>
+<decoder name="FreePBX_child">
+    <parent>FreePBX</parent>
+    <regex>[(\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d)] Asterisk (\d+.\d.\d) \S+ \S+ (\w+) @ (\S+) \S+ \S+ (\S+) \S+ (\S+) \S+ (\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d \w+)</regex>
+    <order>timestamp,asterisk_v,user,machinename,type,os,since</order>
+</decoder>
+<decoder name="FreePBX_child">
+    <parent>FreePBX</parent>
+    <regex>[(\d\d\d\d-\w+-\d\d \d\d:\d\d:\d\d)] [(\.+)] \((\.+)\) - (\.+)</regex>
+    <order>timestamp,msg_type,source,operation</order>
+</decoder>
+<decoder name="FreePBX_child">
+    <parent>FreePBX</parent>
+    <regex>[(\d\d\d\d-\w+-\d\d \d\d:\d\d:\d\d)] [\w+.(\w+)]: (\.+)</regex>
+    <order>timestamp,msg_type,operation</order>
+</decoder>
+<decoder name="FreePBX_child">
+    <parent>FreePBX</parent>
+    <regex>[\.+] [(\w+)] [(\w+)] \S+ \S+ (\.+): (\w+)</regex>
+    <order>msg_type,program,source,hash</order>
+</decoder>
+<decoder name="FreePBX_child">
+    <parent>FreePBX</parent>
+    <regex>(\w+): (\.+): (\.+)</regex>
+    <order>msg_type,reason,details</order>
+</decoder>
+<decoder name="FreePBX_child">
+    <parent>FreePBX</parent>
+    <regex>[(\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d)] (\w+) (\w+) \S+ (\w+) \S+ (\d+.\d+.\d+.\d+)</regex>
+    <order>timestamp,operation,result,user,srcip</order>
+</decoder>
