@@ -48,7 +48,7 @@ checks:
       - cis: ["2.2"]
     condition: none
     rules:
-      - 'c:netstat -an -> r:.25\s*\t* && !r:127.0.0.1.25|::1'
+      - 'c:netstat -an -> r:.25\s*\t*|:25\s*\t* && !r:127.0.0.1|::1'
 
   - id: 7002
     title: "Disable RPC Encryption Key"
@@ -407,8 +407,8 @@ checks:
       - cis: ["6.8"]
     condition: all
     rules:
-      - 'f:/etc/pam.conf -> r:^rlogin\s*\t*auth sufficient\s*\t*pam_rhosts_auth.so.1'
-      - 'f:/etc/pam.conf -> r:^rsh\s*\t*auth sufficient\s*\t*pam_rhosts_auth.so.1'
+      - 'f:/etc/pam.conf -> r:^\s*\t*rlogin && r:auth && r:sufficient && r:pam_rhosts_auth.so.1'
+      - 'f:/etc/pam.conf -> r:^rsh && r:auth && r:sufficient && r:pam_rhosts_auth.so.1'
 
   - id: 7029
     title: "Restrict FTP Use"
@@ -449,7 +449,7 @@ checks:
       - cis: ["6.10"]
     condition: all
     rules:
-      - 'f:/etc/default/login -> n:^SLEEPTIME\p(\d+) compare >= 4'
+      - 'f:/etc/default/login -> n:^SLEEPTIME\s*\t*=\s*\t*(\d+) compare >= 4'
 
   - id: 7031
     title: "Remove Autologin Capabilities from the GNOME desktop"
@@ -460,9 +460,9 @@ checks:
       - cis: ["6.11"]
     condition: all
     rules:
-      - 'f:/etc/pam.conf -> !r:^# && r:gdm-autologin\s*\t*auth\s*\t*required\s*\t*pam_unix_cred.so.1'
-      - 'f:/etc/pam.conf -> !r:^# && r:gdm-autologin\s*\t*auth\s*\t*sufficient\s*\t*pam_allow.so.1'
-      - 'f:/etc/pam.conf -> !r:^# && r:gdm-autologin\s*\t*account\s*\t*sufficient\s*\t*pam_allow.so.1'
+      - 'f:/etc/pam.conf -> !r:^# && r:gdm-autologin && r:auth && r:required && r:pam_unix_cred.so.1'
+      - 'f:/etc/pam.conf -> !r:^# && r:gdm-autologin && r:auth && r:sufficient && r:pam_allow.so.1'
+      - 'f:/etc/pam.conf -> !r:^# && r:gdm-autologin && r:account && r:sufficient && r:pam_allow.so.1'
 
   - id: 7032
     title: "Set Default Screen Lock for GNOME Users"
@@ -503,7 +503,7 @@ checks:
       - cis: ["6.14"]
     condition: none
     rules:
-      - 'f:/etc/default/login -> !r:^CONSOLE\p/dev/console'
+      - 'f:/etc/default/login -> !r:^CONSOLE\s*\t*=\s*\t*/dev/console'
 
   - id: 7035
     title: "Set Retry Limit for Account Lockout"
@@ -514,8 +514,8 @@ checks:
       - cis: ["6.15"]
     condition: all
     rules:
-      - 'f:/etc/default/login -> n:^RETRIES\p(\d+) compare <=3'
-      - 'f:/etc/security/policy.conf -> r:^LOCK_AFTER_RETRIES\pyes'
+      - 'f:/etc/default/login -> n:^RETRIES\s*\t*=\s*\t*(\d+) compare <=3'
+      - 'f:/etc/security/policy.conf -> r:^LOCK_AFTER_RETRIES\s*\t*=\s*\t*yes'
 
   - id: 7036
     title: "Secure the GRUB Menu (Intel)"
@@ -539,9 +539,9 @@ checks:
       - cis: ["7.1"]
     condition: all
     rules:
-      - 'f:/etc/default/passwd -> n:^maxweeks\(\d+) compare <= 13'
-      - 'f:/etc/default/passwd -> r:^minweeks\p1'
-      - 'f:/etc/default/passwd -> !r:^warnweeks\p4'
+      - 'f:/etc/default/passwd -> !r:^# && r:maxweeks|MAXWEEKS && n:=\s*\t*(\d+) compare <= 13'
+      - 'f:/etc/default/passwd -> !r:^# && r:minweeks|MINWEEKS && n:=\s*\t*(\d+) compare == 1'
+      - 'f:/etc/default/passwd -> !r:^# && r:warnweeks|WARNWEEKS && n:=\s*\t*(\d+) compare == 4'
 
   - id: 7038
     title: "Set Strong Password Creation Policies"
