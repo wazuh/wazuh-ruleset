@@ -1,0 +1,36 @@
+<group name="freepbx,">
+ <rule id="70000" level="0">
+    <decoded_as>FreePBX</decoded_as>
+    <description> FreePBX parent </description>
+ </rule>
+<rule id="70001" level="3">
+   <if_sid>70000 </if_sid>
+   <field name="msg_type">ERROR</field>
+   <description> There was and error in the process</description>
+   <group>PBXinfo</group>
+</rule>
+<rule id="70002" level="3">
+   <if_sid>70000</if_sid>
+   <field name="msg_type">WARNING</field>
+   <description>Warning generated</description>
+   <group>PBXinfo</group>
+</rule>
+<rule id="70003" level="2">
+   <if_sid>70000</if_sid>
+   <field name="msg_type">VERBOSE</field>
+   <description>Informative messages</description>
+   <group>PBXinfo</group>
+</rule>
+<rule id="70004" level="2">
+   <if_sid>70000</if_sid>
+   <field name="msg_type">NOTICE</field>
+   <description>Notification messages</description>
+   <group>PBXinfo</group>
+</rule>
+<rule id="70005" level="2">
+   <if_sid>70000</if_sid>
+   <field name="msg_type">INFO</field>
+   <description>Informative messages</description>
+   <group>PBXinfo</group>
+</rule>
+</group>
