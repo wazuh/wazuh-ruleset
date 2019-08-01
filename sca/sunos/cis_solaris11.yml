@@ -198,15 +198,15 @@ checks:
     condition: all
     rules:
       - 'f:/etc/coreadm.conf'
-      - 'f:/etc/coreadm.conf -> r:^COREADM_GLOB_PATTERN\p\.+'
-      - 'f:/etc/coreadm.conf -> r:^COREADM_GLOB_CONTENT\pdefault'
-      - 'f:/etc/coreadm.conf -> r:^COREADM_INIT_PATTERN\pcore'
-      - 'f:/etc/coreadm.conf -> r:^COREADM_INIT_CONTENT\pdefault'
-      - 'f:/etc/coreadm.conf -> r:^COREADM_GLOB_ENABLED\pyes|^COREADM_GLOB_ENABLED\pno'
-      - 'f:/etc/coreadm.conf -> r:^COREADM_PROC_ENABLED\pno'
-      - 'f:/etc/coreadm.conf -> r:^COREADM_GLOB_SETID_ENABLED\pyes|^COREADM_GLOB_SETID_ENABLED\pno'
-      - 'f:/etc/coreadm.conf -> r:^COREADM_PROC_SETID_ENABLED\pno'
-      - 'f:/etc/coreadm.conf -> r:^COREADM_GLOB_LOG_ENABLED\pyes'
+      - 'f:/etc/coreadm.conf -> r:^COREADM_GLOB_PATTERN\s*\t*=\s*\t*\.+'
+      - 'f:/etc/coreadm.conf -> r:^COREADM_GLOB_CONTENT\s*\t*=\s*\t*default'
+      - 'f:/etc/coreadm.conf -> r:^COREADM_INIT_PATTERN\s*\t*=\s*\t*core'
+      - 'f:/etc/coreadm.conf -> r:^COREADM_INIT_CONTENT\s*\t*=\s*\t*default'
+      - 'f:/etc/coreadm.conf -> r:^COREADM_GLOB_ENABLED\s*\t*=\s*\t*yes|^COREADM_GLOB_ENABLED\s*\t*=\s*\t*no'
+      - 'f:/etc/coreadm.conf -> r:^COREADM_PROC_ENABLED\s*\t*=\s*\t*no'
+      - 'f:/etc/coreadm.conf -> r:^COREADM_GLOB_SETID_ENABLED\s*\t*=\s*\t*yes|^COREADM_GLOB_SETID_ENABLED\s*\t*=\s*\t*no'
+      - 'f:/etc/coreadm.conf -> r:^COREADM_PROC_SETID_ENABLED\s*\t*=\s*\t*no'
+      - 'f:/etc/coreadm.conf -> r:^COREADM_GLOB_LOG_ENABLED\s*\t*=\s*\t*yes'
 
   - id: 7014
     title: "Enable Stack Protection"
@@ -218,8 +218,8 @@ checks:
     condition: all
     rules:
       - 'f:/etc/system'
-      - 'f:/etc/system -> r:^\s*\t*noexec_user_stack\p1'
-      - 'f:/etc/system -> r:^\s*\t*noexec_user_stack_log\p1'
+      - 'f:/etc/system -> r:^\s*\t*noexec_user_stack\s*\t*=\s*\t*1'
+      - 'f:/etc/system -> r:^\s*\t*noexec_user_stack_log\s*\t*=\s*\t*1'
 
   - id: 7015
     title: "Enable Strong TCP Sequence Number Generation"
@@ -230,7 +230,7 @@ checks:
       - cis: ["3.3"]
     condition: all
     rules:
-      - 'f:/etc/default/inetinit -> r:^TCP_STRONG_ISS\p2'
+      - 'f:/etc/default/inetinit -> r:^TCP_STRONG_ISS\s*\t*=\s*\t*2'
 
 # 4 Auditing and Logging
   - id: 7016
@@ -340,7 +340,7 @@ checks:
     condition: all
     rules:
       - 'f:/etc/default/keyserv'
-      - 'f:/etc/default/keyserv -> r:^ENABLE\sNOBODY\sKEYS\pNO'
+      - 'f:/etc/default/keyserv -> r:^ENABLE\sNOBODY\sKEYS\s*\t*=\s*\t*NO'
 
   - id: 7023
     title: "Disable X11 Forwarding for SSH"
@@ -551,18 +551,18 @@ checks:
       - cis: ["7.2"]
     condition: all
     rules:
-      - 'f:/etc/default/passwd -> n:^passlength\p(\d) compare <= 8'
-      - 'f:/etc/default/passwd -> r:^namecheck\pyes'
-      - 'f:/etc/default/passwd -> n:^history\p(\d+) compare >= 10'
-      - 'f:/etc/default/passwd -> n:^mindiff\p(\d+) compare >= 3'
-      - 'f:/etc/default/passwd -> n:^minalpha\p(\d+) compare >= 2'
-      - 'f:/etc/default/passwd -> n:^minupper\p(\d+) compare >= 1'
-      - 'f:/etc/default/passwd -> n:^minlower\p(\d+) compare >= 1'
-      - 'f:/etc/default/passwd -> n:^minnonalpha\p(\d+) compare >= 1'
-      - 'f:/etc/default/passwd -> r:^maxrepeats\p0'
-      - 'f:/etc/default/passwd -> r:^whitespace\pyes'
-      - 'f:/etc/default/passwd -> r:^dictiondbdir\p/var/passwd'
-      - 'f:/etc/default/passwd -> r:^dictionlist\p/usr/share/lib/dict/words'
+      - 'f:/etc/default/passwd -> n:^passlength\s*\t*=\s*\t*(\d) compare <= 8'
+      - 'f:/etc/default/passwd -> r:^namecheck\s*\t*=\s*\t*yes'
+      - 'f:/etc/default/passwd -> n:^history\s*\t*=\s*\t*(\d+) compare >= 10'
+      - 'f:/etc/default/passwd -> n:^mindiff\s*\t*=\s*\t*(\d+) compare >= 3'
+      - 'f:/etc/default/passwd -> n:^minalpha\s*\t*=\s*\t*(\d+) compare >= 2'
+      - 'f:/etc/default/passwd -> n:^minupper\s*\t*=\s*\t*(\d+) compare >= 1'
+      - 'f:/etc/default/passwd -> n:^minlower\s*\t*=\s*\t*(\d+) compare >= 1'
+      - 'f:/etc/default/passwd -> n:^minnonalpha\s*\t*=\s*\t*(\d+) compare >= 1'
+      - 'f:/etc/default/passwd -> r:^maxrepeats\s*\t*=\s*\t*0'
+      - 'f:/etc/default/passwd -> r:^whitespace\s*\t*=\s*\t*yes'
+      - 'f:/etc/default/passwd -> r:^dictiondbdir\s*\t*=\s*\t*/var/passwd'
+      - 'f:/etc/default/passwd -> r:^dictionlist\s*\t*=\s*\t*/usr/share/lib/dict/words'
 
   - id: 7039
     title: "Set Default umask for users"
@@ -573,7 +573,7 @@ checks:
       - cis: ["7.3"]
     condition: none
     rules:
-      - 'f:/etc/default/login -> !r:^#  && !r:^umask\p027|^umask\p077'
+      - 'f:/etc/default/login -> !r:^#  && !r:^umask\s*\t*=\s*\t*027|^umask\s*\t*=\s*\t*077'
 
   - id: 7040
     title: "Set Default File Creation Mask for FTP Users"
@@ -582,9 +582,9 @@ checks:
     remediation: "Perform the following to implement the recommended state: # cd /etc    # if [ \"`grep '^Umask' proftpd.conf`\" ]; then awk '/^Umask/ { $2 = \"027\" } { print }' proftpd.conf > proftpd.conf.CIS mv proftpd.conf.CIS proftpd.conf else echo \"Umask 027\" >> proftpd.conf fi"
     compliance:
       - cis: ["7.4"]
-    condition: none
+    condition: all
     rules:
-      - 'f:/etc/proftpd.conf -> !r:^#  && !r:^umask\s*027'
+      - 'f:/etc/proftpd.conf -> !r:^#  && !r:^Umask\s*\t*027'
 
   - id: 7041
     title: "Set \"mesg n\" as Default for All Users"
@@ -642,7 +642,7 @@ checks:
       - cis: ["8.4"]
     condition: all
     rules:
-      - 'f:/etc/proftpd.conf -> r:^DisplayConnect\s+/etc/issue'
+      - 'f:/etc/proftpd.conf -> r:^DisplayConnect\s*\t*/etc/issue'
 
   - id: 7046
     title: "Check that the Banner Setting for telnet is Null"
@@ -653,7 +653,7 @@ checks:
       - cis: ["8.5"]
     condition: all
     rules:
-      - 'f:/etc/default/telnetd -> r:BANNER=$'
+      - 'f:/etc/default/telnetd -> r:BANNER=""$'
 
 # 9 System Maintenance
   - id: 7047
@@ -669,28 +669,28 @@ checks:
       - 'f:/etc/shadow -> r:lp && !r::NL:|:NP:'
       - 'f:/etc/shadow -> r:adm && !r::NL:|:NP:'
       - 'f:/etc/shadow -> r:bin && !r::NL:|:NP:'
-      - 'f:/etc/shadow -> r:gdm && !r::\p*LK\p*:'
-      - 'f:/etc/shadow -> r:noaccess && !r::\p*LK\p*:'
-      - 'f:/etc/shadow -> r:nobody && !r::\p*LK\p*:'
-      - 'f:/etc/shadow -> r:nobody4 && !r::\p*LK\p*:'
-      - 'f:/etc/shadow -> r:openldap && !r::\p*LK\p*:'
-      - 'f:/etc/shadow -> r:unknown && !r::\p*LK\p*:'
-      - 'f:/etc/shadow -> r:webservd && !r::\p*LK\p*:'
+      - 'f:/etc/shadow -> r:gdm && !r::\s*\t*=\s*\t**LK\s*\t*=\s*\t**:'
+      - 'f:/etc/shadow -> r:noaccess && !r::\s*\t*=\s*\t**LK\s*\t*=\s*\t**:'
+      - 'f:/etc/shadow -> r:nobody && !r::\s*\t*=\s*\t**LK\s*\t*=\s*\t**:'
+      - 'f:/etc/shadow -> r:nobody4 && !r::\s*\t*=\s*\t**LK\s*\t*=\s*\t**:'
+      - 'f:/etc/shadow -> r:openldap && !r::\s*\t*=\s*\t**LK\s*\t*=\s*\t**:'
+      - 'f:/etc/shadow -> r:unknown && !r::\s*\t*=\s*\t**LK\s*\t*=\s*\t**:'
+      - 'f:/etc/shadow -> r:webservd && !r::\s*\t*=\s*\t**LK\s*\t*=\s*\t**:'
       - 'f:/etc/shadow -> r:mysql && !r::NL:|:NP:'
       - 'f:/etc/shadow -> r:nuuc && !r::NL:|:NP:'
       - 'f:/etc/shadow -> r:postgres && !r::NL:|:NP:'
       - 'f:/etc/shadow -> r:smmsp && !r::NL:|:NP:'
       - 'f:/etc/shadow -> r:sys && !r::NL:|:NP:'
       - 'f:/etc/shadow -> r:uucp && !r::NL:|:NP:'
-      - 'f:/etc/shadow -> r:aiuser && !r::\p*LK\p*:'
-      - 'f:/etc/shadow -> r:dhcpserv && !r::\p*LK\p*:'
-      - 'f:/etc/shadow -> r:dladm && !r::\p*LK\p*:'
-      - 'f:/etc/shadow -> r:ftp && !r::\p*LK\p*:'
-      - 'f:/etc/shadow -> r:netadm && !r::\p*LK\p*:'
-      - 'f:/etc/shadow -> r:netcfg && !r::\p*LK\p*:'
-      - 'f:/etc/shadow -> r:pkg5srv && !r::\p*LK\p*:'
-      - 'f:/etc/shadow -> r:svctag && !r::\p*LK\p*:'
-      - 'f:/etc/shadow -> r:xvm && !r::\p*LK\p*:'
+      - 'f:/etc/shadow -> r:aiuser && !r::\s*\t*=\s*\t**LK\s*\t*=\s*\t**:'
+      - 'f:/etc/shadow -> r:dhcpserv && !r::\s*\t*=\s*\t**LK\s*\t*=\s*\t**:'
+      - 'f:/etc/shadow -> r:dladm && !r::\s*\t*=\s*\t**LK\s*\t*=\s*\t**:'
+      - 'f:/etc/shadow -> r:ftp && !r::\s*\t*=\s*\t**LK\s*\t*=\s*\t**:'
+      - 'f:/etc/shadow -> r:netadm && !r::\s*\t*=\s*\t**LK\s*\t*=\s*\t**:'
+      - 'f:/etc/shadow -> r:netcfg && !r::\s*\t*=\s*\t**LK\s*\t*=\s*\t**:'
+      - 'f:/etc/shadow -> r:pkg5srv && !r::\s*\t*=\s*\t**LK\s*\t*=\s*\t**:'
+      - 'f:/etc/shadow -> r:svctag && !r::\s*\t*=\s*\t**LK\s*\t*=\s*\t**:'
+      - 'f:/etc/shadow -> r:xvm && !r::\s*\t*=\s*\t**LK\s*\t*=\s*\t**:'
       - 'f:/etc/shadow -> r:upnp && !r::NL:|:NP:'
       - 'f:/etc/shadow -> r:zfssnap && !r::NL:|:NP:'
 
@@ -725,21 +725,15 @@ checks:
       - cis: ["9.6"]
     condition: none
     rules:
-      - 'f:/etc/profile -> r:.'
-      - 'f:/etc/environment -> r:.'
-      - 'f:/.profile -> r:.'
-      - 'f:/.bash_profile -> r:.'
-      - 'f:/.bashrc -> r:.'
+      - 'f:/etc/profile -> r::.'
+      - 'f:/root/.profile -> r::.'
+      - 'f:/root/.bashrc -> r::.'
       - 'f:/etc/profile -> r:::'
-      - 'f:/etc/environment -> r:::'
-      - 'f:/.profile -> r:::'
-      - 'f:/.bash_profile -> r:::'
-      - 'f:/.bashrc -> r:::'
+      - 'f:/root/.profile -> r:::'
+      - 'f:/root/.bashrc -> r:::'
       - 'f:/etc/profile -> r::$'
-      - 'f:/etc/environment -> r::$'
-      - 'f:/.profile -> r::$'
-      - 'f:/.bash_profile -> r::$'
-      - 'f:/.bashrc -> r::$'
+      - 'f:/root/.profile -> r::$'
+      - 'f:/root/.bashrc -> r::$'
 
   - id: 7051
     title: "Check That Users Are Assigned Home Directories"
@@ -750,4 +744,4 @@ checks:
       - cis: ["9.12"]
     condition: none
     rules:
-      - 'f:/etc/passwd -> r:\w+:\.*:\d*:\d*:\.*:\S+:\.*'
+      - 'f:/etc/passwd -> r:\w+:\.*:\d*:\d*:\.*::\.*'
