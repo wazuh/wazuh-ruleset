@@ -34,10 +34,10 @@ checks:
     remediation: "To disable this service, run the following command: # svcadm disable svc:/application/graphical-login/gdm:default"
     compliance:
       - cis: ["2.1"]
-    condition: none
+    condition: any
     rules:
-      - 'p:gdm'
-      - 'p:cde'
+      - 'p:svcs -Ho state svc:/application/graphical-login/gdm:default -> r:disabled'
+      - 'not p:svcs -Ho state svc:/application/graphical-login/gdm:default'
 
   - id: 7001
     title: "Configure sendmail Service for Local-Only Mode"
@@ -57,9 +57,10 @@ checks:
     remediation: "To disable this service, run the following command: # svcadm disable svc:/network/rpc/keyserv"
     compliance:
       - cis: ["2.3"]
-    condition: none
+    condition: any
     rules:
-      - 'p:keyserv'
+      - 'p:svcs -Ho state svc:/network/rpc/keyserv -> r:disabled'
+      - 'not p:svcs -Ho state svc:/network/rpc/keyserv'
 
   - id: 7003
     title: "Disable NIS Server Services"
@@ -70,12 +71,8 @@ checks:
       - cis: ["2.4"]
     condition: none
     rules:
-      - 'p:ypserv'
-      - 'p:ypbind'
-      - 'p:ypxfr'
-      - 'p:rpc.yppasswdd'
-      - 'p:rpc.ypupdated'
-      - 'f:/etc/init.d/nis'
+      - 'p:svcs -Ho state svc:/network/nis/server -> r:online'
+      - 'p:svcs -Ho state svc:/network/nis/domain -> r:online'
 
   - id: 7004
     title: "Disable NIS Client Services"
@@ -86,12 +83,8 @@ checks:
       - cis: ["2.5"]
     condition: none
     rules:
-      - 'p:ypserv'
-      - 'p:ypbind'
-      - 'p:ypxfr'
-      - 'p:rpc.yppasswdd'
-      - 'p:rpc.ypupdated'
-      - 'f:/etc/init.d/nis'
+      - 'p:svcs -Ho state svc:/network/nis/client -> r:online'
+      - 'p:svcs -Ho state svc:/network/nis/domain -> r:online'
 
   - id: 7005
     title: "Disable Kerberos TGT Expiration Warning"
@@ -100,9 +93,10 @@ checks:
     remediation: "To disable this service, run the following command: # svcadm disable svc:/network/security/ktkt_warn"
     compliance:
       - cis: ["2.6"]
-    condition: none
+    condition: any
     rules:
-      - 'p:ktkt_warnd'
+      - 'p:svcs -Ho state svc:/network/security/ktkt_warn -> r:disabled'
+      - 'not p:svcs -Ho state svc:/network/security/ktkt_warn'
 
   - id: 7006
     title: "Disable Generic Security Services (GSS)"
@@ -111,9 +105,10 @@ checks:
     remediation: "To disable this service, run the following command: # svcadm disable svc:/network/rpc/gss"
     compliance:
       - cis: ["2.7"]
-    condition: none
+    condition: any
     rules:
-      - 'p:gssd'
+      - 'p:svcs -Ho state svc:/network/rpc/gss -> r:disabled'
+      - 'not p:svcs -Ho state svc:/network/rpc/gss'
 
   - id: 7007
     title: "Disable Removable Volume Manager"
@@ -124,7 +119,8 @@ checks:
       - cis: ["2.8"]
     condition: none
     rules:
-      - 'p:smserverd'
+      - 'p:svcs -Ho state svc:/system/filesystem/rmvolmgr -> r:online'
+      - 'p:svcs -Ho state svc:/network/rpc/smserver -> r:online'
 
   - id: 7008
     title: "Disable automount Service"
@@ -133,9 +129,10 @@ checks:
     remediation: "To disable this service, run the following command: # svcadm disable svc:/system/filesystem/autofs"
     compliance:
       - cis: ["2.9"]
-    condition: none
+    condition: any
     rules:
-      - 'p:automountd'
+      - 'p:svcs -Ho state svc:/system/filesystem/autofs -> r:disabled'
+      - 'not p:svcs -Ho state svc:/system/filesystem/autofs'
 
   - id: 7009
     title: "Disable Apache Service"
@@ -146,10 +143,10 @@ checks:
       - cis: ["2.10"]
     references:
       - http://httpd.apache.org/docs/2.0/misc/security_tips.html
-    condition: none
+    condition: any
     rules:
-      - 'p:apache'
-      - 'p:httpd'
+      - 'p:svcs -Ho state svc:/network/http:apache22 -> r:disabled'
+      - 'not p:svcs -Ho state svc:/network/http:apache22'
 
   - id: 7010
     title: "Disable Local-only RPC Port Mapping Service"
@@ -158,9 +155,10 @@ checks:
     remediation: "To disable this service, run the following command: # svcadm disable svc:/network/rpc/bind    If the goal is to restrict access to this service, but not disable it completely, consider using a host-based firewall such as ipfilter(5) to control what hosts are allowed to access this service. Alternatively, TCP Wrappers support, which controls host access and connection auditing, can be enabled. TCP Wrappers is discussed in the next section."
     compliance:
       - cis: ["2.11"]
-    condition: none
+    condition: any
     rules:
-      - 'p:rpcbind'
+      - 'p:svcs -Ho state svc:/network/rpc/bind -> r:disabled'
+      - 'not p:svcs -Ho state svc:/network/rpc/bind'
 
   - id: 7011
     title: "Configure TCP Wrappers"
@@ -184,9 +182,10 @@ checks:
     remediation: "Disable telnet server if enabled: # svcadm disable svc:/network/telnet"
     compliance:
       - cis: ["2.13"]
-    condition: all
+    condition: any
     rules:
-      - 'p:telnet'
+      - 'p:svcs -Ho state svc:/network/telnet -> r:disabled'
+      - 'not p:svcs -Ho state svc:/network/telnet'
 
 # 3 Kernel Tuning
   - id: 7013
@@ -363,7 +362,7 @@ checks:
       - cis: ["6.4"]
     condition: all
     rules:
-      - 'f:/etc/ssh/sshd_config -> n:^MaxAuthTries\s+(\d+) compare <= 4'
+      - 'f:/etc/ssh/sshd_config -> n:^MaxAuthTries\s+(\d+) compare <= 3'
 
   - id: 7025
     title: "Disable Rhost-based Authentication for SSH"
@@ -374,7 +373,7 @@ checks:
       - cis: ["6.5"]
     condition: all
     rules:
-      - 'f:/etc/ssh/sshd_config -> !r:^# && r:IgnoreRhosts\.+no'
+      - 'f:/etc/ssh/sshd_config -> !r:^# && r:IgnoreRhosts\.+yes'
 
   - id: 7026
     title: "Disable root login for SSH"
