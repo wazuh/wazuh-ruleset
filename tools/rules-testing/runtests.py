@@ -14,12 +14,14 @@ import os.path
 from collections import OrderedDict
 import shutil
 
+
 class MultiOrderedDict(OrderedDict):
     def __setitem__(self, key, value):
         if isinstance(value, list) and key in self:
             self[key].extend(value)
         else:
             super(MultiOrderedDict, self).__setitem__(key, value)
+
 
 def getOssecConfig(initconf,path):
     if os.path.isfile(path):
@@ -34,6 +36,7 @@ def getOssecConfig(initconf,path):
         print "Seems like there is no Wazuh installation or ossec-init.conf is missing."
         sys.exit(1)
 
+
 def provisionDR(bdir):
     if os.path.isfile("./rules/test_rules.xml") and os.path.isfile("./decoders/test_decoders.xml"):
         shutil.copy2("./rules/test_rules.xml", ossec_init["DIRECTORY"] + "/etc/rules")
@@ -42,6 +45,7 @@ def provisionDR(bdir):
         print "Test files are missing."
         sys.exit(1)
 
+
 def cleanDR(bdir):
     if os.path.isfile(bdir + "/etc/rules/test_rules.xml") and os.path.isfile(bdir + "/etc/decoders/test_decoders.xml"):
         os.remove(bdir + "/etc/rules/test_rules.xml")
@@ -49,6 +53,7 @@ def cleanDR(bdir):
     else:
         print "Could not clean rules and decoders test files"
         sys.exit(1)
+
 
 class OssecTester(object):
     def __init__(self, bdir):
@@ -69,6 +74,7 @@ class OssecTester(object):
             cmd += ["-D", self._base_dir]
         cmd += ['-U', "%s:%s:%s" % (rule, alert, decoder)]
         return cmd
+
     def runTest(self, log, rule, alert, decoder, section, name, negate=False):
         p = subprocess.Popen(
                 self.buildCmd(rule, alert, decoder),
@@ -126,6 +132,7 @@ class OssecTester(object):
         if self._error:
             sys.exit(1)
 
+
 if __name__ == "__main__":
     if len(sys.argv) == 2:
         selective_test = sys.argv[1]
@@ -133,6 +140,7 @@ if __name__ == "__main__":
             selective_test += '.ini'
     else:
         selective_test = False
+
     ossec_init = {}
     initconfigpath = "/etc/ossec-init.conf"
     getOssecConfig(ossec_init, initconfigpath)
