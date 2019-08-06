@@ -36,8 +36,8 @@ checks:
       - cis: ["2.1"]
     condition: any
     rules:
-      - 'p:svcs -Ho state svc:/application/graphical-login/gdm:default -> r:disabled'
-      - 'not p:svcs -Ho state svc:/application/graphical-login/gdm:default'
+      - 'c:svcs -Ho state svc:/application/graphical-login/gdm:default -> r:disabled'
+      - 'not c:svcs -Ho state svc:/application/graphical-login/gdm:default'
 
   - id: 7001
     title: "Configure sendmail Service for Local-Only Mode"
@@ -59,8 +59,8 @@ checks:
       - cis: ["2.3"]
     condition: any
     rules:
-      - 'p:svcs -Ho state svc:/network/rpc/keyserv -> r:disabled'
-      - 'not p:svcs -Ho state svc:/network/rpc/keyserv'
+      - 'c:svcs -Ho state svc:/network/rpc/keyserv -> r:disabled'
+      - 'not c:svcs -Ho state svc:/network/rpc/keyserv'
 
   - id: 7003
     title: "Disable NIS Server Services"
@@ -71,8 +71,8 @@ checks:
       - cis: ["2.4"]
     condition: none
     rules:
-      - 'p:svcs -Ho state svc:/network/nis/server -> r:online'
-      - 'p:svcs -Ho state svc:/network/nis/domain -> r:online'
+      - 'c:svcs -Ho state svc:/network/nis/server -> r:online'
+      - 'c:svcs -Ho state svc:/network/nis/domain -> r:online'
 
   - id: 7004
     title: "Disable NIS Client Services"
@@ -83,8 +83,8 @@ checks:
       - cis: ["2.5"]
     condition: none
     rules:
-      - 'p:svcs -Ho state svc:/network/nis/client -> r:online'
-      - 'p:svcs -Ho state svc:/network/nis/domain -> r:online'
+      - 'c:svcs -Ho state svc:/network/nis/client -> r:online'
+      - 'c:svcs -Ho state svc:/network/nis/domain -> r:online'
 
   - id: 7005
     title: "Disable Kerberos TGT Expiration Warning"
@@ -95,8 +95,8 @@ checks:
       - cis: ["2.6"]
     condition: any
     rules:
-      - 'p:svcs -Ho state svc:/network/security/ktkt_warn -> r:disabled'
-      - 'not p:svcs -Ho state svc:/network/security/ktkt_warn'
+      - 'c:svcs -Ho state svc:/network/security/ktkt_warn -> r:disabled'
+      - 'not c:svcs -Ho state svc:/network/security/ktkt_warn'
 
   - id: 7006
     title: "Disable Generic Security Services (GSS)"
@@ -107,8 +107,8 @@ checks:
       - cis: ["2.7"]
     condition: any
     rules:
-      - 'p:svcs -Ho state svc:/network/rpc/gss -> r:disabled'
-      - 'not p:svcs -Ho state svc:/network/rpc/gss'
+      - 'c:svcs -Ho state svc:/network/rpc/gss -> r:disabled'
+      - 'not c:svcs -Ho state svc:/network/rpc/gss'
 
   - id: 7007
     title: "Disable Removable Volume Manager"
@@ -119,8 +119,8 @@ checks:
       - cis: ["2.8"]
     condition: none
     rules:
-      - 'p:svcs -Ho state svc:/system/filesystem/rmvolmgr -> r:online'
-      - 'p:svcs -Ho state svc:/network/rpc/smserver -> r:online'
+      - 'c:svcs -Ho state svc:/system/filesystem/rmvolmgr -> r:online'
+      - 'c:svcs -Ho state svc:/network/rpc/smserver -> r:online'
 
   - id: 7008
     title: "Disable automount Service"
@@ -131,8 +131,8 @@ checks:
       - cis: ["2.9"]
     condition: any
     rules:
-      - 'p:svcs -Ho state svc:/system/filesystem/autofs -> r:disabled'
-      - 'not p:svcs -Ho state svc:/system/filesystem/autofs'
+      - 'c:svcs -Ho state svc:/system/filesystem/autofs -> r:disabled'
+      - 'not c:svcs -Ho state svc:/system/filesystem/autofs'
 
   - id: 7009
     title: "Disable Apache Service"
@@ -145,8 +145,8 @@ checks:
       - http://httpd.apache.org/docs/2.0/misc/security_tips.html
     condition: any
     rules:
-      - 'p:svcs -Ho state svc:/network/http:apache22 -> r:disabled'
-      - 'not p:svcs -Ho state svc:/network/http:apache22'
+      - 'c:svcs -Ho state svc:/network/http:apache22 -> r:disabled'
+      - 'not c:svcs -Ho state svc:/network/http:apache22'
 
   - id: 7010
     title: "Disable Local-only RPC Port Mapping Service"
@@ -157,8 +157,8 @@ checks:
       - cis: ["2.11"]
     condition: any
     rules:
-      - 'p:svcs -Ho state svc:/network/rpc/bind -> r:disabled'
-      - 'not p:svcs -Ho state svc:/network/rpc/bind'
+      - 'c:svcs -Ho state svc:/network/rpc/bind -> r:disabled'
+      - 'not c:svcs -Ho state svc:/network/rpc/bind'
 
   - id: 7011
     title: "Configure TCP Wrappers"
@@ -184,8 +184,8 @@ checks:
       - cis: ["2.13"]
     condition: any
     rules:
-      - 'p:svcs -Ho state svc:/network/telnet -> r:disabled'
-      - 'not p:svcs -Ho state svc:/network/telnet'
+      - 'c:svcs -Ho state svc:/network/telnet -> r:disabled'
+      - 'not c:svcs -Ho state svc:/network/telnet'
 
 # 3 Kernel Tuning
   - id: 7013
@@ -197,16 +197,16 @@ checks:
       - cis: ["3.1"]
     condition: all
     rules:
-      - 'f:/etc/coreadm.conf'
-      - 'f:/etc/coreadm.conf -> r:^COREADM_GLOB_PATTERN\s*\t*=\s*\t*\.+'
-      - 'f:/etc/coreadm.conf -> r:^COREADM_GLOB_CONTENT\s*\t*=\s*\t*default'
-      - 'f:/etc/coreadm.conf -> r:^COREADM_INIT_PATTERN\s*\t*=\s*\t*core'
-      - 'f:/etc/coreadm.conf -> r:^COREADM_INIT_CONTENT\s*\t*=\s*\t*default'
-      - 'f:/etc/coreadm.conf -> r:^COREADM_GLOB_ENABLED\s*\t*=\s*\t*yes|^COREADM_GLOB_ENABLED\s*\t*=\s*\t*no'
-      - 'f:/etc/coreadm.conf -> r:^COREADM_PROC_ENABLED\s*\t*=\s*\t*no'
-      - 'f:/etc/coreadm.conf -> r:^COREADM_GLOB_SETID_ENABLED\s*\t*=\s*\t*yes|^COREADM_GLOB_SETID_ENABLED\s*\t*=\s*\t*no'
-      - 'f:/etc/coreadm.conf -> r:^COREADM_PROC_SETID_ENABLED\s*\t*=\s*\t*no'
-      - 'f:/etc/coreadm.conf -> r:^COREADM_GLOB_LOG_ENABLED\s*\t*=\s*\t*yes'
+      - 'c:coreadm'
+      - 'c:coreadm -> r:global core file pattern: /var/cores/core_%n_%f_%u_%g_%t_%p'
+      - 'c:coreadm -> r:global core file content: default'
+      - 'c:coreadm -> r:init core file pattern: core'
+      - 'c:coreadm -> r:init core file content: default'
+      - 'c:coreadm -> r:global core dumps: enabled'
+      - 'c:coreadm -> r:per-process core dumps: disabled'
+      - 'c:coreadm -> r:global setid core dumps: enabled'
+      - 'c:coreadm -> r:per-process setid core dumps: disabled'
+      - 'c:coreadm -> r:global core dump logging: enabled'
 
   - id: 7014
     title: "Enable Stack Protection"
@@ -231,6 +231,7 @@ checks:
     condition: all
     rules:
       - 'f:/etc/default/inetinit -> r:^TCP_STRONG_ISS\s*\t*=\s*\t*2'
+      - 'c:ipadm show-prop -p _strong_iss -co current tcp -> r:2'
 
 # 4 Auditing and Logging
   - id: 7016
