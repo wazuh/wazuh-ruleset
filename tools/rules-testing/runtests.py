@@ -1,19 +1,63 @@
 #!/usr/bin/env python
+# Copyright (C) 2015-2019, Wazuh Inc.
+#
+# This program is a free software; you can redistribute it
+# and/or modify it under the terms of the GNU General Public
+# License (version 2) as published by the FSF - Free Software
+# Foundation
+
 import ConfigParser
 import subprocess
 import os
 import sys
 import os.path
+from collections import OrderedDict
+import shutil
 
+class MultiOrderedDict(OrderedDict):
+    def __setitem__(self, key, value):
+        if isinstance(value, list) and key in self:
+            self[key].extend(value)
+        else:
+            super(MultiOrderedDict, self).__setitem__(key, value)
+
+def getOssecConfig(initconf,path):
+    if os.path.isfile(path):
+        with open(path) as f:
+            for line in f.readlines():
+                key, value = line.rstrip("\n").split("=")
+                initconf[key] = value.replace("\"","")
+        if initconf["NAME"] != "Wazuh" or not os.path.exists(initconf["DIRECTORY"]):
+            print "Seems like there is no correct Wazuh installation "
+            sys.exit(1)
+    else:
+        print "Seems like there is no Wazuh installation or ossec-init.conf is missing."
+        sys.exit(1)
+
+def provisionDR(bdir):
+    if os.path.isfile("./rules/test_rules.xml") and os.path.isfile("./decoders/test_decoders.xml"):
+        shutil.copy2("./rules/test_rules.xml", ossec_init["DIRECTORY"] + "/etc/rules")
+        shutil.copy2("./decoders/test_decoders.xml", ossec_init["DIRECTORY"] + "/etc/decoders")
+    else:
+        print "Test files are missing."
+        sys.exit(1)
+
+def cleanDR(bdir):
+    if os.path.isfile(bdir + "/etc/rules/test_rules.xml") and os.path.isfile(bdir + "/etc/decoders/test_decoders.xml"):
+        os.remove(bdir + "/etc/rules/test_rules.xml")
+        os.remove(bdir + "/etc/decoders/test_decoders.xml")
+    else:
+        print "Could not clean rules and decoders test files"
+        sys.exit(1)
 
 class OssecTester(object):
-    def __init__(self):
+    def __init__(self, bdir):
         self._error = False
         self._debug = False
         self._quiet = False
-        self._ossec_conf = "/var/ossec/etc/ossec.conf"
-        self._base_dir = "/var/ossec/"
-        self._ossec_path = "/var/ossec/bin/"
+        self._ossec_conf = bdir + "/etc/ossec.conf"
+        self._base_dir = bdir
+        self._ossec_path = bdir + "/bin/"
         self._test_path = "./tests"
 
     def buildCmd(self, rule, alert, decoder):
@@ -25,9 +69,7 @@ class OssecTester(object):
             cmd += ["-D", self._base_dir]
         cmd += ['-U', "%s:%s:%s" % (rule, alert, decoder)]
         return cmd
-
     def runTest(self, log, rule, alert, decoder, section, name, negate=False):
-        #print self.buildCmd(rule, alert, decoder)
         p = subprocess.Popen(
                 self.buildCmd(rule, alert, decoder),
                 stdout=subprocess.PIPE,
@@ -52,6 +94,7 @@ class OssecTester(object):
             print std_out
         else:
             sys.stdout.write(".")
+            sys.stdout.flush()
 
     def run(self, selective_test=False):
         for aFile in os.listdir(self._test_path):
@@ -60,7 +103,7 @@ class OssecTester(object):
                 if selective_test and not aFile.endswith(selective_test):
                     continue
                 print "- [ File = %s ] ---------" % (aFile)
-                tGroup = ConfigParser.ConfigParser()
+                tGroup = ConfigParser.RawConfigParser(dict_type=MultiOrderedDict)
                 tGroup.read([aFile])
                 tSections = tGroup.sections()
                 for t in tSections:
@@ -78,7 +121,7 @@ class OssecTester(object):
                             else:
                                 neg = False
                             self.runTest(value, rule, alert, decoder,
-                                         t, name, negate=neg)
+                            t, name, negate=neg)
                 print ""
         if self._error:
             sys.exit(1)
@@ -90,5 +133,10 @@ if __name__ == "__main__":
             selective_test += '.ini'
     else:
         selective_test = False
-    OT = OssecTester()
-    OT.run(selective_test)
+        ossec_init = {}
+        initconfigpath = "/etc/ossec-init.conf"
+        getOssecConfig(ossec_init, initconfigpath)
+        provisionDR(ossec_init["DIRECTORY"])
+        OT = OssecTester(ossec_init["DIRECTORY"])
+        OT.run(selective_test)
+        cleanDR(ossec_init["DIRECTORY"])
