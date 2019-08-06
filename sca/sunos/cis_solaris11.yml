@@ -210,8 +210,8 @@ checks:
     condition: all
     rules:
       - 'f:/etc/system'
-      - 'f:/etc/system -> r:^\s*\t*noexec_user_stack\s*\t*=\s*\t*1'
-      - 'f:/etc/system -> r:^\s*\t*noexec_user_stack_log\s*\t*=\s*\t*1'
+      - 'f:/etc/system -> r:\s*\t*noexec_user_stack\s*\t*=\s*\t*1'
+      - 'f:/etc/system -> r:\s*\t*noexec_user_stack_log\s*\t*=\s*\t*1'
 
   - id: 7015
     title: "Enable Strong TCP Sequence Number Generation"
@@ -289,7 +289,7 @@ checks:
       - 'f:/etc/security/audit_event -> r:^\d+:AUE_PRIOCNTLSYS:\.+cis\.*'
       - 'f:/etc/security/audit_event -> r:^\d+:AUE_SETEGID:\.+cis\.*'
       - 'f:/etc/security/audit_event -> r:^\d+:AUE_SETEUID:\.+cis\.*'
-      - 'f:/etc/security/audit_event -> r:^\d+:AUE_SETPRIV:\.+cis\.*'
+      - 'f:/etc/security/audit_event -> r:^\d+:AUE_SETPPRIV:\.+cis\.*'
       - 'f:/etc/security/audit_event -> r:^\d+:AUE_SETSID:\.+cis\.*'
       - 'f:/etc/security/audit_event -> r:^\d+:AUE_SETPGID:\.+cis\.*'
 
@@ -304,11 +304,11 @@ checks:
     rules:
       - 'c:auditconfig -getcond -> audit condition = auditing'
       - 'c:auditconfig -getpolicy -> r:active audit policies = argv,cnt,zonename'
-      - 'c:auditconfig -getflags -> r:active user default audit flags = lo(0x1000,0x1000)'
-      - 'c:auditconfig -getnaflags -> r:active non-attributable audit flags = lo(0x1000,0x1000)'
-      - 'c:auditconfig -getplugin audit_binfile -> r:audit_binfile (active)'
+      - 'c:auditconfig -getflags -> r:active user default audit flags = cis,ex,aa,ua,as,ss,lo,ft\(0x1000000800f1080,0x1000000800f1080\)'
+      - 'c:auditconfig -getnaflags -> r:active non-attributable audit flags = lo\(0x1000,0x1000\)'
+      - 'c:auditconfig -getplugin audit_binfile -> r:audit_binfile \(active\)'
       - 'c:userattr audit_flags root -> r:lo,ad,ft,ex,cis:no'
-      - 'd:/var/spool/cron/crontabs -> r:/usr/sbin/audit -n'
+      - 'f:/var/spool/cron/crontabs/root -> r:/usr/sbin/audit -n'
 
 # 5 File/Directory Permissions/Access
   - id: 7021
@@ -333,7 +333,7 @@ checks:
     condition: all
     rules:
       - 'f:/etc/default/keyserv'
-      - 'f:/etc/default/keyserv -> r:^ENABLE\sNOBODY\sKEYS\s*\t*=\s*\t*NO'
+      - 'f:/etc/default/keyserv -> r:^ENABLE_NOBODY_KEYS\s*\t*=\s*\t*NO'
 
   - id: 7023
     title: "Disable X11 Forwarding for SSH"
@@ -399,8 +399,8 @@ checks:
       - cis: ["6.8"]
     condition: all
     rules:
-      - 'f:/etc/pam.conf -> r:^\s*\t*rlogin && r:auth && r:sufficient && r:pam_rhosts_auth.so.1'
-      - 'f:/etc/pam.conf -> r:^rsh && r:auth && r:sufficient && r:pam_rhosts_auth.so.1'
+      - 'f:/etc/pam.conf -> r:^#rlogin && r:auth && r:sufficient && r:pam_rhosts_auth.so.1'
+      - 'f:/etc/pam.conf -> r:^#rsh && r:auth && r:sufficient && r:pam_rhosts_auth.so.1'
 
   - id: 7029
     title: "Restrict FTP Use"
@@ -409,28 +409,28 @@ checks:
     remediation: "Perform the following to implement the recommended state: # cd /etc/ftpd    # for user in `logins -s | awk '{ print $1 }'` aiuser noaccess nobody nobody4; do $(echo $user >> ftpusers) done    # sort -u ftpusers > ftpusers.CIS    # mv ftpusers.CIS ftpusers    If your site policy states that users have to be authorized to use FTP, consider placing all users in the /etc/ftpd/ftpusers file and then explicitly removing those who are permitted to use the service. To accomplish this, use the command: # getent passwd | cut -f1 -d\":\" > /etc/ftpd/ftpusers    This prohibits any user on the system from using ftp unless they are explicitly removed from the file. Note that this file will need to be updated as users are added to or removed from the system."
     compliance:
       - cis: ["6.9"]
-    condition: none
+    condition: all
     rules:
-      - 'f:/etc/ftpd/ftpusers -> r:^root'
-      - 'f:/etc/ftpd/ftpusers -> r:^daemon'
-      - 'f:/etc/ftpd/ftpusers -> r:^bin'
-      - 'f:/etc/ftpd/ftpusers -> r:^sys'
       - 'f:/etc/ftpd/ftpusers -> r:^adm'
-      - 'f:/etc/ftpd/ftpusers -> r:^uucp'
-      - 'f:/etc/ftpd/ftpusers -> r:^nuucp'
-      - 'f:/etc/ftpd/ftpusers -> r:^smmsp'
-      - 'f:/etc/ftpd/ftpusers -> r:^listen'
-      - 'f:/etc/ftpd/ftpusers -> r:^gdm'
-      - 'f:/etc/ftpd/ftpusers -> r:^lp'
-      - 'f:/etc/ftpd/ftpusers -> r:^webservd'
-      - 'f:/etc/ftpd/ftpusers -> r:^postgres'
-      - 'f:/etc/ftpd/ftpusers -> r:^svctag'
-      - 'f:/etc/ftpd/ftpusers -> r:^openldap'
-      - 'f:/etc/ftpd/ftpusers -> r:^unknown'
       - 'f:/etc/ftpd/ftpusers -> r:^aiuser'
+      - 'f:/etc/ftpd/ftpusers -> r:^bin'
+      - 'f:/etc/ftpd/ftpusers -> r:^daemon'
+      - 'f:/etc/ftpd/ftpusers -> r:^gdm'
+      - 'f:/etc/ftpd/ftpusers -> r:^listen'
+      - 'f:/etc/ftpd/ftpusers -> r:^lp'
+      - 'f:/etc/ftpd/ftpusers -> r:^noaccess'
       - 'f:/etc/ftpd/ftpusers -> r:^nobody'
       - 'f:/etc/ftpd/ftpusers -> r:^nobody4'
-      - 'f:/etc/ftpd/ftpusers -> r:^noaccess'
+      - 'f:/etc/ftpd/ftpusers -> r:^nuucp'
+      - 'f:/etc/ftpd/ftpusers -> r:^openldap'
+      - 'f:/etc/ftpd/ftpusers -> r:^postgres'
+      - 'f:/etc/ftpd/ftpusers -> r:^root'
+      - 'f:/etc/ftpd/ftpusers -> r:^smmsp'
+      - 'f:/etc/ftpd/ftpusers -> r:^svctag'
+      - 'f:/etc/ftpd/ftpusers -> r:^sys'
+      - 'f:/etc/ftpd/ftpusers -> r:^unknown'
+      - 'f:/etc/ftpd/ftpusers -> r:^uucp'
+      - 'f:/etc/ftpd/ftpusers -> r:^webservd'
 
   - id: 7030
     title: "Set Delay between Failed Login Attempts to 4"
@@ -452,9 +452,9 @@ checks:
       - cis: ["6.11"]
     condition: all
     rules:
-      - 'f:/etc/pam.conf -> !r:^# && r:gdm-autologin && r:auth && r:required && r:pam_unix_cred.so.1'
-      - 'f:/etc/pam.conf -> !r:^# && r:gdm-autologin && r:auth && r:sufficient && r:pam_allow.so.1'
-      - 'f:/etc/pam.conf -> !r:^# && r:gdm-autologin && r:account && r:sufficient && r:pam_allow.so.1'
+      - 'f:/etc/pam.conf -> r:^#gdm-autologin && r:auth && r:required && r:pam_unix_cred.so.1'
+      - 'f:/etc/pam.conf -> r:^#gdm-autologin && r:auth && r:sufficient && r:pam_allow.so.1'
+      - 'f:/etc/pam.conf -> r:^#gdm-autologin && r:account && r:sufficient && r:pam_allow.so.1'
 
   - id: 7032
     title: "Set Default Screen Lock for GNOME Users"
@@ -482,9 +482,9 @@ checks:
       - 'not f:/etc/cron.d/cron.deny'
       - 'not f:/etc/cron.d/at.deny'
       - 'f:/etc/cron.d/cron.allow'
-      - 'f:/etc/cron.d/cron.allow -> !r:^root$'
+      - 'f:/etc/cron.d/cron.allow -> r:^root$'
       - 'f:/etc/cron.d/at.allow'
-      - 'not f:/etc/cron.d/at.allow -> !r:^# && r:\w'
+      - 'c:wc -l /etc/cron.d/at.allow -> r:\s0\s'
 
   - id: 7034
     title: "Restrict root Login to System Console"
@@ -493,9 +493,9 @@ checks:
     remediation: "Perform the following to implement the recommended state: # cd /etc/default # awk '/CONSOLE=/ { print \"CONSOLE=/dev/console\"; next }; { print }' login > login.CIS # mv login.CIS login"
     compliance:
       - cis: ["6.14"]
-    condition: none
+    condition: all
     rules:
-      - 'f:/etc/default/login -> !r:^CONSOLE\s*\t*=\s*\t*/dev/console'
+      - 'f:/etc/default/login -> r:^CONSOLE\s*\t*=\s*\t*/dev/console'
 
   - id: 7035
     title: "Set Retry Limit for Account Lockout"
@@ -564,9 +564,9 @@ checks:
     remediation: "Perform the following to implement the recommended state: # cd /etc/default    # awk '/#UMASK=/ { $1 = \"UMASK=027\" } { print }' login > login.CIS    # mv login.CIS login"
     compliance:
       - cis: ["7.3"]
-    condition: none
+    condition: all
     rules:
-      - 'f:/etc/default/login -> !r:^#  && !r:^umask\s*\t*=\s*\t*027|^umask\s*\t*=\s*\t*077'
+      - 'f:/etc/default/login -> r:^UMASK\s*\t*=\s*\t*027'
 
   - id: 7040
     title: "Set Default File Creation Mask for FTP Users"
@@ -586,10 +586,10 @@ checks:
     remediation: "Perform the following to implement the recommended state: # cd /etc    # for file in profile .login ; do if [ \"`grep mesg $file`\" ]; then awk '$1 == \"mesg\" { $2 = \"n\" } { print }' $file > $file.CIS mv $file.CIS $file else echo mesg n >> $file fi done"
     compliance:
       - cis: ["7.5"]
-    condition: none
+    condition: all
     rules:
-      - 'f:/etc/.login -> !r:^mesg\s*n'
-      - 'f:/etc/profile -> !r:^mesg\s*n'
+      - 'f:/etc/.login -> r:^mesg\s*n'
+      - 'f:/etc/profile -> r:^mesg\s*n'
 
 # 8 Warning Banners
   - id: 7042
@@ -658,34 +658,34 @@ checks:
       - cis: ["9.3"]
     condition: none
     rules:
-      - 'f:/etc/shadow -> r:daemon && !r::NL:|:NP:'
-      - 'f:/etc/shadow -> r:lp && !r::NL:|:NP:'
-      - 'f:/etc/shadow -> r:adm && !r::NL:|:NP:'
-      - 'f:/etc/shadow -> r:bin && !r::NL:|:NP:'
-      - 'f:/etc/shadow -> r:gdm && !r::\s*\t*=\s*\t**LK\s*\t*=\s*\t**:'
-      - 'f:/etc/shadow -> r:noaccess && !r::\s*\t*=\s*\t**LK\s*\t*=\s*\t**:'
-      - 'f:/etc/shadow -> r:nobody && !r::\s*\t*=\s*\t**LK\s*\t*=\s*\t**:'
-      - 'f:/etc/shadow -> r:nobody4 && !r::\s*\t*=\s*\t**LK\s*\t*=\s*\t**:'
-      - 'f:/etc/shadow -> r:openldap && !r::\s*\t*=\s*\t**LK\s*\t*=\s*\t**:'
-      - 'f:/etc/shadow -> r:unknown && !r::\s*\t*=\s*\t**LK\s*\t*=\s*\t**:'
-      - 'f:/etc/shadow -> r:webservd && !r::\s*\t*=\s*\t**LK\s*\t*=\s*\t**:'
-      - 'f:/etc/shadow -> r:mysql && !r::NL:|:NP:'
-      - 'f:/etc/shadow -> r:nuuc && !r::NL:|:NP:'
-      - 'f:/etc/shadow -> r:postgres && !r::NL:|:NP:'
-      - 'f:/etc/shadow -> r:smmsp && !r::NL:|:NP:'
-      - 'f:/etc/shadow -> r:sys && !r::NL:|:NP:'
-      - 'f:/etc/shadow -> r:uucp && !r::NL:|:NP:'
-      - 'f:/etc/shadow -> r:aiuser && !r::\s*\t*=\s*\t**LK\s*\t*=\s*\t**:'
-      - 'f:/etc/shadow -> r:dhcpserv && !r::\s*\t*=\s*\t**LK\s*\t*=\s*\t**:'
-      - 'f:/etc/shadow -> r:dladm && !r::\s*\t*=\s*\t**LK\s*\t*=\s*\t**:'
-      - 'f:/etc/shadow -> r:ftp && !r::\s*\t*=\s*\t**LK\s*\t*=\s*\t**:'
-      - 'f:/etc/shadow -> r:netadm && !r::\s*\t*=\s*\t**LK\s*\t*=\s*\t**:'
-      - 'f:/etc/shadow -> r:netcfg && !r::\s*\t*=\s*\t**LK\s*\t*=\s*\t**:'
-      - 'f:/etc/shadow -> r:pkg5srv && !r::\s*\t*=\s*\t**LK\s*\t*=\s*\t**:'
-      - 'f:/etc/shadow -> r:svctag && !r::\s*\t*=\s*\t**LK\s*\t*=\s*\t**:'
-      - 'f:/etc/shadow -> r:xvm && !r::\s*\t*=\s*\t**LK\s*\t*=\s*\t**:'
-      - 'f:/etc/shadow -> r:upnp && !r::NL:|:NP:'
-      - 'f:/etc/shadow -> r:zfssnap && !r::NL:|:NP:'
+      - 'f:/etc/shadow -> r:^daemon: && !r::NL:|:NP:'
+      - 'f:/etc/shadow -> r:^lp: && !r::NL:|:NP:'
+      - 'f:/etc/shadow -> r:^adm: && !r::NL:|:NP:'
+      - 'f:/etc/shadow -> r:^bin: && !r::NL:|:NP:'
+      - 'f:/etc/shadow -> r:^gdm: && !r::\p*LK\p*:'
+      - 'f:/etc/shadow -> r:^noaccess: && !r::\p*LK\p*:'
+      - 'f:/etc/shadow -> r:^nobody: && !r::\p*LK\p*:'
+      - 'f:/etc/shadow -> r:^nobody4: && !r::\p*LK\p*:'
+      - 'f:/etc/shadow -> r:^openldap: && !r::\p*LK\p*:'
+      - 'f:/etc/shadow -> r:^unknown: && !r::\p*LK\p*:'
+      - 'f:/etc/shadow -> r:^webservd: && !r::\p*LK\p*:'
+      - 'f:/etc/shadow -> r:^mysql: && !r::NL:|:NP:'
+      - 'f:/etc/shadow -> r:^nuuc: && !r::NL:|:NP:'
+      - 'f:/etc/shadow -> r:^postgres: && !r::NL:|:NP:'
+      - 'f:/etc/shadow -> r:^smmsp: && !r::NL:|:NP:'
+      - 'f:/etc/shadow -> r:^sys: && !r::NL:|:NP:'
+      - 'f:/etc/shadow -> r:^uucp: && !r::NL:|:NP:'
+      - 'f:/etc/shadow -> r:^aiuser: && !r::\p*LK\p*:'
+      - 'f:/etc/shadow -> r:^dhcpserv: && !r::\p*LK\p*:'
+      - 'f:/etc/shadow -> r:^dladm: && !r::\p*LK\p*:'
+      - 'f:/etc/shadow -> r:^ftp: && !r::\p*LK\p*:'
+      - 'f:/etc/shadow -> r:^netadm: && !r::\p*LK\p*:'
+      - 'f:/etc/shadow -> r:^netcfg: && !r::\p*LK\p*:'
+      - 'f:/etc/shadow -> r:^pkg5srv: && !r::\p*LK\p*:'
+      - 'f:/etc/shadow -> r:^svctag: && !r::\p*LK\p*:'
+      - 'f:/etc/shadow -> r:^xvm: && !r::\p*LK\p*:'
+      - 'f:/etc/shadow -> r:^upnp: && !r::NL:|:NP:'
+      - 'f:/etc/shadow -> r:^zfssnap: && !r::NL:|:NP:'
 
   - id: 7048
     title: "Ensure Password Fields are Not Empty"
