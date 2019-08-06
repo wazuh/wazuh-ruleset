@@ -34,10 +34,9 @@ checks:
     remediation: "To disable this service, run the following command: # svcadm disable svc:/application/graphical-login/gdm:default"
     compliance:
       - cis: ["2.1"]
-    condition: any
+    condition: all
     rules:
-      - 'c:svcs -Ho state svc:/application/graphical-login/gdm:default -> r:disabled'
-      - 'not c:svcs -Ho state svc:/application/graphical-login/gdm:default'
+      - 'c:svcs -xv svc:/application/graphical-login/gdm:default -> r:State:\sdisabled|State:\s-$|match\sany\sinstances'
 
   - id: 7001
     title: "Configure sendmail Service for Local-Only Mode"
@@ -57,10 +56,9 @@ checks:
     remediation: "To disable this service, run the following command: # svcadm disable svc:/network/rpc/keyserv"
     compliance:
       - cis: ["2.3"]
-    condition: any
+    condition: all
     rules:
-      - 'c:svcs -Ho state svc:/network/rpc/keyserv -> r:disabled'
-      - 'not c:svcs -Ho state svc:/network/rpc/keyserv'
+      - 'c:svcs -xv svc:/network/rpc/keyserv -> r:State:\sdisabled|State:\s-$|match\sany\sinstances'
 
   - id: 7003
     title: "Disable NIS Server Services"
@@ -69,10 +67,10 @@ checks:
     remediation: "To disable this service, run the following commands: # svcadm disable svc:/network/nis/server # svcadm disable svc:/network/nis/domain"
     compliance:
       - cis: ["2.4"]
-    condition: none
+    condition: all
     rules:
-      - 'c:svcs -Ho state svc:/network/nis/server -> r:online'
-      - 'c:svcs -Ho state svc:/network/nis/domain -> r:online'
+      - 'c:svcs -xv svc:/network/nis/server -> r:State:\sdisabled|State:\s-$|match\sany\sinstances'
+      - 'c:svcs -xv svc:/network/nis/domain -> r:State:\sdisabled|State:\s-$|match\sany\sinstances'
 
   - id: 7004
     title: "Disable NIS Client Services"
@@ -81,10 +79,10 @@ checks:
     remediation: "To disable this service, run the following commands: # svcadm disable svc:/network/nis/client    # svcadm disable svc:/network/nis/domain"
     compliance:
       - cis: ["2.5"]
-    condition: none
+    condition: all
     rules:
-      - 'c:svcs -Ho state svc:/network/nis/client -> r:online'
-      - 'c:svcs -Ho state svc:/network/nis/domain -> r:online'
+      - 'c:svcs -xv svc:/network/nis/client -> r:State:\sdisabled|State:\s-$|match\sany\sinstances'
+      - 'c:svcs -xv svc:/network/nis/domain -> r:State:\sdisabled|State:\s-$|match\sany\sinstances'
 
   - id: 7005
     title: "Disable Kerberos TGT Expiration Warning"
@@ -93,10 +91,9 @@ checks:
     remediation: "To disable this service, run the following command: # svcadm disable svc:/network/security/ktkt_warn"
     compliance:
       - cis: ["2.6"]
-    condition: any
+    condition: all
     rules:
-      - 'c:svcs -Ho state svc:/network/security/ktkt_warn -> r:disabled'
-      - 'not c:svcs -Ho state svc:/network/security/ktkt_warn'
+      - 'c:svcs -xv svc:/network/security/ktkt_warn -> r:State:\sdisabled|State:\s-$|match\sany\sinstances'
 
   - id: 7006
     title: "Disable Generic Security Services (GSS)"
@@ -105,10 +102,9 @@ checks:
     remediation: "To disable this service, run the following command: # svcadm disable svc:/network/rpc/gss"
     compliance:
       - cis: ["2.7"]
-    condition: any
+    condition: all
     rules:
-      - 'c:svcs -Ho state svc:/network/rpc/gss -> r:disabled'
-      - 'not c:svcs -Ho state svc:/network/rpc/gss'
+      - 'c:svcs -xv svc:/network/rpc/gss -> r:State:\sdisabled|State:\s-$|match\sany\sinstances'
 
   - id: 7007
     title: "Disable Removable Volume Manager"
@@ -117,10 +113,10 @@ checks:
     remediation: "To disable this service, run the following commands: # svcadm disable svc:/system/filesystem/rmvolmgr    # svcadm disable svc:/network/rpc/smserver"
     compliance:
       - cis: ["2.8"]
-    condition: none
+    condition: all
     rules:
-      - 'c:svcs -Ho state svc:/system/filesystem/rmvolmgr -> r:online'
-      - 'c:svcs -Ho state svc:/network/rpc/smserver -> r:online'
+      - 'c:svcs -xv svc:/system/filesystem/rmvolmgr -> r:State:\sdisabled|State:\s-$|match\sany\sinstances'
+      - 'c:svcs -xv svc:/network/rpc/smserver -> r:State:\sdisabled|State:\s-$|match\sany\sinstances'
 
   - id: 7008
     title: "Disable automount Service"
@@ -129,10 +125,9 @@ checks:
     remediation: "To disable this service, run the following command: # svcadm disable svc:/system/filesystem/autofs"
     compliance:
       - cis: ["2.9"]
-    condition: any
+    condition: all
     rules:
-      - 'c:svcs -Ho state svc:/system/filesystem/autofs -> r:disabled'
-      - 'not c:svcs -Ho state svc:/system/filesystem/autofs'
+      - 'c:svcs -xv svc:/system/filesystem/autofs -> r:State:\sdisabled|State:\s-$|match\sany\sinstances'
 
   - id: 7009
     title: "Disable Apache Service"
@@ -143,10 +138,9 @@ checks:
       - cis: ["2.10"]
     references:
       - http://httpd.apache.org/docs/2.0/misc/security_tips.html
-    condition: any
+    condition: all
     rules:
-      - 'c:svcs -Ho state svc:/network/http:apache22 -> r:disabled'
-      - 'not c:svcs -Ho state svc:/network/http:apache22'
+      - 'c:svcs -xv svc:/network/http:apache22 -> r:State:\sdisabled|State:\s-$|match\sany\sinstances'
 
   - id: 7010
     title: "Disable Local-only RPC Port Mapping Service"
@@ -155,10 +149,9 @@ checks:
     remediation: "To disable this service, run the following command: # svcadm disable svc:/network/rpc/bind    If the goal is to restrict access to this service, but not disable it completely, consider using a host-based firewall such as ipfilter(5) to control what hosts are allowed to access this service. Alternatively, TCP Wrappers support, which controls host access and connection auditing, can be enabled. TCP Wrappers is discussed in the next section."
     compliance:
       - cis: ["2.11"]
-    condition: any
+    condition: all
     rules:
-      - 'c:svcs -Ho state svc:/network/rpc/bind -> r:disabled'
-      - 'not c:svcs -Ho state svc:/network/rpc/bind'
+      - 'c:svcs -xv svc:/network/rpc/bind -> r:State:\sdisabled|State:\s-$|match\sany\sinstances'
 
   - id: 7011
     title: "Configure TCP Wrappers"
@@ -182,10 +175,9 @@ checks:
     remediation: "Disable telnet server if enabled: # svcadm disable svc:/network/telnet"
     compliance:
       - cis: ["2.13"]
-    condition: any
+    condition: all
     rules:
-      - 'c:svcs -Ho state svc:/network/telnet -> r:disabled'
-      - 'not c:svcs -Ho state svc:/network/telnet'
+      - 'c:svcs -xv svc:/network/telnet -> r:State:\sdisabled|State:\s-$|match\sany\sinstances'
 
 # 3 Kernel Tuning
   - id: 7013
