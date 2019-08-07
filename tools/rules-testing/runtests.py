@@ -55,6 +55,28 @@ def cleanDR(bdir):
         sys.exit(1)
 
 
+def provisionEC(bdir):
+    with open(bdir + '/etc/rules/local_rules.xml', 'a') as f:
+        f.write('<group name="windows,">')
+        f.write('<rule id="60000" level="0" overwrite="yes">')
+        f.write('<decoded_as>json</decoded_as>')
+        f.write('<field name="win.system.providerName">\.+</field>')
+        f.write('<options>no_full_log</options>')
+        f.write('<description>Overwrite succefuly</description>')
+        f.write('</rule>')
+        f.write('</group>')
+
+
+def cleanEC(bdir):
+    with open(bdir + '/etc/rules/local_rules.xml', 'r') as fread:
+        lines = fread.readlines()
+        with open(bdir + '/etc/rules/local_rules.xml', 'w') as fwrite:
+            for line in lines:
+                if '<group name="windows,">' not in line:
+                    fwrite.write(line)
+
+
+
 class OssecTester(object):
     def __init__(self, bdir):
         self._error = False
@@ -145,6 +167,8 @@ if __name__ == "__main__":
     initconfigpath = "/etc/ossec-init.conf"
     getOssecConfig(ossec_init, initconfigpath)
     provisionDR(ossec_init["DIRECTORY"])
+    provisionEC(ossec_init['DIRECTORY'])
     OT = OssecTester(ossec_init["DIRECTORY"])
     OT.run(selective_test)
     cleanDR(ossec_init["DIRECTORY"])
+    cleanEC(ossec_init['DIRECTORY'])
