@@ -32,10 +32,12 @@ checks:
     title: "Ensure 'Devices: Prevent users from installing printer drivers' is set to 'Enabled'"
     description: "For a computer to print to a shared printer, the driver for that shared printer must be installed on the local computer. This security setting determines who is allowed to install a printer driver as part of connecting to a shared printer.  The recommended state for this setting is: Enabled.  Note: This setting does not affect the ability to add a local printer. This setting does not affect Administrators."
     rationale: "It may be appropriate in some organizations to allow users to install printer drivers on their own workstations. However, you should allow only Administrators, not users, to do so on servers, because printer driver installation on a server may unintentionally cause the computer to become less stable. A malicious user could install inappropriate printer drivers in a deliberate attempt to damage the computer, or a user might accidentally install malicious software that masquerades as a printer driver. It is feasible for an attacker to disguise a Trojan horse program as a printer driver. The program may appear to users as if they must use it to print, but such a program could unleash malicious code on your computer network."
-    remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Local Policies\\Security Options\\Devices: Prevent users from installing printer drivers"
+    remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Local Policies\\Security Options\\Devices: Prevent users from installing printer drivers."
     compliance:
       - cis: ["2.3.4.2"]
       - cis_csc: ["5.1"]
+    references:
+      - 'CCE-37942-0'
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Print\Providers\LanMan Print Services\Servers'
@@ -47,12 +49,13 @@ checks:
     title: "Ensure 'MSS: (KeepAliveTime) How often keep-alive packets are sent in milliseconds' is set to 'Enabled: 300,000 or 5 minutes'"
     description: "This value controls how often TCP attempts to verify that an idle connection is still intact by sending a keep-alive packet. If the remote computer is still reachable, it acknowledges the keep-alive packet.  The recommended state for this setting is: Enabled: 300,000 or 5 minutes (recommended)."
     rationale: "An attacker who is able to connect to network applications could establish numerous connections to cause a DoS condition."
-    remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: 300,000 or 5 minutes (recommended): Computer Configuration\\Policies\\Administrative Templates\\MSS (Legacy)\\MSS: (KeepAliveTime) How often keep-alive packets are sent in milliseconds    Note: This Group Policy path does not exist by default. An additional Group Policy template (MSS-legacy.admx/adml) is required - it is available from this TechNet blog post: The MSS settings - Microsoft Security Guidance blog"
+    remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: 300,000 or 5 minutes (recommended): Computer Configuration\\Policies\\Administrative Templates\\MSS (Legacy)\\MSS: (KeepAliveTime) How often keep-alive packets are sent in milliseconds    Note: This Group Policy path does not exist by default. An additional Group Policy template (MSS-legacy.admx/adml) is required - it is available from this TechNet blog post: The MSS settings - Microsoft Security Guidance blog."
     compliance:
       - cis: ["18.4.5"]
       - cis_csc: ["9"]
     references:
-      - https://blogs.technet.microsoft.com/secguide/2016/10/02/the-mss-settings/
+      - 'CCE-36868-8'
+      - 'https://blogs.technet.microsoft.com/secguide/2016/10/02/the-mss-settings/'
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters'
@@ -63,12 +66,13 @@ checks:
     title: "Ensure 'MSS: (PerformRouterDiscovery) Allow IRDP to detect and configure Default Gateway addresses (could lead to DoS)' is set to 'Disabled'"
     description: "This setting is used to enable or disable the Internet Router Discovery Protocol (IRDP), which allows the system to detect and configure default gateway addresses automatically as described in RFC 1256 on a per-interface basis.  The recommended state for this setting is: Disabled."
     rationale: "An attacker who has gained control of a computer on the same network segment could configure a computer on the network to impersonate a router. Other computers with IRDP enabled would then attempt to route their traffic through the already compromised computer."
-    remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Administrative Templates\\MSS (Legacy)\\MSS: (PerformRouterDiscovery) Allow IRDP to detect and configure Default Gateway addresses (could lead to DoS)    Note: This Group Policy path does not exist by default. An additional Group Policy template (MSS-legacy.admx/adml) is required - it is available from this TechNet blog post: The MSS settings - Microsoft Security Guidance blog"
+    remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Administrative Templates\\MSS (Legacy)\\MSS: (PerformRouterDiscovery) Allow IRDP to detect and configure Default Gateway addresses (could lead to DoS)    Note: This Group Policy path does not exist by default. An additional Group Policy template (MSS-legacy.admx/adml) is required - it is available from this TechNet blog post: The MSS settings - Microsoft Security Guidance blog."
     compliance:
       - cis: ["18.4.7"]
       - cis_csc: ["9"]
     references:
-      - https://blogs.technet.microsoft.com/secguide/2016/10/02/the-mss-settings/
+      - 'CCE-38065-9'
+      - 'https://blogs.technet.microsoft.com/secguide/2016/10/02/the-mss-settings/'
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters'
@@ -79,12 +83,13 @@ checks:
     title: "Ensure 'MSS: (TcpMaxDataRetransmissions IPv6) How many times unacknowledged data is retransmitted' is set to 'Enabled: 3'"
     description: "This setting controls the number of times that TCP retransmits an individual data segment (non-connect segment) before the connection is aborted. The retransmission time-out is doubled with each successive retransmission on a connection. It is reset when responses resume. The base time-out value is dynamically determined by the measured round-trip time on the connection.  The recommended state for this setting is: Enabled: 3."
     rationale: "A malicious user could exhaust a target computer's resources if it never sent any acknowledgment messages for data that was transmitted by the target computer."
-    remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: 3: Computer Configuration\\Policies\\Administrative Templates\\MSS (Legacy)\\MSS:(TcpMaxDataRetransmissions IPv6) How many times unacknowledged data is retransmitted Note: This Group Policy path does not exist by default. An additional Group Policy template (MSS-legacy.admx/adml) is required - it is available from this TechNet blog post: The MSS settings - Microsoft Security Guidance blog"
+    remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: 3: Computer Configuration\\Policies\\Administrative Templates\\MSS (Legacy)\\MSS:(TcpMaxDataRetransmissions IPv6) How many times unacknowledged data is retransmitted Note: This Group Policy path does not exist by default. An additional Group Policy template (MSS-legacy.admx/adml) is required - it is available from this TechNet blog post: The MSS settings - Microsoft Security Guidance blog."
     compliance:
       - cis: ["18.4.10"]
       - cis_csc: ["9"]
     references:
-      - https://blogs.technet.microsoft.com/secguide/2016/10/02/the-mss-settings/
+      - 'CCE-37846-3'
+      - 'https://blogs.technet.microsoft.com/secguide/2016/10/02/the-mss-settings/'
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP6\Parameters'
@@ -95,12 +100,13 @@ checks:
     title: "Ensure 'MSS: (TcpMaxDataRetransmissions) How many times unacknowledged data is retransmitted' is set to 'Enabled: 3'"
     description: "This setting controls the number of times that TCP retransmits an individual data segment (non-connect segment) before the connection is aborted. The retransmission time-out is doubled with each successive retransmission on a connection. It is reset when responses resume. The base time-out value is dynamically determined by the measured round-trip time on the connection.  The recommended state for this setting is: Enabled: 3."
     rationale: "A malicious user could exhaust a target computer's resources if it never sent any acknowledgment messages for data that was transmitted by the target computer."
-    remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: 3: Computer Configuration\\Policies\\Administrative Templates\\MSS (Legacy)\\MSS:(TcpMaxDataRetransmissions) How many times unacknowledged data is retransmitted    Note: This Group Policy path does not exist by default. An additional Group Policy template (MSS-legacy.admx/adml) is required - it is available from this TechNet blog post: The MSS settings - Microsoft Security Guidance blog"
+    remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: 3: Computer Configuration\\Policies\\Administrative Templates\\MSS (Legacy)\\MSS:(TcpMaxDataRetransmissions) How many times unacknowledged data is retransmitted    Note: This Group Policy path does not exist by default. An additional Group Policy template (MSS-legacy.admx/adml) is required - it is available from this TechNet blog post: The MSS settings - Microsoft Security Guidance blog."
     compliance:
       - cis: ["18.4.11"]
       - cis_csc: ["9"]
     references:
-      - https://blogs.technet.microsoft.com/secguide/2016/10/02/the-mss-settings/
+      - 'CCE-36051-1'
+      - 'https://blogs.technet.microsoft.com/secguide/2016/10/02/the-mss-settings/'
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters'
@@ -116,6 +122,8 @@ checks:
     compliance:
       - cis: ["18.5.9.1"]
       - cis_csc: ["9"]
+    references:
+      - 'CCE-38170-7'
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\LLTD'
@@ -136,6 +144,8 @@ checks:
     compliance:
       - cis: ["18.5.9.2"]
       - cis_csc: ["9"]
+    references:
+      - 'CCE-37959-4'
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\LLTD'
@@ -156,6 +166,8 @@ checks:
     compliance:
       - cis: ["18.5.10.2"]
       - cis_csc: ["9.1"]
+    references:
+      - 'CCE-37699-6'
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Peernet'
@@ -184,6 +196,8 @@ checks:
     compliance:
       - cis: ["18.5.20.1"]
       - cis_csc: ["15.4"]
+    references:
+      - 'CCE-37481-9'
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WCN\Registrars'
@@ -206,6 +220,8 @@ checks:
     compliance:
       - cis: ["18.5.20.2"]
       - cis_csc: ["15.4"]
+    references:
+      - 'CCE-36109-7'
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WCN\UI'
@@ -220,6 +236,8 @@ checks:
     compliance:
       - cis: ["18.8.22.1.2"]
       - cis_csc: ["13"]
+    references:
+      - 'CCE-37911-5'
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\TabletPC'
@@ -234,6 +252,8 @@ checks:
     compliance:
       - cis: ["18.8.22.1.3"]
       - cis_csc: ["13"]
+    references:
+      - 'CCE-36203-8'
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\HandwritingErrorReports'
@@ -248,6 +268,8 @@ checks:
     compliance:
       - cis: ["18.8.22.1.4"]
       - cis_csc: ["13"]
+    references:
+      - 'CCE-37163-3'
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Internet Connection Wizard'
@@ -261,6 +283,8 @@ checks:
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\System\\Internet Communication Management\\Internet Communication settings\\Turn off Registration if URL connection is referring to Microsoft.com Note: This Group Policy path is provided by the Group Policy template ICM.admx/adml that is included with all versions of the Microsoft Windows Administrative Templates."
     compliance:
       - cis: ["18.8.22.1.7"]
+    references:
+      - 'CCE-36352-3'
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\Policies\Microsoft\Windows\Registration Wizard Control'
@@ -275,6 +299,8 @@ checks:
     compliance:
       - cis: ["18.8.22.1.8"]
       - cis_csc: ["13"]
+    references:
+      - 'CCE-36884-5'
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\SearchCompanion'
@@ -289,6 +315,8 @@ checks:
     compliance:
       - cis: ["18.8.22.1.9"]
       - cis_csc: ["13"]
+    references:
+      - 'CCE-38275-4'
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer'
@@ -303,6 +331,8 @@ checks:
     compliance:
       - cis: ["18.8.22.1.10"]
       - cis_csc: ["13"]
+    references:
+      - 'CCE-37090-8'
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer'
@@ -317,6 +347,8 @@ checks:
     compliance:
       - cis: ["18.8.22.1.11"]
       - cis_csc: ["13"]
+    references:
+      - 'CCE-36628-6'
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Messenger\Client'
@@ -331,6 +363,8 @@ checks:
     compliance:
       - cis: ["18.8.22.1.12"]
       - cis_csc: ["13"]
+    references:
+      - 'CCE-36174-1'
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\SQMClient\Windows'
@@ -345,6 +379,8 @@ checks:
     compliance:
       - cis: ["18.8.22.1.13"]
       - cis_csc: ["13"]
+    references:
+      - 'CCE-35964-6'
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Windows Error Reporting'
@@ -359,6 +395,8 @@ checks:
     compliance:
       - cis: ["18.8.26.1"]
       - cis_csc: ["16.5"]
+    references:
+      - 'CCE-36343-2'
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Control Panel\International'
@@ -373,6 +411,8 @@ checks:
     compliance:
       - cis: ["18.8.44.5.1"]
       - cis_csc: ["13"]
+    references:
+      - 'CCE-38161-6'
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\ScriptedDiagnosticsProvider\Policy'
@@ -387,6 +427,8 @@ checks:
     compliance:
       - cis: ["18.8.44.11.1"]
       - cis_csc: ["13"]
+    references:
+      - 'CCE-36648-4'
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WDI\{9c5a40da-b965-4fc3-8781-88dd50a6299d}'
@@ -401,6 +443,8 @@ checks:
     compliance:
       - cis: ["18.8.46.1"]
       - cis_csc: ["13"]
+    references:
+      - 'CCE-36931-4'
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\AdvertisingInfo'
@@ -415,6 +459,8 @@ checks:
     compliance:
       - cis: ["18.8.49.1.1"]
       - cis_csc: ["6.1"]
+    references:
+      - 'CCE-37843-0'
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\W32Time\TimeProviders\NtpClient'
@@ -430,6 +476,8 @@ checks:
     compliance:
       - cis: ["18.9.39.2"]
       - cis_csc: ["13"]
+    references:
+      - 'CCE-36886-0'
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\LocationAndSensors'
@@ -443,6 +491,8 @@ checks:
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Remote Desktop Services\\Remote Desktop Session Host\\Connections\\Restrict Remote Desktop Services users to a single Remote Desktop Services session Note: This Group Policy path is provided by the Group Policy template TerminalServer.admx/adml that is included with all versions of the Microsoft Windows Administrative Templates.  Note #2: In older Microsoft Windows Administrative Templates, this setting was named Restrict Terminal Services users to a single remote session, but it was renamed starting with the Windows 7 & Server 2008 R2 Administrative Templates."
     compliance:
       - cis: ["18.9.58.3.2.1"]
+    references:
+      - 'CCE-37708-5'
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services'
@@ -457,6 +507,8 @@ checks:
     compliance:
       - cis: ["18.9.58.3.3.1"]
       - cis_csc: ["9.1"]
+    references:
+      - 'CCE-37696-2'
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services'
@@ -471,6 +523,8 @@ checks:
     compliance:
       - cis: ["18.9.58.3.3.3"]
       - cis_csc: ["9.1"]
+    references:
+      - 'CCE-37778-8'
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services'
@@ -485,6 +539,8 @@ checks:
     compliance:
       - cis: ["18.9.58.3.3.4"]
       - cis_csc: ["9.1"]
+    references:
+      - 'CCE-37477-7'
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services'
@@ -500,6 +556,7 @@ checks:
       - cis: ["18.9.58.3.10.1"]
       - cis_csc: ["16.5"]
     references:
+      - 'CCE-37562-6'
       - https://workbench.cisecurity.org/benchmarks/766
     condition: all
     rules:
@@ -515,6 +572,8 @@ checks:
     compliance:
       - cis: ["18.9.58.3.10.2"]
       - cis_csc: ["16.5"]
+    references:
+      - 'CCE-37949-5'
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services'
@@ -529,6 +588,8 @@ checks:
     compliance:
       - cis: ["18.9.60.3"]
       - cis_csc: ["13"]
+    references:
+      - 'CCE-36937-1'
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Windows Search'
@@ -569,6 +630,8 @@ checks:
     compliance:
       - cis: ["18.9.85.3"]
       - cis_csc: ["7"]
+    references:
+      - 'CCE-37524-6'
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Installer'
@@ -583,6 +646,8 @@ checks:
     compliance:
       - cis: ["18.9.97.2.2"]
       - cis_csc: ["3.4"]
+    references:
+      - 'CCE-37927-1'
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WinRM\Service'
@@ -597,6 +662,8 @@ checks:
     compliance:
       - cis: ["18.9.98.1"]
       - cis_csc: ["3.4"]
+    references:
+      - 'CCE-36499-2'
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WinRM\Service\WinRS'
