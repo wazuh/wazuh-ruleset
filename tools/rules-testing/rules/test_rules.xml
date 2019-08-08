@@ -35,7 +35,7 @@
 <!-- Dec 25 20:45:02 MyHost test_same_fields[12345]: User 'admin' logged from '192.168.1.100' 5 this is the not_same_fields test -->
 <!-- Dec 25 20:45:02 MyHost test_same_fields[12345]: User 'admin' logged from '192.168.1.100' 6 this is the not_same_fields test -->
 <!-- Dec 25 20:45:02 MyHost test_same_fields[12345]: User 'admin' logged from '192.168.1.100' 7 this is the not_same_fields test -->
-  <rule id="999207" level="3">
+<rule id="999207" level="3">
   <match>this is the not_same_fields test</match>
   <description>Testing not_same_fields</description>
 </rule>
@@ -46,5 +46,42 @@
   <description>Not Same fields works</description>
 </rule>
 
+<!--
+Dec 10 01:02:02 my_host my_progrma[1234]: ifsid test
+-->
+<rule id="999999" level="1">
+  <match>ifsid test</match>
+  <description>Parent rule</description>
+</rule>
+
+<!--
+Dec 10 01:02:02 my_host my_progrma[1234]: ifsid test r98 r96
+-->
+<rule id="999998" level="4">
+  <if_sid>999999</if_sid>
+  <match>r98</match>
+  <description>Child rule 98</description>
+</rule>
+
+<rule id="999997" level="4">
+  <if_sid>999999</if_sid>
+  <match>r97</match>
+  <description>Child rule 97</description>
+</rule>
+
+<rule id="999996" level="6">
+  <if_sid>999998</if_sid>
+  <match>r96</match>
+  <description>Child rule 98 96</description>
+</rule>
+
+<!--
+Dec 10 01:02:02 my_host my_progrma[1234]: ifsid test r97 r96
+-->
+<rule id="999996" level="4" overwrite="yes">
+  <if_sid>999997</if_sid>
+  <match>r96</match>
+  <description>Child overwrite rule 97 96</description>
+</rule>
 
 </group>
