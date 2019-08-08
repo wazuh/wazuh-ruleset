@@ -65,6 +65,7 @@ def provisionEC(bdir):
         f.write('<description>Overwrite succefuly</description>')
         f.write('</rule>')
         f.write('</group>')
+    f.close()
 
 
 def cleanEC(bdir):
@@ -74,6 +75,8 @@ def cleanEC(bdir):
             for line in lines:
                 if '<group name="windows,">' not in line:
                     fwrite.write(line)
+        fwrite.close()
+    fread.close()
 
 
 
