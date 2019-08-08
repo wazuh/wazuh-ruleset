@@ -29,7 +29,7 @@ checks:
 # 2.3 Security Options
   - id: 13500
     title: "Ensure 'Devices: Prevent users from installing printer drivers' is set to 'Enabled'"
-    description: "For a computer to print to a shared printer, the driver for that shared printer must be installed on the local computer. This security setting determines who is allowed to install a printer driver as part of connecting to a shared printer.  The recommended state for this setting is: Enabled.    Note: This setting does not affect the ability to add a local printer. This setting does not affect Administrators."
+    description: "For a computer to print to a shared printer, the driver for that shared printer must be installed on the local computer. This security setting determines who is allowed to install a printer driver as part of connecting to a shared printer. The recommended state for this setting is: Enabled. Note: This setting does not affect the ability to add a local printer. This setting does not affect Administrators."
     rationale: "It may be appropriate in some organizations to allow users to install printer drivers on their own workstations. However, in a high security environment, you should allow only Administrators, not users, to do this, because printer driver installation may unintentionally cause the computer to become less stable. A malicious user could install inappropriate printer drivers in a deliberate attempt to damage the computer, or a user might accidentally install malicious software that masquerades as a printer driver. It is feasible for an attacker to disguise a Trojan horse program as a printer driver. The program may appear to users as if they must use it to print, but such a program could unleash malicious code on your computer network."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Local Policies\\Security Options\\Devices: Prevent users from installing printer drivers."
     compliance:
@@ -45,8 +45,8 @@ checks:
 
   - id: 13501
     title: "Ensure 'Interactive logon: Number of previous logons to cache (in case domain controller is not available)' is set to '4 or fewer logon(s)'"
-    description: "This policy setting determines whether a user can log on to a Windows domain using cached account information. Logon information for domain accounts can be cached locally to allow users to log on even if a Domain Controller cannot be contacted. This policy setting determines the number of unique users for whom logon information is cached locally. If this value is set to 0, the logon cache feature is disabled. An attacker who is able to access the file system of the server could locate this cached information and use a brute force attack to determine user passwords.  The recommended state for this setting is: 4 or fewer logon(s)."
-    rationale: "The number that is assigned to this policy setting indicates the number of users whose logon information the computer will cache locally. If the number is set to 4, then the computer caches logon information for 4 users. When a 5th user logs on to the computer, the server overwrites the oldest cached logon session.  Users who access the computer console will have their logon credentials cached on that computer. An attacker who is able to access the file system of the computer could locate this cached information and use a brute force attack to attempt to determine user passwords. To mitigate this type of attack, Windows encrypts the information and obscures its physical location."
+    description: "This policy setting determines whether a user can log on to a Windows domain using cached account information. Logon information for domain accounts can be cached locally to allow users to log on even if a Domain Controller cannot be contacted. This policy setting determines the number of unique users for whom logon information is cached locally. If this value is set to 0, the logon cache feature is disabled. An attacker who is able to access the file system of the server could locate this cached information and use a brute force attack to determine user passwords. The recommended state for this setting is: 4 or fewer logon(s)."
+    rationale: "The number that is assigned to this policy setting indicates the number of users whose logon information the computer will cache locally. If the number is set to 4, then the computer caches logon information for 4 users. When a 5th user logs on to the computer, the server overwrites the oldest cached logon session. Users who access the computer console will have their logon credentials cached on that computer. An attacker who is able to access the file system of the computer could locate this cached information and use a brute force attack to attempt to determine user passwords. To mitigate this type of attack, Windows encrypts the information and obscures its physical location."
     remediation: "To establish the recommended configuration via GP, set the following UI path to 4 or fewer logon(s): Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Local Policies\\Security Options\\Interactive logon: Number of previous logons to cache (in case domain controller is not available)"
     compliance:
       - cis: ["2.3.7.7"]
@@ -61,7 +61,7 @@ checks:
 
   - id: 13502
     title: "Ensure 'System cryptography: Force strong key protection for user keys stored on the computer' is set to 'User is prompted when the key is first used' or higher"
-    description: "This policy setting determines whether users' private keys (such as their S-MIME keys) require a password to be used.  The recommended state for this setting is: User is prompted when the key is first used. Configuring this setting to User must enter a password each time they use a key also conforms to the benchmark."
+    description: "This policy setting determines whether users' private keys (such as their S-MIME keys) require a password to be used. The recommended state for this setting is: User is prompted when the key is first used. Configuring this setting to User must enter a password each time they use a key also conforms to the benchmark."
     rationale: "If a user's account is compromised or their computer is inadvertently left unsecured the malicious user can use the keys stored for the user to access protected resources. You can configure this policy setting so that users must provide a password that is distinct from their domain password every time they use a key. This configuration makes it more difficult for an attacker to access locally stored user keys, even if the attacker takes control of the user's computer and determines their logon password."
     remediation: "To establish the recommended configuration via GP, set the following UI path to User is prompted when the key is first used (configuring to User must enter a password each time they use a key also conforms to the benchmark): Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Local Policies\\Security Options\\System cryptography: Force strong key protection for user keys stored on the computer."
     compliance:
@@ -78,8 +78,8 @@ checks:
 # 5 System Services
   - id: 13503
     title: "Ensure 'Bluetooth Support Service (bthserv)' is set to 'Disabled'"
-    description: "The Bluetooth service supports discovery and association of remote Bluetooth devices.  The recommended state for this setting is: Disabled."
-    rationale: "Bluetooth technology has inherent security risks - especially prior to the v2.1 standard.  Wireless Bluetooth traffic is not well encrypted (if at all), so in a high-security environment, it should not be permitted, in spite of the added inconvenience of not being able to use Bluetooth devices."
+    description: "The Bluetooth service supports discovery and association of remote Bluetooth devices. The recommended state for this setting is: Disabled."
+    rationale: "Bluetooth technology has inherent security risks - especially prior to the v2.1 standard. Wireless Bluetooth traffic is not well encrypted (if at all), so in a high-security environment, it should not be permitted, in spite of the added inconvenience of not being able to use Bluetooth devices."
     remediation: "To establish the recommended configuration via GP, set the following UI path to: Disabled. Computer Configuration\\Policies\\Windows Settings\\Security Settings\\System Services\\Bluetooth Support Service"
     compliance:
       - cis: ["5.2"]
@@ -106,9 +106,9 @@ checks:
 
   - id: 13505
     title: "Ensure 'Geolocation Service (lfsvc)' is set to 'Disabled'"
-    description: "This service monitors the current location of the system and manages geofences (a geographical location with associated events).  The recommended state for this setting is: Disabled."
+    description: "This service monitors the current location of the system and manages geofences (a geographical location with associated events). The recommended state for this setting is: Disabled."
     rationale: "This setting affects the location feature (e.g. GPS or other location tracking). From a security perspective, it’s not a good idea to reveal your location to software in most cases, but there are legitimate uses, such as mapping software. However, they should not be used in high security environments."
-    remediation: "To establish the recommended configuration via GP, set the following UI path to: Disabled.  Computer Configuration\\Policies\\Windows Settings\\Security Settings\\System Services\\Geolocation Service"
+    remediation: "To establish the recommended configuration via GP, set the following UI path to: Disabled. Computer Configuration\\Policies\\Windows Settings\\Security Settings\\System Services\\Geolocation Service"
     compliance:
       - cis: ["5.5"]
       - cis_csc: ["9.1", "9.2"]
@@ -120,7 +120,7 @@ checks:
 
   - id: 13506
     title: "Ensure 'Link-Layer Topology Discovery Mapper (lltdsvc)' is set to 'Disabled'"
-    description: "Creates a Network Map, consisting of PC and device topology (connectivity) information, and metadata describing each PC and device.  The recommended state for this setting is: Disabled."
+    description: "Creates a Network Map, consisting of PC and device topology (connectivity) information, and metadata describing each PC and device. The recommended state for this setting is: Disabled."
     rationale: "The feature that this service enables could potentially be used for unauthorized discovery and connection to network devices. Disabling the service helps to prevent responses to requests for network topology discovery in high security environments."
     remediation: "To establish the recommended configuration via GP, set the following UI path to: Disabled. Computer Configuration\\Policies\\Windows Settings\\Security Settings\\System Services\\Link-Layer Topology Discovery Mapper"
     compliance:
@@ -134,7 +134,7 @@ checks:
 
   - id: 13507
     title: "Ensure 'Microsoft iSCSI Initiator Service (MSiSCSI)' is set to 'Disabled'"
-    description: "Manages Internet SCSI (iSCSI) sessions from this computer to remote target devices.  The recommended state for this setting is: Disabled."
+    description: "Manages Internet SCSI (iSCSI) sessions from this computer to remote target devices. The recommended state for this setting is: Disabled."
     rationale: "This service is critically necessary in order to directly attach to an iSCSI device. However, iSCSI itself uses a very weak authentication protocol (CHAP), which means that the passwords for iSCSI communication are easily exposed, unless all of the traffic is isolated and/or encrypted using another technology like IPsec. This service is generally more appropriate for servers in a controlled environment then on workstations requiring high security."
     remediation: "To establish the recommended configuration via GP, set the following UI path to: Disabled. Computer Configuration\\Policies\\Windows Settings\\Security Settings\\System Services\\Microsoft iSCSI Initiator Service"
     compliance:
@@ -148,7 +148,7 @@ checks:
 
   - id: 13508
     title: "Ensure 'Peer Name Resolution Protocol (PNRPsvc)' is set to 'Disabled'"
-    description: "Enables serverless peer name resolution over the Internet using the Peer Name Resolution Protocol (PNRP).  The recommended state for this setting is: Disabled."
+    description: "Enables serverless peer name resolution over the Internet using the Peer Name Resolution Protocol (PNRP). The recommended state for this setting is: Disabled."
     rationale: "Peer Name Resolution Protocol is a distributed and (mostly) serverless way to handle name resolution of clients with each other. In a high security environment, it is more secure to rely on centralized name resolution methods maintained by authorized staff."
     remediation: "To establish the recommended configuration via GP, set the following UI path to: Disabled. Computer Configuration\\Policies\\Windows Settings\\Security Settings\\System Services\\Peer Name Resolution Protocol"
     compliance:
@@ -162,7 +162,7 @@ checks:
 
   - id: 13509
     title: "Ensure 'Peer Networking Grouping (p2psvc)' is set to 'Disabled'"
-    description: "Enables multi-party communication using Peer-to-Peer Grouping.  The recommended state for this setting is: Disabled."
+    description: "Enables multi-party communication using Peer-to-Peer Grouping. The recommended state for this setting is: Disabled."
     rationale: "Peer Name Resolution Protocol is a distributed and (mostly) serverless way to handle name resolution of clients with each other. In a high security environment, it is more secure to rely on centralized name resolution methods maintained by authorized staff."
     remediation: "To establish the recommended configuration via GP, set the following UI path to: Disabled. Computer Configuration\\Policies\\Windows Settings\\Security Settings\\System Services\\Peer Networking Grouping"
     compliance:
@@ -176,7 +176,7 @@ checks:
 
   - id: 13510
     title: "Ensure 'Peer Networking Identity Manager (p2pimsvc)' is set to 'Disabled'"
-    description: "Provides identity services for the Peer Name Resolution Protocol (PNRP) and Peer-to-Peer Grouping services.  The recommended state for this setting is: Disabled."
+    description: "Provides identity services for the Peer Name Resolution Protocol (PNRP) and Peer-to-Peer Grouping services. The recommended state for this setting is: Disabled."
     rationale: "Peer Name Resolution Protocol is a distributed and (mostly) serverless way to handle name resolution of clients with each other. In a high security environment, it is more secure to rely on centralized name resolution methods maintained by authorized staff."
     remediation: "To establish the recommended configuration via GP, set the following UI path to: Disabled. Computer Configuration\\Policies\\Windows Settings\\Security Settings\\System Services\\Peer Networking Identity Manager"
     compliance:
@@ -190,7 +190,7 @@ checks:
 
   - id: 13511
     title: "Ensure 'PNRP Machine Name Publication Service (PNRPAutoReg)' is set to 'Disabled'"
-    description: "This service publishes a machine name using the Peer Name Resolution Protocol.  Configuration is managed via the netsh context ‘p2p pnrp peer’.  The recommended state for this setting is: Disabled."
+    description: "This service publishes a machine name using the Peer Name Resolution Protocol. Configuration is managed via the netsh context ‘p2p pnrp peer’. The recommended state for this setting is: Disabled."
     rationale: "Peer Name Resolution Protocol is a distributed and (mostly) serverless way to handle name resolution of clients with each other. In a high security environment, it is more secure to rely on centralized name resolution methods maintained by authorized staff."
     remediation: "To establish the recommended configuration via GP, set the following UI path to: Disabled. Computer Configuration\\Policies\\Windows Settings\\Security Settings\\System Services\\PNRP Machine Name Publication Service"
     compliance:
@@ -204,7 +204,7 @@ checks:
 
   - id: 13512
     title: "Ensure 'Problem Reports and Solutions Control Panel Support (wercplsupport)' is set to 'Disabled'"
-    description: "This service provides support for viewing, sending and deletion of system-level problem reports for the Problem Reports and Solutions control panel.  The recommended state for this setting is: Disabled."
+    description: "This service provides support for viewing, sending and deletion of system-level problem reports for the Problem Reports and Solutions control panel. The recommended state for this setting is: Disabled."
     rationale: "This service is involved in the process of displaying/reporting issues & solutions to/from Microsoft. In a high security environment, preventing this information from being sent can help reduce privacy concerns for sensitive corporate information."
     remediation: "To establish the recommended configuration via GP, set the following UI path to: Disabled. Computer Configuration\\Policies\\Windows Settings\\Security Settings\\System Services\\Problem Reports and Solutions Control Panel Support"
     compliance:
@@ -232,7 +232,7 @@ checks:
 
   - id: 13514
     title: "Ensure 'Remote Desktop Configuration (SessionEnv)' is set to 'Disabled'"
-    description: "Remote Desktop Configuration service (RDCS) is responsible for all Remote Desktop related configuration and session maintenance activities that require SYSTEM context.  These include per-session temporary folders, RD themes, and RD certificates.  The recommended state for this setting is: Disabled."
+    description: "Remote Desktop Configuration service (RDCS) is responsible for all Remote Desktop related configuration and session maintenance activities that require SYSTEM context. These include per-session temporary folders, RD themes, and RD certificates. The recommended state for this setting is: Disabled."
     rationale: "In a high security environment, Remote Desktop access is an increased security risk. For these environments, only local console access should be permitted."
     remediation: "To establish the recommended configuration via GP, set the following UI path to: Disabled. Computer Configuration\\Policies\\Windows Settings\\Security Settings\\System Services\\Remote Desktop Configuration"
     compliance:
@@ -246,7 +246,7 @@ checks:
 
   - id: 13515
     title: "Ensure 'Remote Desktop Services (TermService)' is set to 'Disabled'"
-    description: "Allows users to connect interactively to a remote computer. Remote Desktop and Remote Desktop Session Host Server depend on this service.  The recommended state for this setting is: Disabled."
+    description: "Allows users to connect interactively to a remote computer. Remote Desktop and Remote Desktop Session Host Server depend on this service. The recommended state for this setting is: Disabled."
     rationale: "In a high security environment, Remote Desktop access is an increased security risk. For these environments, only local console access should be permitted."
     remediation: "To establish the recommended configuration via GP, set the following UI path to: Disabled. Computer Configuration\\Policies\\Windows Settings\\Security Settings\\System Services\\Remote Desktop Services"
     compliance:
@@ -260,7 +260,7 @@ checks:
 
   - id: 13516
     title: "Ensure 'Remote Desktop Services UserMode Port Redirector (UmRdpService)' is set to 'Disabled'"
-    description: "Allows the redirection of Printers/Drives/Ports for RDP connections.  The recommended state for this setting is: Disabled."
+    description: "Allows the redirection of Printers/Drives/Ports for RDP connections. The recommended state for this setting is: Disabled."
     rationale: "In a security-sensitive environment, it is desirable to reduce the possible attack surface - preventing the redirection of COM, LPT and PnP ports will reduce the number of unexpected avenues for data exfiltration and/or malicious code transfer within an RDP session."
     remediation: "To establish the recommended configuration via GP, set the following UI path to: Disabled. Computer Configuration\\Policies\\Windows Settings\\Security Settings\\System Services\\Remote Desktop Services UserMode Port Redirector"
     compliance:
@@ -274,7 +274,7 @@ checks:
 
   - id: 13517
     title: "Ensure 'Remote Registry (RemoteRegistry)' is set to 'Disabled'"
-    description: "Enables remote users to modify registry settings on this computer.  The recommended state for this setting is: Disabled."
+    description: "Enables remote users to modify registry settings on this computer. The recommended state for this setting is: Disabled."
     rationale: "In a high security environment, exposing the registry to remote access is an increased security risk."
     remediation: "To establish the recommended configuration via GP, set the following UI path to: Disabled. Computer Configuration\\Policies\\Windows Settings\\Security Settings\\System Services\\Remote Registry"
     compliance:
@@ -288,7 +288,7 @@ checks:
 
   - id: 13518
     title: "Ensure 'Server (LanmanServer)' is set to 'Disabled'"
-    description: "Supports file, print, and named-pipe sharing over the network for this computer. If this service is stopped, these functions will be unavailable.  The recommended state for this setting is: Disabled."
+    description: "Supports file, print, and named-pipe sharing over the network for this computer. If this service is stopped, these functions will be unavailable. The recommended state for this setting is: Disabled."
     rationale: "In a high security environment, a secure workstation should only be a client, not a server. Sharing workstation resources for remote access increases security risk as the attack surface is notably higher."
     remediation: "To establish the recommended configuration via GP, set the following UI path to: Disabled. Computer Configuration\\Policies\\Windows Settings\\Security Settings\\System Services\\Server"
     compliance:
@@ -302,9 +302,9 @@ checks:
 
   - id: 13519
     title: "Ensure 'SNMP Service (SNMP)' is set to 'Disabled' or 'Not Installed'"
-    description: "Enables Simple Network Management Protocol (SNMP) requests to be processed by this computer.  The recommended state for this setting is: Disabled or Not Installed.  Note: This service is not installed by default. It is supplied with Windows, but is installed by enabling an optional Windows feature (Simple Network Management Protocol (SNMP))."
+    description: "Enables Simple Network Management Protocol (SNMP) requests to be processed by this computer. The recommended state for this setting is: Disabled or Not Installed. Note: This service is not installed by default. It is supplied with Windows, but is installed by enabling an optional Windows feature (Simple Network Management Protocol (SNMP))."
     rationale: "Features that enable inbound network connections increase the attack surface. In a high security environment, management of secure workstations should be handled locally."
-    remediation: "To establish the recommended configuration via GP, set the following UI path to: Disabled or ensure the service is not installed.  Computer Configuration\\Policies\\Windows Settings\\Security Settings\\System Services\\SNMP Service"
+    remediation: "To establish the recommended configuration via GP, set the following UI path to: Disabled or ensure the service is not installed. Computer Configuration\\Policies\\Windows Settings\\Security Settings\\System Services\\SNMP Service"
     compliance:
       - cis: ["5.29"]
       - cis_csc: ["9.1", "9.2"]
@@ -316,7 +316,7 @@ checks:
 
   - id: 13520
     title: "Ensure 'Windows Error Reporting Service (WerSvc)' is set to 'Disabled'"
-    description: "Allows errors to be reported when programs stop working or responding and allows existing solutions to be delivered. Also allows logs to be generated for diagnostic and repair services.  The recommended state for this setting is: Disabled."
+    description: "Allows errors to be reported when programs stop working or responding and allows existing solutions to be delivered. Also allows logs to be generated for diagnostic and repair services. The recommended state for this setting is: Disabled."
     rationale: "If a Windows Error occurs in a secure, enterprise managed environment, the error should be reported directly to IT staff for troubleshooting and remediation. There is no benefit to the corporation to report these errors directly to Microsoft, and there is some risk of unknowingly exposing sensitive data as part of the error."
     remediation: "To establish the recommended configuration via GP, set the following UI path to: Disabled. Computer Configuration\\Policies\\Windows Settings\\Security Settings\\System Services\\Windows Error Reporting Service"
     compliance:
@@ -330,7 +330,7 @@ checks:
 
   - id: 13521
     title: "Ensure 'Windows Event Collector (Wecsvc)' is set to 'Disabled'"
-    description: "This service manages persistent subscriptions to events from remote sources that support WS-Management protocol. This includes Windows Vista event logs, hardware and IPMI- enabled event sources. The service stores forwarded events in a local Event Log.  The recommended state for this setting is: Disabled."
+    description: "This service manages persistent subscriptions to events from remote sources that support WS-Management protocol. This includes Windows Vista event logs, hardware and IPMI- enabled event sources. The service stores forwarded events in a local Event Log. The recommended state for this setting is: Disabled."
     rationale: "In a high security environment, remote connections to secure workstations should be minimized, and management functions should be done locally."
     remediation: "To establish the recommended configuration via GP, set the following UI path to: Disabled. Computer Configuration\\Policies\\Windows Settings\\Security Settings\\System Services\\Windows Event Collector"
     compliance:
@@ -344,7 +344,7 @@ checks:
 
   - id: 13522
     title: "Ensure 'Windows Push Notifications System Service (WpnService)' is set to 'Disabled'"
-    description: "This service runs in session 0 and hosts the notification platform and connection provider which handles the connection between the device and WNS server.  The recommended state for this setting is: Disabled.  Note: In the first two releases of Windows 10 (R1507 & R1511), the display name of this service was initially named Windows Push Notifications Service - but it was renamed to Windows Push Notifications System Service starting with Windows 10 R1607."
+    description: "This service runs in session 0 and hosts the notification platform and connection provider which handles the connection between the device and WNS server. The recommended state for this setting is: Disabled. Note: In the first two releases of Windows 10 (R1507 & R1511), the display name of this service was initially named Windows Push Notifications Service - but it was renamed to Windows Push Notifications System Service starting with Windows 10 R1607."
     rationale: "Windows Push Notification Services (WNS) is a mechanism to receive 3rd-party notifications and updates from the cloud/Internet. In a high security environment, external systems, especially those hosted outside the organization, should be prevented from having an impact on the secure workstations."
     remediation: "To establish the recommended configuration via GP, set the following UI path to: Disabled. Computer Configuration\\Policies\\Windows Settings\\Security Settings\\System Services\\Windows Push Notifications System Service"
     compliance:
@@ -358,7 +358,7 @@ checks:
 
   - id: 13523
     title: "Ensure 'Windows PushToInstall Service (PushToInstall)' is set to 'Disabled'"
-    description: "This service manages Apps that are pushed to the device from the Windows Store App running on other devices or the web.  The recommended state for this setting is: Disabled."
+    description: "This service manages Apps that are pushed to the device from the Windows Store App running on other devices or the web. The recommended state for this setting is: Disabled."
     rationale: "In a high security managed environment, application installations should be managed centrally by IT staff, not by end users."
     remediation: "To establish the recommended configuration via GP, set the following UI path to: Disabled. Computer Configuration\\Policies\\Windows Settings\\Security Settings\\System Services\\Windows PushToInstall Service (PushToInstall)"
     compliance:
@@ -372,7 +372,7 @@ checks:
 
   - id: 13524
     title: "Ensure 'Windows Remote Management (WS-Management) (WinRM)' is set to 'Disabled'"
-    description: "Windows Remote Management (WinRM) service implements the WS-Management protocol for remote management. WS-Management is a standard web services protocol used for remote software and hardware management. The WinRM service listens on the network for WS-Management requests and processes them.  The recommended state for this setting is: Disabled."
+    description: "Windows Remote Management (WinRM) service implements the WS-Management protocol for remote management. WS-Management is a standard web services protocol used for remote software and hardware management. The WinRM service listens on the network for WS-Management requests and processes them. The recommended state for this setting is: Disabled."
     rationale: "Features that enable inbound network connections increase the attack surface. In a high security environment, management of secure workstations should be handled locally."
     remediation: "To establish the recommended configuration via GP, set the following UI path to: Disabled. Computer Configuration\\Policies\\Windows Settings\\Security Settings\\System Services\\Windows Remote Management (WS-Management)"
     compliance:
@@ -387,7 +387,7 @@ checks:
 # 18.1 Control Panel
   - id: 13525
     title: "Ensure 'Allow Online Tips' is set to 'Disabled'"
-    description: "This policy setting configures the retrieval of online tips and help for the Settings app.  The recommended state for this setting is: Disabled."
+    description: "This policy setting configures the retrieval of online tips and help for the Settings app. The recommended state for this setting is: Disabled."
     rationale: "Due to privacy concerns, data should never be sent to any 3rd party since this data could contain sensitive information."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Administrative Templates\\Control Panel\\Allow Online Tips Note: This Group Policy path may not exist by default. It is provided by the Group Policy template ControlPanel.admx/adml that is included with the Microsoft Windows 10 Release 1709 Administrative Templates (or newer)."
     compliance:
@@ -402,7 +402,7 @@ checks:
 # 18.4 MSS (Legacy)
   - id: 13526
     title: "Ensure 'MSS: (DisableSavePassword) Prevent the dial-up password from being saved' is set to 'Enabled'"
-    description: "When you dial a phonebook or VPN entry in Dial-Up Networking, you can use the \"Save Password\" option so that your Dial-Up Networking password is cached and you will not need to enter it on successive dial attempts. For security, administrators may want to prevent users from caching passwords.  The recommended state for this setting is: Enabled."
+    description: "When you dial a phonebook or VPN entry in Dial-Up Networking, you can use the \"Save Password\" option so that your Dial-Up Networking password is cached and you will not need to enter it on successive dial attempts. For security, administrators may want to prevent users from caching passwords. The recommended state for this setting is: Enabled."
     rationale: "An attacker who steals a mobile user's computer could automatically connect to the organization's network if the Save This Password check box is selected for the dial-up or VPN networking entry used to connect to your organization's network."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\MSS (Legacy)\\MSS:(DisableSavePassword) Prevent the dial-up password from being saved. Note: This Group Policy path does not exist by default. An additional Group Policy template (MSS-legacy.admx/adml) is required - it is available from this TechNet blog post: The MSS settings - Microsoft Security Guidance blog"
     compliance:
@@ -418,7 +418,7 @@ checks:
 
   - id: 13527
     title: "Ensure 'MSS: (KeepAliveTime) How often keep-alive packets are sent in milliseconds' is set to 'Enabled: 300,000 or 5 minutes (recommended)'"
-    description: "This value controls how often TCP attempts to verify that an idle connection is still intact by sending a keep-alive packet. If the remote computer is still reachable, it acknowledges the keep-alive packet.  The recommended state for this setting is: Enabled: 300,000 or 5 minutes (recommended)."
+    description: "This value controls how often TCP attempts to verify that an idle connection is still intact by sending a keep-alive packet. If the remote computer is still reachable, it acknowledges the keep-alive packet. The recommended state for this setting is: Enabled: 300,000 or 5 minutes (recommended)."
     rationale: "An attacker who is able to connect to network applications could establish numerous connections to cause a DoS condition."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: 300,000 or 5 minutes (recommended): Computer Configuration\\Policies\\Administrative Templates\\MSS (Legacy)\\MSS: (KeepAliveTime) How often keep-alive packets are sent in milliseconds. Note: This Group Policy path does not exist by default. An additional Group Policy template (MSS-legacy.admx/adml) is required - it is available from this TechNet blog post: The MSS settings - Microsoft Security Guidance blog"
     compliance:
@@ -435,7 +435,7 @@ checks:
 
   - id: 13528
     title: "Ensure 'MSS: (PerformRouterDiscovery) Allow IRDP to detect and configure Default Gateway addresses (could lead to DoS)' is set to 'Disabled'"
-    description: "This setting is used to enable or disable the Internet Router Discovery Protocol (IRDP), which allows the system to detect and configure default gateway addresses automatically as described in RFC 1256 on a per-interface basis.  The recommended state for this setting is: Disabled."
+    description: "This setting is used to enable or disable the Internet Router Discovery Protocol (IRDP), which allows the system to detect and configure default gateway addresses automatically as described in RFC 1256 on a per-interface basis. The recommended state for this setting is: Disabled."
     rationale: "An attacker who has gained control of a computer on the same network segment could configure a computer on the network to impersonate a router. Other computers with IRDP enabled would then attempt to route their traffic through the already compromised computer."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Administrative Templates\\MSS (Legacy)\\MSS: (PerformRouterDiscovery) Allow IRDP to detect and configure Default Gateway addresses (could lead to DoS). Note: This Group Policy path does not exist by default. An additional Group Policy template (MSS-legacy.admx/adml) is required - it is available from this TechNet blog post: The MSS settings - Microsoft Security Guidance blog"
     compliance:
@@ -452,7 +452,7 @@ checks:
 
   - id: 13529
     title: "Ensure 'MSS: (TcpMaxDataRetransmissions IPv6) How many times unacknowledged data is retransmitted' is set to 'Enabled: 3'"
-    description: "This setting controls the number of times that TCP retransmits an individual data segment (non-connect segment) before the connection is aborted. The retransmission time-out is doubled with each successive retransmission on a connection. It is reset when responses resume. The base time-out value is dynamically determined by the measured round-trip time on the connection.  The recommended state for this setting is: Enabled: 3."
+    description: "This setting controls the number of times that TCP retransmits an individual data segment (non-connect segment) before the connection is aborted. The retransmission time-out is doubled with each successive retransmission on a connection. It is reset when responses resume. The base time-out value is dynamically determined by the measured round-trip time on the connection. The recommended state for this setting is: Enabled: 3."
     rationale: "A malicious user could exhaust a target computer's resources if it never sent any acknowledgment messages for data that was transmitted by the target computer."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: 3: Computer Configuration\\Policies\\Administrative Templates\\MSS (Legacy)\\MSS:(TcpMaxDataRetransmissions IPv6) How many times unacknowledged data is retransmitted. Note: This Group Policy path does not exist by default. An additional Group Policy template (MSS-legacy.admx/adml) is required - it is available from this TechNet blog post: The MSS settings - Microsoft Security Guidance blog"
     compliance:
@@ -469,7 +469,7 @@ checks:
 
   - id: 13530
     title: "Ensure 'MSS: (TcpMaxDataRetransmissions) How many times unacknowledged data is retransmitted' is set to 'Enabled: 3'"
-    description: "This setting controls the number of times that TCP retransmits an individual data segment (non-connect segment) before the connection is aborted. The retransmission time-out is doubled with each successive retransmission on a connection. It is reset when responses resume. The base time-out value is dynamically determined by the measured round-trip time on the connection.  The recommended state for this setting is: Enabled: 3."
+    description: "This setting controls the number of times that TCP retransmits an individual data segment (non-connect segment) before the connection is aborted. The retransmission time-out is doubled with each successive retransmission on a connection. It is reset when responses resume. The base time-out value is dynamically determined by the measured round-trip time on the connection. The recommended state for this setting is: Enabled: 3."
     rationale: "A malicious user could exhaust a target computer's resources if it never sent any acknowledgment messages for data that was transmitted by the target computer."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: 3: Computer Configuration\\Policies\\Administrative Templates\\MSS (Legacy)\\MSS:(TcpMaxDataRetransmissions) How many times unacknowledged data is retransmitted. Note: This Group Policy path does not exist by default. An additional Group Policy template (MSS-legacy.admx/adml) is required - it is available from this TechNet blog post: The MSS settings - Microsoft Security Guidance blog"
     compliance:
@@ -565,7 +565,7 @@ checks:
     title: "Disable IPv6 (Ensure TCPIP6 Parameter 'DisabledComponents' is set to '0xff (255)')"
     description: "Internet Protocol version 6 (IPv6) is a set of protocols that computers use to exchange information over the Internet and over home and business networks. IPv6 allows for many more IP addresses to be assigned than IPv4 did. Older networking, hosts and operating systems may not support IPv6 natively. The recommended state for this setting is: DisabledComponents - 0xff (255)"
     rationale: "Since the vast majority of private enterprise managed networks have no need to utilize IPv6 (because they have access to private IPv4 addressing), disabling IPv6 components reduces a possible attack surface that is also harder to monitor the traffic on. As a result, we recommend configuring IPv6 to a Disabled state when it is not needed."
-    remediation: "To establish the recommended configuration, set the following Registry value to 0xff (255) (DWORD): HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Services\\TCPIP6\\Parameters:Disabl edComponents    Note: This change does not take effect until the computer has been restarted. Note #2: Although Microsoft does not provide an ADMX template to configure this registry value, a custom .ADM template (Disable-IPv6-Components-KB929852.adm) is provided in the CIS Benchmark Remediation Kit to facilitate its configuration. Be aware though that simply turning off the group policy setting in the .ADM template will not \"undo\" the change once applied. Instead, the opposite setting must be applied to change the registry value to the opposite state."
+    remediation: "To establish the recommended configuration, set the following Registry value to 0xff (255) (DWORD): HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Services\\TCPIP6\\Parameters:Disabl edComponents Note: This change does not take effect until the computer has been restarted. Note #2: Although Microsoft does not provide an ADMX template to configure this registry value, a custom .ADM template (Disable-IPv6-Components-KB929852.adm) is provided in the CIS Benchmark Remediation Kit to facilitate its configuration. Be aware though that simply turning off the group policy setting in the .ADM template will not \"undo\" the change once applied. Instead, the opposite setting must be applied to change the registry value to the opposite state."
     compliance:
       - cis: ["18.5.19.2.1"]
       - cis_csc: ["9"]
@@ -650,7 +650,7 @@ checks:
 
   - id: 13540
     title: "Ensure 'Turn off handwriting personalization data sharing' is set to 'Enabled'"
-    description: "This setting turns off data sharing from the handwriting recognition personalization tool. The handwriting recognition personalization tool enables Tablet PC users to adapt handwriting recognition to their own writing style by providing writing samples. The tool can optionally share user writing samples with Microsoft to improve handwriting recognition in future versions of Windows. The tool generates reports and transmits them to Microsoft over a secure connection.  The recommended state for this setting is: Enabled."
+    description: "This setting turns off data sharing from the handwriting recognition personalization tool. The handwriting recognition personalization tool enables Tablet PC users to adapt handwriting recognition to their own writing style by providing writing samples. The tool can optionally share user writing samples with Microsoft to improve handwriting recognition in future versions of Windows. The tool generates reports and transmits them to Microsoft over a secure connection. The recommended state for this setting is: Enabled."
     rationale: "A person's handwriting is Personally Identifiable Information (PII), especially when it comes to your signature. As such, it is unacceptable in many environments to automatically upload PII to a website without explicit approval by the user."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\System\\Internet Communication Management\\Internet Communication settings\\Turn off handwriting personalization data sharing Note: This Group Policy path may not exist by default. It is provided by the Group Policy template ShapeCollector.admx/adml that is included with the Microsoft Windows 7 & Server 2008 R2 Administrative Templates (or newer)."
     compliance:
@@ -666,7 +666,7 @@ checks:
 
   - id: 13541
     title: "Ensure 'Turn off handwriting recognition error reporting' is set to 'Enabled'"
-    description: "Turns off the handwriting recognition error reporting tool.  The handwriting recognition error reporting tool enables users to report errors encountered in Tablet PC Input Panel. The tool generates error reports and transmits them to Microsoft over a secure connection. Microsoft uses these error reports to improve handwriting recognition in future versions of Windows. The recommended state for this setting is: Enabled."
+    description: "Turns off the handwriting recognition error reporting tool. The handwriting recognition error reporting tool enables users to report errors encountered in Tablet PC Input Panel. The tool generates error reports and transmits them to Microsoft over a secure connection. Microsoft uses these error reports to improve handwriting recognition in future versions of Windows. The recommended state for this setting is: Enabled."
     rationale: "A person's handwriting is Personally Identifiable Information (PII), especially when it comes to your signature. As such, it is unacceptable in many environments to automatically upload PII to a website without explicit approval by the user."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\System\\Internet Communication Management\\Internet Communication settings\\Turn off handwriting recognition error reporting. Note: This Group Policy path is provided by the Group Policy template InkWatson.admx/adml that is included with all versions of the Microsoft Windows Administrative Templates."
     compliance:
@@ -729,7 +729,7 @@ checks:
 
   - id: 13545
     title: "Ensure 'Turn off the \"Order Prints\" picture task' is set to 'Enabled'"
-    description: "This policy setting specifies whether the \"Order Prints Online\" task is available from Picture Tasks in Windows folders. The Order Prints Online Wizard is used to download a list of providers and allow users to order prints online.  The recommended state for this setting is: Enabled."
+    description: "This policy setting specifies whether the \"Order Prints Online\" task is available from Picture Tasks in Windows folders. The Order Prints Online Wizard is used to download a list of providers and allow users to order prints online. The recommended state for this setting is: Enabled."
     rationale: "In an enterprise managed environment we want to lower the risk of a user unknowingly exposing sensitive data."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\System\\Internet Communication Management\\Internet Communication settings\\Turn off the \"Order Prints\" picture task. Note: This Group Policy path is provided by the Group Policy template ICM.admx/adml that is included with all versions of the Microsoft Windows Administrative Templates."
     compliance:
@@ -761,7 +761,7 @@ checks:
 
   - id: 13547
     title: "Ensure 'Turn off the Windows Messenger Customer Experience Improvement Program' is set to 'Enabled'"
-    description: "This policy setting specifies whether Windows Messenger can collect anonymous information about how the Windows Messenger software and service is used. Microsoft uses information collected through the Customer Experience Improvement Program to detect software flaws so that they can be corrected more quickly, enabling this setting will reduce the amount of data Microsoft is able to gather for this purpose.  The recommended state for this setting is: Enabled."
+    description: "This policy setting specifies whether Windows Messenger can collect anonymous information about how the Windows Messenger software and service is used. Microsoft uses information collected through the Customer Experience Improvement Program to detect software flaws so that they can be corrected more quickly, enabling this setting will reduce the amount of data Microsoft is able to gather for this purpose. The recommended state for this setting is: Enabled."
     rationale: "Large enterprise managed environments may not want to have information collected by Microsoft from managed client computers."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\System\\Internet Communication Management\\Internet Communication settings\\Turn off the Windows Messenger Customer Experience Improvement Program. Note: This Group Policy path is provided by the Group Policy template ICM.admx/adml that is included with all versions of the Microsoft Windows Administrative Templates."
     compliance:
@@ -830,9 +830,9 @@ checks:
 
   - id: 13551
     title: "Ensure 'Disallow copying of user input methods to the system account for sign-in' is set to 'Enabled'"
-    description: "This policy prevents automatic copying of user input methods to the system account for use on the sign-in screen. The user is restricted to the set of input methods that are enabled in the system account.  The recommended state for this setting is: Enabled."
+    description: "This policy prevents automatic copying of user input methods to the system account for use on the sign-in screen. The user is restricted to the set of input methods that are enabled in the system account. The recommended state for this setting is: Enabled."
     rationale: "This is a way to increase the security of the system account."
-    remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\System\\Locale Services\\Disallow copying of user input methods to the system account for sign-in    Note: This Group Policy path may not exist by default. It is provided by the Group Policy template Globalization.admx/adml that is included with the Microsoft Windows 8.0 & Server 2012 (non-R2) Administrative Templates (or newer)."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\System\\Locale Services\\Disallow copying of user input methods to the system account for sign-in Note: This Group Policy path may not exist by default. It is provided by the Group Policy template Globalization.admx/adml that is included with the Microsoft Windows 8.0 & Server 2012 (non-R2) Administrative Templates (or newer)."
     compliance:
       - cis: ["18.8.26.1"]
       - cis_csc: ["16.5", "16.11"]
@@ -880,7 +880,7 @@ checks:
     title: "Ensure 'Turn off the advertising ID' is set to 'Enabled'"
     description: "This policy setting turns off the advertising ID, preventing apps from using the ID for experiences across apps. The recommended state for this setting is: Enabled."
     rationale: "Tracking user activity for advertising purposes, even anonymously, may be a privacy concern. In an enterprise managed environment, applications should not need or require tracking for targeted advertising."
-    remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\System\\User Profiles\\Turn off the advertising ID    Note: This Group Policy path may not exist by default. It is provided by the Group Policy template UserProfiles.admx/adml that is included with the Microsoft Windows 8.1 & Server 2012 R2 Administrative Templates (or newer)."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\System\\User Profiles\\Turn off the advertising ID Note: This Group Policy path may not exist by default. It is provided by the Group Policy template UserProfiles.admx/adml that is included with the Microsoft Windows 8.1 & Server 2012 R2 Administrative Templates (or newer)."
     compliance:
       - cis: ["18.8.46.1"]
       - cis_csc: ["13"]
@@ -945,7 +945,7 @@ checks:
     title: "Ensure 'Allow Use of Camera' is set to 'Disabled'"
     description: "This policy setting controls whether the use of Camera devices on the machine are permitted. The recommended state for this setting is: Disabled."
     rationale: "Cameras in a high security environment can pose serious privacy and data exfiltration risks - they should be disabled to help mitigate that risk."
-    remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Camera\\Allow Use of Camera    Note: This Group Policy path may not exist by default. It is provided by the Group Policy template Camera.admx/adml that is included with the Microsoft Windows 10 Release 1607 & Server 2016 Administrative Templates (or newer)."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Camera\\Allow Use of Camera Note: This Group Policy path may not exist by default. It is provided by the Group Policy template Camera.admx/adml that is included with the Microsoft Windows 10 Release 1607 & Server 2016 Administrative Templates (or newer)."
     compliance:
       - cis: ["18.9.12.1"]
       - cis_csc: ["13"]
