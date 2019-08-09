@@ -27,6 +27,10 @@
   <program_name>^su$</program_name>
 </decoder>
 
+<decoder name="su-mac">
+  <program_name>com.apple.AccountPolicyHelper</program_name>
+</decoder>
+
 <decoder name="su-detail">
   <parent>su</parent>
   <prematch>^'su </prematch>
@@ -64,4 +68,12 @@
   <regex>^\S \S+ (\S+)\p(\S+)$|^(\S+) to (\S+) on </regex>
   <order>srcuser, dstuser</order>
   <fts>name, srcuser, location</fts>
+</decoder>
+
+<!-- Apr 11 02:00:15 localhost com.apple.AccountPolicyHelper[245]: (88.21.2) AuthenticationAllowed completed: record "root", result: Success (0). -->
+<decoder name="su-mac-auth-allow">
+  <parent>su-mac</parent>
+  <prematch>AuthenticationAllowed</prematch>
+  <regex>completed: record "(\S+)"</regex>
+  <order>user</order>
 </decoder>

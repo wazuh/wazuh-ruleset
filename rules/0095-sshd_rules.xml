@@ -412,4 +412,22 @@
     <description>sshd: could not negotiate with client, no matching mac.</description>
   </rule>
 
+    <rule id="5760" level="3">
+    <decoded_as>sshd</decoded_as>
+    <match>USER_PROCESS:</match>
+    <description>sshd: Authentication success. SSH process running.</description>
+  </rule>
+
+    <rule id="5761" level="3">
+    <decoded_as>sshd</decoded_as>
+    <match>DEAD_PROCESS:</match>
+    <description>sshd: SSH Connection Closed. Process stopped. </description>
+  </rule>
+
+    <rule id="5762" level="3">
+    <decoded_as>sshd-mac</decoded_as>
+    <match>com.openssh.sshd.</match>
+    <description>SSH service exited(Maybe too many authentication failures)</description>
+  </rule>
+
 </group>
