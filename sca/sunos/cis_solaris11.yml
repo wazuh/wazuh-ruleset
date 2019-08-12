@@ -413,11 +413,9 @@ checks:
     remediation: "Perform the following to implement the recommended state: # cd /etc    # awk '/^gdm-autologin/ { $1=\"   #gdm-autologin\" } { print }' /etc/pam.conf > /etc/pam.conf.CIS    # mv pam.conf.CIS pam.conf"
     compliance:
       - cis: ["6.11"]
-    condition: all
+    condition: none
     rules:
-      - 'f:/etc/pam.conf -> r:^#\s*\t*gdm-autologin && r:auth && r:required && r:pam_unix_cred.so.1'
-      - 'f:/etc/pam.conf -> r:^#\s*\t*gdm-autologin && r:auth && r:sufficient && r:pam_allow.so.1'
-      - 'f:/etc/pam.conf -> r:^#\s*\t*gdm-autologin && r:account && r:sufficient && r:pam_allow.so.1'
+      - 'f:/etc/pam.conf -> !r:^# && r:gdm-autologin'
 
   - id: 7032
     title: "Set Default Screen Lock for GNOME Users"
