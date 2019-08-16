@@ -97,7 +97,7 @@ checks:
   - id: 13505
     title: "Ensure 'Geolocation Service (lfsvc)' is set to 'Disabled'"
     description: "This service monitors the current location of the system and manages geofences (a geographical location with associated events). The recommended state for this setting is: Disabled."
-    rationale: "This setting affects the location feature (e.g. GPS or other location tracking). From a security perspective, it’s not a good idea to reveal your location to software in most cases, but there are legitimate uses, such as mapping software. However, they should not be used in high security environments."
+    rationale: "This setting affects the location feature (e.g. GPS or other location tracking). From a security perspective, it's not a good idea to reveal your location to software in most cases, but there are legitimate uses, such as mapping software. However, they should not be used in high security environments."
     remediation: "To establish the recommended configuration via GP, set the following UI path to: Disabled. Computer Configuration\\Policies\\Windows Settings\\Security Settings\\System Services\\Geolocation Service"
     compliance:
       - cis: ["5.5"]
@@ -168,7 +168,7 @@ checks:
 
   - id: 13511
     title: "Ensure 'PNRP Machine Name Publication Service (PNRPAutoReg)' is set to 'Disabled'"
-    description: "This service publishes a machine name using the Peer Name Resolution Protocol. Configuration is managed via the netsh context ‘p2p pnrp peer’. The recommended state for this setting is: Disabled."
+    description: "This service publishes a machine name using the Peer Name Resolution Protocol. Configuration is managed via the netsh context ‘p2p pnrp peer'. The recommended state for this setting is: Disabled."
     rationale: "Peer Name Resolution Protocol is a distributed and (mostly) serverless way to handle name resolution of clients with each other. In a high security environment, it is more secure to rely on centralized name resolution methods maintained by authorized staff."
     remediation: "To establish the recommended configuration via GP, set the following UI path to: Disabled. Computer Configuration\\Policies\\Windows Settings\\Security Settings\\System Services\\PNRP Machine Name Publication Service"
     compliance:
@@ -837,7 +837,7 @@ checks:
   - id: 13560
     title: "Ensure 'Turn off location' is set to 'Enabled'"
     description: "This policy setting turns off the location feature for the computer. The recommended state for this setting is: Enabled."
-    rationale: "This setting affects the location feature (e.g. GPS or other location tracking). From a security perspective, it’s not a good idea to reveal your location to software in most cases, but there are legitimate uses, such as mapping software. However, they should not be used in high security environments."
+    rationale: "This setting affects the location feature (e.g. GPS or other location tracking). From a security perspective, it's not a good idea to reveal your location to software in most cases, but there are legitimate uses, such as mapping software. However, they should not be used in high security environments."
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Location and Sensors\\Turn off location. Note: This Group Policy path may not exist by default. It is provided by the Group Policy template Sensors.admx/adml that is included with the Microsoft Windows 7 & Server 2008 R2 Administrative Templates (or newer)."
     compliance:
       - cis: ["18.9.39.2"]
