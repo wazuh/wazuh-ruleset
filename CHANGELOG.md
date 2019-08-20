@@ -1,7 +1,18 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [v3.9.3]
+## [v3.10.0]
+
+### Added
+
+- SCA policies have been improved and refactored. ([#406](https://github.com/wazuh/wazuh-ruleset/pull/406))
+
+### Changed
+
+## Fixed
+
+
+## [v3.9.3] 2019-07-09
 
 ### Fixed
 
