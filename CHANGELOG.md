@@ -1,7 +1,90 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [v3.8.0]
+## [v3.10.0]
+
+### Added
+
+- SCA policies have been improved and refactored. ([#406](https://github.com/wazuh/wazuh-ruleset/pull/406))
+
+### Changed
+
+## Fixed
+
+
+## [v3.9.3] 2019-07-09
+
+### Fixed
+
+- NGINX Decoder: make "server" field optional. Thanks to @iasdeoupxe. ([#243](https://github.com/wazuh/wazuh-ruleset/pull/243))
+- Remove tailing quote from field "res" in Auditd decoder. Thanks to @branchnetconsulting. ([#412](https://github.com/wazuh/wazuh-ruleset/pull/412))
+- Fix conflict between fields "uid" and "auid" in Auditd decoder. Thanks to @tokibi. ([#246](https://github.com/wazuh/wazuh-ruleset/pull/246))
+- Prevent rules for AWS, Suricata, VirusTotal, OwnCloud, Vuls, CIS-CAT, Vulnerability Detector, MySQL, Osquery, and Azure from including the full log in JSON format. ([#443](https://github.com/wazuh/wazuh-ruleset/pull/443))
+
+## [v3.9.2] 2019-06-10
+
+### Fixed
+
+- Fixed Windows rule about audit log. ([#408](https://github.com/wazuh/wazuh-ruleset/pull/408))
+- Fixed check 11522 of Solaris SCA policy. ([#420](https://github.com/wazuh/wazuh-ruleset/pull/420))
+
+## [v3.9.1] 2019-05-21
+
+### Fixed
+
+- Fixed rule for the SCA check 5035 about SSH protocol. ([#385](https://github.com/wazuh/wazuh-ruleset/pull/385))
+- Fixed duplicated rules for the SCA policy cis_debianlinux7-8_L2. ([#386](https://github.com/wazuh/wazuh-ruleset/pull/386))
+- Fixed Windows Defender rule description. ([#388](https://github.com/wazuh/wazuh-ruleset/pull/388))
+- Fixed rules and requirements for SCA CIS policies of Mac OS X. ([#387](https://github.com/wazuh/wazuh-ruleset/pull/387))
+- Fixed Windows NT registries in Windows SCA policies. ([#393](https://github.com/wazuh/wazuh-ruleset/pull/393))
+- Fixed Windows EventChannel rules for Eventlog and Security Essentials. ([#397](https://github.com/wazuh/wazuh-ruleset/pull/397))
+- Fixed Windows rules to avoid filtering by erroneous provider names. ([#403](https://github.com/wazuh/wazuh-ruleset/pull/403))
+
+## [v3.9.0] 2019-05-02
+
+### Added
+
+- Adapt Sysmon rules to new Windows eventchannel format. ([#285](https://github.com/wazuh/wazuh-ruleset/pull/285))
+- Added ruleset for the SCA module. ([#288](https://github.com/wazuh/wazuh-ruleset/pull/288))
+- Added policy files in YAML format for the SCA module. ([#288](https://github.com/wazuh/wazuh-ruleset/pull/288))
+- Added the policy *cis_win2012r2_memberL2_rcl.yml* for SCA. ([#289](https://github.com/wazuh/wazuh-ruleset/pull/289)) (Thanks to @Bob-Andrews)
+- Improved rules for the docker listener. ([#293](https://github.com/wazuh/wazuh-ruleset/pull/293)) ([#307](https://github.com/wazuh/wazuh-ruleset/pull/307))
+- New options `same_field` and `not_same_field` to correlate dynamic fields in rules. ([#302](https://github.com/wazuh/wazuh-ruleset/pull/302))
+- New rule to catch a logon success from a Windows workstation. ([#304](https://github.com/wazuh/wazuh-ruleset/pull/304))
+- Added rules about Application and System channels for the Windows eventchannel format. ([#325](https://github.com/wazuh/wazuh-ruleset/pull/325))
+- Added *PCI-DSS* and *GDPR* mapping to rules for the docker listener. ([#333](https://github.com/wazuh/wazuh-ruleset/pull/333))
+
+### Changed
+
+- Changed the eventchannel field names in rules. ([#299](https://github.com/wazuh/wazuh-ruleset/pull/299))
+- Redistribute the eventchannel rules by incoming channel. ([#325](https://github.com/wazuh/wazuh-ruleset/pull/325))
+- Prevent events invoked by AWS Internal from flooding alerts. ([#351](https://github.com/wazuh/wazuh-ruleset/pull/351))
+
+### Fixed
+
+- Fixed the bruteforce attack rules for Windows Eventchannel. ([#302](https://github.com/wazuh/wazuh-ruleset/pull/302))
+- Updated links for Windows rules. ([#311](https://github.com/wazuh/wazuh-ruleset/pull/311)) (Credits to @atomicturtle ([#1675](https://github.com/ossec/ossec-hids/pull/1675)))
+- Several fixes for Windows rules for the eventlog format. (Thanks to @branchnetconsulting)
+  - Fixed SID regexes for eventlog Windows rules. ([#197](https://github.com/wazuh/wazuh-ruleset/pull/197))
+  - Fixed the matched string of rule 18270. ([#219](https://github.com/wazuh/wazuh-ruleset/pull/219))
+  - Fixed Sysmon rule when the destination port is empty. ([#229](https://github.com/wazuh/wazuh-ruleset/pull/229))
+  - Fixed the description for rule 18260. ([#232](https://github.com/wazuh/wazuh-ruleset/pull/232))
+  - Generalize description for rule 83201. ([#241](https://github.com/wazuh/wazuh-ruleset/pull/241))
+- Fixed the flow for Windows rule 18230. ([#253](https://github.com/wazuh/wazuh-ruleset/pull/253)) (Thanks to @wiredaem0n)
+
+## [v3.8.2] 2019-01-30
+
+### Changed
+
+- Rework of the rules for Windows Eventchannel. ([#277](https://github.com/wazuh/wazuh-ruleset/pull/277))
+
+
+## [v3.8.1] 2019-01-25
+
+There are no changes for Wazuh Ruleset in this version.
+
+
+## [v3.8.0] 2019-01-19
 
 ### Added
 
@@ -90,7 +173,7 @@ There are no changes for Wazuh Ruleset in this version.
   - Windows decoders: Match "Subject :" format ([#128](https://github.com/wazuh/wazuh-ruleset/pull/128)).
 
 
-## [v3.4.0]
+## [v3.4.0] 2018-07-24
 
 ### Added
 
@@ -101,23 +184,23 @@ There are no changes for Wazuh Ruleset in this version.
   - Removed offset of the `frequency` attribute in rules. ([#145](https://github.com/wazuh/wazuh-ruleset/pull/145))
 
 
-## [v3.3.1]
+## [v3.3.1] 2018-06-18
 
 ### Added
 
   - Rule to detect when agents are unable to unmerge shared files. ([#143](https://github.com/wazuh/wazuh-ruleset/pull/143))
 
-## [v3.3.0]
+## [v3.3.0] 2018-06-06
 
 There are no changes for Wazuh Ruleset in this version.
 
 
-## [v3.2.4]
+## [v3.2.4] 2018-06-01
 
 There are no changes for Wazuh Ruleset in this version.
 
 
-## [v3.2.3]
+## [v3.2.3] 2018-05-28
 
 ### Added
   - GDPR (General Data Protection Regulation) mapping.
@@ -128,7 +211,7 @@ There are no changes for Wazuh Ruleset in this version.
   - Error handling in update ruleset script using python3.
 
 
-## [v3.2.2]
+## [v3.2.2] 2018-05-07
 ### Fixed
   - Syntax error in cis_rhel7_linux_rcl.txt.
   - OpenLDAP decoders to extract the IP address properly.
@@ -149,14 +232,14 @@ There are no changes for Wazuh Ruleset in this version.
   - Rules to detect USB devices disconnected.
 
 
-## [v3.2.1]
+## [v3.2.1] 2018-03-03
 ### Fixed
   - Silence rules about OpenSCAP and CIS-CAT scan status.
   - Add compatibility between versions for CIS-CAT rules.
   - Sudo decoders extract commands with spaces.
 
 
-## [v3.2.0]
+## [v3.2.0] 2018-02-13
 ### Added
   - Added new rules for _Vulnerability detector_.
 
@@ -167,12 +250,12 @@ There are no changes for Wazuh Ruleset in this version.
   - Fixed `update_ruleset` script.
 
 
-## [v3.1.0]
+## [v3.1.0] 2017-12-22
 ### Added
   - New rules for VULS integration
   - New rules for CIS-CAT integration
 
-## [v3.0.0]
+## [v3.0.0] 2017-12-12
 ### Added
   - New features for "update_ruleset.py": custom URL and branch name
   - New users added to list of known malicious user agents
