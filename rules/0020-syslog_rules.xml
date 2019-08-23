@@ -761,3 +761,26 @@
   </rule>
 
 </group>
+
+<group name="syslog,perdition,">
+  <rule id="2962" level="0">
+    <decoded_as>perdition</decoded_as>
+    <description>Perdition custom app group.</description>
+  </rule>
+
+  <rule id="2963" level="3">
+    <if_sid>2962</if_sid>
+    <match>Connect: </match>
+    <description>perdition: New connection.</description>
+    <group>connection_attempt,pci_dss_10.6.1,</group>
+  </rule>
+
+  <rule id="2964" level="10" frequency="4" timeframe="30">
+    <if_matched_sid>2963</if_matched_sid>
+    <same_source_ip />
+    <description>perdition: Multiple connection attempts from same source.</description>
+    <group>recon,pci_dss_11.4,</group>
+  </rule>
+
+</group>
+
