@@ -90,10 +90,11 @@
   <parent>windows-date-format</parent>
   <type>web-log</type>
   <use_own_name>true</use_own_name>
-  <prematch offset="after_parent">^\S+ GET |^\S+ POST </prematch>
-  <regex offset="after_prematch">(\S+ \S*) \.* (\S+) \S*\.* (\d\d\d) \S+ \S+ \S+</regex>
-  <order>url,srcip,id</order>
+  <prematch offset="after_parent">^\S+ GET |^\S+ POST</prematch>
+  <regex offset="after_parent">^\S+ (\w+) (\S+ \S+) (\S+) \S+ (\S+) (\S+) \.*(\d\d\d) </regex>
+  <order>action, url, srcport, srcip, user_agent, id</order>
 </decoder>
+
 
 <!-- IIS 5 W3C FTP log format.
   - Examples:
