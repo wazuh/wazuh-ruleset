@@ -5,13 +5,45 @@
   -  Copyright (C) 2015-2019, Wazuh Inc.
   -  Copyright (C) 2009 Trend Micro Inc.
   -  This program is a free software; you can redistribute it and/or modify it under the terms of GPLv2.
+
+Background on Cisco syslog format:
+
+1111: ROUTERHOSTNAME: 000012: 00:11:22: %SYS-5-CONFIG_I: text...
+ f1  |       f2      |  f3   |    f4   |   message
+
+1111: ROUTERHOSTNAME: 000012: .Mar  3 19:31:51: %SYS-5-CONFIG_I: text...
+ f1  |       f2      |  f3   |    f4           |   message
+
+All f0-4 fields are optional and their appearance and format depends on configuration.
+
+- f1: message counter
+- f2: origin-id (hostname, ip, custom string)
+- f3: sequence number
+- f4: uptime or datetime
+
+When f4 is datetime, there are number of optional options for the format.
+These include year, miliseconds, timezone (local or UTC).
+
+Examples:
+
+*Mar  3 2019 21:42:11.351 UTC
+.Mar  3 21:42:11.351 UTC
+.Mar  3 21:42:11
+Mar  3 21:42:11 UTC
+
+(*) - Clock has not been set. NTP is not configured. Time could be wrong and needs to be verified
+(.) - NTP is setup, but time is out of sync
+
+If neither (*) nor (.) are present then clock is in-sync via NTP
+
+Details: https://www.cisco.com/c/en/us/td/docs/routers/access/wireless/software/guide/SysMsgLogging.html
+
 -->
 
 
 <!--
   - Group for Cisco IOS messages.
  -->
-
 
 <decoder name="cisco-ios">
   <prematch>^%\w+-\d-\w+: </prematch>
@@ -26,7 +58,7 @@
 </decoder>
 
 <!--
-  - Hour first, no date or sequence number
+  - Uptime, no date or sequence number
   - 00:00:46: %LINK-3-UPDOWN: Interface Port-channel1, changed state to up
 -->
 
@@ -51,59 +83,97 @@
 <!--
   - Date (preceded by * or . or nothing) and time (w/wo ms or timezone)
   - *Mar  1 18:46:11: %SYS-5-CONFIG_I: Configured from console by vty2 (10.34.195.36)
+  - *Mar  1 2019 18:46:11: %SYS-5-CONFIG_I: Configured from console by vty2 (10.34.195.36)
   - Mar  1 18:46:11: %SYS-5-CONFIG_I: Configured from console by vty2 (10.34.195.36)
+  - Mar  1 2019 18:46:11: %SYS-5-CONFIG_I: Configured from console by vty2 (10.34.195.36)
+
   - *Mar  1 18:48:50 UTC: %SYS-5-CONFIG_I: Configured from console by vty2 (10.34.195.36)
+  - *Mar  1 2019 18:48:50 UTC: %SYS-5-CONFIG_I: Configured from console by vty2 (10.34.195.36)
   - Mar  1 18:48:50 UTC: %SYS-5-CONFIG_I: Configured from console by vty2 (10.34.195.36)
+  - Mar  1 2019 18:48:50 UTC: %SYS-5-CONFIG_I: Configured from console by vty2 (10.34.195.36)
+
   - *Mar  1 18:46:11.444: %SYS-5-CONFIG_I: Configured from console by vty2 (10.34.195.36)
+  - *Mar  1 2019 18:46:11.444: %SYS-5-CONFIG_I: Configured from console by vty2 (10.34.195.36)
   - Mar  1 18:46:11.444: %SYS-5-CONFIG_I: Configured from console by vty2 (10.34.195.36)
+  - Mar  1 2019 18:46:11.444: %SYS-5-CONFIG_I: Configured from console by vty2 (10.34.195.36)
+
   - *Mar  1 18:48:50.483 UTC: %SYS-5-CONFIG_I: Configured from console by vty2 (10.34.195.36)
+  - *Mar  1 2019 18:48:50.483 UTC: %SYS-5-CONFIG_I: Configured from console by vty2 (10.34.195.36)
   - Mar  1 18:48:50.483 UTC: %SYS-5-CONFIG_I: Configured from console by vty2 (10.34.195.36)
+  - Mar  1 2019 18:48:50.483 UTC: %SYS-5-CONFIG_I: Configured from console by vty2 (10.34.195.36)
 -->
 
 <decoder name="cisco-ios">
-  <prematch>^\p*\w+\s+\d*\s+\d+:\d+:\d+:\s+%|</prematch>
-  <prematch>^\p*\w+\s+\d*\s+\d+:\d+:\d+\s+\w+:\s+%|</prematch>
-  <prematch>^\p*\w+\s+\d*\s+\d+:\d+:\d+.\d+:\s+%|</prematch>
-  <prematch>^\p*\w+\s+\d*\s+\d+:\d+:\d+.\d+\s+\w+:\s+%</prematch>
+  <prematch>^\p*\w+\s+\d*\s\d+:\d+:\d+:\s+%|</prematch>
+  <prematch>^\p*\w+\s+\d*\s\d+\s\d+:\d+:\d+:\s+%|</prematch>
+  <prematch>^\p*\w+\s+\d*\s\d+:\d+:\d+\s+\w+:\s+%|</prematch>
+  <prematch>^\p*\w+\s+\d*\s\d+\s\d+:\d+:\d+\s+\w+:\s+%|</prematch>
+  <prematch>^\p*\w+\s+\d*\s\d+:\d+:\d+.\d+:\s+%|</prematch>
+  <prematch>^\p*\w+\s+\d*\s\d+\s\d+:\d+:\d+.\d+:\s+%|</prematch>
+  <prematch>^\p*\w+\s+\d*\s\d+:\d+:\d+.\d+\s+\w+:\s+%|</prematch>
+  <prematch>^\p*\w+\s+\d*\s\d+\s\d+:\d+:\d+.\d+\s+\w+:\s+%</prematch>
 </decoder>
 
 <decoder name="cisco-ios">
   <program_name />
-  <prematch>^\p*\w+\s+\d*\s+\d+:\d+:\d+:\s+%|</prematch>
-  <prematch>^\p*\w+\s+\d*\s+\d+:\d+:\d+\s+\w+:\s+%|</prematch>
-  <prematch>^\p*\w+\s+\d*\s+\d+:\d+:\d+.\d+:\s+%|</prematch>
-  <prematch>^\p*\w+\s+\d*\s+\d+:\d+:\d+.\d+\s+\w+:\s+%</prematch>
+  <prematch>^\p*\w+\s+\d*\s\d+:\d+:\d+:\s+%|</prematch>
+  <prematch>^\p*\w+\s+\d*\s\d+\s\d+:\d+:\d+:\s+%|</prematch>
+  <prematch>^\p*\w+\s+\d*\s\d+:\d+:\d+\s+\w+:\s+%|</prematch>
+  <prematch>^\p*\w+\s+\d*\s\d+\s\d+:\d+:\d+\s+\w+:\s+%|</prematch>
+  <prematch>^\p*\w+\s+\d*\s\d+:\d+:\d+.\d+:\s+%|</prematch>
+  <prematch>^\p*\w+\s+\d*\s\d+\s\d+:\d+:\d+.\d+:\s+%|</prematch>
+  <prematch>^\p*\w+\s+\d*\s\d+:\d+:\d+.\d+\s+\w+:\s+%|</prematch>
+  <prematch>^\p*\w+\s+\d*\s\d+\s\d+:\d+:\d+.\d+\s+\w+:\s+%</prematch>
 </decoder>
 
 <!--
-  - Sequence number, Date (preceded by * or . or nothing) and time (w/wo ms or timezone)
+  - message counter, Date (preceded by * or . or nothing) and time (w/wo ms or timezone)
   - 1348: .Jun 12 18:22:22: %SYS-5-CONFIG_I:
+  - 1348: .Jun 12 2019 18:22:22: %SYS-5-CONFIG_I:
   - 1348: Jun 12 18:22:22: %SYS-5-CONFIG_I:
+  - 1348: Jun 12 2019 18:22:22: %SYS-5-CONFIG_I:
+
   - 1348: .Jun 12 18:22:22.555: %SYS-5-CONFIG_I:
+  - 1348: .Jun 12 2019 18:22:22.555: %SYS-5-CONFIG_I:
   - 1348: Jun 12 18:22:22.555: %SYS-5-CONFIG_I:
+  - 1348: Jun 12 2019 18:22:22.555: %SYS-5-CONFIG_I:
+
   - 1348: .Jun 12 18:22:22 UTC: %SYS-5-CONFIG_I:
+  - 1348: .Jun 12 2019 18:22:22 UTC: %SYS-5-CONFIG_I:
   - 1348: Jun 12 18:22:22 UTC: %SYS-5-CONFIG_I:
+  - 1348: Jun 12 2019 18:22:22 UTC: %SYS-5-CONFIG_I:
+
   - 1348: .Jun 12 18:22:22.555 UTC: %SYS-5-CONFIG_I:
+  - 1348: .Jun 12 2019 18:22:22.555 UTC: %SYS-5-CONFIG_I:
   - 1348: Jun 12 18:22:22.555 UTC: %SYS-5-CONFIG_I:
+  - 1348: Jun 12 2019 18:22:22.555 UTC: %SYS-5-CONFIG_I:
 -->
 
 <decoder name="cisco-ios">
-  <prematch>^\d+:\s+\p*\w+\s+\d*\s+\d+:\d+:\d+:\s+%|</prematch>
-  <prematch>^\d+:\s+\p*\w+\s+\d*\s+\d+:\d+:\d+\s+\w+:\s+%|</prematch>
-  <prematch>^\d+:\s+\p*\w+\s+\d*\s+\d+:\d+:\d+.\d+:\s+%|</prematch>
-  <prematch>^\d+:\s+\p*\w+\s+\d*\s+\d+:\d+:\d+.\d+\s+\w+:\s+%</prematch>
+  <prematch>^\d+:\s\p*\w+\s+\d*\s\d+:\d+:\d+:\s+%|</prematch>
+  <prematch>^\d+:\s\p*\w+\s+\d*\s\d+\s\d+:\d+:\d+:\s+%|</prematch>
+  <prematch>^\d+:\s\p*\w+\s+\d*\s\d+:\d+:\d+\s+\w+:\s+%|</prematch>
+  <prematch>^\d+:\s\p*\w+\s+\d*\s\d+\s\d+:\d+:\d+\s+\w+:\s+%|</prematch>
+  <prematch>^\d+:\s\p*\w+\s+\d*\s\d+:\d+:\d+.\d+:\s+%|</prematch>
+  <prematch>^\d+:\s\p*\w+\s+\d*\s\d+\s\d+:\d+:\d+.\d+:\s+%|</prematch>
+  <prematch>^\d+:\s\p*\w+\s+\d*\s\d+:\d+:\d+.\d+\s+\w+:\s+%|</prematch>
+  <prematch>^\d+:\s\p*\w+\s+\d*\s\d+\s\d+:\d+:\d+.\d+\s+\w+:\s+%</prematch>
 </decoder>
 
 <decoder name="cisco-ios">
   <program_name />
-  <prematch>^\d+:\s+\p*\w+\s+\d*\s+\d+:\d+:\d+:\s+%|</prematch>
-  <prematch>^\d+:\s+\p*\w+\s+\d*\s+\d+:\d+:\d+\s+\w+:\s+%|</prematch>
-  <prematch>^\d+:\s+\p*\w+\s+\d*\s+\d+:\d+:\d+.\d+:\s+%|</prematch>
-  <prematch>^\d+:\s+\p*\w+\s+\d*\s+\d+:\d+:\d+.\d+\s+\w+:\s+%</prematch>
+  <prematch>^\d+:\s\p*\w+\s+\d*\s\d+:\d+:\d+:\s+%|</prematch>
+  <prematch>^\d+:\s\p*\w+\s+\d*\s\d+\s\d+:\d+:\d+:\s+%|</prematch>
+  <prematch>^\d+:\s\p*\w+\s+\d*\s\d+:\d+:\d+\s+\w+:\s+%|</prematch>
+  <prematch>^\d+:\s\p*\w+\s+\d*\s\d+\s\d+:\d+:\d+\s+\w+:\s+%|</prematch>
+  <prematch>^\d+:\s\p*\w+\s+\d*\s\d+:\d+:\d+.\d+:\s+%|</prematch>
+  <prematch>^\d+:\s\p*\w+\s+\d*\s\d+\s\d+:\d+:\d+.\d+:\s+%|</prematch>
+  <prematch>^\d+:\s\p*\w+\s+\d*\s\d+:\d+:\d+.\d+\s+\w+:\s+%|</prematch>
+  <prematch>^\d+:\s\p*\w+\s+\d*\s\d+\s\d+:\d+:\d+.\d+\s+\w+:\s+%</prematch>
 </decoder>
 
 <!--
-  - Sequence number, origin-id, Date (preceded by * or . or nothing) and time (w/wo ms or timezone)
+  - message counter, origin-id, Date (preceded by * or . or nothing) and time (w/wo ms or timezone)
   - 1348: HOSTNAME: .Jun 12 18:22:22: %SYS-5-CONFIG_I:
   - 1348: HOSTNAME: Jun 12 18:22:22: %SYS-5-CONFIG_I:
   - 1348: HOSTNAME: .Jun 12 18:22:22.555: %SYS-5-CONFIG_I:
@@ -115,18 +185,26 @@
 -->
 
 <decoder name="cisco-ios">
-  <prematch>^\d+:\s+\.+:\s+\p*\w+\s+\d*\s+\d+:\d+:\d+:\s+%|</prematch>
-  <prematch>^\d+:\s+\.+:\s+\p*\w+\s+\d*\s+\d+:\d+:\d+\s+\w+:\s+%|</prematch>
-  <prematch>^\d+:\s+\.+:\s+\p*\w+\s+\d*\s+\d+:\d+:\d+.\d+:\s+%|</prematch>
-  <prematch>^\d+:\s+\.+:\s+\p*\w+\s+\d*\s+\d+:\d+:\d+.\d+\s+\w+:\s+%</prematch>
+  <prematch>^\d+:\s\.+:\s\p*\w+\s+\d*\s\d+:\d+:\d+:\s+%|</prematch>
+  <prematch>^\d+:\s\.+:\s\p*\w+\s+\d*\s\d+\s\d+:\d+:\d+:\s+%|</prematch>
+  <prematch>^\d+:\s\.+:\s\p*\w+\s+\d*\s\d+:\d+:\d+\s+\w+:\s+%|</prematch>
+  <prematch>^\d+:\s\.+:\s\p*\w+\s+\d*\s\d+\s\d+:\d+:\d+\s+\w+:\s+%|</prematch>
+  <prematch>^\d+:\s\.+:\s\p*\w+\s+\d*\s\d+:\d+:\d+.\d+:\s+%|</prematch>
+  <prematch>^\d+:\s\.+:\s\p*\w+\s+\d*\s\d+\s\d+:\d+:\d+.\d+:\s+%|</prematch>
+  <prematch>^\d+:\s\.+:\s\p*\w+\s+\d*\s\d+:\d+:\d+.\d+\s+\w+:\s+%|</prematch>
+  <prematch>^\d+:\s\.+:\s\p*\w+\s+\d*\s\d+\s\d+:\d+:\d+.\d+\s+\w+:\s+%</prematch>
 </decoder>
 
 <decoder name="cisco-ios">
   <program_name />
-  <prematch>^\d+:\s+\.+:\s+\p*\w+\s+\d*\s+\d+:\d+:\d+:\s+%|</prematch>
-  <prematch>^\d+:\s+\.+:\s+\p*\w+\s+\d*\s+\d+:\d+:\d+\s+\w+:\s+%|</prematch>
-  <prematch>^\d+:\s+\.+:\s+\p*\w+\s+\d*\s+\d+:\d+:\d+.\d+:\s+%|</prematch>
-  <prematch>^\d+:\s+\.+:\s+\p*\w+\s+\d*\s+\d+:\d+:\d+.\d+\s+\w+:\s+%</prematch>
+  <prematch>^\d+:\s\.+:\s\p*\w+\s+\d*\s\d+:\d+:\d+:\s+%|</prematch>
+  <prematch>^\d+:\s\.+:\s\p*\w+\s+\d*\s\d+\s\d+:\d+:\d+:\s+%|</prematch>
+  <prematch>^\d+:\s\.+:\s\p*\w+\s+\d*\s\d+:\d+:\d+\s+\w+:\s+%|</prematch>
+  <prematch>^\d+:\s\.+:\s\p*\w+\s+\d*\s\d+\s\d+:\d+:\d+\s+\w+:\s+%|</prematch>
+  <prematch>^\d+:\s\.+:\s\p*\w+\s+\d*\s\d+:\d+:\d+.\d+:\s+%|</prematch>
+  <prematch>^\d+:\s\.+:\s\p*\w+\s+\d*\s\d+\s\d+:\d+:\d+.\d+:\s+%|</prematch>
+  <prematch>^\d+:\s\.+:\s\p*\w+\s+\d*\s\d+:\d+:\d+.\d+\s+\w+:\s+%|</prematch>
+  <prematch>^\d+:\s\.+:\s\p*\w+\s+\d*\s\d+\s\d+:\d+:\d+.\d+\s+\w+:\s+%</prematch>
 </decoder>
 
 <!-- Cisco IOS
