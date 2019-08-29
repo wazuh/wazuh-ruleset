@@ -5,12 +5,28 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- Add rules for VIPRE antivirus. ([#327](https://github.com/wazuh/wazuh-ruleset/pull/327))
+- Add decoders and rules for Panda-PAPS. ([#437](https://github.com/wazuh/wazuh-ruleset/pull/437))
+- Add decoders and rules for CheckPoint Smart-1 firewalls. ([#440](https://github.com/wazuh/wazuh-ruleset/pull/440))
+- Add Windows Software Restriction Policy rules. ([#461](https://github.com/wazuh/wazuh-ruleset/pull/461))
+- Add perdition (imap/pop3 proxy) rules (by @gkissand). ([#407](https://github.com/wazuh/wazuh-ruleset/pull/407))
+- Extend event detection for Windows Defender decoders (by @MarauderDueling). ([#220](https://github.com/wazuh/wazuh-ruleset/pull/220))
+- Add support for NAXSI web application firewall (by @kravietz). ([#354](https://github.com/wazuh/wazuh-ruleset/pull/354))
+- Improved postfix decoder (by @iasdeoupxe). ([#410](https://github.com/wazuh/wazuh-ruleset/pull/410))
+- Add rule to alert about changes in system time. ([#239](https://github.com/wazuh/wazuh-ruleset/pull/239))
+- Add rule to detect sudo actions from users other than root. ([#149](https://github.com/wazuh/wazuh-ruleset/pull/149))
+- Add Cisco-ASA rules and decoders. ([#425](https://github.com/wazuh/wazuh-ruleset/pull/425))
+- Add HIPAA compliance groups to ruleset. ([#400](https://github.com/wazuh/wazuh-ruleset/pull/400))
+- Add mapping for HIPAA and NIST_800_53 compliance to SCA policies. ([#421](https://github.com/wazuh/wazuh-ruleset/pull/421))
 - SCA policies have been improved and refactored. ([#406](https://github.com/wazuh/wazuh-ruleset/pull/406))
+- Add recon group to SSH rule (by @kravietz). ([323](https://github.com/wazuh/wazuh-ruleset/pull/323))
 
-### Changed
+### Fixed
 
-## Fixed
-
+- Fix Sonicwall decoders. ([#274](https://github.com/wazuh/wazuh-ruleset/pull/274))
+- Fix for Windows decoder. ([#154](https://github.com/wazuh/wazuh-ruleset/pull/154))
+- Fix regex to detect rootkit trojans (by @erinish). ([#144](https://github.com/wazuh/wazuh-ruleset/pull/144))
+- Fix rules about shellshock attack. ([#458](https://github.com/wazuh/wazuh-ruleset/pull/458))
 
 ## [v3.9.3] 2019-07-09
 
