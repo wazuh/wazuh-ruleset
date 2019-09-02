@@ -218,7 +218,7 @@
 <!--
     Shellshock detected
     Pattern: "(){:;};" (with spaces)
-    Code: 2xx, 3xx, 4xx, 50x
+    Code: all
     Decoder: web-accesslog_decoders.xml
 
     Examples:
@@ -233,7 +233,7 @@
     -->
 
   <rule id="31166" level="15">
-    <if_sid>31101,31108,31120</if_sid>
+    <if_sid>31100</if_sid>
     <regex>"\(\)\s*{\s*\w*:;\s*}\s*;|"\(\)\s*{\s*\w*;\s*}\s*;</regex>
     <description>Shellshock attack attempt</description>
     <info type="cve">CVE-2014-6271</info>
@@ -242,7 +242,7 @@
   </rule>
 
   <rule id="31167" level="15">
-    <if_sid>31101,31108,31120</if_sid>
+    <if_sid>31100</if_sid>
     <regex>"\(\)\s*{\s*_;\.*}\s*>_[\$\(\$\(\)\)]\s*{</regex>
     <description>Shellshock attack attempt</description>
     <info type="cve">CVE-2014-6278</info>
