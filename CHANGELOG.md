@@ -19,7 +19,12 @@ All notable changes to this project will be documented in this file.
 - Add HIPAA compliance groups to ruleset. ([#400](https://github.com/wazuh/wazuh-ruleset/pull/400))
 - Add mapping for HIPAA and NIST_800_53 compliance to SCA policies. ([#421](https://github.com/wazuh/wazuh-ruleset/pull/421))
 - SCA policies have been improved and refactored. ([#406](https://github.com/wazuh/wazuh-ruleset/pull/406))
-- Add recon group to SSH rule (by @kravietz). ([323](https://github.com/wazuh/wazuh-ruleset/pull/323))
+- Add recon group to SSH rule (by @kravietz). ([#323](https://github.com/wazuh/wazuh-ruleset/pull/323))
+- Add rule to detect untrusted kernel modules being loaded (by @kravietz). ([#323](https://github.com/wazuh/wazuh-ruleset/pull/323))
+- Add rule for rndg failure (by @kravietz). ([#323](https://github.com/wazuh/wazuh-ruleset/pull/323))
+- Add rules for RAID and disk failure (by @kravietz). ([#323](https://github.com/wazuh/wazuh-ruleset/pull/323))
+- Add rule for ZFS error message (by @kravietz). ([#323](https://github.com/wazuh/wazuh-ruleset/pull/323))
+- Add rule for systemd status=1/FAILURE (by @kravietz). ([#323](https://github.com/wazuh/wazuh-ruleset/pull/323))
 
 ### Fixed
 
