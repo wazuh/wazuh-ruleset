@@ -142,6 +142,9 @@
   <rule id="2502" level="10">
     <match>more authentication failures;|REPEATED login failures</match>
     <description>syslog: User missed the password more than one time</description>
+    <mitre>
+      <id>T1110</id>
+    </mitre>
     <group>authentication_failed,pci_dss_10.2.4,pci_dss_10.2.5,gpg13_7.8,gdpr_IV_35.7.d,gdpr_IV_32.2,hipaa_164.312.b,nist_800_53_AU.14,nist_800_53_AC.7,</group>
   </rule>
 
@@ -541,6 +544,10 @@
     <if_sid>5400</if_sid>
     <match>user NOT in sudoers</match>
     <description>Unauthorized user attempted to use sudo.</description>
+    <mitre>
+      <id>T1169</id>
+      <id>T1098</id>
+    </mitre>
     <group>pci_dss_10.2.2,pci_dss_10.2.5,gpg13_7.8,gdpr_IV_35.7.d,gdpr_IV_32.2,hipaa_164.312.b,nist_800_53_AU.14,nist_800_53_AC.6,nist_800_53_AC.7,</group>
   </rule>
 
