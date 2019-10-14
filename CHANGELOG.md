@@ -1,6 +1,12 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [v3.11.0]
+
+### Added
+
+- Add rules and decoders for McAfee EPO. ([#467](https://github.com/wazuh/wazuh-ruleset/pull/467))
+
 ## [v3.10.0]
 
 ### Added
