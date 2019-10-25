@@ -31,6 +31,9 @@
     <if_sid>86802</if_sid>
     <regex>Maximum authentication retries for user (\w+) exceeded</regex>
     <description>VShell user used the maximum number of password attempts.</description>
+    <mitre>
+      <id>T1110</id>
+    </mitre>
     <group>gpg13_7.1,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
   </rule>
 
@@ -61,6 +64,9 @@
   <rule id="86807" level="12" frequency="7" timeframe="60">
     <if_matched_sid>86802</if_matched_sid>
     <description>VShell host has exceeded the number of failed login attempts and has been added to the Hosts Deny file.</description>
+    <mitre>
+      <id>T1110</id>
+    </mitre>
     <group>gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
   </rule>
 </group>

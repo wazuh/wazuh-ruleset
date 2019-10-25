@@ -129,6 +129,9 @@
     <if_sid>18104</if_sid>
     <id>^644$|^4740$</id>
     <description>Windows: User account locked out (multiple login errors).</description>
+    <mitre>
+      <id>T1110</id>
+    </mitre>
     <group>authentication_failures,pci_dss_8.1.6,pci_dss_11.4,gpg13_7.5,gdpr_IV_35.7.d,hipaa_164.312.a.1,nist_800_53_AC.7,nist_800_53_SI.4,</group>
   </rule>
 
@@ -143,6 +146,9 @@
     <if_sid>18104</if_sid>
     <id>^517$|^1102$</id>
     <description>Windows audit log was cleared.</description>
+    <mitre>
+      <id>T1107</id>
+    </mitre>
     <group>logs_cleared,pci_dss_10.6.1,gpg13_10.1,gdpr_IV_35.7.d,hipaa_164.312.b,nist_800_53_AU.6,</group>
   </rule>
 
@@ -186,6 +192,9 @@
     <id>^65xxx</id>
     <description>Windows: Group account added/changed/deleted.</description>
     <info>This rule has been deprecated</info>
+    <mitre>
+      <id>T1098</id>
+    </mitre>
     <group>account_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,hipaa_164.312.a.2.I,hipaa_164.312.a.2.II,hipaa_164.312.b,nist_800_53_AC.2,nist_800_53_IA.4,nist_800_53_AU.14,nist_800_53_AC.7,</group>
   </rule>
 
@@ -919,6 +928,9 @@
     <if_matched_sid>18108</if_matched_sid>
     <same_user />
     <description>Windows: Multiple failed attempts to perform a privileged operation by the same user.</description>
+    <mitre>
+      <id>T1110</id>
+    </mitre>
     <group>pci_dss_10.2.4,pci_dss_10.2.5,pci_dss_11.4,gdpr_IV_35.7.d,gdpr_IV_32.2,hipaa_164.312.b,nist_800_53_AU.14,nist_800_53_AC.7,nist_800_53_SI.4,</group>
   </rule>
 
@@ -926,6 +938,9 @@
     <if_matched_group>win_authentication_failed</if_matched_group>
     <same_source_ip />
     <description>Multiple Windows Logon Failures.</description>
+    <mitre>
+      <id>T1110</id>
+    </mitre>
     <group>authentication_failures,pci_dss_10.2.4,pci_dss_10.2.5,pci_dss_11.4,gdpr_IV_35.7.d,gdpr_IV_32.2,hipaa_164.312.b,nist_800_53_AU.14,nist_800_53_AC.7,nist_800_53_SI.4,</group>
   </rule>
 
@@ -949,12 +964,18 @@
   <rule id="18156" level="10" frequency="$MS_FREQ" timeframe="240">
     <if_matched_sid>18125</if_matched_sid>
     <description>Windows: Multiple remote access login failures.</description>
+    <mitre>
+      <id>T1110</id>
+    </mitre>
     <group>authentication_failures,pci_dss_10.2.4,pci_dss_10.2.5,pci_dss_11.4,pci_dss_8.1.5,gdpr_IV_35.7.d,gdpr_IV_32.2,hipaa_164.312.b,hipaa_164.312.a.1,nist_800_53_AU.14,nist_800_53_AC.7,nist_800_53_SI.4,nist_800_53_AC.2,</group>
   </rule>
 
   <rule id="18157" level="10" frequency="$MS_FREQ" timeframe="240">
       <if_matched_sid>18258</if_matched_sid>
       <description>Windows: Multiple TS Gateway login failures.</description>
+      <mitre>
+        <id>T1110</id>
+      </mitre>
       <group>authentication_failures,pci_dss_10.2.4,pci_dss_10.2.5,pci_dss_11.4,gdpr_IV_35.7.d,gdpr_IV_32.2,hipaa_164.312.b,nist_800_53_AU.14,nist_800_53_AC.7,nist_800_53_SI.4,</group>
   </rule>
 
