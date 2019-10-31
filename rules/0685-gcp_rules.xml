@@ -17,39 +17,179 @@ ID: 65000 - 65499
         <options>no_full_log</options>
     </rule>
 
-    <rule id="65001" level="10">
-        <if_sid>65000</if_sid>
-        <field name="jsonPayload.responseCode">^ERROR$</field>
-        <description>GCP error</description>
-        <options>no_full_log</options>
-    </rule>
-
-    <rule id="65002" level="5">
+    <rule id="65001" level="5">
         <if_sid>65000</if_sid>
         <field name="severity">^NOTICE$</field>
         <description>GCP notice event</description>
         <options>no_full_log</options>
     </rule>
 
-    <rule id="65003" level="3">
+    <rule id="65002" level="3">
         <if_sid>65000</if_sid>
         <field name="resource.labels.source_type">^gcp-vm$</field>
         <description>GCP virtual machine event</description>
         <options>no_full_log</options>
     </rule>
 
-    <rule id="65004" level="3">
-        <if_sid>65003</if_sid>
+    <rule id="65003" level="3">
+        <if_sid>65002</if_sid>
         <field name="jsonPayload.vmInstanceId">\.+</field>
         <field name="jsonPayload.vmInstanceName">\.+</field>
         <description>GCP virtual machine instance $(jsonPayload.vmInstanceName) with ID $(jsonPayload.vmInstanceId)</description>
         <options>no_full_log</options>
     </rule>
 
-    <rule id="65005" level="3">
+    <rule id="65004" level="3">
         <if_sid>65000</if_sid>
         <field name="resource.labels.source_type">^internet$</field>
         <description>GCP internet event</description>
+        <options>no_full_log</options>
+    </rule>
+
+    <rule id="65005" level="10">
+        <if_sid>65000</if_sid>
+        <field name="jsonPayload.responseCode">^ERROR$</field>
+        <description>GCP error</description>
+        <options>no_full_log</options>
+    </rule>
+
+    <rule id="65006" level="5">
+        <if_sid>65000</if_sid>
+        <field name="jsonPayload.responseCode">^NXDOMAIN$</field>
+        <description>Unable to resolve domain name using the DNS</description>
+        <options>no_full_log</options>
+    </rule>
+
+    <rule id="65007" level="12">
+        <if_sid>65000</if_sid>
+        <field name="jsonPayload.responseCode">^SERVFAIL$</field>
+        <description>Unable to process query due to a problem with the name server</description>
+        <options>no_full_log</options>
+    </rule>
+
+    <rule id="65008" level="5">
+        <if_sid>65000</if_sid>
+        <field name="jsonPayload.responseCode">^FORMERR$</field>
+        <description>Unable to interpret query</description>
+        <options>no_full_log</options>
+    </rule>
+
+    <rule id="65009" level="5">
+        <if_sid>65000</if_sid>
+        <field name="jsonPayload.responseCode">^NOTIMP$</field>
+        <description>Unsupported requested query</description>
+        <options>no_full_log</options>
+    </rule>
+
+    <rule id="65010" level="5">
+        <if_sid>65000</if_sid>
+        <field name="jsonPayload.responseCode">^REFUSED$</field>
+        <description>Refuse to perform the specified operation for policy reasons</description>
+        <options>no_full_log</options>
+    </rule>
+
+    <rule id="65011" level="10">
+        <if_sid>65000</if_sid>
+        <field name="jsonPayload.responseCode">^YXDOMAIN$</field>
+        <description>Specified name already created, when it ought not to exist</description>
+        <options>no_full_log</options>
+    </rule>
+
+    <rule id="65012" level="10">
+        <if_sid>65000</if_sid>
+        <field name="jsonPayload.responseCode">^YXRRSET$</field>
+        <description>The specified RR Set already exists</description>
+        <options>no_full_log</options>
+    </rule>
+
+    <rule id="65013" level="10">
+        <if_sid>65000</if_sid>
+        <field name="jsonPayload.responseCode">^NXRRSET$</field>
+        <description>The specified RR Set does not exist, and should</description>
+        <options>no_full_log</options>
+    </rule>
+
+    <rule id="65014" level="10">
+        <if_sid>65000</if_sid>
+        <field name="jsonPayload.responseCode">^NOTAUTH$</field>
+        <description>Server not authoritative for zone</description>
+        <options>no_full_log</options>
+    </rule>
+
+    <rule id="65015" level="7">
+        <if_sid>65000</if_sid>
+        <field name="jsonPayload.responseCode">^NOTZONE$</field>
+        <description>Name not contained in zone</description>
+        <options>no_full_log</options>
+    </rule>
+
+    <rule id="65016" level="5">
+        <if_sid>65000</if_sid>
+        <field name="jsonPayload.responseCode">^DSOTYPENI$</field>
+        <description>DSO-TYPE not implemented</description>
+        <options>no_full_log</options>
+    </rule>
+
+    <rule id="65017" level="10">
+        <if_sid>65000</if_sid>
+        <field name="jsonPayload.responseCode">^BADVERS$</field>
+        <description>Bad OPT version</description>
+        <options>no_full_log</options>
+    </rule>
+
+    <rule id="65018" level="7">
+        <if_sid>65000</if_sid>
+        <field name="jsonPayload.responseCode">^BADSIG$</field>
+        <description>TSIG Signature Failure</description>
+        <options>no_full_log</options>
+    </rule>
+
+    <rule id="65019" level="7">
+        <if_sid>65000</if_sid>
+        <field name="jsonPayload.responseCode">^BADKEY$</field>
+        <description>Key not recognized</description>
+        <options>no_full_log</options>
+    </rule>
+
+    <rule id="65020" level="7">
+        <if_sid>65000</if_sid>
+        <field name="jsonPayload.responseCode">^BADTIME$</field>
+        <description>Signature out of time window</description>
+        <options>no_full_log</options>
+    </rule>
+
+    <rule id="65021" level="7">
+        <if_sid>65000</if_sid>
+        <field name="jsonPayload.responseCode">^BADMODE$</field>
+        <description>Bad TKEY Mode</description>
+        <options>no_full_log</options>
+    </rule>
+
+    <rule id="65022" level="7">
+        <if_sid>65000</if_sid>
+        <field name="jsonPayload.responseCode">^BADNAME$</field>
+        <description>Duplicate key name</description>
+        <options>no_full_log</options>
+    </rule>
+
+    <rule id="65023" level="7">
+        <if_sid>65000</if_sid>
+        <field name="jsonPayload.responseCode">^BADALG$</field>
+        <description>Algorithm not supported</description>
+        <options>no_full_log</options>
+    </rule>
+
+    <rule id="65024" level="7">
+        <if_sid>65000</if_sid>
+        <field name="jsonPayload.responseCode">^BADTRUNC$</field>
+        <description>Bad Truncation</description>
+        <options>no_full_log</options>
+    </rule>
+
+    <rule id="65025" level="7">
+        <if_sid>65000</if_sid>
+        <field name="jsonPayload.responseCode">^BADCOOKIE$</field>
+        <description>Bad/missing Server Cookie</description>
         <options>no_full_log</options>
     </rule>
 </group>
