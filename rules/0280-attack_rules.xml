@@ -16,6 +16,9 @@
     <if_group>authentication_success</if_group>
     <user>$SYS_USERS</user>
     <description>System user successfully logged to the system.</description>
+    <mitre>
+      <id>T1098</id>
+    </mitre>
     <group>invalid_login,pci_dss_10.2.4,pci_dss_10.2.5,gpg13_7.8,gdpr_IV_35.7.d,gdpr_IV_32.2,hipaa_164.312.b,nist_800_53_AU.14,nist_800_53_AC.7,</group>
   </rule>
 
@@ -46,12 +49,18 @@
   <rule id="40105" level="12">
     <match>changed by \(\(null\)</match>
     <description>"Null" user changed some information.</description>
+    <mitre>
+      <id>T1098</id>
+    </mitre>
     <group>exploit_attempt,pci_dss_10.2.7,pci_dss_10.6.1,pci_dss_11.4,gdpr_IV_35.7.d,gdpr_IV_32.2,hipaa_164.312.b,nist_800_53_AU.14,nist_800_53_AU.6,nist_800_53_SI.4,</group>
   </rule>
 
   <rule id="40106" level="12">
     <match>@@@@@@@@@@@@@@@@@@@@@@@@@</match>
     <description>Buffer overflow attempt (probably on yppasswd).</description>
+    <mitre>
+      <id>T1210</id>
+    </mitre>
     <group>exploit_attempt,pci_dss_6.2,pci_dss_6.5.2,pci_dss_11.4,gdpr_IV_35.7.d,nist_800_53_SI.2,nist_800_53_SA.11,nist_800_53_SI.4,</group>
   </rule>
 
@@ -59,6 +68,9 @@
     <regex>cachefsd: Segmentation Fault - core dumped</regex>
     <description>Heap overflow in the Solaris cachefsd service.</description>
     <info type='cve'>2002-0033</info>
+    <mitre>
+      <id>T1210</id>
+    </mitre>
     <group>exploit_attempt,pci_dss_6.2,pci_dss_6.5.2,pci_dss_11.4,gdpr_IV_35.7.d,nist_800_53_SI.2,nist_800_53_SA.11,nist_800_53_SI.4,</group>
   </rule>
 
@@ -122,6 +134,9 @@
     <description>Network scan from same source ip.</description>
     <same_source_ip />
     <info type="link">http://project.honeynet.org/papers/enemy2/</info>
+    <mitre>
+      <id>T1046</id>
+    </mitre>
     <group>pci_dss_11.4,gdpr_IV_35.7.d,nist_800_53_SI.4,</group>
   </rule>
 </group>
