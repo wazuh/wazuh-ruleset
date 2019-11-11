@@ -24,6 +24,9 @@
     <if_sid>31100</if_sid>
     <id>^4</id>
     <description>Web server 400 error code.</description>
+    <mitre>
+      <id>T1102</id>
+    </mitre>
     <group>attack,pci_dss_6.5,pci_dss_11.4,gdpr_IV_35.7.d,nist_800_53_SA.11,nist_800_53_SI.4,</group>
   </rule>
 
@@ -55,6 +58,11 @@
     <url>/x90/|default.ida|/sumthin|nsiislog.dll|chmod%|wget%|cd%20|</url>
     <url>exec%20|../..//|%5C../%5C|././././|2e%2e%5c%2e|\x5C\x5C</url>
     <description>Common web attack.</description>
+    <mitre>
+      <id>T1055</id>
+      <id>T1083</id>
+      <id>T1102</id>
+    </mitre>
     <group>attack,pci_dss_6.5,pci_dss_11.4,pci_dss_6.5.1,gdpr_IV_35.7.d,nist_800_53_SA.11,nist_800_53_SI.4,</group>
   </rule>
 
@@ -63,6 +71,10 @@
     <url>%3Cscript|%3C%2Fscript|script>|script%3E|SRC=javascript|IMG%20|</url>
     <url>%20ONLOAD=|INPUT%20|iframe%20</url>
     <description>XSS (Cross Site Scripting) attempt.</description>
+    <mitre>
+      <id>T1064</id>
+      <id>T1102</id>
+    </mitre>
     <group>attack,pci_dss_6.5,pci_dss_11.4,pci_dss_6.5.7,gdpr_IV_35.7.d,nist_800_53_SA.11,nist_800_53_SI.4,</group>
   </rule>
 
@@ -70,6 +82,9 @@
     <if_sid>31103, 31104, 31105</if_sid>
     <id>^200</id>
     <description>A web attack returned code 200 (success).</description>
+    <mitre>
+      <id>T1102</id>
+    </mitre>
     <group>attack,pci_dss_6.5,pci_dss_11.4,gdpr_IV_35.7.d,nist_800_53_SA.11,nist_800_53_SI.4,</group>
   </rule>
 
@@ -77,6 +92,9 @@
     <if_sid>31100</if_sid>
     <url>?-d|?-s|?-a|?-b|?-w</url>
     <description>PHP CGI-bin vulnerability attempt.</description>
+    <mitre>
+      <id>T1210</id>
+    </mitre>
     <group>attack,pci_dss_6.5,pci_dss_11.4,gdpr_IV_35.7.d,nist_800_53_SA.11,nist_800_53_SI.4,</group>
   </rule>
 
@@ -178,6 +196,11 @@
     <if_matched_sid>31104</if_matched_sid>
     <same_source_ip />
     <description>Multiple common web attacks from same source ip.</description>
+    <mitre>
+      <id>T1055</id>
+      <id>T1083</id>
+      <id>T1102</id>
+    </mitre>
     <group>attack,pci_dss_6.5,pci_dss_11.4,gdpr_IV_35.7.d,nist_800_53_SA.11,nist_800_53_SI.4,</group>
   </rule>
 
@@ -186,6 +209,10 @@
     <same_source_ip />
     <description>Multiple XSS (Cross Site Scripting) attempts </description>
     <description>from same source ip.</description>
+    <mitre>
+      <id>T1064</id>
+      <id>T1102</id>
+    </mitre>
     <group>attack,pci_dss_6.5,pci_dss_11.4,pci_dss_6.5.7,gdpr_IV_35.7.d,nist_800_53_SA.11,nist_800_53_SI.4,</group>
   </rule>
 
@@ -193,6 +220,9 @@
     <if_matched_sid>31121</if_matched_sid>
     <same_source_ip />
     <description>Multiple web server 501 error code (Not Implemented).</description>
+    <mitre>
+      <id>T1102</id>
+    </mitre>
     <group>web_scan,recon,pci_dss_6.5,pci_dss_11.4,gdpr_IV_35.7.d,nist_800_53_SA.11,nist_800_53_SI.4,</group>
   </rule>
 
@@ -207,6 +237,9 @@
     <if_matched_sid>31123</if_matched_sid>
     <same_source_ip />
     <description>Multiple web server 503 error code (Service unavailable).</description>
+    <mitre>
+      <id>T1102</id>
+    </mitre>
     <group>web_scan,recon,pci_dss_6.5,pci_dss_11.4,pci_dss_10.6.1,gdpr_IV_35.7.d,hipaa_164.312.b,nist_800_53_SA.11,nist_800_53_SI.4,nist_800_53_AU.6,</group>
   </rule>
 
@@ -214,6 +247,9 @@
     <if_sid>31100</if_sid>
     <url>=%27|select%2B|insert%2B|%2Bfrom%2B|%2Bwhere%2B|%2Bunion%2B</url>
     <description>SQL injection attempt.</description>
+    <mitre>
+      <id>T1055</id>
+    </mitre>
     <group>attack,sqlinjection,attack,pci_dss_6.5,pci_dss_11.4,pci_dss_6.5.1,gdpr_IV_35.7.d,nist_800_53_SA.11,nist_800_53_SI.4,</group>
   </rule>
 
@@ -221,6 +257,9 @@
     <if_sid>31100</if_sid>
     <url>%EF%BC%87|%EF%BC%87|%EF%BC%87|%2531|%u0053%u0045</url>
     <description>SQL injection attempt.</description>
+    <mitre>
+      <id>T1055</id>
+    </mitre>
     <group>attack,sqlinjection,pci_dss_6.5,pci_dss_11.4,pci_dss_6.5.1,gdpr_IV_35.7.d,nist_800_53_SA.11,nist_800_53_SI.4,</group>
   </rule>
 

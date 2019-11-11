@@ -1228,6 +1228,9 @@
     <if_sid>24700</if_sid>
     <field name="osquery.name">unTabs_1</field>
     <description>osquery: $(osquery.pack) $(osquery.subquery): unTabs Browser extension malware detected on path $(osquery.columns.install_location)</description>
+    <mitre>
+      <id>T1176</id>
+    </mitre>
     <group>windows_attacks,</group>
     <options>no_full_log</options>
   </rule>
@@ -1236,6 +1239,9 @@
     <if_sid>24700</if_sid>
     <field name="osquery.name">unTabs_2</field>
     <description>osquery: $(osquery.pack) $(osquery.subquery): unTabs Chrome extension malware detected $(osquery.columns.name)</description>
+    <mitre>
+      <id>T1176</id>
+    </mitre>
     <group>windows_attacks,</group>
     <options>no_full_log</options>
   </rule>
@@ -1244,6 +1250,10 @@
     <if_sid>24700</if_sid>
     <field name="osquery.name">StickyKeys_File_Replace_Backdoor</field>
     <description>osquery: $(osquery.pack) $(osquery.subquery): Sticky file key backdoor detected for program $(osquery.columns.path)</description>
+    <mitre>
+      <id>T1060</id>
+      <id>T1112</id>
+    </mitre>
     <group>windows_attacks,</group>
     <options>no_full_log</options>
   </rule>
@@ -1252,6 +1262,10 @@
     <if_sid>24700</if_sid>
     <field name="osquery.name">StickyKeys_Registry_Backdoor</field>
     <description>osquery: $(osquery.pack) $(osquery.subquery): Sticky registry key backdoor detected for key $(osquery.columns.path)</description>
+    <mitre>
+      <id>T1060</id>
+      <id>T1112</id>
+    </mitre>
     <group>windows_attacks,</group>
     <options>no_full_log</options>
   </rule>
@@ -1261,6 +1275,9 @@
     <field name="osquery.name">conhost.exe_incorrect_path</field>
     <description>osquery: $(osquery.pack) $(osquery.subquery): conhost.exe process masquerading detected, path is $(osquery.columns.path)</description>
     <group>windows_attacks,</group>
+    <mitre>
+      <id>T1036</id>
+    </mitre>
     <options>no_full_log</options>
   </rule>
 
@@ -1269,6 +1286,9 @@
     <field name="osquery.name">dllhost.exe_incorrect_path</field>
     <description>osquery: $(osquery.pack) $(osquery.subquery): dllhost.exe process masquerading detected, path is $(osquery.columns.path)</description>
     <group>windows_attacks,</group>
+    <mitre>
+      <id>T1036</id>
+    </mitre>
     <options>no_full_log</options>
   </rule>
 
@@ -1277,6 +1297,9 @@
     <field name="osquery.name">lsass.exe_incorrect_path</field>
     <description>osquery: $(osquery.pack) $(osquery.subquery): lsass.exe process masquerading detected, path is $(osquery.columns.path)</description>
     <group>windows_attacks,</group>
+    <mitre>
+      <id>T1036</id>
+    </mitre>
     <options>no_full_log</options>
   </rule>
 
@@ -1285,6 +1308,9 @@
     <field name="osquery.name">services.exe_incorrect_parent_process</field>
     <description>osquery: $(osquery.pack) $(osquery.subquery): services.exe process masquerading detected, the parent process is incorrect</description>
     <group>windows_attacks,</group>
+    <mitre>
+      <id>T1036</id>
+    </mitre>
     <options>no_full_log</options>
   </rule>
 
@@ -1293,6 +1319,9 @@
     <field name="osquery.name">svchost.exe_incorrect_path</field>
     <description>osquery: $(osquery.pack) $(osquery.subquery): svchost.exe process masquerading detected, path $(osquery.columns.path) is incorrect</description>
     <group>windows_attacks,</group>
+    <mitre>
+      <id>T1036</id>
+    </mitre>
     <options>no_full_log</options>
   </rule>
 
@@ -1301,6 +1330,9 @@
     <field name="osquery.name">svchost.exe_incorrect_parent_process</field>
     <description>osquery: $(osquery.pack) $(osquery.subquery): svchost.exe process masquerading detected, the parent process is incorrect</description>
     <group>windows_attacks,</group>
+    <mitre>
+      <id>T1036</id>
+    </mitre>
     <options>no_full_log</options>
   </rule>
 
@@ -1315,6 +1347,9 @@
     <if_sid>24800</if_sid>
     <field name="osquery.name">BetternetVPN</field>
     <description>osquery: $(osquery.pack) $(osquery.subquery): BetternetVPN Chrome extension malware detected</description>
+    <mitre>
+      <id>T1176</id>
+    </mitre>
     <group>unwanted_chrome,</group>
     <options>no_full_log</options>
   </rule>
@@ -1323,6 +1358,9 @@
     <if_sid>24800</if_sid>
     <field name="osquery.name">Chrometana</field>
     <description>osquery: $(osquery.pack) $(osquery.subquery): Chrometana Chrome extension malware detected</description>
+    <mitre>
+      <id>T1176</id>
+    </mitre>
     <group>unwanted_chrome,</group>
     <options>no_full_log</options>
   </rule>
@@ -1331,6 +1369,9 @@
     <if_sid>24800</if_sid>
     <field name="osquery.name">CopyFish</field>
     <description>osquery: $(osquery.pack) $(osquery.subquery): CopyFish Chrome extension malware detected</description>
+    <mitre>
+      <id>T1176</id>
+    </mitre>
     <group>unwanted_chrome,</group>
     <options>no_full_log</options>
   </rule>
@@ -1339,6 +1380,9 @@
     <if_sid>24800</if_sid>
     <field name="osquery.name">Giphy</field>
     <description>osquery: $(osquery.pack) $(osquery.subquery): Giphy Chrome extension malware detected</description>
+    <mitre>
+      <id>T1176</id>
+    </mitre>
     <group>unwanted_chrome,</group>
     <options>no_full_log</options>
   </rule>
@@ -1347,6 +1391,9 @@
     <if_sid>24800</if_sid>
     <field name="osquery.name">HolaVPN</field>
     <description>osquery: $(osquery.pack) $(osquery.subquery): HolaVPN Chrome extension malware detected</description>
+    <mitre>
+      <id>T1176</id>
+    </mitre>
     <group>unwanted_chrome,</group>
     <options>no_full_log</options>
   </rule>
@@ -1355,6 +1402,9 @@
     <if_sid>24800</if_sid>
     <field name="osquery.name">InfinityNewTab</field>
     <description>osquery: $(osquery.pack) $(osquery.subquery): InfinityNewTab Chrome extension malware detected</description>
+    <mitre>
+      <id>T1176</id>
+    </mitre>
     <group>unwanted_chrome,</group>
     <options>no_full_log</options>
   </rule>
@@ -1363,6 +1413,9 @@
     <if_sid>24800</if_sid>
     <field name="osquery.name">SocialFixer</field>
     <description>osquery: $(osquery.pack) $(osquery.subquery): SocialFixer Chrome extension malware detected</description>
+    <mitre>
+      <id>T1176</id>
+    </mitre>
     <group>unwanted_chrome,</group>
     <options>no_full_log</options>
   </rule>
@@ -1371,6 +1424,9 @@
     <if_sid>24800</if_sid>
     <field name="osquery.name">TouchVPN</field>
     <description>osquery: $(osquery.pack) $(osquery.subquery): TouchVPN Chrome extension malware detected</description>
+    <mitre>
+      <id>T1176</id>
+    </mitre>
     <group>unwanted_chrome,</group>
     <options>no_full_log</options>
   </rule>
@@ -1379,6 +1435,9 @@
     <if_sid>24800</if_sid>
     <field name="osquery.name">WebDeveloper</field>
     <description>osquery: $(osquery.pack) $(osquery.subquery): WebDeveloper Chrome extension malware detected</description>
+    <mitre>
+      <id>T1176</id>
+    </mitre>
     <group>unwanted_chrome,</group>
     <options>no_full_log</options>
   </rule>
@@ -1387,6 +1446,9 @@
     <if_sid>24800</if_sid>
     <field name="osquery.name">WebPaint</field>
     <description>osquery: $(osquery.pack) $(osquery.subquery): WebPaint Chrome extension malware detected</description>
+    <mitre>
+      <id>T1176</id>
+    </mitre>
     <group>unwanted_chrome,</group>
     <options>no_full_log</options>
   </rule>
@@ -1395,6 +1457,9 @@
     <if_sid>24800</if_sid>
     <field name="osquery.name">MacOSInstallCore</field>
     <description>osquery: $(osquery.pack) $(osquery.subquery): MacOSInstallCore Chrome extension malware detected</description>
+    <mitre>
+      <id>T1176</id>
+    </mitre>
     <group>unwanted_chrome,</group>
     <options>no_full_log</options>
   </rule>
