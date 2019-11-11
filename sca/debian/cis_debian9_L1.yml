@@ -1153,7 +1153,7 @@ checks:
       - cis_csc: ["4.4"]
     condition: all
     rules:
-      - 'c:dpkg -s libpam-pwquality -> install ok installed'
+      - 'c:dpkg -s libpam-pwquality -> r:install ok installed'
       - 'f:/etc/pam.d/common-password -> !r:^# && r:password\s*\t*requisite\s*\t*pam_pwquality.so\s*\t*retry=\d'
       - 'f:/etc/security/pwquality.conf -> !r:^# && n:minlen\s*\t*=\s*\t*(\d+) compare >= 14'
       - 'f:/etc/security/pwquality.conf -> !r:^# && r:dcredit'
