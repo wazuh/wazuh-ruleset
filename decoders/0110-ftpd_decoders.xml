@@ -14,6 +14,7 @@
   - Dec 21 12:21:20 hostname in.ftpd[18561]: [ID 484914 daemon.notice] gethostbyaddr: nameservices.net. != 216.117.134.168
   - Dec 21 12:21:20 hostname ftpd[31918]: FTPD: EXPORT file local , remote
   - Dec 21 12:21:20 hostname ftpd[323115]: login jones_b from client.example.org failed.
+  - Oct 10 09:39:46 hostname ftpd[1121]: FTP LOGIN FROM abc-def.com [10.10.10.10], test-user
   -->
 <decoder name="ftpd">
   <program_name>^ftpd|^in.ftpd</program_name>
@@ -40,6 +41,13 @@
   <prematch>^login \S+ from \S+ failed.</prematch>
   <regex>^login (\S+) from (\S+) failed.$</regex>
   <order>user, srcip</order>
+</decoder>
+
+<decoder name="ftpd-login">
+  <parent>ftpd</parent>
+  <prematch>^FTP LOGIN FROM \S+ [</prematch>
+  <regex>(\S+) [(\S+)], (\S+)$</regex>
+  <order>host, srcip, user</order>
 </decoder>
 
 <decoder name="ftpd-ip">
