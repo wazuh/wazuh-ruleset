@@ -30,12 +30,18 @@
 
   <rule id="1003" level="13" maxsize="1025" noalert="1">
     <description>Non standard syslog message (size too large).</description>
+    <mitre>
+      <id>T1499</id>
+    </mitre>
     <group>gpg13_4.3,</group>
   </rule>
 
   <rule id="1004" level="5">
     <match>^exiting on signal</match>
     <description>Syslogd exiting (logging stopped).</description>
+    <mitre>
+      <id>T1489</id>
+    </mitre>
     <group>pci_dss_10.6.1,gpg13_10.1,gpg13_4.14,gdpr_IV_35.7.d,hipaa_164.312.b,nist_800_53_AU.6,</group>
   </rule>
 
@@ -74,6 +80,9 @@
   <rule id="1010" level="5">
     <match>segfault at </match>
     <description>Process segfaulted.</description>
+    <mitre>
+      <id>T1489</id>
+    </mitre>
     <group>service_availability,gdpr_IV_35.7.d,</group>
   </rule>
 
@@ -120,6 +129,9 @@
   <rule id="2301" level="10">
     <match>^Deactivating service </match>
     <description>xinetd: Excessive number connections to a service.</description>
+    <mitre>
+      <id>T1499</id>
+    </mitre>
     <group>pci_dss_10.6.1,gdpr_IV_35.7.d,hipaa_164.312.b,nist_800_53_AU.6,</group>
   </rule>
 </group> <!-- SYSLOG,XINETD -->
@@ -322,6 +334,9 @@
     <match>Out of Memory: </match>
     <description>System running out of memory. </description>
     <description>Availability of the system is in risk.</description>
+    <mitre>
+      <id>T1499</id>
+    </mitre>
     <group>service_availability,pci_dss_10.6.1,gpg13_4.12,gdpr_IV_35.7.d,hipaa_164.312.b,nist_800_53_AU.6,</group>
   </rule>
 
@@ -363,6 +378,9 @@
     <if_sid>5100</if_sid>
     <match>ADSL line is down</match>
     <description>Monitor ADSL line is down.</description>
+    <mitre>
+      <id>T1489</id>
+    </mitre>
   </rule>
 
   <rule id="5131" level="3">
@@ -473,6 +491,9 @@
     <if_sid>2832</if_sid>
     <match>^(root)</match>
     <description>Root's crontab entry changed.</description>
+    <mitre>
+      <id>T1169</id>
+    </mitre>
     <group>pci_dss_10.2.7,pci_dss_10.6.1,pci_dss_10.2.2,gpg13_4.13,gdpr_IV_35.7.d,gdpr_IV_32.2,hipaa_164.312.b,nist_800_53_AU.14,nist_800_53_AU.6,nist_800_53_AC.6,</group>
   </rule>
 
@@ -498,6 +519,9 @@
     <if_sid>5301</if_sid>
     <user>^root</user>
     <description>User missed the password to change UID to root.</description>
+    <mitre>
+      <id>T1169</id>
+    </mitre>
     <group>authentication_failed,pci_dss_10.2.4,pci_dss_10.2.5,gpg13_7.8,gdpr_IV_35.7.d,gdpr_IV_32.2,hipaa_164.312.b,nist_800_53_AU.14,nist_800_53_AC.7,</group>
   </rule>
 
@@ -881,7 +905,7 @@
     <same_source_ip />
     <description>perdition: Multiple connection attempts from same source.</description>
     <mitre>
-      <id>T1110</id>
+      <id>T1499</id>
     </mitre>
     <group>recon,pci_dss_11.4,</group>
   </rule>

@@ -58,6 +58,7 @@
     <description>(high number of login timeouts).</description>
     <mitre>
       <id>T1021</id>
+      <id>T1046</id>
     </mitre>
     <group>pci_dss_11.4,gpg13_4.12,gdpr_IV_35.7.d,nist_800_53_SI.4,</group>
   </rule>
@@ -66,6 +67,9 @@
     <if_sid>5700</if_sid>
     <match>Did not receive identification string from</match>
     <description>sshd: insecure connection attempt (scan).</description>
+    <mitre>
+      <id>T1043</id>
+    </mitre>
     <group>recon,pci_dss_11.4,gpg13_4.12,gdpr_IV_35.7.d,nist_800_53_SI.4,</group>
   </rule>
 
@@ -126,6 +130,10 @@
     <if_matched_sid>5713</if_matched_sid>
     <match>Local: crc32 compensation attack</match>
     <description>sshd: SSH CRC-32 Compensation attack</description>
+    <mitre>
+      <id>T1210</id>
+      <id>T1021</id>
+    </mitre>
     <info type="cve">2001-0144</info>
     <info type="link">http://www.securityfocus.com/bid/2347/info/</info>
     <group>exploit_attempt,pci_dss_11.4,pci_dss_6.2,gpg13_4.12,gdpr_IV_35.7.d,nist_800_53_SI.4,nist_800_53_SI.2,</group>
