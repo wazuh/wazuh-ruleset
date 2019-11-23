@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 
 - Add rules and decoders for McAfee EPO. ([#467](https://github.com/wazuh/wazuh-ruleset/pull/467))
 - Add PCI-DSS mapping to vulnerability detector rules. ([#525](https://github.com/wazuh/wazuh-ruleset/pull/525))
+- Add a new base rule for Microsoft Windows Firewall With Advanced Security/Firewalls. ([#532](https://github.com/wazuh/wazuh-ruleset/pull/532))
 
 ### Fixed
 
