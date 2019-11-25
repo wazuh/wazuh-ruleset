@@ -9,6 +9,10 @@ All notable changes to this project will be documented in this file.
 - Add PCI-DSS mapping to vulnerability detector rules. ([#525](https://github.com/wazuh/wazuh-ruleset/pull/525))
 - Add a new base rule for Microsoft Windows Firewall With Advanced Security/Firewalls. ([#532](https://github.com/wazuh/wazuh-ruleset/pull/532))
 
+### Changed
+
+- Let osquery daemon messages appear in alerts as the full log. ([#531](https://github.com/wazuh/wazuh-ruleset/pull/531))
+
 ### Fixed
 
 - Fix typo in network checks for SCA Debian 8 and 9 policies. ([#514](https://github.com/wazuh/wazuh-ruleset/pull/514))
