@@ -42,17 +42,20 @@
 -->
 
 <group name="json,nextcloud,">
+
   <rule id="88200" level="0">
     <decoded_as>json</decoded_as>
     <field name="@source">NextCloud</field>
     <description>NextCloud messages grouped.</description>
     <options>no_full_log</options>
   </rule>
-  <rule id="88201" level="1">
+
+  <rule id="88201" level="0">
     <decoded_as>nextcloud</decoded_as>
     <description>NextCloud messages grouped.</description>
     <options>no_full_log</options>
   </rule>
+
   <rule id="88202" level="1">
     <if_sid>88200,88201</if_sid>
     <match>Login attempt: </match>
@@ -60,6 +63,7 @@
     <group>pci_dss_10.2.4,pci_dss_10.2.5,gdpr_IV_35.7.d,gdpr_IV_32.2,hipaa_164.312.b,nist_800_53_AU.14,nist_800_53_AC.7,</group>
     <options>no_full_log</options>
   </rule>
+
   <rule id="88210" level="6">
     <if_sid>88200,88201</if_sid>
     <match>Logout occurred</match>
@@ -67,6 +71,7 @@
     <group>pci_dss_10.2.4,pci_dss_10.2.5,gdpr_IV_35.7.d,gdpr_IV_32.2,hipaa_164.312.b,nist_800_53_AU.14,nist_800_53_AC.7,</group>
     <options>no_full_log</options>
   </rule>
+
   <rule id="88211" level="6">
     <if_sid>88200,88201</if_sid>
     <match>Login successful: </match>
@@ -74,6 +79,7 @@
     <group>authentication_success,pci_dss_10.2.4,pci_dss_10.2.5,gdpr_IV_35.7.d,gdpr_IV_32.2,hipaa_164.312.b,nist_800_53_AU.14,nist_800_53_AC.7,</group>
     <options>no_full_log</options>
   </rule>
+
   <rule id="88212" level="6">
     <if_sid>88200,88201</if_sid>
     <match>Login failed: </match>
@@ -81,13 +87,15 @@
     <group>authentication_failed,pci_dss_10.2.4,pci_dss_10.2.5,gdpr_IV_35.7.d,gdpr_IV_32.2,hipaa_164.312.b,nist_800_53_AU.14,nist_800_53_AC.7,</group>
     <options>no_full_log</options>
   </rule>
-  <rule frequency="8" id="88203" level="10" timeframe="120">
+
+  <rule id="88203" level="10" frequency="8" timeframe="120">
     <if_matched_sid>88202</if_matched_sid>
     <same_source_ip/>
     <description>NextCloud brute force (multiple failed logins).</description>
     <group>authentication_failures,pci_dss_10.2.4,pci_dss_10.2.5,pci_dss_11.4,gdpr_IV_35.7.d,gdpr_IV_32.2,hipaa_164.312.b,nist_800_53_AU.14,nist_800_53_AC.7,nist_800_53_SI.4,</group>
     <options>no_full_log</options>
   </rule>
+
   <rule id="88213" level="6">
     <if_sid>88200,88201</if_sid>
     <match>File accessed: </match>
@@ -95,6 +103,7 @@
     <group>pci_dss_10.2.4,pci_dss_10.2.5,gdpr_IV_35.7.d,gdpr_IV_32.2,hipaa_164.312.b,nist_800_53_AU.14,nist_800_53_AC.7,</group>
     <options>no_full_log</options>
   </rule>
+
   <rule id="88214" level="6">
     <if_sid>88200,88201</if_sid>
     <match>File created: </match>
@@ -102,6 +111,7 @@
     <group>pci_dss_10.2.4,pci_dss_10.2.5,gdpr_IV_35.7.d,gdpr_IV_32.2,hipaa_164.312.b,nist_800_53_AU.14,nist_800_53_AC.7,</group>
     <options>no_full_log</options>
   </rule>
+
   <rule id="88215" level="6">
     <if_sid>88200,88201</if_sid>
     <match>File deleted: </match>
@@ -109,6 +119,7 @@
     <group>pci_dss_10.2.4,pci_dss_10.2.5,gdpr_IV_35.7.d,gdpr_IV_32.2,hipaa_164.312.b,nist_800_53_AU.14,nist_800_53_AC.7,</group>
     <options>no_full_log</options>
   </rule>
+
   <rule id="88216" level="6">
     <if_sid>88200,88201</if_sid>
     <match>Preview accessed: </match>
@@ -116,6 +127,7 @@
     <group>pci_dss_10.2.4,pci_dss_10.2.5,gdpr_IV_35.7.d,gdpr_IV_32.2,hipaa_164.312.b,nist_800_53_AU.14,nist_800_53_AC.7,</group>
     <options>no_full_log</options>
   </rule>
+
   <rule id="88204" level="6">
     <if_sid>88200,88201</if_sid>
     <match>Passed filename is not valid, might be malicious </match>
@@ -123,6 +135,7 @@
     <group>web,appsec,attack,pci_dss_6.5,pci_dss_11.4,gdpr_IV_35.7.d,nist_800_53_SA.11,nist_800_53_SI.4,</group>
     <options>no_full_log</options>
   </rule>
+
   <rule id="88205" level="8">
     <if_sid>88200,88201</if_sid>
     <status>^4$</status>
@@ -130,28 +143,33 @@
     <group>gdpr_IV_35.7.d,</group>
     <options>no_full_log</options>
   </rule>
+
   <rule id="88206" level="4">
     <if_sid>88200,88201</if_sid>
     <status>^3$</status>
     <description>NextCloud ERROR message.</description>
     <options>no_full_log</options>
   </rule>
+
   <rule id="88207" level="3">
     <if_sid>88200,88201</if_sid>
     <status>^2$</status>
     <description>NextCloud WARN message.</description>
     <options>no_full_log</options>
   </rule>
+
   <rule id="88208" level="0">
     <if_sid>88200,88201</if_sid>
     <status>^1$</status>
     <description>NextCloud INFO message.</description>
     <options>no_full_log</options>
   </rule>
+
   <rule id="88209" level="0">
     <if_sid>88200,88201</if_sid>
     <status>^0$</status>
     <description>NextCloud DEBUG message.</description>
     <options>no_full_log</options>
   </rule>
+
 </group>
