@@ -530,6 +530,9 @@
     <regex>session opened for user root|^'su root'|</regex>
     <regex>^+ \S+ \S+\proot$|^\S+ to root on|^SU \S+ \S+ + \S+ \S+-root$</regex>
     <description>User successfully changed UID to root.</description>
+    <mitre>
+      <id>T1078</id>
+    </mitre>
     <group>authentication_success,pci_dss_10.2.5,gpg13_7.6,gpg13_7.8,gpg13_7.9,gdpr_IV_35.7.d,gdpr_IV_32.2,hipaa_164.312.b,nist_800_53_AU.14,nist_800_53_AC.7,</group>
   </rule>
 
@@ -538,6 +541,9 @@
     <regex>session opened for user|succeeded for|</regex>
     <regex>^+|^\S+ to |^SU \S+ \S+ + </regex>
     <description>User successfully changed UID.</description>
+    <mitre>
+      <id>T1078</id>
+    </mitre>
     <group>authentication_success,pci_dss_10.2.5,gpg13_7.6,gpg13_7.8,gdpr_IV_35.7.d,gdpr_IV_32.2,hipaa_164.312.b,nist_800_53_AU.14,nist_800_53_AC.7,</group>
   </rule>
 
@@ -710,6 +716,9 @@
     <if_fts></if_fts>
     <group>authentication_success,</group>
     <description>First time user logged in.</description>
+    <mitre>
+      <id>T1078</id>
+    </mitre>
   </rule>
 </group>
 
