@@ -21,6 +21,9 @@
     <id>^554$</id>
     <description>Postfix: Attempt to use mail server as relay </description>
     <description>(client host rejected).</description>
+    <mitre>
+      <id>T1114</id>
+    </mitre>
     <group>spam,pci_dss_10.6.1,pci_dss_11.4,gdpr_IV_35.7.d,hipaa_164.312.b,nist_800_53_AU.6,nist_800_53_SI.4,</group>
   </rule>
 
@@ -29,6 +32,9 @@
     <id>^550$</id>
     <description>Postfix: Rejected by access list </description>
     <description>(Requested action not taken).</description>
+    <mitre>
+      <id>T1114</id>
+    </mitre>
     <group>spam,pci_dss_10.6.1,pci_dss_11.4,gdpr_IV_35.7.d,hipaa_164.312.b,nist_800_53_AU.6,nist_800_53_SI.4,</group>
   </rule>
 
@@ -37,6 +43,9 @@
     <id>^450$</id>
     <description>Postfix: Sender domain is not found </description>
     <description>(450: Requested mail action not taken).</description>
+    <mitre>
+      <id>T1114</id>
+    </mitre>
     <group>spam,pci_dss_10.6.1,pci_dss_11.4,gdpr_IV_35.7.d,hipaa_164.312.b,nist_800_53_AU.6,nist_800_53_SI.4,</group>
   </rule>
 
@@ -46,6 +55,7 @@
     <description>Postfix: Improper use of SMTP command pipelining </description>
     <description>(503: Bad sequence of commands).</description>
     <mitre>
+      <id>T1114</id>
       <id>T1035</id>
     </mitre>
     <group>spam,pci_dss_10.6.1,pci_dss_11.4,gdpr_IV_35.7.d,hipaa_164.312.b,nist_800_53_AU.6,nist_800_53_SI.4,</group>
@@ -56,6 +66,9 @@
     <id>^504$</id>
     <description>Postfix: Recipient address must contain FQDN </description>
     <description>(504: Command parameter not implemented).</description>
+    <mitre>
+      <id>T1114</id>
+    </mitre>
     <group>spam,pci_dss_10.6.1,pci_dss_11.4,gdpr_IV_35.7.d,hipaa_164.312.b,nist_800_53_AU.6,nist_800_53_SI.4,</group>
   </rule>
 
@@ -63,6 +76,9 @@
     <if_sid>3301, 3302</if_sid>
     <match> blocked using </match>
     <description>Postfix: IP Address black-listed by anti-spam (blocked).</description>
+    <mitre>
+      <id>T1114</id>
+    </mitre>
     <group>spam,pci_dss_10.6.1,pci_dss_11.4,gdpr_IV_35.7.d,hipaa_164.312.b,nist_800_53_AU.6,nist_800_53_SI.4,</group>
   </rule>
 
@@ -110,6 +126,7 @@
     <group>spam,pci_dss_10.6.1,pci_dss_11.4,gdpr_IV_35.7.d,hipaa_164.312.b,nist_800_53_AU.6,nist_800_53_SI.4,</group>
     <mitre>
       <id>T1095</id>
+      <id>T1114</id>
     </mitre>
   </rule>
 
@@ -128,6 +145,7 @@
     <same_source_ip />
     <description>Postfix: Multiple relaying attempts of spam.</description>
     <mitre>
+      <id>T1114</id>
       <id>T1499</id>
     </mitre>
     <group>multiple_spam,pci_dss_10.6.1,pci_dss_11.4,gdpr_IV_35.7.d,hipaa_164.312.b,nist_800_53_AU.6,nist_800_53_SI.4,</group>
@@ -139,6 +157,7 @@
     <description>Postfix: Multiple attempts to send e-mail from a </description>
     <description>rejected sender IP (access).</description>
     <mitre>
+      <id>T1114</id>
       <id>T1499</id>
     </mitre>
     <group>multiple_spam,pci_dss_10.6.1,pci_dss_11.4,hipaa_164.312.b,nist_800_53_AU.6,nist_800_53_SI.4,</group>
@@ -150,6 +169,7 @@
     <description>Postfix: Multiple attempts to send e-mail from </description>
     <description>invalid/unknown sender domain.</description>
     <mitre>
+      <id>T1114</id>
       <id>T1499</id>
     </mitre>
     <group>multiple_spam,pci_dss_10.6.1,pci_dss_11.4,gdpr_IV_35.7.d,hipaa_164.312.b,nist_800_53_AU.6,nist_800_53_SI.4,</group>
@@ -162,6 +182,7 @@
     <description>(bad sequence of commands).</description>
     <mitre>
       <id>T1035</id>
+      <id>T1114</id>
     </mitre>
     <group>multiple_spam,pci_dss_10.6.1,pci_dss_11.4,gdpr_IV_35.7.d,hipaa_164.312.b,nist_800_53_AU.6,nist_800_53_SI.4,</group>
   </rule>
@@ -172,6 +193,7 @@
     <description>Postfix: Multiple attempts to send e-mail to </description>
     <description>invalid recipient or from unknown sender domain.</description>
     <mitre>
+      <id>T1114</id>
       <id>T1499</id>
     </mitre>
     <group>multiple_spam,pci_dss_10.6.1,pci_dss_11.4,gdpr_IV_35.7.d,hipaa_164.312.b,nist_800_53_AU.6,nist_800_53_SI.4,</group>
@@ -212,6 +234,9 @@
     <if_sid>3395</if_sid>
     <match>verification</match>
     <description>Postfix: hostname verification failed</description>
+    <mitre>
+      <id>T1114</id>
+    </mitre>
     <group>spam,pci_dss_10.6.1,pci_dss_11.4,gdpr_IV_35.7.d,hipaa_164.312.b,nist_800_53_AU.6,nist_800_53_SI.4,</group>
   </rule>
 
@@ -220,6 +245,7 @@
     <match>RBL</match>
     <description>Postfix: RBL lookup error: Host or domain name not found</description>
     <mitre>
+      <id>T1114</id>
       <id>T1147</id>
     </mitre>
     <group>spam,pci_dss_10.6.1,pci_dss_11.4,gdpr_IV_35.7.d,hipaa_164.312.b,nist_800_53_AU.6,nist_800_53_SI.4,</group>
@@ -229,6 +255,9 @@
     <if_sid>3395</if_sid>
     <match>MAIL|does not resolve to address</match>
     <description>Postfix: Illegal address from unknown sender</description>
+    <mitre>
+      <id>T1114</id>
+    </mitre>
     <group>spam,pci_dss_10.6.1,pci_dss_11.4,gdpr_IV_35.7.d,hipaa_164.312.b,nist_800_53_AU.6,nist_800_53_SI.4,</group>
   </rule>
 
