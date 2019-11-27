@@ -30,6 +30,9 @@ ID: 87900 - 87999
         <if_sid>87900</if_sid>
         <field name="docker.status">^destroy$</field>
         <description>Docker: Container $(docker.Actor.Attributes.name) destroyed</description>
+        <mitre>
+            <id>T1485</id>
+        </mitre>
         <group>pci_dss_10.2.7,pci_dss_11.5,hipaa_164.312.b,hipaa_164.312.c.1,hipaa_164.312.c.2,nist_800_53_AU.14,nist_800_53_SI.7,</group>
         <options>no_full_log</options>
     </rule>
@@ -122,6 +125,7 @@ ID: 87900 - 87999
         <description>Docker: Volume destroyed in $(docker.Actor.Attributes.driver)</description>
         <mitre>
             <id>T1107</id>
+            <id>T1485</id>
         </mitre>
         <group>pci_dss_10.2.7,pci_dss_11.5,hipaa_164.312.b,hipaa_164.312.c.1,hipaa_164.312.c.2,nist_800_53_AU.14,nist_800_53_SI.7,</group>
         <options>no_full_log</options>
@@ -179,6 +183,7 @@ ID: 87900 - 87999
         <description>Docker: Container $(docker.Actor.Attributes.name) deleted</description>
         <mitre>
             <id>T1107</id>
+            <id>T1485</id>
         </mitre>
         <group>pci_dss_10.2.7,pci_dss_11.5,hipaa_164.312.b,hipaa_164.312.c.1,hipaa_164.312.c.2,nist_800_53_AU.14,nist_800_53_SI.7,</group>
         <options>no_full_log</options>
@@ -255,6 +260,10 @@ ID: 87900 - 87999
         <if_sid>87927</if_sid>
         <field name="docker.Action">^destroy$</field>
         <description>Docker: Network $(docker.Actor.Attributes.name) deleted</description>
+        <mitre>
+            <id>T1107</id>
+            <id>T1485</id>
+        </mitre>
         <group>pci_dss_10.2.7,pci_dss_11.5,hipaa_164.312.b,hipaa_164.312.c.1,hipaa_164.312.c.2,nist_800_53_AU.14,nist_800_53_SI.7,</group>
         <options>no_full_log</options>
     </rule>
@@ -331,6 +340,10 @@ ID: 87900 - 87999
         <if_sid>87939</if_sid>
         <field name="docker.Action">^remove$</field>
         <description>Docker: Secret '$(docker.Actor.Attributes.name)' removed</description>
+        <mitre>
+            <id>T1107</id>
+            <id>T1485</id>
+        </mitre>
         <group>pci_dss_10.2.7,pci_dss_11.5,hipaa_164.312.b,hipaa_164.312.c.1,hipaa_164.312.c.2,nist_800_53_AU.14,nist_800_53_SI.7,</group>
         <options>no_full_log</options>
     </rule>
@@ -368,6 +381,10 @@ ID: 87900 - 87999
         <if_sid>87942</if_sid>
         <field name="docker.Action">^remove$</field>
         <description>Docker: Plugin $(docker.Actor.Attributes.name) removed</description>
+        <mitre>
+            <id>T1107</id>
+            <id>T1485</id>
+        </mitre>
         <group>pci_dss_10.2.7,pci_dss_11.5,hipaa_164.312.b,hipaa_164.312.c.1,hipaa_164.312.c.2,nist_800_53_AU.14,nist_800_53_SI.7,</group>
         <options>no_full_log</options>
     </rule>
@@ -453,7 +470,11 @@ ID: 87900 - 87999
     <rule id="87957" level="5">
         <if_sid>87954</if_sid>
         <field name="docker.Action">^remove$</field>
-        <description>Docker: Service $(docker.Actor.Attributes.name) deleted</description>+
+        <description>Docker: Service $(docker.Actor.Attributes.name) deleted</description>
+        <mitre>
+            <id>T1107</id>
+            <id>T1485</id>
+        </mitre>
         <group>pci_dss_10.2.7,pci_dss_11.5,hipaa_164.312.b,hipaa_164.312.c.1,hipaa_164.312.c.2,nist_800_53_AU.14,nist_800_53_SI.7,</group>
         <options>no_full_log</options>
     </rule>
