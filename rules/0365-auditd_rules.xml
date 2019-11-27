@@ -72,9 +72,6 @@
         <if_sid>80700</if_sid>
         <field name="audit.type">CONFIG_CHANGE|DAEMON_CONFIG</field>
         <description>Auditd: Configuration changed</description>
-        <mitre>
-            <id>T1098</id>
-        </mitre>
         <group>audit_configuration,gpg13_10.1,gdpr_IV_30.1.g,</group>
     </rule>
 
@@ -88,9 +85,6 @@
         <field name="audit.type">ANOM_PROMISCUOUS</field>
         <match>prom=256</match>
         <description>Auditd: device enables promiscuous mode</description>
-        <mitre>
-            <id>T1098</id>
-        </mitre>
         <group>audit_anom,pci_dss_11.4,pci_dss_10.6.1,gpg13_4.14,gdpr_IV_35.7.d,gdpr_IV_30.1.g,hipaa_164.312.b,nist_800_53_SI.4,nist_800_53_AU.6,</group>
     </rule>
 
@@ -210,7 +204,6 @@
         <field name="audit.type">ANOM_ROOT_TRANS</field>
         <description>Auditd: user becomes root</description>
         <mitre>
-            <id>T1098</id>
             <id>T1169</id>
         </mitre>
         <group>audit_anom,pci_dss_11.4,pci_dss_10.6.1,gpg13_7.9,gdpr_IV_35.7.d,hipaa_164.312.b,nist_800_53_SI.4,nist_800_53_AU.6,</group>
@@ -288,9 +281,6 @@
         <if_sid>80700</if_sid>
         <field name="audit.type">MAC_STATUS</field>
         <description>Auditd: SELinux mode (enforcing, permissive, off) is changed</description>
-        <mitre>
-            <id>T1098</id>
-        </mitre>
         <group>audit_selinux,pci_dss_10.6.1,gpg13_4.14,gdpr_IV_35.7.d,gdpr_IV_30.1.g,hipaa_164.312.b,nist_800_53_AU.6,</group>
     </rule>
 

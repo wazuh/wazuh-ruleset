@@ -135,9 +135,6 @@
     <id>^656$|^4752$|^659$|^4755$|^660$|^4756$|^661$|^4757$|^664$|^4760$|</id>
     <id>^665$|^4761$|^666$|^4762$</id>
     <description>Windows: Group Account Changed</description>
-    <mitre>
-      <id>T1098</id>
-    </mitre>
     <group>group_changed,win_group_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,hipaa_164.312.a.2.I,hipaa_164.312.a.2.II,hipaa_164.312.b,nist_800_53_AC.2,nist_800_53_IA.4,nist_800_53_AU.14,nist_800_53_AC.7,</group>
   </rule>
 
@@ -221,6 +218,9 @@
     <if_sid>18104</if_sid>
     <id>^646$|^645$|^647$|^4741$|^4742$|^4743$</id>
     <description>Windows: Computer account added/changed/deleted.</description>
+    <mitre>
+      <id>T1098</id>
+    </mitre>
     <group>account_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,hipaa_164.312.a.2.I,hipaa_164.312.a.2.II,hipaa_164.312.b,nist_800_53_AC.2,nist_800_53_IA.4,nist_800_53_AU.14,nist_800_53_AC.7,</group>
   </rule>
 
@@ -344,6 +344,9 @@
     <id>^671$|^4767$</id>
     <description>Windows: User account unlocked.</description>
     <info type="link">https://www.ultimatewindowssecurity.com/securitylog/encyclopedia/event.aspx?eventID=4767</info>
+    <mitre>
+      <id>T1098</id>
+    </mitre>
     <group>account_changed,pci_dss_10.2.5,pci_dss_8.1.6,gpg13_7.10,gdpr_IV_32.2,hipaa_164.312.b,hipaa_164.312.a.1,nist_800_53_AU.14,nist_800_53_AC.7,</group>
   </rule>
 
@@ -358,9 +361,6 @@
     <if_sid>18114</if_sid>
     <id>^634$|^638$|^662$</id>
     <description>Windows: Security enabled group deleted.</description>
-    <mitre>
-      <id>T1098</id>
-    </mitre>
     <group>adduser,account_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,hipaa_164.312.a.2.I,hipaa_164.312.a.2.II,hipaa_164.312.b,nist_800_53_AC.2,nist_800_53_IA.4,nist_800_53_AU.14,nist_800_53_AC.7,</group>
   </rule>
 
@@ -542,9 +542,6 @@
     <if_sid>18207,18208</if_sid>
     <regex> ID:\s+\p*S-1-5-32-544\s</regex>
     <description>Windows: Administrators Group Changed</description>
-    <mitre>
-      <id>T1098</id>
-    </mitre>
     <group>group_changed,win_group_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,hipaa_164.312.a.2.I,hipaa_164.312.a.2.II,hipaa_164.312.b,nist_800_53_AC.2,nist_800_53_IA.4,nist_800_53_AU.14,nist_800_53_AC.7,</group>
     <info type="link">https://support.microsoft.com/kb/243330</info>
   </rule>
@@ -561,9 +558,6 @@
     <if_sid>18207,18208</if_sid>
     <regex> ID:\s+%{S-1-5-9}| ID:\s+S-1-5-9\s</regex>
     <description>Windows: Enterprise Domain Controllers Group Changed</description>
-    <mitre>
-      <id>T1098</id>
-    </mitre>
     <group>group_changed,win_group_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,hipaa_164.312.a.2.I,hipaa_164.312.a.2.II,hipaa_164.312.b,nist_800_53_AC.2,nist_800_53_IA.4,nist_800_53_AU.14,nist_800_53_AC.7,</group>
     <info type="link">https://support.microsoft.com/kb/243330</info>
   </rule>
@@ -588,9 +582,6 @@
     <if_sid>18203,18204</if_sid>
     <regex> ID:\s+%{S-1-5-21\S+-512}| ID:\s+S-1-5-21\S+-512\s</regex>
     <description>Windows: Domain Admins Group Changed</description>
-    <mitre>
-      <id>T1098</id>
-    </mitre>
     <group>group_changed,win_group_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,hipaa_164.312.a.2.I,hipaa_164.312.a.2.II,hipaa_164.312.b,nist_800_53_AC.2,nist_800_53_IA.4,nist_800_53_AU.14,nist_800_53_AC.7,</group>
     <info type="link">https://support.microsoft.com/kb/243330</info>
   </rule>
@@ -614,9 +605,6 @@
     <if_sid>18203,18204</if_sid>
     <regex> ID:\s+%{S-1-5-21\S+-514}| ID:\s+S-1-5-21\S+-514\s</regex>
     <description>Windows: Domain Guests Group Changed</description>
-    <mitre>
-      <id>T1098</id>
-    </mitre>
     <group>group_changed,win_group_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,hipaa_164.312.a.2.I,hipaa_164.312.a.2.II,hipaa_164.312.b,nist_800_53_AC.2,nist_800_53_IA.4,nist_800_53_AU.14,nist_800_53_AC.7,</group>
     <info type="link">https://support.microsoft.com/kb/243330</info>
   </rule>
@@ -633,9 +621,6 @@
     <if_sid>18203,18204</if_sid>
     <regex> ID:\s+%{S-1-5-21\S+-516}| ID:\s+S-1-5-21\S+-516\s</regex>
     <description>Windows: Domain Controllers Group Changed</description>
-    <mitre>
-      <id>T1098</id>
-    </mitre>
     <group>group_changed,win_group_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,hipaa_164.312.a.2.I,hipaa_164.312.a.2.II,hipaa_164.312.b,nist_800_53_AC.2,nist_800_53_IA.4,nist_800_53_AU.14,nist_800_53_AC.7,</group>
     <info type="link">https://support.microsoft.com/kb/243330</info>
   </rule>
@@ -644,9 +629,6 @@
     <if_sid>18207,18208</if_sid>
     <regex> ID:\s+%{S-1-5-21\S+-517}| ID:\s+S-1-5-21\S+-517\s</regex>
     <description>Windows: Cert Publishers Group Changed</description>
-    <mitre>
-      <id>T1098</id>
-    </mitre>
     <group>group_changed,win_group_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,hipaa_164.312.a.2.I,hipaa_164.312.a.2.II,hipaa_164.312.b,nist_800_53_AC.2,nist_800_53_IA.4,nist_800_53_AU.14,nist_800_53_AC.7,</group>
     <info type="link">https://support.microsoft.com/kb/243330</info>
   </rule>
@@ -655,9 +637,6 @@
     <if_sid>18203,18204</if_sid>
     <regex> ID:\s+%{S-1-5-21\.+-518}| ID:\s+S-1-5-21\.+-518\s</regex>
     <description>Windows: Schema Admins Group Changed</description>
-    <mitre>
-      <id>T1098</id>
-    </mitre>
     <group>group_changed,win_group_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,hipaa_164.312.a.2.I,hipaa_164.312.a.2.II,hipaa_164.312.b,nist_800_53_AC.2,nist_800_53_IA.4,nist_800_53_AU.14,nist_800_53_AC.7,</group>
     <info type="link">https://support.microsoft.com/kb/243330</info>
   </rule>
@@ -666,9 +645,6 @@
     <if_sid>18213,18214</if_sid>
     <regex> ID:\s+%{S-1-5-21\S+-519}| ID:\s+S-1-5-21\S+-519\s</regex>
     <description>Windows: Enterprise Admins Group Changed</description>
-    <mitre>
-      <id>T1098</id>
-    </mitre>
     <group>group_changed,win_group_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,hipaa_164.312.a.2.I,hipaa_164.312.a.2.II,hipaa_164.312.b,nist_800_53_AC.2,nist_800_53_IA.4,nist_800_53_AU.14,nist_800_53_AC.7,</group>
     <info type="link">https://support.microsoft.com/kb/243330</info>
   </rule>
@@ -688,9 +664,6 @@
     <if_sid>18207,18208</if_sid>
     <regex> ID:\s+%{S-1-5-21\S+-553}| ID:\s+S-1-5-21\S+-553\s</regex>
     <description>Windows: RAS and IAS Servers Group Changed</description>
-    <mitre>
-      <id>T1098</id>
-    </mitre>
     <group>group_changed,win_group_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,hipaa_164.312.a.2.I,hipaa_164.312.a.2.II,hipaa_164.312.b,nist_800_53_AC.2,nist_800_53_IA.4,nist_800_53_AU.14,nist_800_53_AC.7,</group>
     <info type="link">https://support.microsoft.com/kb/243330</info>
   </rule>
@@ -699,9 +672,6 @@
     <if_sid>18207,18208</if_sid>
     <regex> ID:\s+%{S-1-5-32-545}| ID:\s+S-1-5-32-545\s</regex>
     <description>Windows: Users Group Changed</description>
-    <mitre>
-      <id>T1098</id>
-    </mitre>
     <group>group_changed,win_group_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,hipaa_164.312.a.2.I,hipaa_164.312.a.2.II,hipaa_164.312.b,nist_800_53_AC.2,nist_800_53_IA.4,nist_800_53_AU.14,nist_800_53_AC.7,</group>
     <info type="link">https://support.microsoft.com/kb/243330</info>
   </rule>
@@ -710,9 +680,6 @@
     <if_sid>18207,18208</if_sid>
     <regex> ID:\s+%{S-1-5-32-546}| ID:\s+S-1-5-32-546\s</regex>
     <description>Windows: Guests Group Changed</description>
-    <mitre>
-      <id>T1098</id>
-    </mitre>
     <group>group_changed,win_group_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,hipaa_164.312.a.2.I,hipaa_164.312.a.2.II,hipaa_164.312.b,nist_800_53_AC.2,nist_800_53_IA.4,nist_800_53_AU.14,nist_800_53_AC.7,</group>
     <info type="link">https://support.microsoft.com/kb/243330</info>
   </rule>
@@ -721,9 +688,6 @@
     <if_sid>18207,18208</if_sid>
     <regex> ID:\s+%{S-1-5-32-547}| ID:\s+S-1-5-32-547\s</regex>
     <description>Windows: Power Users Group Changed</description>
-    <mitre>
-      <id>T1098</id>
-    </mitre>
     <group>group_changed,win_group_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,hipaa_164.312.a.2.I,hipaa_164.312.a.2.II,hipaa_164.312.b,nist_800_53_AC.2,nist_800_53_IA.4,nist_800_53_AU.14,nist_800_53_AC.7,</group>
     <info type="link">https://support.microsoft.com/kb/243330</info>
   </rule>
@@ -732,9 +696,6 @@
     <if_sid>18207,18208</if_sid>
     <regex> ID:\s+%{S-1-5-32-548}| ID:\s+S-1-5-32-548\s</regex>
     <description>Windows: Account Operators Group Changed</description>
-    <mitre>
-      <id>T1098</id>
-    </mitre>
     <group>group_changed,win_group_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,hipaa_164.312.a.2.I,hipaa_164.312.a.2.II,hipaa_164.312.b,nist_800_53_AC.2,nist_800_53_IA.4,nist_800_53_AU.14,nist_800_53_AC.7,</group>
     <info type="link">https://support.microsoft.com/kb/243330</info>
   </rule>
@@ -743,9 +704,6 @@
     <if_sid>18207,18208</if_sid>
     <regex> ID:\s+%{S-1-5-32-549}| ID:\s+S-1-5-32-549\s</regex>
     <description>Windows: Server Operators Group Changed</description>
-    <mitre>
-      <id>T1098</id>
-    </mitre>
     <group>group_changed,win_group_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,hipaa_164.312.a.2.I,hipaa_164.312.a.2.II,hipaa_164.312.b,nist_800_53_AC.2,nist_800_53_IA.4,nist_800_53_AU.14,nist_800_53_AC.7,</group>
     <info type="link">https://support.microsoft.com/kb/243330</info>
   </rule>
@@ -754,9 +712,6 @@
     <if_sid>18207,18208</if_sid>
     <regex> ID:\s+%{S-1-5-32-550}| ID:\s+S-1-5-32-550\s</regex>
     <description>Windows: Print Operators Group Changed</description>
-    <mitre>
-      <id>T1098</id>
-    </mitre>
     <group>group_changed,win_group_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,hipaa_164.312.a.2.I,hipaa_164.312.a.2.II,hipaa_164.312.b,nist_800_53_AC.2,nist_800_53_IA.4,nist_800_53_AU.14,nist_800_53_AC.7,</group>
     <info type="link">https://support.microsoft.com/kb/243330</info>
   </rule>
@@ -765,9 +720,6 @@
     <if_sid>18207,18208</if_sid>
     <regex> ID:\s+%{S-1-5-32-551}| ID:\s+S-1-5-32-551\s</regex>
     <description>Windows: Backup Operators Group Changed</description>
-    <mitre>
-      <id>T1098</id>
-    </mitre>
     <group>group_changed,win_group_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,hipaa_164.312.a.2.I,hipaa_164.312.a.2.II,hipaa_164.312.b,nist_800_53_AC.2,nist_800_53_IA.4,nist_800_53_AU.14,nist_800_53_AC.7,</group>
     <info type="link">https://support.microsoft.com/kb/243330</info>
   </rule>
@@ -776,9 +728,6 @@
     <if_sid>18207,18208</if_sid>
     <regex> ID:\s+%{S-1-5-32-552}| ID:\s+S-1-5-32-552\s</regex>
     <description>Windows: Replicators Group Changed</description>
-    <mitre>
-      <id>T1098</id>
-    </mitre>
     <group>group_changed,win_group_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,hipaa_164.312.a.2.I,hipaa_164.312.a.2.II,hipaa_164.312.b,nist_800_53_AC.2,nist_800_53_IA.4,nist_800_53_AU.14,nist_800_53_AC.7,</group>
     <info type="link">https://support.microsoft.com/kb/243330</info>
   </rule>
@@ -787,9 +736,6 @@
     <if_sid>18207,18208</if_sid>
     <regex> ID:\s+%{S-1-5-32-554}| ID:\s+S-1-5-32-554\s</regex>
     <description>Pre-Windows 2000 Compatible Access Group Changed</description>
-    <mitre>
-      <id>T1098</id>
-    </mitre>
     <group>group_changed,win_group_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,hipaa_164.312.a.2.I,hipaa_164.312.a.2.II,hipaa_164.312.b,nist_800_53_AC.2,nist_800_53_IA.4,nist_800_53_AU.14,nist_800_53_AC.7,</group>
     <info type="link">https://support.microsoft.com/kb/243330</info>
   </rule>
@@ -798,9 +744,6 @@
     <if_sid>18207,18208</if_sid>
     <regex> ID:\s+%{S-1-5-32-555}| ID:\s+S-1-5-32-555\s</regex>
     <description>Windows: Remote Desktop Users Group Changed</description>
-    <mitre>
-      <id>T1098</id>
-    </mitre>
     <group>group_changed,win_group_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,hipaa_164.312.a.2.I,hipaa_164.312.a.2.II,hipaa_164.312.b,nist_800_53_AC.2,nist_800_53_IA.4,nist_800_53_AU.14,nist_800_53_AC.7,</group>
     <info type="link">https://support.microsoft.com/kb/243330</info>
   </rule>
@@ -809,9 +752,6 @@
     <if_sid>18207,18208</if_sid>
     <regex> ID:\s+%{S-1-5-32-556}| ID:\s+S-1-5-32-556\s</regex>
     <description>Windows: Network Configuration Operators Group Changed</description>
-    <mitre>
-      <id>T1098</id>
-    </mitre>
     <group>group_changed,win_group_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,hipaa_164.312.a.2.I,hipaa_164.312.a.2.II,hipaa_164.312.b,nist_800_53_AC.2,nist_800_53_IA.4,nist_800_53_AU.14,nist_800_53_AC.7,</group>
     <info type="link">https://support.microsoft.com/kb/243330</info>
   </rule>
@@ -820,9 +760,6 @@
     <if_sid>18207,18208</if_sid>
     <regex> ID:\s+%{S-1-5-32-557}| ID:\s+S-1-5-32-557\s</regex>
     <description>Windows: Incoming Forest Trust Builders Group Changed</description>
-    <mitre>
-      <id>T1098</id>
-    </mitre>
     <group>group_changed,win_group_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,hipaa_164.312.a.2.I,hipaa_164.312.a.2.II,hipaa_164.312.b,nist_800_53_AC.2,nist_800_53_IA.4,nist_800_53_AU.14,nist_800_53_AC.7,</group>
     <info type="link">https://support.microsoft.com/kb/243330</info>
   </rule>
@@ -831,9 +768,6 @@
     <if_sid>18207,18208</if_sid>
     <regex> ID:\s+%{S-1-5-32-558}| ID:\s+S-1-5-32-558\s</regex>
     <description>Windows: Performance Monitor Users Group Changed</description>
-    <mitre>
-      <id>T1098</id>
-    </mitre>
     <group>group_changed,win_group_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,hipaa_164.312.a.2.I,hipaa_164.312.a.2.II,hipaa_164.312.b,nist_800_53_AC.2,nist_800_53_IA.4,nist_800_53_AU.14,nist_800_53_AC.7,</group>
     <info type="link">https://support.microsoft.com/kb/243330</info>
   </rule>
@@ -842,9 +776,6 @@
     <if_sid>18207,18208</if_sid>
     <regex> ID:\s+%{S-1-5-32-559}| ID:\s+S-1-5-32-559\s</regex>
     <description>Windows: Performance Log Users Group Changed</description>
-    <mitre>
-      <id>T1098</id>
-    </mitre>
     <group>group_changed,win_group_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,hipaa_164.312.a.2.I,hipaa_164.312.a.2.II,hipaa_164.312.b,nist_800_53_AC.2,nist_800_53_IA.4,nist_800_53_AU.14,nist_800_53_AC.7,</group>
     <info type="link">https://support.microsoft.com/kb/243330</info>
   </rule>
@@ -853,9 +784,6 @@
     <if_sid>18207,18208</if_sid>
     <regex> ID:\s+%{S-1-5-32-560}| ID:\s+S-1-5-32-560\s</regex>
     <description>Windows Authorization Access Group Changed</description>
-    <mitre>
-      <id>T1098</id>
-    </mitre>
     <group>group_changed,win_group_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,hipaa_164.312.a.2.I,hipaa_164.312.a.2.II,hipaa_164.312.b,nist_800_53_AC.2,nist_800_53_IA.4,nist_800_53_AU.14,nist_800_53_AC.7,</group>
     <info type="link">https://support.microsoft.com/kb/243330</info>
   </rule>
@@ -864,9 +792,6 @@
     <if_sid>18207,18208</if_sid>
     <regex> ID:\s+%{S-1-5-32-561}| ID:\s+S-1-5-32-561\s</regex>
     <description>Windows: Terminal Server License Servers Group Changed</description>
-    <mitre>
-      <id>T1098</id>
-    </mitre>
     <group>group_changed,win_group_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,hipaa_164.312.a.2.I,hipaa_164.312.a.2.II,hipaa_164.312.b,nist_800_53_AC.2,nist_800_53_IA.4,nist_800_53_AU.14,nist_800_53_AC.7,</group>
     <info type="link">https://support.microsoft.com/kb/243330</info>
   </rule>
@@ -875,9 +800,6 @@
     <if_sid>18207,18208</if_sid>
     <regex> ID:\s+%{S-1-5-32-562}| ID:\s+S-1-5-32-562\s</regex>
     <description>Windows: Distributed COM Users Group Changed</description>
-    <mitre>
-      <id>T1098</id>
-    </mitre>
     <group>group_changed,win_group_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,hipaa_164.312.a.2.I,hipaa_164.312.a.2.II,hipaa_164.312.b,nist_800_53_AC.2,nist_800_53_IA.4,nist_800_53_AU.14,nist_800_53_AC.7,</group>
     <info type="link">https://support.microsoft.com/kb/243330</info>
   </rule>
@@ -886,9 +808,6 @@
     <if_sid>18207,18208</if_sid>
     <regex> ID:\s+%{S-1-5-\s*21\.+\s*-498}| ID:\s+S-1-5-\s*21\.+\s*-498\s</regex>
     <description>Windows: Enterprise Read-only Domain Controllers Group Changed</description>
-    <mitre>
-      <id>T1098</id>
-    </mitre>
     <group>group_changed,win_group_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,hipaa_164.312.a.2.I,hipaa_164.312.a.2.II,hipaa_164.312.b,nist_800_53_AC.2,nist_800_53_IA.4,nist_800_53_AU.14,nist_800_53_AC.7,</group>
     <info type="link">https://support.microsoft.com/kb/243330</info>
   </rule>
@@ -897,9 +816,6 @@
     <if_sid>18207,18208</if_sid>
     <regex> ID:\s+%{S-1-5-\s*21\.+\s*-529}| ID:\s+S-1-5-\s*21\.+\s*-529\s</regex>
     <description>Windows: Read-only Domain Controllers Group Changed</description>
-    <mitre>
-      <id>T1098</id>
-    </mitre>
     <group>group_changed,win_group_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,hipaa_164.312.a.2.I,hipaa_164.312.a.2.II,hipaa_164.312.b,nist_800_53_AC.2,nist_800_53_IA.4,nist_800_53_AU.14,nist_800_53_AC.7,</group>
     <info type="link">https://support.microsoft.com/kb/243330</info>
   </rule>
@@ -908,9 +824,6 @@
     <if_sid>18207,18208</if_sid>
     <regex> ID:\s+%{S-1-5-32-569}| ID:\s+S-1-5-32-569\s</regex>
     <description>Windows: Cryptographic Operators Group Changed</description>
-    <mitre>
-      <id>T1098</id>
-    </mitre>
     <group>group_changed,win_group_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,hipaa_164.312.a.2.I,hipaa_164.312.a.2.II,hipaa_164.312.b,nist_800_53_AC.2,nist_800_53_IA.4,nist_800_53_AU.14,nist_800_53_AC.7,</group>
     <info type="link">https://support.microsoft.com/kb/243330</info>
   </rule>
@@ -919,9 +832,6 @@
     <if_sid>18207,18208</if_sid>
     <regex> ID:\s+%{S-1-5-\s*21\.+\s*-571}| ID:\s+S-1-5-\s*21\.+\s*-571\s</regex>
     <description>Windows: Allowed RODC Password Replication Group Changed</description>
-    <mitre>
-      <id>T1098</id>
-    </mitre>
     <group>group_changed,win_group_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,hipaa_164.312.a.2.I,hipaa_164.312.a.2.II,hipaa_164.312.b,nist_800_53_AC.2,nist_800_53_IA.4,nist_800_53_AU.14,nist_800_53_AC.7,</group>
     <info type="link">https://support.microsoft.com/kb/243330</info>
   </rule>
@@ -930,9 +840,6 @@
     <if_sid>18207,18208</if_sid>
     <regex> ID:\s+%{S-1-5-\s*21\.+\s*-572}| ID:\s+S-1-5-\s*21\.+\s*-572\s</regex>
     <description>Windows: Denied RODC Password Replication Group Changed</description>
-    <mitre>
-      <id>T1098</id>
-    </mitre>
     <group>group_changed,win_group_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,hipaa_164.312.a.2.I,hipaa_164.312.a.2.II,hipaa_164.312.b,nist_800_53_AC.2,nist_800_53_IA.4,nist_800_53_AU.14,nist_800_53_AC.7,</group>
     <info type="link">https://support.microsoft.com/kb/243330</info>
   </rule>
@@ -941,9 +848,6 @@
     <if_sid>18207,18208</if_sid>
     <regex> ID:\s+%{S-1-5-32-573}| ID:\s+S-1-5-32-573\s</regex>
     <description>Windows: Event Log Readers Group Changed</description>
-    <mitre>
-      <id>T1098</id>
-    </mitre>
     <group>group_changed,win_group_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,hipaa_164.312.a.2.I,hipaa_164.312.a.2.II,hipaa_164.312.b,nist_800_53_AC.2,nist_800_53_IA.4,nist_800_53_AU.14,nist_800_53_AC.7,</group>
     <info type="link">https://support.microsoft.com/kb/243330</info>
   </rule>
@@ -952,9 +856,6 @@
     <if_sid>18207,18208</if_sid>
     <regex> ID:\s+%{S-1-5-32-574}| ID:\s+S-1-5-32-574\s</regex>
     <description>Windows: Certificate Service DCOM Access Group Changed</description>
-    <mitre>
-      <id>T1098</id>
-    </mitre>
     <group>group_changed,win_group_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,hipaa_164.312.a.2.I,hipaa_164.312.a.2.II,hipaa_164.312.b,nist_800_53_AC.2,nist_800_53_IA.4,nist_800_53_AU.14,nist_800_53_AC.7,</group>
     <info type="link">https://support.microsoft.com/kb/243330</info>
   </rule>
