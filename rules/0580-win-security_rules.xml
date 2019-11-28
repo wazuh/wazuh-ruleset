@@ -123,6 +123,7 @@
     <description>User account disabled or deleted</description>
     <mitre>
       <id>T1098</id>
+      <id>T1531</id>
     </mitre>
     <options>no_full_log</options>
     <group>adduser,account_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,hipaa_164.312.a.2.I,hipaa_164.312.a.2.II,hipaa_164.312.b,nist_800_53_AC.2,nist_800_53_IA.4,nist_800_53_AU.14,nist_800_53_AC.7,</group>
@@ -168,6 +169,7 @@
     <description>User account locked out (multiple login errors)</description>
     <mitre>
       <id>T1110</id>
+      <id>T1531</id>
     </mitre>
     <options>no_full_log</options>
     <group>authentication_failures,pci_dss_8.1.6,pci_dss_11.4,gpg13_7.5,gdpr_IV_35.7.d,hipaa_164.312.a.1,nist_800_53_AC.7,nist_800_53_SI.4,</group>
@@ -235,6 +237,7 @@
     <mitre>
       <id>T1098</id>
       <id>T1136</id>
+      <id>T1531</id>
     </mitre>
     <group>account_changed,pci_dss_8.1.2,pci_dss_10.2.5,gpg13_7.10,gdpr_IV_35.7.d,gdpr_IV_32.2,hipaa_164.312.a.2.I,hipaa_164.312.a.2.II,hipaa_164.312.b,nist_800_53_AC.2,nist_800_53_IA.4,nist_800_53_AU.14,nist_800_53_AC.7,</group>
   </rule>
@@ -309,6 +312,9 @@
     <field name="win.system.eventID">^539$</field>
     <description>Logon Failure - Account locked out</description>
     <options>no_full_log</options>
+    <mitre>
+      <id>T1531</id>
+    </mitre>
     <group>win_authentication_failed,pci_dss_10.2.4,pci_dss_10.2.5,pci_dss_8.1.6,gpg13_7.5,gpg13_7.1,gdpr_IV_35.7.d,gdpr_IV_32.2,hipaa_164.312.b,hipaa_164.312.a.1,nist_800_53_AU.14,nist_800_53_AC.7,</group>
   </rule>
 
