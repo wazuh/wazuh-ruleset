@@ -38,11 +38,6 @@
 -->
 
 
-
-<decoder name="owncloud">
-  <prematch>^{"reqId":"\S+","message":"\.+","level":\d,"time":"\S+"}$|^{"app":"\S+","message":"\.+","level":\d,"time":"\S+"}$|^{"reqId":"\S+","level":\d,"time":"\S+","message":"\.+"}$</prematch>
-</decoder>
-
 <!-- Note: This defaults to "ownCloud" but users can change the syslog tag: https://github.com/owncloud/core/blob/v10.0.2/config/config.sample.php#L608-L614 -->
 <decoder name="owncloud">
   <program_name>^ownCloud</program_name>
@@ -67,11 +62,4 @@
   <prematch>Passed filename is not valid, might be malicious </prematch>
   <regex offset="after_prematch">;ip:"(\d+.\d+.\d+.\d+)|;ip:\\"(\d+.\d+.\d+.\d+)</regex>
   <order>srcip</order>
-</decoder>
-
-<decoder name="owncloud-loglevel">
-  <parent>owncloud</parent>
-  <prematch>","level":</prematch>
-  <regex offset="after_prematch">^(\d),"</regex>
-  <order>status</order>
 </decoder>
