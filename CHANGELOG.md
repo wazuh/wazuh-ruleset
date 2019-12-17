@@ -12,6 +12,7 @@ All notable changes to this project will be documented in this file.
 ### Changed
 
 - Let osquery daemon messages appear in alerts as the full log. ([#531](https://github.com/wazuh/wazuh-ruleset/pull/531))
+- Make double-point termination optional in the postfix decoder (by @iasdeoupxe). ([#245](https://github.com/wazuh/wazuh-ruleset/pull/245))
 
 ### Fixed
 
