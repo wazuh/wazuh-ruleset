@@ -6,6 +6,20 @@ All notable changes to this project will be documented in this file.
 ### Added
 
 - Add rules and decoders for McAfee EPO. ([#467](https://github.com/wazuh/wazuh-ruleset/pull/467))
+- Add PCI-DSS mapping to vulnerability detector rules. ([#525](https://github.com/wazuh/wazuh-ruleset/pull/525))
+- Add a new base rule for Microsoft Windows Firewall With Advanced Security/Firewalls. ([#532](https://github.com/wazuh/wazuh-ruleset/pull/532))
+
+### Changed
+
+- Let osquery daemon messages appear in alerts as the full log. ([#531](https://github.com/wazuh/wazuh-ruleset/pull/531))
+- Make double-point termination optional in the postfix decoder (by @iasdeoupxe). ([#245](https://github.com/wazuh/wazuh-ruleset/pull/245))
+
+### Fixed
+
+- Fix typo in network checks for SCA Debian 8 and 9 policies. ([#514](https://github.com/wazuh/wazuh-ruleset/pull/514))
+- Fix path in audit checks for SCA Debian 8 and 9 policies. ([#527](https://github.com/wazuh/wazuh-ruleset/pull/527))
+- Fix last space in regular expression for SCA check about NTP. ([#521](https://github.com/wazuh/wazuh-ruleset/pull/521))
+- Unify SCA regular expressions about installed packages by dpkg. ([#522](https://github.com/wazuh/wazuh-ruleset/pull/522))
 
 ## [v3.10.0]
 
