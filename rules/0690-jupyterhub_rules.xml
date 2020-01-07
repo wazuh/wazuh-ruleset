@@ -1,0 +1,44 @@
+<!--JUPYTERHUB-->
+
+<!--
+-  JupyterHub ruleset
+-  Created by banditopazzo.
+-  Copyright (C) 2015-2019, Wazuh Inc.
+-  This program is a free software; you can redistribute it and/or modify it under the terms of GPLv2.
+-->
+
+<!-- ID: 88300 - 88399 -->
+
+<group name="syslog,jupyterhub">
+
+	<rule id="88300" level="0">
+		<decoded_as>jupyterhub</decoded_as>
+		<description>JupyterHub messages grouped.</description>
+		<options>no_full_log</options>
+	</rule>
+
+	<rule id="88301" level="6">
+		<if_sid>88300</if_sid>
+		<match>User logged out:</match>
+		<description>JupyterHub logout successful.</description>
+		<group>pci_dss_10.2.4,pci_dss_10.2.5,gdpr_IV_35.7.d,gdpr_IV_32.2,hipaa_164.312.b,nist_800_53_AU.14,nist_800_53_AC.7,</group>
+		<options>no_full_log</options>
+	</rule>
+
+	<rule id="88302" level="6">
+		<if_sid>88300</if_sid>
+		<match>User logged in:</match>
+		<description>JupyterHub authentication successful.</description>
+		<group>authentication_success,pci_dss_10.2.4,pci_dss_10.2.5,gdpr_IV_35.7.d,gdpr_IV_32.2,hipaa_164.312.b,nist_800_53_AU.14,nist_800_53_AC.7,</group>
+		<options>no_full_log</options>
+	</rule>
+
+	<rule id="88303" level="6">
+		<if_sid>88300</if_sid>
+		<match>Failed login for </match>
+		<description>JupyterHub authentication failed.</description>
+		<group>authentication_failed,pci_dss_10.2.4,pci_dss_10.2.5,gdpr_IV_35.7.d,gdpr_IV_32.2,hipaa_164.312.b,nist_800_53_AU.14,nist_800_53_AC.7,</group>
+		<options>no_full_log</options>
+	</rule>
+
+</group>
