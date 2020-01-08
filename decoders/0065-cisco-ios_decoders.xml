@@ -26,29 +26,40 @@
 </decoder>
 
 <!--
-  - Hour first, no date or sequence number
+  - Hour first, no date or sequence number. Optional milliseconds and timezone.
   - 00:00:46: %LINK-3-UPDOWN: Interface Port-channel1, changed state to up
 -->
 
 <decoder name="cisco-ios">
   <prematch>^\d+:\d+:\d+:\s+%</prematch>
 </decoder>
-
-<!--
-  - Date and hour (preceded by * or nothing), no sequence number
-  - *Mar  1 18:46:11: %SYS-5-CONFIG_I: Configured from console by vty2 (10.34.195.36)
-  - Mar  1 18:46:11: %SYS-5-CONFIG_I: Configured from console by vty2 (10.34.195.36)
--->
 <decoder name="cisco-ios">
-  <prematch>^\p*\w+\s+\d*\s+\d+:\d+:\d+:\s+%</prematch>
+  <prematch>^\d+:\d+:\d+.\d+:\s+%</prematch>
+</decoder>
+<decoder name="cisco-ios">
+  <prematch>^\d+:\d+:\d+\s+\w+:\s+%</prematch>
+</decoder>
+<decoder name="cisco-ios">
+  <prematch>^\d+:\d+:\d+.\d+\s+\w+:\s+%</prematch>
 </decoder>
 
 <!--
-  - Date and hour (preceded by * or nothing) with ms and timezone, no sequence number
+  - Date and hour (preceded by * or nothing), no sequence number. Optional milliseconds and timezone.
+  - *Mar  1 18:46:11: %SYS-5-CONFIG_I: Configured from console by vty2 (10.34.195.36)
+  - Mar  1 18:46:11: %SYS-5-CONFIG_I: Configured from console by vty2 (10.34.195.36)
   - *Mar  1 18:48:50.483 UTC: %SYS-5-CONFIG_I: Configured from console by vty2 (10.34.195.36)
 -->
 <decoder name="cisco-ios">
-  <prematch>^\p*\w+\s+\d*\s+\d+:\d+:\d+.\d+\s+\w+:\s+%</prematch>
+  <prematch>^\p*\w+\s+\d+\s+\d+:\d+:\d+:\s+%</prematch>
+</decoder>
+<decoder name="cisco-ios">
+  <prematch>^\p*\w+\s+\d+\s+\d+:\d+:\d+.\d+:\s+%</prematch>
+</decoder>
+<decoder name="cisco-ios">
+  <prematch>^\p*\w+\s+\d+\s+\d+:\d+:\d+\s+\w+:\s+%</prematch>
+</decoder>
+<decoder name="cisco-ios">
+  <prematch>^\p*\w+\s+\d+\s+\d+:\d+:\d+.\d+\s+\w+:\s+%</prematch>
 </decoder>
 
 
@@ -62,15 +73,38 @@
 </decoder>
 
 <!--
-  - Sequence number, date (preceded by * or . or nothing) and hour
+  - Sequence number, date (preceded by * or . or nothing) and time
   - 1348: .Jun 12 18:22:22 UTC: %SYS-5-CONFIG_I:
   - 1348: *Jun 12 18:22:22 UTC: %SYS-5-CONFIG_I:
   - 1348: Jun 12 18:22:22 UTC: %SYS-5-CONFIG_I:
   - 681: Aug 17 17:41:24.776 AEST: %SEC-6-IPACCESSLOGS:
+  - 137: *Jan 18 11:48:01.737: %LINK-3-UPDOWN:
 -->
 
 <decoder name="cisco-ios">
-  <prematch>^\d+:\s+\p*\w+\s+\d+\s+\S+\s+\w+:\s+%</prematch>
+  <prematch>^\d+:\s+\p*\w+\s+\d+\s+\d+:\d+:\d+:\s+%</prematch>
+</decoder>
+<decoder name="cisco-ios">
+  <prematch>^\d+:\s+\p*\w+\s+\d+\s+\d+:\d+:\d+.\d+:\s+%</prematch>
+</decoder>
+<decoder name="cisco-ios">
+  <prematch>^\d+:\s+\p*\w+\s+\d+\s+\d+:\d+:\d+\s+\w+:\s+%</prematch>
+</decoder>
+<decoder name="cisco-ios">
+  <prematch>^\d+:\s+\p*\w+\s+\d+\s+\d+:\d+:\d+.\d+\s+\w+:\s+%</prematch>
+</decoder>
+
+<!--
+  - Sequence number and origin-id
+  - 106: ix-edgesw-r1b3a: %SYS-5-CONFIG_I:
+-->
+
+<decoder name="cisco-ios">
+  <prematch>^\d+:\s+\w+:\s+%</prematch>
+  <!-- Capture of origin in parent decoder not working: https://github.com/wazuh/wazuh/issues/2427
+  <regex>^\d+:\s+(\w+):</regex>
+  <order>origin</order>
+  -->
 </decoder>
 
 
@@ -85,7 +119,7 @@
 <decoder name="cisco-ios-acl">
   <parent>cisco-ios</parent>
   <type>firewall</type>
-  <prematch>^%SEC-6-IPACCESSLOGP: </prematch>
+  <prematch>%SEC-6-IPACCESSLOGP: </prematch>
   <regex offset="after_prematch">^list \S+ (\w+) (\w+) </regex>
   <regex>(\S+)\((\d+)\) -> (\S+)\((\d+)\),</regex>
   <order>action, protocol, srcip, srcport, dstip, dstport</order>
@@ -101,7 +135,7 @@
 <decoder name="cisco-ios-ids">
   <parent>cisco-ios</parent>
   <type>ids</type>
-  <prematch>^%IPS-4-SIGNATURE: </prematch>
+  <prematch>%IPS-4-SIGNATURE: </prematch>
   <regex offset="after_prematch">^Sig:(\d+) \.+[(\S+):(\d+) -> </regex>
   <regex>(\S+):(\d+)]</regex>
   <order>id, srcip, srcport, dstip, dstport</order>
@@ -117,4 +151,11 @@
   <parent>cisco-ios</parent>
   <regex>(%\w+-\d-\w+):</regex>
   <order>id</order>
+</decoder>
+
+<!-- Workaround for https://github.com/wazuh/wazuh/issues/2427 -->
+<decoder name="cisco-ios-default">
+  <parent>cisco-ios</parent>
+  <regex>^\d+:\s+(\w+):\s+%</regex>
+  <order>origin</order>
 </decoder>
