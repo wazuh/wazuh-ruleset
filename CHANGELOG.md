@@ -1,6 +1,13 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [v3.11.2]
+
+### Fixed
+
+- Fixed permissions of the VERSION file. ([#545](https://github.com/wazuh/wazuh-ruleset/pull/545))
+
+
 ## [v3.11.0]
 
 ### Added
