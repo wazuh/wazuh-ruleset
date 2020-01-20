@@ -1,5 +1,5 @@
 <!--
-  -  Windows Event Channel ruleset for the Application channel 
+  -  Windows Event Channel ruleset for the Application channel
   -  Created by Wazuh, Inc.
   -  Copyright (C) 2015-2019, Wazuh Inc.
   -  This program is a free software; you can redistribute it and/or modify it under the terms of GPLv2.
@@ -612,11 +612,14 @@
     <description>Safe mode does not support Shadow Copy</description>
     <options>no_full_log</options>
   </rule>
-  
+
   <rule id="60682" level="4">
     <if_sid>60675</if_sid>
     <field name="win.system.eventID">^19$</field>
     <description>The EventSystem service is disabled or attempting to start during Safe Mode</description>
+    <mitre>
+      <id>T1031</id>
+    </mitre>
     <options>no_full_log</options>
   </rule>
 
@@ -669,6 +672,9 @@
     <if_sid>60675</if_sid>
     <field name="win.system.eventID">^4609$</field>
     <description>Bad return code detected during internal processing of the EventSystem service</description>
+    <mitre>
+      <id>T1031</id>
+    </mitre>
     <options>no_full_log</options>
   </rule>
 
@@ -1762,21 +1768,21 @@
   <rule id="60835" level="5">
     <if_sid>60824</if_sid>
     <field name="win.system.eventID">^256$</field>
-    <description>The Cryptographic Services service failed to initialize the Catalog Database</description>
+    <description>The Cryptographic Services failed to initialize the Catalog Database</description>
     <options>no_full_log</options>
   </rule>
 
   <rule id="60836" level="5">
     <if_sid>60824</if_sid>
     <field name="win.system.eventID">^257$</field>
-    <description>The Cryptographic Services service failed to initialize the Catalog Database. ESENT error</description>
+    <description>The Cryptographic Services failed to initialize the Catalog Database. ESENT error</description>
     <options>no_full_log</options>
   </rule>
 
   <rule id="60837" level="5">
     <if_sid>60824</if_sid>
     <field name="win.system.eventID">^512$</field>
-    <description>The Cryptographic Services service failed to initialize the VSS backup "System Writer" object</description>
+    <description>The Cryptographic Services failed to initialize the VSS backup "System Writer" object</description>
     <options>no_full_log</options>
   </rule>
 
@@ -1814,7 +1820,7 @@
     <description>The MS DTC has the same unique identity as the local one</description>
     <options>no_full_log</options>
   </rule>
-  
+
   <rule id="60843" level="5">
     <if_sid>60838</if_sid>
     <field name="win.system.eventID">^4102$</field>
@@ -3379,40 +3385,40 @@
     <description>Group of Microsoft-Windows-SoftwareRestrictionPolicies events</description>
     <options>no_full_log</options>
   </rule>
-  
+
   <rule id="61064" level="5">
     <if_sid>61063</if_sid>
     <field name="win.system.eventID">^865$</field>
     <description>Access restricted by your Administrator by the default software restriction policy level</description>
     <options>no_full_log</options>
   </rule>
-  
+
   <rule id="61065" level="5">
     <if_sid>61063</if_sid>
     <field name="win.system.eventID">^866$</field>
     <description>Access restricted by your Administrator by location with policy rule </description>
     <options>no_full_log</options>
   </rule>
-  
+
   <rule id="61066" level="5">
     <if_sid>61063</if_sid>
     <field name="win.system.eventID">^867$</field>
     <description>Access restricted by your Administrator by software publisher policy</description>
     <options>no_full_log</options>
   </rule>
-  
+
   <rule id="61067" level="5">
     <if_sid>61063</if_sid>
     <field name="win.system.eventID">^868$</field>
     <description>Access restricted by your Administrator by policy rule</description>
     <options>no_full_log</options>
   </rule>
-  
+
   <rule id="61068" level="5">
     <if_sid>61063</if_sid>
     <field name="win.system.eventID">^882$</field>
     <description>Access restricted by your Administrator by policy rule</description>
     <options>no_full_log</options>
   </rule>
-  
+
 </group>
