@@ -213,6 +213,9 @@
     <category>ossec</category>
     <decoded_as>syscheck_integrity_changed</decoded_as>
     <description>Integrity checksum changed.</description>
+    <mitre>
+      <id>T1492</id>
+    </mitre>
     <group>syscheck,pci_dss_11.5,gpg13_4.11,gdpr_II_5.1.f,hipaa_164.312.c.1,hipaa_164.312.c.2,nist_800_53_SI.7,</group>
   </rule>
 
@@ -238,6 +241,9 @@
     <if_sid>500</if_sid>
     <match>^ossec: agentless: </match>
     <description>Integrity checksum for agentless device changed.</description>
+    <mitre>
+      <id>T1492</id>
+    </mitre>
     <group>syscheck,agentless,pci_dss_11.5,pci_dss_10.6.1,gpg13_4.11,gdpr_II_5.1.f,gdpr_IV_35.7.d,hipaa_164.312.c.1,hipaa_164.312.c.2,hipaa_164.312.b,nist_800_53_SI.7,nist_800_53_AU.6,</group>
   </rule>
 
@@ -291,6 +297,9 @@
     <hostname>syscheck-registry</hostname>
     <group>syscheck,pci_dss_11.5,gpg13_4.13,gdpr_II_5.1.f,hipaa_164.312.c.1,hipaa_164.312.c.2,nist_800_53_SI.7,</group>
     <description>Registry Integrity Checksum Changed</description>
+    <mitre>
+      <id>T1492</id>
+    </mitre>
   </rule>
 
   <rule id="597" level="5">
@@ -299,6 +308,10 @@
     <hostname>syscheck-registry</hostname>
     <group>syscheck,pci_dss_11.5,gpg13_4.13,gdpr_II_5.1.f,hipaa_164.312.c.1,hipaa_164.312.c.2,nist_800_53_SI.7,</group>
     <description>Registry Entry Deleted.</description>
+    <mitre>
+      <id>T1107</id>
+      <id>T1485</id>
+    </mitre>
   </rule>
 
   <rule id="598" level="5">
