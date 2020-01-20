@@ -384,4 +384,56 @@
   <description>Different system_name works</description>
 </rule>
 
+<!-- Trigger alerts which depend on same_srcgeoip. -->
+<!-- Dec 19 17:20:08 User test_same_filters[12345]:Test same_srcgeoip 'User' logged from 2.136.147.146:8 to 192.168.5.4:20 pro:ftp act:remove id:1 url:ossec dat:huzaw e_data:hwazu sta:rejected systemname:system1 -->
+<rule id="999261" level="3">
+  <match>Test same_srcgeoip</match>
+  <description>Testing same_srcgeoip</description>
+</rule>
+
+<rule id="999262" level="7" frequency="4" timeframe="300">
+  <if_matched_sid>999261</if_matched_sid>
+  <same_srcgeoip />
+  <description>Same srcgeoip works</description>
+</rule>
+
+<!-- Trigger alerts which depend on different_srcgeoip. -->
+<!-- Dec 19 17:20:08 User test_different_filters[12345]:Test different_srcgeoip 'User' logged from 2.136.147.146:8 to 192.168.5.4:20 pro:ftp act:remove id:1 url:ossec dat:huzaw e_data:hwazu sta:rejected systemname:system1 -->
+<rule id="999263" level="3">
+  <match>Test different_srcgeoip</match>
+  <description>Testing different_srcgeoip</description>
+</rule>
+
+<rule id="999264" level="7" frequency="4" timeframe="300">
+  <if_matched_sid>999263</if_matched_sid>
+  <different_srcgeoip />
+  <description>Different srcgeoip works</description>
+</rule>
+
+<!-- Trigger alerts which depend on same_dstgeoip. -->
+<!-- Dec 19 17:20:08 User test_same_filters[12345]:Test same_dstgeoip 'User' logged from 192.168.1.100:8 to 2.136.147.146:8 pro:ftp act:remove id:1 url:ossec dat:huzaw e_data:hwazu sta:rejected systemname:system1 -->
+<rule id="999265" level="3">
+  <match>Test same_dstgeoip</match>
+  <description>Testing same_dstgeoip</description>
+</rule>
+
+<rule id="999266" level="7" frequency="4" timeframe="300">
+  <if_matched_sid>999265</if_matched_sid>
+  <same_dstgeoip />
+  <description>Same dstgeoip works</description>
+</rule>
+
+<!-- Trigger alerts which depend on different_dstgeoip. -->
+<!-- Dec 19 17:20:08 User test_different_filters[12345]:Test different_dstgeoip 'User' logged from 192.168.1.100:8 to 2.136.147.146:8 pro:ftp act:remove id:1 url:ossec dat:huzaw e_data:hwazu sta:rejected systemname:system1 -->
+<rule id="999267" level="3">
+  <match>Test different_dstgeoip</match>
+  <description>Testing different_dstgeoip</description>
+</rule>
+
+<rule id="999268" level="7" frequency="4" timeframe="300">
+  <if_matched_sid>999267</if_matched_sid>
+  <different_dstgeoip />
+  <description>Different dstgeoip works</description>
+</rule>
+
 </group>
