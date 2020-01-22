@@ -96,7 +96,7 @@ class OssecTester(object):
             sys.stdout.write(".")
             sys.stdout.flush()
 
-    def run(self, selective_test=False):
+    def run(self, selective_test):
         for aFile in os.listdir(self._test_path):
             aFile = os.path.join(self._test_path, aFile)
             if aFile.endswith(".ini"):
@@ -127,16 +127,15 @@ class OssecTester(object):
             sys.exit(1)
 
 if __name__ == "__main__":
+    selective_test = False
     if len(sys.argv) == 2:
         selective_test = sys.argv[1]
         if not selective_test.endswith('.ini'):
             selective_test += '.ini'
-    else:
-        selective_test = False
-        ossec_init = {}
-        initconfigpath = "/etc/ossec-init.conf"
-        getOssecConfig(ossec_init, initconfigpath)
-        provisionDR(ossec_init["DIRECTORY"])
-        OT = OssecTester(ossec_init["DIRECTORY"])
-        OT.run(selective_test)
-        cleanDR(ossec_init["DIRECTORY"])
+    ossec_init = {}
+    initconfigpath = "/etc/ossec-init.conf"
+    getOssecConfig(ossec_init, initconfigpath)
+    provisionDR(ossec_init["DIRECTORY"])
+    OT = OssecTester(ossec_init["DIRECTORY"])
+    OT.run(selective_test)
+    cleanDR(ossec_init["DIRECTORY"])
