@@ -45,7 +45,7 @@ ID: 65000 - 65499
         <options>no_full_log</options>
     </rule>
 
-    <rule id="65005" level="5">
+    <rule id="65005" level="3">
         <if_sid>65002</if_sid>
         <field name="gcp.severity">^NOTICE$</field>
         <description>GCP notice event with source IP $(gcp.jsonPayload.sourceIP) from $(gcp.resource.labels.location) with response code $(gcp.jsonPayload.responseCode)</description>
@@ -87,7 +87,7 @@ ID: 65000 - 65499
         <options>no_full_log</options>
     </rule>
 
-    <rule id="65011" level="5">
+    <rule id="65011" level="3">
         <if_sid>65003</if_sid>
         <field name="gcp.severity">^NOTICE$</field>
         <description>GCP notice event with source IP $(gcp.jsonPayload.sourceIP) from $(gcp.resource.labels.location) with response code $(gcp.jsonPayload.responseCode)</description>
@@ -291,7 +291,7 @@ ID: 65000 - 65499
         <options>no_full_log</options>
     </rule>
 
-    <rule id="65040" level="5">
+    <rule id="65040" level="3">
         <if_sid>65000</if_sid>
         <field name="gcp.severity">^NOTICE$</field>
         <description>GCP notice event on project $(gcp.resource.labels.project_id), monitored resource type: $(gcp.resource.type)</description>
