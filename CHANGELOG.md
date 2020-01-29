@@ -8,6 +8,14 @@ All notable changes to this project will be documented in this file.
 - Extend the rules to detect shellshock attacks (by @iasdeoupxe). ([#459](https://github.com/wazuh/wazuh-ruleset/pull/479))
 - Update Roundcube decoder to support versions greater than 1.4 (by @iasdeoupxe). ([#537](https://github.com/wazuh/wazuh-ruleset/pull/537))
 
+
+## [v3.11.2]
+
+### Fixed
+
+- Fixed permissions of the VERSION file. ([#545](https://github.com/wazuh/wazuh-ruleset/pull/545))
+
+
 ## [v3.11.0]
 
 ### Added
