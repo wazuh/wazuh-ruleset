@@ -121,7 +121,6 @@
   <rule id="31122" level="5">
     <if_sid>31120</if_sid>
     <id>^500</id>
-    <options>alert_by_email</options>
     <description>Web server 500 error code (Internal Error).</description>
     <group>system_error,</group>
   </rule>
@@ -129,7 +128,6 @@
   <rule id="31123" level="4">
     <if_sid>31120</if_sid>
     <id>^503</id>
-    <options>alert_by_email</options>
     <description>Web server 503 error code (Service unavailable).</description>
   </rule>
 
@@ -230,7 +228,7 @@
     192.168.2.100 - - [02/Nov/2015:01:35:55 +0100] "GET /cgi-bin/test.sh HTTP/1.1" 200 292 "-" "() { _; } >_[$($())] { /usr/bin/perl ... }"
     192.168.2.100 - - [02/Nov/2015:01:35:55 +0100] "GET /cgi-bin/test.sh HTTP/1.1" 200 292 "-" "() { _; foo; } >_[$($())] { /usr/bin/perl ... }"
     -->
-
+  
   <!--
     Shellshock attempt
     Code: 4xx, 5xx
@@ -252,7 +250,7 @@
     <info type="link">https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2014-6278</info>
     <group>attack,pci_dss_11.4,gdpr_IV_35.7.d,nist_800_53_SI.4,</group>
   </rule>
-
+  
   <!--
     Shellshock detected
     Code: 2xx, 3xx
