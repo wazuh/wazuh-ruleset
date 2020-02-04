@@ -16,6 +16,8 @@ All notable changes to this project will be documented in this file.
 ### Changed
 
 - Changed the eventchannel field names in rules. ([#299](https://github.com/wazuh/wazuh-ruleset/pull/299))
+- Added rules `PCI` and `HIPAA` groups.
+- Removed the default `alert_by_email` option in rules.
 
 ### Fixed
 
