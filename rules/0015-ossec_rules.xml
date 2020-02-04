@@ -17,7 +17,6 @@
   <rule id="501" level="3">
     <if_sid>500</if_sid>
     <if_fts />
-    <options>alert_by_email</options>
     <match>Agent started</match>
     <description>New ossec agent connected.</description>
     <group>pci_dss_10.6.1,gpg13_10.1,gdpr_IV_35.7.d,</group>
@@ -25,7 +24,6 @@
 
   <rule id="502" level="3">
     <if_sid>500</if_sid>
-    <options>alert_by_email</options>
     <match>Ossec started</match>
     <description>Ossec server started.</description>
     <group>pci_dss_10.6.1,gpg13_10.1,gdpr_IV_35.7.d,</group>
@@ -33,7 +31,6 @@
 
   <rule id="503" level="3">
     <if_sid>500</if_sid>
-    <options>alert_by_email</options>
     <match>Agent started</match>
     <description>Ossec agent started.</description>
     <group>pci_dss_10.6.1,pci_dss_10.2.6,gpg13_10.1,gdpr_IV_35.7.d,</group>
@@ -41,7 +38,6 @@
 
   <rule id="504" level="3">
     <if_sid>500</if_sid>
-    <options>alert_by_email</options>
     <match>Agent disconnected</match>
     <description>Ossec agent disconnected.</description>
     <group>pci_dss_10.6.1,pci_dss_10.2.6,gpg13_10.1,gdpr_IV_35.7.d,</group>
@@ -49,7 +45,6 @@
 
   <rule id="505" level="3">
     <if_sid>500</if_sid>
-    <options>alert_by_email</options>
     <match>Agent removed</match>
     <description>Ossec agent removed.</description>
     <group>pci_dss_10.6.1,pci_dss_10.2.6,gpg13_10.1,gdpr_IV_35.7.d,</group>
@@ -59,7 +54,7 @@
     <category>ossec</category>
     <decoded_as>rootcheck</decoded_as>
     <description>Rootcheck event.</description>
-    <group>rootcheck,</group>
+    <group>pci_dss_10.6.1,rootcheck,</group>
   </rule>
 
   <rule id="510" level="7">
@@ -82,7 +77,7 @@
     <if_sid>510</if_sid>
     <match>^Windows Audit</match>
     <description>Windows Audit event.</description>
-    <group>rootcheck,</group>
+    <group>pci_dss_10.6.1,hipaa_164.312.b,rootcheck,</group>
   </rule>
 
   <rule id="513" level="9">
@@ -96,7 +91,7 @@
     <if_sid>510</if_sid>
     <match>^Application Found</match>
     <description>Windows application monitor event.</description>
-    <group>rootcheck,</group>
+    <group>pci_dss_10.6.1,hipaa_164.312.b,rootcheck,</group>
   </rule>
 
   <rule id="515" level="0">
@@ -191,6 +186,7 @@
     <check_diff />
     <options>no_log</options>
     <description>List of the last logged in users.</description>
+    <group>pci_dss_10.6.1,hipaa_164.312.b,</group>
   </rule>
 
   <rule id="536" level="0">
@@ -270,24 +266,24 @@
     <category>ossec</category>
     <if_sid>550</if_sid>
     <hostname>syscheck-registry</hostname>
-    <group>syscheck,pci_dss_11.5,gpg13_4.13,gdpr_II_5.1.f,</group>
     <description>Registry Integrity Checksum Changed</description>
+    <group>syscheck,pci_dss_11.5,gpg13_4.13,gdpr_II_5.1.f,</group>
   </rule>
 
   <rule id="597" level="5">
     <category>ossec</category>
     <if_sid>553</if_sid>
     <hostname>syscheck-registry</hostname>
-    <group>syscheck,pci_dss_11.5,gpg13_4.13,gdpr_II_5.1.f,</group>
     <description>Registry Entry Deleted.</description>
+    <group>syscheck,pci_dss_11.5,gpg13_4.13,gdpr_II_5.1.f,</group>
   </rule>
 
   <rule id="598" level="5">
     <category>ossec</category>
     <if_sid>554</if_sid>
     <hostname>syscheck-registry</hostname>
-    <group>syscheck,pci_dss_11.5,gpg13_4.13,gdpr_II_5.1.f,</group>
     <description>Registry Entry Added to the System</description>
+    <group>syscheck,pci_dss_11.5,gpg13_4.13,gdpr_II_5.1.f,</group>
   </rule>
 
   <!-- active response rules
