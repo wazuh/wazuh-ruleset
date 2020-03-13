@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 ## [v4.0]
 
 ### Fixed
-- Added new SQL Injection rules.  ([#344](https://github.com/wazuh/wazuh-ruleset/pull/344))
+- Added new SQL Injection rules.  ([#337](https://github.com/wazuh/wazuh-ruleset/pull/337))
 
 ## [v3.9.0]
 
