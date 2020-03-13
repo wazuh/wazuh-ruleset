@@ -1,6 +1,12 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [v4.0]
+
+### Fixed
+
+- Changed rule 83200 id field to avoid false positives (by @eliasgrana).  ([#341](https://github.com/wazuh/wazuh-ruleset/pull/341))
+
 ## [v3.9.0]
 
 ### Added
