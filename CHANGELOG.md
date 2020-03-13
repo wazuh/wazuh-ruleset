@@ -1,6 +1,11 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [v4.0]
+
+### Added
+- Added decoders for fortigate 5.6, 6.0 and 6.2 and an .ini to enable testing. ([#516](https://github.com/wazuh/wazuh-ruleset/pull/516))
+
 ## [v3.9.0]
 
 ### Added
