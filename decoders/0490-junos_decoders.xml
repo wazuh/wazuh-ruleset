@@ -1,0 +1,32 @@
+egex offset="after_parent">assembly-id="(\S+)"</regex>
+    <order>assembly_id</order>
+</decoder>
+
+<!--
+Sep 21 15:25:06 192.168.1.1 junos-flow: 2017-09-21T15:25:06.141Z sis-srx-ICP-01 RT_FLOW - FLOW_MCAST_RPF_FAIL [junos@2636.1.1.1.2.39 interface-name="intf1.326" source-address="192.168.1.1" destination-address="192.168.1.2" protocol-name="udp"]
+-->
+
+<decoder name="junos-rt-flow-mcast-rpf-fail">
+    <parent>junos-rt-flow</parent>
+    <prematch>FLOW_MCAST_RPF_FAIL</prematch>
+    <regex offset="after_parent"> (\.+) (\S+) - (\S+) \S+ interface-name="(\S+)"</regex>
+    <order>firewall_name,cat, subcat,interface</order>
+</decoder>
+
+<decoder name="junos-rt-flow-mcast-rpf-fail">
+    <parent>junos-rt-flow</parent>
+    <regex offset="after_parent">source-address="(\S+)"</regex>
+    <order>srcip</order>
+</decoder>
+
+<decoder name="junos-rt-flow-mcast-rpf-fail">
+    <parent>junos-rt-flow</parent>
+    <regex offset="after_parent">destination-address="(\S+)"</regex>
+    <order>dstip</order>
+</decoder>
+
+<decoder name="junos-rt-flow-mcast-rpf-fail">
+    <parent>junos-rt-flow</parent>
+    <regex offset="after_parent">protocol-name="(\S+)"]</regex>
+    <order>protocol_name</order>
+</decoder>
