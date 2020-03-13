@@ -1,6 +1,11 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [v4.0]
+
+### Fixed
+- Changed Cisco IOS rules level.  ([#344](https://github.com/wazuh/wazuh-ruleset/pull/344))
+
 ## [v3.9.0]
 
 ### Added
