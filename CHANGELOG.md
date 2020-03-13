@@ -1,6 +1,12 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [v4.0]
+
+### Added
+
+- Decoders and rules for FireEye created. ([#178](https://github.com/wazuh/wazuh-ruleset/pull/178))
+
 ## [v3.9.0]
 
 ### Added
