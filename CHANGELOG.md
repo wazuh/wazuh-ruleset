@@ -11,9 +11,8 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 
 - Fix GPG requirement in Windows rules. ([#562](https://github.com/wazuh/wazuh-ruleset/pull/562))
-- Improve Cisco decoders (by @Lopuiz). ([#570](https://github.com/wazuh/wazuh-ruleset/pull/570))
-- Fixed Owlh rule's IDs conflict (by @sergiopa).([#570](https://github.com/wazuh/wazuh-ruleset/pull/570))
-- Fixed checkpoint decoders to read events with a different format (by @SitoRBJ).([#156](https://github.com/wazuh/wazuh-ruleset/pull/156))
+- Improve Cisco decoders and fix Owlh rule's IDs conflict. ([#570](https://github.com/wazuh/wazuh-ruleset/pull/570))
+- Fixed checkpoint decoders to read events with a different format. ([#156](https://github.com/wazuh/wazuh-ruleset/pull/156))
 
 ## [v3.11.2]
 
