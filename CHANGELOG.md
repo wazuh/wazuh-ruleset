@@ -1,6 +1,11 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [v4.0]
+
+### Added
+- Updated the web-accesslog decoders to be able to read logs in rsyslog format.  ([#159](https://github.com/wazuh/wazuh-ruleset/pull/159))
+
 ## [v3.9.0]
 
 ### Added
