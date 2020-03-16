@@ -1,0 +1,39 @@
+ruba decoders
+  -  Created by Wazuh, Inc. <support@wazuh.com>.
+  -  This program is a free software; you can redistribute it and/or modify it under the terms of GPLv2.
+-->
+
+<!--
+Aruba decoders. Based on logs received with syslog from a HP 2920 switch. To create additional decoders 
+to extract particular fields, place the new decoder before the 
+aruba-others decoder (this one will work as the default one).
+-->
+
+<!--Aruba parent decoder to split these events from the rest-->
+<decoder name="aruba">
+  <prematch>^\s\w\w\w\s*\d+\s*\d+:\d+:\d+\s*\d+.\d+.\d+.\d+\s*\d\d\d\d\d\s*\w+:</prematch>
+</decoder>
+
+<!--Decoder for ports logs-->
+<decoder name="aruba-ports">
+  <parent>aruba</parent>
+  <prematch>^\s\w\w\w\s*\d+\s*\d+:\d+:\d+\s*\d+.\d+.\d+.\d+\s*\d\d\d\d\d\s*ports:\s*port\s*\d*\s*is</prematch>
+  <regex>^\s\w\w\w\s*\d+\s*\d+:\d+:\d+\s*(\d+.\d+.\d+.\d+)\s*(\d\d\d\d\d)\s*(ports):\s* port (\d*) is (\.*)</regex>
+  <order>srcip,id,event_type,srcport,status</order>
+</decoder>
+
+<!--Decoder for SNTP: Server not found logs-->
+<decoder name="aruba-SNTP-1">
+  <parent>aruba</parent>
+  <prematch>^\s\w\w\w\s*\d+\s*\d+:\d+:\d+\s*\d+.\d+.\d+.\d+\s*\d\d\d\d\d\s*SNTP:\s*Server not</prematch>
+  <regex>^\s\w\w\w\s*\d+\s*\d+:\d+:\d+\s*(\d+.\d+.\d+.\d+)\s*(\d\d\d\d\d)\s*(SNTP):\s*Server\s*not\s*found\s*at\s*(\d*.\d*.\d*.\d*)</regex>
+  <order>srcip,id,event_type,srcport,status,sntp_server_ip</order>
+</decoder>
+
+<!--Decoder for the rest of aruba logs-->
+<decoder name="aruba-others">
+  <parent>aruba</parent>
+  <prematch>^\s\w\w\w\s*\d+\s*\d+:\d+:\d+\s*\d+.\d+.\d+.\d+\s*\d\d\d\d\d\s*\w+:</prematch>
+  <regex>^\s\w\w\w\s*\d+\s*\d+:\d+:\d+\s*(\d+.\d+.\d+.\d+)\s*(\d\d\d\d\d)\s*(\w+):(\.*)$</regex>
+  <order>srcip,id,event_type,action</order>
+</decoder>

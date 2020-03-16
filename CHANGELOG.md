@@ -1,6 +1,11 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [v4.0]
+
+### Added
+- Added rules and decoders for Aruba, the OS used by HP network devices.  ([#585](https://github.com/wazuh/wazuh-ruleset/pull/585))
+
 ## [v3.9.0]
 
 ### Added
