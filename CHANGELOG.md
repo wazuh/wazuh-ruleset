@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
-- Changed rule 83200 id field to avoid false positives.  ([#341](https://github.com/wazuh/wazuh-ruleset/pull/341))
+- Fixed Windows Security rule to avoid false positives.  ([#341](https://github.com/wazuh/wazuh-ruleset/pull/341))
 
 ## [v3.9.0]
 
