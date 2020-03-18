@@ -1,5 +1,5 @@
 <!--
-  -  Pfsense firewall decoders
+  -  pf firewall decoders
   -  Author Mark Alston
   -  Updated by Wazuh, Inc.
   -  Copyright (C) 2015-2019, Wazuh Inc.
@@ -7,11 +7,11 @@
 -->
 
 <!--
-- Will extract src IP, src Port, dst IP, dst Port, Protocol and action from the pfsense logs, when available.
+- Will extract src IP, src Port, dst IP, dst Port, Protocol and action from the pf logs, when available.
 -->
 
-<!-- PFSENSE
-Nov  8 12:37:34 pfSense filterlog: 5,,,1000102433,em0,match,block,in,4,0x0,,128,24677,0,none,17,udp,186,10.9.0.119,10.9.0.255,17500,17600,166
+<!-- pf filter
+Nov  8 12:37:34 hostname filterlog: 5,,,1000102433,em0,match,block,in,4,0x0,,128,24677,0,none,17,udp,186,10.9.0.119,10.9.0.255,17500,17600,166
  -->
 <decoder name="pf">
   <program_name>filterlog</program_name>
