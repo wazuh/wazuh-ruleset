@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
--Added Arbor rules, decoders and arbor.ini to enable testing. ([#165](https://github.com/wazuh/wazuh-ruleset/pull/165))
+-Added Arbor rules, decoders and arbor.ini to enable testing. ([#580](https://github.com/wazuh/wazuh-ruleset/pull/580))
 
 ## [v3.9.0]
 
