@@ -7,7 +7,7 @@
 
 Wazuh ruleset is used to detect attacks, intrusions, software misuse, configuration problems, application errors, malware, rootkits, system anomalies or security policy violations.
 
-The ruleset includes compliance mapping with PCI DSS v3.1 and CIS.
+The ruleset includes compliance mapping with PCI DSS v3.1, HIPAA, NIST 800 53, GDPR, GPG 13, and CIS.
 
 ## Installation
 
@@ -20,13 +20,14 @@ The ruleset includes compliance mapping with PCI DSS v3.1 and CIS.
     │ ├── rules               # OSSEC rules created/updated by Wazuh
     │ ├── rootchecks          # OSSEC rootchecks created/updated by Wazuh
     │ ├── scap_content        # OVAL, XCCDF, DS created/updated by Wazuh
+    │ ├── sca                 # YAML SCA policies created/updated by Wazuh
     │ ├── lists               # CDB lists created/updated by Wazuh
     |
     │ ├── tools
     |
     │ ├── README.md
     │ ├── VERSION
-    │ ├── update_ruleset.py   # Install/update ruleset
+    │ ├── update_ruleset     # Install/update ruleset
 
 ## Full documentation
 
@@ -41,7 +42,7 @@ Full documentation at [documentation.wazuh.com](https://documentation.wazuh.com/
 
 ## Contribute
 
-If you have created new rules, decoders or rootchecks and you would like to contribute to our repository, please fork our Github repository and submit a pull request. To make a pull request for new rules and decoders, follow these instructions:
+If you have created new rules, decoders, lists, SCA policies or rootchecks and you would like to contribute to our repository, please fork our Github repository and submit a pull request. To make a pull request for new rules and decoders, follow these instructions:
 
 1. If your rules and decoders are related to existent ones in the ruleset, you should add them at the end of the corresponding file. If they are made for a new application or device that Wazuh does not currently support, you should create a new `XML` following the title format. For example, if the last `XML` file is `0620-last-xml_rules.xml`, the next one should be named `0625-new_integration.xml`. Please, make sure your rules do not use an existent `rule id`.
 
