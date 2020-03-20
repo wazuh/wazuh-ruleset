@@ -1,6 +1,11 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [v4.0]
+
+### Changed
+- Changed compliance rules groups and removed `alert_by_email` option by default. ([#559](https://github.com/wazuh/wazuh-ruleset/pull/559))
+
 ## [v3.12.0]
 
 ### Added
@@ -121,7 +126,6 @@ All notable changes to this project will be documented in this file.
 - Changed the eventchannel field names in rules. ([#299](https://github.com/wazuh/wazuh-ruleset/pull/299))
 - Redistribute the eventchannel rules by incoming channel. ([#325](https://github.com/wazuh/wazuh-ruleset/pull/325))
 - Prevent events invoked by AWS Internal from flooding alerts. ([#351](https://github.com/wazuh/wazuh-ruleset/pull/351))
-- Changed compliance rules groups and removed `alert_by_email` option by default. ([#559](https://github.com/wazuh/wazuh-ruleset/pull/559))
 ### Fixed
 
 - Fixed the bruteforce attack rules for Windows Eventchannel. ([#302](https://github.com/wazuh/wazuh-ruleset/pull/302))
