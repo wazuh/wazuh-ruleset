@@ -1,6 +1,20 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [v3.12.0]
+
+### Added
+
+- Extend the rules to detect shellshock attacks (by @iasdeoupxe). ([#459](https://github.com/wazuh/wazuh-ruleset/pull/479))
+- Update Roundcube decoder to support versions greater than 1.4 (by @iasdeoupxe). ([#537](https://github.com/wazuh/wazuh-ruleset/pull/537))
+- Added Junos rules and decoders ([#581](https://github.com/wazuh/wazuh-ruleset/pull/581))
+
+### Fixed
+
+- Fix GPG requirement in Windows rules. ([#562](https://github.com/wazuh/wazuh-ruleset/pull/562))
+- Improve Cisco decoders and fix Owlh rule's IDs conflict. ([#570](https://github.com/wazuh/wazuh-ruleset/pull/570))
+- Fixed checkpoint decoders to read events with a different format. ([#156](https://github.com/wazuh/wazuh-ruleset/pull/156))
+
 ## [v3.11.2]
 
 ### Fixed
