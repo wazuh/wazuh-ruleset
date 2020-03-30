@@ -4,9 +4,21 @@ All notable changes to this project will be documented in this file.
 ## [v4.0]
 
 ### Added
+
 - Added rules and decoders for Huawei USG devices.  ([#584](https://github.com/wazuh/wazuh-ruleset/pull/584))
 - Updated the web-accesslog decoders to be able to read logs in rsyslog format.  ([#583](https://github.com/wazuh/wazuh-ruleset/pull/583))
+- Decoders and rules for FireEye created. ([#582](https://github.com/wazuh/wazuh-ruleset/pull/582))
+-Added Arbor rules, decoders and arbor.ini to enable testing. ([#580](https://github.com/wazuh/wazuh-ruleset/pull/580))
+- Added decoders for Fortigate version 5.6, 6.0 and 6.2 ([#578](https://github.com/wazuh/wazuh-ruleset/pull/578))
+- Added new SQL Injection rules.  ([#574](https://github.com/wazuh/wazuh-ruleset/pull/574))
 
+### Changed
+
+- Changed Cisco IOS rules level.  ([#577](https://github.com/wazuh/wazuh-ruleset/pull/577))
+
+### Fixed
+
+- Fixed Windows Security rule to avoid false positives.  ([#576](https://github.com/wazuh/wazuh-ruleset/pull/576))
 
 ## [v3.9.0]
 
