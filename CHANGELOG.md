@@ -5,6 +5,8 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 - Added rules and decoders for Huawei USG devices.  ([#584](https://github.com/wazuh/wazuh-ruleset/pull/584))
+- Updated the web-accesslog decoders to be able to read logs in rsyslog format.  ([#583](https://github.com/wazuh/wazuh-ruleset/pull/583))
+
 
 ## [v3.9.0]
 
