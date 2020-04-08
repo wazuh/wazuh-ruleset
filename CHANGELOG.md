@@ -1,6 +1,13 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [v3.13.0]
+
+### Added
+
+- Added rules and decoders for macOS sshd logs ([#593](https://github.com/wazuh/wazuh-ruleset/pull/593))
+- Added TSC/SOC compliance mapping ([#611](https://github.com/wazuh/wazuh-ruleset/pull/611))
+
 ## [v3.12.1]
 
 ### Fixed
