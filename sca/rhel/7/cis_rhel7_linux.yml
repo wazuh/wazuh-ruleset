@@ -35,6 +35,123 @@ variables:
   $sshd_file: /etc/ssh/sshd_config
 
 checks:
+
+# 1.1.1.1 cramfs: filesystem
+  - id: 5621
+    title: "Ensure mounting of cramfs filesystems is disabled"
+    description: "The cramfs filesystem type is a compressed read-only Linux filesystem embedded in small footprint systems. A cramfs image can be used without having to first decompress the image."
+    rationale: "Removing support for unneeded filesystem types reduces the local attack surface of the server. If this filesystem type is not needed, disable it."
+    remediation: "Edit or create the file /etc/modprobe.d/CIS.conf and add the following line: install cramfs /bin/true. Run the following command to unload the cramfs module: rmmod cramfs"
+    compliance:
+      - cis: ["1.1.1.1"]
+    references:
+      - AJ Lewis, "LVM HOWTO", https://tldp.org/HOWTO/LVM-HOWTO/
+    condition: all
+    rules:
+      - 'c:modprobe -n -v cramfs -> r:install /bin/true'
+      - 'not c:lsmod -> r:cramfs'
+
+# 1.1.1.2 freevxfs: filesystem
+  - id: 5622
+    title: "Ensure mounting of freevxfs filesystems is disabled"
+    description: "The freevxfs filesystem type is a free version of the Veritas type filesystem. This is the primary filesystem type for HP-UX operating systems."
+    rationale: "Removing support for unneeded filesystem types reduces the local attack surface of the system. If this filesystem type is not needed, disable it."
+    remediation: "Edit or create the file /etc/modprobe.d/CIS.conf and add the following line: install freevxfs /bin/true. Run the following command to unload the freevxfs module: rmmod freevxfs"
+    compliance:
+      - cis: ["1.1.1.2"]
+    references:
+      - AJ Lewis, "LVM HOWTO", https://tldp.org/HOWTO/LVM-HOWTO/
+    condition: all
+    rules:
+      - 'c:modprobe -n -v freevxfs -> r:install /bin/true'
+      - 'not c:lsmod -> r:freevxfs'
+
+# 1.1.1.3 jffs2: filesystem
+  - id: 5623
+    title: "Ensure mounting of jffs2 filesystems is disabled"
+    description: "The jffs2 (journaling flash filesystem 2) filesystem type is a log-structured filesystem used in flash memory devices."
+    rationale: "Removing support for unneeded filesystem types reduces the local attack surface of the system. If this filesystem type is not needed, disable it."
+    remediation: "Edit or create the file /etc/modprobe.d/CIS.conf and add the following line: install jffs2 /bin/true. Run the following command to unload the jffs2 module: rmmod jffs2"
+    compliance:
+      - cis: ["1.1.1.3"]
+    references:
+      - AJ Lewis, "LVM HOWTO", https://tldp.org/HOWTO/LVM-HOWTO/
+    condition: all
+    rules:
+      - 'c:modprobe -n -v jffs2 -> r:install /bin/true'
+      - 'not c:lsmod -> r:jffs2'
+
+# 1.1.1.4 hfs: filesystem
+  - id: 5624
+    title: "Ensure mounting of hfs filesystems is disabled"
+    description: "The hfs filesystem type is a hierarchical filesystem that allows you to mount Mac OS filesystems."
+    rationale: "Removing support for unneeded filesystem types reduces the local attack surface of the system. If this filesystem type is not needed, disable it."
+    remediation: "Edit or create the file /etc/modprobe.d/CIS.conf and add the following line: install hfs /bin/true. Run the following command to unload the hfs module: rmmod hfs"
+    compliance:
+      - cis: ["1.1.1.4"]
+    references:
+      - AJ Lewis, "LVM HOWTO", https://tldp.org/HOWTO/LVM-HOWTO/
+    condition: all
+    rules:
+      - 'c:modprobe -n -v hfs -> r:install /bin/true'
+      - 'not c:lsmod -> r:hfs'
+# 1.1.1.5 hfsplus: filesystem
+  - id: 5625
+    title: "Ensure mounting of hfsplus filesystems is disabled"
+    description: "The hfsplus filesystem type is a hierarchical filesystem designed to replace hfs that allows you to mount Mac OS filesystems."
+    rationale: "Removing support for unneeded filesystem types reduces the local attack surface of the system. If this filesystem type is not needed, disable it."
+    remediation: "Edit or create the file /etc/modprobe.d/CIS.conf and add the following line: install hfsplus /bin/true. Run the following command to unload the hfsplus module: rmmod hfsplus"
+    compliance:
+      - cis: ["1.1.1.5"]
+    references:
+      - AJ Lewis, "LVM HOWTO", https://tldp.org/HOWTO/LVM-HOWTO/
+    condition: all
+    rules:
+      - 'c:modprobe -n -v hfsplus -> r:install /bin/true'
+      - 'not c:lsmod -> r:hfsplus'
+# 1.1.1.6 squashfs: filesystem
+  - id: 5626
+    title: "Ensure mounting of squashfs filesystems is disabled"
+    description: "The squashfs filesystem type is a compressed read-only Linux filesystem embedded in small footprint systems (similar to cramfs ). A squashfs image can be used without having to first decompress the image."
+    rationale: "Removing support for unneeded filesystem types reduces the local attack surface of the system. If this filesystem type is not needed, disable it."
+    remediation: "Edit or create the file /etc/modprobe.d/CIS.conf and add the following line: install squashfs /bin/true. Run the following command to unload the squashfs module: rmmod squashfs"
+    compliance:
+      - cis: ["1.1.1.6"]
+    references:
+      - AJ Lewis, "LVM HOWTO", https://tldp.org/HOWTO/LVM-HOWTO/
+    condition: all
+    rules:
+      - 'c:modprobe -n -v squashfs -> r:install /bin/true'
+      - 'not c:lsmod -> r:squashfs'
+# 1.1.1.7 udfs: filesystem
+  - id: 5627
+    title: "Ensure mounting of udf filesystems is disabled"
+    description: "The udf filesystem type is the universal disk format used to implement ISO/IEC 13346 and ECMA-167 specifications. This is an open vendor filesystem type for data storage on a broad range of media. This filesystem type is necessary to support writing DVDs and newer optical disc formats."
+    rationale: "Removing support for unneeded filesystem types reduces the local attack surface of the system. If this filesystem type is not needed, disable it."
+    remediation: "Edit or create the file /etc/modprobe.d/CIS.conf and add the following line: install udf /bin/true. Run the following command to unload the udf module: rmmod udf"
+    compliance:
+      - cis: ["1.1.1.7"]
+    references:
+      - AJ Lewis, "LVM HOWTO", https://tldp.org/HOWTO/LVM-HOWTO/
+    condition: all
+    rules:
+      - 'c:modprobe -n -v udf -> r:install /bin/true'
+      - 'not c:lsmod -> r:udf'
+# 1.1.1.8 FAT: filesystem
+  - id: 5628
+    title: "Ensure mounting of FAT filesystems is disabled"
+    description: "The FAT filesystem format is primarily used on older windows systems and portable USB drives or flash modules. It comes in three types FAT12 , FAT16 , and FAT32 all of which are supported by the vfat kernel module."
+    rationale: "Removing support for unneeded filesystem types reduces the local attack surface of the system. If this filesystem type is not needed, disable it."
+    remediation: "Edit or create the file /etc/modprobe.d/CIS.conf and add the following line: install vfat /bin/true. Run the following command to unload the vfat module: rmmod vfat"
+    compliance:
+      - cis: ["1.1.1.8"]
+    references:
+      - AJ Lewis, "LVM HOWTO", https://tldp.org/HOWTO/LVM-HOWTO/
+    condition: all
+    rules:
+      - 'c:modprobe -n -v vfat -> r:install /bin/true'
+      - 'not c:lsmod -> r:vfat'
+
 # 1.1.2 /tmp: partition
   - id: 5500
     title: "Ensure separate partition exists for /tmp"
@@ -117,6 +234,42 @@ checks:
     condition: all
     rules:
       - 'c:mount -> r:\s/var/tmp\s'
+
+# 1.1.8 nodev set on /var/tmp
+  - id: 5606
+    title: "Ensure nodev option set on /var/tmp partition"
+    description: "The nodev mount option specifies that the filesystem cannot contain special devices."
+    rationale: "Since the /var/tmp filesystem is not intended to support devices, set this option to ensure that users cannot attempt to create block or character special devices in /var/tmp ."
+    remediation: "Edit the /etc/fstab file and add nodev to the fourth field (mounting options) for the /var/tmp partition. See the fstab(5) manual page for more information."
+    compliance:
+      - cis: ["1.1.8"]
+    condition: all
+    rules:
+      - 'c:mount -> r:\s/var/tmp\s && r:nodev'
+
+# 1.1.9 nosuid set on /var/tmp
+  - id: 5607
+    title: "Ensure nosuid option set on /var/tmp partition"
+    description: "The nosuid mount option specifies that the filesystem cannot contain setuid files."
+    rationale: "Since the /var/tmp filesystem is only intended for temporary file storage, set this option to ensure that users cannot create setuid files in /var/tmp."
+    remediation: "Edit the /etc/fstab file and add nosuid to the fourth field (mounting options) for the /var/tmp partition. See the fstab(5) manual page for more information."
+    compliance:
+      - cis: ["1.1.9"]
+    condition: all
+    rules:
+      - 'c:mount -> r:\s/var/tmp\s && r:nosuid'
+
+# 1.1.10 noexec set on /var/tmp
+  - id: 5608
+    title: "Ensure noexec option set on /var/tmp partition"
+    description: "The noexec mount option specifies that the filesystem cannot contain executable binaries."
+    rationale: "Since the /var/tmp filesystem is only intended for temporary file storage, set this option to ensure that users cannot run executable binaries from /var/tmp."
+    remediation: "Edit the /etc/fstab file and add noexec to the fourth field (mounting options) for the /var/tmp partition. See the fstab(5) manual page for more information."
+    compliance:
+      - cis: ["1.1.10"]
+    condition: all
+    rules:
+      - 'c:mount -> r:\s/var/tmp\s && r:noexec'
 
 # 1.1.11 /var/log: partition
   - id: 5506
@@ -218,6 +371,19 @@ checks:
     condition: all
     rules:
       - 'c:mount -> r:\s/dev/shm\s && r:noexec'
+
+# 1.1.22 Disable Automounting
+  - id: 5610
+    title: "Disable Automounting"
+    description: "autofs allows automatic mounting of devices, typically including CD/DVDs and USB drives."
+    rationale: "With automounting enabled anyone with physical access could attach a USB drive or disc and have its contents available in system even if they lacked permissions to mount it themselves."
+    remediation: "Run the following command to disable autofs : systemctl disable autofs"
+    compliance:
+      - cis: ["1.1.22"]
+    condition: none
+    rules:
+      - 'c:systemctl is-enabled autofs -> r:enabled'
+
 
 ###############################################
 # 1.6 Configure SELinux
