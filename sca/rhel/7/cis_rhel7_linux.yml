@@ -48,7 +48,7 @@ checks:
       - AJ Lewis, "LVM HOWTO", https://tldp.org/HOWTO/LVM-HOWTO/
     condition: all
     rules:
-      - 'c:modprobe -n -v cramfs -> r:install /bin/true'
+      - 'c:modprobe -n -v cramfs -> r:install /bin/true|Module cramfs not found'
       - 'not c:lsmod -> r:cramfs'
 
 # 1.1.1.2 freevxfs: filesystem
@@ -63,7 +63,7 @@ checks:
       - AJ Lewis, "LVM HOWTO", https://tldp.org/HOWTO/LVM-HOWTO/
     condition: all
     rules:
-      - 'c:modprobe -n -v freevxfs -> r:install /bin/true'
+      - 'c:modprobe -n -v freevxfs -> r:install /bin/true|Module freevxfs not found'
       - 'not c:lsmod -> r:freevxfs'
 
 # 1.1.1.3 jffs2: filesystem
@@ -78,7 +78,7 @@ checks:
       - AJ Lewis, "LVM HOWTO", https://tldp.org/HOWTO/LVM-HOWTO/
     condition: all
     rules:
-      - 'c:modprobe -n -v jffs2 -> r:install /bin/true'
+      - 'c:modprobe -n -v jffs2 -> r:install /bin/true|Module jffs2 not found'
       - 'not c:lsmod -> r:jffs2'
 
 # 1.1.1.4 hfs: filesystem
@@ -93,7 +93,7 @@ checks:
       - AJ Lewis, "LVM HOWTO", https://tldp.org/HOWTO/LVM-HOWTO/
     condition: all
     rules:
-      - 'c:modprobe -n -v hfs -> r:install /bin/true'
+      - 'c:modprobe -n -v hfs -> r:install /bin/true|Module hfs not found'
       - 'not c:lsmod -> r:hfs'
 # 1.1.1.5 hfsplus: filesystem
   - id: 5625
@@ -107,7 +107,7 @@ checks:
       - AJ Lewis, "LVM HOWTO", https://tldp.org/HOWTO/LVM-HOWTO/
     condition: all
     rules:
-      - 'c:modprobe -n -v hfsplus -> r:install /bin/true'
+      - 'c:modprobe -n -v hfsplus -> r:install /bin/true|Module hfsplus not found'
       - 'not c:lsmod -> r:hfsplus'
 # 1.1.1.6 squashfs: filesystem
   - id: 5626
@@ -121,7 +121,7 @@ checks:
       - AJ Lewis, "LVM HOWTO", https://tldp.org/HOWTO/LVM-HOWTO/
     condition: all
     rules:
-      - 'c:modprobe -n -v squashfs -> r:install /bin/true'
+      - 'c:modprobe -n -v squashfs -> r:install /bin/true|Module squashfs not found'
       - 'not c:lsmod -> r:squashfs'
 # 1.1.1.7 udfs: filesystem
   - id: 5627
@@ -135,7 +135,7 @@ checks:
       - AJ Lewis, "LVM HOWTO", https://tldp.org/HOWTO/LVM-HOWTO/
     condition: all
     rules:
-      - 'c:modprobe -n -v udf -> r:install /bin/true'
+      - 'c:modprobe -n -v udf -> r:install /bin/true|Module udf not found'
       - 'not c:lsmod -> r:udf'
 # 1.1.1.8 FAT: filesystem
   - id: 5628
@@ -149,7 +149,7 @@ checks:
       - AJ Lewis, "LVM HOWTO", https://tldp.org/HOWTO/LVM-HOWTO/
     condition: all
     rules:
-      - 'c:modprobe -n -v vfat -> r:install /bin/true'
+      - 'c:modprobe -n -v vfat -> r:install /bin/true|Module vfat not found'
       - 'not c:lsmod -> r:vfat'
 
 # 1.1.2 /tmp: partition
@@ -383,6 +383,72 @@ checks:
     condition: none
     rules:
       - 'c:systemctl is-enabled autofs -> r:enabled'
+
+###############################################
+# 1.2 Configure Software Updates
+###############################################
+
+# 1.2.2 Activate gpgcheck
+  - id: 5629
+    title: "Ensure gpgcheck is globally activated"
+    description: "The gpgcheck option, found in the main section of the /etc/yum.conf and individual /etc/yum/repos.d/* files determines if an RPM package's signature is checked prior to its installation."
+    rationale: "It is important to ensure that an RPM's package signature is always checked prior to installation to ensure that the software is obtained from a trusted source."
+    remediation: "Edit /etc/yum.conf and set ' gpgcheck=1 ' in the [main] section. Edit any failing files in /etc/yum.repos.d/* and set all instances of gpgcheck to ' 1 '."
+    compliance:
+      - cis: ["1.2.2"]
+    condition: all
+    rules:
+      - 'f:/etc/yum.conf -> r:gpgcheck=1'
+      - 'not c:grep -Rh ^gpgcheck /etc/yum.repos.d/ -> r:gpgcheck=0'
+
+
+###############################################
+# 1.3 Filesystem Integrity Checking
+###############################################
+
+# 1.3.1 install AIDE
+  - id: 5630
+    title: "Ensure AIDE is installed"
+    description: "AIDE takes a snapshot of filesystem state including modification times, permissions, and file hashes which can then be used to compare against the current state of the filesystem to detect modifications to the system."
+    rationale: "By monitoring the filesystem state compromised files can be detected to prevent or limit the exposure of accidental or malicious misconfigurations or modified binaries."
+    remediation: "Run the following command to install aide: yum install aide // Configure AIDE as appropriate for your environment. Consult the AIDE documentation for options. Initialize AIDE: aide --init && mv /var/lib/aide/aide.db.new.gz /var/lib/aide/aide.db.gz"
+    compliance:
+      - cis: ["1.3.1"]
+    references: "AIDE stable manual: http://aide.sourceforge.net/stable/manual.html"
+    condition: all
+    rules:
+      - 'c:rpm -q aide -> r:aide-\S*'
+
+# 1.3.2 AIDE regular checks
+  - id: 5631
+    title: "Ensure filesystem integrity is regularly checked"
+    description: "Periodic checking of the filesystem integrity is needed to detect changes to the filesystem."
+    rationale: "Periodic file checking allows the system administrator to determine on a regular basis if critical files have been changed in an unauthorized fashion."
+    remediation: "Run the following command: crontab -u root -e // Add the following line to the crontab: 0 5 * * * /usr/sbin/aide --check  // Notes: The checking in this recommendation occurs every day at 5am. Alter the frequency and time of the checks in compliance with site policy.  "
+    compliance:
+      - cis: ["1.3.2"]
+    condition: any
+    rules:
+      - 'c:crontab -u root -l -> r:aide'
+      - 'c:grep -r aide /etc/cron.* /etc/crontab -> r:aide'
+
+###############################################
+# 1.4 Secure Boot Settings
+###############################################
+# 1.4.1 Configure bootloader 
+  - id: 5632
+    title: "Ensure permissions on bootloader config are configured"
+    description: "The grub configuration file contains information on boot settings and passwords for unlocking boot options. The grub configuration is usually located at /boot/grub2/grub.cfg and linked as /etc/grub2.cfg . Additional settings can be found in the /boot/grub2/user.cfg file."
+    rationale: "Setting the permissions to read and write for root only prevents non-root users from seeing the boot parameters or changing them. Non-root users who read the boot parameters may be able to identify weaknesses in security upon boot and be able to exploit them."
+    remediation: "Run the following commands to set permissions on your grub configuration: chown root:root /boot/grub2/grub.cfg, chmod og-rwx /boot/grub2/grub.cfg, chown root:root /boot/grub2/user.cfg, chmod og-rwx /boot/grub2/user.cfg"
+    compliance:
+      - cis: ["1.4.1"]
+    condition: all
+    rules:
+      - 'c:stat /boot/grub2/grub.cfg -> r:Access:\s*\(0600/-rw-------\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*0/\s*\t*root\)'
+      - 'c:stat /boot/grub2/user.cfg -> r:Access:\s*\(0600/-rw-------\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*0/\s*\t*root\)'
+
+
 
 
 ###############################################
