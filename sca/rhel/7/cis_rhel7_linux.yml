@@ -1083,7 +1083,7 @@ checks:
     title: "Ensure time synchronization is in use"
     description: "System time should be synchronized between all systems in an environment. This is typically done by establishing an authoritative time server or set of servers and having all systems synchronize their clocks to them."
     rationale: "Time synchronization is important to support time sensitive security mechanisms like Kerberos and also ensures log files have consistent time records across the enterprise, which aids in forensic investigations."
-    remediation: "Run the following command to disable tftp: # chkconfig tftp off"
+    remediation: "On physical systems or virtual systems where host based time synchronization is not available run the following commands and verify either ntp or chrony is installed: # rpm -q ntp # rpm -q chrony  On virtual systems where host based time synchronization is available consult your virtualization software documentation and verify that host based synchronization is in use."
     compliance:
     condition: any
     rules:
@@ -1095,7 +1095,7 @@ checks:
     title: "Ensure chrony is configured"
     description: "chrony is a daemon which implements the Network Time Protocol (NTP) is designed to synchronize system clocks across a variety of systems and use a source that is highly accurate. More information on chrony can be found at http://chrony.tuxfamily.org/. chrony can be configured to be a client and/or a server."
     rationale: "If chrony is in use on the system proper configuration is vital to ensuring time synchronization is working properly. This recommendation only applies if chrony is in use on the system."
-    remediation: "Add or edit server or pool lines to /etc/chrony.conf as appropriate: server <remote-server>. Add or edit the OPTIONS in /etc/sysconfig/chronyd to include ' -u chrony ': OPTIONS='-u chrony'"
+    remediation: "Add or edit server or pool lines to /etc/chrony.conf as appropriate: server <remote-server>. Add or edit the OPTIONS in /etc/sysconfig/chronyd to include ' -u chrony ': OPTIONS=\"-u chrony\""
     compliance:
     condition: any
     rules:
@@ -1127,11 +1127,54 @@ checks:
 
 # 2.2.15 Ensure mail transfer agent is configured for local-only mode (Scored)
   - id: 100005
-    title: "Ensure DNS Server is not enabled"
+    title: "Ensure mail transfer agent is configured for local-only mode"
     description: "Mail Transfer Agents (MTA), such as sendmail and Postfix, are used to listen for incoming mail and transfer the messages to the appropriate user or mail server. If the system is not intended to be a mail server, it is recommended that the MTA be configured to only process local mail."
     rationale: "Mail Transfer Agents (MTA), such as sendmail and Postfix, are used to listen for incoming mail and transfer the messages to the appropriate user or mail server. If the system is not intended to be a mail server, it is recommended that the MTA be configured to only process local mail."
     remediation: "Edit /etc/postfix/main.cf and add the following line to the RECEIVING MAIL section. If the line already exists, change it to look like the line below: inet_interfaces = loopback-only . Restart postfix: # systemctl restart postfix"
     compliance:
     condition: none
     rules:
-      - 'c:ss -an | grep LIST | grep ":25[[:space:]] -> r:127.0.0.1:25|::1:25'
+      - 'c:ss -an | grep LIST | grep ":25[[:space:]]" -> !r:127.0.0.1:25|::1'
+
+# 2.3.2 Ensure rsh client is not installed (Scored)
+  - id: 100006
+    title: "Ensure rsh client is not installed"
+    description: "The rsh package contains the client commands for the rsh services."
+    rationale: "These legacy clients contain numerous security exposures and have been replaced with the more secure SSH package. Even if the server is removed, it is best to ensure the clients are also removed to prevent users from inadvertently attempting to use these commands and therefore exposing their credentials. Note that removing the rsh package removes the clients for rsh , rcp and rlogin ."
+    remediation: "Run the following command to uninstall rsh : # yum remove rsh"
+    compliance:
+    condition: all
+    rules:
+      - 'c:rpm -q rsh -> r:^package rsh is not installed'
+
+# 2.3.3 Ensure talk client is not installed (Scored)
+  - id: 100007
+    title: "Ensure talk client is not installed"
+    description: "The talk software makes it possible for users to send and receive messages across systems through a terminal session. The talk client, which allows initialization of talk sessions, is installed by default."
+    rationale: "The software presents a security risk as it uses unencrypted protocols for communication."
+    remediation: "Run the following command to uninstall talk : # yum remove talk"
+    compliance:
+    condition: all
+    rules:
+      - 'c:rpm -q talk -> r:^package talk is not installed'
+
+# 2.3.4 Ensure telnet client is not installed (Scored)
+  - id: 100008
+    title: "Ensure telnet client is not installed"
+    description: "The telnet package contains the telnet client, which allows users to start connections to other systems via the telnet protocol."
+    rationale: "The telnet protocol is insecure and unencrypted. The use of an unencrypted transmission medium could allow an unauthorized user to steal credentials. The ssh package provides an encrypted session and stronger security and is included in most Linux distributions."
+    remediation: "Run the following command to uninstall telnet : # yum remove telnet"
+    compliance:
+    condition: all
+    rules:
+      - 'c:rpm -q telnet -> r:^package telnet is not installed'
+
+# 2.3.5 Ensure LDAP client is not installed (Scored)
+  - id: 100009
+    title: "Ensure LDAP client is not installed"
+    description: "The Lightweight Directory Access Protocol (LDAP) was introduced as a replacement for NIS/YP. It is a service that provides a method for looking up information from a central database."
+    rationale: "If the system will not need to act as an LDAP client, it is recommended that the software be removed to reduce the potential attack surface."
+    remediation: "Run the following command to uninstall openldap-clients : # yum remove openldap-clients"
+    compliance:op
+    rules:
+      - 'c:rpm -q openldap-clients -> r:^package openldap-clients is not installed'
