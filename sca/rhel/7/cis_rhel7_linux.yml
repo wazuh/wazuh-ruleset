@@ -923,6 +923,356 @@ checks:
     rules:
       - 'c:sysctl net.ipv4.tcp_syncookies -> r:^net.ipv4.tcp_syncookies\s*=\s*1$'
       - 'c:grep -Rh net\.ipv4\.tcp_syncookies /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.tcp_syncookies\s*=\s*1$'
+      
+###############################################
+# 3.3 IPv6
+###############################################
+
+# 3.3.1 Ensure IPv6 router advertisements are not accepted (Not Scored)
+  - id: 5564
+    title: "Ensure IPv6 router advertisements are not accepted"
+    description: "This setting disables the system's ability to accept IPv6 router advertisements."
+    rationale: "It is recommended that systems not accept router advertisements as they could be tricked into routing traffic to compromised machines. Setting hard routes within the system (usually a single default route to a trusted router) protects the system from bad routes."
+    remediation: "Set the following parameter in /etc/sysctl.conf or a /etc/sysctl.d/* file: net.ipv6.conf.all.accept_ra = 0 and net.ipv6.conf.default.accept_ra = 0 and set the active kernel parameters."
+    compliance:
+      - cis: ["3.3.1"]
+      - cis_csc: ["9.1"]
+      - pci_dss: ["10.2.6"]
+      - nist_800_53: ["CM.1"]
+    condition: all
+    rules:
+      - 'c:sysctl net.ipv6.conf.all.accept_ra -> r:^net.ipv6.conf.all.accept_ra\s*=\s*0$'
+      - 'c:sysctl net.ipv6.conf.default.accept_ra -> r:^net.ipv6.conf.default.accept_ra\s*=\s*0$'
+      - 'c:grep -Rh net\.ipv6\.conf\.all\.accept_ra /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv6.conf.all.accept_ra\s*=\s*0$'
+      - 'c:grep -Rh net\.ipv6\.conf\.default\.accept_ra /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv6.conf.default.accept_ra\s*=\s*0$'
+
+
+# 3.3.2 Ensure IPv6 router advertisements are not accepted (Not Scored)
+  - id: 5565
+    title: "Ensure IPv6 router advertisements are not accepted"
+    description: "This setting disables the system's ability to accept IPv6 router advertisements."
+    rationale: "It is recommended that systems not accept router advertisements as they could be tricked into routing traffic to compromised machines. Setting hard routes within the system (usually a single default route to a trusted router) protects the system from bad routes."
+    remediation: "Set the following parameter in /etc/sysctl.conf or a /etc/sysctl.d/* file: net.ipv6.conf.all.accept_ra = 0 and net.ipv6.conf.default.accept_ra = 0 and set the active kernel parameters."
+    compliance:
+      - cis: ["3.3.2"]
+      - cis_csc: ["9.1"]
+      - pci_dss: ["10.2.6"]
+      - nist_800_53: ["AU.14", "AU.5"]
+    condition: all
+    rules:
+      - 'c:sysctl net.ipv6.conf.all.accept_redirects -> r:^net.ipv6.conf.all.accept_redirects\s*=\s*0$'
+      - 'c:sysctl net.ipv6.conf.default.accept_redirects -> r:^net.ipv6.conf.default.accept_redirects\s*=\s*0$'
+      - 'c:grep -Rh net\.ipv6\.conf\.all\.accept_redirects /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv6.conf.all.accept_redirects\s*=\s*0$'
+      - 'c:grep -Rh net\.ipv6\.conf\.default\.accept_redirects /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv6.conf.default.accept_redirects\s*=\s*0$'
+
+# 3.3.3 Ensure IPv6 is disabled (Not Scored)
+  - id: 5566
+    title: "Ensure IPv6 is disabled"
+    description: "Although IPv6 has many advantages over IPv4, few organizations have implemented IPv6."
+    rationale: "If IPv6 is not to be used, it is recommended that it be disabled to reduce the attack surface of the system."
+    remediation: "Edit /etc/default/grub and remove add ipv6.disable=1 to the GRUB_CMDLINE_LINUX parameters and update the grub2 configuration."
+    compliance:
+      - cis: ["3.3.3"]
+      - cis_csc: ["3", "11"]
+      - pci_dss: ["10.2.6"]
+      - nist_800_53: ["AU.14", "AU.5"]
+    condition: any
+    rules:
+      - 'not f:/boot/grub2/grub.cfg -> r:^\s*linux && !r:ipv6.disable\s*=\s*1'
+
+
+###############################################
+# 3.4 TCP Wrappers
+###############################################
+# 3.4.1 Ensure TCP Wrappers is installed (Scored)
+  - id: 5567
+    title: "Ensure TCP Wrappers is installed"
+    description: "TCP Wrappers provides a simple access list and standardized logging method for services capable of supporting it. In the past, services that were called from inetd and xinetd supported the use of tcp wrappers. As inetd and xinetd have been falling in disuse, any service that can support tcp wrappers will have the libwrap.so library attached to it."
+    rationale: "TCP Wrappers provide a good simple access list mechanism to services that may not have that support built in. It is recommended that all services that can support TCP Wrappers, use it."
+    remediation: "Run the following command to install tcp_wrappers: yum install tcp_wrappers"
+    compliance:
+      - cis: ["3.4.1"]
+      - cis_csc: ["9.2"]
+      - pci_dss: ["10.2.6"]
+      - nist_800_53: ["AU.14", "AU.5"]
+    condition: all
+    rules:
+      - 'c:rpm -q tcp_wrappers -> r:^tcp_wrappers-'
+      - 'c:rpm -q tcp_wrappers-libs -> r:^tcp_wrappers-libs-'
+
+# 3.4.3 Ensure /etc/hosts.deny is configured (Scored)
+  - id: 5569
+    title: "Ensure /etc/hosts.deny is configured"
+    description: "The /etc/hosts.deny file specifies which IP addresses are not permitted to connect to the host. It is intended to be used in conjunction with the /etc/hosts.allow file."
+    rationale: "The /etc/hosts.allow file supports access control by IP and helps ensure that only authorized systems can connect to the system."
+    remediation: "Run the following command to create /etc/hosts.deny: echo 'ALL: ALL' >> /etc/hosts.deny"
+    compliance:
+      - cis: ["3.4.3"]
+      - cis_csc: ["9.2"]
+      - pci_dss: ["10.2.6"]
+      - nist_800_53: ["AU.14", "AU.5"]
+    condition: all
+    rules:
+      - 'f:/etc/hosts.deny -> r:^ALL\s*:\s*ALL'
+
+# 3.4.4 Ensure permissions on /etc/hosts.allow are configured (Scored)
+  - id: 5570
+    title: "Ensure permissions on /etc/hosts.allow are configured."
+    description: "The /etc/hosts.allow file contains networking information that is used by many applications and therefore must be readable for these applications to operate."
+    rationale: "It is critical to ensure that the /etc/hosts.allow file is protected from unauthorized write access. Although it is protected by default, the file permissions could be changed either inadvertently or through malicious actions."
+    remediation: "Run the following commands to set permissions on /etc/hosts.allow : chown root:root /etc/hosts.allow and chmod 644 /etc/hosts.allow"
+    compliance:
+      - cis: ["3.4.4"]
+      - cis_csc: ["5.1"]
+      - pci_dss: ["10.2.6"]
+      - nist_800_53: ["AU.14", "AU.5"]
+    condition: all
+    rules:
+      - 'c:stat /etc/hosts.deny -> r:^Access: \(0644/-rw-r--r--\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
+
+
+# 3.4.5 Ensure permissions on /etc/hosts.deny are configured (Scored)
+  - id: 5571
+    title: "Ensure permissions on /etc/hosts.deny are configured."
+    description: "The /etc/hosts.deny file contains network information that is used by many system applications and therefore must be readable for these applications to operate."
+    rationale: "It is critical to ensure that the /etc/hosts.deny file is protected from unauthorized write access. Although it is protected by default, the file permissions could be changed either inadvertently or through malicious actions."
+    remediation: "Run the following commands to set permissions on /etc/hosts.deny : chown root:root /etc/hosts.deny and chmod 644 /etc/hosts.deny"
+    compliance:
+      - cis: ["3.4.5"]
+      - cis_csc: ["5.1"]
+      - pci_dss: ["10.2.6"]
+      - nist_800_53: ["AU.14", "AU.5"]
+    condition: all
+    rules:
+      - 'c:stat /etc/hosts.deny -> r:^Access: \(0644/-rw-r--r--\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
+
+
+###############################################
+# 3.5 Uncommon Network Protocols
+###############################################
+# 3.5.1 Ensure DCCP is disabled (Not Scored)
+  - id: 5572
+    title: "Ensure DCCP is disabled"
+    description: "The Datagram Congestion Control Protocol (DCCP) is a transport layer protocol that supports streaming media and telephony. DCCP provides a way to gain access to congestion control, without having to do it at the application layer, but does not provide in-sequence delivery."
+    rationale: "If the protocol is not required, it is recommended that the drivers not be installed to reduce
+the potential attack surface."
+    remediation: "Edit or create the file /etc/modprobe.d/CIS.conf and add the following line: install dccp /bin/true"
+    compliance:
+      - cis: ["3.5.1"]
+      - cis_csc: ["9.1"]
+      - pci_dss: ["10.2.6"]
+      - nist_800_53: ["AU.14", "AU.5"]
+    condition: all
+    rules:
+      - 'c:modprobe -n -v dccp -> r:^install /bin/true'
+      - 'not c:lsmod -> r:dccp'
+
+
+
+# 3.5.2 Ensure SCTP is disabled (Not Scored)
+  - id: 5573
+    title: "Ensure SCTP is disabled"
+    description: "The Stream Control Transmission Protocol (SCTP) is a transport layer protocol used to support message oriented communication, with several streams of messages in one connection. It serves a similar function as TCP and UDP, incorporating features of both. It is message-oriented like UDP, and ensures reliable in-sequence transport of messages with congestion control like TCP."
+    rationale: "If the protocol is not being used, it is recommended that kernel module not be loaded, disabling the service to reduce the potential attack surface."
+    remediation: "Edit or create the file /etc/modprobe.d/CIS.conf and add the following line: install sctp /bin/true"
+    compliance:
+      - cis: ["3.5.2"]
+      - cis_csc: ["9.1"]
+      - pci_dss: ["10.2.6"]
+      - nist_800_53: ["AU.14", "AU.5"]
+    condition: all
+    rules:
+      - 'c:modprobe -n -v sctp -> r:^install /bin/true'
+      - 'not c:lsmod -> r:sctp'
+
+
+# 3.5.3 Ensure RDS is disabled (Not Scored)
+  - id: 5574
+    title: "Ensure SCTP is disabled"
+    description: "The Reliable Datagram Sockets (RDS) protocol is a transport layer protocol designed to provide low-latency, high-bandwidth communications between cluster nodes. It was developed by the Oracle Corporation."
+    rationale: "If the protocol is not being used, it is recommended that kernel module not be loaded, disabling the service to reduce the potential attack surface."
+    remediation: "Edit or create the file /etc/modprobe.d/CIS.conf and add the following line: install rds /bin/true"
+    compliance:
+      - cis: ["3.5.3"]
+      - cis_csc: ["9.1"]
+      - pci_dss: ["10.2.6"]
+      - nist_800_53: ["AU.14", "AU.5"]
+    condition: all
+    rules:
+      - 'c:modprobe -n -v rds -> r:^install /bin/true'
+      - 'not c:lsmod -> r:rds'
+
+
+# 3.5.4 Ensure TIPC is disabled (Not Scored)
+  - id: 5575
+    title: "Ensure TIPC is disabled"
+    description: "The Transparent Inter-Process Communication (TIPC) protocol is designed to provide communication between cluster nodes."
+    rationale: "If the protocol is not being used, it is recommended that kernel module not be loaded, disabling the service to reduce the potential attack surface."
+    remediation: "Edit or create the file /etc/modprobe.d/CIS.conf and add the following line: install tipc /bin/true"
+    compliance:
+      - cis: ["3.5.4"]
+      - cis_csc: ["9.1"]
+      - pci_dss: ["10.2.6"]
+      - nist_800_53: ["AU.14", "AU.5"]
+    condition: all
+    rules:
+      - 'c:modprobe -n -v tipc -> r:^install /bin/true'
+      - 'not c:lsmod -> r:tipc'	
+
+###############################################
+# 3.6 Firewall Configuration
+###############################################
+# 3.6.1 Ensure iptables is installed (Scored)
+  - id: 5576
+    title: "Ensure iptables is installed"
+    description: "iptables allows configuration of the IPv4 tables in the linux kernel and the rules stored within them. Most firewall configuration utilities operate as a front end to iptables ."
+    rationale: "iptables is required for firewall management and configuration."
+    remediation: "Run the following command to install iptables : yum install iptables"
+    compliance:
+      - cis: ["3.6.1"]
+      - cis_csc: ["9.2"]
+      - pci_dss: ["10.2.6"]
+      - nist_800_53: ["AU.14", "AU.5"]
+    condition: all
+    rules:
+      - 'c:rpm -q iptables -> r:iptables-'
+
+# 3.6.2 Ensure default deny firewall policy (Scored)
+  - id: 5577
+    title: "Ensure default deny firewall policy"
+    description: "A default deny all policy on connections ensures that any unconfigured network usage will be rejected."
+    rationale: "With a default accept policy the firewall will accept any packet that is not configured to be denied. It is easier to white list acceptable usage than to black list unacceptable usage."
+    remediation: "Run the following commands to implement a default DROP policy: iptables -P INPUT DROP; iptables -P OUTPUT DROP and iptables -P FORWARD DROP"
+    compliance:
+      - cis: ["3.6.2"]
+      - cis_csc: ["9.2"]
+      - pci_dss: ["10.2.6"]
+      - nist_800_53: ["AU.14", "AU.5"]
+    condition: all
+    rules:
+      - 'c:iptables -L -> r:Chain INPUT (policy DROP) && r:Chain FORWARD (policy DROP) && r:Chain OUTPUT (policy DROP)'
+
+
+###############################################
+# 5 System Access, Authentication and Authorization
+###############################################
+###############################################
+# 5.1 Configure cron
+###############################################
+# 5.1.1 Ensure cron daemon is enabled (Scored)
+  - id: 5578
+    title: "Ensure cron daemon is enabled"
+    description: "The cron daemon is used to execute batch jobs on the system."
+    rationale: "While there may not be user jobs that need to be run on the system, the system does have maintenance jobs that may include security monitoring that have to run, and cron is used to execute them."
+    remediation: "Run the following command to enable cron : systemctl enable crond"
+    compliance:
+      - cis: ["5.1.1"]
+      - cis_csc: ["6"]
+      - pci_dss: ["4.1"]
+      - hipaa: ["164.312.a.2.IV", "164.312.e.1", "164.312.e.2.I", "164.312.e.2.II"]
+      - nist_800_53: ["SC.8"]
+    condition: all
+    rules:
+      - 'c:systemctl is-enabled crond -> enabled'
+
+
+# 5.1.2 Ensure permissions on /etc/crontab are configured (Scored)
+  - id: 5579
+    title: "Ensure permissions on /etc/crontab are configured"
+    description: "The /etc/crontab file is used by cron to control its own jobs. The commands in this item make sure that root is the user and group owner of the file and that only the owner can access the file."
+    rationale: "This file contains information on what system jobs are run by cron. Write access to these files could provide unprivileged users with the ability to elevate their privileges. Read access to these files could provide users with the ability to gain insight on system jobs that run on the system and could provide them a way to gain unauthorized privileged access."
+    remediation: "Run the following commands to set ownership and permissions on /etc/crontab : chown root:root /etc/crontab and chmod og-rwx /etc/crontab"
+    compliance:
+      - cis: ["5.1.2"]
+      - cis_csc: ["5.1"]
+      - pci_dss: ["4.1"]
+      - hipaa: ["164.312.a.2.IV", "164.312.e.1", "164.312.e.2.I", "164.312.e.2.II"]
+      - nist_800_53: ["SC.8"]
+    condition: all
+    rules:
+      - 'c:stat /etc/crontab -> r:^Access: \(0600/-rw-------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
+
+# 5.1.3 Ensure permissions on /etc/cron.hourly are configured (Scored)
+  - id: 5580
+    title: "Ensure permissions on /etc/cron.hourly are configured"
+    description: "This directory contains system cron jobs that need to run on an hourly basis. The files in this directory cannot be manipulated by the crontab command, but are instead edited by system administrators using a text editor. The commands below restrict read/write and search access to user and group root, preventing regular users from accessing this directory."
+    rationale: "Granting write access to this directory for non-privileged users could provide them the means for gaining unauthorized elevated privileges. Granting read access to this directory could give an unprivileged user insight in how to gain elevated privileges or circumvent auditing controls."
+    remediation: "Run the following commands to set ownership and permissions on /etc/cron.hourly : chown root:root /etc/cron.hourly and chmod og-rwx /etc/cron.hourly"
+    compliance:
+      - cis: ["5.1.2"]
+      - cis_csc: ["5.1"]
+      - pci_dss: ["4.1"]
+      - hipaa: ["164.312.a.2.IV", "164.312.e.1", "164.312.e.2.I", "164.312.e.2.II"]
+      - nist_800_53: ["SC.8"]
+    condition: all
+    rules:
+      - 'c:stat /etc/cron.hourly -> r:^Access: \(0700/drwx------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
+
+# 5.1.4 Ensure permissions on /etc/cron.daily are configured (Scored)
+  - id: 5581
+    title: "Ensure permissions on /etc/cron.daily are configured"
+    description: "The /etc/cron.daily directory contains system cron jobs that need to run on a daily basis. The files in this directory cannot be manipulated by the crontab command, but are instead edited by system administrators using a text editor. The commands below restrict read/write and search access to user and group root, preventing regular users from accessing this directory."
+    rationale: "Granting write access to this directory for non-privileged users could provide them the means for gaining unauthorized elevated privileges. Granting read access to this directory could give an unprivileged user insight in how to gain elevated privileges or circumvent auditing controls."
+    remediation: "Run the following commands to set ownership and permissions on /etc/cron.daily : chown root:root /etc/cron.daily and chmod og-rwx /etc/cron.daily"
+    compliance:
+      - cis: ["5.1.4"]
+      - cis_csc: ["5.1"]
+      - pci_dss: ["4.1"]
+      - hipaa: ["164.312.a.2.IV", "164.312.e.1", "164.312.e.2.I", "164.312.e.2.II"]
+      - nist_800_53: ["SC.8"]
+    condition: all
+    rules:
+      - 'c:stat /etc/cron.daily -> r:^Access: \(0700/drwx------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
+
+# 5.1.5 Ensure permissions on /etc/cron.weekly are configured (Scored)
+  - id: 5582
+    title: "Ensure permissions on /etc/cron.weekly are configured"
+    description: "The /etc/cron.weekly directory contains system cron jobs that need to run on a weekly basis. The files in this directory cannot be manipulated by the crontab command, but are instead edited by system administrators using a text editor. The commands below restrict read/write and search access to user and group root, preventing regular users from accessing this directory."
+    rationale: "Granting write access to this directory for non-privileged users could provide them the means for gaining unauthorized elevated privileges. Granting read access to this directory could give an unprivileged user insight in how to gain elevated privileges or circumvent auditing controls."
+    remediation: "Run the following commands to set ownership and permissions on /etc/cron.weekly : chown root:root /etc/cron.weekly and chmod og-rwx /etc/cron.weekly"
+    compliance:
+      - cis: ["5.1.5"]
+      - cis_csc: ["5.1"]
+      - pci_dss: ["4.1"]
+      - hipaa: ["164.312.a.2.IV", "164.312.e.1", "164.312.e.2.I", "164.312.e.2.II"]
+      - nist_800_53: ["SC.8"]
+    condition: all
+    rules:
+      - 'c:stat /etc/cron.weekly -> r:^Access: \(0700/drwx------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
+
+
+# 5.1.6 Ensure permissions on /etc/cron.monthly are configured (Scored)
+  - id: 5583
+    title: "Ensure permissions on /etc/cron.monthly are configured"
+    description: "The /etc/cron.monthly directory contains system cron jobs that need to run on a monthly basis. The files in this directory cannot be manipulated by the crontab command, but are instead edited by system administrators using a text editor. The commands below restrict read/write and search access to user and group root, preventing regular users from accessing this directory."
+    rationale: "Granting write access to this directory for non-privileged users could provide them the means for gaining unauthorized elevated privileges. Granting read access to this directory could give an unprivileged user insight in how to gain elevated privileges or circumvent auditing controls."
+    remediation: "Run the following commands to set ownership and permissions on /etc/cron.monthly : chown root:root /etc/cron.monthly and chmod og-rwx /etc/cron.monthly"
+    compliance:
+      - cis: ["5.1.6"]
+      - cis_csc: ["5.1"]
+      - pci_dss: ["4.1"]
+      - hipaa: ["164.312.a.2.IV", "164.312.e.1", "164.312.e.2.I", "164.312.e.2.II"]
+      - nist_800_53: ["SC.8"]
+    condition: all
+    rules:
+      - 'c:stat /etc/cron.monthly -> r:^Access: \(0700/drwx------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
+
+# 5.1.7 Ensure permissions on /etc/cron.d are configured (Scored)
+  - id: 5584
+    title: "Ensure permissions on /etc/cron.d are configured"
+    description: "The /etc/cron.d directory contains system cron jobs that need to run in a similar manner to the hourly, daily weekly and monthly jobs from /etc/crontab , but require more granular control as to when they run. The files in this directory cannot be manipulated by the crontab command, but are instead edited by system administrators using a text editor. The commands below restrict read/write and search access to user and group root, preventing regular users from accessing this directory."
+    rationale: "Granting write access to this directory for non-privileged users could provide them the means for gaining unauthorized elevated privileges. Granting read access to this directory could give an unprivileged user insight in how to gain elevated privileges or circumvent auditing controls."
+    remediation: "Run the following commands to set ownership and permissions on /etc/cron.d : chown root:root /etc/cron.d and chmod og-rwx /etc/cron.d"
+    compliance:
+      - cis: ["5.1.7"]
+      - cis_csc: ["5.1"]
+      - pci_dss: ["4.1"]
+      - hipaa: ["164.312.a.2.IV", "164.312.e.1", "164.312.e.2.I", "164.312.e.2.II"]
+      - nist_800_53: ["SC.8"]
+    condition: all
+    rules:
+      - 'c:stat /etc/cron.d -> r:^Access: \(0700/drwx------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
+
 
 ###############################################
 # 5 System Access, Authentication and Authorization
