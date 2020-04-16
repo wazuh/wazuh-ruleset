@@ -1273,13 +1273,34 @@ the potential attack surface."
     rules:
       - 'c:stat /etc/cron.d -> r:^Access: \(0700/drwx------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
 
+# 5.1.8 Ensure at/cron is restricted to authorized users (Scored)
+  - id: 5585
+    title: "Ensure at/cron is restricted to authorized users"
+    description: "Configure /etc/cron.allow and /etc/at.allow to allow specific users to use these services. If /etc/cron.allow or /etc/at.allow do not exist, then /etc/at.deny and /etc/cron.deny are checked. Any user not specifically defined in those files is allowed to use at and cron. By removing the files, only users in /etc/cron.allow and /etc/at.allow are allowed to use at and cron. Note that even though a given user is not listed in cron.allow , cron jobs can still be run as that user. The cron.allow file only controls administrative access to the crontab command for scheduling and modifying cron jobs."
+    rationale: "On many systems, only the system administrator is authorized to schedule cron jobs. Using the cron.allow file to control who can run cron jobs enforces this policy. It is easier to manage an allow list than a deny list. In a deny list, you could potentially add a user ID to the system and forget to add it to the deny files."
+    remediation: "Run the following commands to remove /etc/cron.deny and /etc/at.deny and create and set permissions and ownership for /etc/cron.allow and /etc/at.allow: rm /etc/cron.deny;rm /etc/at.deny;touch /etc/cron.allow; touch /etc/at.allow; chmod og-rwx /etc/cron.allow; chmod og-rwx /etc/at.allow; chown root:root /etc/cron.allow and chown root:root /etc/at.allow"
+    compliance:
+    condition: all
+    rules:
+      - 'c:stat /etc/cron.deny -> r:No such file or directory$'
+      - 'c:stat /etc/at.deny -> r:No such file or directory$'
+      - 'c:stat /etc/cron.allow -> r:^Access: \(0600/-rw-------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
+      - 'c:stat /etc/at.allow -> r:^Access: \(0600/-rw-------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
 
-###############################################
-# 5 System Access, Authentication and Authorization
-###############################################
+
 ###############################################
 # 5.2 Configure SSH
 ###############################################
+# 5.2.1 Ensure permissions on /etc/ssh/sshd_config are configured (Scored)
+  - id: 5586
+    title: "Ensure permissions on /etc/ssh/sshd_config are configured"
+    description: "The /etc/ssh/sshd_config file contains configuration specifications for sshd. The command below sets the owner and group of the file to root."
+    rationale: "The /etc/ssh/sshd_config file needs to be protected from unauthorized changes by non-privileged users."
+    remediation: "Run the following commands to set ownership and permissions on /etc/ssh/sshd_config: chown root:root /etc/ssh/sshd_config and chmod og-rwx /etc/ssh/sshd_config"
+    compliance:	
+    condition: all
+    rules:
+      - 'c:stat /etc/ssh/sshd_config -> r:^Access: \(0600/-rw-------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
 # 5.2.2 Set SSH Protocol to 2 (Scored)
   - id: 5556
     title: "Ensure SSH Protocol is set to 2"
@@ -1311,6 +1332,17 @@ the potential attack surface."
     condition: all
     rules:
       - 'f:$sshd_file -> !r:^# && r:LogLevel\s*\t*INFO'
+
+# 5.2.4 Ensure SSH X11 forwarding is disabled (Scored)
+  - id: 5589
+    title: "Ensure SSH X11 forwarding is disabled"
+    description: "The X11Forwarding parameter provides the ability to tunnel X11 traffic through the connection to enable remote graphic connections."
+    rationale: "Disable X11 forwarding unless there is an operational requirement to use X11 applications directly. There is a small risk that the remote X11 servers of users who are logged in via SSH with X11 forwarding could be compromised by other users on the X11 server. Note that even if X11 forwarding is disabled, users can always install their own forwarders."
+    remediation: "Edit the /etc/ssh/sshd_config file to set the parameter as follows: X11Forwarding no"
+    compliance:
+    condition: all
+    rules:
+      - 'f:/etc/ssh/sshd_config -> r:^X11Forwarding no'
 
 # 5.2.5 Set SSH MaxAuthTries to 4 or Less (Scored)
   - id: 5558
@@ -1390,6 +1422,167 @@ the potential attack surface."
     condition: all
     rules:
       - 'f:$sshd_file -> !r:^# && r:PermitEmptyPasswords\s*\t*no'
+
+# 5.2.10 Ensure SSH PermitUserEnvironment is disabled (Scored)
+  - id: 5590
+    title: "Ensure SSH PermitEmptyPasswords is disabled"
+    description: "The PermitEmptyPasswords parameter specifies if the SSH server allows login to accounts with empty password strings."
+    rationale: "Disallowing remote shell access to accounts that have an empty password reduces the probability of unauthorized access to the system."
+    remediation: "Edit the /etc/ssh/sshd_config file to set the parameter as follows: PermitEmptyPasswords no"
+    compliance:
+    condition: all
+    rules:
+      - 'f:/etc/ssh/sshd_config -> r:^PermitUserEnvironment no'
+
+# 5.2.12 Ensure SSH Idle Timeout Interval is configured (Scored)
+  - id: 5591
+    title: "Ensure SSH PermitEmptyPasswords is disabled"
+    description: "The two options ClientAliveInterval and ClientAliveCountMax control the timeout of ssh sessions. When the ClientAliveInterval variable is set, ssh sessions that have no activity for the specified length of time are terminated. When the ClientAliveCountMax variable is set, sshd will send client alive messages at every ClientAliveInterval interval. When the number of consecutive client alive messages are sent with no response from the client, the ssh session is terminated. For example, if the ClientAliveInterval is set to 15 seconds and the ClientAliveCountMax is set to 3, the client ssh session will be terminated after 45 seconds of idle time."
+    rationale: "Having no timeout value associated with a connection could allow an unauthorized user access to another user's ssh session (e.g. user walks away from their computer and doesn't lock the screen). Setting a timeout value at least reduces the risk of this happening. While the recommended setting is 300 seconds (5 minutes), set this timeout value based on site policy. The recommended setting for ClientAliveCountMax is 0. In this case, the client session will be terminated after 5 minutes of idle time and no keepalive messages will be sent."
+    remediation: "Edit the /etc/ssh/sshd_config file to set the parameters according to site policy: ClientAliveInterval 300 and ClientAliveCountMax 0"
+    compliance:
+    condition: all
+    rules:
+      - 'f:/etc/ssh/sshd_config -> n:^\s*ClientAliveInterval\s*\t*(\d+) compare <= 300' 
+      - 'f:/etc/ssh/sshd_config -> n:^\s*ClientAliveCountMax\s*\t*(\d+) compare <= 3' 
+
+
+# 5.2.13 Ensure SSH LoginGraceTime is set to one minute or less (Scored)
+  - id: 5592
+    title: "Ensure SSH PermitEmptyPasswords is disabled"
+    description: "The LoginGraceTime parameter specifies the time allowed for successful authentication to the SSH server. The longer the Grace period is the more open unauthenticated connections can exist. Like other session controls in this session the Grace Period should be limited to appropriate organizational limits to ensure the service is available for needed access."
+    rationale: "Setting the LoginGraceTime parameter to a low number will minimize the risk of successful brute force attacks to the SSH server. It will also limit the number of concurrent unauthenticated connections While the recommended setting is 60 seconds (1 Minute), set the number based on site policy."
+    remediation: "Edit the /etc/ssh/sshd_config file to set the parameter as follows: LoginGraceTime 60"
+    compliance:
+    condition: all
+    rules:
+      - 'f:/etc/ssh/sshd_config -> n:^\s*LoginGraceTime\s*\t*(\d+) compare <= 60' 
+
+
+# 5.2.14 Ensure SSH access is limited (Scored)
+  - id: 5593
+    title: "Ensure SSH Idle Timeout Interval is configured"
+    description: "There are several options available to limit which users and group can access the system via SSH. It is recommended that at least one of the following options be leveraged: AllowUsers The AllowUsers variable gives the system administrator the option of allowing specific users to ssh into the system. The list consists of space separated user names. Numeric user IDs are not recognized with this variable. If a system administrator wants to restrict user access further by only allowing the allowed users to log in from a particular host, the entry can be specified in the form of user@host. AllowGroups
+The AllowGroups variable gives the system administrator the option of allowing specific groups of users to ssh into the system. The list consists of space separated group names. Numeric group IDs are not recognized with this variable. DenyUsers The DenyUsers variable gives the system administrator the option of denying specific users to ssh into the system. The list consists of space separated user names. Numeric user IDs are not recognized with this variable. If a system administrator wants to restrict user access further by specifically denying a user's access from a particular host, the entry can be specified in the form of user@host. DenyGroups The DenyGroups variable gives the system administrator the option of denying specific groups of users to ssh into the system. The list consists of space separated group names. Numeric group IDs are not recognized with this variable."
+    rationale: "Restricting which users can remotely access the system via SSH will help ensure that only authorized users access the system."
+    remediation: "Edit the /etc/ssh/sshd_config file to set one or more of the parameter as follows: AllowUsers <userlist>; AllowGroups <grouplist>; DenyUsers <userlist> and DenyGroups <grouplist>"
+    compliance:
+    condition: all
+    rules:
+      - 'f:/etc/ssh/sshd_config -> r:^\s*AllowUsers && r:^\s*AllowGroups && r:^\s*DenyUsers && r:^\s*DenyGroups'
+
+# 5.2.15 Ensure SSH warning banner is configured (Scored)
+  - id: 5594
+    title: "Ensure SSH warning banner is configured"
+    description: "The Banner parameter specifies a file whose contents must be sent to the remote user before authentication is permitted. By default, no banner is displayed."
+    rationale: "Banners are used to warn connecting users of the particular site's policy regarding connection. Presenting a warning message prior to the normal user login may assist the prosecution of trespassers on the computer system."
+    remediation: "Edit the /etc/ssh/sshd_config file to set the parameter as follows: Banner /etc/issue.net"
+    compliance:
+    condition: all
+    rules:
+      - 'f:/etc/ssh/sshd_config -> r:^\s*Banner\s*\t*/etc/issue.net'
+
+
+###############################################
+# 5.3 Configure PAM
+###############################################
+# 5.3.4 Ensure password hashing algorithm is SHA-512 (Scored)
+  - id: 5595
+    title: "Ensure password hashing algorithm is SHA-512"
+    description: "The commands below change password encryption from md5 to sha512 (a much stronger hashing algorithm). All existing accounts will need to perform a password change to upgrade the stored hashes to the new algorithm."
+    rationale: "The SHA-512 algorithm provides much stronger hashing than MD5, thus providing additional protection to the system by increasing the level of effort for an attacker to successfully determine passwords. Note that these change only apply to accounts configured on the local system."
+    remediation: "Edit the /etc/pam.d/password-auth and /etc/pam.d/system-auth files to include the sha512 option for pam_unix.so as shown: password sufficient pam_unix.so sha512"
+    compliance:
+    condition: all
+    rules:
+      - 'f:/etc/pam.d/password-auth -> r:^password sufficient pam_unix.so sha512'
+      - 'f:/etc/pam.d/system-auth -> r:^password sufficient pam_unix.so sha512'
+
+
+
+
+###############################################
+# 5.4.1 Set Shadow Password Suite Parameters
+###############################################
+# 5.4.1.1 Ensure password expiration is 365 days or less (Scored)
+  - id: 5596
+    title: "Ensure password expiration is 365 days or less"
+    description: "The PASS_MAX_DAYS parameter in /etc/login.defs allows an administrator to force passwords to expire once they reach a defined age. It is recommended that the PASS_MAX_DAYS parameter be set to less than or equal to 365 days."
+    rationale: "The window of opportunity for an attacker to leverage compromised credentials or successfully compromise credentials via an online brute force attack is limited by the age of the password. Therefore, reducing the maximum age of a password also reduces an attacker's window of opportunity."
+    remediation: "Set the PASS_MAX_DAYS parameter to conform to site policy in /etc/login.defs : PASS_MAX_DAYS 90 and modify user parameters for all users with a password set to match: chage --maxdays 90 <user>"
+    compliance:
+    condition: all
+    rules:
+      - 'f:/etc/login.defs -> n:^\s*PASS_MAX_DAYS\s*\t*(\d+) compare <= 365'
+
+# 5.4.1.2 Ensure minimum days between password changes is 7 or more (Scored)
+  - id: 5597
+    title: "Ensure minimum days between password changes is 7 or more"
+    description: "The PASS_MIN_DAYS parameter in /etc/login.defs allows an administrator to prevent users from changing their password until a minimum number of days have passed since the last time the user changed their password. It is recommended that PASS_MIN_DAYS parameter be set to 7 or more days."
+    rationale: "By restricting the frequency of password changes, an administrator can prevent users from repeatedly changing their password in an attempt to circumvent password reuse controls."
+    remediation: "Set the PASS_MIN_DAYS parameter to 7 in /etc/login.defs: PASS_MIN_DAYS 7 and modify user parameters for all users with a password set to match: chage --mindays 7 <user>"
+    compliance:
+    condition: all
+    rules:
+      - 'f:/etc/login.defs -> n:^\s*PASS_MIN_DAYS\s*\t*(\d+) compare >= 7'
+
+# 5.4.1.3 Ensure password expiration warning days is 7 or more (Scored)
+  - id: 5598
+    title: "Ensure minimum days between password changes is 7 or more"
+    description: "The PASS_WARN_AGE parameter in /etc/login.defs allows an administrator to notify users that their password will expire in a defined number of days. It is recommended that the PASS_WARN_AGE parameter be set to 7 or more days."
+    rationale: "Providing an advance warning that a password will be expiring gives users time to think of a secure password. Users caught unaware may choose a simple password or write it down where it may be discovered."
+    remediation: "Set the PASS_WARN_AGE parameter to 7 in /etc/login.defs: PASS_WARN_AGE 7 and modify user parameters for all users with a password set to match: chage --warndays 7 <user>"
+    compliance:
+    condition: all
+    rules:
+      - 'f:/etc/login.defs -> n:^\s*PASS_WARN_AGE\s*\t*(\d+) compare >= 7'
+
+# 5.4.1.4 Ensure inactive password lock is 30 days or less (Scored)
+  - id: 5599
+    title: "Ensure inactive password lock is 30 days or less"
+    description: "User accounts that have been inactive for over a given period of time can be automatically disabled. It is recommended that accounts that are inactive for 30 days after password expiration be disabled."
+    rationale: "Inactive accounts pose a threat to system security since the users are not logging in to notice failed login attempts or other anomalies."
+    remediation: "Run the following command to set the default password inactivity period to 30 days: useradd -D -f 30 and modify user parameters for all users with a password set to match: chage --inactive 30 <user>"
+    compliance:
+    condition: all
+    rules:
+      - 'c:useradd -D -> n:^\s*INACTIVE\s*=\s*(\d+) compare <= 30'
+
+
+# 5.4.3 Ensure default group for the root account is GID 0 (Scored)
+  - id: 5600
+    title: "Ensure default group for the root account is GID 0"
+    description: "The usermod command can be used to specify which group the root user belongs to. This affects permissions of files that are created by the root user."
+    rationale: "Using GID 0 for the root account helps prevent root -owned files from accidentally becoming accessible to non-privileged users."
+    remediation: "Run the following command to set the root user default group to GID 0: usermod -g 0 root"
+    compliance:
+    condition: all
+    rules:
+      - 'c:grep "^root:" /etc/passwd | cut -f4 -d: -> r:0'
+
+# 5.4.4 Ensure default user umask is 027 or more restrictive (Scored)
+  - id: 5601
+    title: "Ensure default user umask is 027 or more restrictive"
+    description: "The default umask determines the permissions of files created by users. The user creating the file has the discretion of making their files and directories readable by others via the chmod command. Users who wish to allow their files and directories to be readable by others by default may choose a different default umask by inserting the umask command into the standard shell configuration files ( .profile , .bashrc , etc.) in their home directories."
+    rationale: "Setting a very secure default value for umask ensures that users make a conscious choice about their file permissions. A default umask setting of 077 causes files and directories created by users to not be readable by any other user on the system. A umask of 027 would make files and directories readable by users in the same Unix group, while a umask of 022 would make files readable by every user on the system."
+    remediation: "Edit the /etc/bashrc , /etc/profile and /etc/profile.d/*.sh files (and the appropriate files for any other shell supported on your system) and add or edit any umask parameters as follows: umask 027"
+    compliance:
+    condition: all
+    rules:
+      - 'not c:grep umask /etc/bashrc -> n:^\s*\t*umask\s+(\d+) compare <= 27'
+      - 'not c:grep -Rh umask /etc/profile /etc/profile.d/*.sh -> n:umask\s+(\d+) compare <= 27'
+
+# 5.5 Ensure default user shell timeout is 900 seconds or less (Scored)
+  - id: 5602
+    title: "Ensure default user umask is 027 or more restrictive"
+    description: "The default TMOUT determines the shell timeout for users. The TMOUT value is measured in seconds."
+    rationale: "Having no timeout value associated with a shell could allow an unauthorized user access to another user's shell session (e.g. user walks away from their computer and doesn't lock the screen). Setting a timeout value at least reduces the risk of this happening."
+    remediation: "Edit the /etc/bashrc and /etc/profile files (and the appropriate files for any other shell supported on your system) and add or edit any umask parameters as follows: TMOUT=600"
+    compliance:
+    condition: all
+    rules:
+      - 'not f:/etc/bashrc -> n:^\s*\t*umask\s+(\d+) compare >= 900'
+      - 'not f:/etc/profile /etc/profile.d/*.sh -> n:umask\s+(\d+) compare >= 900'
 
 ###############################################
 # 6 System Maintenance
