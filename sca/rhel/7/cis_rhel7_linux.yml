@@ -1234,8 +1234,158 @@ checks:
     title: "Ensure auditing for processes that start prior to auditd is enabled"
     description: "Configure grub so that processes that are capable of being audited can be audited even if they start up prior to auditd startup."
     rationale: "The capturing of system events provides system administrators with information to allow them to determine if unauthorized access to their system is occurring."
-    remediation: "Edit /etc/default/grub and add audit=1 to GRUB_CMDLINE_LINUX : GRUB_CMDLINE_LINUX="audit=1" . Run the following command to update the grub2 configuration: # grub2-mkconfig -o /boot/grub2/grub.cfg"
+    remediation: "Edit /etc/default/grub and add audit=1 to GRUB_CMDLINE_LINUX : GRUB_CMDLINE_LINUX=\"audit=1\" . Run the following command to update the grub2 configuration: # grub2-mkconfig -o /boot/grub2/grub.cfg"
+    compliance:
+    condition: none
+    rules:
+      - 'f:/boot/grub2/grub.cfg -> r:^\W*linux && !r:audit=1'
+
+# 4.1.4 Ensure events that modify date and time information are collected (Scored)
+  - id: 104140
+    title: "Ensure events that modify date and time information are collected"
+    description: "Capture events where the system date and/or time has been modified. The parameters in this section are set to determine if the adjtimex (tune kernel clock), settimeofday (Set time, using timeval and timezone structures) stime (using seconds since 1/1/1970) or clock_settime (allows for the setting of several internal clocks and timers) system calls have been executed and always write an audit record to the /var/log/audit.log file upon exit, tagging the records with the identifier \"time-change\"."
+    rationale: "Unexpected changes in system date and/or time could be a sign of malicious activity on the system."
+    remediation: "For 32 bit systems add the following lines to the /etc/audit/audit.rules file: -a always,exit -F arch=b32 -S adjtimex -S settimeofday -S stime -k time-change   -a always,exit -F arch=b32 -S clock_settime -k time-change   -w /etc/localtime -p wa -k time-change   For 64 bit systems add the following lines to the /etc/audit/audit.rules file:   -a always,exit -F arch=b64 -S adjtimex -S settimeofday -k time-change   -a always,exit -F arch=b32 -S adjtimex -S settimeofday -S stime -k time-change   -a always,exit -F arch=b64 -S clock_settime -k time-change   -a always,exit -Farch=b32 -S clock_settime -k time-change   -w /etc/localtime -p wa -k time-change"
+
+
     compliance:
     condition: all
     rules:
-      - 'f:/boot/grub2/grub.cfg -> r:^\s*linux && r:audit=1'
+      - 'f:/etc/audit/audit.rules -> r:-a always,exit -F arch=b32 && r:-S adjtimex -S settimeofday -S stime|-S stime,settimeofday,adjtimex && r:-k time-change|-F key=time-change'
+      - 'f:/etc/audit/audit.rules -> r:-a always,exit -F arch=b32 -S clock_settime && r:-k time-change|-F key=time-change'
+      - 'f:/etc/audit/audit.rules -> r:-w /etc/localtime -p wa -k time-change'
+      - 'c:auditctl -l -> r:-a always,exit -F arch=b32 && r:-S adjtimex -S settimeofday -S stime|-S stime,settimeofday,adjtimex && r:-k time-change|-F key=time-change'
+      - 'c:auditctl -l -> r:-a always,exit -F arch=b32 -S clock_settime && r:-k time-change|-F key=time-change'
+      - 'c:auditctl -l -> r:-w /etc/localtime -p wa -k time-change'
+
+# 4.1.5 Ensure events that modify user/group information are collected (Scored)
+  - id: 104150
+    title: "Ensure events that modify user/group information are collected"
+    description: "Record events affecting the group , passwd (user IDs), shadow and gshadow (passwords) or /etc/security/opasswd (old passwords, based on remember parameter in the PAM configuration) files. The parameters in this section will watch the files to see if they have been opened for write or have had attribute changes (e.g. permissions) and tag them with the identifier \"identity\" in the audit log file."
+    rationale: "Unexpected changes to these files could be an indication that the system has been compromised and that an unauthorized user is attempting to hide their activities or compromise additional accounts."
+    remediation: "Add the following lines to the /etc/audit/audit.rules file:    -w /etc/group -p wa -k identity    -w /etc/passwd -p wa -k identity    -w /etc/gshadow -p wa -k identity    -w /etc/shadow -p wa -k identity    -w /etc/security/opasswd -p wa -k identity"
+    compliance:
+    condition: all
+    rules:
+      - 'f:/etc/audit/audit.rules -> -w /etc/group -p wa -k identity'
+      - 'f:/etc/audit/audit.rules -> -w /etc/passwd -p wa -k identity'
+      - 'f:/etc/audit/audit.rules -> -w /etc/gshadow -p wa -k identity'
+      - 'f:/etc/audit/audit.rules -> -w /etc/shadow -p wa -k identity'
+      - 'f:/etc/audit/audit.rules -> -w /etc/security/opasswd -p wa -k identity'
+      - 'c:auditctl -l -> -w /etc/group -p wa -k identity'
+      - 'c:auditctl -l -> -w /etc/passwd -p wa -k identity'
+      - 'c:auditctl -l -> -w /etc/gshadow -p wa -k identity'
+      - 'c:auditctl -l -> -w /etc/shadow -p wa -k identity'
+      - 'c:auditctl -l -> -w /etc/security/opasswd -p wa -k identity'
+
+# 4.1.6 Ensure events that modify the system's network environment are collected (Scored)
+  - id: 104160
+    title: "Ensure events that modify the system's network environment are collected"
+    description: "Record changes to network environment files or system calls. The below parameters monitor the sethostname (set the systems host name) or setdomainname (set the systems domainname) system calls, and write an audit event on system call exit. The other parameters monitor the /etc/issue and /etc/issue.net files (messages displayed pre-login), /etc/hosts (file containing host names and associated IP addresses), /etc/sysconfig/network file and /etc/sysconfig/network-scripts/ directory (containing network interface scripts and configurations)."
+    rationale: "Monitoring sethostname and setdomainname will identify potential unauthorized changes to host and domainname of a system. The changing of these names could potentially break security parameters that are set based on those names. The /etc/hosts file is monitored for changes in the file that can indicate an unauthorized intruder is trying to change machine associations with IP addresses and trick users and processes into connecting to unintended machines. Monitoring /etc/issue and /etc/issue.net is important, as intruders could put disinformation into those files and trick users into providing information to the intruder. Monitoring /etc/sysconfig/network and /etc/sysconfig/network-scripts/ is important as it can show if network interfaces or scripts are being modified in a way that can lead to the machine becoming unavailable or compromised. All audit records will be tagged with the identifier \"system-locale.\""
+    remediation: "For 32 bit systems add the following lines to the /etc/audit/audit.rules file:    -a always,exit -F arch=b32 -S sethostname -S setdomainname -k system-locale    -w /etc/issue -p wa -k system-locale    -w /etc/issue.net -p wa -k system-locale    -w /etc/hosts -p wa -k system-locale    -w /etc/sysconfig/network -p wa -k system-locale    -w /etc/sysconfig/network-scripts/ -p wa -k system-locale        For 64 bit systems add the following lines to the /etc/audit/audit.rules file:    -a always,exit -F arch=b64 -S sethostname -S setdomainname -k system-locale    -a always,exit -F arch=b32 -S sethostname -S setdomainname -k system-locale    -w /etc/issue -p wa -k system-locale    -w /etc/issue.net -p wa -k system-locale    -w /etc/hosts -p wa -k system-locale    -w /etc/sysconfig/network -p wa -k system-locale    -w /etc/sysconfig/network-scripts/ -p wa -k system-locale"
+    compliance:
+    condition: all
+    rules:
+      - 'f:/etc/audit/audit.rules -> r:^-a always,exit -F arch=b32 && r:-S sethostname -S setdomainname|-S sethostname,setdomainname && r:-k system-locale|-F key=system-locale'
+      - 'f:/etc/audit/audit.rules -> r:^-w /etc/issue -p wa && r:-k system-locale|-F key=system-locale'
+      - 'f:/etc/audit/audit.rules -> r:^-w /etc/issue.net -p wa && r:-k system-locale|-F key=system-locale'
+      - 'f:/etc/audit/audit.rules -> r:^-w /etc/hosts -p wa && r:-k system-locale|-F key=system-locale'
+      - 'f:/etc/audit/audit.rules -> r:^-w /etc/sysconfig/network -p wa && r:-k system-locale|-F key=system-locale'
+      - 'f:/etc/audit/audit.rules -> r:^-w /etc/sysconfig/network-scripts|-w /etc/sysconfig/network-scripts/ -p wa && r:-k system-locale|-F key=system-locale'
+      - 'c:auditctl -l -> r:^-a always,exit -F arch=b32 && r:-S sethostname -S setdomainname|-S sethostname,setdomainname && r:-k system-locale|-F key=system-locale'
+      - 'c:auditctl -l -> r:^-w /etc/issue -p wa && r:-k system-locale|-F key=system-locale'
+      - 'c:auditctl -l -> r:^-w /etc/issue.net -p wa && r:-k system-locale|-F key=system-locale'
+      - 'c:auditctl -l -> r:^-w /etc/hosts -p wa && r:-k system-locale|-F key=system-locale'
+      - 'c:auditctl -l -> r:^-w /etc/sysconfig/network -p wa && r:-k system-locale|-F key=system-locale'
+      - 'c:auditctl -l -> r:^-w /etc/sysconfig/network-scripts -p wa && r:-k system-locale|-F key=system-locale'
+
+# 4.1.7 Ensure events that modify the system's Mandatory Access Controls are collected (Scored)
+  - id: 104170
+    title: "Ensure events that modify the system's Mandatory Access Controls are collected"
+    description: "Monitor SELinux mandatory access controls. The parameters below monitor any write access (potential additional, deletion or modification of files in the directory) or attribute changes to the /etc/selinux or directory."
+    rationale: "Changes to files in these directories could indicate that an unauthorized user is attempting to modify access controls and change security contexts, leading to a compromise of the system."
+    remediation: "Add the following lines to the /etc/audit/audit.rules file: -w /etc/selinux/ -p wa -k MAC-policy -w /usr/share/selinux/ -p wa -k MAC-policy"
+    compliance:
+    condition: all
+    rules:
+      - 'f:/etc/audit/audit.rules -> r:^-w /etc/selinux/|^-w /etc/selinux && r:-p wa -k MAC-policy'
+      - 'f:/etc/audit/audit.rules -> r:^-w /usr/share/selinux/|^-w /usr/share/selinux && r:-p wa -k MAC-policy'
+      - 'c:auditctl -l -> r:^-w /etc/selinux/|^-w /etc/selinux && r:-p wa -k MAC-policy'
+      - 'c:auditctl -l -> r:^-w /usr/share/selinux/|^-w /usr/share/selinux && r:-p wa -k MAC-policy'
+
+# 4.1.8 Ensure login and logout events are collected (Scored)
+  - id: 104180
+    title: "Ensure login and logout events are collected"
+    description: "Monitor login and logout events. The parameters below track changes to files associated with login/logout events. The file /var/log/lastlog maintain records of the last time a user successfully logged in. The /var/run/failock directory maintains records of login failures via the pam_faillock module."
+    rationale: "Monitoring login/logout events could provide a system administrator with information associated with brute force attacks against user logins."
+    remediation: "Add the following lines to the /etc/audit/audit.rules file:  -w /var/log/lastlog -p wa -k logins   -w /var/run/faillock/ -p wa -k logins"
+    compliance:
+    condition: all
+    rules:
+      - 'f:/etc/audit/audit.rules -> r:-w /var/log/lastlog && r:-p wa && r:-k logins|-F key=logins'
+      - 'f:/etc/audit/audit.rules -> r:-w /var/run/faillock && r:-p wa && r:-k logins|-F key=logins'
+
+# 4.1.9 Ensure session initiation information is collected (Scored)
+  - id: 104190
+    title: "Ensure session initiation information is collected"
+    description: "Monitor session initiation events. The parameters in this section track changes to the files associated with session events. The file /var/run/utmp file tracks all currently logged in users. All audit records will be tagged with the identifier \"session.\" The /var/log/wtmp file tracks logins, logouts, shutdown, and reboot events. The file /var/log/btmp keeps track of failed login attempts and can be read by entering the command /usr/bin/last -f /var/log/btmp . All audit records will be tagged with the identifier \"logins.\"."
+    rationale: "Monitoring these files for changes could alert a system administrator to logins occurring at unusual hours, which could indicate intruder activity (i.e. a user logging in at a time when they do not normally log in)."
+    remediation: "Add the following lines to the /etc/audit/audit.rules file:   -w /var/run/utmp -p wa -k session   -w /var/log/wtmp -p wa -k logins   -w /var/log/btmp -p wa -k logins"
+    compliance:
+    condition: all
+    rules:
+      - 'f:/etc/audit/audit.rules -> r:-w /var/run/utmp -p wa && r:-k session|-F key=session'
+      - 'f:/etc/audit/audit.rules -> r:-w /var/log/wtmp -p wa && r:-k logins|-F key=logins'
+      - 'f:/etc/audit/audit.rules -> r:-w /var/log/btmp -p wa && r:-k logins|-F key=logins'
+      - 'c:auditctl -l -> r:-w /var/run/utmp -p wa && r:-k session|-F key=session'
+      - 'c:auditctl -l -> r:-w /var/log/wtmp -p wa && r:-k logins|-F key=logins'
+      - 'c:auditctl -l -> r:-w /var/log/btmp -p wa && r:-k logins|-F key=logins'
+
+# 4.1.10 Ensure discretionary access control permission modification events are collected (Scored)
+  - id: 104200
+    title: "Ensure discretionary access control permission modification events are collected"
+    description: "Monitor changes to file permissions, attributes, ownership and group. The parameters in this section track changes for system calls that affect file permissions and attributes. The chmod , fchmod and fchmodat system calls affect the permissions associated with a file. The chown , fchown , fchownat and lchown system calls affect owner and group attributes on a file. The setxattr , lsetxattr , fsetxattr (set extended file attributes) and removexattr , lremovexattr , fremovexattr (remove extended file attributes) control extended file attributes. In all cases, an audit record will only be written for non-system user ids (auid >= 1000) and will ignore Daemon events (auid = 4294967295). All audit records will be tagged with the identifier \"perm_mod.\""
+    rationale: "Monitoring for changes in file attributes could alert a system administrator to activity that could indicate intruder activity or policy violation."
+    remediation: "For 32 bit systems add the following lines to the /etc/audit/audit.rules file:   -a always,exit -F arch=b32 -S chmod -S fchmod -S fchmodat -F auid>=1000 -F auid!=4294967295 -k perm_mod   -a always,exit -F arch=b32 -S chown -S fchown -S fchownat -S lchown -F auid>=1000 -F auid!=4294967295 -k perm_mod   -a always,exit -F arch=b32 -S setxattr -S lsetxattr -S fsetxattr -S removexattr -S lremovexattr -S fremovexattr -F auid>=1000 -F auid!=4294967295 -k perm_mod   For 64 bit systems add the following lines to the /etc/audit/audit.rules file:   -a always,exit -F arch=b64 -S chmod -S fchmod -S fchmodat -F auid>=1000 -F auid!=4294967295 -k perm_mod   -a always,exit -F arch=b32 -S chmod -S fchmod -S fchmodat -F auid>=1000 -F auid!=4294967295 -k perm_mod   -a always,exit -F arch=b64 -S chown -S fchown -S fchownat -S lchown -F auid>=1000 -F auid!=4294967295 -k perm_mod   -a always,exit -F arch=b32 -S chown -S fchown -S fchownat -S lchown -F auid>=1000 -F auid!=4294967295 -k perm_mod   -a always,exit -F arch=b64 -S setxattr -S lsetxattr -S fsetxattr -S removexattr -S lremovexattr -S fremovexattr -F auid>=1000 -F auid!=4294967295 -k perm_mod   -a always,exit -F arch=b32 -S setxattr -S lsetxattr -S fsetxattr -S removexattr -S lrem"
+    compliance:
+    condition: all
+    rules:
+      - 'f:/etc/audit/audit.rules -> -a always,exit -F arch=b32 -S chmod -S fchmod -S fchmodat -F auid>=1000 -F auid!=4294967295 -k perm_mod'
+      - 'f:/etc/audit/audit.rules -> -a always,exit -F arch=b32 -S chown -S fchown -S fchownat -S lchown -F auid>=1000 -F auid!=4294967295 -k perm_mod'
+      - 'f:/etc/audit/audit.rules -> -a always,exit -F arch=b32 -S setxattr -S lsetxattr -S fsetxattr -S removexattr -S lremovexattr -S fremovexattr -F auid>=1000 -F auid!=4294967295 -k perm_mod'
+
+# 4.1.11 Ensure unsuccessful unauthorized file access attempts are collected (Scored)
+  - id: 104210
+    title: "Ensure unsuccessful unauthorized file access attempts are collected"
+    description: "Monitor for unsuccessful attempts to access files. The parameters below are associated  with system calls that control creation ( creat ), opening ( open , openat ) and truncation (  truncate , ftruncate ) of files. An audit log record will only be written if the user is a non-  privileged user (auid > = 1000), is not a Daemon event (auid=4294967295) and if the  system call returned EACCES (permission denied to the file) or EPERM (some other  permanent error associated with the specific system call). All audit records will be tagged  with the identifier \"access.\""
+    rationale: "Failed attempts to open, create or truncate files could be an indication that an individual or process is trying to gain unauthorized access to the system."
+    remediation: "For 32 bit systems add the following lines to the /etc/audit/audit.rules file:   -a always,exit -F arch=b32 -S creat -S open -S openat -S truncate -S ftruncate -F exit=-EACCES -F auid>=1000 -F auid!=4294967295 -k access   -a always,exit -F arch=b32 -S creat -S open -S openat -S truncate -S ftruncate -F exit=-EPERM -F auid>=1000 -F auid!=4294967295 -k access   For 64 bit systems add the following lines to the /etc/audit/audit.rules file:   -a always,exit -F arch=b64 -S creat -S open -S openat -S truncate -S ftruncate -F exit=-EACCES -F auid>=1000 -F auid!=4294967295 -k access   -a always,exit -F arch=b32 -S creat -S open -S openat -S truncate -S ftruncate -F exit=-EACCES -F auid>=1000 -F auid!=4294967295 -k access   -a always,exit -F arch=b64 -S creat -S open -S openat -S truncate -S ftruncate -F exit=-EPERM -F auid>=1000 -F auid!=4294967295 -k access   -a always,exit -F arch=b32 -S creat -S open -S openat -S truncate -S ftruncate -F exit=-EPERM -F auid>=1000 -F auid!=4294967295 -k access"
+    compliance:
+    condition: all
+    rules:
+      - 'f:/etc/audit/audit.rules -> -a always,exit -F arch=b32 -S creat -S open -S openat -S truncate -S ftruncate -F exit=-EACCES -F auid>=1000 -F auid!=4294967295 -k access'
+      - 'f:/etc/audit/audit.rules -> -a always,exit -F arch=b32 -S creat -S open -S openat -S truncate -S ftruncate -F exit=-EPERM -F auid>=1000 -F auid!=4294967295 -k access'
+
+# 4.1.13 Ensure successful file system mounts are collected (Scored)
+  - id: 104230
+    title: "Ensure successful file system mounts are collected"
+    description: "Monitor the use of the mount system call. The mount (and umount ) system call controls the mounting and unmounting of file systems. The parameters below configure the system to create an audit record when the mount system call is used by a non-privileged user."
+    rationale: "It is highly unusual for a non privileged user to mount file systems to the system. While tracking mount commands gives the system administrator evidence that external media may have been mounted (based on a review of the source of the mount and confirming it's an external media type), it does not conclusively indicate that data was exported to the media. System administrators who wish to determine if data were exported, would also have to track successful open , creat and truncate system calls requiring write access to a file under the mount point of the external media file system. This could give a fair indication that a write occurred. The only way to truly prove it, would be to track successful writes to the external media. Tracking write system calls could quickly fill up the audit log and is not recommended. Recommendations on configuration options to track data export to media is beyond the scope of this document."
+    remediation: "For 32 bit systems add the following lines to the /etc/audit/audit.rules file:   -a always,exit -F arch=b32 -S mount -F auid>=1000 -F auid!=4294967295 -k mounts   For 64 bit systems add the following lines to the /etc/audit/audit.rules file:   -a always,exit -F arch=b64 -S mount -F auid>=1000 -F auid!=4294967295 -k mounts   -a always,exit -F arch=b32 -S mount -F auid>=1000 -F auid!=4294967295 -k mounts"
+    compliance:
+    condition: all
+    rules:
+      - 'f:/etc/audit/audit.rules -> -a always,exit -F arch=b32 -S mount -F auid>=1000 -F auid!=4294967295 -k mounts'
+
+
+# 4.1.14 Ensure file deletion events by users are collected (Scored)
+  - id: 104240
+    title: "Ensure file deletion events by users are collected"
+    description: "Monitor the use of system calls associated with the deletion or renaming of files and file attributes. This configuration statement sets up monitoring for the unlink (remove a file), unlinkat (remove a file attribute), rename (rename a file) and renameat (rename a file attribute) system calls and tags them with the identifier \"delete\"."
+    rationale: "Monitoring these calls from non-privileged users could provide a system administrator with evidence that inappropriate removal of files and file attributes associated with protected files is occurring. While this audit option will look at all events, system administrators will want to look for specific privileged files that are being deleted or altered."
+    remediation: "For 32 bit systems add the following lines to the /etc/audit/audit.rules file:   -a always,exit -F arch=b32 -S unlink -S unlinkat -S rename -S renameat -F auid>=1000 -F auid!=4294967295 -k delete   For 64 bit systems add the following lines to the /etc/audit/audit.rules file:   -a always,exit -F arch=b64 -S unlink -S unlinkat -S rename -S renameat -F auid>=1000 -F auid!=4294967295 -k delete   -a always,exit -F arch=b32 -S unlink -S unlinkat -S rename -S renameat -F auid>=1000 -F auid!=4294967295 -k delete"
+    compliance:
+    condition: all
+    rules:
+      - 'f:/etc/audit/audit.rules -> -a always,exit -F arch=b32 -S unlink -S unlinkat -S rename -S renameat -F auid>=1000 -F auid!=4294967295 -k delete'
