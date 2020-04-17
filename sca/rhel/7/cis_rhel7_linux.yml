@@ -758,8 +758,6 @@ checks:
     compliance:
       - cis: ["3.1.1"]
       - cis_csc: ["3", "11"]
-      - pci_dss: ["2.2.4"]
-      - nist_800_53: ["CM.1"]
     condition: all
     rules:
       - 'c:sysctl net.ipv4.ip_forward -> r:^net.ipv4.ip_forward\s*=\s*0$'
@@ -774,8 +772,6 @@ checks:
     compliance:
       - cis: ["3.1.2"]
       - cis_csc: ["3", "11"]
-      - pci_dss: ["2.2.4"]
-      - nist_800_53: ["CM.1"]
     condition: all
     rules:
       - 'c:sysctl net.ipv4.conf.all.send_redirects -> r:^net.ipv4.conf.all.send_redirects\s*=\s*0$'
@@ -795,8 +791,6 @@ checks:
     compliance:
       - cis: ["3.2.1"]
       - cis_csc: ["3", "11"]
-      - pci_dss: ["2.2.4"]
-      - nist_800_53: ["CM.1"]
     condition: all
     rules:
       - 'c:sysctl net.ipv4.conf.all.accept_source_route -> r:^net.ipv4.conf.all.accept_source_route\s*=\s*0$'
@@ -813,8 +807,6 @@ checks:
     compliance:
       - cis: ["3.2.2"]
       - cis_csc: ["3", "11"]
-      - pci_dss: ["2.2.4"]
-      - nist_800_53: ["CM.1"]
     condition: all
     rules:
       - 'c:sysctl net.ipv4.conf.all.accept_redirects -> r:^net.ipv4.conf.all.accept_redirects\s*=\s*0$'
@@ -831,8 +823,6 @@ checks:
     compliance:
       - cis: ["3.2.3"]
       - cis_csc: ["3", "11"]
-      - pci_dss: ["2.2.4"]
-      - nist_800_53: ["CM.1"]
     condition: all
     rules:
       - 'c:sysctl net.ipv4.conf.all.secure_redirects -> r:^net.ipv4.conf.all.secure_redirects\s*=\s*0$'
@@ -849,8 +839,6 @@ checks:
     compliance:
       - cis: ["3.2.4"]
       - cis_csc: ["6"]
-      - pci_dss: ["2.2.4"]
-      - nist_800_53: ["CM.1"]
     condition: all
     rules:
       - 'c:sysctl net.ipv4.conf.all.log_martians -> r:^net.ipv4.conf.all.log_martians\s*=\s*1$'
@@ -883,8 +871,6 @@ checks:
     compliance:
       - cis: ["3.2.6"]
       - cis_csc: ["3", "11"]
-      - pci_dss: ["2.2.4"]
-      - nist_800_53: ["CM.1"]
     condition: all
     rules:
       - 'c:sysctl net.ipv4.icmp_ignore_bogus_error_responses -> r:^net.ipv4.icmp_ignore_bogus_error_responses\s*=\s*1$'
@@ -899,8 +885,6 @@ checks:
     compliance:
       - cis: ["3.2.7"]
       - cis_csc: ["3", "11"]
-      - pci_dss: ["2.2.4"]
-      - nist_800_53: ["CM.1"]
     condition: all
     rules:
       - 'c:sysctl net.ipv4.conf.all.rp_filter -> r:^net.ipv4.conf.all.rp_filter\s*=\s*1$'
@@ -917,17 +901,14 @@ checks:
     compliance:
       - cis: ["3.2.8"]
       - cis_csc: ["3", "11"]
-      - pci_dss: ["2.2.4"]
-      - nist_800_53: ["CM.1"]
     condition: all
     rules:
       - 'c:sysctl net.ipv4.tcp_syncookies -> r:^net.ipv4.tcp_syncookies\s*=\s*1$'
       - 'c:grep -Rh net\.ipv4\.tcp_syncookies /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.tcp_syncookies\s*=\s*1$'
-      
+
 ###############################################
 # 3.3 IPv6
 ###############################################
-
 # 3.3.1 Ensure IPv6 router advertisements are not accepted (Not Scored)
   - id: 5564
     title: "Ensure IPv6 router advertisements are not accepted"
@@ -936,9 +917,7 @@ checks:
     remediation: "Set the following parameter in /etc/sysctl.conf or a /etc/sysctl.d/* file: net.ipv6.conf.all.accept_ra = 0 and net.ipv6.conf.default.accept_ra = 0 and set the active kernel parameters."
     compliance:
       - cis: ["3.3.1"]
-      - cis_csc: ["9.1"]
-      - pci_dss: ["10.2.6"]
-      - nist_800_53: ["CM.1"]
+      - cis_csc: ["3", "11"]
     condition: all
     rules:
       - 'c:sysctl net.ipv6.conf.all.accept_ra -> r:^net.ipv6.conf.all.accept_ra\s*=\s*0$'
@@ -955,15 +934,13 @@ checks:
     remediation: "Set the following parameter in /etc/sysctl.conf or a /etc/sysctl.d/* file: net.ipv6.conf.all.accept_ra = 0 and net.ipv6.conf.default.accept_ra = 0 and set the active kernel parameters."
     compliance:
       - cis: ["3.3.2"]
-      - cis_csc: ["9.1"]
-      - pci_dss: ["10.2.6"]
-      - nist_800_53: ["AU.14", "AU.5"]
+      - cis_csc: ["3", "11"]
     condition: all
     rules:
-      - 'c:sysctl net.ipv6.conf.all.accept_redirects -> r:^net.ipv6.conf.all.accept_redirects\s*=\s*0$'
-      - 'c:sysctl net.ipv6.conf.default.accept_redirects -> r:^net.ipv6.conf.default.accept_redirects\s*=\s*0$'
-      - 'c:grep -Rh net\.ipv6\.conf\.all\.accept_redirects /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv6.conf.all.accept_redirects\s*=\s*0$'
-      - 'c:grep -Rh net\.ipv6\.conf\.default\.accept_redirects /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv6.conf.default.accept_redirects\s*=\s*0$'
+      - 'c:sysctl net.ipv6.conf.all.accept_redirects -> r:^net.ipv6.conf.all.accept_redirect\s*=\s*0$'
+      - 'c:sysctl net.ipv6.conf.default.accept_redirects -> r:^net.ipv6.conf.default.accept_redirect\s*=\s*0$'
+      - 'c:grep -Rh net\.ipv6\.conf\.all\.accept_redirect /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv6.conf.all.accept_redirect\s*=\s*0$'
+      - 'c:grep -Rh net\.ipv6\.conf\.default\.accept_redirect /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv6.conf.default.accept_redirect\s*=\s*0$'
 
 # 3.3.3 Ensure IPv6 is disabled (Not Scored)
   - id: 5566
@@ -993,8 +970,6 @@ checks:
     compliance:
       - cis: ["3.4.1"]
       - cis_csc: ["9.2"]
-      - pci_dss: ["10.2.6"]
-      - nist_800_53: ["AU.14", "AU.5"]
     condition: all
     rules:
       - 'c:rpm -q tcp_wrappers -> r:^tcp_wrappers-'
@@ -1009,8 +984,6 @@ checks:
     compliance:
       - cis: ["3.4.3"]
       - cis_csc: ["9.2"]
-      - pci_dss: ["10.2.6"]
-      - nist_800_53: ["AU.14", "AU.5"]
     condition: all
     rules:
       - 'f:/etc/hosts.deny -> r:^ALL\s*:\s*ALL'
@@ -1024,11 +997,9 @@ checks:
     compliance:
       - cis: ["3.4.4"]
       - cis_csc: ["5.1"]
-      - pci_dss: ["10.2.6"]
-      - nist_800_53: ["AU.14", "AU.5"]
     condition: all
     rules:
-      - 'c:stat /etc/hosts.deny -> r:^Access: \(0644/-rw-r--r--\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
+      - 'c:stat /etc/hosts.allow -> r:^Access: \(0644/-rw-r--r--\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)'
 
 
 # 3.4.5 Ensure permissions on /etc/hosts.deny are configured (Scored)
@@ -1040,8 +1011,6 @@ checks:
     compliance:
       - cis: ["3.4.5"]
       - cis_csc: ["5.1"]
-      - pci_dss: ["10.2.6"]
-      - nist_800_53: ["AU.14", "AU.5"]
     condition: all
     rules:
       - 'c:stat /etc/hosts.deny -> r:^Access: \(0644/-rw-r--r--\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
@@ -1060,11 +1029,9 @@ the potential attack surface."
     compliance:
       - cis: ["3.5.1"]
       - cis_csc: ["9.1"]
-      - pci_dss: ["10.2.6"]
-      - nist_800_53: ["AU.14", "AU.5"]
     condition: all
     rules:
-      - 'c:modprobe -n -v dccp -> r:^install /bin/true'
+      - 'c:modprobe -n -v dccp -> r:install /bin/true'
       - 'not c:lsmod -> r:dccp'
 
 
@@ -1078,11 +1045,9 @@ the potential attack surface."
     compliance:
       - cis: ["3.5.2"]
       - cis_csc: ["9.1"]
-      - pci_dss: ["10.2.6"]
-      - nist_800_53: ["AU.14", "AU.5"]
     condition: all
     rules:
-      - 'c:modprobe -n -v sctp -> r:^install /bin/true'
+      - 'c:modprobe -n -v sctp -> r:install /bin/true'
       - 'not c:lsmod -> r:sctp'
 
 
@@ -1095,11 +1060,9 @@ the potential attack surface."
     compliance:
       - cis: ["3.5.3"]
       - cis_csc: ["9.1"]
-      - pci_dss: ["10.2.6"]
-      - nist_800_53: ["AU.14", "AU.5"]
     condition: all
     rules:
-      - 'c:modprobe -n -v rds -> r:^install /bin/true'
+      - 'c:modprobe -n -v rds -> r:install /bin/true'
       - 'not c:lsmod -> r:rds'
 
 
@@ -1112,11 +1075,9 @@ the potential attack surface."
     compliance:
       - cis: ["3.5.4"]
       - cis_csc: ["9.1"]
-      - pci_dss: ["10.2.6"]
-      - nist_800_53: ["AU.14", "AU.5"]
     condition: all
     rules:
-      - 'c:modprobe -n -v tipc -> r:^install /bin/true'
+      - 'c:modprobe -n -v tipc -> r:install /bin/true'
       - 'not c:lsmod -> r:tipc'	
 
 ###############################################
@@ -1131,8 +1092,6 @@ the potential attack surface."
     compliance:
       - cis: ["3.6.1"]
       - cis_csc: ["9.2"]
-      - pci_dss: ["10.2.6"]
-      - nist_800_53: ["AU.14", "AU.5"]
     condition: all
     rules:
       - 'c:rpm -q iptables -> r:iptables-'
@@ -1146,12 +1105,9 @@ the potential attack surface."
     compliance:
       - cis: ["3.6.2"]
       - cis_csc: ["9.2"]
-      - pci_dss: ["10.2.6"]
-      - nist_800_53: ["AU.14", "AU.5"]
     condition: all
     rules:
       - 'c:iptables -L -> r:Chain INPUT (policy DROP) && r:Chain FORWARD (policy DROP) && r:Chain OUTPUT (policy DROP)'
-
 
 ###############################################
 # 5 System Access, Authentication and Authorization
@@ -1168,13 +1124,9 @@ the potential attack surface."
     compliance:
       - cis: ["5.1.1"]
       - cis_csc: ["6"]
-      - pci_dss: ["4.1"]
-      - hipaa: ["164.312.a.2.IV", "164.312.e.1", "164.312.e.2.I", "164.312.e.2.II"]
-      - nist_800_53: ["SC.8"]
     condition: all
     rules:
       - 'c:systemctl is-enabled crond -> enabled'
-
 
 # 5.1.2 Ensure permissions on /etc/crontab are configured (Scored)
   - id: 5579
@@ -1185,12 +1137,10 @@ the potential attack surface."
     compliance:
       - cis: ["5.1.2"]
       - cis_csc: ["5.1"]
-      - pci_dss: ["4.1"]
-      - hipaa: ["164.312.a.2.IV", "164.312.e.1", "164.312.e.2.I", "164.312.e.2.II"]
-      - nist_800_53: ["SC.8"]
     condition: all
     rules:
       - 'c:stat /etc/crontab -> r:^Access: \(0600/-rw-------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
+
 
 # 5.1.3 Ensure permissions on /etc/cron.hourly are configured (Scored)
   - id: 5580
@@ -1199,11 +1149,8 @@ the potential attack surface."
     rationale: "Granting write access to this directory for non-privileged users could provide them the means for gaining unauthorized elevated privileges. Granting read access to this directory could give an unprivileged user insight in how to gain elevated privileges or circumvent auditing controls."
     remediation: "Run the following commands to set ownership and permissions on /etc/cron.hourly : chown root:root /etc/cron.hourly and chmod og-rwx /etc/cron.hourly"
     compliance:
-      - cis: ["5.1.2"]
+      - cis: ["5.1.3"]
       - cis_csc: ["5.1"]
-      - pci_dss: ["4.1"]
-      - hipaa: ["164.312.a.2.IV", "164.312.e.1", "164.312.e.2.I", "164.312.e.2.II"]
-      - nist_800_53: ["SC.8"]
     condition: all
     rules:
       - 'c:stat /etc/cron.hourly -> r:^Access: \(0700/drwx------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
@@ -1217,9 +1164,6 @@ the potential attack surface."
     compliance:
       - cis: ["5.1.4"]
       - cis_csc: ["5.1"]
-      - pci_dss: ["4.1"]
-      - hipaa: ["164.312.a.2.IV", "164.312.e.1", "164.312.e.2.I", "164.312.e.2.II"]
-      - nist_800_53: ["SC.8"]
     condition: all
     rules:
       - 'c:stat /etc/cron.daily -> r:^Access: \(0700/drwx------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
@@ -1233,9 +1177,6 @@ the potential attack surface."
     compliance:
       - cis: ["5.1.5"]
       - cis_csc: ["5.1"]
-      - pci_dss: ["4.1"]
-      - hipaa: ["164.312.a.2.IV", "164.312.e.1", "164.312.e.2.I", "164.312.e.2.II"]
-      - nist_800_53: ["SC.8"]
     condition: all
     rules:
       - 'c:stat /etc/cron.weekly -> r:^Access: \(0700/drwx------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
@@ -1250,9 +1191,6 @@ the potential attack surface."
     compliance:
       - cis: ["5.1.6"]
       - cis_csc: ["5.1"]
-      - pci_dss: ["4.1"]
-      - hipaa: ["164.312.a.2.IV", "164.312.e.1", "164.312.e.2.I", "164.312.e.2.II"]
-      - nist_800_53: ["SC.8"]
     condition: all
     rules:
       - 'c:stat /etc/cron.monthly -> r:^Access: \(0700/drwx------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
@@ -1260,15 +1198,12 @@ the potential attack surface."
 # 5.1.7 Ensure permissions on /etc/cron.d are configured (Scored)
   - id: 5584
     title: "Ensure permissions on /etc/cron.d are configured"
-    description: "The /etc/cron.d directory contains system cron jobs that need to run in a similar manner to the hourly, daily weekly and monthly jobs from /etc/crontab , but require more granular control as to when they run. The files in this directory cannot be manipulated by the crontab command, but are instead edited by system administrators using a text editor. The commands below restrict read/write and search access to user and group root, preventing regular users from accessing this directory."
-    rationale: "Granting write access to this directory for non-privileged users could provide them the means for gaining unauthorized elevated privileges. Granting read access to this directory could give an unprivileged user insight in how to gain elevated privileges or circumvent auditing controls."
-    remediation: "Run the following commands to set ownership and permissions on /etc/cron.d : chown root:root /etc/cron.d and chmod og-rwx /etc/cron.d"
+    description: "Configure /etc/cron.allow and /etc/at.allow to allow specific users to use these services. If /etc/cron.allow or /etc/at.allow do not exist, then /etc/at.deny and /etc/cron.deny are checked. Any user not specifically defined in those files is allowed to use at and cron. By removing the files, only users in /etc/cron.allow and /etc/at.allow are allowed to use at and cron. Note that even though a given user is not listed in cron.allow , cron jobs can still be run as that user. The cron.allow file only controls administrative access to the crontab command for scheduling and modifying cron jobs."
+    rationale: "On many systems, only the system administrator is authorized to schedule cron jobs. Using the cron.allow file to control who can run cron jobs enforces this policy. It is easier to manage an allow list than a deny list. In a deny list, you could potentially add a user ID to the system and forget to add it to the deny files."
+    remediation: "Run the following commands to remove /etc/cron.deny and /etc/at.deny and create and set permissions and ownership for /etc/cron.allow and /etc/at.allow: rm /etc/cron.deny;rm /etc/at.deny;touch /etc/cron.allow; touch /etc/at.allow; chmod og-rwx /etc/cron.allow; chmod og-rwx /etc/at.allow; chown root:root /etc/cron.allow and chown root:root /etc/at.allow"
     compliance:
       - cis: ["5.1.7"]
       - cis_csc: ["5.1"]
-      - pci_dss: ["4.1"]
-      - hipaa: ["164.312.a.2.IV", "164.312.e.1", "164.312.e.2.I", "164.312.e.2.II"]
-      - nist_800_53: ["SC.8"]
     condition: all
     rules:
       - 'c:stat /etc/cron.d -> r:^Access: \(0700/drwx------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
@@ -1280,12 +1215,19 @@ the potential attack surface."
     rationale: "On many systems, only the system administrator is authorized to schedule cron jobs. Using the cron.allow file to control who can run cron jobs enforces this policy. It is easier to manage an allow list than a deny list. In a deny list, you could potentially add a user ID to the system and forget to add it to the deny files."
     remediation: "Run the following commands to remove /etc/cron.deny and /etc/at.deny and create and set permissions and ownership for /etc/cron.allow and /etc/at.allow: rm /etc/cron.deny;rm /etc/at.deny;touch /etc/cron.allow; touch /etc/at.allow; chmod og-rwx /etc/cron.allow; chmod og-rwx /etc/at.allow; chown root:root /etc/cron.allow and chown root:root /etc/at.allow"
     compliance:
+      - cis: ["5.1.8"]
+      - cis_csc: ["16"]
     condition: all
     rules:
       - 'c:stat /etc/cron.deny -> r:No such file or directory$'
       - 'c:stat /etc/at.deny -> r:No such file or directory$'
       - 'c:stat /etc/cron.allow -> r:^Access: \(0600/-rw-------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
       - 'c:stat /etc/at.allow -> r:^Access: \(0600/-rw-------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
+
+
+
+
+
 
 
 ###############################################
@@ -1297,12 +1239,15 @@ the potential attack surface."
     description: "The /etc/ssh/sshd_config file contains configuration specifications for sshd. The command below sets the owner and group of the file to root."
     rationale: "The /etc/ssh/sshd_config file needs to be protected from unauthorized changes by non-privileged users."
     remediation: "Run the following commands to set ownership and permissions on /etc/ssh/sshd_config: chown root:root /etc/ssh/sshd_config and chmod og-rwx /etc/ssh/sshd_config"
-    compliance:	
+    compliance:
+      - cis: ["5.2.1"]
+      - cis_csc: ["5.1"]
     condition: all
     rules:
       - 'c:stat /etc/ssh/sshd_config -> r:^Access: \(0600/-rw-------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
+
 # 5.2.2 Set SSH Protocol to 2 (Scored)
-  - id: 5556
+  - id: 5557
     title: "Ensure SSH Protocol is set to 2"
     description: "SSH supports two different and incompatible protocols: SSH1 and SSH2. SSH1 was the original protocol and was subject to security issues. SSH2 is more advanced and secure."
     rationale: "SSH v1 suffers from insecurities that do not affect SSH v2."
@@ -1318,7 +1263,7 @@ the potential attack surface."
       - 'f:$sshd_file -> !r:^# && r:Protocol\s*\t*2'
 
 # 5.2.3 Set LogLevel to INFO (Scored)
-  - id: 5557
+  - id: 5558
     title: "Ensure SSH LogLevel is set to INFO"
     description: "The INFO parameter specifies that login and logout activity will be logged."
     rationale: "SSH provides several logging levels with varying amounts of verbosity. DEBUG is specifically not recommended other than strictly for debugging SSH communications since it provides so much data that it is difficult to identify important security information. INFO level is the basic level that only records login activity of SSH users. In many situations, such as Incident Response, it is important to determine when a particular user was active on a system. The logout record can eliminate those users who disconnected, which helps narrow the field."
@@ -1340,12 +1285,13 @@ the potential attack surface."
     rationale: "Disable X11 forwarding unless there is an operational requirement to use X11 applications directly. There is a small risk that the remote X11 servers of users who are logged in via SSH with X11 forwarding could be compromised by other users on the X11 server. Note that even if X11 forwarding is disabled, users can always install their own forwarders."
     remediation: "Edit the /etc/ssh/sshd_config file to set the parameter as follows: X11Forwarding no"
     compliance:
+      - cis: ["5.2.4"]
     condition: all
     rules:
-      - 'f:/etc/ssh/sshd_config -> r:^X11Forwarding no'
+      - 'f:/etc/ssh/sshd_config -> r:^\s*X11Forwarding\s*\t*no'
 
 # 5.2.5 Set SSH MaxAuthTries to 4 or Less (Scored)
-  - id: 5558
+  - id: 5678
     title: "Ensure SSH MaxAuthTries is set to 4 or less"
     description: "The MaxAuthTries parameter specifies the maximum number of authentication attempts permitted per connection. When the login failure count reaches half the number, error messages will be written to the syslog file detailing the login failure."
     rationale: "Setting the MaxAuthTries parameter to a low number will minimize the risk of successful brute force attacks to the SSH server. While the recommended setting is 4, set the number based on site policy."
@@ -1393,16 +1339,11 @@ the potential attack surface."
 
 # 5.2.8 Disable SSH Root Login (Scored)
   - id: 5561
-    title: "Ensure SSH root login is disabled"
-    description: "The PermitRootLogin parameter specifies if the root user can log in using ssh. The default is no."
-    rationale: "Disallowing root logins over SSH requires system admins to authenticate using their own individual account, then escalating to root via sudo or su . This in turn limits opportunity for non-repudiation and provides a clear audit trail in the event of a security incident."
-    remediation: "Edit the /etc/ssh/sshd_config file to set the parameter as follows: PermitRootLogin no"
+    title: "Ensure SSH PermitUserEnvironment is disabled"
+    description: "The PermitUserEnvironment option allows users to present environment options to the ssh daemon."
+    rationale: "Permitting users the ability to set environment variables through the SSH daemon could potentially allow users to bypass security controls (e.g. setting an execution path that has ssh executing trojan'd programs)"
+    remediation: "Edit the /etc/ssh/sshd_config file to set the parameter as follows: PermitUserEnvironment no"
     compliance:
-      - cis: ["5.2.8"]
-      - cis_csc: ["5.8"]
-      - pci_dss: ["4.1"]
-      - hipaa: ["164.312.a.2.IV", "164.312.e.1", "164.312.e.2.I", "164.312.e.2.II"]
-      - nist_800_53: ["SC.8"]
     condition: all
     rules:
       - 'f:$sshd_file -> !r:^# && r:PermitRootLogin\s*\t*no'
@@ -1430,9 +1371,11 @@ the potential attack surface."
     rationale: "Disallowing remote shell access to accounts that have an empty password reduces the probability of unauthorized access to the system."
     remediation: "Edit the /etc/ssh/sshd_config file to set the parameter as follows: PermitEmptyPasswords no"
     compliance:
+      - cis: ["5.2.10"]
+      - cis_csc: ["16"]
     condition: all
     rules:
-      - 'f:/etc/ssh/sshd_config -> r:^PermitUserEnvironment no'
+      - 'f:/etc/ssh/sshd_config -> r:^\s*PermitUserEnvironment\s*\t*no'
 
 # 5.2.12 Ensure SSH Idle Timeout Interval is configured (Scored)
   - id: 5591
@@ -1441,11 +1384,12 @@ the potential attack surface."
     rationale: "Having no timeout value associated with a connection could allow an unauthorized user access to another user's ssh session (e.g. user walks away from their computer and doesn't lock the screen). Setting a timeout value at least reduces the risk of this happening. While the recommended setting is 300 seconds (5 minutes), set this timeout value based on site policy. The recommended setting for ClientAliveCountMax is 0. In this case, the client session will be terminated after 5 minutes of idle time and no keepalive messages will be sent."
     remediation: "Edit the /etc/ssh/sshd_config file to set the parameters according to site policy: ClientAliveInterval 300 and ClientAliveCountMax 0"
     compliance:
+      - cis: ["5.2.12"]
+      - cis_csc: ["16.4"]
     condition: all
     rules:
       - 'f:/etc/ssh/sshd_config -> n:^\s*ClientAliveInterval\s*\t*(\d+) compare <= 300' 
       - 'f:/etc/ssh/sshd_config -> n:^\s*ClientAliveCountMax\s*\t*(\d+) compare <= 3' 
-
 
 # 5.2.13 Ensure SSH LoginGraceTime is set to one minute or less (Scored)
   - id: 5592
@@ -1454,6 +1398,7 @@ the potential attack surface."
     rationale: "Setting the LoginGraceTime parameter to a low number will minimize the risk of successful brute force attacks to the SSH server. It will also limit the number of concurrent unauthenticated connections While the recommended setting is 60 seconds (1 Minute), set the number based on site policy."
     remediation: "Edit the /etc/ssh/sshd_config file to set the parameter as follows: LoginGraceTime 60"
     compliance:
+      - cis: ["5.2.13"]
     condition: all
     rules:
       - 'f:/etc/ssh/sshd_config -> n:^\s*LoginGraceTime\s*\t*(\d+) compare <= 60' 
@@ -1467,9 +1412,14 @@ The AllowGroups variable gives the system administrator the option of allowing s
     rationale: "Restricting which users can remotely access the system via SSH will help ensure that only authorized users access the system."
     remediation: "Edit the /etc/ssh/sshd_config file to set one or more of the parameter as follows: AllowUsers <userlist>; AllowGroups <grouplist>; DenyUsers <userlist> and DenyGroups <grouplist>"
     compliance:
+      - cis: ["5.2.14"]
+      - cis_csc: ["5.1", "5.8"]
     condition: all
     rules:
-      - 'f:/etc/ssh/sshd_config -> r:^\s*AllowUsers && r:^\s*AllowGroups && r:^\s*DenyUsers && r:^\s*DenyGroups'
+      - 'f:/etc/ssh/sshd_config -> r:^\s*AllowUsers'
+      - 'f:/etc/ssh/sshd_config -> r:^\s*AllowGroups'
+      - 'f:/etc/ssh/sshd_config -> r:^\s*DenyUsers'
+      - 'f:/etc/ssh/sshd_config -> r:^\s*DenyGroups'
 
 # 5.2.15 Ensure SSH warning banner is configured (Scored)
   - id: 5594
@@ -1478,6 +1428,7 @@ The AllowGroups variable gives the system administrator the option of allowing s
     rationale: "Banners are used to warn connecting users of the particular site's policy regarding connection. Presenting a warning message prior to the normal user login may assist the prosecution of trespassers on the computer system."
     remediation: "Edit the /etc/ssh/sshd_config file to set the parameter as follows: Banner /etc/issue.net"
     compliance:
+      - cis: ["5.2.15"]
     condition: all
     rules:
       - 'f:/etc/ssh/sshd_config -> r:^\s*Banner\s*\t*/etc/issue.net'
@@ -1486,6 +1437,22 @@ The AllowGroups variable gives the system administrator the option of allowing s
 ###############################################
 # 5.3 Configure PAM
 ###############################################
+# 5.3.1 Ensure password creation requirements are configured (Scored)
+  - id: 5615
+    title: "Ensure password creation requirements are configured"
+    description: "The pam_pwquality.so module checks the strength of passwords. It performs checks such as making sure a password is not a dictionary word, it is a certain length, contains a mix of characters (e.g. alphabet, numeric, other) and more"
+    rationale: "Strong passwords protect systems from being hacked through brute force methods."
+    remediation: "Edit the /etc/pam.d/password-auth and /etc/pam.d/system-auth files to include the appropriate options for pam_pwquality.so and to conform to site policy: password requisite pam_pwquality.so try_first_pass retry=3. Edit /etc/security/pwquality.conf to add or update the following settings to conform to site policy: minlen = 14"
+    compliance:
+      - cis: ["5.3.1"]
+      - cis_csc: ["5.7", "16.12"]
+    condition: all
+    rules:
+      - 'c:grep pam_pwquality.so /etc/pam.d/password-auth -> r:try_first_pass'
+      - 'c:grep pam_pwquality.so /etc/pam.d/system-auth -> r:try_first_pass'
+      - 'f:/etc/security/pwquality.conf -> n:^\s*minlen\s+\t*=\s+\t*(\d+) compare >= 14'
+
+
 # 5.3.4 Ensure password hashing algorithm is SHA-512 (Scored)
   - id: 5595
     title: "Ensure password hashing algorithm is SHA-512"
@@ -1493,14 +1460,15 @@ The AllowGroups variable gives the system administrator the option of allowing s
     rationale: "The SHA-512 algorithm provides much stronger hashing than MD5, thus providing additional protection to the system by increasing the level of effort for an attacker to successfully determine passwords. Note that these change only apply to accounts configured on the local system."
     remediation: "Edit the /etc/pam.d/password-auth and /etc/pam.d/system-auth files to include the sha512 option for pam_unix.so as shown: password sufficient pam_unix.so sha512"
     compliance:
+      - cis: ["5.3.4"]
+      - cis_csc: ["16.14"]
     condition: all
     rules:
-      - 'f:/etc/pam.d/password-auth -> r:^password sufficient pam_unix.so sha512'
-      - 'f:/etc/pam.d/system-auth -> r:^password sufficient pam_unix.so sha512'
-
-
-
-
+      - 'f:/etc/pam.d/password-auth -> r:^password\s*sufficient\s*pam_unix.so\s*sha512'
+      - 'f:/etc/pam.d/system-auth -> r:^password\s*sufficient\s*pam_unix.so\s*sha512'
+###############################################
+# 5.4 User Accounts and Environment
+###############################################
 ###############################################
 # 5.4.1 Set Shadow Password Suite Parameters
 ###############################################
@@ -1511,6 +1479,8 @@ The AllowGroups variable gives the system administrator the option of allowing s
     rationale: "The window of opportunity for an attacker to leverage compromised credentials or successfully compromise credentials via an online brute force attack is limited by the age of the password. Therefore, reducing the maximum age of a password also reduces an attacker's window of opportunity."
     remediation: "Set the PASS_MAX_DAYS parameter to conform to site policy in /etc/login.defs : PASS_MAX_DAYS 90 and modify user parameters for all users with a password set to match: chage --maxdays 90 <user>"
     compliance:
+      - cis: ["5.4.1.1"]
+      - cis_csc: ["16"]
     condition: all
     rules:
       - 'f:/etc/login.defs -> n:^\s*PASS_MAX_DAYS\s*\t*(\d+) compare <= 365'
@@ -1522,6 +1492,8 @@ The AllowGroups variable gives the system administrator the option of allowing s
     rationale: "By restricting the frequency of password changes, an administrator can prevent users from repeatedly changing their password in an attempt to circumvent password reuse controls."
     remediation: "Set the PASS_MIN_DAYS parameter to 7 in /etc/login.defs: PASS_MIN_DAYS 7 and modify user parameters for all users with a password set to match: chage --mindays 7 <user>"
     compliance:
+      - cis: ["5.4.1.2"]
+      - cis_csc: ["16"]
     condition: all
     rules:
       - 'f:/etc/login.defs -> n:^\s*PASS_MIN_DAYS\s*\t*(\d+) compare >= 7'
@@ -1533,6 +1505,8 @@ The AllowGroups variable gives the system administrator the option of allowing s
     rationale: "Providing an advance warning that a password will be expiring gives users time to think of a secure password. Users caught unaware may choose a simple password or write it down where it may be discovered."
     remediation: "Set the PASS_WARN_AGE parameter to 7 in /etc/login.defs: PASS_WARN_AGE 7 and modify user parameters for all users with a password set to match: chage --warndays 7 <user>"
     compliance:
+      - cis: ["5.4.1.3"]
+      - cis_csc: ["16"]
     condition: all
     rules:
       - 'f:/etc/login.defs -> n:^\s*PASS_WARN_AGE\s*\t*(\d+) compare >= 7'
@@ -1544,6 +1518,8 @@ The AllowGroups variable gives the system administrator the option of allowing s
     rationale: "Inactive accounts pose a threat to system security since the users are not logging in to notice failed login attempts or other anomalies."
     remediation: "Run the following command to set the default password inactivity period to 30 days: useradd -D -f 30 and modify user parameters for all users with a password set to match: chage --inactive 30 <user>"
     compliance:
+      - cis: ["5.4.1.4"]
+      - cis_csc: ["16"]
     condition: all
     rules:
       - 'c:useradd -D -> n:^\s*INACTIVE\s*=\s*(\d+) compare <= 30'
@@ -1556,9 +1532,11 @@ The AllowGroups variable gives the system administrator the option of allowing s
     rationale: "Using GID 0 for the root account helps prevent root -owned files from accidentally becoming accessible to non-privileged users."
     remediation: "Run the following command to set the root user default group to GID 0: usermod -g 0 root"
     compliance:
+      - cis: ["5.4.3"]
+      - cis_csc: ["5"]
     condition: all
     rules:
-      - 'c:grep "^root:" /etc/passwd | cut -f4 -d: -> r:0'
+      - 'f:/etc/passwd -> r:^root:\w:\w:0'
 
 # 5.4.4 Ensure default user umask is 027 or more restrictive (Scored)
   - id: 5601
@@ -1566,23 +1544,46 @@ The AllowGroups variable gives the system administrator the option of allowing s
     description: "The default umask determines the permissions of files created by users. The user creating the file has the discretion of making their files and directories readable by others via the chmod command. Users who wish to allow their files and directories to be readable by others by default may choose a different default umask by inserting the umask command into the standard shell configuration files ( .profile , .bashrc , etc.) in their home directories."
     rationale: "Setting a very secure default value for umask ensures that users make a conscious choice about their file permissions. A default umask setting of 077 causes files and directories created by users to not be readable by any other user on the system. A umask of 027 would make files and directories readable by users in the same Unix group, while a umask of 022 would make files readable by every user on the system."
     remediation: "Edit the /etc/bashrc , /etc/profile and /etc/profile.d/*.sh files (and the appropriate files for any other shell supported on your system) and add or edit any umask parameters as follows: umask 027"
-    compliance:
-    condition: all
+    compliance:      
+      - cis: ["5.4.4"]
+      - cis_csc: ["13"]
+    condition: none
     rules:
-      - 'not c:grep umask /etc/bashrc -> n:^\s*\t*umask\s+(\d+) compare <= 27'
-      - 'not c:grep -Rh umask /etc/profile /etc/profile.d/*.sh -> n:umask\s+(\d+) compare <= 27'
+      - 'f:/etc/bashrc -> n:^\s*\t*umask\s+(\d+) compare >= 027'
+      - 'f:/etc/profile -> n:^\s*\t*umask\s+(\d+) compare >= 027'
+      - 'd:/etc/profile.d -> .sh -> n:^\s*\t*umask\s+(\d+) compare >= 027'
 
-# 5.5 Ensure default user shell timeout is 900 seconds or less (Scored)
+
+
+# 5.4.5 Ensure default user shell timeout is 900 seconds or less (Scored)
   - id: 5602
-    title: "Ensure default user umask is 027 or more restrictive"
+    title: "Ensure default user shell timeout is 900 seconds or less"
     description: "The default TMOUT determines the shell timeout for users. The TMOUT value is measured in seconds."
     rationale: "Having no timeout value associated with a shell could allow an unauthorized user access to another user's shell session (e.g. user walks away from their computer and doesn't lock the screen). Setting a timeout value at least reduces the risk of this happening."
-    remediation: "Edit the /etc/bashrc and /etc/profile files (and the appropriate files for any other shell supported on your system) and add or edit any umask parameters as follows: TMOUT=600"
+    remediation: "Edit the /etc/bashrc and /etc/profile files (and the appropriate files for any other shell
+supported on your system) and add or edit any umask parameters as follows: TMOUT=600"
     compliance:
+      - cis: ["5.4.5"]
+      - cis_csc: ["16.4"]
     condition: all
     rules:
       - 'not f:/etc/bashrc -> n:^\s*\t*umask\s+(\d+) compare >= 900'
-      - 'not f:/etc/profile /etc/profile.d/*.sh -> n:umask\s+(\d+) compare >= 900'
+      - 'not f:/etc/profile -> n:^\s*\t*umask\s+(\d+) compare >= 900'
+
+# 5.6 Ensure access to the su command is restricted (Scored)
+  - id: 5603
+    title: "Ensure access to the su command is restricted."
+    description: "The su command allows a user to run a command or shell as another user. The program has been superseded by sudo , which allows for more granular control over privileged access. Normally, the su command can be executed by any user. By uncommenting the pam_wheel.so statement in /etc/pam.d/su , the su command will only allow users in the wheel group to execute su ."
+    rationale: "Restricting the use of su , and using sudo in its place, provides system administrators better control of the escalation of user privileges to execute privileged commands. The sudo utility also provides a better logging and audit mechanism, as it can log each command executed via sudo , whereas su can only record that a user executed the su program."
+    remediation: "Add the following line to the /etc/pam.d/su file: auth required pam_wheel.so use_uid"
+    compliance:
+      - cis: ["5.6"]
+      - cis_csc: ["5.1"]
+    condition: all
+    rules:
+      - 'f:/etc/pam.d/su -> r:^auth\s*\t*required\s*\t*pam_wheel.so\s*\t*use_uid'
+
+
 
 ###############################################
 # 6 System Maintenance
