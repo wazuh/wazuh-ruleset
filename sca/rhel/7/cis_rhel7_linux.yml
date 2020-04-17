@@ -1390,7 +1390,6 @@ checks:
     rules:
       - 'f:/etc/audit/audit.rules -> -a always,exit -F arch=b32 -S unlink -S unlinkat -S rename -S renameat -F auid>=1000 -F auid!=4294967295 -k delete'
 
-
 # 4.1.15 Ensure changes to system administration scope (sudoers) is collected (Scored)
   - id: 104250
     title: "Ensure changes to system administration scope (sudoers) is collected"
@@ -1468,10 +1467,9 @@ checks:
     rationale: "It is important to ensure that log files have the correct permissions to ensure that sensitive data is archived and protected."
     remediation: "Edit the /etc/rsyslog.conf and /etc/rsyslog.d/*.conf files and set $FileCreateMode to 0640 or more restrictive:   $FileCreateMode 0640"
     compliance:
-    condition: none
+    condition: all
     rules:
-      - 'f:/etc/rsyslog.conf -> !r:$FileCreateMode 0600|$FileCreateMode 0640'
-      - 'd:/etc/rsyslog.d -> *.conf -> !r:$FileCreateMode 0600|$FileCreateMode 0640'
+      - 'f:/etc/rsyslog.conf -> r:^\$FileCreateMode 0600|^\$FileCreateMode 0640'
 
 # 4.2.2.3 Ensure syslog-ng default file permissions configured (Scored)
   - id: 104703
@@ -1480,10 +1478,9 @@ checks:
     rationale: "It is important to ensure that log files have the correct permissions to ensure that sensitive syslog-ng data is archived and protected."
     remediation: "Edit the /etc/syslog-ng/syslog-ng.conf and set perm option to 0640 or more restrictive:     options { chain_hostnames(off); flush_lines(0); perm(0640); stats_freq(3600); threaded(yes); };"
     compliance:
-    condition: none
+    condition: all
     rules:
-      - 'f:/etc/syslog-ng/syslog-ng.conf -> r:^\s*options && !r:perm(0600)|$perm(0640)'
-
+      - 'not f:/etc/syslog-ng/syslog-ng.conf -> r:^\s*options && !r:perm(0600)|perm(0640)'
 
 # 4.2.1.4 Ensure rsyslog is configured to send logs to a remote log host (Scored)
   - id: 104604
@@ -1494,8 +1491,7 @@ checks:
     compliance:
     condition: all
     rules:
-      - 'f:/etc/rsyslog.conf -> r:\*.\* @@\W+'
-      - 'd:/etc/rsyslog.d -> *.conf -> r:\*.\* @@\W+'
+      - 'f:/etc/rsyslog.conf -> r:^*.* @@+'
 
 # 4.2.2.4 Ensure syslog-ng is configured to send logs to a remote log host (Not Scored)
   - id: 104704
@@ -1506,7 +1502,7 @@ checks:
     compliance:
     condition: all
     rules:
-      - 'f:/etc/syslog-ng/syslog-ng.conf -> r:destination logserver && r:tcp("\W+"'
+      - 'f:/etc/syslog-ng/syslog-ng.conf -> r:^destination logserver'
 
 # 4.2.3 Ensure rsyslog or syslog-ng is installed (Scored)
   - id: 104803
@@ -1527,6 +1523,6 @@ checks:
     rationale: "It is important to ensure that log files have the correct permissions to ensure that sensitivebdata is archived and protected."
     remediation: "Run the following command to set permissions on all existing log files: # find /var/log -type f -exec chmod g-wx,o-rwx {} +"
     compliance:
-    condition: none
+    condition: all
     rules:
-      - 'c:find /var/log -type f -ls -> r:\w\w\w\w\w-----'
+      - 'not c:find /var/log -type f -ls -> !r:-\w\w-\w-----'
