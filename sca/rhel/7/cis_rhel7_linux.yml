@@ -1587,6 +1587,61 @@ checks:
 ###############################################
 # 6.2 Review User and Group Settings
 ###############################################
+# 6.2.1 Check passwords fields (Scored)
+  - id: 5665
+    title: "Ensure password fields are not empty"
+    description: "An account with an empty password field means that anybody may log in as that user without providing a password."
+    rationale: "All accounts must have passwords or be locked to prevent the account from being used by an unauthorized user."
+    remediation: "If any accounts in the /etc/shadow file do not have a password, run the following command to lock the account until it can be determined why it does not have a password: passwd -l <username> || Also, check to see if the account is logged in and investigate what it is being used for to determine if it needs to be forced off."
+    compliance:
+      - cis: ["6.2.1"]
+      - cis_csc: ["16"]
+      - pci_dss: ["10.2.5"]
+      - hipaa: ["164.312.b"]
+      - nist_800_53: ["AU.14", "AC.7"]
+    condition: none
+    rules:
+      - 'f:/etc/shadow -> !r:^# && r:^\w+::'
+
+# 6.2.2 Delete legacy entries in /etc/passwd (Scored)
+  - id: 5666
+    title: "Ensure no legacy \"+\" entries exist in /etc/passwd"
+    description: "The character + in various files used to be markers for systems to insert data from NIS maps at a certain point in a system configuration file. These entries are no longer required on most systems, but may exist in files that have been imported from other platforms."
+    rationale: "These entries may provide an avenue for attackers to gain privileged access on the system."
+    remediation: "Remove any legacy '+' entries from /etc/passwd if they exist."
+    compliance:
+      - cis: ["6.2.2"]
+      - cis_csc: ["16.9"]
+    condition: none
+    rules:
+      - 'f:/etc/passwd -> !r:^# && r:^+:'
+
+# 6.2.3 Delete legacy entries in /etc/shadow (Scored)
+  - id: 5667
+    title: "Ensure no legacy \"+\" entries exist in /etc/shadow"
+    description: "The character + in various files used to be markers for systems to insert data from NIS maps at a certain point in a system configuration file. These entries are no longer required on most systems, but may exist in files that have been imported from other platforms."
+    rationale: "These entries may provide an avenue for attackers to gain privileged access on the system."
+    remediation: "Remove any legacy '+' entries from /etc/shadow if they exist."
+    compliance:
+      - cis: ["6.2.3"]
+      - cis_csc: ["16.9"]
+    condition: none
+    rules:
+      - 'f:/etc/shadow -> !r:^# && r:^+:'
+
+# 6.2.4 Delete legacy entries in /etc/group (Scored)
+  - id: 5668
+    title: "Ensure no legacy \"+\" entries exist in /etc/group"
+    description: "The character + in various files used to be markers for systems to insert data from NIS maps at a certain point in a system configuration file. These entries are no longer required on most systems, but may exist in files that have been imported from other platforms."
+    rationale: "These entries may provide an avenue for attackers to gain privileged access on the system."
+    remediation: "Remove any legacy '+' entries from /etc/group if they exist."
+    compliance:
+      - cis: ["6.2.4"]
+      - cis_csc: ["16.9"]
+    condition: none
+    rules:
+      - 'f:/etc/group -> !r:^# && r:^+:'
+
 # 6.2.5 Verify No UID 0 Accounts Exist Other Than root (Scored)
   - id: 5563
     title: "Ensure root is the only UID 0 account"
