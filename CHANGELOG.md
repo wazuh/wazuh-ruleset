@@ -1,15 +1,52 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [v3.13.0] 
+
+### Added
+
+- Added rules and decoders for macOS sshd logs ([#593](https://github.com/wazuh/wazuh-ruleset/pull/593))
+
+## [v3.12.0]
+
+### Added
+
+- Extend the rules to detect shellshock attacks (by @iasdeoupxe). ([#459](https://github.com/wazuh/wazuh-ruleset/pull/479))
+- Update Roundcube decoder to support versions greater than 1.4 (by @iasdeoupxe). ([#537](https://github.com/wazuh/wazuh-ruleset/pull/537))
+- Added Junos rules and decoders ([#581](https://github.com/wazuh/wazuh-ruleset/pull/581))
+
+### Fixed
+
+- Fix GPG requirement in Windows rules. ([#562](https://github.com/wazuh/wazuh-ruleset/pull/562))
+- Improve Cisco decoders and fix Owlh rule's IDs conflict. ([#570](https://github.com/wazuh/wazuh-ruleset/pull/570))
+- Fixed checkpoint decoders to read events with a different format. ([#156](https://github.com/wazuh/wazuh-ruleset/pull/156))
+
+## [v3.11.2]
+
+### Fixed
+
+- Fixed permissions of the VERSION file. ([#545](https://github.com/wazuh/wazuh-ruleset/pull/545))
+
+
 ## [v3.11.0]
 
 ### Added
 
 - Add rules and decoders for McAfee EPO. ([#467](https://github.com/wazuh/wazuh-ruleset/pull/467))
+- Add PCI-DSS mapping to vulnerability detector rules. ([#525](https://github.com/wazuh/wazuh-ruleset/pull/525))
+- Add a new base rule for Microsoft Windows Firewall With Advanced Security/Firewalls. ([#532](https://github.com/wazuh/wazuh-ruleset/pull/532))
+
+### Changed
+
+- Let osquery daemon messages appear in alerts as the full log. ([#531](https://github.com/wazuh/wazuh-ruleset/pull/531))
+- Make double-point termination optional in the postfix decoder (by @iasdeoupxe). ([#245](https://github.com/wazuh/wazuh-ruleset/pull/245))
 
 ### Fixed
 
 - Fix typo in network checks for SCA Debian 8 and 9 policies. ([#514](https://github.com/wazuh/wazuh-ruleset/pull/514))
+- Fix path in audit checks for SCA Debian 8 and 9 policies. ([#527](https://github.com/wazuh/wazuh-ruleset/pull/527))
+- Fix last space in regular expression for SCA check about NTP. ([#521](https://github.com/wazuh/wazuh-ruleset/pull/521))
+- Unify SCA regular expressions about installed packages by dpkg. ([#522](https://github.com/wazuh/wazuh-ruleset/pull/522))
 
 ## [v3.10.0]
 
