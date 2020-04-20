@@ -811,7 +811,7 @@ checks:
     rationale: "Disabling this service will reduce the remote attack surface of the system."
     remediation: "Run the following commands to disable time-dgram and time-stream: # chkconfig time-dgram off; # chkconfig time-stream off"
     compliance:
-      - cis: ["2.1.4"]
+      - cis: ["2.1.5"]
       - cis_csc: ["9.1"]
       - pci_dss: ["2.2.3"]
       - nist_800_53: ["CM.1"]
@@ -827,6 +827,10 @@ checks:
     rationale: "TFTP does not support authentication nor does it ensure the confidentiality or integrity of data. It is recommended that TFTP be removed, unless there is a specific need for TFTP. In that case, extreme caution must be used when configuring the services."
     remediation: "Run the following command to disable tftp: # chkconfig tftp off"
     compliance:
+      - cis: ["2.1.6"]
+      - cis_csc: ["9.1"]
+      - pci_dss: ["2.2.3"]
+      - nist_800_53: ["CM.1"]
     condition: none
     rules:
       - 'c:chkconfig --list -> r:^\s*\t*tftp:\s*\t*on'
@@ -857,6 +861,8 @@ checks:
     rationale: "Time synchronization is important to support time sensitive security mechanisms like Kerberos and also ensures log files have consistent time records across the enterprise, which aids in forensic investigations."
     remediation: "On physical systems or virtual systems where host based time synchronization is not available run the following commands and verify either ntp or chrony is installed: # rpm -q ntp # rpm -q chrony  On virtual systems where host based time synchronization is available consult your virtualization software documentation and verify that host based synchronization is in use."
     compliance:
+      - cis: ["2.2.2.1"]
+      - cis_csc: ["6.1"]
     condition: any
     rules:
       - 'not c:rpm -q ntp -> r:^package ntp is not installed'
@@ -934,6 +940,10 @@ checks:
     rationale: "If the system does not need to print jobs or accept print jobs from other systems, it is recommended that CUPS be disabled to reduce the potential attack surface."
     remediation: "Run the following command to disable cups : # systemctl disable cups"
     compliance:
+      - cis: ["2.2.4"]
+      - cis_csc: ["9.1"]
+      - pci_dss: ["2.2.2"]
+      - nist_800_53: ["CM.1"]
     condition: none
     rules:
       - 'c:systemctl is-enabled cups -> r:^enabled'
@@ -998,6 +1008,10 @@ checks:
     rationale: "Unless a system is specifically designated to act as a DNS server, it is recommended that the service be disabled to reduce the potential attack surface."
     remediation: "Run the following command to disable cups : # systemctl disable named"
     compliance:
+      - cis: ["2.2.8"]
+      - cis_csc: ["9.1"]
+      - pci_dss: ["2.2.2"]
+      - nist_800_53: ["CM.1"]
     condition: none
     rules:
       - 'c:systemctl is-enabled named -> r:^enabled'
@@ -1097,9 +1111,13 @@ checks:
     rationale: "Mail Transfer Agents (MTA), such as sendmail and Postfix, are used to listen for incoming mail and transfer the messages to the appropriate user or mail server. If the system is not intended to be a mail server, it is recommended that the MTA be configured to only process local mail."
     remediation: "Edit /etc/postfix/main.cf and add the following line to the RECEIVING MAIL section. If the line already exists, change it to look like the line below: inet_interfaces = loopback-only . Restart postfix: # systemctl restart postfix"
     compliance:
+      - cis: ["2.2.15"]
+      - cis_csc: ["9.1"]
+      - pci_dss: ["2.2.2"]
+      - nist_800_53: ["CM.1"]
     condition: none
     rules:
-      - 'c:ss -an | grep LIST | grep ":25[[:space:]]" -> !r:127.0.0.1:25|::1'
+      - 'c:netstat -an -> r:\.*:25\.*LISTEN && !r:127.0.0.1:25\.+LISTEN|::1:25\.*LISTEN'
 
 # 2.2.16 Remove NIS Server (Scored)
   - id: 5572 
@@ -1218,6 +1236,10 @@ checks:
     rationale: "These legacy clients contain numerous security exposures and have been replaced with the more secure SSH package. Even if the server is removed, it is best to ensure the clients are also removed to prevent users from inadvertently attempting to use these commands and therefore exposing their credentials. Note that removing the rsh package removes the clients for rsh , rcp and rlogin ."
     remediation: "Run the following command to uninstall rsh : # yum remove rsh"
     compliance:
+      - cis: ["2.3.2"]
+      - cis_csc: ["2"]
+      - pci_dss: ["2.2.3"]
+      - nist_800_53: ["CM.1"]
     condition: all
     rules:
       - 'c:rpm -q rsh -> r:^package rsh is not installed'
@@ -1229,6 +1251,10 @@ checks:
     rationale: "The software presents a security risk as it uses unencrypted protocols for communication."
     remediation: "Run the following command to uninstall talk : # yum remove talk"
     compliance:
+      - cis: ["2.3.3"]
+      - cis_csc: ["2"]
+      - pci_dss: ["2.2.3"]
+      - nist_800_53: ["CM.1"]
     condition: all
     rules:
       - 'c:rpm -q talk -> r:^package talk is not installed'
@@ -1240,6 +1266,10 @@ checks:
     rationale: "The telnet protocol is insecure and unencrypted. The use of an unencrypted transmission medium could allow an unauthorized user to steal credentials. The ssh package provides an encrypted session and stronger security and is included in most Linux distributions."
     remediation: "Run the following command to uninstall telnet : # yum remove telnet"
     compliance:
+      - cis: ["2.3.4"]
+      - cis_csc: ["2"]
+      - pci_dss: ["2.2.3"]
+      - nist_800_53: ["CM.1"]
     condition: all
     rules:
       - 'c:rpm -q telnet -> r:^package telnet is not installed'
@@ -1251,6 +1281,10 @@ checks:
     rationale: "If the system will not need to act as an LDAP client, it is recommended that the software be removed to reduce the potential attack surface."
     remediation: "Run the following command to uninstall openldap-clients : # yum remove openldap-clients"
     compliance:
+      - cis: ["2.3.5"]
+      - cis_csc: ["2"]
+      - pci_dss: ["2.2.3"]
+      - nist_800_53: ["CM.1"]
     condition: all
     rules:
       - 'c:rpm -q openldap-clients -> r:^package openldap-clients is not installed'
