@@ -435,7 +435,7 @@ checks:
 ###############################################
 # 1.4 Secure Boot Settings
 ###############################################
-# 1.4.1 Configure bootloader 
+# 1.4.1 Configure bootloader
   - id: 5632
     title: "Ensure permissions on bootloader config are configured"
     description: "The grub configuration file contains information on boot settings and passwords for unlocking boot options. The grub configuration is usually located at /boot/grub2/grub.cfg and linked as /etc/grub2.cfg . Additional settings can be found in the /boot/grub2/user.cfg file."
@@ -498,7 +498,7 @@ checks:
       - 'c:sysctl fs.suid_dumpable -> r:^fs.suid_dumpable\s*=\s*0\s*$'
       - 'c:grep -Rh fs\.suid_dumpable /etc/sysctl.conf /etc/sysctl.d -> r:^\s*fs.suid_dumpable\s*=\s*0\s*$'
 
-# 1.5.2 XD/NX enabled  
+# 1.5.2 XD/NX enabled
   - id: 5634
     title: "Ensure XD/NX support is enabled"
     description: "Recent processors in the x86 family support the ability to prevent code execution on a per memory page basis. Generically and on AMD processors, this ability is called No Execute (NX), while on Intel processors it is called Execute Disable (XD). This ability can help prevent exploitation of buffer overflow vulnerabilities and should be activated whenever possible. Extra steps must be taken to ensure that this protection is enabled, particularly on 32-bit x86 systems. Other processors, such as Itanium and POWER, have included such support since inception and the standard kernel for those platforms supports the feature."
@@ -526,7 +526,7 @@ checks:
       - 'c:grep -Rh ^kernel\.randomize_va_space /etc/sysctl.conf /etc/sysctl.d -> r:^\s*kernel.randomize_va_space\s*=\s*2$'
       - 'c:sysctl kernel.randomize_va_space -> r:^\s*kernel.randomize_va_space\s*=\s*2'
 
-# 1.5.4 Disable prelink  
+# 1.5.4 Disable prelink
   - id: 5635
     title: "Ensure prelink is disabled"
     description: "prelink is a program that modifies ELF shared libraries and ELF dynamically linked binaries in such a way that the time needed for the dynamic linker to perform relocations at startup significantly decreases."
@@ -820,6 +820,17 @@ checks:
       - 'c:chkconfig --list -> r:^\s*\t*time-dgram:\s*\t*on'
       - 'c:chkconfig --list -> r:^\s*\t*time-stream:\s*\t*on'
 
+# 2.1.6 Ensure tftp server is not enabled (Scored)
+  - id: 100000
+    title: "Ensure tftp server is not enabled"
+    description: "Trivial File Transfer Protocol (TFTP) is a simple file transfer protocol, typically used to automatically transfer configuration or boot machines from a boot server. The package tftp-server is used to define and support a TFTP server."
+    rationale: "TFTP does not support authentication nor does it ensure the confidentiality or integrity of data. It is recommended that TFTP be removed, unless there is a specific need for TFTP. In that case, extreme caution must be used when configuring the services."
+    remediation: "Run the following command to disable tftp: # chkconfig tftp off"
+    compliance:
+    condition: none
+    rules:
+      - 'c:chkconfig --list -> r:^\s*\t*tftp:\s*\t*on'
+
  # 2.1.7 Remove xinetd (Scored)
   - id: 5527
     title: "Ensure xinetd is not enabled"
@@ -838,6 +849,18 @@ checks:
 ###############################################
 # 2.2 Remove Legacy Services
 ###############################################
+
+# 2.2.1.1 Ensure time synchronization is in use (Not Scored)
+  - id: 100001
+    title: "Ensure time synchronization is in use"
+    description: "System time should be synchronized between all systems in an environment. This is typically done by establishing an authoritative time server or set of servers and having all systems synchronize their clocks to them."
+    rationale: "Time synchronization is important to support time sensitive security mechanisms like Kerberos and also ensures log files have consistent time records across the enterprise, which aids in forensic investigations."
+    remediation: "On physical systems or virtual systems where host based time synchronization is not available run the following commands and verify either ntp or chrony is installed: # rpm -q ntp # rpm -q chrony  On virtual systems where host based time synchronization is available consult your virtualization software documentation and verify that host based synchronization is in use."
+    compliance:
+    condition: any
+    rules:
+      - 'not c:rpm -q ntp -> r:^package ntp is not installed'
+      - 'not c:rpm -q chrony -> r:^package chrony is not installed'
 
 # 2.2.1.2 Configure Network Time Protocol (NTP) (Scored)
   - id: 5537
@@ -904,6 +927,17 @@ checks:
     rules:
       - 'c:systemctl is-enabled avahi-daemon -> r:^enabled'
 
+# 2.2.4 Ensure CUPS is not enabled (Scored)
+  - id: 100003
+    title: "Ensure CUPS is not enabled"
+    description: "The Common Unix Print System (CUPS) provides the ability to print to both local and network printers. A system running CUPS can also accept print jobs from remote systems and print them to local printers. It also provides a web based remote administration capability."
+    rationale: "If the system does not need to print jobs or accept print jobs from other systems, it is recommended that CUPS be disabled to reduce the potential attack surface."
+    remediation: "Run the following command to disable cups : # systemctl disable cups"
+    compliance:
+    condition: none
+    rules:
+      - 'c:systemctl is-enabled cups -> r:^enabled'
+
 # 2.2.5 Remove DHCP Server (Scored)
   - id: 5535
     title: "Ensure DHCP Server is not enabled"
@@ -956,6 +990,17 @@ checks:
       - 'c:systemctl is-enabled nfs -> r:^enabled'
       - 'c:systemctl is-enabled nfs-server -> r:^enabled'
       - 'c:systemctl is-enabled rpcbind -> r:^enabled'
+
+# 2.2.8 Ensure DNS Server is not enabled (Scored)
+  - id: 100004
+    title: "Ensure DNS Server is not enabled"
+    description: "The Domain Name System (DNS) is a hierarchical naming system that maps names to IP addresses for computers, services and other resources connected to a network."
+    rationale: "Unless a system is specifically designated to act as a DNS server, it is recommended that the service be disabled to reduce the potential attack surface."
+    remediation: "Run the following command to disable cups : # systemctl disable named"
+    compliance:
+    condition: none
+    rules:
+      - 'c:systemctl is-enabled named -> r:^enabled'
 
 # 2.2.9 Remove FTP Server (Scored)
   - id: 5540
@@ -1044,6 +1089,17 @@ checks:
     condition: none
     rules:
       - 'c:systemctl is-enabled snmpd -> r:^enabled'
+
+# 2.2.15 Ensure mail transfer agent is configured for local-only mode (Scored)
+  - id: 100005
+    title: "Ensure mail transfer agent is configured for local-only mode"
+    description: "Mail Transfer Agents (MTA), such as sendmail and Postfix, are used to listen for incoming mail and transfer the messages to the appropriate user or mail server. If the system is not intended to be a mail server, it is recommended that the MTA be configured to only process local mail."
+    rationale: "Mail Transfer Agents (MTA), such as sendmail and Postfix, are used to listen for incoming mail and transfer the messages to the appropriate user or mail server. If the system is not intended to be a mail server, it is recommended that the MTA be configured to only process local mail."
+    remediation: "Edit /etc/postfix/main.cf and add the following line to the RECEIVING MAIL section. If the line already exists, change it to look like the line below: inet_interfaces = loopback-only . Restart postfix: # systemctl restart postfix"
+    compliance:
+    condition: none
+    rules:
+      - 'c:ss -an | grep LIST | grep ":25[[:space:]]" -> !r:127.0.0.1:25|::1'
 
 # 2.2.16 Remove NIS Server (Scored)
   - id: 5520
@@ -1155,7 +1211,48 @@ checks:
     rules:
       - 'c:rpm -qa ypbind -> r:ypbind'
 
+# 2.3.2 Ensure rsh client is not installed (Scored)
+  - id: 100006
+    title: "Ensure rsh client is not installed"
+    description: "The rsh package contains the client commands for the rsh services."
+    rationale: "These legacy clients contain numerous security exposures and have been replaced with the more secure SSH package. Even if the server is removed, it is best to ensure the clients are also removed to prevent users from inadvertently attempting to use these commands and therefore exposing their credentials. Note that removing the rsh package removes the clients for rsh , rcp and rlogin ."
+    remediation: "Run the following command to uninstall rsh : # yum remove rsh"
+    compliance:
+    condition: all
+    rules:
+      - 'c:rpm -q rsh -> r:^package rsh is not installed'
 
+# 2.3.3 Ensure talk client is not installed (Scored)
+  - id: 100007
+    title: "Ensure talk client is not installed"
+    description: "The talk software makes it possible for users to send and receive messages across systems through a terminal session. The talk client, which allows initialization of talk sessions, is installed by default."
+    rationale: "The software presents a security risk as it uses unencrypted protocols for communication."
+    remediation: "Run the following command to uninstall talk : # yum remove talk"
+    compliance:
+    condition: all
+    rules:
+      - 'c:rpm -q talk -> r:^package talk is not installed'
+
+# 2.3.4 Ensure telnet client is not installed (Scored)
+  - id: 100008
+    title: "Ensure telnet client is not installed"
+    description: "The telnet package contains the telnet client, which allows users to start connections to other systems via the telnet protocol."
+    rationale: "The telnet protocol is insecure and unencrypted. The use of an unencrypted transmission medium could allow an unauthorized user to steal credentials. The ssh package provides an encrypted session and stronger security and is included in most Linux distributions."
+    remediation: "Run the following command to uninstall telnet : # yum remove telnet"
+    compliance:
+    condition: all
+    rules:
+      - 'c:rpm -q telnet -> r:^package telnet is not installed'
+
+# 2.3.5 Ensure LDAP client is not installed (Scored)
+  - id: 100009
+    title: "Ensure LDAP client is not installed"
+    description: "The Lightweight Directory Access Protocol (LDAP) was introduced as a replacement for NIS/YP. It is a service that provides a method for looking up information from a central database."
+    rationale: "If the system will not need to act as an LDAP client, it is recommended that the software be removed to reduce the potential attack surface."
+    remediation: "Run the following command to uninstall openldap-clients : # yum remove openldap-clients"
+    compliance:op
+    rules:
+      - 'c:rpm -q openldap-clients -> r:^package openldap-clients is not installed'
 
 
 
@@ -1512,7 +1609,7 @@ the potential attack surface."
     condition: all
     rules:
       - 'c:modprobe -n -v tipc -> r:install /bin/true'
-      - 'not c:lsmod -> r:tipc'	
+      - 'not c:lsmod -> r:tipc'
 
 ###############################################
 # 3.6 Firewall Configuration
@@ -1542,6 +1639,306 @@ the potential attack surface."
     condition: all
     rules:
       - 'c:iptables -L -> r:Chain INPUT (policy DROP) && r:Chain FORWARD (policy DROP) && r:Chain OUTPUT (policy DROP)'
+
+###############################################
+# 4 Logging and Auditing
+###############################################
+###############################################
+# 4.1 Configure System Accounting (auditd)
+###############################################
+
+# 4.1.1.1 Ensure audit log storage size is configured (Not Scored)
+  - id: 104111
+    title: "Ensure audit log storage size is configured"
+    description: "Configure the maximum size of the audit log file. Once the log reaches the maximum size, it will be rotated and a new log file will be started."
+    rationale: "It is important that an appropriate size is determined for log files so that they do not impact the system and audit data is not lost."
+    remediation: "Set the following parameter in /etc/audit/auditd.conf in accordance with site policy: max_log_file = <MB>"
+    compliance:
+    condition: all
+    rules:
+      - 'f:/etc/audit/auditd.conf -> r:^max_log_file = \d+'
+
+# 4.1.1.2 Ensure system is disabled when audit logs are full (Scored)
+  - id: 104112
+    title: "Ensure system is disabled when audit logs are full"
+    description: "The auditd daemon can be configured to halt the system when the audit logs are full."
+    rationale: "In high security contexts, the risk of detecting unauthorized access or nonrepudiation exceeds the benefit of the system's availability."
+    remediation: "Set the following parameters in /etc/audit/auditd.conf: space_left_action = email   action_mail_acct = root   admin_space_left_action = halt"
+    compliance:
+    condition: all
+    rules:
+      - 'f:/etc/audit/auditd.conf -> r:^space_left_action = email'
+      - 'f:/etc/audit/auditd.conf -> r:^action_mail_acct = root'
+      - 'f:/etc/audit/auditd.conf -> r:^admin_space_left_action = halt'
+
+# 4.1.1.3 Ensure audit logs are not automatically deleted (Scored)
+  - id: 104113
+    title: "Ensure audit logs are not automatically deleted"
+    description: "The max_log_file_action setting determines how to handle the audit log file reaching the max file size. A value of keep_logs will rotate the logs but never delete old logs."
+    rationale: "In high security contexts, the benefits of maintaining a long audit history exceed the cost of storing the audit history."
+    remediation: "Set the following parameter in /etc/audit/auditd.conf: max_log_file_action = keep_logs"
+    compliance:
+    condition: all
+    rules:
+      - 'f:/etc/audit/auditd.conf -> r:^max_log_file_action = keep_logs'
+
+# 4.1.2 Ensure auditd service is enabled (Scored)
+  - id: 104120
+    title: "Ensure auditd service is enabled"
+    description: "Turn on the auditd daemon to record system events."
+    rationale: "The capturing of system events provides system administrators with information to allow them to determine if unauthorized access to their system is occurring."
+    remediation: "Run the following command to enable auditd : # systemctl enable auditd"
+    compliance:
+    condition: all
+    rules:
+      - 'c:systemctl is-enabled auditd -> r:^enabled'
+
+# 4.1.4 Ensure events that modify date and time information are collected (Scored)
+  - id: 104140
+    title: "Ensure events that modify date and time information are collected"
+    description: "Capture events where the system date and/or time has been modified. The parameters in this section are set to determine if the adjtimex (tune kernel clock), settimeofday (Set time, using timeval and timezone structures) stime (using seconds since 1/1/1970) or clock_settime (allows for the setting of several internal clocks and timers) system calls have been executed and always write an audit record to the /var/log/audit.log file upon exit, tagging the records with the identifier \"time-change\"."
+    rationale: "Unexpected changes in system date and/or time could be a sign of malicious activity on the system."
+    remediation: "For 32 bit systems add the following lines to the /etc/audit/audit.rules file: -a always,exit -F arch=b32 -S adjtimex -S settimeofday -S stime -k time-change   -a always,exit -F arch=b32 -S clock_settime -k time-change   -w /etc/localtime -p wa -k time-change   For 64 bit systems add the following lines to the /etc/audit/audit.rules file:   -a always,exit -F arch=b64 -S adjtimex -S settimeofday -k time-change   -a always,exit -F arch=b32 -S adjtimex -S settimeofday -S stime -k time-change   -a always,exit -F arch=b64 -S clock_settime -k time-change   -a always,exit -Farch=b32 -S clock_settime -k time-change   -w /etc/localtime -p wa -k time-change"
+
+
+    compliance:
+    condition: all
+    rules:
+      - 'f:/etc/audit/audit.rules -> r:-a always,exit -F arch=b32 && r:-S adjtimex -S settimeofday -S stime|-S stime,settimeofday,adjtimex && r:-k time-change|-F key=time-change'
+      - 'f:/etc/audit/audit.rules -> r:-a always,exit -F arch=b32 -S clock_settime && r:-k time-change|-F key=time-change'
+      - 'f:/etc/audit/audit.rules -> r:-w /etc/localtime -p wa -k time-change'
+      - 'c:auditctl -l -> r:-a always,exit -F arch=b32 && r:-S adjtimex -S settimeofday -S stime|-S stime,settimeofday,adjtimex && r:-k time-change|-F key=time-change'
+      - 'c:auditctl -l -> r:-a always,exit -F arch=b32 -S clock_settime && r:-k time-change|-F key=time-change'
+      - 'c:auditctl -l -> r:-w /etc/localtime -p wa -k time-change'
+
+# 4.1.5 Ensure events that modify user/group information are collected (Scored)
+  - id: 104150
+    title: "Ensure events that modify user/group information are collected"
+    description: "Record events affecting the group , passwd (user IDs), shadow and gshadow (passwords) or /etc/security/opasswd (old passwords, based on remember parameter in the PAM configuration) files. The parameters in this section will watch the files to see if they have been opened for write or have had attribute changes (e.g. permissions) and tag them with the identifier \"identity\" in the audit log file."
+    rationale: "Unexpected changes to these files could be an indication that the system has been compromised and that an unauthorized user is attempting to hide their activities or compromise additional accounts."
+    remediation: "Add the following lines to the /etc/audit/audit.rules file:    -w /etc/group -p wa -k identity    -w /etc/passwd -p wa -k identity    -w /etc/gshadow -p wa -k identity    -w /etc/shadow -p wa -k identity    -w /etc/security/opasswd -p wa -k identity"
+    compliance:
+    condition: all
+    rules:
+      - 'f:/etc/audit/audit.rules -> -w /etc/group -p wa -k identity'
+      - 'f:/etc/audit/audit.rules -> -w /etc/passwd -p wa -k identity'
+      - 'f:/etc/audit/audit.rules -> -w /etc/gshadow -p wa -k identity'
+      - 'f:/etc/audit/audit.rules -> -w /etc/shadow -p wa -k identity'
+      - 'f:/etc/audit/audit.rules -> -w /etc/security/opasswd -p wa -k identity'
+      - 'c:auditctl -l -> -w /etc/group -p wa -k identity'
+      - 'c:auditctl -l -> -w /etc/passwd -p wa -k identity'
+      - 'c:auditctl -l -> -w /etc/gshadow -p wa -k identity'
+      - 'c:auditctl -l -> -w /etc/shadow -p wa -k identity'
+      - 'c:auditctl -l -> -w /etc/security/opasswd -p wa -k identity'
+
+# 4.1.6 Ensure events that modify the system's network environment are collected (Scored)
+  - id: 104160
+    title: "Ensure events that modify the system's network environment are collected"
+    description: "Record changes to network environment files or system calls. The below parameters monitor the sethostname (set the systems host name) or setdomainname (set the systems domainname) system calls, and write an audit event on system call exit. The other parameters monitor the /etc/issue and /etc/issue.net files (messages displayed pre-login), /etc/hosts (file containing host names and associated IP addresses), /etc/sysconfig/network file and /etc/sysconfig/network-scripts/ directory (containing network interface scripts and configurations)."
+    rationale: "Monitoring sethostname and setdomainname will identify potential unauthorized changes to host and domainname of a system. The changing of these names could potentially break security parameters that are set based on those names. The /etc/hosts file is monitored for changes in the file that can indicate an unauthorized intruder is trying to change machine associations with IP addresses and trick users and processes into connecting to unintended machines. Monitoring /etc/issue and /etc/issue.net is important, as intruders could put disinformation into those files and trick users into providing information to the intruder. Monitoring /etc/sysconfig/network and /etc/sysconfig/network-scripts/ is important as it can show if network interfaces or scripts are being modified in a way that can lead to the machine becoming unavailable or compromised. All audit records will be tagged with the identifier \"system-locale.\""
+    remediation: "For 32 bit systems add the following lines to the /etc/audit/audit.rules file:    -a always,exit -F arch=b32 -S sethostname -S setdomainname -k system-locale    -w /etc/issue -p wa -k system-locale    -w /etc/issue.net -p wa -k system-locale    -w /etc/hosts -p wa -k system-locale    -w /etc/sysconfig/network -p wa -k system-locale    -w /etc/sysconfig/network-scripts/ -p wa -k system-locale        For 64 bit systems add the following lines to the /etc/audit/audit.rules file:    -a always,exit -F arch=b64 -S sethostname -S setdomainname -k system-locale    -a always,exit -F arch=b32 -S sethostname -S setdomainname -k system-locale    -w /etc/issue -p wa -k system-locale    -w /etc/issue.net -p wa -k system-locale    -w /etc/hosts -p wa -k system-locale    -w /etc/sysconfig/network -p wa -k system-locale    -w /etc/sysconfig/network-scripts/ -p wa -k system-locale"
+    compliance:
+    condition: all
+    rules:
+      - 'f:/etc/audit/audit.rules -> r:^-a always,exit -F arch=b32 && r:-S sethostname -S setdomainname|-S sethostname,setdomainname && r:-k system-locale|-F key=system-locale'
+      - 'f:/etc/audit/audit.rules -> r:^-w /etc/issue -p wa && r:-k system-locale|-F key=system-locale'
+      - 'f:/etc/audit/audit.rules -> r:^-w /etc/issue.net -p wa && r:-k system-locale|-F key=system-locale'
+      - 'f:/etc/audit/audit.rules -> r:^-w /etc/hosts -p wa && r:-k system-locale|-F key=system-locale'
+      - 'f:/etc/audit/audit.rules -> r:^-w /etc/sysconfig/network -p wa && r:-k system-locale|-F key=system-locale'
+      - 'f:/etc/audit/audit.rules -> r:^-w /etc/sysconfig/network-scripts|-w /etc/sysconfig/network-scripts/ -p wa && r:-k system-locale|-F key=system-locale'
+      - 'c:auditctl -l -> r:^-a always,exit -F arch=b32 && r:-S sethostname -S setdomainname|-S sethostname,setdomainname && r:-k system-locale|-F key=system-locale'
+      - 'c:auditctl -l -> r:^-w /etc/issue -p wa && r:-k system-locale|-F key=system-locale'
+      - 'c:auditctl -l -> r:^-w /etc/issue.net -p wa && r:-k system-locale|-F key=system-locale'
+      - 'c:auditctl -l -> r:^-w /etc/hosts -p wa && r:-k system-locale|-F key=system-locale'
+      - 'c:auditctl -l -> r:^-w /etc/sysconfig/network -p wa && r:-k system-locale|-F key=system-locale'
+      - 'c:auditctl -l -> r:^-w /etc/sysconfig/network-scripts -p wa && r:-k system-locale|-F key=system-locale'
+
+# 4.1.7 Ensure events that modify the system's Mandatory Access Controls are collected (Scored)
+  - id: 104170
+    title: "Ensure events that modify the system's Mandatory Access Controls are collected"
+    description: "Monitor SELinux mandatory access controls. The parameters below monitor any write access (potential additional, deletion or modification of files in the directory) or attribute changes to the /etc/selinux or directory."
+    rationale: "Changes to files in these directories could indicate that an unauthorized user is attempting to modify access controls and change security contexts, leading to a compromise of the system."
+    remediation: "Add the following lines to the /etc/audit/audit.rules file: -w /etc/selinux/ -p wa -k MAC-policy -w /usr/share/selinux/ -p wa -k MAC-policy"
+    compliance:
+    condition: all
+    rules:
+      - 'f:/etc/audit/audit.rules -> r:^-w /etc/selinux/|^-w /etc/selinux && r:-p wa -k MAC-policy'
+      - 'f:/etc/audit/audit.rules -> r:^-w /usr/share/selinux/|^-w /usr/share/selinux && r:-p wa -k MAC-policy'
+      - 'c:auditctl -l -> r:^-w /etc/selinux/|^-w /etc/selinux && r:-p wa -k MAC-policy'
+      - 'c:auditctl -l -> r:^-w /usr/share/selinux/|^-w /usr/share/selinux && r:-p wa -k MAC-policy'
+
+# 4.1.8 Ensure login and logout events are collected (Scored)
+  - id: 104180
+    title: "Ensure login and logout events are collected"
+    description: "Monitor login and logout events. The parameters below track changes to files associated with login/logout events. The file /var/log/lastlog maintain records of the last time a user successfully logged in. The /var/run/failock directory maintains records of login failures via the pam_faillock module."
+    rationale: "Monitoring login/logout events could provide a system administrator with information associated with brute force attacks against user logins."
+    remediation: "Add the following lines to the /etc/audit/audit.rules file:  -w /var/log/lastlog -p wa -k logins   -w /var/run/faillock/ -p wa -k logins"
+    compliance:
+    condition: all
+    rules:
+      - 'f:/etc/audit/audit.rules -> r:-w /var/log/lastlog && r:-p wa && r:-k logins|-F key=logins'
+      - 'f:/etc/audit/audit.rules -> r:-w /var/run/faillock && r:-p wa && r:-k logins|-F key=logins'
+
+# 4.1.9 Ensure session initiation information is collected (Scored)
+  - id: 104190
+    title: "Ensure session initiation information is collected"
+    description: "Monitor session initiation events. The parameters in this section track changes to the files associated with session events. The file /var/run/utmp file tracks all currently logged in users. All audit records will be tagged with the identifier \"session.\" The /var/log/wtmp file tracks logins, logouts, shutdown, and reboot events. The file /var/log/btmp keeps track of failed login attempts and can be read by entering the command /usr/bin/last -f /var/log/btmp . All audit records will be tagged with the identifier \"logins.\"."
+    rationale: "Monitoring these files for changes could alert a system administrator to logins occurring at unusual hours, which could indicate intruder activity (i.e. a user logging in at a time when they do not normally log in)."
+    remediation: "Add the following lines to the /etc/audit/audit.rules file:   -w /var/run/utmp -p wa -k session   -w /var/log/wtmp -p wa -k logins   -w /var/log/btmp -p wa -k logins"
+    compliance:
+    condition: all
+    rules:
+      - 'f:/etc/audit/audit.rules -> r:-w /var/run/utmp -p wa && r:-k session|-F key=session'
+      - 'f:/etc/audit/audit.rules -> r:-w /var/log/wtmp -p wa && r:-k logins|-F key=logins'
+      - 'f:/etc/audit/audit.rules -> r:-w /var/log/btmp -p wa && r:-k logins|-F key=logins'
+      - 'c:auditctl -l -> r:-w /var/run/utmp -p wa && r:-k session|-F key=session'
+      - 'c:auditctl -l -> r:-w /var/log/wtmp -p wa && r:-k logins|-F key=logins'
+      - 'c:auditctl -l -> r:-w /var/log/btmp -p wa && r:-k logins|-F key=logins'
+
+# 4.1.10 Ensure discretionary access control permission modification events are collected (Scored)
+  - id: 104200
+    title: "Ensure discretionary access control permission modification events are collected"
+    description: "Monitor changes to file permissions, attributes, ownership and group. The parameters in this section track changes for system calls that affect file permissions and attributes. The chmod , fchmod and fchmodat system calls affect the permissions associated with a file. The chown , fchown , fchownat and lchown system calls affect owner and group attributes on a file. The setxattr , lsetxattr , fsetxattr (set extended file attributes) and removexattr , lremovexattr , fremovexattr (remove extended file attributes) control extended file attributes. In all cases, an audit record will only be written for non-system user ids (auid >= 1000) and will ignore Daemon events (auid = 4294967295). All audit records will be tagged with the identifier \"perm_mod.\""
+    rationale: "Monitoring for changes in file attributes could alert a system administrator to activity that could indicate intruder activity or policy violation."
+    remediation: "For 32 bit systems add the following lines to the /etc/audit/audit.rules file:   -a always,exit -F arch=b32 -S chmod -S fchmod -S fchmodat -F auid>=1000 -F auid!=4294967295 -k perm_mod   -a always,exit -F arch=b32 -S chown -S fchown -S fchownat -S lchown -F auid>=1000 -F auid!=4294967295 -k perm_mod   -a always,exit -F arch=b32 -S setxattr -S lsetxattr -S fsetxattr -S removexattr -S lremovexattr -S fremovexattr -F auid>=1000 -F auid!=4294967295 -k perm_mod   For 64 bit systems add the following lines to the /etc/audit/audit.rules file:   -a always,exit -F arch=b64 -S chmod -S fchmod -S fchmodat -F auid>=1000 -F auid!=4294967295 -k perm_mod   -a always,exit -F arch=b32 -S chmod -S fchmod -S fchmodat -F auid>=1000 -F auid!=4294967295 -k perm_mod   -a always,exit -F arch=b64 -S chown -S fchown -S fchownat -S lchown -F auid>=1000 -F auid!=4294967295 -k perm_mod   -a always,exit -F arch=b32 -S chown -S fchown -S fchownat -S lchown -F auid>=1000 -F auid!=4294967295 -k perm_mod   -a always,exit -F arch=b64 -S setxattr -S lsetxattr -S fsetxattr -S removexattr -S lremovexattr -S fremovexattr -F auid>=1000 -F auid!=4294967295 -k perm_mod   -a always,exit -F arch=b32 -S setxattr -S lsetxattr -S fsetxattr -S removexattr -S lrem"
+    compliance:
+    condition: all
+    rules:
+      - 'f:/etc/audit/audit.rules -> -a always,exit -F arch=b32 -S chmod -S fchmod -S fchmodat -F auid>=1000 -F auid!=4294967295 -k perm_mod'
+      - 'f:/etc/audit/audit.rules -> -a always,exit -F arch=b32 -S chown -S fchown -S fchownat -S lchown -F auid>=1000 -F auid!=4294967295 -k perm_mod'
+      - 'f:/etc/audit/audit.rules -> -a always,exit -F arch=b32 -S setxattr -S lsetxattr -S fsetxattr -S removexattr -S lremovexattr -S fremovexattr -F auid>=1000 -F auid!=4294967295 -k perm_mod'
+
+# 4.1.11 Ensure unsuccessful unauthorized file access attempts are collected (Scored)
+  - id: 104210
+    title: "Ensure unsuccessful unauthorized file access attempts are collected"
+    description: "Monitor for unsuccessful attempts to access files. The parameters below are associated  with system calls that control creation ( creat ), opening ( open , openat ) and truncation (  truncate , ftruncate ) of files. An audit log record will only be written if the user is a non-  privileged user (auid > = 1000), is not a Daemon event (auid=4294967295) and if the  system call returned EACCES (permission denied to the file) or EPERM (some other  permanent error associated with the specific system call). All audit records will be tagged  with the identifier \"access.\""
+    rationale: "Failed attempts to open, create or truncate files could be an indication that an individual or process is trying to gain unauthorized access to the system."
+    remediation: "For 32 bit systems add the following lines to the /etc/audit/audit.rules file:   -a always,exit -F arch=b32 -S creat -S open -S openat -S truncate -S ftruncate -F exit=-EACCES -F auid>=1000 -F auid!=4294967295 -k access   -a always,exit -F arch=b32 -S creat -S open -S openat -S truncate -S ftruncate -F exit=-EPERM -F auid>=1000 -F auid!=4294967295 -k access   For 64 bit systems add the following lines to the /etc/audit/audit.rules file:   -a always,exit -F arch=b64 -S creat -S open -S openat -S truncate -S ftruncate -F exit=-EACCES -F auid>=1000 -F auid!=4294967295 -k access   -a always,exit -F arch=b32 -S creat -S open -S openat -S truncate -S ftruncate -F exit=-EACCES -F auid>=1000 -F auid!=4294967295 -k access   -a always,exit -F arch=b64 -S creat -S open -S openat -S truncate -S ftruncate -F exit=-EPERM -F auid>=1000 -F auid!=4294967295 -k access   -a always,exit -F arch=b32 -S creat -S open -S openat -S truncate -S ftruncate -F exit=-EPERM -F auid>=1000 -F auid!=4294967295 -k access"
+    compliance:
+    condition: all
+    rules:
+      - 'f:/etc/audit/audit.rules -> -a always,exit -F arch=b32 -S creat -S open -S openat -S truncate -S ftruncate -F exit=-EACCES -F auid>=1000 -F auid!=4294967295 -k access'
+      - 'f:/etc/audit/audit.rules -> -a always,exit -F arch=b32 -S creat -S open -S openat -S truncate -S ftruncate -F exit=-EPERM -F auid>=1000 -F auid!=4294967295 -k access'
+
+# 4.1.13 Ensure successful file system mounts are collected (Scored)
+  - id: 104230
+    title: "Ensure successful file system mounts are collected"
+    description: "Monitor the use of the mount system call. The mount (and umount ) system call controls the mounting and unmounting of file systems. The parameters below configure the system to create an audit record when the mount system call is used by a non-privileged user."
+    rationale: "It is highly unusual for a non privileged user to mount file systems to the system. While tracking mount commands gives the system administrator evidence that external media may have been mounted (based on a review of the source of the mount and confirming it's an external media type), it does not conclusively indicate that data was exported to the media. System administrators who wish to determine if data were exported, would also have to track successful open , creat and truncate system calls requiring write access to a file under the mount point of the external media file system. This could give a fair indication that a write occurred. The only way to truly prove it, would be to track successful writes to the external media. Tracking write system calls could quickly fill up the audit log and is not recommended. Recommendations on configuration options to track data export to media is beyond the scope of this document."
+    remediation: "For 32 bit systems add the following lines to the /etc/audit/audit.rules file:   -a always,exit -F arch=b32 -S mount -F auid>=1000 -F auid!=4294967295 -k mounts   For 64 bit systems add the following lines to the /etc/audit/audit.rules file:   -a always,exit -F arch=b64 -S mount -F auid>=1000 -F auid!=4294967295 -k mounts   -a always,exit -F arch=b32 -S mount -F auid>=1000 -F auid!=4294967295 -k mounts"
+    compliance:
+    condition: all
+    rules:
+      - 'f:/etc/audit/audit.rules -> -a always,exit -F arch=b32 -S mount -F auid>=1000 -F auid!=4294967295 -k mounts'
+
+
+# 4.1.14 Ensure file deletion events by users are collected (Scored)
+  - id: 104240
+    title: "Ensure file deletion events by users are collected"
+    description: "Monitor the use of system calls associated with the deletion or renaming of files and file attributes. This configuration statement sets up monitoring for the unlink (remove a file), unlinkat (remove a file attribute), rename (rename a file) and renameat (rename a file attribute) system calls and tags them with the identifier \"delete\"."
+    rationale: "Monitoring these calls from non-privileged users could provide a system administrator with evidence that inappropriate removal of files and file attributes associated with protected files is occurring. While this audit option will look at all events, system administrators will want to look for specific privileged files that are being deleted or altered."
+    remediation: "For 32 bit systems add the following lines to the /etc/audit/audit.rules file:   -a always,exit -F arch=b32 -S unlink -S unlinkat -S rename -S renameat -F auid>=1000 -F auid!=4294967295 -k delete   For 64 bit systems add the following lines to the /etc/audit/audit.rules file:   -a always,exit -F arch=b64 -S unlink -S unlinkat -S rename -S renameat -F auid>=1000 -F auid!=4294967295 -k delete   -a always,exit -F arch=b32 -S unlink -S unlinkat -S rename -S renameat -F auid>=1000 -F auid!=4294967295 -k delete"
+    compliance:
+    condition: all
+    rules:
+      - 'f:/etc/audit/audit.rules -> -a always,exit -F arch=b32 -S unlink -S unlinkat -S rename -S renameat -F auid>=1000 -F auid!=4294967295 -k delete'
+
+# 4.1.15 Ensure changes to system administration scope (sudoers) is collected (Scored)
+  - id: 104250
+    title: "Ensure changes to system administration scope (sudoers) is collected"
+    description: "Monitor scope changes for system administrations. If the system has been properly configured to force system administrators to log in as themselves first and then use the sudo command to execute privileged commands, it is possible to monitor changes in scope. The file /etc/sudoers will be written to when the file or its attributes have changed. The audit records will be tagged with the identifier \"scope.\""
+    rationale: "Changes in the /etc/sudoers file can indicate that an unauthorized change has been made to scope of system administrator activity."
+    remediation: "Add the following line to the /etc/audit/audit.rules file:   -w /etc/sudoers -p wa -k scope   -w /etc/sudoers.d/ -p wa -k scope"
+    compliance:
+    condition: all
+    rules:
+      - 'f:/etc/audit/audit.rules -> -w /etc/sudoers -p wa -k scope'
+      - 'f:/etc/audit/audit.rules -> -w /etc/sudoers.d/ -p wa -k scope'
+
+# 4.1.16 Ensure system administrator actions (sudolog) are collected (Scored)
+  - id: 104260
+    title: "Ensure system administrator actions (sudolog) are collected"
+    description: "Monitor the sudo log file. If the system has been properly configured to disable the use of the su command and force all administrators to have to log in first and then use sudo to execute privileged commands, then all administrator commands will be logged to /var/log/sudo.log . Any time a command is executed, an audit event will be triggered as the /var/log/sudo.log file will be opened for write and the executed administration command will be written to the log."
+    rationale: "Changes in /var/log/sudo.log indicate that an administrator has executed a command or the log file itself has been tampered with. Administrators will want to correlate the events written to the audit trail with the records written to /var/log/sudo.log to verify if unauthorized commands have been executed."
+    remediation: "Add the following line to the /etc/audit/audit.rules file:   -w /var/log/sudo.log -p wa -k actions"
+    compliance:
+    condition: all
+    rules:
+      - 'f:/etc/audit/audit.rules -> -w /var/log/sudo.log -p wa -k actions'
+
+# 4.1.17 Ensure kernel module loading and unloading is collected (Scored)
+  - id: 104270
+    title: "Ensure kernel module loading and unloading is collected"
+    description: "Monitor the loading and unloading of kernel modules. The programs insmod (install a kernel module), rmmod (remove a kernel module), and modprobe (a more sophisticated program to load and unload modules, as well as some other features) control loading and unloading of modules. The init_module (load a module) and delete_module (delete a module) system calls control loading and unloading of modules. Any execution of the loading and unloading module programs and system calls will trigger an audit record with an identifier of \"modules\"."
+    rationale: "Monitoring the use of insmod , rmmod and modprobe could provide system administrators with evidence that an unauthorized user loaded or unloaded a kernel module, possibly compromising the security of the system. Monitoring of the init_module and delete_module system calls would reflect an unauthorized user attempting to use a different program to load and unload modules."
+    remediation: "Add the following line to the /etc/audit/audit.rules file:   -w /var/log/sudo.log -p wa -k actions"
+    compliance:
+    condition: all
+    rules:
+      - 'f:/etc/audit/audit.rules -> -w /sbin/insmod -p x -k modules'
+      - 'f:/etc/audit/audit.rules -> -w /sbin/rmmod -p x -k modules'
+      - 'f:/etc/audit/audit.rules -> -w /sbin/modprobe -p x -k modules'
+      - 'f:/etc/audit/audit.rules -> r:-a always,exit -F arch=b\d\d -S init_module -S delete_module -k modules'
+
+# 4.1.18 Ensure the audit configuration is immutable (Scored)
+  - id: 104280
+    title: "Ensure the audit configuration is immutable"
+    description: "Set system audit so that audit rules cannot be modified with auditctl . Setting the flag \"-e 2\" forces audit to be put in immutable mode. Audit changes can only be made on system reboot."
+    rationale: "In immutable mode, unauthorized users cannot execute changes to the audit system to potentially hide malicious activity and then put the audit rules back. Users would most likely notice a system reboot and that could alert administrators of an attempt to make unauthorized audit changes."
+    remediation: "Add the following line to the end of the /etc/audit/audit.rules file.   -e 2"
+    compliance:
+    condition: all
+    rules:
+      - 'c:grep \"^\s*[^#]\" /etc/audit/audit.rules | tail -1 -> -e 2'
+
+###############################################
+# 4.2 Configure Logging
+###############################################
+
+# 4.2.1.1 Ensure rsyslog Service is enabled (Scored)
+  - id: 104601
+    title: "Ensure rsyslog Service is enabled"
+    description: "Once the rsyslog package is installed it needs to be activated."
+    rationale: "If the rsyslog service is not activated the system may default to the syslogd service or lackblogging instead."
+    remediation: "Run the following command to enable rsyslog :   # systemctl enable rsyslog"
+    compliance:
+    condition: all
+    rules:
+      - 'c:systemctl is-enabled rsyslog -> enabled'
+
+# 4.2.2.1 Ensure syslog-ng service is enabled (Scored)
+  - id: 104701
+    title: "Ensure syslog-ng service is enabled"
+    description: "Once the syslog-ng package is installed it needs to be activated."
+    rationale: "If the syslog-ng service is not activated the system may default to the syslogd service or lack logging instead."
+    remediation: "Run the following command to enable rsyslog :   # systemctl enable syslog-ng"
+    compliance:
+    condition: all
+    rules:
+      - 'c:systemctl is-enabled syslog-ng -> enabled'
+
+# 4.2.1.3 Ensure rsyslog default file permissions configured (Scored)
+  - id: 104603
+    title: "Ensure rsyslog default file permissions configured"
+    description: "rsyslog will create logfiles that do not already exist on the system. This setting controls what permissions will be applied to these newly created files."
+    rationale: "It is important to ensure that log files have the correct permissions to ensure that sensitive data is archived and protected."
+    remediation: "Edit the /etc/rsyslog.conf and /etc/rsyslog.d/*.conf files and set $FileCreateMode to 0640 or more restrictive:   $FileCreateMode 0640"
+    compliance:
+    condition: all
+    rules:
+      - 'f:/etc/rsyslog.conf -> r:^\$FileCreateMode 0600|^\$FileCreateMode 0640'
+
+# 4.2.3 Ensure rsyslog or syslog-ng is installed (Scored)
+  - id: 104803
+    title: "Ensure rsyslog or syslog-ng is installed"
+    description: "The rsyslog and syslog-ng software are recommended replacements to the original syslogd daemon which provide improvements over syslogd , such as connection-oriented (i.e. TCP) transmission of logs, the option to log to database formats, and the encryption of log data en route to a central logging server."
+    rationale: "The security enhancements of rsyslog and syslog-ng such as connection-oriented (i.e. TCP) transmission of logs, the option to log to database formats, and the encryption of log data en route to a central logging server) justify installing and configuring the package."
+    remediation: "Install rsyslog or syslog-ng using one of the following commands:   # yum install rsyslog   # yum install syslog-ng"
+    compliance:
+    condition: any
+    rules:
+      - 'not c:rpm -q rsyslog -> r:^package rsyslog is not installed'
+      - 'not c:rpm -q syslog-ng -> r:^package syslog-ng is not installed'
 
 ###############################################
 # 5 System Access, Authentication and Authorization
@@ -1827,8 +2224,8 @@ the potential attack surface."
       - cis_csc: ["16.4"]
     condition: all
     rules:
-      - 'f:/etc/ssh/sshd_config -> n:^\s*ClientAliveInterval\s*\t*(\d+) compare <= 300' 
-      - 'f:/etc/ssh/sshd_config -> n:^\s*ClientAliveCountMax\s*\t*(\d+) compare <= 3' 
+      - 'f:/etc/ssh/sshd_config -> n:^\s*ClientAliveInterval\s*\t*(\d+) compare <= 300'
+      - 'f:/etc/ssh/sshd_config -> n:^\s*ClientAliveCountMax\s*\t*(\d+) compare <= 3'
 
 # 5.2.13 Ensure SSH LoginGraceTime is set to one minute or less (Scored)
   - id: 5592
@@ -1840,7 +2237,7 @@ the potential attack surface."
       - cis: ["5.2.13"]
     condition: all
     rules:
-      - 'f:/etc/ssh/sshd_config -> n:^\s*LoginGraceTime\s*\t*(\d+) compare <= 60' 
+      - 'f:/etc/ssh/sshd_config -> n:^\s*LoginGraceTime\s*\t*(\d+) compare <= 60'
 
 
 # 5.2.14 Ensure SSH access is limited (Scored)
@@ -1982,7 +2379,7 @@ the potential attack surface."
     description: "The default umask determines the permissions of files created by users. The user creating the file has the discretion of making their files and directories readable by others via the chmod command. Users who wish to allow their files and directories to be readable by others by default may choose a different default umask by inserting the umask command into the standard shell configuration files ( .profile , .bashrc , etc.) in their home directories."
     rationale: "Setting a very secure default value for umask ensures that users make a conscious choice about their file permissions. A default umask setting of 077 causes files and directories created by users to not be readable by any other user on the system. A umask of 027 would make files and directories readable by users in the same Unix group, while a umask of 022 would make files readable by every user on the system."
     remediation: "Edit the /etc/bashrc , /etc/profile and /etc/profile.d/*.sh files (and the appropriate files for any other shell supported on your system) and add or edit any umask parameters as follows: umask 027"
-    compliance:      
+    compliance:
       - cis: ["5.4.4"]
       - cis_csc: ["13"]
     condition: none
