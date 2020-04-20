@@ -448,7 +448,7 @@ checks:
     condition: all
     rules:
       - 'c:stat /boot/grub2/grub.cfg -> r:Access:\s*\(0600/-rw-------\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*0/\s*\t*root\)'
-      - 'c:stat /boot/grub2/user.cfg -> r:Access:\s*\(0600/-rw-------\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*0/\s*\t*root\)'
+      - 'c:stat /boot/grub2/user.cfg -> r:Access:\s*\(0600/-rw-------\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*0/\s*\t*root\)|cannot stat'
 
 # 1.4.2 Set Boot Loader Password (Scored)
   - id: 5529 
@@ -1485,7 +1485,7 @@ checks:
       - cis_csc: ["3", "11"]
       - pci_dss: ["10.2.6"]
       - nist_800_53: ["AU.14", "AU.5"]
-    condition: any
+    condition: all
     rules:
       - 'not f:/boot/grub2/grub.cfg -> r:^\s*linux && !r:ipv6.disable\s*=\s*1'
 
@@ -1668,9 +1668,9 @@ the potential attack surface."
     compliance:
     condition: all
     rules:
-      - 'f:/etc/audit/auditd.conf -> r:^space_left_action = email'
-      - 'f:/etc/audit/auditd.conf -> r:^action_mail_acct = root'
-      - 'f:/etc/audit/auditd.conf -> r:^admin_space_left_action = halt'
+      - 'f:/etc/audit/auditd.conf -> r:^space_left_action\s*=\s*email'
+      - 'f:/etc/audit/auditd.conf -> r:^action_mail_acct\s*=\s*root'
+      - 'f:/etc/audit/auditd.conf -> r:^admin_space_left_action\s*=\s*halt'
 
 # 4.1.1.3 Ensure audit logs are not automatically deleted (Scored)
   - id: 5608 
@@ -1681,7 +1681,7 @@ the potential attack surface."
     compliance:
     condition: all
     rules:
-      - 'f:/etc/audit/auditd.conf -> r:^max_log_file_action = keep_logs'
+      - 'f:/etc/audit/auditd.conf -> r:^max_log_file_action\s*=\s*keep_logs'
 
 # 4.1.2 Ensure auditd service is enabled (Scored)
   - id: 5609 
@@ -1700,8 +1700,6 @@ the potential attack surface."
     description: "Capture events where the system date and/or time has been modified. The parameters in this section are set to determine if the adjtimex (tune kernel clock), settimeofday (Set time, using timeval and timezone structures) stime (using seconds since 1/1/1970) or clock_settime (allows for the setting of several internal clocks and timers) system calls have been executed and always write an audit record to the /var/log/audit.log file upon exit, tagging the records with the identifier \"time-change\"."
     rationale: "Unexpected changes in system date and/or time could be a sign of malicious activity on the system."
     remediation: "For 32 bit systems add the following lines to the /etc/audit/audit.rules file: -a always,exit -F arch=b32 -S adjtimex -S settimeofday -S stime -k time-change   -a always,exit -F arch=b32 -S clock_settime -k time-change   -w /etc/localtime -p wa -k time-change   For 64 bit systems add the following lines to the /etc/audit/audit.rules file:   -a always,exit -F arch=b64 -S adjtimex -S settimeofday -k time-change   -a always,exit -F arch=b32 -S adjtimex -S settimeofday -S stime -k time-change   -a always,exit -F arch=b64 -S clock_settime -k time-change   -a always,exit -Farch=b32 -S clock_settime -k time-change   -w /etc/localtime -p wa -k time-change"
-
-
     compliance:
     condition: all
     rules:
