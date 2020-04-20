@@ -1469,10 +1469,10 @@ checks:
       - cis_csc: ["3", "11"]
     condition: all
     rules:
-      - 'c:sysctl net.ipv6.conf.all.accept_redirects -> r:^net.ipv6.conf.all.accept_redirect\s*=\s*0$'
-      - 'c:sysctl net.ipv6.conf.default.accept_redirects -> r:^net.ipv6.conf.default.accept_redirect\s*=\s*0$'
-      - 'c:grep -Rh net\.ipv6\.conf\.all\.accept_redirect /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv6.conf.all.accept_redirect\s*=\s*0$'
-      - 'c:grep -Rh net\.ipv6\.conf\.default\.accept_redirect /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv6.conf.default.accept_redirect\s*=\s*0$'
+      - 'c:sysctl net.ipv6.conf.all.accept_redirects -> r:^net.ipv6.conf.all.accept_redirects\s*=\s*0$'
+      - 'c:sysctl net.ipv6.conf.default.accept_redirects -> r:^net.ipv6.conf.default.accept_redirects\s*=\s*0$'
+      - 'c:grep -Rh net\.ipv6\.conf\.all\.accept_redirect /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv6.conf.all.accept_redirects\s*=\s*0$'
+      - 'c:grep -Rh net\.ipv6\.conf\.default\.accept_redirect /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv6.conf.default.accept_redirects\s*=\s*0$'
 
 # 3.3.3 Ensure IPv6 is disabled (Not Scored)
   - id: 5595
