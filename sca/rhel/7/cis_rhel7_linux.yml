@@ -881,7 +881,7 @@ checks:
       - cis: ["2.1.6"]
       - cis_csc: ["9.1"]
       - pci_dss: ["2.2.3"]
-      - nist_800_53: ["CM.1","AC.4","SC.7"]
+      - nist_800_53: ["CM.1"]
       - gpg_13: ["4.3"]
       - gdpr_IV: ["35.7.d"]
       - hipaa: ["164.312.b"]
@@ -920,8 +920,6 @@ checks:
     compliance:
       - cis: ["2.2.2.1"]
       - cis_csc: ["6.1"]
-      - pci_dss: ["10.4"]
-      - nist_800_53: ["AU.8"]
     condition: any
     rules:
       - 'not c:rpm -q ntp -> r:^package ntp is not installed'
@@ -1065,7 +1063,7 @@ checks:
     title: "Ensure DNS Server is not enabled"
     description: "The Domain Name System (DNS) is a hierarchical naming system that maps names to IP addresses for computers, services and other resources connected to a network."
     rationale: "Unless a system is specifically designated to act as a DNS server, it is recommended that the service be disabled to reduce the potential attack surface."
-    remediation: "Run the following command to disable named : # systemctl disable named"
+    remediation: "Run the following command to disable cups : # systemctl disable named"
     compliance:
       - cis: ["2.2.8"]
       - cis_csc: ["9.1"]
@@ -1173,7 +1171,7 @@ checks:
       - cis: ["2.2.15"]
       - cis_csc: ["9.1"]
       - pci_dss: ["2.2.2"]
-      - nist_800_53: ["CM.1","AC.4","SC.7"]
+      - nist_800_53: ["CM.1"]
     condition: none
     rules:
       - 'c:netstat -an -> r:\.*:25\.*LISTEN && !r:127.0.0.1:25\.+LISTEN|::1:25\.*LISTEN'
@@ -2196,6 +2194,8 @@ the potential attack surface."
     compliance:
       - cis: ["5.1.1"]
       - cis_csc: ["6"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
     condition: all
     rules:
       - 'c:systemctl is-enabled crond -> enabled'
@@ -2209,6 +2209,10 @@ the potential attack surface."
     compliance:
       - cis: ["5.1.2"]
       - cis_csc: ["5.1"]
+      - hipaa: ["164.312.b"]
+      - nist_800_53: ["AU.14", "AC.7"]
+      - gpg_13: ["7.8"]
+      - gdpr_IV: ["35.7","32.2"]
     condition: all
     rules:
       - 'c:stat /etc/crontab -> r:^Access: \(0600/-rw-------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
@@ -2223,6 +2227,11 @@ the potential attack surface."
     compliance:
       - cis: ["5.1.3"]
       - cis_csc: ["5.1"]
+      - pci_dss: ["10.2.5"]
+      - hipaa: ["164.312.b"]
+      - nist_800_53: ["AU.14", "AC.7"]
+      - gpg_13: ["7.8"]
+      - gdpr_IV: ["35.7","32.2"]
     condition: all
     rules:
       - 'c:stat /etc/cron.hourly -> r:^Access: \(0700/drwx------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
@@ -2236,6 +2245,11 @@ the potential attack surface."
     compliance:
       - cis: ["5.1.4"]
       - cis_csc: ["5.1"]
+      - pci_dss: ["10.2.5"]
+      - hipaa: ["164.312.b"]
+      - nist_800_53: ["AU.14", "AC.7"]
+      - gpg_13: ["7.8"]
+      - gdpr_IV: ["35.7","32.2"]
     condition: all
     rules:
       - 'c:stat /etc/cron.daily -> r:^Access: \(0700/drwx------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
@@ -2249,6 +2263,11 @@ the potential attack surface."
     compliance:
       - cis: ["5.1.5"]
       - cis_csc: ["5.1"]
+      - pci_dss: ["10.2.5"]
+      - hipaa: ["164.312.b"]
+      - nist_800_53: ["AU.14", "AC.7"]
+      - gpg_13: ["7.8"]
+      - gdpr_IV: ["35.7","32.2"]
     condition: all
     rules:
       - 'c:stat /etc/cron.weekly -> r:^Access: \(0700/drwx------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
@@ -2263,6 +2282,11 @@ the potential attack surface."
     compliance:
       - cis: ["5.1.6"]
       - cis_csc: ["5.1"]
+      - pci_dss: ["10.2.5"]
+      - hipaa: ["164.312.b"]
+      - nist_800_53: ["AU.14", "AC.7"]
+      - gpg_13: ["7.8"]
+      - gdpr_IV: ["35.7","32.2"]
     condition: all
     rules:
       - 'c:stat /etc/cron.monthly -> r:^Access: \(0700/drwx------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
@@ -2276,6 +2300,11 @@ the potential attack surface."
     compliance:
       - cis: ["5.1.7"]
       - cis_csc: ["5.1"]
+      - pci_dss: ["10.2.5"]
+      - hipaa: ["164.312.b"]
+      - nist_800_53: ["AU.14", "AC.7"]
+      - gpg_13: ["7.8"]
+      - gdpr_IV: ["35.7","32.2"]
     condition: all
     rules:
       - 'c:stat /etc/cron.d -> r:^Access: \(0700/drwx------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
@@ -2289,6 +2318,11 @@ the potential attack surface."
     compliance:
       - cis: ["5.1.8"]
       - cis_csc: ["16"]
+      - pci_dss: ["10.2.5"]
+      - hipaa: ["164.312.b"]
+      - nist_800_53: ["AU.14", "AC.7"]
+      - gpg_13: ["7.8"]
+      - gdpr_IV: ["35.7","32.2"]
     condition: all
     rules:
       - 'c:stat /etc/cron.deny -> r:No such file or directory$'
@@ -2314,6 +2348,11 @@ the potential attack surface."
     compliance:
       - cis: ["5.2.1"]
       - cis_csc: ["5.1"]
+      - pci_dss: ["10.2.5"]
+      - hipaa: ["164.312.b"]
+      - nist_800_53: ["AU.14", "AC.7"]
+      - gpg_13: ["7.8"]
+      - gdpr_IV: ["35.7","32.2"]
     condition: all
     rules:
       - 'c:stat /etc/ssh/sshd_config -> r:^Access: \(0600/-rw-------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
@@ -2450,6 +2489,9 @@ the potential attack surface."
     compliance:
       - cis: ["5.2.10"]
       - cis_csc: ["16"]
+      - pci_dss: ["4.1"]
+      - hipaa: ["164.312.a.2.IV", "164.312.e.1", "164.312.e.2.I", "164.312.e.2.II"]
+      - nist_800_53: ["SC.8"]
     condition: all
     rules:
       - 'f:/etc/ssh/sshd_config -> r:^\s*PermitUserEnvironment\s*\t*no'
@@ -2463,6 +2505,7 @@ the potential attack surface."
     compliance:
       - cis: ["5.2.12"]
       - cis_csc: ["16.4"]
+      - pci_dss: ["12.3.8"]
     condition: all
     rules:
       - 'f:/etc/ssh/sshd_config -> n:^\s*ClientAliveInterval\s*\t*(\d+) compare <= 300'
@@ -2476,6 +2519,7 @@ the potential attack surface."
     remediation: "Edit the /etc/ssh/sshd_config file to set the parameter as follows: LoginGraceTime 60"
     compliance:
       - cis: ["5.2.13"]
+      - pci_dss: ["10.2.4"]
     condition: all
     rules:
       - 'f:/etc/ssh/sshd_config -> n:^\s*LoginGraceTime\s*\t*(\d+) compare <= 60'
@@ -2490,6 +2534,11 @@ the potential attack surface."
     compliance:
       - cis: ["5.2.14"]
       - cis_csc: ["5.1", "5.8"]
+      - pci_dss: ["10.2.5"]
+      - hipaa: ["164.312.b"]
+      - nist_800_53: ["AU.14", "AC.7"]
+      - gpg_13: ["7.8"]
+      - gdpr_IV: ["35.7","32.2"]
     condition: all
     rules:
       - 'f:/etc/ssh/sshd_config -> r:^\s*AllowUsers'
@@ -2505,6 +2554,8 @@ the potential attack surface."
     remediation: "Edit the /etc/ssh/sshd_config file to set the parameter as follows: Banner /etc/issue.net"
     compliance:
       - cis: ["5.2.15"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
     condition: all
     rules:
       - 'f:/etc/ssh/sshd_config -> r:^\s*Banner\s*\t*/etc/issue.net'
@@ -2551,6 +2602,11 @@ the potential attack surface."
     compliance:
       - cis: ["5.3.4"]
       - cis_csc: ["16.14"]
+      - pci_dss: ["10.2.5"]
+      - hipaa: ["164.312.b"]
+      - nist_800_53: ["AU.14", "AC.7"]
+      - gpg_13: ["7.8"]
+      - gdpr_IV: ["35.7","32.2"]
     condition: all
     rules:
       - 'f:/etc/pam.d/password-auth -> r:^password\s*sufficient\s*pam_unix.so\s*sha512'
@@ -2583,6 +2639,11 @@ the potential attack surface."
     compliance:
       - cis: ["5.4.1.2"]
       - cis_csc: ["16"]
+      - pci_dss: ["10.2.5"]
+      - hipaa: ["164.312.b"]
+      - nist_800_53: ["AU.14", "AC.7"]
+      - gpg_13: ["7.8"]
+      - gdpr_IV: ["35.7","32.2"]
     condition: all
     rules:
       - 'f:/etc/login.defs -> n:^\s*PASS_MIN_DAYS\s*\t*(\d+) compare >= 7'
@@ -2596,6 +2657,11 @@ the potential attack surface."
     compliance:
       - cis: ["5.4.1.3"]
       - cis_csc: ["16"]
+      - pci_dss: ["10.2.5"]
+      - hipaa: ["164.312.b"]
+      - nist_800_53: ["AU.14", "AC.7"]
+      - gpg_13: ["7.8"]
+      - gdpr_IV: ["35.7","32.2"]
     condition: all
     rules:
       - 'f:/etc/login.defs -> n:^\s*PASS_WARN_AGE\s*\t*(\d+) compare >= 7'
@@ -2609,6 +2675,11 @@ the potential attack surface."
     compliance:
       - cis: ["5.4.1.4"]
       - cis_csc: ["16"]
+      - pci_dss: ["10.2.5"]
+      - hipaa: ["164.312.b"]
+      - nist_800_53: ["AU.14", "AC.7"]
+      - gpg_13: ["7.8"]
+      - gdpr_IV: ["35.7","32.2"]
     condition: all
     rules:
       - 'c:useradd -D -> n:^\s*INACTIVE\s*=\s*(\d+) compare <= 30'
@@ -2623,6 +2694,11 @@ the potential attack surface."
     compliance:
       - cis: ["5.4.3"]
       - cis_csc: ["5"]
+      - pci_dss: ["10.2.5"]
+      - hipaa: ["164.312.b"]
+      - nist_800_53: ["AU.14", "AC.7"]
+      - gpg_13: ["7.8"]
+      - gdpr_IV: ["35.7","32.2"]
     condition: all
     rules:
       - 'f:/etc/passwd -> r:^root:\w:\w:0'
@@ -2636,6 +2712,11 @@ the potential attack surface."
     compliance:
       - cis: ["5.4.4"]
       - cis_csc: ["13"]
+      - pci_dss: ["10.2.5"]
+      - hipaa: ["164.312.b"]
+      - nist_800_53: ["AU.14", "AC.7"]
+      - gpg_13: ["7.8"]
+      - gdpr_IV: ["35.7","32.2"]
     condition: none
     rules:
       - 'f:/etc/bashrc -> n:^\s*\t*umask\s+(\d+) compare >= 027'
@@ -2654,6 +2735,7 @@ supported on your system) and add or edit any umask parameters as follows: TMOUT
     compliance:
       - cis: ["5.4.5"]
       - cis_csc: ["16.4"]
+      - pci_dss: ["12.3.8"]
     condition: all
     rules:
       - 'not f:/etc/bashrc -> n:^\s*\t*umask\s+(\d+) compare >= 900'
@@ -2668,6 +2750,11 @@ supported on your system) and add or edit any umask parameters as follows: TMOUT
     compliance:
       - cis: ["5.6"]
       - cis_csc: ["5.1"]
+      - pci_dss: ["10.2.5"]
+      - hipaa: ["164.312.b"]
+      - nist_800_53: ["AU.14", "AC.7"]
+      - gpg_13: ["7.8"]
+      - gdpr_IV: ["35.7","32.2"]
     condition: all
     rules:
       - 'f:/etc/pam.d/su -> r:^auth\s*\t*required\s*\t*pam_wheel.so\s*\t*use_uid'
