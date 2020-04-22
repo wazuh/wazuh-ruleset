@@ -881,7 +881,7 @@ checks:
       - cis: ["2.1.6"]
       - cis_csc: ["9.1"]
       - pci_dss: ["2.2.3"]
-      - nist_800_53: ["CM.1"]
+      - nist_800_53: ["CM.1","AC.4","SC.7"]
       - gpg_13: ["4.3"]
       - gdpr_IV: ["35.7.d"]
       - hipaa: ["164.312.b"]
@@ -920,6 +920,8 @@ checks:
     compliance:
       - cis: ["2.2.2.1"]
       - cis_csc: ["6.1"]
+      - pci_dss: ["10.4"]
+      - nist_800_53: ["AU.8"]
     condition: any
     rules:
       - 'not c:rpm -q ntp -> r:^package ntp is not installed'
@@ -1063,7 +1065,7 @@ checks:
     title: "Ensure DNS Server is not enabled"
     description: "The Domain Name System (DNS) is a hierarchical naming system that maps names to IP addresses for computers, services and other resources connected to a network."
     rationale: "Unless a system is specifically designated to act as a DNS server, it is recommended that the service be disabled to reduce the potential attack surface."
-    remediation: "Run the following command to disable cups : # systemctl disable named"
+    remediation: "Run the following command to disable named : # systemctl disable named"
     compliance:
       - cis: ["2.2.8"]
       - cis_csc: ["9.1"]
@@ -1171,7 +1173,7 @@ checks:
       - cis: ["2.2.15"]
       - cis_csc: ["9.1"]
       - pci_dss: ["2.2.2"]
-      - nist_800_53: ["CM.1"]
+      - nist_800_53: ["CM.1","AC.4","SC.7"]
     condition: none
     rules:
       - 'c:netstat -an -> r:\.*:25\.*LISTEN && !r:127.0.0.1:25\.+LISTEN|::1:25\.*LISTEN'
