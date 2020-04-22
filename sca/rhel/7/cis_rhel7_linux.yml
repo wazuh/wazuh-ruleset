@@ -1937,6 +1937,7 @@ the potential attack surface."
     compliance:
       - cis: ["4.1.8"]
       - cis_csc: ["5.5","16.10","16.4"]
+            - pci_dss: ["12.3.8"]
     condition: all
     rules:
       - 'f:/etc/audit/audit.rules -> r:-w /var/log/lastlog -p wa -k logins'
@@ -1967,6 +1968,8 @@ the potential attack surface."
     compliance:
       - cis: ["4.1.10"]
       - cis_csc: ["3.6"]
+      - pci_dss: ["12.3.8"]
+
     condition: all
     rules:
       - 'f:/etc/audit/audit.rules -> -a always,exit -F arch=b32 -S chmod -S fchmod -S fchmodat -F auid>=1000 -F auid!=4294967295 -k perm_mod'
