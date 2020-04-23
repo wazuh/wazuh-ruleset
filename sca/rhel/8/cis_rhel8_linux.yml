@@ -1,0 +1,413 @@
+# Security Configuration Assessment
+# CIS Checks for RHEL 8
+# Copyright (C) 2015-2020, Wazuh Inc.
+#
+# This program is free software; you can redistribute it
+# and/or modify it under the terms of the GNU General Public
+# License (version 2) as published by the FSF - Free Software
+# Foundation
+#
+# Based on:
+# Center for Internet Security Red Hat Enterprise Linux 8 Benchmark v1.0.0 - 09-30-2019
+
+policy:
+  id: "cis_rhel8"
+  file: "cis_rhel8_linux.yml"
+  name: "CIS Benchmark for Red Hat Enterprise Linux 8"
+  description: "This document provides prescriptive guidance for establishing a secure configuration posture for Red Hat Enterprise Linux 7 systems running on x86 and x64 platforms. This document was tested against Red Hat Enterprise Linux 8."
+  references:
+    - https://www.cisecurity.org/cis-benchmarks/
+
+requirements:
+  title: "Check RHEL8 family platform"
+  description: "Requirements for running the policy against RHEL 8 family."
+  condition: any
+  rules:
+    - 'f:/etc/redhat-release -> r:^Red Hat Enterprise Linux && r:release 8'
+    - 'f:/etc/redhat-release -> r:^CentOS && r:release 8'
+
+variables:
+  $sshd_file: /etc/ssh/sshd_config
+
+checks:
+
+###############################################
+# 2 OS Services
+###############################################
+###############################################
+# 2.1 inetd Services
+###############################################
+ # 2.1.1 Ensure xinetd is not installed (Scored)
+  - id: 5555 
+    title: "Ensure xinetd is not installed"
+    description: "The eXtended InterNET Daemon ( xinetd ) is an open source super daemon that replaced the original inetd daemon. The xinetd daemon listens for well known services and dispatches the appropriate daemon to properly respond to service requests."
+    rationale: "If there are no xinetd services required, it is recommended that the daemon be disabled."
+    remediation: "Run the following command to remove xinetd: # dnf remove xinetd"
+    compliance:
+      - cis: ["2.1.1"]
+      - cis_csc: ["9.1"]
+      - pci_dss: ["2.2.3"]
+      - nist_800_53: ["CM.1"]
+      - gpg_13: ["4.3"]
+      - gdpr_IV: ["35.7.d"]
+      - hipaa: ["164.312.b"]
+    condition: none
+    rules:
+      - 'c:rpm -q xinetd -> r:^package xinetd is not installed'
+
+###############################################
+# 2.2 Remove Legacy Services
+###############################################
+
+# 2.2.1.1 Ensure time synchronization is in use (Not Scored)
+  - id: 5556 
+    title: "Ensure time synchronization is in use"
+    description: "System time should be synchronized between all systems in an environment. This is typically done by establishing an authoritative time server or set of servers and having all systems synchronize their clocks to them."
+    rationale: "Time synchronization is important to support time sensitive security mechanisms like Kerberos and also ensures log files have consistent time records across the enterprise, which aids in forensic investigations."
+    remediation: "On physical systems or virtual systems where host based time synchronization is not available install chrony: # dnf install chrony  On virtual systems where host based time synchronization is available consult your virtualization software documentation and verify that host based synchronization is in use."
+    compliance:
+      - cis: ["2.2.2.1"]
+      - cis_csc: ["6.1"]
+      - pci_dss: ["10.4"]
+      - nist_800_53: ["AU.8"]
+    condition: any
+    rules:
+      - 'c:rpm -q chrony -> r:^chrony-'
+
+# 2.2.1.2 Configure Network Time Protocol (Chrony) (Scored)
+  - id: 5558 
+    title: "Ensure chrony is configured"
+    description: "chrony is a daemon which implements the Network Time Protocol (NTP). It is designed to synchronize system clocks across a variety of systems and use a source that is highly accurate. More information on NTP can be found at https://www.ntp.org. ntp can be configured to be a client and/or a server."
+    rationale: "If chrony is in use on the system proper configuration is vital to ensuring time synchronization is working properly."
+    remediation: "Add or edit server or pool lines to /etc/chrony.conf as appropriate: server <remote-server>   Configure chrony to run as the chrony user"
+    compliance:
+      - cis: ["2.2.1.2"]
+      - cis_csc: ["6.1"]
+      - pci_dss: ["2.2.2"]
+      - nist_800_53: ["CM.1"]
+    condition: none
+    rules:
+      - 'f:/etc/chrony.conf -> r:^server\s*\t*\.+$|^pool\s*\t*\.+$'
+      - 'c:ps -ef -> r:\.+/chronyd\s*\t*$ && !r:^\s*\t*chrony\s*\t*'
+
+# 2.2.2 Ensure X Window System is not installed (Scored)
+  - id: 5559 
+    title: "Ensure X Window System is not installed"
+    description: "The X Window System provides a Graphical User Interface (GUI) where users can have multiple windows in which to run programs and various add on. The X Windows system is typically used on workstations where users login, but not on servers where users typically do not login."
+    rationale: "Unless your organization specifically requires graphical login access via X Windows, remove it to reduce the potential attack surface."
+    remediation: "Run the following command to remove the X Windows System packages: # dnf remove xorg-x11*"
+    compliance:
+      - cis: ["2.2.2"]
+      - cis_csc: ["2"]
+      - pci_dss: ["2.2.2"]
+      - nist_800_53: ["CM.1"]
+    condition: none
+    rules:
+      - 'c:rpm -qa xorg-x11* -> r:^xorg-x11'
+
+# 2.2.3 Remove rsync service (Scored)
+  - id: 5578 
+    title: "Ensure rsync service is not enabled"
+    description: "The rsyncd service can be used to synchronize files between systems over network links."
+    rationale: "The rsyncd service presents a security risk as it uses unencrypted protocols for communication."
+    remediation: "Run the following command to disable rsync: # systemctl --now disable rsyncd"
+    compliance:
+      - cis: ["2.2.3"]
+      - cis_csc: ["9.1"]
+      - pci_dss: ["2.2.3"]
+      - nist_800_53: ["CM.1"]
+      - gpg_13: ["4.3"]
+      - gdpr_IV: ["35.7.d"]
+      - hipaa: ["164.312.b"]
+    condition: none
+    rules:
+      - 'c:systemctl is-enabled rsyncd -> r:^enabled'
+
+# 2.2.4 Disable Avahi Server (Scored)
+  - id: 5560 
+    title: "Ensure Avahi Server is not enabled"
+    description: "Avahi is a free zeroconf implementation, including a system for multicast DNS/DNS-SD service discovery. Avahi allows programs to publish and discover services and hosts running on a local network with no specific configuration. For example, a user can plug a computer into a network and Avahi automatically finds printers to print to, files to look at and people to talk to, as well as network services running on the machine."
+    rationale: "Automatic discovery of network services is not normally required for system functionality. It is recommended to disable the service to reduce the potential attack surface."
+    remediation: "Run the following command to disable avahi-daemon: # systemctl --now disable avahi-daemon"
+    compliance:
+      - cis: ["2.2.4"]
+      - cis_csc: ["9.1"]
+      - pci_dss: ["2.2.2"]
+      - nist_800_53: ["CM.1"]
+    condition: none
+    rules:
+      - 'c:systemctl is-enabled avahi-daemon -> r:^enabled'
+
+# 2.2.5 Remove SNMP Server (Scored)
+  - id: 5571 
+    title: "Ensure SNMP Server is not enabled"
+    description: "The Simple Network Management Protocol (SNMP) server is used to listen for SNMP commands from an SNMP management system, execute the commands or collect the information and then send results back to the requesting system."
+    rationale: "The SNMP server can communicate using SNMP v1, which transmits data in the clear and does not require authentication to execute commands. Unless absolutely necessary, it is recommended that the SNMP service not be used. If SNMP is required the server should be configured to disallow SNMP v1."
+    remediation: "Run the following command to disable snmpd: # systemctl --now disable snmpd"
+    compliance:
+      - cis: ["2.2.5"]
+      - cis_csc: ["9.1"]
+      - pci_dss: ["2.2.2"]
+      - nist_800_53: ["CM.1"]
+    condition: none
+    rules:
+      - 'c:systemctl is-enabled snmpd -> r:^enabled'
+
+# 2.2.6 Remove HTTP Proxy Server (Scored)
+  - id: 5570 
+    title: "Ensure HTTP Proxy Server is not enabled"
+    description: "Squid is a standard proxy server used in many distributions and environments."
+    rationale: "If there is no need for a proxy server, it is recommended that the squid proxy be disabled to reduce the potential attack surface."
+    remediation: "Run the following command to disable squid: # systemctl --now disable squid"
+    compliance:
+      - cis: ["2.2.6"]
+      - cis_csc: ["9.1"]
+      - pci_dss: ["2.2.2"]
+      - nist_800_53: ["CM.1"]
+    condition: none
+    rules:
+      - 'c:systemctl is-enabled squid -> r:^enabled'
+
+# 2.2.7 Remove Samba (Scored)
+  - id: 5569 
+    title: "Ensure Samba is not enabled"
+    description: "The Samba daemon allows system administrators to configure their Linux systems to share file systems and directories with Windows desktops. Samba will advertise the file systems and directories via the Small Message Block (SMB) protocol. Windows desktop users will be able to mount these directories and file systems as letter drives on their systems."
+    rationale: "If there is no need to mount directories and file systems to Windows systems, then this service can be disabled to reduce the potential attack surface."
+    remediation: "Run the following command to disable smb: # systemctl --now disable smb"
+    compliance:
+      - cis: ["2.2.7"]
+      - cis_csc: ["9.1"]
+      - pci_dss: ["2.2.2"]
+      - nist_800_53: ["CM.1"]
+    condition: none
+    rules:
+      - 'c:systemctl is-enabled smb -> r:^enabled'
+
+# 2.2.8 Remove Dovecot (IMAP and POP3 services) (Scored)
+  - id: 5568 
+    title: "Ensure IMAP and POP3 server is not enabled"
+    description: "dovecot is an open source IMAP and POP3 server for Linux based systems."
+    rationale: "Unless POP3 and/or IMAP servers are to be provided by this system, it is recommended that the service be disabled to reduce the potential attack surface."
+    remediation: "Run the following command to disable dovecot: # systemctl --now disable dovecot"
+    compliance:
+      - cis: ["2.2.8"]
+      - cis_csc: ["9.1"]
+      - pci_dss: ["2.2.2"]
+      - nist_800_53: ["CM.1"]
+    condition: none
+    rules:
+      - 'c:systemctl is-enabled dovecot -> r:^enabled'
+
+# 2.2.9 Remove HTTP Server (Scored)
+  - id: 5567 
+    title: "Ensure HTTP server is not enabled"
+    description: "HTTP or web servers provide the ability to host web site content."
+    rationale: "Unless there is a need to run the system as a web server, it is recommended that the service be disabled to reduce the potential attack surface."
+    remediation: "Run the following command to disable httpd: # systemctl --now disable httpd"
+    compliance:
+      - cis: ["2.2.9"]
+      - cis_csc: ["9.1"]
+    condition: none
+    rules:
+      - 'c:systemctl is-enabled httpd -> r:^enabled'
+
+# 2.2.10 Remove FTP Server (Scored)
+  - id: 5566 
+    title: "Ensure FTP Server is not enabled"
+    description: "The File Transfer Protocol (FTP) provides networked computers with the ability to transfer files."
+    rationale: "FTP does not protect the confidentiality of data or authentication credentials. It is recommended sftp be used if file transfer is required. Unless there is a need to run the system as a FTP server (for example, to allow anonymous downloads), it is recommended that the service be disabled to reduce the potential attack surface."
+    remediation: "Run the following command to disable vsftpd: # systemctl --now disable vsftpd"
+    compliance:
+      - cis: ["2.2.10"]
+      - cis_csc: ["9.1"]
+      - pci_dss: ["2.2.2"]
+      - nist_800_53: ["CM.1"]
+    condition: none
+    rules:
+      - 'c:systemctl is-enabled vsftpd -> r:^enabled'
+
+# 2.2.11 Ensure DNS Server is not enabled (Scored)
+  - id: 5565 
+    title: "Ensure DNS Server is not enabled"
+    description: "The Domain Name System (DNS) is a hierarchical naming system that maps names to IP addresses for computers, services and other resources connected to a network."
+    rationale: "Unless a system is specifically designated to act as a DNS server, it is recommended that the service be disabled to reduce the potential attack surface."
+    remediation: "Run the following command to disable named : # systemctl --now disable named"
+    compliance:
+      - cis: ["2.2.11"]
+      - cis_csc: ["9.1"]
+      - pci_dss: ["2.2.2"]
+      - nist_800_53: ["CM.1"]
+    condition: none
+    rules:
+      - 'c:systemctl is-enabled named -> r:^enabled'
+
+
+# 2.2.12 Ensure RFC is not enabled (Scored)
+  - id: 5564 
+    title: "Ensure NFS is not enabled"
+    description: "The Network File System (NFS) is one of the first and most widely distributed file systems in the UNIX environment. It provides the ability for systems to mount file systems of other servers through the network."
+    rationale: "If the system does not export NFS shares, it is recommended that the NFS be disabled to reduce remote attack surface."
+    remediation: "Run the following commands to disable nfs: # systemctl --now disable nfs"
+    compliance:
+      - cis: ["2.2.12"]
+      - cis_csc: ["9.1"]
+      - pci_dss: ["2.2.2"]
+      - nist_800_53: ["CM.1"]
+    condition: none
+    rules:
+      - 'c:systemctl is-enabled nfs -> r:^enabled'
+
+# 2.2.13 Ensure RPC is not enabled (Scored)
+  - id: 5574
+    title: "Ensure RPC is not enabled"
+    description: "The rpcbind service maps Remote Procedure Call (RPC) services to the ports on which they listen. RPC processes notify rpcbind when they start, registering the ports they are listening on and the RPC program numbers they expect to serve. The client system then contacts rpcbind on the server with a particular RPC program number. The rpcbind service redirects the client to the proper port number so it can communicate with the requested service."
+    rationale: "If the system does not require rpc based services, it is recommended that rpcbind be disabled to reduce the remote attack surface."
+    remediation: "Run the following commands to disable nfs: # systemctl --now disable rpcbind"
+    compliance:
+      - cis: ["2.2.13"]
+      - cis_csc: ["9.1"]
+      - pci_dss: ["2.2.2"]
+      - nist_800_53: ["CM.1"]
+    condition: none
+    rules:
+      - 'c:systemctl is-enabled rpcbind -> r:^enabled'
+
+# 2.2.14 Remove LDAP Server (Scored)
+  - id: 5563 
+    title: "Ensure LDAP Server is not enabled"
+    description: "The Lightweight Directory Access Protocol (LDAP) was introduced as a replacement for NIS/YP. It is a service that provides a method for looking up information from a central database."
+    rationale: "If the system will not need to act as an LDAP server, it is recommended that the software be disabled to reduce the potential attack surface."
+    remediation: "Run the following command to disable slapd: # systemctl --now disable slapd"
+    compliance:
+      - cis: ["2.2.14"]
+      - cis_csc: ["9.1"]
+      - pci_dss: ["2.2.2"]
+      - nist_800_53: ["CM.1"]
+    references:
+      - More detailed documentation on OpenLDAP is available at https://www.openldap.org
+    condition: none
+    rules:
+      - 'c:systemctl is-enabled sladp -> r:^enabled'
+
+# 2.2.15 Remove DHCP Server (Scored)
+  - id: 5562 
+    title: "Ensure DHCP Server is not enabled"
+    description: "The Dynamic Host Configuration Protocol (DHCP) is a service that allows machines to be dynamically assigned IP addresses."
+    rationale: "Unless a system is specifically set up to act as a DHCP server, it is recommended that this service be disabled to reduce the potential attack surface."
+    remediation: "Run the following command to disable dhcpd: # systemctl --now disable dhcpd"
+    compliance:
+      - cis: ["2.2.15"]
+      - cis_csc: ["9.1"]
+      - pci_dss: ["2.2.2"]
+      - nist_800_53: ["CM.1"]
+    references:
+      - More detailed documentation on DHCP is available at https://www.isc.org/software/dhcp
+    condition: none
+    rules:
+      - 'c:systemctl is-enabled dhcpd -> r:^enabled'
+
+# 2.2.16 Ensure CUPS is not enabled (Scored)
+  - id: 5561 
+    title: "Ensure CUPS is not enabled"
+    description: "The Common Unix Print System (CUPS) provides the ability to print to both local and network printers. A system running CUPS can also accept print jobs from remote systems and print them to local printers. It also provides a web based remote administration capability."
+    rationale: "If the system does not need to print jobs or accept print jobs from other systems, it is recommended that CUPS be disabled to reduce the potential attack surface."
+    remediation: "Run the following command to disable cups : # systemctl --now disable cups"
+    compliance:
+      - cis: ["2.2.16"]
+      - cis_csc: ["9.1"]
+      - pci_dss: ["2.2.2"]
+      - nist_800_53: ["CM.1"]
+    condition: none
+    rules:
+      - 'c:systemctl is-enabled cups -> r:^enabled'
+
+# 2.2.17 Remove NIS Server (Scored)
+  - id: 5573 
+    title: "Ensure NIS Server is not enabled"
+    description: "The Network Information Service (NIS) (formally known as Yellow Pages) is a client-server directory service protocol for distributing system configuration files. The NIS server is a collection of programs that allow for the distribution of configuration files."
+    rationale: "The NIS service is inherently an insecure system that has been vulnerable to DOS attacks, buffer overflows and has poor authentication for querying NIS maps. NIS generally been replaced by such protocols as Lightweight Directory Access Protocol (LDAP). It is recommended that the service be disabled and other, more secure services be used"
+    remediation: "Run the following command to disable ypserv: # systemctl --now disable ypserv"
+    compliance:
+      - cis: ["2.2.17"]
+      - cis_csc: ["9.1"]
+      - pci_dss: ["2.2.3"]
+      - nist_800_53: ["CM.1"]
+      - gpg_13: ["4.3"]
+      - gdpr_IV: ["35.7.d"]
+      - hipaa: ["164.312.b"]
+    condition: none
+    rules:
+      - 'c:systemctl is-enabled ypserv -> r:^enabled'
+
+# 2.2.18 Ensure mail transfer agent is configured for local-only mode (Scored)
+  - id: 5572 
+    title: "Ensure mail transfer agent is configured for local-only mode"
+    description: "Mail Transfer Agents (MTA), such as sendmail and Postfix, are used to listen for incoming mail and transfer the messages to the appropriate user or mail server. If the system is not intended to be a mail server, it is recommended that the MTA be configured to only process local mail."
+    rationale: "Mail Transfer Agents (MTA), such as sendmail and Postfix, are used to listen for incoming mail and transfer the messages to the appropriate user or mail server. If the system is not intended to be a mail server, it is recommended that the MTA be configured to only process local mail."
+    remediation: "Edit /etc/postfix/main.cf and add the following line to the RECEIVING MAIL section. If the line already exists, change it to look like the line below: inet_interfaces = loopback-only . Restart postfix: # systemctl restart postfix"
+    compliance:
+      - cis: ["2.2.18"]
+      - cis_csc: ["9.1"]
+      - pci_dss: ["2.2.2"]
+      - nist_800_53: ["CM.1","AC.4","SC.7"]
+    condition: none
+    rules:
+      - 'c:ss -lntu -> r:\.*:25\.*LISTEN && !r:127.0.0.1:25\.+LISTEN|::1:25\.*LISTEN'
+
+###############################################
+# 2.3 Service Clients
+###############################################
+
+# 2.3.1 Remove NIS Client (Scored)
+  - id: 5579 
+    title: "Ensure NIS Client is not installed"
+    description: "The Network Information Service (NIS), formerly known as Yellow Pages, is a client-server directory service protocol used to distribute system configuration files. The NIS client ( ypbind ) was used to bind a machine to an NIS server and receive the distributed configuration files."
+    rationale: "The NIS service is inherently an insecure system that has been vulnerable to DOS attacks, buffer overflows and has poor authentication for querying NIS maps. NIS generally has been replaced by such protocols as Lightweight Directory Access Protocol (LDAP). It is recommended that the service be removed."
+    remediation: "Run the following command to uninstall ypbind: # dnf remove ypbind"
+    compliance:
+      - cis: ["2.3.1"]
+      - cis_csc: ["2"]
+      - pci_dss: ["2.2.3"]
+      - nist_800_53: ["CM.1"]
+      - gpg_13: ["4.3"]
+      - gdpr_IV: ["35.7.d"]
+      - hipaa: ["164.312.b"]
+    condition: none
+    rules:
+      - 'c:rpm -qa ypbind -> r:ypbind'
+
+# 2.3.2 Ensure telnet client is not installed (Scored)
+  - id: 5582 
+    title: "Ensure telnet client is not installed"
+    description: "The telnet package contains the telnet client, which allows users to start connections to other systems via the telnet protocol."
+    rationale: "The telnet protocol is insecure and unencrypted. The use of an unencrypted transmission medium could allow an unauthorized user to steal credentials. The ssh package provides an encrypted session and stronger security and is included in most Linux distributions."
+    remediation: "Run the following command to uninstall telnet : # dnf remove telnet"
+    compliance:
+      - cis: ["2.3.2"]
+      - cis_csc: ["2"]
+      - pci_dss: ["2.2.3"]
+      - nist_800_53: ["CM.1"]
+      - gpg_13: ["4.3"]
+      - gdpr_IV: ["35.7.d"]
+      - hipaa: ["164.312.b"]
+    condition: all
+    rules:
+      - 'c:rpm -q telnet -> r:^package telnet is not installed'
+
+# 2.3.3 Ensure LDAP client is not installed (Scored)
+  - id: 5583 
+    title: "Ensure LDAP client is not installed"
+    description: "The Lightweight Directory Access Protocol (LDAP) was introduced as a replacement for NIS/YP. It is a service that provides a method for looking up information from a central database."
+    rationale: "If the system will not need to act as an LDAP client, it is recommended that the software be removed to reduce the potential attack surface."
+    remediation: "Run the following command to uninstall openldap-clients : # dnf remove openldap-clients"
+    compliance:
+      - cis: ["2.3.3"]
+      - cis_csc: ["2"]
+      - pci_dss: ["2.2.3"]
+      - nist_800_53: ["CM.1"]
+      - gpg_13: ["4.3"]
+      - gdpr_IV: ["35.7.d"]
+      - hipaa: ["164.312.b"]
+    condition: all
+    rules:
+      - 'c:rpm -q openldap-clients -> r:^package openldap-clients is not installed'
