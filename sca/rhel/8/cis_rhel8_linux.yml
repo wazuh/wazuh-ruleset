@@ -51,7 +51,7 @@ checks:
       - gpg_13: ["4.3"]
       - gdpr_IV: ["35.7.d"]
       - hipaa: ["164.312.b"]
-    condition: none
+    condition: all
     rules:
       - 'c:rpm -q xinetd -> r:^package xinetd is not installed'
 
@@ -85,10 +85,10 @@ checks:
       - cis_csc: ["6.1"]
       - pci_dss: ["2.2.2"]
       - nist_800_53: ["CM.1"]
-    condition: none
+    condition: all
     rules:
-      - 'f:/etc/chrony.conf -> r:^server\s*\t*\.+$|^pool\s*\t*\.+$'
-      - 'c:ps -ef -> r:\.+/chronyd\s*\t*$ && !r:^\s*\t*chrony\s*\t*'
+      - 'f:/etc/chrony.conf -> r:^server\s*\t*\.+s|^pool\s*\t*\.+'
+      - 'not c:ps -ef -> r:\.+/chronyd\s*\t*$ && !r:^\s*\t*chrony\s*\t*'
 
 # 2.2.2 Ensure X Window System is not installed (Scored)
   - id: 5559 
@@ -242,7 +242,7 @@ checks:
       - 'c:systemctl is-enabled named -> r:^enabled'
 
 
-# 2.2.12 Ensure RFC is not enabled (Scored)
+# 2.2.12 Ensure NFS is not enabled (Scored)
   - id: 5564 
     title: "Ensure NFS is not enabled"
     description: "The Network File System (NFS) is one of the first and most widely distributed file systems in the UNIX environment. It provides the ability for systems to mount file systems of other servers through the network."
@@ -287,7 +287,7 @@ checks:
       - More detailed documentation on OpenLDAP is available at https://www.openldap.org
     condition: none
     rules:
-      - 'c:systemctl is-enabled sladp -> r:^enabled'
+      - 'c:systemctl is-enabled slapd -> r:^enabled'
 
 # 2.2.15 Remove DHCP Server (Scored)
   - id: 5562 
@@ -352,7 +352,7 @@ checks:
       - nist_800_53: ["CM.1","AC.4","SC.7"]
     condition: none
     rules:
-      - 'c:ss -lntu -> r:\.*:25\.*LISTEN && !r:127.0.0.1:25\.+LISTEN|::1:25\.*LISTEN'
+      - 'c:ss -lntu -> r:\.*:25\.* && !r:\s*127.0.0.1:25\s*|\s*::1:25\s*'
 
 ###############################################
 # 2.3 Service Clients
