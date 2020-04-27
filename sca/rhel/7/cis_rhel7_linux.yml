@@ -802,6 +802,27 @@ checks:
     rules:
       - 'c:stat /etc/issue.net -> r:Access:\s*\(0644/-rw-r--r--\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*0/\s*\t*root\)'
 
+# 1.7.2 Ensure GDM login banner is configured (Scored)
+  - id: 15547 
+    title: "Ensure GDM login banner is configured"
+    description: "GDM is the GNOME Display Manager which handles graphical login for GNOME based
+systems."
+    rationale: "Warning messages inform users who are attempting to login to the system of their legal
+status regarding the system and must include the name of the organization that owns the
+system and any monitoring policies that are in place."
+    remediation: "Run the following commands to set permissions on /etc/issue.net: # chown root:root /etc/issue.net # chmod 644 /etc/issue.net"
+    compliance:
+      - cis: ["1.7.2"]
+      - pci_dss: ["7.1"]
+    condition: all
+    rules:
+      - 'f:/etc/dconf/profile/gdm -> r:user-db:user'
+      - 'f:/etc/dconf/profile/gdm -> r:system-db:gdm'
+      - 'f:/etc/dconf/profile/gdm -> r:file-db:/usr/share/gdm/greeter-dconf-defaults'
+      - 'f:/etc/dconf/db/gdm.d/01-banner-message -> r:banner-message-enable=true'
+      - 'f:/etc/dconf/db/gdm.d/01-banner-message -> r:banner-message-text=\.+'
+
+
 # 1.8 Ensure updates, patches, and additional security software are installed(Scored)
   - id: 5548 
     title: "Ensure updates, patches, and additional security software are installed"
