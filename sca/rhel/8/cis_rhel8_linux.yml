@@ -116,7 +116,7 @@ checks:
     condition: all
     rules:
       - 'c:mount -> r:\s/tmp\s'
-      - 'f:/etc/fstab -> !r:^# && r:\s/tmp\s'
+      - 'f:/etc/fstab -> !r:^\s*# && r:\s/tmp\s'
 
 # 1.1.3 /tmp: nodev
   - id: 5609 
@@ -402,9 +402,10 @@ checks:
       - nist_800_53: ["SI.2","SA.11","SI.4"]
       - gpg_13: ["4.3"]
       - gdpr_IV: ["35.7.d"]
-      - hipaa: ["164.312.b"]
-      
+      - hipaa: ["164.312.b"] 
     condition: all
     rules:
       - 'f:/etc/yum.conf -> r:gpgcheck=1'
       - 'not c:grep -Rh ^gpgcheck /etc/yum.repos.d/ -> r:gpgcheck=0'
+
+  
