@@ -493,6 +493,7 @@ checks:
     remediation: "Run the following commands to set permissions on your grub configuration: chown root:root /boot/grub2/grub.cfg, chmod og-rwx /boot/grub2/grub.cfg, chown root:root /boot/grub2/user.cfg, chmod og-rwx /boot/grub2/user.cfg"
     compliance:
       - cis: ["1.4.1"]
+      - cis_csc: ["5.1"]
       - pci_dss: ["2.2.4"]
       - nist_800_53: ["CM.1"]
     condition: all
@@ -523,6 +524,7 @@ checks:
     remediation: "Edit /usr/lib/systemd/system/rescue.service and /usr/lib/systemd/system/emergency.service and set ExecStart to use /sbin/sulogin or /usr/sbin/sulogin: ExecStart=-/bin/sh -c \"/sbin/sulogin; /usr/bin/systemctl --fail --no-block default\" "
     compliance:
       - cis: ["1.4.3"]
+      - cis_csc: ["5.1"]
       - pci_dss: ["2.2.4"]
       - nist_800_53: ["CM.1"]
     condition: all
@@ -558,6 +560,7 @@ checks:
     remediation: "On 32 bit systems install a kernel with PAE support, no installation is required on 64 bit systems: If necessary configure your bootloader to load the new kernel and reboot the system. You may need to enable NX or XD support in your bios."
     compliance:
       - cis: ["1.5.2"]
+      - cis_csc: ["8.4"]
       - pci_dss: ["2.2.4"]
       - nist_800_53: ["CM.1"]
     condition: all
@@ -588,6 +591,7 @@ checks:
     remediation: "Run the following commands to restore binaries to normal and uninstall prelink: prelink -ua && yum remove prelink"
     compliance:
       - cis: ["1.5.4"]
+      - cis_csc: ["3.5"]
       - pci_dss: ["2.2.4"]
       - nist_800_53: ["CM.1"]
     condition: all
@@ -761,8 +765,6 @@ checks:
       - nist_800_53: ["AU.14", "AC.7"]
       - gpg_13: ["7.8"]
       - gdpr_IV: ["35.7","32.2"]
-
-
     condition: all
     rules:
       - 'c:stat /etc/motd -> r:Access:\s*\(0644/-rw-r--r--\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*0/\s*\t*root\)'
