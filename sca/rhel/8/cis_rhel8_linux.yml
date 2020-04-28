@@ -408,4 +408,170 @@ checks:
       - 'f:/etc/yum.conf -> r:gpgcheck=1'
       - 'not c:grep -Rh ^gpgcheck /etc/yum.repos.d/ -> r:gpgcheck=0'
 
-  
+###############################################
+# 1.3 Configure sudo
+###############################################
+
+# 1.3.1 install sudo
+  - id: 5527
+    title: "Ensure sudo is installed"
+    description: "sudo allows a permitted user to execute a command as the superuser or another user, as specified by the security policy. The invoking user's real (not effective) user ID is used to determine the user name with which to query the security policy."
+    rationale: "sudo supports a plugin architecture for security policies and input/output logging. Third parties can develop and distribute their own policy and I/O logging plugins to work seamlessly with the sudo front end. The default security policy is sudoers, which is configured via the file /etc/sudoers. The security policy determines what privileges, if any, a user has to run sudo. The policy may require that users authenticate themselves with a password or another authentication mechanism. If authentication is required, sudo will exit if the user's password is not entered within a configurable time limit. This limit is policy-specific."
+    remediation: "Run the following command to install sudo: # dnf install sudo"
+    compliance:
+      - cis: ["1.3.1"]
+      - cis_csc: ["4.3"]
+    condition: all
+    rules:
+      - 'c:rpm -q sudo -> r:sudo-\S*'
+
+# 1.3.2 Ensure sudo commands use pty (Scored)
+  - id: 5528
+    title: "Ensure sudo commands use pty"
+    description: "sudo can be configured to run only from a psuedo-pty"
+    rationale: "Attackers can run a malicious program using sudo which would fork a background process that remains even when the main program has finished executing."
+    remediation: "edit the file /etc/sudoers or a file in /etc/sudoers.d/ with visudo -f and add the following line: Defaults use_pty"
+    compliance:
+      - cis: ["1.3.2"]
+      - cis_csc: ["5.1"]
+    references: "AIDE stable manual: http://aide.sourceforge.net/stable/manual.html"
+    condition: any
+    rules:
+      - 'f:/etc/sudoers -> r:^\s*Defaults\s+use_pty'
+      - 'c:grep -r Default /etc/sudoers.d/  -> !r:# && r:\s*Defaults\s+use_pty'
+
+# 1.3.3 Ensure sudo log file exists (Scored)
+  - id: 5529
+    title: "Ensure sudo log file exists"
+    description: "sudo can use a custom log file"
+    rationale: "A sudo log file simplifies auditing of sudo commands"
+    remediation: "edit the file /etc/sudoers or a file in /etc/sudoers.d/ with visudo -f and add the following line: Defaults logfile=\"<PATH TO CUSTOM LOG FILE>\""
+    compliance:
+      - cis: ["1.3.3"]
+      - cis_csc: ["6.3"]
+    references: "AIDE stable manual: http://aide.sourceforge.net/stable/manual.html"
+    condition: any
+    rules:
+      - 'f:/etc/sudoers -> r:^\s*Defaults\s+logfile='
+      - 'c:grep -r Default /etc/sudoers.d/  -> !r:# && r:\s*Defaults\s+logfile'
+
+###############################################
+# 1.4 Filesystem Integrity Checking
+###############################################
+
+# 1.4.1 install AIDE
+  - id: 5526 
+    title: "Ensure AIDE is installed"
+    description: "AIDE takes a snapshot of filesystem state including modification times, permissions, and file hashes which can then be used to compare against the current state of the filesystem to detect modifications to the system."
+    rationale: "By monitoring the filesystem state compromised files can be detected to prevent or limit the exposure of accidental or malicious misconfigurations or modified binaries."
+    remediation: "Run the following command to install aide: # dnf install aide  ||  Configure AIDE as appropriate for your environment. Consult the AIDE documentation for options. Initialize AIDE: #aide --init && mv /var/lib/aide/aide.db.new.gz /var/lib/aide/aide.db.gz"
+    compliance:
+      - cis: ["1.3.1"]
+      - cis_csc: ["14.9"]
+      - pci_dss: ["11.5"]
+    references: "AIDE stable manual: http://aide.sourceforge.net/stable/manual.html"
+    condition: all
+    rules:
+      - 'c:rpm -q aide -> r:aide-\S*'
+
+# 1.4.2 AIDE regular checks
+  - id: 5527 
+    title: "Ensure filesystem integrity is regularly checked"
+    description: "Periodic checking of the filesystem integrity is needed to detect changes to the filesystem."
+    rationale: "Periodic file checking allows the system administrator to determine on a regular basis if critical files have been changed in an unauthorized fashion."
+    remediation: "Run the following command: crontab -u root -e // Add the following line to the crontab: 0 5 * * * /usr/sbin/aide --check  // Notes: The checking in this recommendation occurs every day at 5am. Alter the frequency and time of the checks in compliance with site policy.  "
+    compliance:
+      - cis: ["1.3.2"]
+      - cis_csc: ["3.5"]
+      - pci_dss: ["11.5"]
+    condition: any
+    rules:
+      - 'c:crontab -u root -l -> r:aide'
+      - 'c:grep -r aide /etc/cron.* /etc/crontab -> r:aide'
+    
+###############################################
+# 1.5 Secure Boot Settings
+###############################################
+# 1.5.1 Configure bootloader
+  - id: 5528 
+    title: "Ensure permissions on bootloader config are configured"
+    description: "The grub configuration file contains information on boot settings and passwords for unlocking boot options. The grub configuration is usually located at /boot/grub2/grub.cfg and linked as /etc/grub2.cfg . Additional settings can be found in the /boot/grub2/user.cfg file."
+    rationale: "Setting the permissions to read and write for root only prevents non-root users from seeing the boot parameters or changing them. Non-root users who read the boot parameters may be able to identify weaknesses in security upon boot and be able to exploit them."
+    remediation: "Run the following commands to set permissions on your grub configuration: chown root:root /boot/grub2/grub.cfg, chmod og-rwx /boot/grub2/grub.cfg, chown root:root /boot/grub2/user.cfg, chmod og-rwx /boot/grub2/user.cfg"
+    compliance:
+      - cis: ["1.5.1"]
+      - cis_csc: ["5.1"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+    condition: all
+    rules:
+      - 'c:stat /boot/grub2/grub.cfg -> r:Access:\s*\(0600/-rw-------\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*0/\s*\t*root\)'
+      - 'c:stat /boot/grub2/user.cfg -> r:Access:\s*\(0600/-rw-------\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*0/\s*\t*root\)|cannot stat'
+
+# 1.5.2 Set Boot Loader Password (Scored)
+  - id: 5529 
+    title: "Ensure bootloader password is set"
+    description: "Setting the boot loader password will require that anyone rebooting the system must enter a password before being able to set command line boot parameters."
+    rationale: "Requiring a boot password upon execution of the boot loader will prevent an unauthorized user from entering boot parameters or changing the boot partition. This prevents users from weakening security (e.g. turning off SELinux at boot time)."
+    remediation: "Create an encrypted password with grub2-setpassword: # grub2-setpassword    || Run the following command to update the grub2 configuration: # grub2-mkconfig -o /boot/grub2/grub.cfg"
+    compliance:
+      - cis: ["1.5.2"]
+      - cis_csc: ["5.1"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+    condition: all
+    rules:
+      - 'f:/boot/grub2/grub.cfg -> r:^GRUB2_PASSWORD\s*=\.+'
+
+# 1.5.3 Single user authentication
+  - id: 5530 
+    title: "Ensure authentication required for single user mode"
+    description: "Single user mode (rescue mode) is used for recovery when the system detects an issue during boot or by manual selection from the bootloader."
+    rationale: "Requiring authentication in single user mode (rescue mode) prevents an unauthorized user from rebooting the system into single user to gain root privileges without credentials."
+    remediation: "Edit /usr/lib/systemd/system/rescue.service and add/modify the following line: ExecStart=-/usr/lib/systemd/systemd-sulogin-shell rescue Edit /usr/lib/systemd/system/emergency.service and add/modify the following line: ExecStart=-/usr/lib/systemd/systemd-sulogin-shell emergency"
+    compliance:
+      - cis: ["1.5.3"]
+      - cis_csc: ["5.1"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+    condition: all
+    rules:
+      - 'f:/usr/lib/systemd/system/rescue.service -> r:ExecStart=-/usr/lib/systemd/systemd-sulogin-shell rescue'
+      - 'f:/usr/lib/systemd/system/emergency.service -> r:ExecStart=-/usr/lib/systemd/systemd-sulogin-shell emergency'
+
+###############################################
+# 1.6 Additional Process Hardening
+###############################################
+# 1.6.1 Restrict Core Dumps (Scored)
+  - id: 5531 
+    title: "Ensure core dumps are restricted"
+    description: "A core dump is the memory of an executable program. It is generally used to determine why a program aborted. It can also be used to glean confidential information from a core file."
+    rationale: "Setting a hard limit on core dumps prevents users from overriding the soft variable. If core dumps are required, consider setting limits for user groups (see limits.conf). In addition, setting the fs.suid_dumpable variable to 0 will prevent setuid programs from dumping core."
+    remediation: "Add the following line to /etc/security/limits.conf or a /etc/security/limits.d/* file: * hard core 0. Set the following parameter in /etc/sysctl.conf or a /etc/sysctl.d/* file: fs.suid_dumpable = 0 and set the active kernel parameter: If systemd-coredump is installed:  edit /etc/systemd/coredump.conf and add/modify the following lines: Storage=none ProcessSizeMax=0       Run the command: # systemctl daemon-reload"
+    compliance:
+      - cis: ["1.6.1"]
+      - cis_csc: ["5.1"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+    condition: all
+    rules:
+      - 'c:grep -Rh ^*[[:space:]]*hard[[:space:]][[:space:]]*core[[:space:]][[:space:]]* /etc/security/limits.conf /etc/security/limits.d -> r:\s*\t*0$'
+      - 'c:sysctl fs.suid_dumpable -> r:^fs.suid_dumpable\s*=\s*0\s*$'
+      - 'c:grep -Rh fs\.suid_dumpable /etc/sysctl.conf /etc/sysctl.d -> r:^\s*fs.suid_dumpable\s*=\s*0\s*$'
+      - 'c:systemctl is-enabled coredump.service -> r:enabled|disabled'
+
+# 1.6.2 Ensure address space layout randomization (ASLR) is enabled (Scored)
+  - id: 5532 
+    title: "Ensure address space layout randomization (ASLR) is enabled"
+    description: "Address space layout randomization (ASLR) is an exploit mitigation technique which randomly arranges the address space of key data areas of a process."
+    rationale: "Randomly placing virtual memory regions will make it difficult to write memory page exploits as the memory placement will be consistently shifting."
+    remediation: "Set the following parameter in /etc/sysctl.conf or a /etc/sysctl.d/* file: kernel.randomize_va_space = 2 Run the following command to set the active kernel parameter: # sysctl -w kernel.randomize_va_space=2"
+    compliance:
+      - cis: ["1.6.2"]
+      - cis_csc: ["8.3"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+    condition: all
+    rules:
+      - 'c:grep -Rh ^kernel\.randomize_va_space /etc/sysctl.conf /etc/sysctl.d -> r:^\s*kernel.randomize_va_space\s*=\s*2$'
+      - 'c:sysctl kernel.randomize_va_space -> r:^\s*kernel.randomize_va_space\s*=\s*2'
