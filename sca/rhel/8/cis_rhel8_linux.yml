@@ -575,3 +575,234 @@ checks:
     rules:
       - 'c:grep -Rh ^kernel\.randomize_va_space /etc/sysctl.conf /etc/sysctl.d -> r:^\s*kernel.randomize_va_space\s*=\s*2$'
       - 'c:sysctl kernel.randomize_va_space -> r:^\s*kernel.randomize_va_space\s*=\s*2'
+
+###############################################
+# 1.7 Configure SELinux
+###############################################
+# 1.7.1.1 Ensure SELinux is installed(Scored)
+  - id: 5535 
+    title: "Ensure SELinux is installed"
+    description: "SELinux provides Mandatory Access Control."
+    rationale: "Without a Mandatory Access Control system installed only the default Discretionary Access Control system will be available."
+    remediation: "Edit /etc/default/grub and remove all instances of selinux=0 and enforcing=0 from all CMDLINE_LINUX parameters: GRUB_CMDLINE_LINUX_DEFAULT=\"quiet\" GRUB_CMDLINE_LINUX=\"\"  || Run the following command to update the grub2 configuration: grub2-mkconfig -o /boot/grub2/grub.cfg"
+    compliance:
+      - cis: ["1.6.1.1"]
+      - cis_csc: ["14.6"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+    condition: all
+    rules:
+      - 'c:rpm -q libselinux -> r:libselinux-'
+
+# 1.7.1.2 SELinux not disabled
+  - id: 5535 
+    title: "Ensure SELinux is not disabled in bootloader configuration"
+    description: "Configure SELINUX to be enabled at boot time and verify that it has not been overwritten by the grub boot parameters."
+    rationale: "SELinux must be enabled at boot time in your grub configuration to ensure that the controls it provides are not overridden."
+    remediation: "Edit /etc/default/grub and remove all instances of selinux=0 and enforcing=0 from all CMDLINE_LINUX parameters: GRUB_CMDLINE_LINUX_DEFAULT=\"quiet\" GRUB_CMDLINE_LINUX=\"\"  || Run the following command to update the grub2 configuration: grub2-mkconfig -o /boot/grub2/grub.cfg"
+    compliance:
+      - cis: ["1.6.1.2"]
+      - cis_csc: ["14.6"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+    condition: none
+    rules:
+      - 'f:/boot/grub2/grubenv -> r:kernelopts=\.*selinux=0|kernelopts=\.*enforcing=0'
+
+# 1.7.1.3 Set selinux policy
+  - id: 5537 
+    title: "Ensure SELinux policy is configured"
+    description: "Configure SELinux to meet or exceed the default targeted policy, which constrains daemons and system software only."
+    rationale: "Security configuration requirements vary from site to site. Some sites may mandate a policy that is stricter than the default policy, which is perfectly acceptable. This item is intended to ensure that at least the default recommendations are met."
+    remediation: "Edit the /etc/selinux/config file to set the SELINUXTYPE parameter: SELINUXTYPE=targeted"
+    compliance:
+      - cis: ["1.6.1.3"]
+      - cis_csc: ["14.6"] 
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+    condition: all
+    rules:
+      - 'c:sestatus -> r:^Loaded policy name:\s+targeted$'
+      - 'f:/etc/selinux/config -> r:^\s*SELINUXTYPE\s*=\s*targeted|^\s*SELINUXTYPE\s*=\s*mls'
+ 
+ # 1.7.1.4 Set selinux state
+  - id: 5536 
+    title: "Ensure the SELinux state is enforcing"
+    description: "Set SELinux to enable when the system is booted."
+    rationale: "SELinux must be enabled at boot time in to ensure that the controls it provides are in effect at all times."
+    remediation: "Edit the /etc/selinux/config file to set the SELINUX parameter: SELINUX=enforcing"
+    compliance:
+      - cis: ["1.7.1.4"]
+      - cis_csc: ["14.6"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+    condition: all
+    rules:
+      - 'c:sestatus -> r:^SELinux status:\s+enabled$'
+      - 'c:sestatus -> r:^Current mode:\s+enforcing$'
+      - 'c:sestatus -> r:^Mode from config file:\s+enforcing$'
+      - 'f:/etc/selinux/config -> r:^\s*SELINUX\s*=\s*enforcing'
+
+
+# 1.7.1.5 Ensure no unconfined services exist (Scored)
+  - id: 5540 
+    title: "Ensure no unconfined services exist"
+    description: "Unconfined processes run in unconfined domains"
+    rationale: "For unconfined processes, SELinux policy rules are applied, but policy rules exist that allow processes running in unconfined domains almost all access. Processes running in unconfined domains fall back to using DAC rules exclusively. If an unconfined process is compromised, SELinux does not prevent an attacker from gaining access to system resources and data, but of course, DAC rules are still used. SELinux is a security enhancement on top of DAC rules – it does not replace them"
+    remediation: "Investigate any unconfined processes found during the audit action. They may need to have an existing security context assigned to them or a policy built for them."
+    compliance:
+      - cis: ["1.7.1.5"]
+      - cis_csc: ["9.2"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+    condition: none
+    rules:
+      - 'c:ps -eZ -> r:unconfined_service_t'
+  
+# 1.7.1.6 Remove SETroubleshoot
+  - id: 5538 
+    title: "Ensure SETroubleshoot is not installed"
+    description: "The SETroubleshoot service notifies desktop users of SELinux denials through a user-friendly interface. The service provides important information around configuration errors, unauthorized intrusions, and other potential errors."
+    rationale: "The SETroubleshoot service is an unnecessary daemon to have running on a server, especially if X Windows is disabled."
+    remediation: "Run the following command to uninstall s etroubleshoot: # dnf remove setroubleshoot"
+    compliance:
+      - cis: ["1.7.1.6"]
+      - cis_csc: ["14.6"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+    condition: none
+    rules:
+      - 'c:rpm -qa setroubleshoot -> r:setroubleshoot'
+
+# 1.7.1.7 Disable MCS Translation service mcstrans
+  - id: 5539 
+    title: "Ensure the MCS Translation Service (mcstrans) is not installed"
+    description: "The mcstransd daemon provides category label information to client processes requesting information. The label translations are defined in /etc/selinux/targeted/setrans.conf"
+    rationale: "Since this service is not used very often, remove it to reduce the amount of potentially vulnerable code running on the system."
+    remediation: "Run the following command to uninstall mcstrans: # dnf remove mcstrans"
+    compliance:
+      - cis: ["1.6.1.5"]
+      - cis_csc: ["9.2"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+    condition: none
+    rules:
+      - 'c:rpm -qa mcstrans -> r:mcstrans'
+
+
+###############################################
+# 1.8  Warning Banners
+###############################################
+# 1.8.1.1 Configure message of the day (Scored)
+  - id: 5542 
+    title: "Ensure message of the day is configured properly"
+    description: "The contents of the /etc/motd file are displayed to users after login and function as a message of the day for authenticated users. Unix-based systems have typically displayed information about the OS release and patch level upon logging in to the system. This information can be useful to developers who are developing software for a particular OS platform. If mingetty(8) supports the following options, they display operating system information: \\m - machine architecture \\r - operating system release \\s - operating system name \\v - operating system version"
+    rationale: "Warning messages inform users who are attempting to login to the system of their legal status regarding the system and must include the name of the organization that owns the system and any monitoring policies that are in place. Displaying OS and patch level information in login banners also has the side effect of providing detailed system information to attackers attempting to target specific exploits of a system. Authorized users can easily get this information by running the \" uname -a \" command once they have logged in."
+    remediation: "Edit the /etc/motd file with the appropriate contents according to your site policy, remove any instances of \\m , \\r , \\s , \\v or references to the OS platform    OR    If the motd is not used, this file can be removed. Run the following command to remove the motd file: # rm /etc/motd"
+    compliance:
+      - cis: ["1.8.1.1"]
+      - cis_csc: ["5.1"]
+      - pci_dss: ["7.1"]
+    condition: none
+    rules:
+      - 'f:/etc/motd -> r:\\v|\\r|\\m|\\s'
+    
+# 1.8.1.2 Configure local login warning banner (Scored)
+  - id: 5543 
+    title: "Ensure local login warning banner is configured properly"
+    description: "The contents of the /etc/issue file are displayed to users prior to login for local terminals. Unix-based systems have typically displayed information about the OS release and patch level upon logging in to the system. This information can be useful to developers who are developing software for a particular OS platform. If mingetty(8) supports the following options, they display operating system information: \\m - machine architecture \\r - operating system release \\s - operating system name \\v - operating system version"
+    rationale: "Warning messages inform users who are attempting to login to the system of their legal status regarding the system and must include the name of the organization that owns the system and any monitoring policies that are in place. Displaying OS and patch level information in login banners also has the side effect of providing detailed system information to attackers attempting to target specific exploits of a system. Authorized users can easily get this information by running the \" uname -a \" command once they have logged in."
+    remediation: "Edit the /etc/issue file with the appropriate contents according to your site policy, remove any instances of \\m , \\r , \\s , \\v or references to the OS platform: # echo \"Authorized uses only. All activity may be monitored and reported.\" > /etc/issue"
+    compliance:
+      - cis: ["1.8.1.2"]
+      - cis_csc: ["5.1"]
+      - pci_dss: ["7.1"]
+    condition: none
+    rules:
+      - 'f:/etc/issue -> r:\\v|\\r|\\m|\\s'
+
+
+# 1.8.1.3 Configure remote login warning banner (Scored)
+  - id: 5544 
+    title: "Ensure remote login warning banner is configured properly"
+    description: "The contents of the /etc/issue.net file are displayed to users prior to login for remote connections from configured services. Unix-based systems have typically displayed information about the OS release and patch level upon logging in to the system. This information can be useful to developers who are developing software for a particular OS platform. If mingetty(8) supports the following options, they display operating system information: \\m - machine architecture \\r - operating system release \\s - operating system name \\v - operating system version"
+    rationale: "Warning messages inform users who are attempting to login to the system of their legal status regarding the system and must include the name of the organization that owns the system and any monitoring policies that are in place. Displaying OS and patch level information in login banners also has the side effect of providing detailed system information to attackers attempting to target specific exploits of a system. Authorized users can easily get this information by running the \" uname -a \" command once they have logged in."
+    remediation: "Edit the /etc/issue.net file with the appropriate contents according to your site policy, remove any instances of \\m , \\r , \\s , \\v or references to the OS platform: # echo \"Authorized uses only. All activity may be monitored and reported.\" > /etc/issue.net"
+    compliance:
+      - cis: ["1.8.1.3"]
+      - cis_csc: ["5.1"]
+      - pci_dss: ["7.1"]
+    condition: none
+    rules:
+      - 'f:/etc/issue.net -> r:\\v|\\r|\\m|\\s'
+
+# 1.8.1.4 Configure /etc/motd permissions (Scored)
+  - id: 5545 
+    title: "Ensure permissions on /etc/motd are configured"
+    description: "The contents of the /etc/motd file are displayed to users after login and function as a message of the day for authenticated users."
+    rationale: "If the /etc/motd file does not have the correct ownership it could be modified by unauthorized users with incorrect or misleading information."
+    remediation: "Run the following commands to set permissions on /etc/motd: # chown root:root /etc/motd # chmod 644 /etc/motd"
+    compliance:
+      - cis: ["1.8.1.4"]
+      - cis_csc: ["5.1"]
+      - pci_dss: ["10.2.5"]
+      - hipaa: ["164.312.b"]
+      - nist_800_53: ["AU.14", "AC.7"]
+      - gpg_13: ["7.8"]
+      - gdpr_IV: ["35.7","32.2"]
+    condition: all
+    rules:
+      - 'c:stat /etc/motd -> r:Access:\s*\(0644/-rw-r--r--\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*0/\s*\t*root\)'
+
+# 1.8.1.5 Configure /etc/issue permissions (Scored)
+  - id: 5546 
+    title: "Ensure permissions on /etc/issue are configured"
+    description: "The contents of the /etc/issue file are displayed to users prior to login for local terminals."
+    rationale: "If the /etc/issue file does not have the correct ownership it could be modified by unauthorized users with incorrect or misleading information."
+    remediation: "Run the following commands to set permissions on /etc/issue: # chown root:root /etc/issue # chmod 644 /etc/issue"
+    compliance:
+      - cis: ["1.8.1.5"]
+      - cis_csc: ["5.1"]
+      - pci_dss: ["10.2.5"]
+      - hipaa: ["164.312.b"]
+      - nist_800_53: ["AU.14", "AC.7"]
+      - gpg_13: ["7.8"]
+      - gdpr_IV: ["35.7","32.2"]
+    condition: all
+    rules:
+      - 'c:stat /etc/issue -> r:Access:\s*\(0644/-rw-r--r--\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*0/\s*\t*root\)'
+
+# 1.8.1.6 Configure /etc/issue.net permissions (Scored)
+  - id: 5547 
+    title: "Ensure permissions on /etc/issue.net are configured"
+    description: "The contents of the /etc/issue.net file are displayed to users prior to login for remote connections from configured services."
+    rationale: "If the /etc/issue.net file does not have the correct ownership it could be modified by unauthorized users with incorrect or misleading information."
+    remediation: "Run the following commands to set permissions on /etc/issue.net: # chown root:root /etc/issue.net # chmod 644 /etc/issue.net"
+    compliance:
+      - cis: ["1.8.1.6"]
+      - cis_csc: ["5.1"]
+      - pci_dss: ["10.2.5"]
+      - hipaa: ["164.312.b"]
+      - nist_800_53: ["AU.14", "AC.7"]
+      - gpg_13: ["7.8"]
+      - gdpr_IV: ["35.7","32.2"]
+    condition: all
+    rules:
+      - 'c:stat /etc/issue.net -> r:Access:\s*\(0644/-rw-r--r--\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*0/\s*\t*root\)'
+
+# 1.8.2 Ensure GDM login banner is configured (Scored)
+  - id: 5548 
+    title: "Ensure GDM login banner is configured"
+    description: "GDM is the GNOME Display Manager which handles graphical login for GNOME based systems."
+    rationale: "Warning messages inform users who are attempting to login to the system of their legal status regarding the system and must include the name of the organization that owns the system and any monitoring policies that are in place."
+    remediation: "Edit or create the file /etc/gdm3/greeter.dconf-defaults and add the following in 3 lines: (1) [org/gnome/login-screen]    (2) banner-message-enable=true   (3) banner-message-text='Authorized uses only. All activity may be monitored and reported.'"
+    compliance:
+      - cis: ["1.8.2"]
+      - cis_csc: ["5.1"]
+      - pci_dss: ["7.1"]
+    condition: all
+    rules:
+      - 'f:/etc/gdm3/greeter.dconf-defaults -> r:[org/gnome/login-screen]'
+      - 'f:/etc/gdm3/greeter.dconf-defaults -> r:banner-message-enable=true'
+      - 'f:/etc/gdm3/greeter.dconf-defaults -> r:banner-message-text='
+
