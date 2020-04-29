@@ -8,6 +8,7 @@
 # Foundation
 #
 # Based on:
+
 # Center for Internet Security Red Hat Enterprise Linux 8 Benchmark v1.0 - 09-30-2019
 
 policy:
@@ -35,6 +36,388 @@ variables:
   $sshd_file: /etc/ssh/sshd_config
 
 checks:
+
+###############################################
+# 2 OS Services
+###############################################
+###############################################
+# 2.1 inetd Services
+###############################################
+ # 2.1.1 Ensure xinetd is not installed (Scored)
+  - id: 5555 
+    title: "Ensure xinetd is not installed"
+    description: "The eXtended InterNET Daemon ( xinetd ) is an open source super daemon that replaced the original inetd daemon. The xinetd daemon listens for well known services and dispatches the appropriate daemon to properly respond to service requests."
+    rationale: "If there are no xinetd services required, it is recommended that the daemon be disabled."
+    remediation: "Run the following command to remove xinetd: # dnf remove xinetd"
+    compliance:
+      - cis: ["2.1.1"]
+      - cis_csc: ["9.2"]
+      - pci_dss: ["2.2.3"]
+      - nist_800_53: ["CM.1"]
+      - gpg_13: ["4.3"]
+      - gdpr_IV: ["35.7.d"]
+      - hipaa: ["164.312.b"]
+    condition: all
+    rules:
+      - 'c:rpm -q xinetd -> r:^package xinetd is not installed'
+
+###############################################
+# 2.2 Remove Legacy Services
+###############################################
+
+# 2.2.1.1 Ensure time synchronization is in use (Not Scored)
+  - id: 5556 
+    title: "Ensure time synchronization is in use"
+    description: "System time should be synchronized between all systems in an environment. This is typically done by establishing an authoritative time server or set of servers and having all systems synchronize their clocks to them."
+    rationale: "Time synchronization is important to support time sensitive security mechanisms like Kerberos and also ensures log files have consistent time records across the enterprise, which aids in forensic investigations."
+    remediation: "On physical systems or virtual systems where host based time synchronization is not available install chrony: # dnf install chrony  On virtual systems where host based time synchronization is available consult your virtualization software documentation and verify that host based synchronization is in use."
+    compliance:
+      - cis: ["2.2.2.1"]
+      - cis_csc: ["6.1"]
+      - pci_dss: ["10.4"]
+      - nist_800_53: ["AU.8"]
+    condition: any
+    rules:
+      - 'c:rpm -q chrony -> r:^chrony-'
+
+# 2.2.1.2 Configure Network Time Protocol (Chrony) (Scored)
+  - id: 5558 
+    title: "Ensure chrony is configured"
+    description: "chrony is a daemon which implements the Network Time Protocol (NTP). It is designed to synchronize system clocks across a variety of systems and use a source that is highly accurate. More information on NTP can be found at https://www.ntp.org. ntp can be configured to be a client and/or a server."
+    rationale: "If chrony is in use on the system proper configuration is vital to ensuring time synchronization is working properly."
+    remediation: "Add or edit server or pool lines to /etc/chrony.conf as appropriate: server <remote-server>   Configure chrony to run as the chrony user"
+    compliance:
+      - cis: ["2.2.1.2"]
+      - cis_csc: ["6.1"]
+      - pci_dss: ["2.2.2"]
+      - nist_800_53: ["CM.1"]
+    condition: all
+    rules:
+      - 'f:/etc/chrony.conf -> r:^server\s*\t*\.+s|^pool\s*\t*\.+'
+      - 'not c:ps -ef -> r:\.+/chronyd\s*\t*$ && !r:^\s*\t*chrony\s*\t*'
+
+# 2.2.2 Ensure X Window System is not installed (Scored)
+  - id: 5559 
+    title: "Ensure X Window System is not installed"
+    description: "The X Window System provides a Graphical User Interface (GUI) where users can have multiple windows in which to run programs and various add on. The X Windows system is typically used on workstations where users login, but not on servers where users typically do not login."
+    rationale: "Unless your organization specifically requires graphical login access via X Windows, remove it to reduce the potential attack surface."
+    remediation: "Run the following command to remove the X Windows System packages: # dnf remove xorg-x11*"
+    compliance:
+      - cis: ["2.2.2"]
+      - cis_csc: ["2.6"]
+      - pci_dss: ["2.2.2"]
+      - nist_800_53: ["CM.1"]
+    condition: none
+    rules:
+      - 'c:rpm -qa xorg-x11* -> r:^xorg-x11'
+
+# 2.2.3 Remove rsync service (Scored)
+  - id: 5578 
+    title: "Ensure rsync service is not enabled"
+    description: "The rsyncd service can be used to synchronize files between systems over network links."
+    rationale: "The rsyncd service presents a security risk as it uses unencrypted protocols for communication."
+    remediation: "Run the following command to disable rsync: # systemctl --now disable rsyncd"
+    compliance:
+      - cis: ["2.2.3"]
+      - cis_csc: ["9.2"]
+      - pci_dss: ["2.2.3"]
+      - nist_800_53: ["CM.1"]
+      - gpg_13: ["4.3"]
+      - gdpr_IV: ["35.7.d"]
+      - hipaa: ["164.312.b"]
+    condition: none
+    rules:
+      - 'c:systemctl is-enabled rsyncd -> r:^enabled'
+
+# 2.2.4 Disable Avahi Server (Scored)
+  - id: 5560 
+    title: "Ensure Avahi Server is not enabled"
+    description: "Avahi is a free zeroconf implementation, including a system for multicast DNS/DNS-SD service discovery. Avahi allows programs to publish and discover services and hosts running on a local network with no specific configuration. For example, a user can plug a computer into a network and Avahi automatically finds printers to print to, files to look at and people to talk to, as well as network services running on the machine."
+    rationale: "Automatic discovery of network services is not normally required for system functionality. It is recommended to disable the service to reduce the potential attack surface."
+    remediation: "Run the following command to disable avahi-daemon: # systemctl --now disable avahi-daemon"
+    compliance:
+      - cis: ["2.2.4"]
+      - cis_csc: ["9.2"]
+      - pci_dss: ["2.2.2"]
+      - nist_800_53: ["CM.1"]
+    condition: none
+    rules:
+      - 'c:systemctl is-enabled avahi-daemon -> r:^enabled'
+
+# 2.2.5 Remove SNMP Server (Scored)
+  - id: 5571 
+    title: "Ensure SNMP Server is not enabled"
+    description: "The Simple Network Management Protocol (SNMP) server is used to listen for SNMP commands from an SNMP management system, execute the commands or collect the information and then send results back to the requesting system."
+    rationale: "The SNMP server can communicate using SNMP v1, which transmits data in the clear and does not require authentication to execute commands. Unless absolutely necessary, it is recommended that the SNMP service not be used. If SNMP is required the server should be configured to disallow SNMP v1."
+    remediation: "Run the following command to disable snmpd: # systemctl --now disable snmpd"
+    compliance:
+      - cis: ["2.2.5"]
+      - cis_csc: ["9.2"]
+      - pci_dss: ["2.2.2"]
+      - nist_800_53: ["CM.1"]
+    condition: none
+    rules:
+      - 'c:systemctl is-enabled snmpd -> r:^enabled'
+
+# 2.2.6 Remove HTTP Proxy Server (Scored)
+  - id: 5570 
+    title: "Ensure HTTP Proxy Server is not enabled"
+    description: "Squid is a standard proxy server used in many distributions and environments."
+    rationale: "If there is no need for a proxy server, it is recommended that the squid proxy be disabled to reduce the potential attack surface."
+    remediation: "Run the following command to disable squid: # systemctl --now disable squid"
+    compliance:
+      - cis: ["2.2.6"]
+      - cis_csc: ["9.2"]
+      - pci_dss: ["2.2.2"]
+      - nist_800_53: ["CM.1"]
+    condition: none
+    rules:
+      - 'c:systemctl is-enabled squid -> r:^enabled'
+
+# 2.2.7 Remove Samba (Scored)
+  - id: 5569 
+    title: "Ensure Samba is not enabled"
+    description: "The Samba daemon allows system administrators to configure their Linux systems to share file systems and directories with Windows desktops. Samba will advertise the file systems and directories via the Small Message Block (SMB) protocol. Windows desktop users will be able to mount these directories and file systems as letter drives on their systems."
+    rationale: "If there is no need to mount directories and file systems to Windows systems, then this service can be disabled to reduce the potential attack surface."
+    remediation: "Run the following command to disable smb: # systemctl --now disable smb"
+    compliance:
+      - cis: ["2.2.7"]
+      - cis_csc: ["9.2"]
+      - pci_dss: ["2.2.2"]
+      - nist_800_53: ["CM.1"]
+    condition: none
+    rules:
+      - 'c:systemctl is-enabled smb -> r:^enabled'
+
+# 2.2.8 Remove Dovecot (IMAP and POP3 services) (Scored)
+  - id: 5568 
+    title: "Ensure IMAP and POP3 server is not enabled"
+    description: "dovecot is an open source IMAP and POP3 server for Linux based systems."
+    rationale: "Unless POP3 and/or IMAP servers are to be provided by this system, it is recommended that the service be disabled to reduce the potential attack surface."
+    remediation: "Run the following command to disable dovecot: # systemctl --now disable dovecot"
+    compliance:
+      - cis: ["2.2.8"]
+      - cis_csc: ["9.2"]
+      - pci_dss: ["2.2.2"]
+      - nist_800_53: ["CM.1"]
+    condition: none
+    rules:
+      - 'c:systemctl is-enabled dovecot -> r:^enabled'
+
+# 2.2.9 Remove HTTP Server (Scored)
+  - id: 5567 
+    title: "Ensure HTTP server is not enabled"
+    description: "HTTP or web servers provide the ability to host web site content."
+    rationale: "Unless there is a need to run the system as a web server, it is recommended that the service be disabled to reduce the potential attack surface."
+    remediation: "Run the following command to disable httpd: # systemctl --now disable httpd"
+    compliance:
+      - cis: ["2.2.9"]
+      - cis_csc: ["9.2"]
+    condition: none
+    rules:
+      - 'c:systemctl is-enabled httpd -> r:^enabled'
+
+# 2.2.10 Remove FTP Server (Scored)
+  - id: 5566 
+    title: "Ensure FTP Server is not enabled"
+    description: "The File Transfer Protocol (FTP) provides networked computers with the ability to transfer files."
+    rationale: "FTP does not protect the confidentiality of data or authentication credentials. It is recommended sftp be used if file transfer is required. Unless there is a need to run the system as a FTP server (for example, to allow anonymous downloads), it is recommended that the service be disabled to reduce the potential attack surface."
+    remediation: "Run the following command to disable vsftpd: # systemctl --now disable vsftpd"
+    compliance:
+      - cis: ["2.2.10"]
+      - cis_csc: ["9.2"]
+      - pci_dss: ["2.2.2"]
+      - nist_800_53: ["CM.1"]
+    condition: none
+    rules:
+      - 'c:systemctl is-enabled vsftpd -> r:^enabled'
+
+# 2.2.11 Ensure DNS Server is not enabled (Scored)
+  - id: 5565 
+    title: "Ensure DNS Server is not enabled"
+    description: "The Domain Name System (DNS) is a hierarchical naming system that maps names to IP addresses for computers, services and other resources connected to a network."
+    rationale: "Unless a system is specifically designated to act as a DNS server, it is recommended that the service be disabled to reduce the potential attack surface."
+    remediation: "Run the following command to disable named : # systemctl --now disable named"
+    compliance:
+      - cis: ["2.2.11"]
+      - cis_csc: ["9.2"]
+      - pci_dss: ["2.2.2"]
+      - nist_800_53: ["CM.1"]
+    condition: none
+    rules:
+      - 'c:systemctl is-enabled named -> r:^enabled'
+
+
+# 2.2.12 Ensure NFS is not enabled (Scored)
+  - id: 5564 
+    title: "Ensure NFS is not enabled"
+    description: "The Network File System (NFS) is one of the first and most widely distributed file systems in the UNIX environment. It provides the ability for systems to mount file systems of other servers through the network."
+    rationale: "If the system does not export NFS shares, it is recommended that the NFS be disabled to reduce remote attack surface."
+    remediation: "Run the following commands to disable nfs: # systemctl --now disable nfs"
+    compliance:
+      - cis: ["2.2.12"]
+      - cis_csc: ["9.2"]
+      - pci_dss: ["2.2.2"]
+      - nist_800_53: ["CM.1"]
+    condition: none
+    rules:
+      - 'c:systemctl is-enabled nfs -> r:^enabled'
+
+# 2.2.13 Ensure RPC is not enabled (Scored)
+  - id: 5574
+    title: "Ensure RPC is not enabled"
+    description: "The rpcbind service maps Remote Procedure Call (RPC) services to the ports on which they listen. RPC processes notify rpcbind when they start, registering the ports they are listening on and the RPC program numbers they expect to serve. The client system then contacts rpcbind on the server with a particular RPC program number. The rpcbind service redirects the client to the proper port number so it can communicate with the requested service."
+    rationale: "If the system does not require rpc based services, it is recommended that rpcbind be disabled to reduce the remote attack surface."
+    remediation: "Run the following commands to disable nfs: # systemctl --now disable rpcbind"
+    compliance:
+      - cis: ["2.2.13"]
+      - cis_csc: ["9.2"]
+      - pci_dss: ["2.2.2"]
+      - nist_800_53: ["CM.1"]
+    condition: none
+    rules:
+      - 'c:systemctl is-enabled rpcbind -> r:^enabled'
+
+# 2.2.14 Remove LDAP Server (Scored)
+  - id: 5563 
+    title: "Ensure LDAP Server is not enabled"
+    description: "The Lightweight Directory Access Protocol (LDAP) was introduced as a replacement for NIS/YP. It is a service that provides a method for looking up information from a central database."
+    rationale: "If the system will not need to act as an LDAP server, it is recommended that the software be disabled to reduce the potential attack surface."
+    remediation: "Run the following command to disable slapd: # systemctl --now disable slapd"
+    compliance:
+      - cis: ["2.2.14"]
+      - cis_csc: ["9.2"]
+      - pci_dss: ["2.2.2"]
+      - nist_800_53: ["CM.1"]
+    references:
+      - More detailed documentation on OpenLDAP is available at https://www.openldap.org
+    condition: none
+    rules:
+      - 'c:systemctl is-enabled slapd -> r:^enabled'
+
+# 2.2.15 Remove DHCP Server (Scored)
+  - id: 5562 
+    title: "Ensure DHCP Server is not enabled"
+    description: "The Dynamic Host Configuration Protocol (DHCP) is a service that allows machines to be dynamically assigned IP addresses."
+    rationale: "Unless a system is specifically set up to act as a DHCP server, it is recommended that this service be disabled to reduce the potential attack surface."
+    remediation: "Run the following command to disable dhcpd: # systemctl --now disable dhcpd"
+    compliance:
+      - cis: ["2.2.15"]
+      - cis_csc: ["9.2"]
+      - pci_dss: ["2.2.2"]
+      - nist_800_53: ["CM.1"]
+    references:
+      - More detailed documentation on DHCP is available at https://www.isc.org/software/dhcp
+    condition: none
+    rules:
+      - 'c:systemctl is-enabled dhcpd -> r:^enabled'
+
+# 2.2.16 Ensure CUPS is not enabled (Scored)
+  - id: 5561 
+    title: "Ensure CUPS is not enabled"
+    description: "The Common Unix Print System (CUPS) provides the ability to print to both local and network printers. A system running CUPS can also accept print jobs from remote systems and print them to local printers. It also provides a web based remote administration capability."
+    rationale: "If the system does not need to print jobs or accept print jobs from other systems, it is recommended that CUPS be disabled to reduce the potential attack surface."
+    remediation: "Run the following command to disable cups : # systemctl --now disable cups"
+    compliance:
+      - cis: ["2.2.16"]
+      - cis_csc: ["9.2"]
+      - pci_dss: ["2.2.2"]
+      - nist_800_53: ["CM.1"]
+    condition: none
+    rules:
+      - 'c:systemctl is-enabled cups -> r:^enabled'
+
+# 2.2.17 Remove NIS Server (Scored)
+  - id: 5573 
+    title: "Ensure NIS Server is not enabled"
+    description: "The Network Information Service (NIS) (formally known as Yellow Pages) is a client-server directory service protocol for distributing system configuration files. The NIS server is a collection of programs that allow for the distribution of configuration files."
+    rationale: "The NIS service is inherently an insecure system that has been vulnerable to DOS attacks, buffer overflows and has poor authentication for querying NIS maps. NIS generally been replaced by such protocols as Lightweight Directory Access Protocol (LDAP). It is recommended that the service be disabled and other, more secure services be used"
+    remediation: "Run the following command to disable ypserv: # systemctl --now disable ypserv"
+    compliance:
+      - cis: ["2.2.17"]
+      - cis_csc: ["9.2"]
+      - pci_dss: ["2.2.3"]
+      - nist_800_53: ["CM.1"]
+      - gpg_13: ["4.3"]
+      - gdpr_IV: ["35.7.d"]
+      - hipaa: ["164.312.b"]
+    condition: none
+    rules:
+      - 'c:systemctl is-enabled ypserv -> r:^enabled'
+
+# 2.2.18 Ensure mail transfer agent is configured for local-only mode (Scored)
+  - id: 5572 
+    title: "Ensure mail transfer agent is configured for local-only mode"
+    description: "Mail Transfer Agents (MTA), such as sendmail and Postfix, are used to listen for incoming mail and transfer the messages to the appropriate user or mail server. If the system is not intended to be a mail server, it is recommended that the MTA be configured to only process local mail."
+    rationale: "Mail Transfer Agents (MTA), such as sendmail and Postfix, are used to listen for incoming mail and transfer the messages to the appropriate user or mail server. If the system is not intended to be a mail server, it is recommended that the MTA be configured to only process local mail."
+    remediation: "Edit /etc/postfix/main.cf and add the following line to the RECEIVING MAIL section. If the line already exists, change it to look like the line below: inet_interfaces = loopback-only . Restart postfix: # systemctl restart postfix"
+    compliance:
+      - cis: ["2.2.18"]
+      - cis_csc: ["9.2"]
+      - pci_dss: ["2.2.2"]
+      - nist_800_53: ["CM.1","AC.4","SC.7"]
+    condition: none
+    rules:
+      - 'c:ss -lntu -> r:\.*:25\.* && !r:\s*127.0.0.1:25\s*|\s*::1:25\s*'
+
+###############################################
+# 2.3 Service Clients
+###############################################
+
+# 2.3.1 Remove NIS Client (Scored)
+  - id: 5579 
+    title: "Ensure NIS Client is not installed"
+    description: "The Network Information Service (NIS), formerly known as Yellow Pages, is a client-server directory service protocol used to distribute system configuration files. The NIS client ( ypbind ) was used to bind a machine to an NIS server and receive the distributed configuration files."
+    rationale: "The NIS service is inherently an insecure system that has been vulnerable to DOS attacks, buffer overflows and has poor authentication for querying NIS maps. NIS generally has been replaced by such protocols as Lightweight Directory Access Protocol (LDAP). It is recommended that the service be removed."
+    remediation: "Run the following command to uninstall ypbind: # dnf remove ypbind"
+    compliance:
+      - cis: ["2.3.1"]
+      - cis_csc: ["2.6"]
+      - pci_dss: ["2.2.3"]
+      - nist_800_53: ["CM.1"]
+      - gpg_13: ["4.3"]
+      - gdpr_IV: ["35.7.d"]
+      - hipaa: ["164.312.b"]
+    condition: none
+    rules:
+      - 'c:rpm -qa ypbind -> r:ypbind'
+
+# 2.3.2 Ensure telnet client is not installed (Scored)
+  - id: 5582 
+    title: "Ensure telnet client is not installed"
+    description: "The telnet package contains the telnet client, which allows users to start connections to other systems via the telnet protocol."
+    rationale: "The telnet protocol is insecure and unencrypted. The use of an unencrypted transmission medium could allow an unauthorized user to steal credentials. The ssh package provides an encrypted session and stronger security and is included in most Linux distributions."
+    remediation: "Run the following command to uninstall telnet : # dnf remove telnet"
+    compliance:
+      - cis: ["2.3.2"]
+      - cis_csc: ["4.5"]
+      - pci_dss: ["2.2.3"]
+      - nist_800_53: ["CM.1"]
+      - gpg_13: ["4.3"]
+      - gdpr_IV: ["35.7.d"]
+      - hipaa: ["164.312.b"]
+    condition: all
+    rules:
+      - 'c:rpm -q telnet -> r:^package telnet is not installed'
+
+# 2.3.3 Ensure LDAP client is not installed (Scored)
+  - id: 5583 
+    title: "Ensure LDAP client is not installed"
+    description: "The Lightweight Directory Access Protocol (LDAP) was introduced as a replacement for NIS/YP. It is a service that provides a method for looking up information from a central database."
+    rationale: "If the system will not need to act as an LDAP client, it is recommended that the software be removed to reduce the potential attack surface."
+    remediation: "Run the following command to uninstall openldap-clients : # dnf remove openldap-clients"
+    compliance:
+      - cis: ["2.3.3"]
+      - cis_csc: ["2.6"]
+      - pci_dss: ["2.2.3"]
+      - nist_800_53: ["CM.1"]
+      - gpg_13: ["4.3"]
+      - gdpr_IV: ["35.7.d"]
+      - hipaa: ["164.312.b"]
+    condition: all
+    rules:
+      - 'c:rpm -q openldap-clients -> r:^package openldap-clients is not installed'
+      
 
 ###############################################
 # 3 Network Configuration
@@ -528,6 +911,516 @@ checks:
     condition: all
     rules:
       - 'f:/boot/grub2/grubenv -> r:^\s*kernelopts=(\S+\s+)*ipv6\.disable=1\b\s*(\S+\s*)*$'
+
+###############################################
+# 4 Logging and Auditing
+###############################################
+###############################################
+# 4.1 Configure System Accounting (auditd)
+###############################################
+
+# 4.1.1.1 Ensure auditd is installed (Scored)
+  - id: 410101 
+    title: "Ensure auditd is installed"
+    description: "auditd is the userspace component to the Linux Auditing System. It's responsible for writing audit records to the disk."
+    rationale: "The capturing of system events provides system administrators with information to allow them to determine if unauthorized access to their system is occurring."
+    remediation: "Run the following command to Install auditd # dnf install audit audit-libs"
+    compliance:
+      - cis: ["4.1.1.1"]
+      - cis_csc: ["6.2","6.3"]
+      - pci_dss: ["10.1"]
+      - nist_800_53: ["AU.2"]
+      - hipaa: ["164.312.b"]
+    condition: all
+    rules:
+      - 'not c:rpm -q audit audit-libs -> r:is not installed'
+
+# 4.1.1.2 Ensure auditd service is enabled (Scored)
+  - id: 410102 
+    title: "Ensure auditd service is enabled"
+    description: "Turn on the auditd daemon to record system events."
+    rationale: "The capturing of system events provides system administrators with information to allow them to determine if unauthorized access to their system is occurring."
+    remediation: "Run the following command to enable auditd : # systemctl --now enable auditd"
+    compliance:
+      - cis: ["4.1.2"]
+      - cis_csc: ["6.2","6.3"]
+      - pci_dss: ["10.1","10.7"]
+      - nist_800_53: ["AU.2"]
+      - hipaa: ["164.312.b"]
+    condition: all
+    rules:
+      - 'c:systemctl is-enabled auditd -> r:^enabled'
+
+
+# 4.1.1.3 Ensure auditing for processes that start prior to auditd is enabled (Scored)
+  - id: 410103 
+    title: "Ensure auditing for processes that start prior to auditd is enabled"
+    description: "Configure grub2 so that processes that are capable of being audited can be audited even if they start up prior to auditd startup."
+    rationale: "The capturing of system events provides system administrators with information to allow them to determine if unauthorized access to their system is occurring."
+    remediation: "Edit /etc/default/grub and add audit=1 to GRUB_CMDLINE_LINUX : GRUB_CMDLINE_LINUX=\"audit=1\" . Run the following command to update the grub2 configuration: # grub2-mkconfig -o /boot/grub2/grub.cfg"
+    compliance:
+      - cis: ["4.1.1.3"]
+      - cis_csc: ["6.2","6.3"]
+      - pci_dss: ["10.2.6","10.7"]
+      - nist_800_53: ["AU.2"]
+      - gpg_13: ["7.9"]
+      - gdpr_IV: ["35.7.d","32.2"]
+      - hipaa: ["164.312.b"]
+    condition: none
+    rules:
+      - 'f:/boot/grub2/grubenv -> r:kernelopts= && !r:audit=1'
+
+
+# 4.1.1.4 Ensure auditing for processes that start prior to auditd is enabled (Scored)
+  - id: 410104 
+    title: "Ensure audit_backlog_limit is sufficient"
+    description: "The backlog limit has a default setting of 64."
+    rationale: "During boot if audit=1, then the backlog will hold 64 records. If more than 64 records are created during boot, auditd records will be lost and potential malicious activity could go undetected."
+    remediation: "Edit /etc/default/grub and add audit_backlog_limit=<BACKLOG SIZE> to GRUB_CMDLINE_LINUX: Run the following command to update the grub2 configuration: # grub2-mkconfig -o /boot/grub2/grub.cfg"
+    compliance:
+      - cis: ["4.1.1.4"]
+      - cis_csc: ["6.2","6.3"]
+      - nist_800_53: ["AU.4"]
+      - hipaa: ["164.312.b"]
+    condition: all
+    rules:
+      - 'f:/boot/grub2/grubenv -> r:kernelopts= && n:audit_backlog_limit=(\d+) compare >= 8192'
+
+# 4.1.2.1 Ensure audit log storage size is configured (Not Scored)
+  - id: 410201 
+    title: "Ensure audit log storage size is configured"
+    description: "Configure the maximum size of the audit log file. Once the log reaches the maximum size, it will be rotated and a new log file will be started."
+    rationale: "It is important that an appropriate size is determined for log files so that they do not impact the system and audit data is not lost."
+    remediation: "Set the following parameter in /etc/audit/auditd.conf in accordance with site policy: max_log_file = <MB>"
+    compliance:
+      - cis: ["4.1.2.1"]
+      - cis_csc: ["6.4"]
+      - pci_dss: ["10.7"]
+      - nist_800_53: ["AU.4"]
+      - hipaa: ["164.312.b"]
+    condition: all
+    rules:
+      - 'f:/etc/audit/auditd.conf -> r:^max_log_file\s*=\s*\d+'
+
+# 4.1.2.2 Ensure audit logs are not automatically deleted (Scored)
+  - id: 410202
+    title: "Ensure audit logs are not automatically deleted"
+    description: "The max_log_file_action setting determines how to handle the audit log file reaching the max file size. A value of keep_logs will rotate the logs but never delete old logs."
+    rationale: "In high security contexts, the benefits of maintaining a long audit history exceed the cost of storing the audit history."
+    remediation: "Set the following parameter in /etc/audit/auditd.conf: max_log_file_action = keep_logs"
+    compliance:
+      - cis: ["4.1.2.2"]
+      - cis_csc: ["6.4"]
+      - pci_dss: ["10.7"]
+      - nist_800_53: ["AU.9"]
+      - hipaa: ["164.312.b"]
+    condition: all
+    rules:
+      - 'f:/etc/audit/auditd.conf -> r:^max_log_file_action\s*=\s*keep_logs'
+
+## 4.1.3 Ensure changes to system administration scope (sudoers) is collected (Scored)
+  - id: 410300 
+    title: "Ensure changes to system administration scope (sudoers) is collected"
+    description: "Monitor scope changes for system administrations. If the system has been properly configured to force system administrators to log in as themselves first and then use the sudo command to execute privileged commands, it is possible to monitor changes in scope. The file /etc/sudoers will be written to when the file or its attributes have changed. The audit records will be tagged with the identifier \"scope.\""
+    rationale: "Changes in the /etc/sudoers file can indicate that an unauthorized change has been made to scope of system administrator activity."
+    remediation: "Add the following line to the /etc/audit/audit.rules file:   -w /etc/sudoers -p wa -k scope   -w /etc/sudoers.d/ -p wa -k scope"
+    compliance:
+      - cis: ["4.1.15"]
+      - cis_csc: ["4.8"]
+      - pci_dss: ["10.2.5"]
+      - hipaa: ["164.312.b"]
+      - nist_800_53: ["AU.14", "AC.7"]
+      - gpg_13: ["7.8"]
+      - gdpr_IV: ["35.7","32.2"]
+    condition: all
+    rules:
+      - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> -w /etc/sudoers -p wa -k scope'
+      - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> -w /etc/sudoers.d/ -p wa -k scope'
+      
+
+# 4.1.4 Ensure login and logout events are collected (Scored)
+  - id: 410400 
+    title: "Ensure login and logout events are collected"
+    description: "Monitor login and logout events. The parameters below track changes to files associated with login/logout events. The file /var/log/faillog tracks failed events from login. The file /var/log/lastlog maintain records of the last time a user successfully logged in."
+    rationale: "Monitoring login/logout events could provide a system administrator with information associated with brute force attacks against user logins."
+    remediation: "Edit or create a file in the /etc/audit/rules.d/ directory ending in .rules and add the following lines:  -w /var/log/lastlog -p wa -k logins   -w /var/run/faillock/ -p wa -k logins"
+    compliance:
+      - cis: ["4.1.4"]
+      - cis_csc: ["4.9","16.13"]
+      - pci_dss: ["10.2.1", "10.2.4", "10.3"]
+      - nist_800_53: ["AC.7","AU.14"]
+      - gpg_13: ["7.8"]
+      - gdpr_IV: ["32.2","35.7.d"]
+      - hipaa: ["164.312.b"]
+    condition: all
+    rules:
+      - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> r:-w /var/log/lastlog -p wa -k logins'
+      - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> r:-w /var/run/faillock/ -p wa -k logins'
+
+# 4.1.5 Ensure session initiation information is collected (Scored)
+  - id: 410500 
+    title: "Ensure session initiation information is collected"
+    description: "Monitor session initiation events. The parameters in this section track changes to the files associated with session events. The file /var/run/utmp file tracks all currently logged in users. All audit records will be tagged with the identifier \"session.\" The /var/log/wtmp file tracks logins, logouts, shutdown, and reboot events. The file /var/log/btmp keeps track of failed login attempts and can be read by entering the command /usr/bin/last -f /var/log/btmp . All audit records will be tagged with the identifier \"logins.\"."
+    rationale: "Monitoring these files for changes could alert a system administrator to logins occurring at unusual hours, which could indicate intruder activity (i.e. a user logging in at a time when they do not normally log in)."
+    remediation: "Edit or create a file in the /etc/audit/rules.d/ directory ending in .rules and add the following lines:   -w /var/run/utmp -p wa -k session   -w /var/log/wtmp -p wa -k logins   -w /var/log/btmp -p wa -k logins"
+    compliance:
+    compliance:
+      - cis: ["4.1.5"]
+      - cis_csc: ["4.9","16.13"]
+      - pci_dss: ["10.3"]
+      - nist_800_53: ["AC.7","AU.14"]
+      - hipaa: ["164.312.b"]
+    condition: all
+    rules:
+      - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> r:-w /var/run/utmp -p wa -k session'
+      - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> r:-w /var/log/wtmp -p wa -k logins'
+      - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> r:-w /var/log/btmp -p wa -k logins'
+
+# 4.1.6 Ensure events that modify date and time information are collected (Scored)
+  - id: 410600 
+    title: "Ensure events that modify date and time information are collected"
+    description: "Capture events where the system date and/or time has been modified. The parameters in this section are set to determine if the adjtimex (tune kernel clock), settimeofday (Set time, using timeval and timezone structures) stime (using seconds since 1/1/1970) or clock_settime (allows for the setting of several internal clocks and timers) system calls have been executed and always write an audit record to the /var/log/audit.log file upon exit, tagging the records with the identifier \"time-change\"."
+    rationale: "Unexpected changes in system date and/or time could be a sign of malicious activity on the system."
+    remediation: "For 32 bit systems add the following lines to the /etc/audit/audit.rules file: -a always,exit -F arch=b32 -S adjtimex -S settimeofday -S stime -k time-change   -a always,exit -F arch=b32 -S clock_settime -k time-change   -w /etc/localtime -p wa -k time-change   For 64 bit systems add the following lines to the /etc/audit/audit.rules file:   -a always,exit -F arch=b64 -S adjtimex -S settimeofday -k time-change   -a always,exit -F arch=b32 -S adjtimex -S settimeofday -S stime -k time-change   -a always,exit -F arch=b64 -S clock_settime -k time-change   -a always,exit -Farch=b32 -S clock_settime -k time-change   -w /etc/localtime -p wa -k time-change"
+    compliance:
+      - cis: ["4.1.6"]
+      - cis_csc: ["5.5"]
+      - pci_dss: ["10.4.2","10.2.7"]
+      - nist_800_53: ["AU.14","AU.6"]
+      - gpg_13: ["7.9"]
+      - gdpr_IV: ["32.2","35.7.d"]
+      - hipaa: ["164.312.b"]
+    condition: all
+    rules:
+      - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> r:-a always,exit -F arch=b32 -S adjtimex -S settimeofday -S stime -k time-change'
+      - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> r:-a always,exit -F arch=b32 -S clock_settime -k time-change'
+      - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> r:-a always,exit -F arch=b64 -S adjtimex -S settimeofday -S stime -k time-change'
+      - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> r:-a always,exit -F arch=b64 -S clock_settime -k time-change'
+      - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> r:-w /etc/localtime -p wa -k time-change'
+
+# 4.1.7 Ensure events that modify the system's Mandatory Access Controls are collected (Scored)
+  - id: 410700 
+    title: "Ensure events that modify the system's Mandatory Access Controls are collected"
+    description: "Monitor SELinux mandatory access controls. The parameters below monitor any write access (potential additional, deletion or modification of files in the directory) or attribute changes to the /etc/selinux or /etc/apparmor and /etc/apparmor.d directories."
+    rationale: "Changes to files in these directories could indicate that an unauthorized user is attempting to modify access controls and change security contexts, leading to a compromise of the system."
+    remediation: "Edit or create a file in the /etc/audit/rules.d/ directory ending in .rules and add the following lines: -w /etc/selinux/ -p wa -k MAC-policy -w /usr/share/selinux/ -p wa -k MAC-policy"
+    compliance:
+      - cis: ["4.1.7"]
+      - cis_csc: ["5.5"]
+      - pci_dss: ["10.2.5"]
+      - hipaa: ["164.312.b"]
+      - nist_800_53: ["AU.14", "AC.7"]
+      - gpg_13: ["7.8"]
+      - gdpr_IV: ["35.7","32.2"]
+    condition: all
+    rules:
+      - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> r:-w /etc/selinux/ -p wa -k MAC-policy'
+      - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> r:-w /usr/share/selinux/ -p wa -k MAC-policy'
+
+# 4.1.8 Ensure events that modify the system's network environment are collected (Scored)
+  - id: 410800 
+    title: "Ensure events that modify the system's network environment are collected"
+    description: "Record changes to network environment files or system calls. The below parameters monitor the sethostname (set the systems host name) or setdomainname (set the systems domainname) system calls, and write an audit event on system call exit. The other parameters monitor the /etc/issue and /etc/issue.net files (messages displayed pre-login), /etc/hosts (file containing host names and associated IP addresses), /etc/sysconfig/network file and /etc/sysconfig/network-scripts/ directory (containing network interface scripts and configurations)."
+    rationale: "Monitoring sethostname and setdomainname will identify potential unauthorized changes to host and domainname of a system. The changing of these names could potentially break security parameters that are set based on those names. The /etc/hosts file is monitored for changes in the file that can indicate an unauthorized intruder is trying to change machine associations with IP addresses and trick users and processes into connecting to unintended machines. Monitoring /etc/issue and /etc/issue.net is important, as intruders could put disinformation into those files and trick users into providing information to the intruder. Monitoring /etc/sysconfig/network and /etc/sysconfig/network-scripts/ is important as it can show if network interfaces or scripts are being modified in a way that can lead to the machine becoming unavailable or compromised. All audit records will be tagged with the identifier \"system-locale.\""
+    remediation: "Edit or create a file in the /etc/audit/rules.d/ directory ending in .rules and add the following lines:    -a always,exit -F arch=b64 -S sethostname -S setdomainname -k system-locale    -a always,exit -F arch=b32 -S sethostname -S setdomainname -k system-locale    -w /etc/issue -p wa -k system-locale    -w /etc/issue.net -p wa -k system-locale    -w /etc/hosts -p wa -k system-locale    -w /etc/sysconfig/network -p wa -k system-locale    -w /etc/sysconfig/network-scripts/ -p wa -k system-locale"
+    compliance:
+      - cis: ["4.1.8"]
+      - cis_csc: ["5.5"]
+      - pci_dss: ["10.2.7"]
+      - nist_800_53: ["AU.14","AU.6"]
+      - gpg_13: ["7.9"]
+      - gdpr_IV: ["32.2","35.7.d"]
+      - hipaa: ["164.312.b"]
+    condition: all
+    rules:
+      - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> r:-a always,exit -F arch=b32 -S sethostname -S setdomainname -k system-locale'
+      - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> r:-a always,exit -F arch=b64 -S sethostname -S setdomainname -k system-locale'
+      - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> r:-w /etc/issue -p wa -k system-locale'
+      - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> r:-w /etc/issue.net -p wa -k system-locale'
+      - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> r:-w /etc/hosts -p wa -k system-locale'
+      - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> r:-w /etc/sysconfig/network -p wa -k system-locale'
+      - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> r:-w /etc/sysconfig/network-scripts/ -p wa -k system-locale'
+
+# 4.1.9 Ensure discretionary access control permission modification events are collected (Scored)
+  - id: 410900 
+    title: "Ensure discretionary access control permission modification events are collected"
+    description: "Monitor changes to file permissions, attributes, ownership and group. The parameters in this section track changes for system calls that affect file permissions and attributes. The chmod , fchmod and fchmodat system calls affect the permissions associated with a file. The chown , fchown , fchownat and lchown system calls affect owner and group attributes on a file. The setxattr , lsetxattr , fsetxattr (set extended file attributes) and removexattr , lremovexattr , fremovexattr (remove extended file attributes) control extended file attributes. In all cases, an audit record will only be written for non-system user ids (auid >= 1000) and will ignore Daemon events (auid = 4294967295). All audit records will be tagged with the identifier \"perm_mod.\""
+    rationale: "Monitoring for changes in file attributes could alert a system administrator to activity that could indicate intruder activity or policy violation."
+    remediation: "Edit or create a file in the /etc/audit/rules.d/ directory ending in .rules and add the following lines:   -a always,exit -F arch=b64 -S chmod -S fchmod -S fchmodat -F auid>=1000 -F auid!=4294967295 -k perm_mod   -a always,exit -F arch=b32 -S chmod -S fchmod -S fchmodat -F auid>=1000 -F auid!=4294967295 -k perm_mod   -a always,exit -F arch=b64 -S chown -S fchown -S fchownat -S lchown -F auid>=1000 -F auid!=4294967295 -k perm_mod   -a always,exit -F arch=b32 -S chown -S fchown -S fchownat -S lchown -F auid>=1000 -F auid!=4294967295 -k perm_mod   -a always,exit -F arch=b64 -S setxattr -S lsetxattr -S fsetxattr -S removexattr -S lremovexattr -S fremovexattr -F auid>=1000 -F auid!=4294967295 -k perm_mod   -a always,exit -F arch=b32 -S setxattr -S lsetxattr -S fsetxattr -S removexattr -S lrem"
+    compliance:
+      - cis: ["4.1.9"]
+      - cis_csc: ["5.5"]
+      - pci_dss: ["10.2.5"]
+      - hipaa: ["164.312.b"]
+      - nist_800_53: ["AU.14", "AC.7"]
+      - gpg_13: ["7.8"]
+      - gdpr_IV: ["35.7","32.2"]
+
+    condition: all
+    rules:
+      - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> -a always,exit -F arch=b32 -S chmod -S fchmod -S fchmodat -F auid>=1000 -F auid!=4294967295 -k perm_mod'
+      - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> -a always,exit -F arch=b32 -S chown -S fchown -S fchownat -S lchown -F auid>=1000 -F auid!=4294967295 -k perm_mod'
+      - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> -a always,exit -F arch=b32 -S setxattr -S lsetxattr -S fsetxattr -S removexattr -S lremovexattr -S fremovexattr -F auid>=1000 -F auid!=4294967295 -k perm_mod'
+      - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> -a always,exit -F arch=b64 -S chmod -S fchmod -S fchmodat -F auid>=1000 -F auid!=4294967295 -k perm_mod'
+      - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> -a always,exit -F arch=b64 -S chown -S fchown -S fchownat -S lchown -F auid>=1000 -F auid!=4294967295 -k perm_mod'
+      - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> -a always,exit -F arch=b64 -S setxattr -S lsetxattr -S fsetxattr -S removexattr -S lremovexattr -S fremovexattr -F auid>=1000 -F auid!=4294967295 -k perm_mod'
+
+# 4.1.10 Ensure unsuccessful unauthorized file access attempts are collected (Scored)
+  - id: 411000 
+    title: "Ensure unsuccessful unauthorized file access attempts are collected"
+    description: "Monitor for unsuccessful attempts to access files. The parameters below are associated  with system calls that control creation ( creat ), opening ( open , openat ) and truncation (  truncate , ftruncate ) of files. An audit log record will only be written if the user is a non-  privileged user (auid > = 1000), is not a Daemon event (auid=4294967295) and if the  system call returned EACCES (permission denied to the file) or EPERM (some other  permanent error associated with the specific system call). All audit records will be tagged  with the identifier \"access.\""
+    rationale: "Failed attempts to open, create or truncate files could be an indication that an individual or process is trying to gain unauthorized access to the system."
+    remediation: "For 32 bit systems add the following lines to the /etc/audit/audit.rules file:   -a always,exit -F arch=b32 -S creat -S open -S openat -S truncate -S ftruncate -F exit=-EACCES -F auid>=1000 -F auid!=4294967295 -k access   -a always,exit -F arch=b32 -S creat -S open -S openat -S truncate -S ftruncate -F exit=-EPERM -F auid>=1000 -F auid!=4294967295 -k access   For 64 bit systems add the following lines to the /etc/audit/audit.rules file:   -a always,exit -F arch=b64 -S creat -S open -S openat -S truncate -S ftruncate -F exit=-EACCES -F auid>=1000 -F auid!=4294967295 -k access   -a always,exit -F arch=b32 -S creat -S open -S openat -S truncate -S ftruncate -F exit=-EACCES -F auid>=1000 -F auid!=4294967295 -k access   -a always,exit -F arch=b64 -S creat -S open -S openat -S truncate -S ftruncate -F exit=-EPERM -F auid>=1000 -F auid!=4294967295 -k access   -a always,exit -F arch=b32 -S creat -S open -S openat -S truncate -S ftruncate -F exit=-EPERM -F auid>=1000 -F auid!=4294967295 -k access"
+    compliance:
+      - cis: ["4.1.10"]
+      - cis_csc: ["14.9"]
+      - pci_dss: ["10.2.4"]
+      - nist_800_53: ["AC.7"]
+      - gpg_13: ["7.8"]
+      - gdpr_IV: ["32.2","35.7.d"]
+      - hipaa: ["164.312.b"]
+    condition: all
+    rules:
+      - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> -a always,exit -F arch=b32 -S creat -S open -S openat -S truncate -S ftruncate -F exit=-EACCES -F auid>=1000 -F auid!=4294967295 -k access'
+      - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> -a always,exit -F arch=b32 -S creat -S open -S openat -S truncate -S ftruncate -F exit=-EPERM -F auid>=1000 -F auid!=4294967295 -k access'
+      - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> -a always,exit -F arch=b64 -S creat -S open -S openat -S truncate -S ftruncate -F exit=-EACCES -F auid>=1000 -F auid!=4294967295 -k access'
+      - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> -a always,exit -F arch=b64 -S creat -S open -S openat -S truncate -S ftruncate -F exit=-EPERM -F auid>=1000 -F auid!=4294967295 -k access'
+
+# 4.1.11 Ensure events that modify user/group information are collected (Scored)
+  - id: 411100 
+    title: "Ensure events that modify user/group information are collected"
+    description: "Record events affecting the group , passwd (user IDs), shadow and gshadow (passwords) or /etc/security/opasswd (old passwords, based on remember parameter in the PAM configuration) files. The parameters in this section will watch the files to see if they have been opened for write or have had attribute changes (e.g. permissions) and tag them with the identifier \"identity\" in the audit log file."
+    rationale: "Unexpected changes to these files could be an indication that the system has been compromised and that an unauthorized user is attempting to hide their activities or compromise additional accounts."
+    remediation: "Edit or create a file in the /etc/audit/rules.d/ directory ending in .rules and add the following lines:    -w /etc/group -p wa -k identity    -w /etc/passwd -p wa -k identity    -w /etc/gshadow -p wa -k identity    -w /etc/shadow -p wa -k identity    -w /etc/security/opasswd -p wa -k identity"
+    compliance:
+      - cis: ["4.1.11"]
+      - cis_csc: ["4.8"]
+      - pci_dss: ["10.2.5"]
+      - hipaa: ["164.312.b"]
+      - nist_800_53: ["AU.14", "AC.7"]
+      - gpg_13: ["7.8"]
+      - gdpr_IV: ["35.7","32.2"]
+    condition: all
+    rules:
+      - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> -w /etc/group -p wa -k identity'
+      - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> -w /etc/passwd -p wa -k identity'
+      - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> -w /etc/gshadow -p wa -k identity'
+      - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> -w /etc/shadow -p wa -k identity'
+      - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> -w /etc/security/opasswd -p wa -k identity'
+
+# 4.1.12 Ensure successful file system mounts are collected (Scored)
+  - id: 411200 
+    title: "Ensure successful file system mounts are collected"
+    description: "Monitor the use of the mount system call. The mount (and umount ) system call controls the mounting and unmounting of file systems. The parameters below configure the system to create an audit record when the mount system call is used by a non-privileged user."
+    rationale: "It is highly unusual for a non privileged user to mount file systems to the system. While tracking mount commands gives the system administrator evidence that external media may have been mounted (based on a review of the source of the mount and confirming it's an external media type), it does not conclusively indicate that data was exported to the media. System administrators who wish to determine if data were exported, would also have to track successful open , creat and truncate system calls requiring write access to a file under the mount point of the external media file system. This could give a fair indication that a write occurred. The only way to truly prove it, would be to track successful writes to the external media. Tracking write system calls could quickly fill up the audit log and is not recommended. Recommendations on configuration options to track data export to media is beyond the scope of this document."
+    remediation: "Edit or create a file in the /etc/audit/rules.d/ directory ending in .rules and add the following lines:   -a always,exit -F arch=b64 -S mount -F auid>=1000 -F auid!=4294967295 -k mounts   -a always,exit -F arch=b32 -S mount -F auid>=1000 -F auid!=4294967295 -k mounts"
+    compliance:
+      - cis: ["4.1.12"]
+      - cis_csc: ["5.1"]
+      - pci_dss: ["10.2.7"]
+      - nist_800_53: ["AU.14","AU.6"]
+      - gpg_13: ["7.9"]
+      - gdpr_IV: ["32.2","35.7.d"]
+      - hipaa: ["164.312.b"]
+    condition: all
+    rules:
+      - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> -a always,exit -F arch=b32 -S mount -F auid>=1000 -F auid!=4294967295 -k mounts'
+      - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> -a always,exit -F arch=b64 -S mount -F auid>=1000 -F auid!=4294967295 -k mounts'
+
+# 4.1.14 Ensure file deletion events by users are collected (Scored)
+  - id: 411400 
+    title: "Ensure file deletion events by users are collected"
+    description: "Monitor the use of system calls associated with the deletion or renaming of files and file attributes. This configuration statement sets up monitoring for the unlink (remove a file), unlinkat (remove a file attribute), rename (rename a file) and renameat (rename a file attribute) system calls and tags them with the identifier \"delete\"."
+    rationale: "Monitoring these calls from non-privileged users could provide a system administrator with evidence that inappropriate removal of files and file attributes associated with protected files is occurring. While this audit option will look at all events, system administrators will want to look for specific privileged files that are being deleted or altered."
+    remediation: "Edit or create a file in the /etc/audit/rules.d/ directory ending in .rules and add the following lines:   -a always,exit -F arch=b64 -S unlink -S unlinkat -S rename -S renameat -F auid>=1000 -F auid!=4294967295 -k delete   -a always,exit -F arch=b32 -S unlink -S unlinkat -S rename -S renameat -F auid>=1000 -F auid!=4294967295 -k delete"
+    compliance:
+      - cis: ["4.1.14"]
+      - cis_csc: ["13"]
+      - pci_dss: ["10.5.5"]
+      - nist_800_53: ["AU.14"]
+      - hipaa: ["164.312.b"]
+    condition: all
+    rules:
+      - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> -a always,exit -F arch=b32 -S unlink -S unlinkat -S rename -S renameat -F auid>=1000 -F auid!=4294967295 -k delete'
+      - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> -a always,exit -F arch=b64 -S unlink -S unlinkat -S rename -S renameat -F auid>=1000 -F auid!=4294967295 -k delete'
+
+# 4.1.15 Ensure kernel module loading and unloading is collected (Scored)
+  - id: 411500 
+    title: "Ensure kernel module loading and unloading is collected"
+    description: "Monitor the loading and unloading of kernel modules. The programs insmod (install a kernel module), rmmod (remove a kernel module), and modprobe (a more sophisticated program to load and unload modules, as well as some other features) control loading and unloading of modules. The init_module (load a module) and delete_module (delete a module) system calls control loading and unloading of modules. Any execution of the loading and unloading module programs and system calls will trigger an audit record with an identifier of \"modules\"."
+    rationale: "Monitoring the use of insmod , rmmod and modprobe could provide system administrators with evidence that an unauthorized user loaded or unloaded a kernel module, possibly compromising the security of the system. Monitoring of the init_module and delete_module system calls would reflect an unauthorized user attempting to use a different program to load and unload modules."
+    remediation: "Edit or create a file in the /etc/audit/rules.d/ directory ending in .rules and add the following lines:   -w /sbin/insmod -p x -k modules   -w /sbin/rmmod -p x -k modules   -w /sbin/modprobe -p x -k modules  -a always,exit -F arch=b32 -S init_module -S delete_module -k modules   -a always,exit -F arch=b64 -S init_module -S delete_module -k modules"
+    compliance:
+      - cis: ["4.1.15"]
+      - cis_csc: ["5.1"]
+      - pci_dss: ["10.2.7"]
+      - nist_800_53: ["AU.14","AU.6"]
+      - gpg_13: ["7.9"]
+      - gdpr_IV: ["32.2","35.7.d"]
+      - hipaa: ["164.312.b"]
+    condition: all
+    rules:
+      - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> -w /sbin/insmod -p x -k modules'
+      - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> -w /sbin/rmmod -p x -k modules'
+      - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> -w /sbin/modprobe -p x -k modules'
+      - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> r:-a always,exit -F arch=b64 -S init_module -S delete_module -k modules'
+
+# 4.1.16 Ensure system administrator actions (sudolog) are collected (Scored)
+  - id: 411600 
+    title: "Ensure system administrator actions (sudolog) are collected"
+    description: "Monitor the sudo log file. If the system has been properly configured to disable the use of the su command and force all administrators to have to log in first and then use sudo to execute privileged commands, then all administrator commands will be logged to /var/log/sudo.log . Any time a command is executed, an audit event will be triggered as the /var/log/sudo.log file will be opened for write and the executed administration command will be written to the log."
+    rationale: "Changes in /var/log/sudo.log indicate that an administrator has executed a command or the log file itself has been tampered with. Administrators will want to correlate the events written to the audit trail with the records written to /var/log/sudo.log to verify if unauthorized commands have been executed."
+    remediation: "Edit or create a file in the /etc/audit/rules.d/ directory ending in .rules and add the following lines:   -w /var/log/sudo.log -p wa -k actions"
+    compliance:
+      - cis: ["4.1.16"]
+      - cis_csc: ["4.9"]
+      - pci_dss: ["10.2.2"]
+      - nist_800_53: ["AU.14","AC.6","AC.7"]
+      - gpg_13: ["7.8"]
+      - gdpr_IV: ["32.2","35.7.d"]
+      - hipaa: ["164.312.b"]
+    condition: all
+    rules:
+      - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> -w /var/log/sudo.log -p wa -k actions'
+
+# 4.1.17 Ensure the audit configuration is immutable (Scored)
+  - id: 411700 
+    title: "Ensure the audit configuration is immutable"
+    description: "Set system audit so that audit rules cannot be modified with auditctl . Setting the flag \"-e 2\" forces audit to be put in immutable mode. Audit changes can only be made on system reboot."
+    rationale: "In immutable mode, unauthorized users cannot execute changes to the audit system to potentially hide malicious activity and then put the audit rules back. Users would most likely notice a system reboot and that could alert administrators of an attempt to make unauthorized audit changes."
+    remediation: "Edit or create the file /etc/audit/rules.d/99-finalize.rules and add the line:   -e 2    at the end of the file"
+    compliance:
+      - cis: ["4.1.17"]
+      - cis_csc: ["6.2","6.3"]
+      - pci_dss: ["10.5"]
+      - nist_800_53: ["AU.9"]
+      - hipaa: ["164.312.b"]
+    condition: all
+    rules:
+      - 'c:tail -1 /etc/audit/rules.d/99-finalize.rules -> -e 2'
+
+# 4.2.1.1 Ensure rsyslog or syslog-ng is installed (Scored)
+  - id: 420101 
+    title: "Ensure rsyslog is installed"
+    description: "The rsyslog software is a recommended replacement to the original syslogd daemon which provide improvements over syslogd , such as connection-oriented (i.e. TCP) transmission of logs, the option to log to database formats, and the encryption of log data en route to a central logging server."
+    rationale: "The security enhancements of rsyslog such as connection-oriented (i.e. TCP) transmission of logs, the option to log to database formats, and the encryption of log data en route to a central logging server) justify installing and configuring the package."
+    remediation: "Run the following command to install rsyslog:   # dnf install rsyslog"
+    compliance:
+      - cis: ["4.2.1.1"]
+      - cis_csc: ["6.2","6.3"]
+      - pci_dss: ["10.1"]
+      - nist_800_53: ["CM.1"]
+      - hipaa: ["164.312.b"]
+    condition: all
+    rules:
+      - 'c:rpm -q rsyslog -> r:^rsyslog-'
+
+# 4.2.1.2 Ensure rsyslog Service is enabled (Scored)
+  - id: 420102 
+    title: "Ensure rsyslog Service is enabled"
+    description: "Once the rsyslog package is installed it needs to be activated."
+    rationale: "If the rsyslog service is not activated the system may default to the syslogd service or lack logging instead."
+    remediation: "Run the following command to enable rsyslog :   # systemctl --now enable rsyslog"
+    compliance:
+      - cis: ["4.2.1.2"]
+      - cis_csc: ["6.2","6.3"]
+      - pci_dss: ["10.1"]
+      - nist_800_53: ["CM.1"]
+      - hipaa: ["164.312.b"]
+    condition: all
+    rules:
+      - 'c:systemctl is-enabled rsyslog -> enabled'
+
+# 4.2.1.3 Ensure rsyslog default file permissions configured (Scored)
+  - id: 420103
+    title: "Ensure rsyslog default file permissions configured"
+    description: "rsyslog will create logfiles that do not already exist on the system. This setting controls what permissions will be applied to these newly created files."
+    rationale: "It is important to ensure that log files have the correct permissions to ensure that sensitive data is archived and protected."
+    remediation: "Edit the /etc/rsyslog.conf and /etc/rsyslog.d/*.conf files and set $FileCreateMode to 0640 or more restrictive:   $FileCreateMode 0640"
+    compliance:
+      - cis: ["4.2.1.3"]
+      - cis_csc: ["5.1"]  
+      - pci_dss: ["10.5.1","10.5.2"]
+      - nist_800_53: ["CM.1","AU.9"]
+    condition: all
+    rules:
+      - 'f:/etc/rsyslog.conf -> r:^\$FileCreateMode 0600|^\$FileCreateMode 0640|^\$FileCreateMode 0440|^\$FileCreateMode 0400'
+
+# 4.2.1.5 Ensure rsyslog is configured to send logs to a remote log host (Scored)
+  - id: 420105 
+    title: "Ensure rsyslog is configured to send logs to a remote log host"
+    description: "The rsyslog utility supports the ability to send logs it gathers to a remote log host running syslogd(8) or to receive messages from remote hosts, reducing administrative overhead."
+    rationale: "Storing log data on a remote host protects log integrity from local attacks. If an attacker gains root access on the local system, they could tamper with or remove log data that is stored on the local system."
+    remediation: "Edit the /etc/rsyslog.conf and /etc/rsyslog.d/*.conf files and add the following line (where loghost.example.com is the name of your central log host).   *.* @@loghost.example.com   Run the following command to reload the rsyslogd configuration: # pkill -HUP rsyslogd"
+    compliance:
+      - cis: ["4.2.1.5"]
+      - cis_csc: ["6.6","6.8"]
+      - pci_dss: ["10.5.3"]
+      - nist_800_53: ["CM.1","AU.4"]
+    condition: all
+    rules:
+      - 'c:grep *.*[^I][^I]*@ /etc/rsyslog.conf /etc/rsyslog.d/*.conf -> !r:# && r:*.* @@\.+'
+
+# 4.2.2.1 Ensure journald is configured to send logs to rsyslog (Scored)
+  - id: 420201 
+    title: "Ensure journald is configured to send logs to rsyslog"
+    description: "Data from journald may be stored in volatile memory or persisted locally on the server. Utilities exist to accept remote export of journald logs, however, use of the rsyslog service provides a consistent means of log collection and export."
+    rationale: "Storing log data on a remote host protects log integrity from local attacks. If an attacker gains root access on the local system, they could tamper with or remove log data that is stored on the local system."
+    remediation: "Edit the /etc/systemd/journald.conf file and add the following line: ForwardToSyslog=yes"
+    compliance:
+      - cis: ["4.2.2.1"]
+      - cis_csc: ["6.5"]
+      - pci_dss: ["10.5.3"]
+      - nist_800_53: ["CM.1","AU.9","AU.4"]
+    condition: all
+    rules:
+      - 'f:/etc/systemd/journald.conf -> r:^\s*\t*ForwardToSyslog\s*=\s*yes'
+
+# 4.2.2.2 Ensure journald is configured to compress large log files (Scored)
+  - id: 420202
+    title: "Ensure journald is configured to compress large log files"
+    description: "The journald system includes the capability of compressing overly large files to avoid filling up the system with logs or making the logs unmanageably large."
+    rationale: "Uncompressed large files may unexpectedly fill a filesystem leading to resource unavailability. Compressing logs prior to write can prevent sudden, unexpected filesystem impacts."
+    remediation: "Edit the /etc/systemd/journald.conf file and add the following line:   Compress=yes"
+    compliance:
+      - cis: ["4.2.2.2"]
+      - cis_csc: ["6.4"]
+      - pci_dss: ["10.7"]
+      - nist_800_53: ["CM.1","AU.4"]
+    condition: all
+    rules:
+      - 'f:/etc/systemd/journald.conf -> r:^\s*\t*Compress\s*=\s*yes'
+
+# 4.2.2.3 Ensure journald is configured to write logfiles to persistent disk (Scored)
+  - id: 420203
+    title: "Ensure journald is configured to write logfiles to persistent disk"
+    description: "Data from journald may be stored in volatile memory or persisted locally on the server. Logs in memory will be lost upon a system reboot. By persisting logs to local disk on the server they are protected from loss."
+    rationale: "Writing log data to disk will provide the ability to forensically reconstruct events which may have impacted the operations or security of a system even after a system crash or reboot."
+    remediation: "Edit the /etc/systemd/journald.conf file and add the following line:   Compress=yes"
+    compliance:
+      - cis: ["4.2.2.3"]
+      - cis_csc: ["6.2","6.3"]
+      - pci_dss: ["10.7"]
+      - nist_800_53: ["CM.1","AU.4"]
+    condition: all
+    rules:
+      - 'f:/etc/systemd/journald.conf -> r:^\s*\t*Storage\s*=\s*persistent'
+
+  # 4.2.3 Ensure permissions on all logfiles are configured (Scored)
+  - id: 420300 
+    title: "Ensure permissions on all logfiles are configured"
+    description: "Log files stored in /var/log/ contain logged information from many services on the system, or on log hosts others as well."
+    rationale: "It is important to ensure that log files have the correct permissions to ensure that sensitivebdata is archived and protected."
+    remediation: "Run the following command to set permissions on all existing log files: # find /var/log -type f -exec chmod g-wx,o-rwx {} +"
+    compliance:
+      - cis: ["4.2.3"]
+      - cis_csc: ["5.1"]
+      - pci_dss: ["10.5.1","10.5.2"]
+      - nist_800_53: ["CM.1","AU.9"]
+    condition: none
+    rules:
+      - 'c:find /var/log -type f -ls -> r:-\w\w\w\ww\w\w\w\w|-\w\w\w\w\wx\w\w\w|-\w\w\w\w\w\w\ww\w|-\w\w\w\w\w\wr\w\w|-\w\w\w\w\w\w\w\wx'
+
 
 ###############################################
 # 5 Access, Authentication and Authorization
@@ -1165,6 +2058,4 @@ checks:
     condition: all
     rules:
       - 'f:/etc/pam.d/su -> r:^auth\s*\t*required\s*\t*pam_wheel.so\s*\t*use_uid'
-
-
 
