@@ -431,6 +431,7 @@ checks:
       - cis_csc: ["6.2","6.3"]
       - pci_dss: ["10.1"]
       - nist_800_53: ["AU.2"]
+      - hipaa: ["164.312.b"]
     condition: all
     rules:
       - 'not c:rpm -q audit audit-libs -> r:is not installed'
@@ -446,6 +447,7 @@ checks:
       - cis_csc: ["6.2","6.3"]
       - pci_dss: ["10.1","10.7"]
       - nist_800_53: ["AU.2"]
+      - hipaa: ["164.312.b"]
     condition: all
     rules:
       - 'c:systemctl is-enabled auditd -> r:^enabled'
@@ -464,6 +466,7 @@ checks:
       - nist_800_53: ["AU.2"]
       - gpg_13: ["7.9"]
       - gdpr_IV: ["35.7.d","32.2"]
+      - hipaa: ["164.312.b"]
     condition: none
     rules:
       - 'f:/boot/grub2/grubenv -> r:kernelopts= && !r:audit=1'
@@ -479,6 +482,7 @@ checks:
       - cis: ["4.1.1.4"]
       - cis_csc: ["6.2","6.3"]
       - nist_800_53: ["AU.4"]
+      - hipaa: ["164.312.b"]
     condition: all
     rules:
       - 'f:/boot/grub2/grubenv -> r:kernelopts= && n:audit_backlog_limit=(\d+) compare >= 8192'
@@ -494,6 +498,7 @@ checks:
       - cis_csc: ["6.4"]
       - pci_dss: ["10.7"]
       - nist_800_53: ["AU.4"]
+      - hipaa: ["164.312.b"]
     condition: all
     rules:
       - 'f:/etc/audit/auditd.conf -> r:^max_log_file\s*=\s*\d+'
@@ -509,6 +514,7 @@ checks:
       - cis_csc: ["6.4"]
       - pci_dss: ["10.7"]
       - nist_800_53: ["AU.9"]
+      - hipaa: ["164.312.b"]
     condition: all
     rules:
       - 'f:/etc/audit/auditd.conf -> r:^max_log_file_action\s*=\s*keep_logs'
@@ -564,6 +570,7 @@ checks:
       - cis_csc: ["4.9","16.13"]
       - pci_dss: ["10.3"]
       - nist_800_53: ["AC.7","AU.14"]
+      - hipaa: ["164.312.b"]
     condition: all
     rules:
       - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> r:-w /var/run/utmp -p wa -k session'
@@ -732,6 +739,7 @@ checks:
       - cis_csc: ["13"]
       - pci_dss: ["10.5.5"]
       - nist_800_53: ["AU.14"]
+      - hipaa: ["164.312.b"]
     condition: all
     rules:
       - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> -a always,exit -F arch=b32 -S unlink -S unlinkat -S rename -S renameat -F auid>=1000 -F auid!=4294967295 -k delete'
@@ -787,6 +795,7 @@ checks:
       - cis_csc: ["6.2","6.3"]
       - pci_dss: ["10.5"]
       - nist_800_53: ["AU.9"]
+      - hipaa: ["164.312.b"]
     condition: all
     rules:
       - 'c:tail -1 /etc/audit/rules.d/99-finalize.rules -> -e 2'
@@ -802,6 +811,7 @@ checks:
       - cis_csc: ["6.2","6.3"]
       - pci_dss: ["10.1"]
       - nist_800_53: ["CM.1"]
+      - hipaa: ["164.312.b"]
     condition: all
     rules:
       - 'c:rpm -q rsyslog -> r:^rsyslog-'
@@ -817,6 +827,7 @@ checks:
       - cis_csc: ["6.2","6.3"]
       - pci_dss: ["10.1"]
       - nist_800_53: ["CM.1"]
+      - hipaa: ["164.312.b"]
     condition: all
     rules:
       - 'c:systemctl is-enabled rsyslog -> enabled'
