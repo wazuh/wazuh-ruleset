@@ -806,3 +806,250 @@ checks:
       - 'f:/etc/gdm3/greeter.dconf-defaults -> r:banner-message-enable=true'
       - 'f:/etc/gdm3/greeter.dconf-defaults -> r:banner-message-text='
 
+
+
+# 1.10 Ensure system-wide crypto policy is not legacy (Scored)
+  - id: 5542 
+    title: "Ensure system-wide crypto policy is not legacy"
+    description: "The system-wide crypto-policies followed by the crypto core components allow consistently deprecating and disabling algorithms system-wide. The individual policy levels (DEFAULT, LEGACY, FUTURE, and FIPS) are included in the crypto-policies(7) package."
+    rationale: "If the Legacy system-wide crypto policy is selected, it includes support for TLS 1.0, TLS 1.1, and SSH2 protocols or later. The algorithms DSA, 3DES, and RC4 are allowed, while RSA and Diffie-Hellman parameters are accepted if larger than 1023-bits. These legacy protocols and algorithms can make the system vulnerable to attacks, including those listed in RFC 7457"
+    remediation: "Run the following command to change the system-wide crypto policy # update-crypto-policies --set <CRYPTO POLICY>         Example:     # update-crypto-policies --set DEFAULT              Run the following to make the updated system-wide crypto policy active           # update-crypto-policies"
+    compliance:
+      - cis: ["1.10"]
+      - cis_csc: ["14.4"]
+    condition: none
+    rules:
+      - 'f:/etc/crypto-policies/config -> r:^\s*LEGACY'
+
+# 1.11 Ensure system-wide crypto policy is FUTURE or FIPS (Scored)
+  - id: 5542 
+    title: "Ensure system-wide crypto policy is FUTURE or FIPS"
+    description: "The system-wide crypto-policies followed by the crypto core components allow consistently deprecating and disabling algorithms system-wide. The individual policy levels (DEFAULT, LEGACY, FUTURE, and FIPS) are included in the crypto-policies(7) package."
+    rationale: "If the Legacy system-wide crypto policy is selected, it includes support for TLS 1.0, TLS 1.1, and SSH2 protocols or later. The algorithms DSA, 3DES, and RC4 are allowed, while RSA and Diffie-Hellman parameters are accepted if larger than 1023-bits. These legacy protocols and algorithms can make the system vulnerable to attacks, including those listed in RFC 7457 FUTURE: Is a conservative security level that is believed to withstand any near-term future attacks. This level does not allow the use of SHA-1 in signature algorithms. The RSA and Diffie-Hellman parameters are accepted if larger than 3071 bits. The level provides at least 128-bit security FIPS: Conforms to the FIPS 140-2 requirements. This policy is used internally by the fips-mode-setup(8) tool which can switch the system into the FIPS 140-2 compliance mode. The level provides at least 112-bit security"
+    remediation: "Run the following command to change the system-wide crypto policy # update-crypto-policies --set FUTURE              OR             To switch the system to FIPS mode, run the following command: # fips-mode-setup --enable"
+    compliance:
+      - cis: ["1.11"]
+      - cis_csc: ["14.4"]
+    condition: none
+    rules:
+      - 'f:/etc/crypto-policies/config -> r:^\s*FUTURE|^\s*FIPS'
+
+
+###############################################
+# 6 System Maintenance
+###############################################
+###############################################
+# 6.1 System File Permissions
+###############################################
+# 6.1.2 Configure /etc/passwd permissions (Scored)
+  - id: 5669 
+    title: "Ensure permissions on /etc/passwd are configured"
+    description: "The /etc/passwd file contains user account information that is used by many system utilities and therefore must be readable for these utilities to operate."
+    rationale: "It is critical to ensure that the /etc/passwd file is protected from unauthorized write access. Although it is protected by default, the file permissions could be changed either inadvertently or through malicious actions."
+    remediation: "Run the following command to set permissions on /etc/passwd: # chown root:root /etc/passwd # chmod 644 /etc/passwd"
+    compliance:
+      - cis: ["6.1.2"]
+      - cis_csc: ["16.4"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+    condition: all
+    rules:
+      - 'c:stat /etc/passwd -> r:Access:\s*\(0644/-rw-r--r--\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*0/\s*\t*root\)'
+
+
+# 6.1.3 Configure /etc/shadow permissions (Scored)
+  - id: 5670 
+    title: "Ensure permissions on /etc/shadow are configured"
+    description: "The /etc/shadow file is used to store the information about user accounts that is critical to the security of those accounts, such as the hashed password and other security information."
+    rationale: "If attackers can gain read access to the /etc/shadow file, they can easily run a password cracking program against the hashed password to break it. Other security information that is stored in the /etc/shadow file (such as expiration) could also be useful to subvert the user accounts."
+    remediation: "Run the following command to set permissions on /etc/ shadow: # chown root:root /etc/shadow  # chown root:shadow /etc/shadow    # chmod o-rwx,g-wx /etc/shadow"
+    compliance:
+      - cis: ["6.1.3"]
+      - cis_csc: ["16.4"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+    condition: all
+    rules:
+      - 'c:stat /etc/shadow -> r:Access:\s*\(0\d\d0/-\w\w-\w-----\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*0/\s*\t*root\)|Access:\s*\(0\d\d0/-\w\w-\w-----\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*\w*/\s*\t*shadow\)'
+
+# 6.1.4 Configure /etc/group permissions (Scored)
+  - id: 5671 
+    title: "Ensure permissions on /etc/group are configured"
+    description: "The /etc/group file contains a list of all the valid groups defined in the system. The command below allows read/write access for root and read access for everyone else."
+    rationale: "The /etc/group file needs to be protected from unauthorized changes by non-privileged users, but needs to be readable as this information is used with many non-privileged programs."
+    remediation: "Run the following command to set permissions on /etc/group: # chown root:root /etc/group # chmod 644 /etc/group"
+    compliance:
+      - cis: ["6.1.4"]
+      - cis_csc: ["16.4"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+    condition: all
+    rules:
+      - 'c:stat /etc/group -> r:Access:\s*\(0644/-rw-r--r--\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*0/\s*\t*root\)'
+
+# 6.1.5 Configure /etc/gshadow permissions (Scored)
+  - id: 5672 
+    title: "Ensure permissions on /etc/gshadow are configured"
+    description: "The /etc/gshadow file is used to store the information about groups that is critical to the security of those accounts, such as the hashed password and other security information."
+    rationale: "If attackers can gain read access to the /etc/gshadow file, they can easily run a password cracking program against the hashed password to break it. Other security information that is stored in the /etc/gshadow file (such as group administrators) could also be useful to subvert the group"
+    remediation: "Run the following command to set permissions on /etc/gshadow: # chown root:root /etc/gshadow # chown root:shadow /etc/gshadow  # chmod o-rwx,g-rw /etc/gshadow"
+    compliance:
+      - cis: ["6.1.5"]
+      - cis_csc: ["16.14"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+    condition: all
+    rules:
+      - 'c:stat /etc/gshadow -> r:Access:\s*\(0\d\d0/-\w\w-\w-----\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*0/\s*\t*root\)|Access:\s*\(0\d\d0/-\w\w-\w-----\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*\w*/\s*\t*shadow\)'
+
+# 6.1.6 Configure /etc/passwd- permissions (Scored)
+  - id: 5673 
+    title: "Ensure permissions on /etc/passwd- are configured"
+    description: "The /etc/passwd- file contains backup user account information."
+    rationale: "It is critical to ensure that the /etc/passwd- file is protected from unauthorized access. Although it is protected by default, the file permissions could be changed either inadvertently or through malicious actions."
+    remediation: "Run the following command to set permissions on /etc/passwd-: # chown root:root /etc/passwd- # chmod 600 /etc/passwd-"
+    compliance:
+      - cis: ["6.1.6"]
+      - cis_csc: ["16.4"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+    condition: all
+    rules:
+      - 'c:stat /etc/passwd- -> r:Access:\s*\(0\d00/-\w\w-------\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*0/\s*\t*root\)'
+
+# 6.1.7 Configure /etc/shadow- permissions (Scored)
+  - id: 5674 
+    title: "Ensure permissions on /etc/shadow- are configured"
+    description: "The /etc/shadow- file is used to store backup information about user accounts that is critical to the security of those accounts, such as the hashed password and other security information."
+    rationale: "It is critical to ensure that the /etc/shadow- file is protected from unauthorized access. Although it is protected by default, the file permissions could be changed either inadvertently or through malicious actions."
+    remediation: "Run the following command to set permissions on /etc/shadow-: # chown root:shadow /etc/shadow-  # chmod u-x,go-rwx /etc/shadow-"
+    compliance:
+      - cis: ["6.1.7"]
+      - cis_csc: ["16.4"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+    condition: all
+    rules:
+      - 'c:stat /etc/shadow- -> r:Access:\s*\(0\d00/-\w\w-------\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*0/\s*\t*root\)|Access:\s*\(0\d00/-\w\w-------\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*\w*/\s*\t*shadow\)'
+
+# 6.1.8 Configure /etc/group- permissions (Scored)
+  - id: 5675 
+    title: "Ensure permissions on /etc/group- are configured"
+    description: "The /etc/group- file contains a backup list of all the valid groups defined in the system."
+    rationale: "It is critical to ensure that the /etc/group- file is protected from unauthorized access. Although it is protected by default, the file permissions could be changed either inadvertently or through malicious actions."
+    remediation: "Run the following command to set permissions on /etc/group-: # chown root:root /etc/group- # chmod 644 /etc/group-"
+    compliance:
+      - cis: ["6.1.8"]
+      - cis_csc: ["16.4"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+    condition: all
+    rules:
+      - 'c:stat /etc/group- -> r:Access:\s*\(0\d\d\d/-\w\w-\w--\w--\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*0/\s*\t*root\)'
+
+# 6.1.9 Configure /etc/gshadow- permissions (Scored)
+  - id: 5676 
+    title: "Ensure permissions on /etc/gshadow- are configured"
+    description: "The /etc/gshadow- file is used to store backup information about groups that is critical to the security of those accounts, such as the hashed password and other security information."
+    rationale: "It is critical to ensure that the /etc/gshadow- file is protected from unauthorized access. Although it is protected by default, the file permissions could be changed either inadvertently or through malicious actions."
+    remediation: "Run the one of the following chown commands as appropriate and the chmod to set permissions on /etc/gshadow- : # chown root:root /etc/gshadow-  # chown root:shadow /etc/gshadow-  # chmod o-rwx,g-rw /etc/gshadow-"
+    compliance:
+      - cis: ["6.1.9"]
+      - cis_csc: ["16.4"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+    condition: all
+    rules:
+      - 'c:stat /etc/gshadow- -> r:Access:\s*\(0\d\d0/-\w\w-\w-----\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*0/\s*\t*root\)|Access:\s*\(0\d\d0/-\w\w-\w-----\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*\w*/\s*\t*shadow\)'
+
+
+
+###############################################
+# 6.2 Review User and Group Settings
+###############################################
+# 6.2.1 Check passwords fields (Scored)
+  - id: 5677 
+    title: "Ensure password fields are not empty"
+    description: "An account with an empty password field means that anybody may log in as that user without providing a password."
+    rationale: "All accounts must have passwords or be locked to prevent the account from being used by an unauthorized user."
+    remediation: "If any accounts in the /etc/shadow file do not have a password, run the following command to lock the account until it can be determined why it does not have a password: passwd -l <username> || Also, check to see if the account is logged in and investigate what it is being used for to determine if it needs to be forced off."
+    compliance:
+      - cis: ["6.2.1"]
+      - cis_csc: ["4.4"]
+      - pci_dss: ["8.2"]
+    condition: none
+    rules:
+      - 'f:/etc/shadow -> !r:^# && r:^\w+::'
+
+
+# 6.2.2 Delete legacy entries in /etc/passwd (Scored)
+  - id: 5678 
+    title: "Ensure no legacy \"+\" entries exist in /etc/passwd"
+    description: "The character + in various files used to be markers for systems to insert data from NIS maps at a certain point in a system configuration file. These entries are no longer required on most systems, but may exist in files that have been imported from other platforms."
+    rationale: "These entries may provide an avenue for attackers to gain privileged access on the system."
+    remediation: "Remove any legacy '+' entries from /etc/passwd if they exist."
+    compliance:
+      - cis: ["6.2.2"]
+      - cis_csc: ["16.2"]
+      - pci_dss: ["2.2.3"]
+      - nist_800_53: ["CM.1"]
+      - gpg_13: ["4.3"]
+      - gdpr_IV: ["35.7.d"]
+      - hipaa: ["164.312.b"]
+    condition: none
+    rules:
+      - 'f:/etc/passwd -> !r:^# && r:^+:'
+
+  # 6.2.4 Delete legacy entries in /etc/shadow (Scored)
+  - id: 5679 
+    title: "Ensure no legacy \"+\" entries exist in /etc/shadow"
+    description: "The character + in various files used to be markers for systems to insert data from NIS maps at a certain point in a system configuration file. These entries are no longer required on most systems, but may exist in files that have been imported from other platforms."
+    rationale: "These entries may provide an avenue for attackers to gain privileged access on the system."
+    remediation: "Remove any legacy '+' entries from /etc/shadow if they exist."
+    compliance:
+      - cis: ["6.2.4"]
+      - cis_csc: ["16.2"]
+      - pci_dss: ["2.2.3"]
+      - nist_800_53: ["CM.1"]
+      - gpg_13: ["4.3"]
+      - gdpr_IV: ["35.7.d"]
+      - hipaa: ["164.312.b"]
+    condition: none
+    rules:
+      - 'f:/etc/shadow -> !r:^# && r:^+:'
+
+# 6.2.5 Delete legacy entries in /etc/group (Scored)
+  - id: 5680 
+    title: "Ensure no legacy \"+\" entries exist in /etc/group"
+    description: "The character + in various files used to be markers for systems to insert data from NIS maps at a certain point in a system configuration file. These entries are no longer required on most systems, but may exist in files that have been imported from other platforms."
+    rationale: "These entries may provide an avenue for attackers to gain privileged access on the system."
+    remediation: "Remove any legacy '+' entries from /etc/group if they exist."
+    compliance:
+      - cis: ["6.2.5"]
+      - cis_csc: ["16.2"]
+      - pci_dss: ["2.2.3"]
+      - nist_800_53: ["CM.1"]
+      - gpg_13: ["4.3"]
+      - gdpr_IV: ["35.7.d"]
+      - hipaa: ["164.312.b"]
+    condition: none
+    rules:
+      - 'f:/etc/group -> !r:^# && r:^+:'
+
+# 6.2.6 Verify No UID 0 Accounts Exist Other Than root (Scored)
+  - id: 5681 
+    title: "Ensure root is the only UID 0 account"
+    description: "Any account with UID 0 has superuser privileges on the system."
+    rationale: "This access must be limited to only the default root account and only from the system console. Administrative access must be through an unprivileged account using an approved mechanism as noted in Item 5.6 Ensure access to the su command is restricted."
+    remediation: "Remove any users other than root with UID 0 or assign them a new UID if appropriate."
+    compliance:
+      - cis: ["6.2.6"]
+      - cis_csc: ["5.1"]
+      - pci_dss: ["10.2.5"]
+      - hipaa: ["164.312.b"]
+      - nist_800_53: ["AU.14", "AC.7"]
+      - gpg_13: ["7.8"]
+      - gdpr_IV: ["35.7","32.2"]
+    condition: none
+    rules:
+      - 'f:/etc/passwd -> !r:^# && !r:^\s*\t*root: && r:^\w+:\w+:0:'
