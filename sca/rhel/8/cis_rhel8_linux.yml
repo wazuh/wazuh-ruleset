@@ -8,7 +8,6 @@
 # Foundation
 #
 # Based on:
-
 # Center for Internet Security Red Hat Enterprise Linux 8 Benchmark v1.0 - 09-30-2019
 
 policy:
@@ -36,6 +35,805 @@ variables:
   $sshd_file: /etc/ssh/sshd_config
 
 checks:
+
+###############################################
+# 1 Initial setup
+###############################################
+###############################################
+# 1.1 Filesystem Configuration
+###############################################
+# 1.1.1.1 cramfs: filesystem
+  - id: 5500 
+    title: "Ensure mounting of cramfs filesystems is disabled"
+    description: "The cramfs filesystem type is a compressed read-only Linux filesystem embedded in small footprint systems. A cramfs image can be used without having to first decompress the image."
+    rationale: "Removing support for unneeded filesystem types reduces the local attack surface of the server. If this filesystem type is not needed, disable it."
+    remediation: "Edit or create the file /etc/modprobe.d/CIS.conf and add the following line: install cramfs /bin/true. Run the following command to unload the cramfs module: rmmod cramfs"
+    compliance:
+      - cis: ["1.1.1.1"]
+      - cis_csc: ["5.1"]
+      - pci_dss: ["2.2.5"]
+    condition: all
+    rules:
+      - 'c:modprobe -n -v cramfs -> r:install /bin/true|Module cramfs not found'
+      - 'not c:lsmod -> r:cramfs'
+# 1.1.1.2 vFAT: filesystem       REVIEW
+  - id: 5501 
+    title: "Ensure mounting of FAT filesystems is limited"
+    description: "The VFAT filesystem format is primarily used on older windows systems and portable USB drives or flash modules. It comes in three types FAT12 , FAT16 , and FAT32 all of which are supported by the vfat kernel module."
+    rationale: "Removing support for unneeded filesystem types reduces the local attack surface of the system. If this filesystem type is not needed, disable it."
+    remediation: "Edit or create the file /etc/modprobe.d/CIS.conf and add the following line: install vfat /bin/true. Run the following command to unload the vfat module: rmmod vfat"
+    compliance:
+      - cis: ["1.1.1.2"]
+      - cis_csc: ["5.1"]
+      - pci_dss: ["2.2.5"]
+    condition: all
+    rules:
+      - 'c:modprobe -n -v vfat -> r:install /bin/true|Module vfat not found'
+      - 'not c:lsmod -> r:vfat'
+
+# 1.1.1.3 squashfs: filesystem
+  - id: 5502 
+    title: "Ensure mounting of squashfs filesystems is disabled"
+    description: "The squashfs filesystem type is a compressed read-only Linux filesystem embedded in small footprint systems (similar to cramfs ). A squashfs image can be used without having to first decompress the image."
+    rationale: "Removing support for unneeded filesystem types reduces the local attack surface of the system. If this filesystem type is not needed, disable it."
+    remediation: "Edit or create the file /etc/modprobe.d/CIS.conf and add the following line: install squashfs /bin/true. Run the following command to unload the squashfs module: rmmod squashfs"
+    compliance:
+      - cis: ["1.1.1.3"]
+      - cis_csc: ["5.1"]
+      - pci_dss: ["2.2.5"]
+    condition: all
+    rules:
+      - 'c:modprobe -n -v squashfs -> r:install /bin/true|Module squashfs not found'
+      - 'not c:lsmod -> r:squashfs'
+
+# 1.1.1.4 udfs: filesystem
+  - id: 5503 
+    title: "Ensure mounting of udf filesystems is disabled"
+    description: "The udf filesystem type is the universal disk format used to implement ISO/IEC 13346 and ECMA-167 specifications. This is an open vendor filesystem type for data storage on a broad range of media. This filesystem type is necessary to support writing DVDs and newer optical disc formats."
+    rationale: "Removing support for unneeded filesystem types reduces the local attack surface of the system. If this filesystem type is not needed, disable it."
+    remediation: "Edit or create the file /etc/modprobe.d/CIS.conf and add the following line: install udf /bin/true. Run the following command to unload the udf module: rmmod udf"
+    compliance:
+      - cis: ["1.1.1.4"]
+      - cis_csc: ["5.1"]
+      - pci_dss: ["2.2.5"]
+    references:
+      - AJ Lewis, "LVM HOWTO", https://tldp.org/HOWTO/LVM-HOWTO/
+    condition: all
+    rules:
+      - 'c:modprobe -n -v udf -> r:install /bin/true|Module udf not found'
+      - 'not c:lsmod -> r:udf'
+# 1.1.2 /tmp: partition
+  - id: 5504 
+    title: "Ensure /tmp is configured"
+    description: "The /tmp directory is a world-writable directory used for temporary storage by all users and some applications."
+    rationale: "Making /tmp its own file system allows an administrator to set the noexec option on the mount, making /tmp useless for an attacker to install executable code. It would also prevent an attacker from establishing a hardlink to a system setuid program and wait for it to be updated. Once the program was updated, the hardlink would be broken and the attacker would have his own copy of the program. If the program happened to have a security vulnerability, the attacker could continue to exploit the known flaw. This can be accomplished by either mounting tmpfs to /tmp, or creating a separate partition for /tmp."
+    remediation: "Configure /etc/fstab as appropriate. example: \"tmpfs  /tmp  tmpfs defaults,rw,nosuid,nodev,noexec,relatime  0 0\"  OR  Run the following commands to enable systemd /tmp mounting: # systemctl unmask tmp.mount # systemctl enable tmp.mount    Edit /etc/systemd/system/local-fs.target.wants/tmp.mount to configure the /tmp mount:   [Mount] What=tmpfs Where=/tmp Type=tmpfs Options=mode=1777,strictatime,noexec,nodev,nosuid"
+    compliance:
+      - cis: ["1.1.2"]
+      - cis_csc: ["9.1"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+    condition: all
+    rules:
+      - 'c:mount -> r:\s/tmp\s'
+      - 'f:/etc/fstab -> !r:^\s*# && r:\s/tmp\s'
+
+# 1.1.3 /tmp: nodev
+  - id: 5505 
+    title: "Ensure nodev option set on /tmp partition"
+    description: "The nodev mount option specifies that the filesystem cannot contain special devices."
+    rationale: "Since the /tmp filesystem is not intended to support devices, set this option to ensure that users cannot attempt to create block or character special devices in /tmp."
+    remediation: "Edit the /etc/fstab file and add nodev to the fourth field (mounting options) for the /tmp partition. See the fstab(5) manual page for more information. Run the following command to remount /tmp : # mount -o remount,nodev /tmp  OR Edit /etc/systemd/system/local-fs.target.wants/tmp.mount to add nodev to the /tmp mount options: [Mount]  Options=mode=1777,strictatime,noexec,nodev,nosuid       Run the following command to remount /tmp : # mount -o remount,nodev /tmp"
+    compliance:
+      - cis: ["1.1.3"]
+      - cis_csc: ["5.1"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+    condition: none
+    rules:
+      - 'c:mount -> r:\s/tmp\s && !r:nodev'
+
+# 1.1.4 /tmp: nosuid
+  - id: 5506 
+    title: "Ensure nosuid option set on /tmp partition"
+    description: "The nosuid mount option specifies that the filesystem cannot contain setuid files."
+    rationale: "Since the /tmp filesystem is only intended for temporary file storage, set this option to ensure that users cannot create setuid files in /tmp."
+    remediation: "Edit the /etc/fstab file and add nosuid to the fourth field (mounting options) for the /tmp partition. See the fstab(5) manual page for more information. Run the following command to remount /tmp : # mount -o remount,nosuid /tmp       OR Edit /etc/systemd/system/local-fs.target.wants/tmp.mount to add nosuid to the /tmp mount options:    [Mount]    Options=mode=1777,strictatime,noexec,nodev,nosuid     Run the following command to remount /tmp : # mount -o remount,nosuid /tmp"
+    compliance:
+      - cis: ["1.1.4"]
+      - cis_csc: ["5.1"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+    condition: none
+    rules:
+      - 'c:mount -> r:\s/tmp\s && !r:nosuid'
+
+# 1.1.5 /tmp: noexec
+  - id: 5507 
+    title: "Ensure noexec option set on /tmp partition"
+    description: "The noexec mount option specifies that the filesystem cannot contain executable binaries."
+    rationale: "Since the /tmp filesystem is only intended for temporary file storage, set this option to ensure that users cannot run executable binaries from /tmp."
+    remediation: "Edit the /etc/fstab file and add noexec to the fourth field (mounting options) for the /tmp partition. See the fstab(5) manual page for more information. Run the following command to remount /tmp : # mount -o remount,noexec /tmp       OR      Edit /etc/systemd/system/local-fs.target.wants/tmp.mount to add noexec to the /tmp mount options: [Mount]        Options=mode=1777,strictatime,noexec,nodev,nosuid         Run the following command to remount /tmp : # mount -o remount,noexec /tmp"
+    compliance:
+      - cis: ["1.1.5"]
+      - cis_csc: ["2.6"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+    condition: none
+    rules:
+      - 'c:mount -> r:\s/tmp\s && !r:noexec'
+
+# 1.1.6 Build considerations - Partition scheme.
+  - id: 5508 
+    title: "Ensure separate partition exists for /var"
+    description: "The /var directory is used by daemons and other system services to temporarily store dynamic data. Some directories created by these processes may be world-writable."
+    rationale: "Since the /var directory may contain world-writable files and directories, there is a risk of resource exhaustion if it is not bound to a separate partition."
+    remediation: "For new installations, during installation create a custom partition setup and specify a separate partition for /var. For systems that were previously installed, create a new partition and configure /etc/fstab as appropriate."
+    compliance:
+      - cis: ["1.1.6"]
+      - cis_csc: ["5.1"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+    references:
+      - AJ Lewis, "LVM HOWTO", https://tldp.org/HOWTO/LVM-HOWTO/
+    condition: all
+    rules:
+      - 'c:mount -> r:\s/var\s'
+
+# 1.1.7 bind mount /var/tmp to /tmp
+  - id: 5509 
+    title: "Ensure separate partition exists for /var/tmp"
+    description: "The /var/tmp directory is a world-writable directory used for temporary storage by all users and some applications."
+    rationale: "Since the /var/tmp directory is intended to be world-writable, there is a risk of resource exhaustion if it is not bound to a separate partition. In addition, making /var/tmp its own file system allows an administrator to set the noexec option on the mount, making /var/tmp useless for an attacker to install executable code."
+    remediation: "For new installations, during installation create a custom partition setup and specify a separate partition for /var/tmp. For systems that were previously installed, create a new partition and configure /etc/fstab as appropriate."
+    compliance:
+      - cis: ["1.1.7"]
+      - cis_csc: ["5.1"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+    condition: all
+    rules:
+      - 'c:mount -> r:\s/var/tmp\s'
+
+# 1.1.8 nodev set on /var/tmp
+  - id: 5510 
+    title: "Ensure nodev option set on /var/tmp partition"
+    description: "The nodev mount option specifies that the filesystem cannot contain special devices."
+    rationale: "Since the /var/tmp filesystem is not intended to support devices, set this option to ensure that users cannot attempt to create block or character special devices in /var/tmp ."
+    remediation: "Edit the /etc/fstab file and add nodev to the fourth field (mounting options) for the /var/tmp partition. See the fstab(5) manual page for more information."
+    compliance:
+      - cis: ["1.1.8"]
+      - cis_csc: ["5.1"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+    condition: none
+    rules:
+      - 'c:mount -> r:\s/var/tmp\s && !r:nodev'
+
+
+# 1.1.9 nosuid set on /var/tmp
+  - id: 5511 
+    title: "Ensure nosuid option set on /var/tmp partition"
+    description: "The nosuid mount option specifies that the filesystem cannot contain setuid files."
+    rationale: "Since the /var/tmp filesystem is only intended for temporary file storage, set this option to ensure that users cannot create setuid files in /var/tmp."
+    remediation: "Edit the /etc/fstab file and add nosuid to the fourth field (mounting options) for the /var/tmp partition. See the fstab(5) manual page for more information."
+    compliance:
+      - cis: ["1.1.9"]
+      - cis_csc: ["5.1"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+    condition: none
+    rules:
+      - 'c:mount -> r:\s/var/tmp\s && !r:nosuid'
+
+# 1.1.10 noexec set on /var/tmp
+  - id: 5512 
+    title: "Ensure noexec option set on /var/tmp partition"
+    description: "The noexec mount option specifies that the filesystem cannot contain executable binaries."
+    rationale: "Since the /var/tmp filesystem is only intended for temporary file storage, set this option to ensure that users cannot run executable binaries from /var/tmp."
+    remediation: "Edit the /etc/fstab file and add noexec to the fourth field (mounting options) for the /var/tmp partition. See the fstab(5) manual page for more information."
+    compliance:
+      - cis: ["1.1.10"]
+      - cis_csc: ["5.1"]
+      - cis_csc: ["2"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+    condition: none
+    rules:
+      - 'c:mount -> r:\s/var/tmp\s && !r:noexec'
+
+# 1.1.11 /var/log: partition
+  - id: 5513 
+    title: "Ensure separate partition exists for /var/log"
+    description: "The /var/log directory is used by system services to store log data ."
+    rationale: "There are two important reasons to ensure that system logs are stored on a separate partition: protection against resource exhaustion (since logs can grow quite large) and protection of audit data."
+    remediation: "For new installations, during installation create a custom partition setup and specify a separate partition for /var/log. For systems that were previously installed, create a new partition and configure /etc/fstab as appropriate."
+    compliance:
+      - cis: ["1.1.11"]
+      - cis_csc: ["6.4"]
+      - pci_dss: ["2.2.4","10.7"]
+      - nist_800_53: ["CM.1"]
+    references:
+      - AJ Lewis, "LVM HOWTO", https://tldp.org/HOWTO/LVM-HOWTO/
+    condition: all
+    rules:
+      - 'c:mount -> r:\s/var/log\s'
+
+  # 1.1.12 /var/log/audit: partition
+  - id: 5514 
+    title: "Ensure separate partition exists for /var/log/audit"
+    description: "The auditing daemon, auditd , stores log data in the /var/log/audit directory."
+    rationale: "There are two important reasons to ensure that data gathered by auditd is stored on a separate partition: protection against resource exhaustion (since the audit.log file can grow quite large) and protection of audit data."
+    remediation: "For new installations, during installation create a custom partition setup and specify a separate partition for /var/log/audit. For systems that were previously installed, create a new partition and configure /etc/fstab as appropriate."
+    compliance:
+      - cis: ["1.1.12"]
+      - cis_csc: ["6.4"]
+      - pci_dss: ["2.2.4","10.7"]
+      - nist_800_53: ["CM.1"]
+    references:
+      - AJ Lewis, "LVM HOWTO", https://tldp.org/HOWTO/LVM-HOWTO/
+    condition: all
+    rules:
+      - 'c:mount -> r:\s/var/log/audit\s'
+
+  # 1.1.13 /home: partition
+  - id: 5515 
+    title: "Ensure separate partition exists for /home"
+    description: "The /home directory is used to support disk storage needs of local users."
+    rationale: "If the system is intended to support local users, create a separate partition for the /home directory to protect against resource exhaustion and restrict the type of files that can be stored under /home."
+    remediation: "For new installations, during installation create a custom partition setup and specify a separate partition for /home. For systems that were previously installed, create a new partition and configure /etc/fstab as appropriate."
+    compliance:
+      - cis: ["1.1.13"]
+      - cis_csc: ["5.1"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+    references:
+      - AJ Lewis, "LVM HOWTO", https://tldp.org/HOWTO/LVM-HOWTO/
+    condition: all
+    rules:
+      - 'c:mount -> r:\s/home\s'
+
+    # 1.1.14 /home: nodev
+  - id: 5516 
+    title: "Ensure nodev option set on /home partition"
+    description: "The nodev mount option specifies that the filesystem cannot contain special devices."
+    rationale: "Since the user partitions are not intended to support devices, set this option to ensure that users cannot attempt to create block or character special devices."
+    remediation: "Edit the /etc/fstab file and add nodev to the fourth field (mounting options) for the /home partition. # mount -o remount,nodev /home"
+    compliance:
+      - cis: ["1.1.14"]
+      - cis_csc: ["5.1"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+    condition: none
+    rules:
+      - 'c:mount -> r:\s/home\s && !r:nodev'
+
+      # 1.1.15 /dev/shm: nodev
+  - id: 5517 
+    title: "Ensure nodev option set on /dev/shm partition"
+    description: "The nodev mount option specifies that the filesystem cannot contain special devices."
+    rationale: "Since the /dev/shm filesystem is not intended to support devices, set this option to ensure that users cannot attempt to create special devices in /dev/shm partitions."
+    remediation: "Edit the /etc/fstab file and add nodev to the fourth field (mounting options) for the /dev/shm partition. Run the following command to remount /dev/shm: # mount -o remount,nodev /dev/shm"
+    compliance:
+      - cis: ["1.1.15"]
+      - cis_csc: ["5.1"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+    condition: none
+    rules:
+      - 'c:mount -> r:\s/dev/shm\s && !r:nodev'
+
+      # 1.1.16 /dev/shm: nosuid
+  - id: 5518 
+    title: "Ensure nosuid option set on /dev/shm partition"
+    description: "The nosuid mount option specifies that the filesystem cannot contain setuid files."
+    rationale: "Setting this option on a file system prevents users from introducing privileged programs onto the system and allowing non-root users to execute them."
+    remediation: "Edit the /etc/fstab file and add nosuid to the fourth field (mounting options) for the /dev/shm partition. Run the following command to remount /dev/shm: # mount -o remount,nosuid /dev/shm"
+    compliance:
+      - cis: ["1.1.16"]
+      - cis_csc: ["5.1"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+    condition: none
+    rules:
+      - 'c:mount -> r:\s/dev/shm\s && !r:nosuid'
+
+  # 1.1.17 /dev/shm: noexec
+  - id: 5519 
+    title: "Ensure noexec option set on /dev/shm partition"
+    description: "The noexec mount option specifies that the filesystem cannot contain executable binaries."
+    rationale: "Setting this option on a file system prevents users from executing programs from shared memory. This deters users from introducing potentially malicious software on the system."
+    remediation: "Edit the /etc/fstab file and add noexec to the fourth field (mounting options) for the /dev/shm partition. Run the following command to remount /dev/shm: # mount -o remount,noexec /dev/shm"
+    compliance:
+      - cis: ["1.1.17"]
+      - cis_csc: ["2.6"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+    condition: none
+    rules:
+      - 'c:mount -> r:\s/dev/shm\s && !r:noexec'
+
+  # 1.1.22 Disable Automounting
+  - id: 5520 
+    title: "Disable Automounting"
+    description: "autofs allows automatic mounting of devices, typically including CD/DVDs and USB drives."
+    rationale: "With automounting enabled anyone with physical access could attach a USB drive or disc and have its contents available in system even if they lacked permissions to mount it themselves."
+    remediation: "Run the following command to disable autofs : systemctl disable autofs"
+    compliance:
+      - cis: ["1.1.22"]
+      - cis_csc: ["8.4","8.5"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+    condition: none
+    rules:
+      - 'c:systemctl is-enabled autofs -> r:enabled'
+
+
+# 1.1.23 Disable USB Storage (Scored)
+  - id: 5521 
+    title: "Disable USB Storage"
+    description: "USB storage provides a means to transfer and store files insuring persistence and availability of the files independent of network connection status. Its popularity and utility has led to USB-based malware being a simple and common means for network infiltration and a first step to establishing a persistent threat within a networked environment."
+    rationale: "Restricting USB access on the system will decrease the physical attack surface for a device and diminish the possible vectors to introduce malware."
+    remediation: "Edit or create a file in the /etc/modprobe.d/ directory ending in .conf  Example: vim /etc/modprobe.d/usb-storage.conf   and add the following line: install usb-storage /bin/true     Run the following command to unload the usb-storage module:  # rmmod usb-storage"
+    compliance:
+      - cis: ["1.1.23"]
+      - cis_csc: ["8.4","8.5"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+    condition: all
+    rules:
+      - 'c:modprobe -n -v usb-storage -> r:install /bin/true'
+      - 'c:lsmod -> !r:usb-storage'
+
+###############################################
+# 1.2 Configure Software Updates
+###############################################
+
+# 1.2.4 Activate gpgcheck
+  - id: 5522 
+    title: "Ensure gpgcheck is globally activated"
+    description: "The gpgcheck option, found in the main section of the /etc/yum.conf and individual /etc/yum/repos.d/* files determines if an RPM package's signature is checked prior to its installation."
+    rationale: "It is important to ensure that an RPM's package signature is always checked prior to installation to ensure that the software is obtained from a trusted source."
+    remediation: "Edit /etc/yum.conf and set ' gpgcheck=1 ' in the [main] section. Edit any failing files in /etc/yum.repos.d/* and set all instances of gpgcheck to ' 1 '."
+    compliance:
+      - cis: ["1.2.4"]
+      - cis_csc: ["3.4"]
+      - pci_dss: ["6.2"]
+      - nist_800_53: ["SI.2","SA.11","SI.4"]
+      - gpg_13: ["4.3"]
+      - gdpr_IV: ["35.7.d"]
+      - hipaa: ["164.312.b"] 
+    condition: all
+    rules:
+      - 'f:/etc/yum.conf -> r:gpgcheck=1'
+      - 'not c:grep -Rh ^gpgcheck /etc/yum.repos.d/ -> r:gpgcheck=0'
+
+###############################################
+# 1.3 Configure sudo
+###############################################
+
+# 1.3.1 install sudo
+  - id: 5523 
+    title: "Ensure sudo is installed"
+    description: "sudo allows a permitted user to execute a command as the superuser or another user, as specified by the security policy. The invoking user's real (not effective) user ID is used to determine the user name with which to query the security policy."
+    rationale: "sudo supports a plugin architecture for security policies and input/output logging. Third parties can develop and distribute their own policy and I/O logging plugins to work seamlessly with the sudo front end. The default security policy is sudoers, which is configured via the file /etc/sudoers. The security policy determines what privileges, if any, a user has to run sudo. The policy may require that users authenticate themselves with a password or another authentication mechanism. If authentication is required, sudo will exit if the user's password is not entered within a configurable time limit. This limit is policy-specific."
+    remediation: "Run the following command to install sudo: # dnf install sudo"
+    compliance:
+      - cis: ["1.3.1"]
+      - cis_csc: ["4.3"]
+    condition: all
+    rules:
+      - 'c:rpm -q sudo -> r:sudo-\S*'
+
+# 1.3.2 Ensure sudo commands use pty (Scored)
+  - id: 5524 
+    title: "Ensure sudo commands use pty"
+    description: "sudo can be configured to run only from a psuedo-pty"
+    rationale: "Attackers can run a malicious program using sudo which would fork a background process that remains even when the main program has finished executing."
+    remediation: "edit the file /etc/sudoers or a file in /etc/sudoers.d/ with visudo -f and add the following line: Defaults use_pty"
+    compliance:
+      - cis: ["1.3.2"]
+      - cis_csc: ["5.1"]
+    references: "AIDE stable manual: http://aide.sourceforge.net/stable/manual.html"
+    condition: any
+    rules:
+      - 'f:/etc/sudoers -> r:^\s*Defaults\s+use_pty'
+      - 'c:grep -r Default /etc/sudoers.d/  -> !r:# && r:\s*Defaults\s+use_pty'
+
+# 1.3.3 Ensure sudo log file exists (Scored)
+  - id: 5525 
+    title: "Ensure sudo log file exists"
+    description: "sudo can use a custom log file"
+    rationale: "A sudo log file simplifies auditing of sudo commands"
+    remediation: "edit the file /etc/sudoers or a file in /etc/sudoers.d/ with visudo -f and add the following line: Defaults logfile=\"<PATH TO CUSTOM LOG FILE>\""
+    compliance:
+      - cis: ["1.3.3"]
+      - cis_csc: ["6.3"]
+    references: "AIDE stable manual: http://aide.sourceforge.net/stable/manual.html"
+    condition: any
+    rules:
+      - 'f:/etc/sudoers -> r:^\s*Defaults\s+logfile='
+      - 'c:grep -r Default /etc/sudoers.d/  -> !r:# && r:\s*Defaults\s+logfile'
+
+###############################################
+# 1.4 Filesystem Integrity Checking
+###############################################
+
+# 1.4.1 install AIDE
+  - id: 5526 
+    title: "Ensure AIDE is installed"
+    description: "AIDE takes a snapshot of filesystem state including modification times, permissions, and file hashes which can then be used to compare against the current state of the filesystem to detect modifications to the system."
+    rationale: "By monitoring the filesystem state compromised files can be detected to prevent or limit the exposure of accidental or malicious misconfigurations or modified binaries."
+    remediation: "Run the following command to install aide: # dnf install aide  ||  Configure AIDE as appropriate for your environment. Consult the AIDE documentation for options. Initialize AIDE: #aide --init && mv /var/lib/aide/aide.db.new.gz /var/lib/aide/aide.db.gz"
+    compliance:
+      - cis: ["1.3.1"]
+      - cis_csc: ["14.9"]
+      - pci_dss: ["11.5"]
+    references: "AIDE stable manual: http://aide.sourceforge.net/stable/manual.html"
+    condition: all
+    rules:
+      - 'c:rpm -q aide -> r:aide-\S*'
+
+# 1.4.2 AIDE regular checks
+  - id: 5527 
+    title: "Ensure filesystem integrity is regularly checked"
+    description: "Periodic checking of the filesystem integrity is needed to detect changes to the filesystem."
+    rationale: "Periodic file checking allows the system administrator to determine on a regular basis if critical files have been changed in an unauthorized fashion."
+    remediation: "Run the following command: crontab -u root -e // Add the following line to the crontab: 0 5 * * * /usr/sbin/aide --check  // Notes: The checking in this recommendation occurs every day at 5am. Alter the frequency and time of the checks in compliance with site policy.  "
+    compliance:
+      - cis: ["1.3.2"]
+      - cis_csc: ["3.5"]
+      - pci_dss: ["11.5"]
+    condition: any
+    rules:
+      - 'c:crontab -u root -l -> r:aide'
+      - 'c:grep -r aide /etc/cron.* /etc/crontab -> r:aide'
+    
+###############################################
+# 1.5 Secure Boot Settings
+###############################################
+# 1.5.1 Configure bootloader
+  - id: 5528 
+    title: "Ensure permissions on bootloader config are configured"
+    description: "The grub configuration file contains information on boot settings and passwords for unlocking boot options. The grub configuration is usually located at /boot/grub2/grub.cfg and linked as /etc/grub2.cfg . Additional settings can be found in the /boot/grub2/user.cfg file."
+    rationale: "Setting the permissions to read and write for root only prevents non-root users from seeing the boot parameters or changing them. Non-root users who read the boot parameters may be able to identify weaknesses in security upon boot and be able to exploit them."
+    remediation: "Run the following commands to set permissions on your grub configuration: # chown root:root /boot/grub2/grub.cfg # chmod og-rwx /boot/grub2/grub.cfg # chown root:root /boot/grub2/grubenv # chmod og-rwx /boot/grub2/grubenv"
+    compliance:
+      - cis: ["1.5.1"]
+      - cis_csc: ["5.1"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+    condition: all
+    rules:
+      - 'c:stat /boot/grub2/grub.cfg -> r:Access:\s*\(0600/-rw-------\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*0/\s*\t*root\)'
+      - 'c:stat /boot/grub2/grubenv -> r:Access:\s*\(0600/-rw-------\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*0/\s*\t*root\)'
+
+# 1.5.2 Set Boot Loader Password (Scored)
+  - id: 5529 
+    title: "Ensure bootloader password is set"
+    description: "Setting the boot loader password will require that anyone rebooting the system must enter a password before being able to set command line boot parameters."
+    rationale: "Requiring a boot password upon execution of the boot loader will prevent an unauthorized user from entering boot parameters or changing the boot partition. This prevents users from weakening security (e.g. turning off SELinux at boot time)."
+    remediation: "Create an encrypted password with grub2-setpassword: # grub2-setpassword    || Run the following command to update the grub2 configuration: # grub2-mkconfig -o /boot/grub2/grub.cfg"
+    compliance:
+      - cis: ["1.5.2"]
+      - cis_csc: ["5.1"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+    condition: all
+    rules:
+      - 'f:/boot/grub2/user.cfg -> r:^GRUB2_PASSWORD\s*=\.+'
+
+# 1.5.3 Single user authentication
+  - id: 5530 
+    title: "Ensure authentication required for single user mode"
+    description: "Single user mode (rescue mode) is used for recovery when the system detects an issue during boot or by manual selection from the bootloader."
+    rationale: "Requiring authentication in single user mode (rescue mode) prevents an unauthorized user from rebooting the system into single user to gain root privileges without credentials."
+    remediation: "Edit /usr/lib/systemd/system/rescue.service and add/modify the following line: ExecStart=-/usr/lib/systemd/systemd-sulogin-shell rescue Edit /usr/lib/systemd/system/emergency.service and add/modify the following line: ExecStart=-/usr/lib/systemd/systemd-sulogin-shell emergency"
+    compliance:
+      - cis: ["1.5.3"]
+      - cis_csc: ["5.1"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+    condition: all
+    rules:
+      - 'f:/usr/lib/systemd/system/rescue.service -> r:ExecStart=-/usr/lib/systemd/systemd-sulogin-shell rescue'
+      - 'f:/usr/lib/systemd/system/emergency.service -> r:ExecStart=-/usr/lib/systemd/systemd-sulogin-shell emergency'
+
+###############################################
+# 1.6 Additional Process Hardening
+###############################################
+# 1.6.1 Restrict Core Dumps (Scored)
+  - id: 5531 
+    title: "Ensure core dumps are restricted"
+    description: "A core dump is the memory of an executable program. It is generally used to determine why a program aborted. It can also be used to glean confidential information from a core file."
+    rationale: "Setting a hard limit on core dumps prevents users from overriding the soft variable. If core dumps are required, consider setting limits for user groups (see limits.conf). In addition, setting the fs.suid_dumpable variable to 0 will prevent setuid programs from dumping core."
+    remediation: "Add the following line to /etc/security/limits.conf or a /etc/security/limits.d/* file: * hard core 0. Set the following parameter in /etc/sysctl.conf or a /etc/sysctl.d/* file: fs.suid_dumpable = 0 and set the active kernel parameter: If systemd-coredump is installed:  edit /etc/systemd/coredump.conf and add/modify the following lines: Storage=none ProcessSizeMax=0       Run the command: # systemctl daemon-reload"
+    compliance:
+      - cis: ["1.6.1"]
+      - cis_csc: ["5.1"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+    condition: all
+    rules:
+      - 'c:grep -Rh ^*[[:space:]]*hard[[:space:]][[:space:]]*core[[:space:]][[:space:]]* /etc/security/limits.conf /etc/security/limits.d -> r:\s*\t*0$'
+      - 'c:sysctl fs.suid_dumpable -> r:^fs.suid_dumpable\s*=\s*0\s*$'
+      - 'c:grep -Rh fs\.suid_dumpable /etc/sysctl.conf /etc/sysctl.d -> r:^\s*fs.suid_dumpable\s*=\s*0\s*$'
+      - 'c:systemctl is-enabled coredump.service -> r:enabled|disabled'
+
+# 1.6.2 Ensure address space layout randomization (ASLR) is enabled (Scored)
+  - id: 5532 
+    title: "Ensure address space layout randomization (ASLR) is enabled"
+    description: "Address space layout randomization (ASLR) is an exploit mitigation technique which randomly arranges the address space of key data areas of a process."
+    rationale: "Randomly placing virtual memory regions will make it difficult to write memory page exploits as the memory placement will be consistently shifting."
+    remediation: "Set the following parameter in /etc/sysctl.conf or a /etc/sysctl.d/* file: kernel.randomize_va_space = 2 Run the following command to set the active kernel parameter: # sysctl -w kernel.randomize_va_space=2"
+    compliance:
+      - cis: ["1.6.2"]
+      - cis_csc: ["8.3"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+    condition: all
+    rules:
+      - 'c:grep -Rh ^kernel\.randomize_va_space /etc/sysctl.conf /etc/sysctl.d -> r:^\s*kernel.randomize_va_space\s*=\s*2$'
+      - 'c:sysctl kernel.randomize_va_space -> r:^\s*kernel.randomize_va_space\s*=\s*2'
+
+###############################################
+# 1.7 Configure SELinux
+###############################################
+# 1.7.1.1 Ensure SELinux is installed(Scored)
+  - id: 5533 
+    title: "Ensure SELinux is installed"
+    description: "SELinux provides Mandatory Access Control."
+    rationale: "Without a Mandatory Access Control system installed only the default Discretionary Access Control system will be available."
+    remediation: "Edit /etc/default/grub and remove all instances of selinux=0 and enforcing=0 from all CMDLINE_LINUX parameters: GRUB_CMDLINE_LINUX_DEFAULT=\"quiet\" GRUB_CMDLINE_LINUX=\"\"  || Run the following command to update the grub2 configuration: grub2-mkconfig -o /boot/grub2/grub.cfg"
+    compliance:
+      - cis: ["1.7.1.1"]
+      - cis_csc: ["14.6"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+    condition: all
+    rules:
+      - 'c:rpm -q libselinux -> r:libselinux-'
+
+# 1.7.1.2 SELinux not disabled
+  - id: 5534 
+    title: "Ensure SELinux is not disabled in bootloader configuration"
+    description: "Configure SELINUX to be enabled at boot time and verify that it has not been overwritten by the grub boot parameters."
+    rationale: "SELinux must be enabled at boot time in your grub configuration to ensure that the controls it provides are not overridden."
+    remediation: "Edit /etc/default/grub and remove all instances of selinux=0 and enforcing=0 from all CMDLINE_LINUX parameters: GRUB_CMDLINE_LINUX_DEFAULT=\"quiet\" GRUB_CMDLINE_LINUX=\"\"  || Run the following command to update the grub2 configuration: grub2-mkconfig -o /boot/grub2/grub.cfg"
+    compliance:
+      - cis: ["1.7.1.2"]
+      - cis_csc: ["14.6"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+    condition: none
+    rules:
+      - 'f:/boot/grub2/grubenv -> r:kernelopts=\.*selinux=0|kernelopts=\.*enforcing=0'
+
+# 1.7.1.3 Set selinux policy
+  - id: 5535 
+    title: "Ensure SELinux policy is configured"
+    description: "Configure SELinux to meet or exceed the default targeted policy, which constrains daemons and system software only."
+    rationale: "Security configuration requirements vary from site to site. Some sites may mandate a policy that is stricter than the default policy, which is perfectly acceptable. This item is intended to ensure that at least the default recommendations are met."
+    remediation: "Edit the /etc/selinux/config file to set the SELINUXTYPE parameter: SELINUXTYPE=targeted"
+    compliance:
+      - cis: ["1.7.1.3"]
+      - cis_csc: ["14.6"] 
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+    condition: all
+    rules:
+      - 'c:sestatus -> r:^Loaded policy name:\s+targeted$'
+      - 'f:/etc/selinux/config -> r:^\s*SELINUXTYPE\s*=\s*targeted|^\s*SELINUXTYPE\s*=\s*mls'
+ 
+ # 1.7.1.4 Set selinux state
+  - id: 5536 
+    title: "Ensure the SELinux state is enforcing"
+    description: "Set SELinux to enable when the system is booted."
+    rationale: "SELinux must be enabled at boot time in to ensure that the controls it provides are in effect at all times."
+    remediation: "Edit the /etc/selinux/config file to set the SELINUX parameter: SELINUX=enforcing"
+    compliance:
+      - cis: ["1.7.1.4"]
+      - cis_csc: ["14.6"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+    condition: all
+    rules:
+      - 'c:sestatus -> r:^SELinux status:\s+enabled$'
+      - 'c:sestatus -> r:^Current mode:\s+enforcing$'
+      - 'c:sestatus -> r:^Mode from config file:\s+enforcing$'
+      - 'f:/etc/selinux/config -> r:^\s*SELINUX\s*=\s*enforcing'
+
+
+# 1.7.1.5 Ensure no unconfined services exist (Scored)
+  - id: 5537 
+    title: "Ensure no unconfined services exist"
+    description: "Unconfined processes run in unconfined domains"
+    rationale: "For unconfined processes, SELinux policy rules are applied, but policy rules exist that allow processes running in unconfined domains almost all access. Processes running in unconfined domains fall back to using DAC rules exclusively. If an unconfined process is compromised, SELinux does not prevent an attacker from gaining access to system resources and data, but of course, DAC rules are still used. SELinux is a security enhancement on top of DAC rules – it does not replace them"
+    remediation: "Investigate any unconfined processes found during the audit action. They may need to have an existing security context assigned to them or a policy built for them."
+    compliance:
+      - cis: ["1.7.1.5"]
+      - cis_csc: ["9.2"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+    condition: none
+    rules:
+      - 'c:ps -eZ -> r:unconfined_service_t'
+  
+# 1.7.1.6 Remove SETroubleshoot
+  - id: 5538 
+    title: "Ensure SETroubleshoot is not installed"
+    description: "The SETroubleshoot service notifies desktop users of SELinux denials through a user-friendly interface. The service provides important information around configuration errors, unauthorized intrusions, and other potential errors."
+    rationale: "The SETroubleshoot service is an unnecessary daemon to have running on a server, especially if X Windows is disabled."
+    remediation: "Run the following command to uninstall s etroubleshoot: # dnf remove setroubleshoot"
+    compliance:
+      - cis: ["1.7.1.6"]
+      - cis_csc: ["14.6"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+    condition: none
+    rules:
+      - 'c:rpm -qa setroubleshoot -> r:setroubleshoot'
+
+# 1.7.1.7 Disable MCS Translation service mcstrans
+  - id: 5539 
+    title: "Ensure the MCS Translation Service (mcstrans) is not installed"
+    description: "The mcstransd daemon provides category label information to client processes requesting information. The label translations are defined in /etc/selinux/targeted/setrans.conf"
+    rationale: "Since this service is not used very often, remove it to reduce the amount of potentially vulnerable code running on the system."
+    remediation: "Run the following command to uninstall mcstrans: # dnf remove mcstrans"
+    compliance:
+      - cis: ["1.7.1.5"]
+      - cis_csc: ["9.2"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+    condition: none
+    rules:
+      - 'c:rpm -qa mcstrans -> r:mcstrans'
+
+
+###############################################
+# 1.8  Warning Banners
+###############################################
+# 1.8.1.1 Configure message of the day (Scored)
+  - id: 5540 
+    title: "Ensure message of the day is configured properly"
+    description: "The contents of the /etc/motd file are displayed to users after login and function as a message of the day for authenticated users. Unix-based systems have typically displayed information about the OS release and patch level upon logging in to the system. This information can be useful to developers who are developing software for a particular OS platform. If mingetty(8) supports the following options, they display operating system information: \\m - machine architecture \\r - operating system release \\s - operating system name \\v - operating system version"
+    rationale: "Warning messages inform users who are attempting to login to the system of their legal status regarding the system and must include the name of the organization that owns the system and any monitoring policies that are in place. Displaying OS and patch level information in login banners also has the side effect of providing detailed system information to attackers attempting to target specific exploits of a system. Authorized users can easily get this information by running the \" uname -a \" command once they have logged in."
+    remediation: "Edit the /etc/motd file with the appropriate contents according to your site policy, remove any instances of \\m , \\r , \\s , \\v or references to the OS platform    OR    If the motd is not used, this file can be removed. Run the following command to remove the motd file: # rm /etc/motd"
+    compliance:
+      - cis: ["1.8.1.1"]
+      - cis_csc: ["5.1"]
+      - pci_dss: ["7.1"]
+    condition: none
+    rules:
+      - 'f:/etc/motd -> r:\\v|\\r|\\m|\\s'
+    
+# 1.8.1.2 Configure local login warning banner (Scored)
+  - id: 5541 
+    title: "Ensure local login warning banner is configured properly"
+    description: "The contents of the /etc/issue file are displayed to users prior to login for local terminals. Unix-based systems have typically displayed information about the OS release and patch level upon logging in to the system. This information can be useful to developers who are developing software for a particular OS platform. If mingetty(8) supports the following options, they display operating system information: \\m - machine architecture \\r - operating system release \\s - operating system name \\v - operating system version"
+    rationale: "Warning messages inform users who are attempting to login to the system of their legal status regarding the system and must include the name of the organization that owns the system and any monitoring policies that are in place. Displaying OS and patch level information in login banners also has the side effect of providing detailed system information to attackers attempting to target specific exploits of a system. Authorized users can easily get this information by running the \" uname -a \" command once they have logged in."
+    remediation: "Edit the /etc/issue file with the appropriate contents according to your site policy, remove any instances of \\m , \\r , \\s , \\v or references to the OS platform: # echo \"Authorized uses only. All activity may be monitored and reported.\" > /etc/issue"
+    compliance:
+      - cis: ["1.8.1.2"]
+      - cis_csc: ["5.1"]
+      - pci_dss: ["7.1"]
+    condition: none
+    rules:
+      - 'f:/etc/issue -> r:\\v|\\r|\\m|\\s'
+
+
+# 1.8.1.3 Configure remote login warning banner (Scored)
+  - id: 5542 
+    title: "Ensure remote login warning banner is configured properly"
+    description: "The contents of the /etc/issue.net file are displayed to users prior to login for remote connections from configured services. Unix-based systems have typically displayed information about the OS release and patch level upon logging in to the system. This information can be useful to developers who are developing software for a particular OS platform. If mingetty(8) supports the following options, they display operating system information: \\m - machine architecture \\r - operating system release \\s - operating system name \\v - operating system version"
+    rationale: "Warning messages inform users who are attempting to login to the system of their legal status regarding the system and must include the name of the organization that owns the system and any monitoring policies that are in place. Displaying OS and patch level information in login banners also has the side effect of providing detailed system information to attackers attempting to target specific exploits of a system. Authorized users can easily get this information by running the \" uname -a \" command once they have logged in."
+    remediation: "Edit the /etc/issue.net file with the appropriate contents according to your site policy, remove any instances of \\m , \\r , \\s , \\v or references to the OS platform: # echo \"Authorized uses only. All activity may be monitored and reported.\" > /etc/issue.net"
+    compliance:
+      - cis: ["1.8.1.3"]
+      - cis_csc: ["5.1"]
+      - pci_dss: ["7.1"]
+    condition: none
+    rules:
+      - 'f:/etc/issue.net -> r:\\v|\\r|\\m|\\s'
+
+# 1.8.1.4 Configure /etc/motd permissions (Scored)
+  - id: 5543 
+    title: "Ensure permissions on /etc/motd are configured"
+    description: "The contents of the /etc/motd file are displayed to users after login and function as a message of the day for authenticated users."
+    rationale: "If the /etc/motd file does not have the correct ownership it could be modified by unauthorized users with incorrect or misleading information."
+    remediation: "Run the following commands to set permissions on /etc/motd: # chown root:root /etc/motd # chmod 644 /etc/motd"
+    compliance:
+      - cis: ["1.8.1.4"]
+      - cis_csc: ["5.1"]
+      - pci_dss: ["10.2.5"]
+      - hipaa: ["164.312.b"]
+      - nist_800_53: ["AU.14", "AC.7"]
+      - gpg_13: ["7.8"]
+      - gdpr_IV: ["35.7","32.2"]
+    condition: all
+    rules:
+      - 'c:stat /etc/motd -> r:Access:\s*\(0644/-rw-r--r--\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*0/\s*\t*root\)'
+
+# 1.8.1.5 Configure /etc/issue permissions (Scored)
+  - id: 5544 
+    title: "Ensure permissions on /etc/issue are configured"
+    description: "The contents of the /etc/issue file are displayed to users prior to login for local terminals."
+    rationale: "If the /etc/issue file does not have the correct ownership it could be modified by unauthorized users with incorrect or misleading information."
+    remediation: "Run the following commands to set permissions on /etc/issue: # chown root:root /etc/issue # chmod 644 /etc/issue"
+    compliance:
+      - cis: ["1.8.1.5"]
+      - cis_csc: ["5.1"]
+      - pci_dss: ["10.2.5"]
+      - hipaa: ["164.312.b"]
+      - nist_800_53: ["AU.14", "AC.7"]
+      - gpg_13: ["7.8"]
+      - gdpr_IV: ["35.7","32.2"]
+    condition: all
+    rules:
+      - 'c:stat /etc/issue -> r:Access:\s*\(0644/-rw-r--r--\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*0/\s*\t*root\)'
+
+# 1.8.1.6 Configure /etc/issue.net permissions (Scored)
+  - id: 5545 
+    title: "Ensure permissions on /etc/issue.net are configured"
+    description: "The contents of the /etc/issue.net file are displayed to users prior to login for remote connections from configured services."
+    rationale: "If the /etc/issue.net file does not have the correct ownership it could be modified by unauthorized users with incorrect or misleading information."
+    remediation: "Run the following commands to set permissions on /etc/issue.net: # chown root:root /etc/issue.net # chmod 644 /etc/issue.net"
+    compliance:
+      - cis: ["1.8.1.6"]
+      - cis_csc: ["5.1"]
+      - pci_dss: ["10.2.5"]
+      - hipaa: ["164.312.b"]
+      - nist_800_53: ["AU.14", "AC.7"]
+      - gpg_13: ["7.8"]
+      - gdpr_IV: ["35.7","32.2"]
+    condition: all
+    rules:
+      - 'c:stat /etc/issue.net -> r:Access:\s*\(0644/-rw-r--r--\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*0/\s*\t*root\)'
+
+# 1.8.2 Ensure GDM login banner is configured (Scored)
+  - id: 5546 
+    title: "Ensure GDM login banner is configured"
+    description: "GDM is the GNOME Display Manager which handles graphical login for GNOME based systems."
+    rationale: "Warning messages inform users who are attempting to login to the system of their legal status regarding the system and must include the name of the organization that owns the system and any monitoring policies that are in place."
+    remediation: "Edit or create the file /etc/gdm3/greeter.dconf-defaults and add the following in 3 lines: (1) [org/gnome/login-screen]    (2) banner-message-enable=true   (3) banner-message-text='Authorized uses only. All activity may be monitored and reported.'"
+    compliance:
+      - cis: ["1.8.2"]
+      - cis_csc: ["5.1"]
+      - pci_dss: ["7.1"]
+    condition: all
+    rules:
+      - 'f:/etc/gdm3/greeter.dconf-defaults -> r:[org/gnome/login-screen]'
+      - 'f:/etc/gdm3/greeter.dconf-defaults -> r:banner-message-enable=true'
+      - 'f:/etc/gdm3/greeter.dconf-defaults -> r:banner-message-text='
+
+
+
+# 1.10 Ensure system-wide crypto policy is not legacy (Scored)
+  - id: 5547 
+    title: "Ensure system-wide crypto policy is not legacy"
+    description: "The system-wide crypto-policies followed by the crypto core components allow consistently deprecating and disabling algorithms system-wide. The individual policy levels (DEFAULT, LEGACY, FUTURE, and FIPS) are included in the crypto-policies(7) package."
+    rationale: "If the Legacy system-wide crypto policy is selected, it includes support for TLS 1.0, TLS 1.1, and SSH2 protocols or later. The algorithms DSA, 3DES, and RC4 are allowed, while RSA and Diffie-Hellman parameters are accepted if larger than 1023-bits. These legacy protocols and algorithms can make the system vulnerable to attacks, including those listed in RFC 7457"
+    remediation: "Run the following command to change the system-wide crypto policy # update-crypto-policies --set <CRYPTO POLICY>         Example:     # update-crypto-policies --set DEFAULT              Run the following to make the updated system-wide crypto policy active           # update-crypto-policies"
+    compliance:
+      - cis: ["1.10"]
+      - cis_csc: ["14.4"]
+    condition: none
+    rules:
+      - 'f:/etc/crypto-policies/config -> r:^\s*LEGACY'
+
+# 1.11 Ensure system-wide crypto policy is FUTURE or FIPS (Scored)
+  - id: 5548 
+    title: "Ensure system-wide crypto policy is FUTURE or FIPS"
+    description: "The system-wide crypto-policies followed by the crypto core components allow consistently deprecating and disabling algorithms system-wide. The individual policy levels (DEFAULT, LEGACY, FUTURE, and FIPS) are included in the crypto-policies(7) package."
+    rationale: "If the Legacy system-wide crypto policy is selected, it includes support for TLS 1.0, TLS 1.1, and SSH2 protocols or later. The algorithms DSA, 3DES, and RC4 are allowed, while RSA and Diffie-Hellman parameters are accepted if larger than 1023-bits. These legacy protocols and algorithms can make the system vulnerable to attacks, including those listed in RFC 7457 FUTURE: Is a conservative security level that is believed to withstand any near-term future attacks. This level does not allow the use of SHA-1 in signature algorithms. The RSA and Diffie-Hellman parameters are accepted if larger than 3071 bits. The level provides at least 128-bit security FIPS: Conforms to the FIPS 140-2 requirements. This policy is used internally by the fips-mode-setup(8) tool which can switch the system into the FIPS 140-2 compliance mode. The level provides at least 112-bit security"
+    remediation: "Run the following command to change the system-wide crypto policy # update-crypto-policies --set FUTURE              OR             To switch the system to FIPS mode, run the following command: # fips-mode-setup --enable"
+    compliance:
+      - cis: ["1.11"]
+      - cis_csc: ["14.4"]
+    condition: none
+    rules:
+      - 'f:/etc/crypto-policies/config -> r:^\s*FUTURE|^\s*FIPS'
+    
 
 ###############################################
 # 2 OS Services
@@ -1485,7 +2283,7 @@ checks:
     compliance:
       - cis: ["5.1.4"]
       - cis_csc: ["5.1"]
-      - pci_dss: ["2.2.4"]
+       pci_dss: ["2.2.4"]
       - nist_800_53: ["CM.1"]
     condition: all
     rules:
@@ -2058,4 +2856,225 @@ checks:
     condition: all
     rules:
       - 'f:/etc/pam.d/su -> r:^auth\s*\t*required\s*\t*pam_wheel.so\s*\t*use_uid'
+
+
+
+###############################################
+# 6 System Maintenance
+###############################################
+###############################################
+# 6.1 System File Permissions
+###############################################
+# 6.1.2 Configure /etc/passwd permissions (Scored)
+  - id: 5549 
+    title: "Ensure permissions on /etc/passwd are configured"
+    description: "The /etc/passwd file contains user account information that is used by many system utilities and therefore must be readable for these utilities to operate."
+    rationale: "It is critical to ensure that the /etc/passwd file is protected from unauthorized write access. Although it is protected by default, the file permissions could be changed either inadvertently or through malicious actions."
+    remediation: "Run the following command to set permissions on /etc/passwd: # chown root:root /etc/passwd # chmod 644 /etc/passwd"
+    compliance:
+      - cis: ["6.1.2"]
+      - cis_csc: ["16.4"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+    condition: all
+    rules:
+      - 'c:stat /etc/passwd -> r:Access:\s*\(0644/-rw-r--r--\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*0/\s*\t*root\)'
+
+
+# 6.1.3 Configure /etc/shadow permissions (Scored)
+  - id: 5550 
+    title: "Ensure permissions on /etc/shadow are configured"
+    description: "The /etc/shadow file is used to store the information about user accounts that is critical to the security of those accounts, such as the hashed password and other security information."
+    rationale: "If attackers can gain read access to the /etc/shadow file, they can easily run a password cracking program against the hashed password to break it. Other security information that is stored in the /etc/shadow file (such as expiration) could also be useful to subvert the user accounts."
+    remediation: "Run the following command to set permissions on /etc/ shadow: # chown root:root /etc/shadow  # chown root:shadow /etc/shadow    # chmod o-rwx,g-wx /etc/shadow"
+    compliance:
+      - cis: ["6.1.3"]
+      - cis_csc: ["16.4"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+    condition: all
+    rules:
+      - 'c:stat /etc/shadow -> r:Access:\s*\(0\d\d0/-\w\w-\w-----\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*0/\s*\t*root\)|Access:\s*\(0\d\d0/-\w\w-\w-----\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*\w*/\s*\t*shadow\)'
+
+# 6.1.4 Configure /etc/group permissions (Scored)
+  - id: 5551 
+    title: "Ensure permissions on /etc/group are configured"
+    description: "The /etc/group file contains a list of all the valid groups defined in the system. The command below allows read/write access for root and read access for everyone else."
+    rationale: "The /etc/group file needs to be protected from unauthorized changes by non-privileged users, but needs to be readable as this information is used with many non-privileged programs."
+    remediation: "Run the following command to set permissions on /etc/group: # chown root:root /etc/group # chmod 644 /etc/group"
+    compliance:
+      - cis: ["6.1.4"]
+      - cis_csc: ["16.4"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+    condition: all
+    rules:
+      - 'c:stat /etc/group -> r:Access:\s*\(0644/-rw-r--r--\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*0/\s*\t*root\)'
+
+# 6.1.5 Configure /etc/gshadow permissions (Scored)
+  - id: 5552 
+    title: "Ensure permissions on /etc/gshadow are configured"
+    description: "The /etc/gshadow file is used to store the information about groups that is critical to the security of those accounts, such as the hashed password and other security information."
+    rationale: "If attackers can gain read access to the /etc/gshadow file, they can easily run a password cracking program against the hashed password to break it. Other security information that is stored in the /etc/gshadow file (such as group administrators) could also be useful to subvert the group"
+    remediation: "Run the following command to set permissions on /etc/gshadow: # chown root:root /etc/gshadow # chown root:shadow /etc/gshadow  # chmod o-rwx,g-rw /etc/gshadow"
+    compliance:
+      - cis: ["6.1.5"]
+      - cis_csc: ["16.14"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+    condition: all
+    rules:
+      - 'c:stat /etc/gshadow -> r:Access:\s*\(0\d\d0/-\w\w-\w-----\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*0/\s*\t*root\)|Access:\s*\(0\d\d0/-\w\w-\w-----\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*\w*/\s*\t*shadow\)'
+
+# 6.1.6 Configure /etc/passwd- permissions (Scored)
+  - id: 5553 
+    title: "Ensure permissions on /etc/passwd- are configured"
+    description: "The /etc/passwd- file contains backup user account information."
+    rationale: "It is critical to ensure that the /etc/passwd- file is protected from unauthorized access. Although it is protected by default, the file permissions could be changed either inadvertently or through malicious actions."
+    remediation: "Run the following command to set permissions on /etc/passwd-: # chown root:root /etc/passwd- # chmod 600 /etc/passwd-"
+    compliance:
+      - cis: ["6.1.6"]
+      - cis_csc: ["16.4"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+    condition: all
+    rules:
+      - 'c:stat /etc/passwd- -> r:Access:\s*\(0\d00/-\w\w-------\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*0/\s*\t*root\)'
+
+# 6.1.7 Configure /etc/shadow- permissions (Scored)
+  - id: 5554 
+    title: "Ensure permissions on /etc/shadow- are configured"
+    description: "The /etc/shadow- file is used to store backup information about user accounts that is critical to the security of those accounts, such as the hashed password and other security information."
+    rationale: "It is critical to ensure that the /etc/shadow- file is protected from unauthorized access. Although it is protected by default, the file permissions could be changed either inadvertently or through malicious actions."
+    remediation: "Run the following command to set permissions on /etc/shadow-: # chown root:shadow /etc/shadow-  # chmod u-x,go-rwx /etc/shadow-"
+    compliance:
+      - cis: ["6.1.7"]
+      - cis_csc: ["16.4"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+    condition: all
+    rules:
+      - 'c:stat /etc/shadow- -> r:Access:\s*\(0\d00/-\w\w-------\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*0/\s*\t*root\)|Access:\s*\(0\d00/-\w\w-------\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*\w*/\s*\t*shadow\)'
+
+# 6.1.8 Configure /etc/group- permissions (Scored)
+  - id: 5555 
+    title: "Ensure permissions on /etc/group- are configured"
+    description: "The /etc/group- file contains a backup list of all the valid groups defined in the system."
+    rationale: "It is critical to ensure that the /etc/group- file is protected from unauthorized access. Although it is protected by default, the file permissions could be changed either inadvertently or through malicious actions."
+    remediation: "Run the following command to set permissions on /etc/group-: # chown root:root /etc/group- # chmod 644 /etc/group-"
+    compliance:
+      - cis: ["6.1.8"]
+      - cis_csc: ["16.4"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+    condition: all
+    rules:
+      - 'c:stat /etc/group- -> r:Access:\s*\(0\d\d\d/-\w\w-\w--\w--\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*0/\s*\t*root\)'
+
+# 6.1.9 Configure /etc/gshadow- permissions (Scored)
+  - id: 5556 
+    title: "Ensure permissions on /etc/gshadow- are configured"
+    description: "The /etc/gshadow- file is used to store backup information about groups that is critical to the security of those accounts, such as the hashed password and other security information."
+    rationale: "It is critical to ensure that the /etc/gshadow- file is protected from unauthorized access. Although it is protected by default, the file permissions could be changed either inadvertently or through malicious actions."
+    remediation: "Run the one of the following chown commands as appropriate and the chmod to set permissions on /etc/gshadow- : # chown root:root /etc/gshadow-  # chown root:shadow /etc/gshadow-  # chmod o-rwx,g-rw /etc/gshadow-"
+    compliance:
+      - cis: ["6.1.9"]
+      - cis_csc: ["16.4"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+    condition: all
+    rules:
+      - 'c:stat /etc/gshadow- -> r:Access:\s*\(0\d\d0/-\w\w-\w-----\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*0/\s*\t*root\)|Access:\s*\(0\d\d0/-\w\w-\w-----\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*\w*/\s*\t*shadow\)'
+
+
+
+###############################################
+# 6.2 Review User and Group Settings
+###############################################
+# 6.2.1 Check passwords fields (Scored)
+  - id: 5557 
+    title: "Ensure password fields are not empty"
+    description: "An account with an empty password field means that anybody may log in as that user without providing a password."
+    rationale: "All accounts must have passwords or be locked to prevent the account from being used by an unauthorized user."
+    remediation: "If any accounts in the /etc/shadow file do not have a password, run the following command to lock the account until it can be determined why it does not have a password: passwd -l <username> || Also, check to see if the account is logged in and investigate what it is being used for to determine if it needs to be forced off."
+    compliance:
+      - cis: ["6.2.1"]
+      - cis_csc: ["4.4"]
+      - pci_dss: ["8.2"]
+    condition: none
+    rules:
+      - 'f:/etc/shadow -> !r:^# && r:^\w+::'
+
+
+# 6.2.2 Delete legacy entries in /etc/passwd (Scored)
+  - id: 5558 
+    title: "Ensure no legacy \"+\" entries exist in /etc/passwd"
+    description: "The character + in various files used to be markers for systems to insert data from NIS maps at a certain point in a system configuration file. These entries are no longer required on most systems, but may exist in files that have been imported from other platforms."
+    rationale: "These entries may provide an avenue for attackers to gain privileged access on the system."
+    remediation: "Remove any legacy '+' entries from /etc/passwd if they exist."
+    compliance:
+      - cis: ["6.2.2"]
+      - cis_csc: ["16.2"]
+      - pci_dss: ["2.2.3"]
+      - nist_800_53: ["CM.1"]
+      - gpg_13: ["4.3"]
+      - gdpr_IV: ["35.7.d"]
+      - hipaa: ["164.312.b"]
+    condition: none
+    rules:
+      - 'f:/etc/passwd -> !r:^# && r:^+:'
+
+  # 6.2.4 Delete legacy entries in /etc/shadow (Scored)
+  - id: 5559 
+    title: "Ensure no legacy \"+\" entries exist in /etc/shadow"
+    description: "The character + in various files used to be markers for systems to insert data from NIS maps at a certain point in a system configuration file. These entries are no longer required on most systems, but may exist in files that have been imported from other platforms."
+    rationale: "These entries may provide an avenue for attackers to gain privileged access on the system."
+    remediation: "Remove any legacy '+' entries from /etc/shadow if they exist."
+    compliance:
+      - cis: ["6.2.4"]
+      - cis_csc: ["16.2"]
+      - pci_dss: ["2.2.3"]
+      - nist_800_53: ["CM.1"]
+      - gpg_13: ["4.3"]
+      - gdpr_IV: ["35.7.d"]
+      - hipaa: ["164.312.b"]
+    condition: none
+    rules:
+      - 'f:/etc/shadow -> !r:^# && r:^+:'
+
+# 6.2.5 Delete legacy entries in /etc/group (Scored)
+  - id: 5560 
+    title: "Ensure no legacy \"+\" entries exist in /etc/group"
+    description: "The character + in various files used to be markers for systems to insert data from NIS maps at a certain point in a system configuration file. These entries are no longer required on most systems, but may exist in files that have been imported from other platforms."
+    rationale: "These entries may provide an avenue for attackers to gain privileged access on the system."
+    remediation: "Remove any legacy '+' entries from /etc/group if they exist."
+    compliance:
+      - cis: ["6.2.5"]
+      - cis_csc: ["16.2"]
+      - pci_dss: ["2.2.3"]
+      - nist_800_53: ["CM.1"]
+      - gpg_13: ["4.3"]
+      - gdpr_IV: ["35.7.d"]
+      - hipaa: ["164.312.b"]
+    condition: none
+    rules:
+      - 'f:/etc/group -> !r:^# && r:^+:'
+
+# 6.2.6 Verify No UID 0 Accounts Exist Other Than root (Scored)
+  - id: 5561 
+    title: "Ensure root is the only UID 0 account"
+    description: "Any account with UID 0 has superuser privileges on the system."
+    rationale: "This access must be limited to only the default root account and only from the system console. Administrative access must be through an unprivileged account using an approved mechanism as noted in Item 5.6 Ensure access to the su command is restricted."
+    remediation: "Remove any users other than root with UID 0 or assign them a new UID if appropriate."
+    compliance:
+      - cis: ["6.2.6"]
+      - cis_csc: ["5.1"]
+      - pci_dss: ["10.2.5"]
+      - hipaa: ["164.312.b"]
+      - nist_800_53: ["AU.14", "AC.7"]
+      - gpg_13: ["7.8"]
+      - gdpr_IV: ["35.7","32.2"]
+    condition: none
+    rules:
+      - 'f:/etc/passwd -> !r:^# && !r:^\s*\t*root: && r:^\w+:\w+:0:'
 
