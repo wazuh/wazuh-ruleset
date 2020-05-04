@@ -28,8 +28,30 @@ requirements:
     - 'r:HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion -> ProductName -> r:^Windows Server 2012 R2'
 
 checks:
-# Section 1.1 - Password Policies
-  - id: 11000
+###############################################
+# 1 Account Policy
+###############################################
+###############################################
+# 1.1 Password Policy
+###############################################
+
+# 1.1.1 Ensure 'Enforce password history' is set to '24 or more password(s)'
+  - id: 1000001
+    title: "Ensure 'Enforce password history' is set to '24 or more password(s)'"
+    description: "This policy setting determines the number of renewed, unique passwords that have to be associated with a user account before you can reuse an old password. The value for this policy setting must be between 0 and 24 passwords. The default value for Windows Vista is 0 passwords, but the default setting in a domain is 24 passwords. To maintain the effectiveness of this policy setting, use the Minimum password age setting to prevent users from repeatedly changing their password. The recommended state for this setting is: 24 or more password(s)."
+    rationale: "The longer a user uses the same password, the greater the chance that an attacker can determine the password through brute force attacks. Also, any accounts that may have been compromised will remain exploitable for as long as the password is left unchanged. If password changes are required but password reuse is not prevented, or if users continually reuse a small number of passwords, the effectiveness of a good password policy is greatly reduced. If you specify a low number for this policy setting, users will be able to use the same small number of passwords repeatedly. If you do not also configure the Minimum password age setting, users might repeatedly change their passwords until they can reuse their original password."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to 24 or more password(s): Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Account Policies\\Password Policy\\Enforce password history"
+    compliance:
+      - cis: ["1.1.1"]
+      - cis_csc: ["16.5"]
+    references:
+      - 'CCE-37166-6'
+    condition: all
+    rules:
+      #- 'r:Computer Configuration\Policies\Windows Settings\Security Settings\Account Policies\Password Policy -> Enforce password history -> n:^(\d+) compare >= 25'
+
+# 1.1.2 Ensure 'Maximum password age' is set to '60 or fewer days, but not 0'
+  - id: 1000002
     title: "Ensure 'Maximum password age' is set to '60 or fewer days, but not 0'"
     description: "This policy setting defines how long a user can use their password before it expires. Values for this policy setting range from 0 to 999 days. If you set the value to 0, the password will never expire. Because attackers can crack passwords, the more frequently you change the password the less opportunity an attacker has to use a cracked password. However, the lower this value is set, the higher the potential for an increase in calls to help desk support due to users having to change their password or forgetting which password is current. The recommended state for this setting is 60 or fewer days, but not 0."
     rationale: "The longer a password exists the higher the likelihood that it will be compromised by a brute force attack, by an attacker gaining general knowledge about the user, or by the user sharing the password. Configuring the Maximum password age setting to 0 so that users are never required to change their passwords is a major security risk because that allows a compromised password to be used by the malicious user for as long as the valid user is authorized access."
@@ -41,9 +63,144 @@ checks:
       - 'CCE-37167-4'
     condition: all
     rules:
-      - 'not r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\Netlogon\Parameters -> MaximumPasswordAge -> 0'
-      - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\Netlogon\Parameters -> MaximumPasswordAge -> n:^(\d+) compare <= 60'
+      #- 'not r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\Netlogon\Parameters -> MaximumPasswordAge -> 0'
+      #- 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\Netlogon\Parameters -> MaximumPasswordAge -> n:^(\d+) compare <= 60'
 
+# 1.1.3 Ensure 'Minimum password age' is set to '1 or more day(s)'
+  - id: 1000003
+    title: "Ensure 'Minimum password age' is set to '1 or more day(s)'"
+    description: "This policy setting determines the number of days that you must use a password before you can change it. The range of values for this policy setting is between 1 and 999 days. (You may also set the value to 0 to allow immediate password changes.) The default value for this setting is 0 days. The recommended state for this setting is: 1 or more day(s)."
+    rationale: "Users may have favorite passwords that they like to use because they are easy to remember and they believe that their password choice is secure from compromise. Unfortunately, passwords are compromised and if an attacker is targeting a specific individual user account, with foreknowledge of data about that user, reuse of old passwords can cause a security breach. To address password reuse a combination of security settings is required. Using this policy setting with the Enforce password history setting prevents the easy reuse of old passwords. For example, if you configure the Enforce password history setting to ensure that users cannot reuse any of their last 12 passwords, they could change their password 13 times in a few minutes and reuse the password they started with, unless you also configure the Minimum password age setting to a number that is greater than 0. You must configure this policy setting to a number that is greater than 0 for the Enforce password history setting to be effective."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to 1 or more day(s): Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Account Policies\\Password Policy\\Minimum password age"
+    compliance:
+      - cis: ["1.1.3"]
+      - cis_csc: ["16.5"]
+    references:
+      - 'CCE-37073-4'
+    condition: all
+    rules:
+      #- 'r:Computer Configuration\Policies\Windows Settings\Security Settings\Account Policies\Password Policy -> Minimum password age -> n:^(\d+) compare >= 1'
+
+# 1.1.4 Ensure 'Minimum password length' is set to '14 or more character(s)'
+  - id: 1000004
+    title: "Ensure 'Minimum password length' is set to '14 or more character(s)'"
+    description: "This policy setting determines the least number of characters that make up a password for a user account. There are many different theories about how to determine the best password length for an organization, but perhaps "pass phrase" is a better term than "password." In Microsoft Windows 2000 and newer, pass phrases can be quite long and can include spaces. Therefore, a phrase such as "I want to drink a $5 milkshake" is a valid pass phrase; it is a considerably stronger password than an 8 or 10 character string of random numbers and letters, and yet is easier to remember. Users must be educated about the proper selection and maintenance of passwords, especially with regard to password length. In enterprise environments, the ideal value for the Minimum password length setting is 14 characters, however you should adjust this value to meet your organization's business requirements. The recommended state for this setting is: 14 or more character(s)."
+    rationale: "Types of password attacks include dictionary attacks (which attempt to use common words and phrases) and brute force attacks (which try every possible combination of characters). Also, attackers sometimes try to obtain the account database so they can use tools to discover the accounts and passwords."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to 14 or more character(s): Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Account Policies\\Password Policy\\Minimum password length"
+    compliance:
+      - cis: ["1.1.4"]
+      - cis_csc: ["16.5","5.7","16.12"]
+    references:
+      - 'CCE-36534-6'
+    condition: all
+    rules:
+      #- 'r:Computer Configuration\Policies\Windows Settings\Security Settings\Account Policies\Password Policy -> Minimum password age -> n:^(\d+) compare >= 1'
+
+# 1.1.5 Ensure 'Password must meet complexity requirements' is set to 'Enabled'
+  - id: 1000005
+    title: "Ensure 'Password must meet complexity requirements' is set to 'Enabled'"
+    description: "This policy setting checks all new passwords to ensure that they meet basic requirements for strong passwords. When this policy is enabled, passwords must meet the following minimum requirements: Not contain the user's account name or parts of the user's full name that exceed two consecutive characters and Be at least six characters in length. It must also contain characters from three of the following four categories: English uppercase characters (A through Z) English lowercase characters (a through z) Base 10 digits (0 through 9) Non-alphabetic characters (for example, !, $, #, %) A catch-all category of any Unicode character that does not fall under the previous four categories. This fifth category can be regionally specific. Each additional character in a password increases its complexity exponentially. For instance, a seven-character, all lower-case alphabetic password would have 267 (approximately 8 x 109 or 8 billion) possible combinations. At 1,000,000 attempts per second (a capability of many password-cracking utilities), it would only take 133 minutes to crack. A seven-character alphabetic password with case sensitivity has 527 combinations. A seven-character case-sensitive alphanumeric password without punctuation has 627 combinations. An eight-character password has 268 (or 2 x 1011) possible combinations. Although this might seem to be a large number, at 1,000,000 attempts per second it would take only 59 hours to try all possible passwords. Remember, these times will significantly increase for passwords that use ALT characters and other special keyboard characters such as "!" or "@". Proper use of the password settings can help make it difficult to mount a brute force attack. The recommended state for this setting is: Enabled."
+    rationale: "Passwords that contain only alphanumeric characters are extremely easy to discover with several publicly available tools."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Account Policies\\Password Policy\\Password must meet complexity requirements"
+    compliance:
+      - cis: ["1.1.5"]
+      - cis_csc: ["16.5"]
+    references:
+      - 'CCE-37063-5'
+    condition: all
+    rules:
+      #- 'r:Computer Configuration\Policies\Windows Settings\Security Settings\Account Policies\Password Policy -> Password must meet complexity requirements -> Enabled'
+
+# 1.1.6 Ensure 'Store passwords using reversible encryption' is set to 'Disabled'
+  - id: 1000006
+    title: "Ensure 'Store passwords using reversible encryption' is set to 'Disabled'"
+    description: "This policy setting determines whether the operating system stores passwords in a way that uses reversible encryption, which provides support for application protocols that require knowledge of the user's password for authentication purposes. Passwords that are stored with reversible encryption are essentially the same as plaintext versions of the passwords. The recommended state for this setting is: Disabled ."
+    rationale: "Enabling this policy setting allows the operating system to store passwords in a weaker format that is much more susceptible to compromise and weakens your system security."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Account Policies\\Password Policy\\Store passwords using reversible encryption"
+    compliance:
+      - cis: ["1.1.6"]
+      - cis_csc: ["16.5","16.14"]
+    references:
+      - 'CCE-36286-3'
+    condition: all
+    rules:
+      #- 'r:Computer Configuration\Policies\Windows Settings\Security Settings\Account Policies\Password Policy -> Store passwords using reversible encryption -> Disabled'
+
+###############################################
+# 1.2 Account Lockout Policy
+###############################################
+
+# 1.2.1 Ensure 'Account lockout duration' is set to '15 or more minute(s)'
+  - id: 1000007
+    title: "Ensure 'Account lockout duration' is set to '15 or more minute(s)'"
+    description: "This policy setting determines the length of time that must pass before a locked account is unlocked and a user can try to log on again. The setting does this by specifying the number  of minutes a locked out account will remain unavailable. If the value for this policy settingis configured to 0, locked out accounts will remain locked out until an administrator manually unlocks them. Although it might seem like a good idea to configure the value for this policy setting to a high value, such a configuration will likely increase the number of calls that the help desk receives to unlock accounts locked by mistake. Users should be aware of the length of time a lock remains in place, so that they realize they only need to call the help desk if they have an extremely urgent need to regain access to their computer.The recommended state for this setting is: 15 or more minute(s)."
+    rationale: "A denial of service (DoS) condition can be created if an attacker abuses the Account lockout threshold and repeatedly attempts to log on with a specific account. Once you configure the Account lockout threshold setting, the account will be locked out after the specified number of failed attempts. If you configure the Account lockout duration setting to 0, then the account will remain locked out until an administrator unlocks it manually."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to 15 or more minute(s): Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Account Policies\\Account Lockout Policy\\Account lockout duration"
+    compliance:
+      - cis: ["1.2.1"]
+      - cis_csc: ["16","16.7"]
+    references:
+      - 'CCE-36286-3'
+    condition: all
+    rules:
+      #- 'r:Computer Configuration\Policies\Windows Settings\Security Settings\Account Policies\Account Lockout Policy -> Account lockout duration -> n:^(\d+) compare >= 15'
+
+# 1.2.2 Ensure 'Account lockout threshold' is set to '10 or fewer invalid logon attempt(s), but not 0'
+  - id: 1000008
+    title: "Ensure 'Account lockout threshold' is set to '10 or fewer invalid logon attempt(s), but not 0'"
+    description: "This policy setting determines the number of failed logon attempts before the account is locked. Setting this policy to 0 does not conform to the benchmark as doing so disables the account lockout threshold. The recommended state for this setting is: 10 or fewer invalid logon attempt(s), but not 0 ."
+    rationale: "Setting an account lockout threshold reduces the likelihood that an online password brute force attack will be successful. Setting the account lockout threshold too low introduces risk of increased accidental lockouts and/or a malicious actor intentionally locking out accounts."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to 10 or fewer invalid login attempt(s), but not 0: Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Account Policies\\Account Lockout Policy\\Account lockout threshold"
+    compliance:
+      - cis: ["1.2.2"]
+      - cis_csc: ["16","16.7"]
+    references:
+      - 'CCE-36008-1'
+    condition: all
+    rules:
+      #- 'not r:Computer Configuration\Policies\Windows Settings\Security Settings\Account Policies\Account Lockout Policy -> Account lockout threshold -> n:^(\d+) compare == 0'
+      #- 'r:Computer Configuration\Policies\Windows Settings\Security Settings\Account Policies\Account Lockout Policy -> Account lockout threshold -> n:^(\d+) compare <= 10'
+
+# 1.2.3 Ensure 'Reset account lockout counter after' is set to '15 or more minute(s)'
+  - id: 1000009
+    title: "Ensure 'Reset account lockout counter after' is set to '15 or more minute(s)'"
+    description: "This policy setting determines the length of time before the Account lockout threshold resets to zero. The default value for this policy setting is Not Defined. If the Account lockout threshold is defined, this reset time must be less than or equal to the value for the Account lockout duration setting. If you leave this policy setting at its default value or configure the value to an interval that is too long, your environment could be vulnerable to a DoS attack. An attacker could maliciously perform a number of failed logon attempts on all users in the organization, which will lock out their accounts. If no policy were determined to reset the account lockout, it would be a manual task for administrators. Conversely, if a reasonable time value is configured for this policy setting, users would be locked out for a set period until all of the accounts are unlocked automatically. The recommended state for this setting is: 15 or more minute(s) ."
+    rationale: "Users can accidentally lock themselves out of their accounts if they mistype their password multiple times. To reduce the chance of such accidental lockouts, the Reset account lockout counter after setting determines the number of minutes that must elapse before the counter that tracks failed logon attempts and triggers lockouts is reset to 0."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to 15 or more minutes: Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Account Policies\\Account Lockout Policy\\Reset account lockout counter after"
+    compliance:
+      - cis: ["1.2.3"]
+      - cis_csc: ["16","16.7"]
+    references:
+      - 'CCE-36286-3'
+    condition: all
+    rules:
+      #- 'r:Computer Configuration\Policies\Windows Settings\Security Settings\Account Policies\Account Lockout Policy -> Reset account lockout counter after -> n:^(\d+) compare >= 15'
+
+###############################################
+# 2 Local Policies
+###############################################
+###############################################
+# 2.1 Audit Policy
+###############################################
+
+#This section is intentionally blank and exists to ensure the structure of Windows benchmarks is consistent.
+
+###############################################
+# 2.2 User Rights Assignment
+###############################################
+  - id: 100000
+    title: "Ensure 'Access Credential Manager as a trusted caller' is set to 'No One'"
+    description: "This security setting is used by Credential Manager during Backup and Restore. No accounts should have this user right, as it is only assigned to Winlogon. Users' saved credentials might be compromised if this user right is assigned to other entities. The recommended state for this setting is: No One."
+    rationale: "If an account is given this right the user of the account may create an application that calls into Credential Manager and is returned the credentials for another user."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to No One : Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Local Policies\\User Rights Assignment\\Access Credential Manager as a trusted caller"
+    compliance:
+      - cis: ["2.2.1"]
+      - cis_csc: ["5.1"]
+    references:
+      - 'CCE-36147-7'
+    condition: all
+    rules:
+      - 'r:HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System -> NoConnectedUser -> 3'
 # Section 2.3 - Security Options
   - id: 11001
     title: "Ensure 'Accounts: Block Microsoft accounts' is set to 'Users can't add or log on with Microsoft accounts'"
