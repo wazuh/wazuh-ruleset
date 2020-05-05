@@ -33,15 +33,49 @@ checks:
 ###############################################
 # 1 Account Policies
 ###############################################
+###############################################
+# 1.1 Pasword Policy
+###############################################
 
+# 1.1.2 Maximum password age (Scored)
+  - id: 16000
+    title: "Ensure 'Maximum password age' is set to '60 or fewer days, but not 0'"
+    description: "This policy setting defines how long a user can use their password before it expires. Values for this policy setting range from 0 to 999 days. If you set the value to 0, the password will never expire. Because attackers can crack passwords, the more frequently you change the password the less opportunity an attacker has to use a cracked password. However, the lower this value is set, the higher the potential for an increase in calls to help desk support due to users having to change their password or forgetting which password is current. The recommended state for this setting is 60 or fewer days, but not 0."
+    rationale: "The longer a password exists the higher the likelihood that it will be compromised by a brute force attack, by an attacker gaining general knowledge about the user, or by the user sharing the password. Configuring the Maximum password age setting to 0 so that users are never required to change their passwords is a major security risk because that allows a compromised password to be used by the malicious user for as long as the valid user is authorized access."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to 60 or fewer days, but not 0: Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Account Policies\\Password Policy\\Maximum password age."
+    compliance:
+      - cis: ["1.1.2"]
+      - cis_csc: ["16.5"]
+    references:
+      - 'CCE-37167-4'
+    condition: all
+    rules:
+      - 'not r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\Netlogon\Parameters -> MaximumPasswordAge -> 0'
+      - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\Netlogon\Parameters -> MaximumPasswordAge -> n:^(\d+) compare <= 60'
 
 
 
 ###############################################
 # 2 Local Policies
 ###############################################
+###############################################
+# 2.3 Security Options
+###############################################
 
-
+# 2.3.1.2 Accounts: Block Microsoft accounts (Scored)
+  - id: 12001
+    title: "Ensure 'Accounts: Block Microsoft accounts' is set to 'Users can't add or log on with Microsoft accounts"
+    description: "This policy setting prevents users from adding new Microsoft accounts on this computer. The recommended state for this setting is: Users can't add or log on with Microsoft accounts."
+    rationale: "Organizations that want to effectively implement identity management policies and maintain firm control of what accounts are used to log onto their computers will probably want to block Microsoft accounts. Organizations may also need to block Microsoft accounts in order to meet the requirements of compliance standards that apply to their information systems."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to Users can't add or log on with Microsoft accounts : Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Local Policies\\Security Options\\Accounts: Block Microsoft accounts."
+    compliance:
+      - cis: ["2.3.1.2"]
+      - cis_csc: ["16"]
+    references:
+      - 'CCE-36147-7'
+    condition: all
+    rules:
+      - 'r:HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System -> NoConnectedUser -> 3'
 
 
 ###############################################
