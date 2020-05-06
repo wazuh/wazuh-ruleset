@@ -81,4 +81,15 @@
     <description>Multiple Eventlog warning events</description>
     <options>no_full_log</options>
   </rule>
+
+  <rule id="63108" level="7">
+    <if_sid>63100</if_sid>
+    <field name="win.system.eventID">^6006$</field>
+    <description>The Event log service was stopped.</description>
+    <mitre>
+      <id>T1529</id>
+    </mitre>
+    <options>no_full_log</options>
+  </rule>
+
 </group>
