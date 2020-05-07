@@ -227,10 +227,10 @@ checks:
       - 'CCE-38258-0'
     condition: all
     rules:
-      - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters -> NullSessionPipes -> r:\S*'
+      - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters -> NullSessionPipes -> r:LSARPC && r:NETLOGON && r:SAMR'
 
 # 2.3.10.7 Configure 'Network access: Named Pipes that can be accessed anonymously' (Member Server)
-  - id: 12029
+  - id: 212029
     title: "Configure 'Network access: Named Pipes that can be accessed anonymously'"
     description: "This policy setting determines which communication sessions, or pipes, will have attributes and permissions that allow anonymous access. The recommended state for this setting is: <blank> (i.e. None), or (when the legacy Computer Browser service is enabled) BROWSER. Note: A Member Server that holds the Remote Desktop Services Role with Remote Desktop Licensing Role Service will require a special exception to this recommendation, to allow the HydraLSPipe and TermServLicensing Named Pipes to be accessed anonymously."
     rationale: "Limiting named pipes that can be accessed anonymously will reduce the attack surface of the system."
@@ -242,7 +242,7 @@ checks:
       - 'CCE-38258-0'
     condition: all
     rules:
-      - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters -> NullSessionPipes -> r:\S*'
+      - 'not r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters -> NullSessionPipes -> r:\s*\S+'
 
 # 2.3.10.8 Configure 'Network access: Remotely accessible registry paths'
   - id: 12030
@@ -290,7 +290,7 @@ checks:
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters -> RestrictNullSessAccess -> 1'
 
 # 2.3.10.11 Ensure 'Network access: Restrict clients allowed to make remote calls to SAM' is set to 'Administrators: Remote Access: Allow' (MS only)
-  - id: 12032
+  - id: 212032
     title: "Ensure 'Network access: Restrict clients allowed to make remote calls to SAM' is set to 'Administrators: Remote Access: Allow'"
     description: "This policy setting allows you to restrict remote RPC connections to SAM. The recommended state for this setting is: Administrators: Remote Access: Allow . Note: A Windows 10 R1607, Server 2016 or newer OS is required to access and set this value in Group Policy."
     rationale: "To ensure that an unauthorized user cannot anonymously list local account names or groups and use the information to attempt to guess passwords or perform social engineering attacks. (Social engineering attacks try to deceive users in some way to obtain passwords or some form of security information.)"
@@ -300,7 +300,7 @@ checks:
       - cis_csc: ["5.1", "9.1"]
     condition: all
     rules:
-      - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Lsa -> restrictremotesam -> 1'
+      - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Lsa -> restrictremotesam -> O:BAG:BAD:(A;;RC;;;BA)'
 
 # 2.3.10.12 Ensure 'Network access: Shares that can be accessed anonymously' is set to 'None'
   - id: 12033
@@ -450,7 +450,7 @@ checks:
       - 'CCE-36858-9'
     condition: all
     rules:
-      - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\LDAP -> LDAPClientIntegrity -> n:(/d+) compare >= 1'
+      - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\LDAP -> LDAPClientIntegrity -> n:(\d+) compare >= 1'
 
 # 2.3.11.9 Ensure 'Network security: Minimum session security for NTLM SSP based (including secure RPC) clients' is set to 'Require NTLMv2 session security, Require 128-bit encryption'
   - id: 12043
@@ -600,7 +600,7 @@ checks:
       - 'CCE-36533-8'
     condition: all
     rules:
-      - 'r:HKEY_LOCAL_MACHINE\MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System -> EnableInstallerDetection -> 1'
+      - 'r:HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System -> EnableInstallerDetection -> 1'
 
 # 2.3.17.6 Ensure 'User Account Control: Only elevate UIAccess applications that are installed in secure locations' is set to 'Enabled'
   - id: 12053
