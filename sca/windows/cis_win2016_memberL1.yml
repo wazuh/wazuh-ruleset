@@ -71,6 +71,7 @@ checks:
     compliance:
       - cis: ["2.3.1.2"]
       - cis_csc: ["16"]
+      - pci_dss: ["8.1"]
     references:
       - 'CCE-36147-7'
     condition: all
@@ -87,6 +88,7 @@ checks:
     compliance:
       - cis: ["2.3.1.4"]
       - cis_csc: ["16"]
+      - pci_dss: ["8.2"]
     references:
       - 'CCE-37615-2'
     condition: all
@@ -117,6 +119,7 @@ checks:
     compliance:
       - cis: ["2.3.2.2"]
       - cis_csc: ["6"]
+      - pci_dss: ["10.7"]
     references:
       - 'CCE-35907-5'
     condition: all
@@ -133,6 +136,7 @@ checks:
     compliance:
       - cis: ["2.3.4.1"]
       - cis_csc: ["5.1"]
+      - pci_dss: ["7.2"]
     references:
       - 'CCE-37701-0'
     condition: all
@@ -149,6 +153,7 @@ checks:
     compliance:
       - cis: ["2.3.4.2"]
       - cis_csc: ["5.1"]
+      - pci_dss: ["6"]
     references:
       - 'CCE-37942-0'
     condition: all
@@ -165,6 +170,7 @@ checks:
     compliance:
       - cis: ["2.3.6.1"]
       - cis_csc: ["13"]
+      - pci_dss: ["4.1"]
     references:
       - 'CCE-36142-8'
     condition: all
@@ -180,6 +186,7 @@ checks:
     compliance:
       - cis: ["2.3.6.2"]
       - cis_csc: ["13"]
+      - pci_dss: ["4.1"]
     references:
       - 'CCE-37130-2'
     condition: all
@@ -195,6 +202,7 @@ checks:
     compliance:
       - cis: ["2.3.6.3"]
       - cis_csc: ["13"]
+      - pci_dss: ["4.1"]
     references:
       - 'CCE-37222-7'
     condition: all
@@ -210,6 +218,7 @@ checks:
     compliance:
       - cis: ["2.3.6.4"]
       - cis_csc: ["16"]
+      - pci_dss: ["8.2.4"]
     references:
       - 'CCE-37508-9'
     condition: all
@@ -225,6 +234,7 @@ checks:
     compliance:
       - cis: ["2.3.6.6"]
       - cis_csc: ["13"]
+      - pci_dss: ["4.1"]
     references:
       - 'CCE-37614-5'
     condition: all
@@ -271,6 +281,7 @@ checks:
     compliance:
       - cis: ["2.3.7.3"]
       - cis_csc: ["16.5"]
+      - pci_dss: ["8.1.8"]
     references:
       - 'CCE-38235-8'
     condition: all
@@ -287,6 +298,7 @@ checks:
     compliance:
       - cis: ["2.3.7.7"]
       - cis_csc: ["16"]
+      - pci_dss: ["8.2.4"]
     references:
       - 'CCE-37622-8'
     condition: all
@@ -302,6 +314,7 @@ checks:
     compliance:
       - cis: ["2.3.7.8"]
       - cis_csc: ["16.9"]
+      - pci_dss: ["8"]
     references:
       - 'CCE-38240-8'
     condition: all
@@ -318,6 +331,7 @@ checks:
     compliance:
       - cis: ["2.3.7.9"]
       - cis_csc: ["16.5"]
+      - pci_dss: ["8.6"]
     references:
       - 'CCE-38333-1'
     condition: all
@@ -334,6 +348,7 @@ checks:
     compliance:
       - cis: ["2.3.8.1"]
       - cis_csc: ["13"]
+      - pci_dss: ["4.1"]
     references:
       - 'CCE-36325-9'
     condition: all
@@ -349,6 +364,7 @@ checks:
     compliance:
       - cis: ["2.3.8.2"]
       - cis_csc: ["13"]
+      - pci_dss: ["4.1"]
     references:
       - 'CCE-36269-9'
     condition: all
@@ -364,6 +380,7 @@ checks:
     compliance:
       - cis: ["2.3.8.3"]
       - cis_csc: ["13"]
+      - pci_dss: ["4.1"]
     references:
       - 'CCE-37863-8'
     condition: all
@@ -379,6 +396,7 @@ checks:
     compliance:
       - cis: ["2.3.9.1"]
       - cis_csc: ["3"]
+      - pci_dss: ["8.1.8"]
     references:
       - 'CCE-38046-9'
     condition: all
@@ -395,6 +413,7 @@ checks:
     compliance:
       - cis: ["2.3.9.2"]
       - cis_csc: ["13"]
+      - pci_dss: ["4.1"]
     references:
       - 'CCE-37864-6'
     condition: all
@@ -410,6 +429,7 @@ checks:
     compliance:
       - cis: ["2.3.9.3"]
       - cis_csc: ["13"]
+      - pci_dss: ["4.1"]
     references:
       - 'CCE-35988-5'
     condition: all
@@ -425,6 +445,7 @@ checks:
     compliance:
       - cis: ["2.3.9.4"]
       - cis_csc: ["16"]
+      - pci_dss: ["7.1"]
     references:
       - 'CCE-37972-7'
     condition: all
@@ -440,6 +461,7 @@ checks:
     compliance:
       - cis: ["2.3.9.5"]
       - cis_csc: ["14"]
+      - pci_dss: ["7.1"]
     references:
       - https://support.microsoft.com/en-us/help/3161561/ms16-075-and-ms16-076-description-of-the-security-update-for-windows-n
       - 'CCE-36170-9'
@@ -447,7 +469,7 @@ checks:
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanManServer\Parameters -> SMBServerNameHardeningLevel -> n:^(\d+) compare >= 1'
 
-# 2.3.9.6 Ensure 'Network access: Do not allow anonymous enumeration of SAM accounts' is set to 'Enabled'
+# 2.3.10.2 Ensure 'Network access: Do not allow anonymous enumeration of SAM accounts' is set to 'Enabled'
   - id: 12026
     title: "Ensure 'Network access: Do not allow anonymous enumeration of SAM accounts' is set to 'Enabled'"
     description: "This policy setting controls the ability of anonymous users to enumerate the accounts in the Security Accounts Manager (SAM). If you enable this policy setting, users with anonymous connections will not be able to enumerate domain account user names on the systems in your environment. This policy setting also allows additional restrictions on anonymous connections. The recommended state for this setting is: Enabled. Note: This policy has no effect on Domain Controllers."
@@ -471,6 +493,7 @@ checks:
     compliance:
       - cis: ["2.3.10.3"]
       - cis_csc: ["16"]
+      - pci_dss: ["7.1"]
     references:
       - 'CCE-36316-8'
     condition: all
@@ -486,6 +509,7 @@ checks:
     compliance:
       - cis: ["2.3.10.5"]
       - cis_csc: ["14", "16"]
+      - pci_dss: ["7.1"]
     references:
       - 'CCE-36148-5'
     condition: all
@@ -501,6 +525,7 @@ checks:
     compliance:
       - cis: ["2.3.10.7"]
       - cis_csc: ["14.1", "16"]
+      - pci_dss: ["7.1"]
     references:
       - 'CCE-38258-0'
     condition: all
@@ -516,6 +541,7 @@ checks:
     compliance:
       - cis: ["2.3.10.8"]
       - cis_csc: ["14", "16"]
+      - pci_dss: ["7.1"]
     references:
       - 'CCE-37194-8'
     condition: all
@@ -546,6 +572,7 @@ checks:
     compliance:
       - cis: ["2.3.10.10"]
       - cis_csc: ["14", "16"]
+      - pci_dss: ["7.1"]
     references:
       - 'CCE-36021-4'
     condition: all
@@ -561,6 +588,7 @@ checks:
     compliance:
       - cis: ["2.3.10.11"]
       - cis_csc: ["5.1", "9.1"]
+      - pci_dss: ["7.1"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Lsa -> restrictremotesam -> O:BAG:BAD:(A;;RC;;;BA)'
@@ -574,6 +602,7 @@ checks:
     compliance:
       - cis: ["2.3.10.12"]
       - cis_csc: ["14", "16"]
+      - pci_dss: ["7.1"]
     references:
       - 'CCE-38095-6'
     condition: all
@@ -589,6 +618,7 @@ checks:
     compliance:
       - cis: ["2.3.10.13"]
       - cis_csc: ["14", "16"]
+      - pci_dss: ["7.1.3"]
     references:
       - 'CCE-37623-6'
     condition: all
@@ -604,6 +634,7 @@ checks:
     compliance:
       - cis: ["2.3.11.1"]
       - cis_csc: ["14", "16"]
+      - pci_dss: ["4.1"]
     references:
       - 'CCE-38341-4'
     condition: all
@@ -619,6 +650,7 @@ checks:
     compliance:
       - cis: ["2.3.11.2"]
       - cis_csc: ["14"]
+      - pci_dss: ["4.1"]
     references:
       - 'CCE-37035-3'
     condition: all
@@ -634,6 +666,7 @@ checks:
     compliance:
       - cis: ["2.3.11.3"]
       - cis_csc: ["16.9"]
+      - pci_dss: ["4.1"]
     references:
       - 'CCE-38047-7'
     condition: all
@@ -649,6 +682,7 @@ checks:
     compliance:
       - cis: ["2.3.11.4"]
       - cis_csc: ["16.14"]
+      - pci_dss: ["4.1"]
     references:
       - 'CCE-37755-6'
     condition: all
@@ -664,6 +698,7 @@ checks:
     compliance:
       - cis: ["2.3.11.5"]
       - cis_csc: ["16.14"]
+      - pci_dss: ["8.2.1"]
     references:
       - 'CCE-36326-7'
     condition: all
@@ -679,6 +714,7 @@ checks:
     compliance:
       - cis: ["2.3.11.6"]
       - cis_csc: ["16"]
+      - pci_dss: ["7.1"]
     references:
       - 'CCE-36270-7'
     condition: all
@@ -694,6 +730,7 @@ checks:
     compliance:
       - cis: ["2.3.11.7"]
       - cis_csc: ["13"]
+      - pci_dss: ["4.1"]
     references:
       - 'CCE-36173-3'
     condition: all
@@ -709,6 +746,7 @@ checks:
     compliance:
       - cis: ["2.3.11.8"]
       - cis_csc: ["13"]
+      - pci_dss: ["4.1"]
     references:
       - 'CCE-36858-9'
     condition: all
@@ -724,6 +762,7 @@ checks:
     compliance:
       - cis: ["2.3.11.9"]
       - cis_csc: ["13"]
+      - pci_dss: ["4.1"]
     references:
       - 'CCE-37553-5'
     condition: all
@@ -739,6 +778,7 @@ checks:
     compliance:
       - cis: ["2.3.11.10"]
       - cis_csc: ["13"]
+      - pci_dss: ["4.1"]
     references:
       - https://workbench.cisecurity.org/benchmarks/288
       - 'CCE-37835-6'
@@ -784,6 +824,7 @@ checks:
     compliance:
       - cis: ["2.3.15.2"]
       - cis_csc: ["14.4"]
+      - pci_dss: ["7.1"]
     references:
       - 'CCE-37644-2'
     condition: all
@@ -799,6 +840,7 @@ checks:
     compliance:
       - cis: ["2.3.17.1"]
       - cis_csc: ["5.1"]
+      - pci_dss: ["7.1"]
     references:
       - 'CCE-36494-3'
     condition: all
@@ -814,6 +856,7 @@ checks:
     compliance:
       - cis: ["2.3.17.2"]
       - cis_csc: ["16"]
+      - pci_dss: ["7.1"]
     references:
       - 'CCE-36863-9'
     condition: all
@@ -844,13 +887,14 @@ checks:
     compliance:
       - cis: ["2.3.17.4"]
       - cis_csc: ["5.1"]
+      - pci_dss: ["7.1.2"]
     references:
       - 'CCE-36864-7'
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System -> ConsentPromptBehaviorUser -> 0'
 
-# 2.3.17.5 Some malicious software will attempt to install itself after being given permission to run. For example, malicious software with a trusted application shell. The user may have given permission for the program to run because the program is trusted, but if they are then prompted for installation of an unknown component this provides another way of trapping the software before it can do damage.
+# 2.3.17.5 Ensure 'User Account Control: Detect application installations and prompt for elevation' is set to 'Enabled'
   - id: 12052
     title: "Ensure 'User Account Control: Detect application installations and prompt for elevation' is set to 'Enabled'"
     description: "This policy setting controls the behavior of application installation detection for the computer. The recommended state for this setting is: Enabled."
@@ -874,6 +918,7 @@ checks:
     compliance:
       - cis: ["2.3.17.6"]
       - cis_csc: ["5.1"]
+      - pci_dss: ["2.2.4"]
     references:
       - 'CCE-37057-7'
     condition: all
@@ -889,6 +934,7 @@ checks:
     compliance:
       - cis: ["2.3.17.7"]
       - cis_csc: ["5.1"]
+      - pci_dss: ["7.1"]
     references:
       - 'CCE-36869-6'
     condition: all
@@ -904,6 +950,7 @@ checks:
     compliance:
       - cis: ["2.3.17.8"]
       - cis_csc: ["5.1"]
+      - pci_dss: ["2.2.4"]
     references:
       - 'CCE-36866-2'
     condition: all
