@@ -89,6 +89,7 @@ checks:
     compliance:
       - cis: ["18.1.3"]
       - cis_csc: ["9.1"]
+      - pci_dss: ["1.3.4"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer -> AllowOnlineTips -> 0'
@@ -120,6 +121,7 @@ checks:
     compliance:
       - cis: ["18.4.7"]
       - cis_csc: ["9"]
+      - pci_dss: ["1.3.3"]
     references:
       - 'CCE-38065-9'
     condition: all
@@ -137,6 +139,7 @@ checks:
       - cis_csc: ["9"]
     references:
       - 'CCE-37846-3'
+      - 'https://blogs.technet.microsoft.com/secguide/2016/10/02/the-mss-settings/'
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP6\Parameters -> TcpMaxDataRetransmissions -> 3'
@@ -616,5 +619,3 @@ checks:
 ###############################################
 # 19 Administrative Templates (User)
 ###############################################
-
-
