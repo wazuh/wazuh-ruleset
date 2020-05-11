@@ -106,6 +106,7 @@ checks:
     compliance:
       - cis: ["18.4.5"]
       - cis_csc: ["9"]
+      - nist_800_53: ["SC.5"]
     references:
       - 'CCE-36868-8'
     condition: all
@@ -137,6 +138,7 @@ checks:
     compliance:
       - cis: ["18.4.10"]
       - cis_csc: ["9"]
+      - nist_800_53: ["SC.5"]
     references:
       - 'CCE-37846-3'
       - 'https://blogs.technet.microsoft.com/secguide/2016/10/02/the-mss-settings/'
@@ -153,6 +155,7 @@ checks:
     compliance:
       - cis: ["18.4.11"]
       - cis_csc: ["9"]
+      - nist_800_53: ["SC.5"]
     references:
       - 'CCE-36051-1'
     condition: all
@@ -467,6 +470,8 @@ checks:
       - cis: ["18.8.25.1"]
       - cis_csc: ["1.6"]
       - pci_dss: ["4.1"]
+      - hipaa: ["164.312.a.2.IV", "164.312.e.1", "164.312.e.2.I", "164.312.e.2.II"]
+      - nist_800_53: ["SC.8"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\kerberos\parameters -> DevicePKInitBehavior -> 0'
@@ -507,7 +512,7 @@ checks:
     compliance:
       - cis: ["18.8.33.6.1"]
       - cis_csc: ["9"]
-      - pci_dss: ["2.2.5"]
+      - pci_dss: ["2.2.4"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Power\PowerSettings\f15576e8-98b7-4186-b944-eafa664402d9 -> DCSettingIndex -> 0'
@@ -521,7 +526,7 @@ checks:
     compliance:
       - cis: ["18.8.33.6.2"]
       - cis_csc: ["9"]
-      - pci_dss: ["2.2.5"]
+      - pci_dss: ["2.2.4"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Power\PowerSettings\f15576e8-98b7-4186-b944-eafa664402d9 -> ACSettingIndex -> 0'
@@ -539,6 +544,10 @@ checks:
       - cis: ["18.8.36.2"]
       - cis_csc: ["9.1"]
       - pci_dss: ["2.2.3"]
+      - nist_800_53: ["CM.1"]
+      - gpg_13: ["4.3"]
+      - gdpr_IV: ["35.7.d"]
+      - hipaa: ["164.312.b"]
     references:
       - 'CCE-36559-3'
     condition: all
@@ -607,6 +616,7 @@ checks:
       - cis: ["18.8.49.1.1"]
       - cis_csc: ["6.1"]
       - pci_dss: ["10.4"]
+      - nist_800_53: ["AU.8"]
     references:
       - 'CCE-37843-0'
     condition: all
@@ -623,6 +633,7 @@ checks:
       - cis: ["18.8.49.1.2"]
       - cis_csc: ["9.1"]
       - pci_dss: ["2.2.5"]
+      - nist_800_53: ["AU.8"]
     references:
       - 'CCE-37319-1'
     condition: all
