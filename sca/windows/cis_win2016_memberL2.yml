@@ -620,6 +620,9 @@ checks:
     compliance:
       - cis: ["18.9.4.1"]
       - cis_csc: ["14.4"]
+      - pci_dss: ["4.1"]
+      - hipaa: ["164.312.a.2.IV", "164.312.e.1", "164.312.e.2.I", "164.312.e.2.II"]
+      - nist_800_53: ["SC.8"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\CurrentVersion\AppModel\StateManager -> AllowSharedLocalAppData -> 0'
@@ -633,6 +636,7 @@ checks:
     compliance:
       - cis: ["18.9.12.1"]
       - cis_csc: ["13"]
+      - pci_dss: ["2.2.5"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Camera -> AllowCamera -> 0'
@@ -646,6 +650,9 @@ checks:
     compliance:
       - cis: ["18.9.16.2"]
       - cis_csc: ["13"]
+      - pci_dss: ["4.1"]
+      - hipaa: ["164.312.a.2.IV", "164.312.e.1", "164.312.e.2.I", "164.312.e.2.II"]
+      - nist_800_53: ["SC.8"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\DataCollection -> DisableEnterpriseAuthProxy -> 1'
@@ -658,6 +665,7 @@ checks:
     compliance:
       - cis: ["18.9.39.2"]
       - cis_csc: ["13"]
+      - pci_dss: ["2.2.5"]
     references:
       - 'CCE-36886-0'
     condition: all
@@ -673,6 +681,9 @@ checks:
     compliance:
       - cis: ["18.9.43.1"]
       - cis_csc: ["9.1", "13"]
+      - pci_dss: ["4.1"]
+      - hipaa: ["164.312.a.2.IV", "164.312.e.1", "164.312.e.2.I", "164.312.e.2.II"]
+      - nist_800_53: ["SC.8"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Messaging -> AllowMessageSync -> 0'
@@ -685,6 +696,7 @@ checks:
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Remote Desktop Services\\Remote Desktop Session Host\\Connections\\Restrict Remote Desktop Services users to a single Remote Desktop Services session."
     compliance:
       - cis: ["18.9.58.3.2.1"]
+      - pci_dss: ["7.2"]
     references:
       - 'CCE-37708-5'
     condition: all
@@ -700,6 +712,7 @@ checks:
     compliance:
       - cis: ["18.9.58.3.3.1"]
       - cis_csc: ["9.1"]
+      - pci_dss: ["2.2.5"]
     references:
       - 'CCE-37696-2'
     condition: all
@@ -714,6 +727,7 @@ checks:
     compliance:
       - cis: ["18.9.58.3.3.3"]
       - cis_csc: ["9.1"]
+      - pci_dss: ["2.2.5"]
     references:
       - 'CCE-37778-8'
     condition: all
@@ -728,6 +742,7 @@ checks:
     compliance:
       - cis: ["18.9.58.3.3.4"]
       - cis_csc: ["9.1"]
+      - pci_dss: ["2.2.5"]
     references:
       - 'CCE-37477-7'
     condition: all
@@ -743,6 +758,7 @@ checks:
     compliance:
       - cis: ["18.9.58.3.10.1"]
       - cis_csc: ["16.5"]
+      - pci_dss: ["8.1.8"]
     references:
       - 'CCE-37562-6'
     condition: all
@@ -757,6 +773,7 @@ checks:
     compliance:
       - cis: ["18.9.58.3.10.2"]
       - cis_csc: ["16.5"]
+      - pci_dss: ["8.1"]
     references:
       - 'CCE-37949-5'
     condition: all
@@ -776,6 +793,7 @@ checks:
     compliance:
       - cis: ["18.9.60.2"]
       - cis_csc: ["9.1"]
+      - pci_dss: ["2.2.5"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Windows Search -> AllowCloudSearch -> 0'
@@ -789,6 +807,7 @@ checks:
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Software Protection Platform\\Turn off KMS Client Online AVS Validation."
     compliance:
       - cis: ["18.9.65.1"]
+      - pci_dss: ["2.2.5"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\CurrentVersion\Software Protection Platform -> NoGenTicket -> 1'
@@ -801,6 +820,7 @@ checks:
     remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Windows Defender Antivirus\\MAPS\\Join Microsoft MAPS."
     compliance:
       - cis: ["18.9.76.3.2"]
+      - pci_dss: ["2.2.5"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\Spynet -> SpynetReporting -> 0'
@@ -814,6 +834,7 @@ checks:
     compliance:
       - cis: ["18.9.76.9.1"]
       - cis_csc: ["13"]
+      - pci_dss: ["2.2.5"]
     references:
       - 'CCE-36950-4'
     condition: all
@@ -829,6 +850,7 @@ checks:
     compliance:
       - cis: ["18.9.84.1"]
       - cis_csc: ["13"]
+      - pci_dss: ["2.2.5"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsInkWorkspace -> AllowSuggestedAppsInWindowsInkWorkspace -> 0'
