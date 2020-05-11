@@ -1533,6 +1533,7 @@ checks:
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\Control Panel\\Personalization\\Prevent enabling lock screen camera. Note: This Group Policy path may not exist by default. It is provided by the Group Policy template ControlPanelDisplay.admx/adml that is included with the Microsoft Windows 8.1 & Server 2012 R2 Administrative Templates (or newer)."
     compliance:
       - cis: ["18.1.1.1"]
+      - pci_dss: ["2.2.5"]
     references:
       - 'CCE-38347-1'
     condition: all
@@ -1547,6 +1548,7 @@ checks:
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\Control Panel\\Personalization\\Prevent enabling lock screen slide show. Note: This Group Policy path may not exist by default. It is provided by the Group Policy template ControlPanelDisplay.admx/adml that is included with the Microsoft Windows 8.1 & Server 2012 R2 Administrative Templates (or newer)."
     compliance:
       - cis: ["18.1.1.2"]
+      - pci_dss: ["2.2.5"]
     references:
       - 'CCE-38348-9'
     condition: all
@@ -1898,6 +1900,7 @@ checks:
     compliance:
       - cis: ["18.8.3.1"]
       - cis_csc: ["16.14"]
+      - pci_dss: ["8.2.1"]
     references:
       - 'CCE-36925-6'
     condition: all
@@ -1916,6 +1919,7 @@ checks:
     compliance:
       - cis: ["18.8.4.1"]
       - cis_csc: ["16"]
+      - pci_dss: ["8.2.1"]
     references:
       - 'https://docs.microsoft.com/en-us/windows/access-protection/remote-credential-guard'
     condition: all
@@ -1934,6 +1938,7 @@ checks:
     compliance:
       - cis: ["18.8.14.1"]
       - cis_csc: ["8"]
+      - pci_dss: ["5.1.1"]
     references:
       - 'CCE-37912-3'
     condition: all
@@ -1964,6 +1969,7 @@ checks:
     compliance:
       - cis: ["18.8.21.3"]
       - cis_csc: ["3.7"]
+      - pci_dss: ["11.5.1"]
     references:
       - 'CCE-36169-1'
     condition: all
@@ -1979,6 +1985,7 @@ checks:
     compliance:
       - cis: ["18.8.21.4"]
       - cis_csc: ["9.1"]
+      - pci_dss: ["7.1"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System -> EnableCdp -> 0'
@@ -2008,6 +2015,7 @@ checks:
     compliance:
       - cis: ["18.8.22.1.1"]
       - cis_csc: ["2"]
+      - pci_dss: ["6"]
     references:
       - 'CCE-36625-2'
     condition: all
@@ -2023,6 +2031,7 @@ checks:
     compliance:
       - cis: ["18.8.22.1.5"]
       - cis_csc: ["7"]
+      - pci_dss: ["2.2.5"]
     references:
       - 'CCE-36096-6'
     condition: all
@@ -2038,6 +2047,7 @@ checks:
     compliance:
       - cis: ["18.8.22.1.6"]
       - cis_csc: ["13.1"]
+      - pci_dss: ["2.2.5"]
     references:
       - 'CCE-36920-7'
     condition: all
@@ -2056,6 +2066,7 @@ checks:
     compliance:
       - cis: ["18.8.27.1"]
       - cis_csc: ["16.5"]
+      - pci_dss: ["2.2.5"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System -> BlockUserFromShowingAccountDetailsOnSignin -> 1'
@@ -2069,6 +2080,7 @@ checks:
     compliance:
       - cis: ["18.8.27.2"]
       - cis_csc: ["5"]
+      - pci_dss: ["2.2.5"]
     references:
       - 'CCE-38353-9'
     condition: all
@@ -2084,6 +2096,7 @@ checks:
     compliance:
       - cis: ["18.8.27.3"]
       - cis_csc: ["16.9"]
+      - pci_dss: ["2.2.5"]
     references:
       - 'CCE-37838-0'
     condition: all
@@ -2099,6 +2112,7 @@ checks:
     compliance:
       - cis: ["18.8.27.5"]
       - cis_csc: ["16.5"]
+      - pci_dss: ["2.2.5"]
     references:
       - 'CCE-35893-7'
     condition: all
@@ -2114,6 +2128,7 @@ checks:
     compliance:
       - cis: ["18.8.27.6"]
       - cis_csc: ["16.5"]
+      - pci_dss: ["8.2"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System -> BlockDomainPicturePassword -> 1'
@@ -2127,11 +2142,26 @@ checks:
     compliance:
       - cis: ["18.8.27.7"]
       - cis_csc: ["16.5"]
+      - pci_dss: ["8.2"]
     references:
       - 'CCE-37528-7'
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System -> AllowDomainPINLogon -> 0'
+
+# 18.8.28.1 (L1) Ensure 'Untrusted Font Blocking' is set to 'Enabled: Block untrusted fonts and log events' (Scored)
+  - id: 12230
+    title: "Ensure 'Untrusted Font Blocking' is set to 'Enabled: Block untrusted fonts and log events'"
+    description: "This security feature provides a global setting to prevent programs from loading untrusted fonts. Untrusted fonts are any font installed outside of the %windir%\\Fonts directory. This feature can be configured to be in 3 modes: On, Off, and Audit. The recommended state for this setting is: Enabled : Block untrusted fonts and log events"
+    rationale: "Blocking untrusted fonts helps prevent both remote (web-based or email-based) and local EOP attacks that can happen during the font file-parsing process."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Block untrusted fonts and log events : Computer Configuration\\Policies\\Administrative Templates\\System\\MitigationOptions\\Untrusted Font Blocking Note: This Group Policy path may not exist by default. It is provided by the Group Policy template GroupPolicy.admx/adml that is included with the Microsoft Windows 10 RTM (Release 1507) Administrative Templates (or newer)."
+    compliance:
+      - cis: ["18.8.28.1"]
+      - cis_csc: ["8.4"]
+      - pci_dss: ["2.2.5"]
+    condition: all
+    rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\MitigationOptions -> MitigationOptions_FontBocking -> 1000000000000'
 
 # 18.8.33.6.3 (L1) Ensure 'Require a password when a computer wakes (on battery)' is set to 'Enabled' (Scored)
   - id: 11109
@@ -2142,6 +2172,7 @@ checks:
     compliance:
       - cis: ["18.8.33.6.3"]
       - cis_csc: ["16.5"]
+      - pci_dss: ["8.2"]
     references:
       - 'CCE-36881-1'
     condition: all
@@ -2157,6 +2188,7 @@ checks:
     compliance:
       - cis: ["18.8.33.6.4"]
       - cis_csc: ["16.5"]
+      - pci_dss: ["8.2"]
     references:
       - 'CCE-37066-8'
     condition: all
@@ -2172,6 +2204,7 @@ checks:
     compliance:
       - cis: ["18.8.35.1"]
       - cis_csc: ["9.1"]
+      - pci_dss: ["2.2.5"]
     references:
       - 'CCE-36388-7'
     condition: all
@@ -2187,6 +2220,7 @@ checks:
     compliance:
       - cis: ["18.8.35.2"]
       - cis_csc: ["5.1"]
+      - pci_dss: ["2.2.5"]
     references:
       - 'CCE-37281-3'
     condition: all
@@ -3054,5 +3088,3 @@ checks:
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU -> NoAutoRebootWithLoggedOnUsers -> 0'
-
-

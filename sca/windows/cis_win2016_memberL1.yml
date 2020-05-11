@@ -1514,6 +1514,7 @@ checks:
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\Control Panel\\Personalization\\Prevent enabling lock screen camera. Note: This Group Policy path may not exist by default. It is provided by the Group Policy template ControlPanelDisplay.admx/adml that is included with the Microsoft Windows 8.1 & Server 2012 R2 Administrative Templates (or newer)."
     compliance:
       - cis: ["18.1.1.1"]
+      - pci_dss: ["2.2.5"]
     references:
       - 'CCE-38347-1'
     condition: all
@@ -1528,6 +1529,7 @@ checks:
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\Control Panel\\Personalization\\Prevent enabling lock screen slide show. Note: This Group Policy path may not exist by default. It is provided by the Group Policy template ControlPanelDisplay.admx/adml that is included with the Microsoft Windows 8.1 & Server 2012 R2 Administrative Templates (or newer)."
     compliance:
       - cis: ["18.1.1.2"]
+      - pci_dss: ["2.2.5"]
     references:
       - 'CCE-38348-9'
     condition: all
@@ -2014,6 +2016,7 @@ checks:
     compliance:
       - cis: ["18.8.3.1"]
       - cis_csc: ["16.14"]
+      - pci_dss: ["8.2.1"]
     references:
       - 'CCE-36925-6'
     condition: all
@@ -2032,6 +2035,7 @@ checks:
     compliance:
       - cis: ["18.8.4.1"]
       - cis_csc: ["16"]
+      - pci_dss: ["8.2.1"]
     references:
       - 'https://docs.microsoft.com/en-us/windows/access-protection/remote-credential-guard'
     condition: all
@@ -2050,6 +2054,7 @@ checks:
     compliance:
       - cis: ["18.8.14.1"]
       - cis_csc: ["8"]
+      - pci_dss: ["5.1.1"]
     references:
       - 'CCE-37912-3'
     condition: all
@@ -2080,6 +2085,7 @@ checks:
     compliance:
       - cis: ["18.8.21.3"]
       - cis_csc: ["3.7"]
+      - pci_dss: ["11.5.1"]
     references:
       - 'CCE-36169-1'
     condition: all
@@ -2095,13 +2101,13 @@ checks:
     compliance:
       - cis: ["18.8.21.4"]
       - cis_csc: ["9.1"]
+      - pci_dss: ["7.1"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System -> EnableCdp -> 0'
 
 
 # 18.8.21.5 (L1) Ensure 'Turn off background refresh of Group Policy' is set to 'Disabled' (Scored)
-
   - id: 12108
     title: "Ensure 'Turn off background refresh of Group Policy' is set to 'Disabled'"
     description: "This policy setting prevents Group Policy from being updated while the computer is in use. This policy setting applies to Group Policy for computers, users and Domain Controllers. The recommended state for this setting is: Disabled."
@@ -2116,6 +2122,7 @@ checks:
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System -> DisableBkGndGroupPolicy -> 0'
 
+# 18.8.22.1.1 (L1) Ensure 'Turn off downloading of print drivers over HTTP' is set to 'Enabled' (Scored)
   - id: 12218
     title: "Ensure 'Turn off downloading of print drivers over HTTP' is set to 'Enabled'"
     description: "This policy setting controls whether the computer can download print driver packages over HTTP. To set up HTTP printing, printer drivers that are not available in the standard operating system installation might need to be downloaded over HTTP. The recommended state for this setting is: Enabled."
@@ -2124,6 +2131,7 @@ checks:
     compliance:
       - cis: ["18.8.22.1.1"]
       - cis_csc: ["2"]
+      - pci_dss: ["6"]
     references:
       - 'CCE-36625-2'
     condition: all
@@ -2139,6 +2147,7 @@ checks:
     compliance:
       - cis: ["18.8.22.1.5"]
       - cis_csc: ["7"]
+      - pci_dss: ["2.2.5"]
     references:
       - 'CCE-36096-6'
     condition: all
@@ -2154,6 +2163,7 @@ checks:
     compliance:
       - cis: ["18.8.22.1.6"]
       - cis_csc: ["13.1"]
+      - pci_dss: ["2.2.5"]
     references:
       - 'CCE-36920-7'
     condition: all
@@ -2172,6 +2182,7 @@ checks:
     compliance:
       - cis: ["18.8.27.1"]
       - cis_csc: ["16.5"]
+      - pci_dss: ["2.2.5"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System -> BlockUserFromShowingAccountDetailsOnSignin -> 1'
@@ -2185,6 +2196,7 @@ checks:
     compliance:
       - cis: ["18.8.27.2"]
       - cis_csc: ["5"]
+      - pci_dss: ["2.2.5"]
     references:
       - 'CCE-38353-9'
     condition: all
@@ -2200,6 +2212,7 @@ checks:
     compliance:
       - cis: ["18.8.27.3"]
       - cis_csc: ["16.9"]
+      - pci_dss: ["2.2.5"]
     references:
       - 'CCE-37838-0'
     condition: all
@@ -2215,6 +2228,7 @@ checks:
     compliance:
       - cis: ["18.8.27.4"]
       - cis_csc: ["16.9"]
+      - pci_dss: ["2.2.5"]
     references:
       - 'CCE-35894-5'
     condition: all
@@ -2230,6 +2244,7 @@ checks:
     compliance:
       - cis: ["18.8.27.5"]
       - cis_csc: ["16.5"]
+      - pci_dss: ["2.2.5"]
     references:
       - 'CCE-35893-7'
     condition: all
@@ -2245,11 +2260,10 @@ checks:
     compliance:
       - cis: ["18.8.27.6"]
       - cis_csc: ["16.5"]
+      - pci_dss: ["8.2"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System -> BlockDomainPicturePassword -> 1'
-
-
 
 # 18.8.27.7 (L1) Ensure 'Turn on convenience PIN sign-in' is set to 'Disabled' (Scored)
   - id: 12113
@@ -2260,6 +2274,7 @@ checks:
     compliance:
       - cis: ["18.8.27.7"]
       - cis_csc: ["16.5"]
+      - pci_dss: ["8.2"]
     references:
       - 'CCE-37528-7'
     condition: all
@@ -2278,6 +2293,7 @@ checks:
     compliance:
       - cis: ["18.8.28.1"]
       - cis_csc: ["8.4"]
+      - pci_dss: ["2.2.5"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\MitigationOptions -> MitigationOptions_FontBocking -> 1000000000000'
@@ -2291,6 +2307,7 @@ checks:
     compliance:
       - cis: ["18.8.33.6.3"]
       - cis_csc: ["16.5"]
+      - pci_dss: ["8.2"]
     references:
       - 'CCE-36881-1'
     condition: all
@@ -2306,6 +2323,7 @@ checks:
     compliance:
       - cis: ["18.8.33.6.4"]
       - cis_csc: ["16.5"]
+      - pci_dss: ["8.2"]
     references:
       - 'CCE-37066-8'
     condition: all
@@ -2321,6 +2339,7 @@ checks:
     compliance:
       - cis: ["18.8.35.1"]
       - cis_csc: ["9.1"]
+      - pci_dss: ["2.2.5"]
     references:
       - 'CCE-36388-7'
     condition: all
@@ -2336,6 +2355,7 @@ checks:
     compliance:
       - cis: ["18.8.35.2"]
       - cis_csc: ["5.1"]
+      - pci_dss: ["2.2.5"]
     references:
       - 'CCE-37281-3'
     condition: all
@@ -2351,6 +2371,7 @@ checks:
     compliance:
       - cis: ["18.8.36.1"]
       - cis_csc: ["9.1"]
+      - pci_dss: ["2.2.3"]
     references:
       - https://support.microsoft.com/en-us/help/3073942/rpc-endpoint-mapper-client-authentication-prevents-users-and-groups-fr
       - 'CCE-37346-4'
@@ -3188,7 +3209,3 @@ checks:
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU -> NoAutoRebootWithLoggedOnUsers -> 0'
-
-
-
-
