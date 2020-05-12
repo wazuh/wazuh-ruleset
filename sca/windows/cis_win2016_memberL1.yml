@@ -2023,6 +2023,8 @@ checks:
     compliance:
       - cis: ["18.5.21.1"]
       - cis_csc: ["12"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
     references:
       - 'CCE-38338-0'
     condition: all
@@ -2098,6 +2100,7 @@ checks:
     compliance:
       - cis: ["18.8.21.2"]
       - cis_csc: ["3.7"]
+      - pci_dss: ["6.4"]
     references:
       - 'CCE-36169-1'
     condition: all
@@ -2129,7 +2132,10 @@ checks:
     compliance:
       - cis: ["18.8.21.4"]
       - cis_csc: ["9.1"]
-      - pci_dss: ["7.1"]
+      - pci_dss: ["6.5.8"]
+      - nist_800_53: ["SA.11","AU.14","AC.7"]
+      - gdpr_IV: [35.7.d]
+      - hipaa: ["164.312.b"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System -> EnableCdp -> 0'
@@ -2144,6 +2150,7 @@ checks:
     compliance:
       - cis: ["18.8.21.5"]
       - cis_csc: ["3.7"]
+      - pci_dss: ["6.4"]
     references:
       - 'CCE-37712-7'
     condition: all
