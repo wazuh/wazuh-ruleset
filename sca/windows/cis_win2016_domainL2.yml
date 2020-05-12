@@ -576,6 +576,7 @@ checks:
     compliance:
       - cis: ["18.9.12.1"]
       - cis_csc: ["13"]
+      - pci_dss: ["2.2.5"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Camera -> AllowCamera -> 0'
@@ -589,10 +590,14 @@ checks:
     compliance:
       - cis: ["18.9.16.2"]
       - cis_csc: ["13"]
+      - pci_dss: ["4.1"]
+      - hipaa: ["164.312.a.2.IV", "164.312.e.1", "164.312.e.2.I", "164.312.e.2.II"]
+      - nist_800_53: ["SC.8"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\DataCollection -> DisableEnterpriseAuthProxy -> 1'
 
+# 18.9.39.2 Ensure 'Turn off location' is set to 'Enabled'
   - id: 11526
     title: "Ensure 'Turn off location' is set to 'Enabled'"
     description: "This policy setting turns off the location feature for the computer. The recommended state for this setting is: Enabled."
@@ -601,6 +606,7 @@ checks:
     compliance:
       - cis: ["18.9.39.2"]
       - cis_csc: ["13"]
+      - pci_dss: ["2.2.5"]
     references:
       - 'CCE-36886-0'
     condition: all
@@ -616,10 +622,14 @@ checks:
     compliance:
       - cis: ["18.9.43.1"]
       - cis_csc: ["9.1", "13"]
+      - pci_dss: ["4.1"]
+      - hipaa: ["164.312.a.2.IV", "164.312.e.1", "164.312.e.2.I", "164.312.e.2.II"]
+      - nist_800_53: ["SC.8"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Messaging -> AllowMessageSync -> 0'
 
+# 18.9.58.3.2.1 Ensure 'Restrict Remote Desktop Services users to a single Remote Desktop Services session' is set to 'Enabled'
   - id: 11527
     title: "Ensure 'Restrict Remote Desktop Services users to a single Remote Desktop Services session' is set to 'Enabled'"
     description: "This policy setting allows you to restrict users to a single Remote Desktop Services session. The recommended state for this setting is: Enabled."
@@ -627,12 +637,14 @@ checks:
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Remote Desktop Services\\Remote Desktop Session Host\\Connections\\Restrict Remote Desktop Services users to a single Remote Desktop Services session. Note: This Group Policy path is provided by the Group Policy template TerminalServer.admx/adml that is included with all versions of the Microsoft Windows Administrative Templates. Note #2: In older Microsoft Windows Administrative Templates, this setting was named Restrict Terminal Services users to a single remote session, but it was renamed starting with the Windows 7 & Server 2008 R2 Administrative Templates."
     compliance:
       - cis: ["18.9.58.3.2.1"]
+      - pci_dss: ["7.2"]
     references:
       - 'CCE-37708-5'
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services -> fSingleSessionPerUser -> 1'
 
+# 18.9.58.3.3.1 Ensure 'Do not allow COM port redirection' is set to 'Enabled'
   - id: 11528
     title: "Ensure 'Do not allow COM port redirection' is set to 'Enabled'"
     description: "This policy setting specifies whether to prevent the redirection of data to client COM ports from the remote computer in a Remote Desktop Services session. The recommended state for this setting is: Enabled."
@@ -641,12 +653,14 @@ checks:
     compliance:
       - cis: ["18.9.58.3.3.1"]
       - cis_csc: ["9.1"]
+      - pci_dss: ["2.2.5"]
     references:
       - 'CCE-37696-2'
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services -> fDisableCcm -> 1'
 
+# 18.9.58.3.3.3 Ensure 'Do not allow LPT port redirection' is set to 'Enabled'
   - id: 11529
     title: "Ensure 'Do not allow LPT port redirection' is set to 'Enabled'"
     description: "This policy setting specifies whether to prevent the redirection of data to client LPT ports during a Remote Desktop Services session. The recommended state for this setting is: Enabled."
@@ -655,12 +669,14 @@ checks:
     compliance:
       - cis: ["18.9.58.3.3.3"]
       - cis_csc: ["9.1"]
+      - pci_dss: ["2.2.5"]
     references:
       - 'CCE-37778-8'
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services -> fDisableLPT -> 1'
 
+# 18.9.58.3.3.4 Ensure 'Do not allow supported Plug and Play device redirection' is set to 'Enabled'
   - id: 11530
     title: "Ensure 'Do not allow supported Plug and Play device redirection' is set to 'Enabled'"
     description: "This policy setting allows you to control the redirection of supported Plug and Play devices, such as Windows Portable Devices, to the remote computer in a Remote Desktop Services session. The recommended state for this setting is: Enabled."
@@ -669,12 +685,14 @@ checks:
     compliance:
       - cis: ["18.9.58.3.3.4"]
       - cis_csc: ["9.1"]
+      - pci_dss: ["2.2.5"]
     references:
       - 'CCE-37477-7'
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services -> fDisablePNPRedir -> 1'
 
+# 18.9.58.3.10.1 Ensure 'Set time limit for active but idle Remote Desktop Services sessions' is set to 'Enabled: 15 minutes or less'
   - id: 11531
     title: "Ensure 'Set time limit for active but idle Remote Desktop Services sessions' is set to 'Enabled: 15 minutes or less'"
     description: "This policy setting allows you to specify the maximum amount of time that an active Remote Desktop Services session can be idle (without user input) before it is automatically disconnected. The recommended state for this setting is: Enabled: 15 minutes or less."
@@ -683,6 +701,7 @@ checks:
     compliance:
       - cis: ["18.9.58.3.10.1"]
       - cis_csc: ["16.5"]
+      - pci_dss: ["8.1.8"]
     references:
       - 'CCE-37562-6'
       - https://workbench.cisecurity.org/benchmarks/766
@@ -690,6 +709,7 @@ checks:
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services -> MaxIdleTime -> n:^(\d+) compare <= 900000'
 
+# 18.9.58.3.10.2 Ensure 'Set time limit for disconnected sessions' is set to 'Enabled: 1 minute'
   - id: 11532
     title: "Ensure 'Set time limit for disconnected sessions' is set to 'Enabled: 1 minute'"
     description: "This policy setting allows you to configure a time limit for disconnected Remote Desktop Services sessions. The recommended state for this setting is: Enabled: 1 minute."
@@ -698,6 +718,7 @@ checks:
     compliance:
       - cis: ["18.9.58.3.10.2"]
       - cis_csc: ["16.5"]
+      - pci_dss: ["8.1"]
     references:
       - 'CCE-37949-5'
     condition: all
@@ -713,10 +734,12 @@ checks:
     compliance:
       - cis: ["18.9.60.2"]
       - cis_csc: ["9.1"]
+      - pci_dss: ["2.2.5"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Windows Search -> AllowCloudSearch -> 0'
 
+# 18.9.65.1 Ensure 'Turn off KMS Client Online AVS Validation' is set to 'Enabled'
   - id: 11534
     title: "Ensure 'Turn off KMS Client Online AVS Validation' is set to 'Enabled'"
     description: "The Key Management Service (KMS) is a Microsoft license activation method that entails setting up a local server to store the software licenses. The KMS server itself needs to connect to Microsoft to activate the KMS service, but subsequent on-network clients can activate Microsoft Windows OS and/or their Microsoft Office via the KMS server instead of connecting directly to Microsoft. This policy setting lets you opt-out of sending KMS client activation data to Microsoft automatically. The recommended state for this setting is: Enabled."
@@ -724,10 +747,12 @@ checks:
     remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Software Protection Platform\\Turn off KMS Client Online AVS Validation. Note: This Group Policy path may not exist by default. It is provided by the Group Policy template AVSValidationGP.admx/adml that is included with the Microsoft Windows 10 RTM (Release 1507) Administrative Templates (or newer)."
     compliance:
       - cis: ["18.9.65.1"]
+      - pci_dss: ["2.2.5"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\CurrentVersion\Software Protection Platform -> NoGenTicket -> 1'
 
+# 18.9.76.3.2 Ensure 'Join Microsoft MAPS' is set to 'Disabled'
   - id: 11535
     title: "Ensure 'Join Microsoft MAPS' is set to 'Disabled'"
     description: "This policy setting allows you to join Microsoft Active Protection Service (MAPS), which Microsoft has now renamed to 'Windows Defender Antivirus Cloud Protection Service'. Microsoft MAPS / Windows Defender Antivirus Cloud Protection Service is the online community that helps you choose how to respond to potential threats. The community also helps stop the spread of new malicious software infections. You can choose to send basic or additional information about detected software. Additional information helps Microsoft create new definitions and help it to protect your computer. Possible options are: - (0x0) Disabled (default) - (0x1) Basic membership - (0x2) Advanced membership   Basic membership will send basic information to Microsoft about software that has been detected including where the software came from the actions that you apply or that are applied automatically and whether the actions were successful. Advanced membership in addition to basic information will send more information to Microsoft about malicious software spyware and potentially unwanted software including the location of the software file names how the software operates and how it has impacted your computer. The recommended state for this setting is: Disabled."
@@ -735,6 +760,7 @@ checks:
     remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Windows Defender Antivirus\\MAPS\\Join Microsoft MAPS. Note: This Group Policy path may not exist by default. It is provided by the Group Policy template WindowsDefender.admx/adml that is included with the Microsoft Windows 8.1 & Server 2012 R2 Administrative Templates (or newer)."
     compliance:
       - cis: ["18.9.76.3.2"]
+      - pci_dss: ["2.2.5"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\Spynet -> SpynetReporting -> 0'
@@ -748,10 +774,12 @@ checks:
     compliance:
       - cis: ["18.9.84.1"]
       - cis_csc: ["13"]
+      - pci_dss: ["2.2.5"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsInkWorkspace -> AllowSuggestedAppsInWindowsInkWorkspace -> 0'
 
+# 18.9.85.3 Ensure 'Prevent Internet Explorer security prompt for Windows Installer scripts' is set to 'Disabled'
   - id: 11536
     title: "Ensure 'Prevent Internet Explorer security prompt for Windows Installer scripts' is set to 'Disabled'"
     description: "This policy setting controls whether Web-based programs are allowed to install software on the computer without notifying the user. The recommended state for this setting is: Disabled."
@@ -760,12 +788,14 @@ checks:
     compliance:
       - cis: ["18.9.85.3"]
       - cis_csc: ["7"]
+      - pci_dss: ["2.2.5"]
     references:
       - 'CCE-37524-6'
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Installer -> SafeForScripting -> 0'
 
+# 18.9.97.2.2 Ensure 'Allow remote server management through WinRM' is set to 'Disabled'
   - id: 11537
     title: "Ensure 'Allow remote server management through WinRM' is set to 'Disabled'"
     description: "This policy setting allows you to manage whether the Windows Remote Management (WinRM) service automatically listens on the network for requests on the HTTP transport over the default HTTP port. The recommended state for this setting is: Disabled."
@@ -774,12 +804,14 @@ checks:
     compliance:
       - cis: ["18.9.97.2.2"]
       - cis_csc: ["3.4"]
+      - pci_dss: ["4.1"]
     references:
       - 'CCE-37927-1'
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WinRM\Service -> AllowAutoConfig -> 0'
 
+# 18.9.98.1 Ensure 'Allow Remote Shell Access' is set to 'Disabled'
   - id: 11538
     title: "Ensure 'Allow Remote Shell Access' is set to 'Disabled'"
     description: "This policy setting allows you to manage configuration of remote access to all supported shells to execute scripts and commands. The recommended state for this setting is: Disabled. Note: The GPME help text for this setting is incorrectly worded, implying that configuring it to Enabled will reject new Remote Shell connections, and setting it to Disabled will allow Remote Shell connections. The opposite is true (and is consistent with the title of the setting). This is a wording mistake by Microsoft in the Administrative Template."
@@ -788,6 +820,7 @@ checks:
     compliance:
       - cis: ["18.9.98.1"]
       - cis_csc: ["3.4"]
+      - pci_dss: ["4.1"]
     references:
       - 'CCE-36499-2'
     condition: all

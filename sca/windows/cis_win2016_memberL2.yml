@@ -657,6 +657,7 @@ checks:
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\DataCollection -> DisableEnterpriseAuthProxy -> 1'
 
+# 18.9.39.2 Ensure 'Turn off location' is set to 'Enabled'
   - id: 12531
     title: "Ensure 'Turn off location' is set to 'Enabled'"
     description: "This policy setting turns off the location feature for the computer."
@@ -688,7 +689,7 @@ checks:
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Messaging -> AllowMessageSync -> 0'
 
-# Section 18.9.58.3.2 - Connections
+# 18.9.58.3.2.1 Ensure 'Restrict Remote Desktop Services users to a single Remote Desktop Services session' is set to 'Enabled'
   - id: 12532
     title: "Ensure 'Restrict Remote Desktop Services users to a single Remote Desktop Services session' is set to 'Enabled'"
     description: "This policy setting allows you to restrict users to a single Remote Desktop Services session."
@@ -704,6 +705,7 @@ checks:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services -> fSingleSessionPerUser -> 1'
 
 # Section 18.9.58.3.3 Device and Resource Redirection
+# 18.9.58.3.3.1 Ensure 'Do not allow COM port redirection' is set to 'Enabled'
   - id: 12533
     title: "Ensure 'Do not allow COM port redirection' is set to 'Enabled'"
     description: "This policy setting specifies whether to prevent the redirection of data to client COM ports from the remote computer in a Remote Desktop Services session."
@@ -719,6 +721,7 @@ checks:
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services -> fDisableCcm -> 1'
 
+# 18.9.58.3.3.3 Ensure 'Do not allow LPT port redirection' is set to 'Enabled'
   - id: 12534
     title: "Ensure 'Do not allow LPT port redirection' is set to 'Enabled'"
     description: "This policy setting specifies whether to prevent the redirection of data to client LPT ports during a Remote Desktop Services session."
@@ -734,6 +737,7 @@ checks:
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services -> fDisableLPT -> 1'
 
+# 18.9.58.3.3.4 Ensure 'Do not allow supported Plug and Play device redirection' is set to 'Enabled'
   - id: 12535
     title: "Ensure 'Do not allow supported Plug and Play device redirection' is set to 'Enabled'"
     description: "This policy setting allows you to control the redirection of supported Plug and Play devices, such as Windows Portable Devices, to the remote computer in a Remote Desktop Services session."
@@ -750,6 +754,7 @@ checks:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services -> fDisablePNPRedir -> 1'
 
 # Section 18.9.58.3.10 - Session Time Limits
+# 18.9.58.3.10.1 Ensure 'Set time limit for active but idle Remote Desktop Services sessions' is set to 'Enabled: 15 minutes or less'
   - id: 12536
     title: "Ensure 'Set time limit for active but idle Remote Desktop Services sessions' is set to 'Enabled: 15 minutes or less'"
     description: "This policy setting allows you to specify the maximum amount of time that an active Remote Desktop Services session can be idle (without user input) before it is automatically disconnected."
@@ -765,6 +770,7 @@ checks:
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services -> MaxIdleTime -> n:^(\d+) compare <= 900000'
 
+# 18.9.58.3.10.2 Ensure 'Set time limit for disconnected sessions' is set to 'Enabled: 1 minute'
   - id: 12537
     title: "Ensure 'Set time limit for disconnected sessions' is set to 'Enabled: 1 minute'"
     description: "This policy setting allows you to configure a time limit for disconnected Remote Desktop Services sessions."
@@ -800,6 +806,7 @@ checks:
 
 
 # Section 18.9.56 - Software Protection Platform
+# 18.9.65.1 Ensure 'Turn off KMS Client Online AVS Validation' is set to 'Enabled'
   - id: 12539
     title: "Ensure 'Turn off KMS Client Online AVS Validation' is set to 'Enabled'"
     description: "The Key Management Service (KMS) is a Microsoft license activation method that entails setting up a local server to store the software licenses."
@@ -813,6 +820,7 @@ checks:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\CurrentVersion\Software Protection Platform -> NoGenTicket -> 1'
 
 # Section 18.9.76.3 - MAPS
+# 18.9.76.3.2 Ensure 'Join Microsoft MAPS' is set to 'Disabled'
   - id: 12540
     title: "Ensure 'Join Microsoft MAPS' is set to 'Disabled'"
     description: "This policy setting allows you to join Microsoft Active Protection Service (MAPS), which Microsoft has now renamed to \"Windows Defender Antivirus Cloud Protection Service\"."
@@ -856,6 +864,7 @@ checks:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsInkWorkspace -> AllowSuggestedAppsInWindowsInkWorkspace -> 0'
 
 # Section 18.9.85 - Windows Installer
+# 18.9.85.3 Ensure 'Prevent Internet Explorer security prompt for Windows Installer scripts' is set to 'Disabled'
   - id: 12542
     title: "Ensure 'Prevent Internet Explorer security prompt for Windows Installer scripts' is set to 'Disabled'"
     description: "This policy setting controls whether Web-based programs are allowed to install software on the computer without notifying the user."
@@ -864,6 +873,7 @@ checks:
     compliance:
       - cis: ["18.9.85.3"]
       - cis_csc: ["7"]
+      - pci_dss: ["2.2.5"]
     references:
       - 'CCE-37524-6'
     condition: all
@@ -871,6 +881,7 @@ checks:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Installer -> SafeForScripting -> 0'
 
 # Section 18.9.97.2 - WinRM Service
+# 18.9.97.2.2 Ensure 'Allow remote server management through WinRM' is set to 'Disabled'
   - id: 12543
     title: "Ensure 'Allow remote server management through WinRM' is set to 'Disabled'"
     description: "This policy setting allows you to manage whether the Windows Remote Management (WinRM) service automatically listens on the network for requests on the HTTP transport over the default HTTP port."
@@ -879,6 +890,7 @@ checks:
     compliance:
       - cis: ["18.9.97.2.2"]
       - cis_csc: ["3.4"]
+      - pci_dss: ["4.1"]
     references:
       - 'CCE-37927-1'
     condition: all
@@ -886,6 +898,7 @@ checks:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WinRM\Service -> AllowAutoConfig -> 0'
 
 # Section 18.9.98 - Windows Remote Shell
+# 18.9.98.1 Ensure 'Allow Remote Shell Access' is set to 'Disabled'
   - id: 12544
     title: "Ensure 'Allow Remote Shell Access' is set to 'Disabled'"
     description: "This policy setting allows you to manage configuration of remote access to all supported shells to execute scripts and commands."
@@ -894,6 +907,7 @@ checks:
     compliance:
       - cis: ["18.9.98.1"]
       - cis_csc: ["3.4"]
+      - pci_dss: ["4.1"]
     references:
       - 'CCE-36499-2'
     condition: all

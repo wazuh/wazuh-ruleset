@@ -2206,6 +2206,7 @@ checks:
     compliance:
       - cis: ["18.9.6.1"]
       - cis_csc: ["16.9"]
+      - pci_dss: ["8.1"]
     references:
       - 'CCE-38354-7'
     condition: all
@@ -2221,6 +2222,7 @@ checks:
     compliance:
       - cis: ["18.9.8.1"]
       - cis_csc: ["8.3"]
+      - pci_dss: ["2.2.4"]
     references:
       - 'CCE-37636-8'
     condition: all
@@ -2236,6 +2238,8 @@ checks:
     compliance:
       - cis: ["18.9.8.2"]
       - cis_csc: ["8.3"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
     references:
       - 'CCE-38217-6'
     condition: all
@@ -2251,6 +2255,8 @@ checks:
     compliance:
       - cis: ["18.9.8.3"]
       - cis_csc: ["8.3"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
     references:
       - 'CCE-36875-3'
     condition: all
@@ -2266,6 +2272,7 @@ checks:
     compliance:
       - cis: ["18.9.10.1.1"]
       - cis_csc: ["16"]
+      - pci_dss: ["8.1"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Biometrics\FacialFeatures -> EnhancedAntiSpoofing -> 1'
@@ -2279,6 +2286,9 @@ checks:
     compliance:
       - cis: ["18.9.13.1"]
       - cis_csc: ["13"]
+      - pci_dss: ["4.1"]
+      - hipaa: ["164.312.a.2.IV", "164.312.e.1", "164.312.e.2.I", "164.312.e.2.II"]
+      - nist_800_53: ["SC.8"]
     references:
       - 'https://technet.microsoft.com/en-us/itpro/windows/manage/group-policies-for-enterprise-and-education-editions'
     condition: all
@@ -2294,6 +2304,9 @@ checks:
     compliance:
       - cis: ["18.9.14.1"]
       - cis_csc: ["15.8"]
+      - pci_dss: ["4.1"]
+      - hipaa: ["164.312.a.2.IV", "164.312.e.1", "164.312.e.2.I", "164.312.e.2.II"]
+      - nist_800_53: ["SC.8"]
     condition: any
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Connect -> RequirePinForPairing -> 1'
@@ -2308,6 +2321,7 @@ checks:
     compliance:
       - cis: ["18.9.15.1"]
       - cis_csc: ["16"]
+      - pci_dss: ["8.2.1"]
     references:
       - 'CCE-37534-5'
     condition: all
@@ -2323,6 +2337,7 @@ checks:
     compliance:
       - cis: ["18.9.15.2"]
       - cis_csc: ["16"]
+      - pci_dss: ["8.2.1"]
     references:
       - 'CCE-36512-2'
     condition: all
@@ -2338,6 +2353,9 @@ checks:
     compliance:
       - cis: ["18.9.16.1"]
       - cis_csc: ["13"]
+      - pci_dss: ["4.1"]
+      - hipaa: ["164.312.a.2.IV", "164.312.e.1", "164.312.e.2.I", "164.312.e.2.II"]
+      - nist_800_53: ["SC.8"]
     condition: any
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\DataCollection -> AllowTelemetry -> 0'
@@ -2352,6 +2370,9 @@ checks:
     compliance:
       - cis: ["18.9.16.4"]
       - cis_csc: ["13"]
+      - pci_dss: ["4.1"]
+      - hipaa: ["164.312.a.2.IV", "164.312.e.1", "164.312.e.2.I", "164.312.e.2.II"]
+      - nist_800_53: ["SC.8"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\DataCollection -> DoNotShowFeedbackNotifications -> 1'
@@ -2365,6 +2386,9 @@ checks:
     compliance:
       - cis: ["18.9.16.5"]
       - cis_csc: ["3"]
+      - pci_dss: ["4.1"]
+      - hipaa: ["164.312.a.2.IV", "164.312.e.1", "164.312.e.2.I", "164.312.e.2.II"]
+      - nist_800_53: ["SC.8"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\PreviewBuilds -> AllowBuildPreview -> 0'
@@ -2378,6 +2402,11 @@ checks:
     compliance:
       - cis: ["18.9.26.1.1"]
       - cis_csc: ["6.3"]
+      - pci_dss: ["10.6.1"]
+      - nist_800_53: ["AU.6"]
+      - gpg13: ["4.12"]
+      - gdpr_IV: [35.7.d]
+      - hipaa: ["164.312.b"]
     references:
       - 'CCE-37775-4'
     condition: all
@@ -2393,6 +2422,11 @@ checks:
     compliance:
       - cis: ["18.9.26.1.2"]
       - cis_csc: ["6.3"]
+      - pci_dss: ["10.6.1"]
+      - nist_800_53: ["AU.6"]
+      - gpg13: ["4.12"]
+      - gdpr_IV: [35.7.d]
+      - hipaa: ["164.312.b"]
     references:
       - 'CCE-37948-7'
     condition: all
@@ -2408,6 +2442,11 @@ checks:
     compliance:
       - cis: ["18.9.26.2.1"]
       - cis_csc: ["6.3"]
+      - pci_dss: ["10.6.1"]
+      - nist_800_53: ["AU.6"]
+      - gpg13: ["4.12"]
+      - gdpr_IV: [35.7.d]
+      - hipaa: ["164.312.b"]
     references:
       - 'CCE-37145-0'
     condition: all
@@ -2423,6 +2462,11 @@ checks:
     compliance:
       - cis: ["18.9.26.2.2"]
       - cis_csc: ["6.3"]
+      - pci_dss: ["10.6.1"]
+      - nist_800_53: ["AU.6"]
+      - gpg13: ["4.12"]
+      - gdpr_IV: [35.7.d]
+      - hipaa: ["164.312.b"]
     references:
       - 'CCE-37695-4'
     condition: all
@@ -2438,6 +2482,11 @@ checks:
     compliance:
       - cis: ["18.9.26.3.1"]
       - cis_csc: ["6.3"]
+      - pci_dss: ["10.6.1"]
+      - nist_800_53: ["AU.6"]
+      - gpg13: ["4.12"]
+      - gdpr_IV: [35.7.d]
+      - hipaa: ["164.312.b"]
     references:
       - 'CCE-38276-2'
     condition: all
@@ -2453,6 +2502,11 @@ checks:
     compliance:
       - cis: ["18.9.26.3.2"]
       - cis_csc: ["6.3"]
+      - pci_dss: ["10.6.1"]
+      - nist_800_53: ["AU.6"]
+      - gpg13: ["4.12"]
+      - gdpr_IV: [35.7.d]
+      - hipaa: ["164.312.b"]
     references:
       - 'CCE-37526-1'
     condition: all
@@ -2468,6 +2522,11 @@ checks:
     compliance:
       - cis: ["18.9.26.4.1"]
       - cis_csc: ["6.3"]
+      - pci_dss: ["10.6.1"]
+      - nist_800_53: ["AU.6"]
+      - gpg13: ["4.12"]
+      - gdpr_IV: [35.7.d]
+      - hipaa: ["164.312.b"]
     references:
       - 'CCE-36160-0'
     condition: all
@@ -2483,6 +2542,11 @@ checks:
     compliance:
       - cis: ["18.9.26.4.2"]
       - cis_csc: ["6.3"]
+      - pci_dss: ["10.6.1"]
+      - nist_800_53: ["AU.6"]
+      - gpg13: ["4.12"]
+      - gdpr_IV: [35.7.d]
+      - hipaa: ["164.312.b"]
     references:
       - 'CCE-36092-5'
     condition: all
@@ -2498,6 +2562,8 @@ checks:
     compliance:
       - cis: ["18.9.30.2"]
       - cis_csc: ["8.4"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]   
     references:
       - 'CCE-37809-1'
     condition: all
@@ -2513,6 +2579,8 @@ checks:
     compliance:
       - cis: ["18.9.30.3"]
       - cis_csc: ["8.4"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]   
     references:
       - 'CCE-36660-9'
     condition: all
@@ -2528,6 +2596,8 @@ checks:
     compliance:
       - cis: ["18.9.30.4"]
       - cis_csc: ["8.4"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]  
     references:
       - 'CCE-36809-2'
     condition: all
@@ -2543,6 +2613,7 @@ checks:
     compliance:
       - cis: ["18.9.44.1"]
       - cis_csc: ["16"]
+      - pci_dss: ["8.1"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\MicrosoftAccount -> DisableUserAuth -> 1'
@@ -2556,6 +2627,9 @@ checks:
     compliance:
       - cis: ["18.9.52.1"]
       - cis_csc: ["13"]
+      - pci_dss: ["4.1"]
+      - hipaa: ["164.312.a.2.IV", "164.312.e.1", "164.312.e.2.I", "164.312.e.2.II"]
+      - nist_800_53: ["SC.8"]
     references:
       - 'CCE-36939-7'
     condition: all
@@ -2571,6 +2645,7 @@ checks:
     compliance:
       - cis: ["18.9.58.2.2"]
       - cis_csc: ["16.4"]
+      - pci_dss: ["12.3.8"]
     references:
       - 'CCE-36223-6'
     condition: all
@@ -2586,6 +2661,9 @@ checks:
     compliance:
       - cis: ["18.9.58.3.3.2"]
       - cis_csc: ["13"]
+      - pci_dss: ["4.1"]
+      - hipaa: ["164.312.a.2.IV", "164.312.e.1", "164.312.e.2.I", "164.312.e.2.II"]
+      - nist_800_53: ["SC.8"]
     references:
       - 'CCE-36509-8'
     condition: all
@@ -2601,6 +2679,7 @@ checks:
     compliance:
       - cis: ["18.9.58.3.9.1"]
       - cis_csc: ["16.14"]
+      - pci_dss: ["8.2.1"]
     references:
       - 'CCE-37929-7'
     condition: all
@@ -2616,6 +2695,7 @@ checks:
     compliance:
       - cis: ["18.9.58.3.9.2"]
       - cis_csc: ["3.4"]
+      - pci_dss: ["8.2.1"]
     references:
       - 'CCE-37567-5'
     condition: all
@@ -2631,6 +2711,7 @@ checks:
     compliance:
       - cis: ["18.9.58.3.9.3"]
       - cis_csc: ["3.4"]
+      - pci_dss: ["8.2.1"]
     references:
       - 'CCE-36627-8'
     condition: all
@@ -2646,6 +2727,7 @@ checks:
     compliance:
       - cis: ["18.9.58.3.11.1"]
       - cis_csc: ["14.4"]
+      - pci_dss: ["7.1"]
     references:
       - 'CCE-37946-1'
     condition: all
@@ -2661,12 +2743,14 @@ checks:
     compliance:
       - cis: ["18.9.58.3.11.2"]
       - cis_csc: ["14.4"]
+      - pci_dss: ["7.1"]
     references:
       - 'CCE-38180-6'
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services -> PerSessionTempDir -> 1'
 
+# 18.9.59.1 Ensure 'Prevent downloading of enclosures' is set to 'Enabled'
   - id: 11138
     title: "Ensure 'Prevent downloading of enclosures' is set to 'Enabled'"
     description: "This policy setting prevents the user from having enclosures (file attachments) downloaded from an RSS feed to the user's computer. The recommended state for this setting is: Enabled."
@@ -2675,12 +2759,15 @@ checks:
     compliance:
       - cis: ["18.9.59.1"]
       - cis_csc: ["7.2"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]    
     references:
       - 'CCE-37126-0'
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Internet Explorer\Feeds -> DisableEnclosureDownload -> 1'
 
+# 18.9.60.3 Ensure 'Allow indexing of encrypted files' is set to 'Disabled'
   - id: 11139
     title: "Ensure 'Allow indexing of encrypted files' is set to 'Disabled'"
     description: "This policy setting controls whether encrypted items are allowed to be indexed. When this setting is changed, the index is rebuilt completely. Full volume encryption (such as BitLocker Drive Encryption or a non-Microsoft solution) must be used for the location of the index to maintain security for encrypted files. The recommended state for this setting is: Disabled."
@@ -2689,6 +2776,7 @@ checks:
     compliance:
       - cis: ["18.9.60.3"]
       - cis_csc: ["13.1"]
+      - pci_dss: ["2.2.5"]
     references:
       - 'CCE-38277-0'
     condition: all
@@ -2704,6 +2792,11 @@ checks:
     compliance:
       - cis: ["18.9.76.3.1"]
       - cis_csc: ["8"]
+      - pci_dss: ["2.2.3"]
+      - nist_800_53: ["CM.1"]
+      - gpg_13: ["4.3"]
+      - gdpr_IV: ["35.7.d"]
+      - hipaa: ["164.312.b"]
     references:
       - 'CCE-36940-5'
     condition: all
@@ -2719,6 +2812,7 @@ checks:
     compliance:
       - cis: ["18.9.76.7.1"]
       - cis_csc: ["8.1"]
+      - pci_dss: ["5.2"]
     references:
       - 'CCE-38389-3'
     condition: all
@@ -2734,6 +2828,11 @@ checks:
     compliance:
       - cis: ["18.9.76.10.1"]
       - cis_csc: ["13"]
+      - pci_dss: ["2.2.3"]
+      - nist_800_53: ["CM.1"]
+      - gpg_13: ["4.3"]
+      - gdpr_IV: ["35.7.d"]
+      - hipaa: ["164.312.b"]
     references:
       - 'CCE-38409-9'
     condition: all
@@ -2749,6 +2848,11 @@ checks:
     compliance:
       - cis: ["18.9.76.10.2"]
       - cis_csc: ["13"]
+      - pci_dss: ["2.2.3"]
+      - nist_800_53: ["CM.1"]
+      - gpg_13: ["4.3"]
+      - gdpr_IV: ["35.7.d"]
+      - hipaa: ["164.312.b"]
     references:
       - 'CCE-36958-7'
     condition: all
@@ -2765,6 +2869,11 @@ checks:
     compliance:
       - cis: ["18.9.76.13.3.1"]
       - cis_csc: ["7"]
+      - pci_dss: ["2.2.3"]
+      - nist_800_53: ["CM.1"]
+      - gpg_13: ["4.3"]
+      - gdpr_IV: ["35.7.d"]
+      - hipaa: ["164.312.b"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\Windows Defender Exploit Guard\Network Protection -> EnableNetworkProtection -> 1'
@@ -2778,12 +2887,14 @@ checks:
     compliance:
       - cis: ["18.9.76.14"]
       - cis_csc: ["8.1"]
+      - pci_dss: ["5.2"]
     references:
       - 'CCE-36082-6'
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender -> DisableAntiSpyware -> 0'
 
+# 18.9.80.1.1 Ensure 'Configure Windows Defender SmartScreen' is set to 'Enabled: Warn and prevent bypass'
   - id: 11140
     title: "Ensure 'Configure Windows Defender SmartScreen' is set to 'Enabled: Warn and prevent bypass'"
     description: "This policy setting allows you to manage the behavior of Windows SmartScreen. Windows SmartScreen helps keep PCs safer by warning users before running unrecognized programs downloaded from the Internet. Some information is sent to Microsoft about files and programs run on PCs with this feature enabled. The recommended state for this setting is: Enabled: Warn and prevent bypass."
@@ -2792,6 +2903,8 @@ checks:
     compliance:
       - cis: ["18.9.80.1.1"]
       - cis_csc: ["2"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
     references:
       - 'CCE-35859-8'
     condition: all
@@ -2808,11 +2921,13 @@ checks:
     compliance:
       - cis: ["18.9.84.2"]
       - cis_csc: ["16.5"]
+      - pci_dss: ["8.6"]
     condition: any
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsInkWorkspace -> AllowWindowsInkWorkspace -> 0'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsInkWorkspace -> AllowWindowsInkWorkspace -> 1'
 
+# 18.9.85.1 Ensure 'Allow user control over installs' is set to 'Disabled'
   - id: 11143
     title: "Ensure 'Allow user control over installs' is set to 'Disabled'"
     description: "This setting controls whether users are permitted to change installation options that typically are available only to system administrators. The security features of Windows Installer normally prevent users from changing installation options that are typically reserved for system administrators, such as specifying the directory to which files are installed. If Windows Installer detects that an installation package has permitted the user to change a protected option, it stops the installation and displays a message. These security features operate only when the installation program is running in a privileged security context in which it has access to directories denied to the user. The recommended state for this setting is: Disabled."
@@ -2821,12 +2936,14 @@ checks:
     compliance:
       - cis: ["18.9.85.1"]
       - cis_csc: ["5.1"]
+      - pci_dss: ["7.1"]
     references:
       - 'CCE-36400-0'
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Installer -> EnableUserControl -> 0'
 
+# 18.9.85.2 Ensure 'Always install with elevated privileges' is set to 'Disabled'
   - id: 11144
     title: "Ensure 'Always install with elevated privileges' is set to 'Disabled'"
     description: "This setting controls whether or not Windows Installer should use system permissions when it installs any program on the system. Note: This setting appears both in the Computer Configuration and User Configuration folders. To make this setting effective, you must enable the setting in both folders. Caution: If enabled, skilled users can take advantage of the permissions this setting grants to change their privileges and gain permanent access to restricted files and folders. Note that the User Configuration version of this setting is not guaranteed to be secure. The recommended state for this setting is: Disabled."
@@ -2835,12 +2952,14 @@ checks:
     compliance:
       - cis: ["18.9.85.2"]
       - cis_csc: ["5.1"]
+      - pci_dss: ["7.1"]
     references:
       - 'CCE-36919-9'
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Installer -> AlwaysInstallElevated -> 0'
 
+# 18.9.86.1 Ensure 'Sign-in last interactive user automatically after a system-initiated restart' is set to 'Disabled'
   - id: 11145
     title: "Ensure 'Sign-in last interactive user automatically after a system-initiated restart' is set to 'Disabled'"
     description: "This policy setting controls whether a device will automatically sign-in the last interactive user after Windows Update restarts the system. The recommended state for this setting is: Disabled."
@@ -2849,12 +2968,14 @@ checks:
     compliance:
       - cis: ["18.9.86.1"]
       - cis_csc: ["16.5"]
+      - pci_dss: ["8.6"]
     references:
       - 'CCE-36977-7'
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System -> DisableAutomaticRestartSignOn -> 1'
 
+# 18.9.95.1 Ensure 'Turn on PowerShell Script Block Logging' is set to 'Disabled'
   - id: 11146
     title: "Ensure 'Turn on PowerShell Script Block Logging' is set to 'Disabled'"
     description: "This policy setting enables logging of all PowerShell script input to the Microsoft-Windows- PowerShell/Operational event log. The recommended state for this setting is: Disabled. Note: In Microsoft's own hardening guidance, they recommend the opposite value, Enabled, because having this data logged improves investigations of PowerShell attack incidents. However, the default ACL on the PowerShell Operational log allows Interactive User (i.e. any logged on user) to read it, and therefore possibly expose passwords or other sensitive information to unauthorized users. If Microsoft locks down the default ACL on that log in the future (e.g. to restrict it only to Administrators), then we will revisit this recommendation in a future release."
@@ -2863,10 +2984,12 @@ checks:
     compliance:
       - cis: ["18.9.95.1"]
       - cis_csc: ["16.4"]
+      - pci_dss: ["12.3.8"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\PowerShell\ScriptBlockLogging -> EnableScriptBlockLogging -> 0'
 
+# 18.9.95.2 Ensure 'Turn on PowerShell Transcription' is set to 'Disabled'
   - id: 11147
     title: "Ensure 'Turn on PowerShell Transcription' is set to 'Disabled'"
     description: "This Policy setting lets you capture the input and output of Windows PowerShell commands into text-based transcripts. The recommended state for this setting is: Disabled."
@@ -2875,10 +2998,12 @@ checks:
     compliance:
       - cis: ["18.9.95.2"]
       - cis_csc: ["16.4"]
+      - pci_dss: ["12.3.8"]
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\PowerShell\Transcription -> EnableTranscripting -> 0'
 
+# 18.9.97.1.1 Ensure 'Allow Basic authentication' is set to 'Disabled'
   - id: 11148
     title: "Ensure 'Allow Basic authentication' is set to 'Disabled'"
     description: "This policy setting allows you to manage whether the Windows Remote Management (WinRM) client uses Basic authentication. The recommended state for this setting is: Disabled."
@@ -2887,12 +3012,16 @@ checks:
     compliance:
       - cis: ["18.9.97.1.1"]
       - cis_csc: ["16.13"]
+      - pci_dss: ["4.1"]
+      - hipaa: ["164.312.a.2.IV", "164.312.e.1", "164.312.e.2.I", "164.312.e.2.II"]
+      - nist_800_53: ["SC.8"]
     references:
       - 'CCE-36310-1'
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WinRM\Client -> AllowBasic -> 0'
 
+# 18.9.97.1.2 Ensure 'Allow unencrypted traffic' is set to 'Disabled'
   - id: 11149
     title: "Ensure 'Allow unencrypted traffic' is set to 'Disabled'"
     description: "This policy setting allows you to manage whether the Windows Remote Management (WinRM) client sends and receives unencrypted messages over the network. The recommended state for this setting is: Disabled."
@@ -2901,12 +3030,16 @@ checks:
     compliance:
       - cis: ["18.9.97.1.2"]
       - cis_csc: ["16.13"]
+      - pci_dss: ["4.1"]
+      - hipaa: ["164.312.a.2.IV", "164.312.e.1", "164.312.e.2.I", "164.312.e.2.II"]
+      - nist_800_53: ["SC.8"]
     references:
       - 'CCE-37726-7'
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WinRM\Client -> AllowUnencryptedTraffic -> 0'
 
+# 18.9.97.1.3 Ensure 'Disallow Digest authentication' is set to 'Enabled'
   - id: 11150
     title: "Ensure 'Disallow Digest authentication' is set to 'Enabled'"
     description: "This policy setting allows you to manage whether the Windows Remote Management (WinRM) client will not use Digest authentication. The recommended state for this setting is: Enabled."
@@ -2915,12 +3048,16 @@ checks:
     compliance:
       - cis: ["18.9.97.1.3"]
       - cis_csc: ["16.13"]
+      - pci_dss: ["4.1"]
+      - hipaa: ["164.312.a.2.IV", "164.312.e.1", "164.312.e.2.I", "164.312.e.2.II"]
+      - nist_800_53: ["SC.8"]
     references:
       - 'CCE-38318-2'
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WinRM\Client -> AllowDigest -> 0'
 
+# 18.9.97.2.1 Ensure 'Allow Basic authentication' is set to 'Disabled'
   - id: 11151
     title: "Ensure 'Allow Basic authentication' is set to 'Disabled'"
     description: "This policy setting allows you to manage whether the Windows Remote Management (WinRM) service accepts Basic authentication from a remote client. The recommended state for this setting is: Disabled."
@@ -2929,12 +3066,16 @@ checks:
     compliance:
       - cis: ["18.9.97.2.1"]
       - cis_csc: ["16.13"]
+      - pci_dss: ["4.1"]
+      - hipaa: ["164.312.a.2.IV", "164.312.e.1", "164.312.e.2.I", "164.312.e.2.II"]
+      - nist_800_53: ["SC.8"]
     references:
       - 'CCE-36254-1'
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WinRM\Service -> AllowBasic -> 0'
 
+# 18.9.97.2.3 Ensure 'Allow unencrypted traffic' is set to 'Disabled'
   - id: 11152
     title: "Ensure 'Allow unencrypted traffic' is set to 'Disabled'"
     description: "This policy setting allows you to manage whether the Windows Remote Management (WinRM) service sends and receives unencrypted messages over the network. The recommended state for this setting is: Disabled."
@@ -2943,12 +3084,16 @@ checks:
     compliance:
       - cis: ["18.9.97.2.3"]
       - cis_csc: ["16.13"]
+      - pci_dss: ["4.1"]
+      - hipaa: ["164.312.a.2.IV", "164.312.e.1", "164.312.e.2.I", "164.312.e.2.II"]
+      - nist_800_53: ["SC.8"]
     references:
       - 'CCE-38223-4'
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WinRM\Service -> AllowUnencryptedTraffic -> 0'
 
+# 18.9.97.2.4 Ensure 'Disallow WinRM from storing RunAs credentials' is set to 'Enabled'
   - id: 11153
     title: "Ensure 'Disallow WinRM from storing RunAs credentials' is set to 'Enabled'"
     description: "This policy setting allows you to manage whether the Windows Remote Management (WinRM) service will allow RunAs credentials to be stored for any plug-ins. The recommended state for this setting is: Enabled. Note: If you enable and then disable this policy setting, any values that were previously configured for RunAsPassword will need to be reset."
@@ -2957,6 +3102,7 @@ checks:
     compliance:
       - cis: ["18.9.97.2.4"]
       - cis_csc: ["16.4"]
+      - pci_dss: ["12.3.8"]
     references:
       - 'CCE-36000-8'
     condition: all
@@ -2986,6 +3132,9 @@ checks:
     compliance:
       - cis: ["18.9.101.1.2"]
       - cis_csc: ["3"]
+      - pci_dss: ["4.1"]
+      - hipaa: ["164.312.a.2.IV", "164.312.e.1", "164.312.e.2.I", "164.312.e.2.II"]
+      - nist_800_53: ["SC.8"]
     references:
       - 'https://blogs.technet.microsoft.com/wsus/2017/05/05/demystifying-dual-scan/'
       - 'https://blogs.technet.microsoft.com/wsus/2017/08/04/improving-dual-scan-on-1607/'
@@ -3003,6 +3152,7 @@ checks:
     compliance:
       - cis: ["18.9.101.1.3"]
       - cis_csc: ["4.5"]
+      - pci_dss: ["6.2"]
     references:
       - 'https://blogs.technet.microsoft.com/wsus/2017/05/05/demystifying-dual-scan/'
       - 'https://blogs.technet.microsoft.com/wsus/2017/08/04/improving-dual-scan-on-1607/'
@@ -3012,7 +3162,7 @@ checks:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate -> DeferQualityUpdatesPeriodInDays -> 0'
 
 
-
+# 18.9.101.2 Ensure 'Configure Automatic Updates' is set to 'Enabled'
   - id: 11154
     title: "Ensure 'Configure Automatic Updates' is set to 'Enabled'"
     description: "This policy setting specifies whether computers in your environment will receive security updates from Windows Update or WSUS. If you configure this policy setting to Enabled, the operating system will recognize when a network connection is available and then use the network connection to search Windows Update or your designated intranet site for updates that apply to them. After you configure this policy setting to Enabled, select one of the following three options in the Configure Automatic Updates Properties dialog box to specify how the service will work: 2 - Notify for download and auto install (Notify before downloading any updates) 3 - Auto download and notify for install (Download the updates automatically and notify when they are ready to be installed.) (Default setting) 4 - Auto download and schedule the install (Automatically download updates and install them on the schedule specified below.)) 5 - Allow local admin to choose setting (Leave decision on above choices up to the local Administrators (Not Recommended)) The recommended state for this setting is: Enabled. Note: The sub-setting 'Configure automatic updating:' has 4 possible values - all of them are valid depending on specific organizational needs, however if feasible we suggest using a value of 4 - Auto download and schedule the install. This suggestion is not a scored requirement. Note #2: Organizations that utilize a 3rd-party solution for patching may choose to exempt themselves from this setting, and instead configure it to Disabled so that the native Windows Update mechanism does not interfere with the 3rd-party patching process."
@@ -3021,12 +3171,14 @@ checks:
     compliance:
       - cis: ["18.9.101.2"]
       - cis_csc: ["4.5"]
+      - pci_dss: ["6.2"]
     references:
       - 'CCE-36172-5'
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU -> NoAutoUpdate -> 0'
 
+# 18.9.101.3 Ensure 'Configure Automatic Updates: Scheduled install day' is set to '0 - Every day'
   - id: 11155
     title: "Ensure 'Configure Automatic Updates: Scheduled install day' is set to '0 - Every day'"
     description: "This policy setting specifies when computers in your environment will receive security updates from Windows Update or WSUS. The recommended state for this setting is: 0 - Every day. Note: This setting is only applicable if 4 - Auto download and schedule the install is selected in Rule 18.9.101.2. It will have no impact if any other option is selected."
@@ -3035,12 +3187,14 @@ checks:
     compliance:
       - cis: ["18.9.101.3"]
       - cis_csc: ["4.5"]
+      - pci_dss: ["6.2"]
     references:
       - 'CCE-36172-5'
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU -> ScheduledInstallDay -> 0'
 
+# 18.9.101.4 Ensure 'No auto-restart with logged on users for scheduled automatic updates installations' is set to 'Disabled'
   - id: 11156
     title: "Ensure 'No auto-restart with logged on users for scheduled automatic updates installations' is set to 'Disabled'"
     description: "This policy setting specifies that Automatic Updates will wait for computers to be restarted by the users who are logged on to them to complete a scheduled installation. The recommended state for this setting is: Disabled. Note: This setting applies only when you configure Automatic Updates to perform scheduled update installations. If you configure the Configure Automatic Updates setting to Disabled, this setting has no effect."
@@ -3049,6 +3203,7 @@ checks:
     compliance:
       - cis: ["18.9.101.4"]
       - cis_csc: ["4.5"]
+      - pci_dss: ["6.2"]
     references:
       - 'CCE-37027-0'
     condition: all
