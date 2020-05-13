@@ -42,6 +42,20 @@ checks:
 ###############################################
 
 
+#  2.3.7.6 - Interactive logon: Number of previous logons to cache (in case domain controller is not available)' is set to '4 or fewer logon(s)
+  - id: 16500 
+    title: "Ensure 'Interactive logon: Number of previous logons to cache (in case domain controller is not available)' is set to '4 or fewer logon(s)'"
+    description: "This policy setting determines whether a user can log on to a Windows domain using cached account information."
+    rationale: "The number that is assigned to this policy setting indicates the number of users whose logon information the computer will cache locally."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to 4 or fewer logon(s): Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Local Policies\\Security Options\\Interactive logon: Number of previous logons to cache (in case domain controller is not available)."
+    compliance:
+      - cis: ["2.3.7.6"]
+      - cis_csc: ["16"]
+    references:
+      - 'CCE-38240-8'
+    condition: all
+    rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon -> CachedLogonsCount -> r:^0$|^1$|^2$|^3$|^4$'
 
 
 ###############################################
@@ -76,5 +90,3 @@ checks:
 ###############################################
 # 19 Administrative Templates (User)
 ###############################################
-
-
