@@ -49,6 +49,480 @@ checks:
 ###############################################
 
 
+###############################################
+# 9.1 Domain Profile
+###############################################
+
+# 9.1.1 Ensure 'Windows Firewall: Domain: Firewall state' is set to 'On (recommended)'
+  - id: 15058 
+    title: "Ensure 'Windows Firewall: Domain: Firewall state' is set to 'On (recommended)'"
+    description: "Select On (recommended) to have Windows Firewall with Advanced Security use the settings for this profile to filter network traffic. If you select Off, Windows Firewall with Advanced Security will not use any of the firewall rules or connection security rules for this profile. The recommended state for this setting is: On (recommended)."
+    rationale: "If the firewall is turned off all traffic will be able to access the system and an attacker may be more easily able to remotely exploit a weakness in a network service."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to On (recommended): Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Windows Firewall with Advanced Security\\Windows Firewall with Advanced Security\\Windows Firewall Properties\\Domain Profile\\Firewall state."
+    compliance:
+      - cis: ["9.1.1"]
+      - cis_csc: ["9.2"]
+      - pci_dss: ["1.2.3"]
+    references:
+      - 'CCE-36062-8'
+    condition: all
+    rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\DomainProfile -> EnableFirewall -> 1'
+
+# 9.1.2 Ensure 'Windows Firewall: Domain: Inbound connections' is set to 'Block (default)' 
+  - id: 15059 
+    title: "Ensure 'Windows Firewall: Domain: Inbound connections' is set to 'Block (default)'"
+    description: "This setting determines the behavior for inbound connections that do not match an inbound firewall rule. The recommended state for this setting is: Block (default)."
+    rationale: "If the firewall allows all traffic to access the system then an attacker may be more easily able to remotely exploit a weakness in a network service."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to Block (default): Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Windows Firewall with Advanced Security\\Windows Firewall with Advanced Security\\Windows Firewall Properties\\Domain Profile\\Inbound connections."
+    compliance:
+      - cis: ["9.1.2"]
+      - cis_csc: ["9.2"]
+      - pci_dss: ["1.2.3"]
+    references:
+      - 'CCE-38117-8'
+    condition: all
+    rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\DomainProfile -> DefaultInboundAction -> 1'
+
+# 9.1.3 Ensure 'Windows Firewall: Domain: Outbound connections' is set to 'Allow (default)'
+  - id: 15060 
+    title: "Ensure 'Windows Firewall: Domain: Outbound connections' is set to 'Allow (default)'"
+    description: "This setting determines the behavior for outbound connections that do not match an outbound firewall rule. The recommended state for this setting is: Allow (default)."
+    rationale: "Some people believe that it is prudent to block all outbound connections except those specifically approved by the user or administrator. Microsoft disagrees with this opinion, blocking outbound connections by default will force users to deal with a large number of dialog boxes prompting them to authorize or block applications such as their web browser or instant messaging software. Additionally, blocking outbound traffic has little value because if an attacker has compromised the system they can reconfigure the firewall anyway."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to Allow (default): Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Windows Firewall with Advanced Security\\Windows Firewall with Advanced Security\\Windows Firewall Properties\\Domain Profile\\Outbound connections."
+    compliance:
+      - cis: ["9.1.3"]
+      - cis_csc: ["9.2"]
+      - pci_dss: ["1.2.3"]
+    references:
+      - 'CCE-36146-9'
+    condition: all
+    rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\DomainProfile -> DefaultOutboundAction -> 0'
+
+# 9.1.4 Ensure 'Windows Firewall: Domain: Settings: Display a notification' is set to 'No'
+  - id: 15061 
+    title: "Ensure 'Windows Firewall: Domain: Settings: Display a notification' is set to 'No'"
+    description: "Select this option to have Windows Firewall with Advanced Security display notifications to the user when a program is blocked from receiving inbound connections. The recommended state for this setting is: No. Note: When the Apply local firewall rules setting is configured to No, it's recommended to also configure the Display a notification setting to No. Otherwise, users will continue to receive messages that ask if they want to unblock a restricted inbound connection, but the user's response will be ignored."
+    rationale: "Firewall notifications can be complex and may confuse the end users, who would not be able to address the alert."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to No: Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Windows Firewall with Advanced Security\\Windows Firewall with Advanced Security\\Windows Firewall Properties\\Domain Profile\\Settings Customize\\Display a notification."
+    compliance:
+      - cis: ["9.1.4"]
+      - pci_dss: ["7.2"]
+    references:
+      - 'CCE-38041-0'
+    condition: all
+    rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\DomainProfile -> DisableNotifications -> 1'
+
+# 9.1.5 Ensure 'Windows Firewall: Domain: Logging: Name' is set to '%SYSTEMROOT%\System32\logfiles\firewall\domainfw.log'
+  - id: 15062 
+    title: "Ensure 'Windows Firewall: Domain: Logging: Name' is set to '%SYSTEMROOT%\\System32\\logfiles\\firewall\\domainfw.log'"
+    description: "Use this option to specify the path and name of the file in which Windows Firewall will write its log information. The recommended state for this setting is: %SYSTEMROOT%\\System32\\logfiles\\firewall\\domainfw.log."
+    rationale: "If events are not recorded it may be difficult or impossible to determine the root cause of system problems or the unauthorized activities of malicious users."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to %SYSTEMROOT%\\System32\\logfiles\\firewall\\domainfw.log: Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Windows Firewall with Advanced Security\\Windows Firewall with Advanced Security\\Windows Firewall Properties\\Domain Profile\\Logging Customize\\Name"
+    compliance:
+      - cis: ["9.1.5"]
+      - cis_csc: ["6.2"]  
+      - pci_dss: ["10.6.1"]
+      - nist_800_53: ["AU.6"]
+      - gpg13: ["4.12"]
+      - gdpr_IV: [35.7.d]
+      - hipaa: ["164.312.b"]
+    references:
+      - 'CCE-37482-7'
+    condition: all
+    rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\DomainProfile\Logging -> LogFilePath -> r:%SYSTEMROOT%\\System32\\logfiles\\firewall\\domainfw.log'
+
+# 9.1.6 Ensure 'Windows Firewall: Domain: Logging: Size limit (KB)' is set to '16384 KB or greater'
+  - id: 15063 
+    title: "Ensure 'Windows Firewall: Domain: Logging: Size limit (KB)' is set to '16384 KB or greater'"
+    description: "Use this option to specify the size limit of the file in which Windows Firewall will write its log information. The recommended state for this setting is: 16,384 KB or greater."
+    rationale: "If events are not recorded it may be difficult or impossible to determine the root cause of system problems or the unauthorized activities of malicious users."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to 16,384 KB or greater: Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Windows Firewall with Advanced Security\\Windows Firewall with Advanced Security\\Windows Firewall Properties\\Domain Profile\\Logging Customize\\Size limit (KB)."
+    compliance:
+      - cis: ["9.1.6"]
+      - cis_csc: ["6.3"]
+      - pci_dss: ["10.6.1"]
+      - nist_800_53: ["AU.6"]
+      - gpg13: ["4.12"]
+      - gdpr_IV: [35.7.d]
+      - hipaa: ["164.312.b"]
+    references:
+      - 'CCE-36088-3'
+    condition: all
+    rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\DomainProfile\Logging -> LogFileSize -> n:^(\d+) compare >= 16384'
+
+# 9.1.7 Ensure 'Windows Firewall: Domain: Logging: Log dropped packets' is set to 'Yes'
+  - id: 15064 
+    title: "Ensure 'Windows Firewall: Domain: Logging: Log dropped packets' is set to 'Yes'"
+    description: "Use this option to log when Windows Firewall with Advanced Security discards an inbound packet for any reason. The log records why and when the packet was dropped. Look for entries with the word DROP in the action column of the log. The recommended state for this setting is: Yes."
+    rationale: "If events are not recorded it may be difficult or impossible to determine the root cause of system problems or the unauthorized activities of malicious users."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to Yes: Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Windows Firewall with Advanced Security\\Windows Firewall with Advanced Security\\Windows Firewall Properties\\Domain Profile\\Logging Customize\\Log dropped packets."
+    compliance:
+      - cis: ["9.1.7"]
+      - cis_csc: ["6.2"]
+      - pci_dss: ["10.6.1"]
+      - nist_800_53: ["AU.6"]
+      - gpg13: ["4.12"]
+      - gdpr_IV: [35.7.d]
+      - hipaa: ["164.312.b"]
+    references:
+      - 'CCE-37523-8'
+    condition: all
+    rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\DomainProfile\Logging -> LogDroppedPackets -> 1'
+
+# 9.1.8 Ensure 'Windows Firewall: Domain: Logging: Log successful connections' is set to 'Yes'
+  - id: 15065 
+    title: "Ensure 'Windows Firewall: Domain: Logging: Log successful connections' is set to 'Yes'"
+    description: "Use this option to log when Windows Firewall with Advanced Security allows an inbound connection. The log records why and when the connection was formed. Look for entries with the word ALLOW in the action column of the log. The recommended state for this setting is: Yes."
+    rationale: "If events are not recorded it may be difficult or impossible to determine the root cause of system problems or the unauthorized activities of malicious users."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to Yes: Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Windows Firewall with Advanced Security\\Windows Firewall with Advanced Security\\Windows Firewall Properties\\Domain Profile\\Logging Customize\\Log successful connections."
+    compliance:
+      - cis: ["9.1.8"]
+      - cis_csc: ["6.2"]
+      - pci_dss: ["10.6.1"]
+      - nist_800_53: ["AU.6"]
+      - gpg13: ["4.12"]
+      - gdpr_IV: [35.7.d]
+      - hipaa: ["164.312.b"]
+    references:
+      - 'CCE-36393-7'
+    condition: all
+    rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\DomainProfile\Logging -> LogSuccessfulConnections -> 1'
+
+###############################################
+# 9.2 Private Profile
+###############################################
+
+# 9.2.1 Ensure 'Windows Firewall: Private: Firewall state' is set to 'On (recommended)'
+  - id: 15066 
+    title: "Ensure 'Windows Firewall: Private: Firewall state' is set to 'On (recommended)'"
+    description: "Select On (recommended) to have Windows Firewall with Advanced Security use the settings for this profile to filter network traffic. If you select Off, Windows Firewall with Advanced Security will not use any of the firewall rules or connection security rules for this profile. The recommended state for this setting is: On (recommended)."
+    rationale: "If the firewall is turned off all traffic will be able to access the system and an attacker may be more easily able to remotely exploit a weakness in a network service."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to On (recommended): Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Windows Firewall with Advanced Security\\Windows Firewall with Advanced Security\\Windows Firewall Properties\\Private Profile\\Firewall state."
+    compliance:
+      - cis: ["9.2.1"]
+      - cis_csc: ["9.2"]
+      - pci_dss: ["1.2.3"]
+    references:
+      - 'CCE-38239-0'
+    condition: all
+    rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PrivateProfile -> EnableFirewall -> 1'
+
+# 9.2.2 Ensure 'Windows Firewall: Private: Inbound connections' is set to 'Block (default)'
+  - id: 15067 
+    title: "Ensure 'Windows Firewall: Private: Inbound connections' is set to 'Block (default)'"
+    description: "This setting determines the behavior for inbound connections that do not match an inbound firewall rule. The recommended state for this setting is: Block (default)."
+    rationale: "If the firewall allows all traffic to access the system then an attacker may be more easily able to remotely exploit a weakness in a network service."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to Block (default): Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Windows Firewall with Advanced Security\\Windows Firewall with Advanced Security\\Windows Firewall Properties\\Private Profile\\Inbound connections."
+    compliance:
+      - cis: ["9.2.2"]
+      - cis_csc: ["9.2"]
+      - pci_dss: ["1.2.3"]
+    references:
+      - 'CCE-38042-8'
+    condition: all
+    rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PrivateProfile -> DefaultInboundAction -> 1'
+
+# 9.2.3 Ensure 'Windows Firewall: Private: Outbound connections' is set to 'Allow (default)'
+  - id: 15068 
+    title: "Ensure 'Windows Firewall: Private: Outbound connections' is set to 'Allow (default)'"
+    description: "This setting determines the behavior for outbound connections that do not match an outbound firewall rule. The recommended state for this setting is: Allow (default). Note: If you set Outbound connections to Block and then deploy the firewall policy by using a GPO, computers that receive the GPO settings cannot receive subsequent Group Policy updates unless you create and deploy an outbound rule that enables Group Policy to work. Predefined rules for Core Networking include outbound rules that enable Group Policy to work. Ensure that these outbound rules are active, and thoroughly test firewall profiles before deploying."
+    rationale: "Some people believe that it is prudent to block all outbound connections except those specifically approved by the user or administrator. Microsoft disagrees with this opinion, blocking outbound connections by default will force users to deal with a large number of dialog boxes prompting them to authorize or block applications such as their web browser or instant messaging software. Additionally, blocking outbound traffic has little value because if an attacker has compromised the system they can reconfigure the firewall anyway."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to Allow (default): Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Windows Firewall with Advanced Security\\Windows Firewall with Advanced Security\\Windows Firewall Properties\\Private Profile\\Outbound connections."
+    compliance:
+      - cis: ["9.2.3"]
+      - cis_csc: ["9.2"]
+      - pci_dss: ["1.2.3"]
+    references:
+      - 'CCE-38332-3'
+    condition: all
+    rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PrivateProfile -> DefaultOutboundAction -> 0'
+
+# 9.2.4 Ensure 'Windows Firewall: Private: Settings: Display a notification' is set to 'No'
+  - id: 15069 
+    title: "Ensure 'Windows Firewall: Private: Settings: Display a notification' is set to 'No'"
+    description: "Select this option to have Windows Firewall with Advanced Security display notifications to the user when a program is blocked from receiving inbound connections. The recommended state for this setting is: No. Note: When the Apply local firewall rules setting is configured to No, it's recommended to also configure the Display a notification setting to No. Otherwise, users will continue to receive messages that ask if they want to unblock a restricted inbound connection, but the user's response will be ignored."
+    rationale: "Firewall notifications can be complex and may confuse the end users, who would not be able to address the alert."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to No: Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Windows Firewall with Advanced Security\\Windows Firewall with Advanced Security\\Windows Firewall Properties\\Private Profile\\Settings Customize\\Display a notification."
+    compliance:
+      - cis: ["9.2.4"]
+      - pci_dss: ["7.2"]
+    references:
+      - 'CCE-37621-0'
+    condition: all
+    rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PrivateProfile -> DisableNotifications -> 1'
+
+# 9.2.5 Ensure 'Windows Firewall: Private: Logging: Name' is set to '%SYSTEMROOT%\System32\logfiles\firewall\privatefw.log'
+  - id: 15070 
+    title: "Ensure 'Windows Firewall: Private: Logging: Name' is set to '%SYSTEMROOT%\\System32\\logfiles\\firewall\\privatefw.log'"
+    description: "Use this option to specify the path and name of the file in which Windows Firewall will write its log information. The recommended state for this setting is: %SYSTEMROOT%\\System32\\logfiles\\firewall\\privatefw.log."
+    rationale: "If events are not recorded it may be difficult or impossible to determine the root cause of system problems or the unauthorized activities of malicious users."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to %SYSTEMROOT%\\System32\\logfiles\\firewall\\privatefw.log: Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Windows Firewall with Advanced Security\\Windows Firewall with Advanced Security\\Windows Firewall Properties\\Private Profile\\Logging Customize\\Name"
+    compliance:
+      - cis: ["9.2.5"]
+      - cis_csc: ["6.2"]
+      - pci_dss: ["10.6.1"]
+      - nist_800_53: ["AU.6"]
+      - gpg13: ["4.12"]
+      - gdpr_IV: [35.7.d]
+      - hipaa: ["164.312.b"]
+    references:
+      - 'CCE-37569-1'
+    condition: all
+    rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PrivateProfile\Logging -> LogFilePath -> r:%SYSTEMROOT%\\System32\\logfiles\\firewall\\privatefw.log'
+
+# 9.2.6 Ensure 'Windows Firewall: Private: Logging: Size limit (KB)' is set to '16384 KB or greater'
+  - id: 15071 
+    title: "Ensure 'Windows Firewall: Private: Logging: Size limit (KB)' is set to '16384 KB or greater'"
+    description: "Use this option to specify the size limit of the file in which Windows Firewall will write its log information. The recommended state for this setting is: 16,384 KB or greater."
+    rationale: "If events are not recorded it may be difficult or impossible to determine the root cause of system problems or the unauthorized activities of malicious users."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to 16,384 KB or greater: Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Windows Firewall with Advanced Security\\Windows Firewall with Advanced Security\\Windows Firewall Properties\\Private Profile\\Logging Customize\\Size limit (KB)."
+    compliance:
+      - cis: ["9.2.6"]
+      - cis_csc: ["6.3"]
+      - pci_dss: ["10.6.1"]
+      - nist_800_53: ["AU.6"]
+      - gpg13: ["4.12"]
+      - gdpr_IV: [35.7.d]
+      - hipaa: ["164.312.b"]
+    references:
+      - 'CCE-38178-0'
+    condition: all
+    rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PrivateProfile\Logging -> LogFileSize -> n:^(\d+) compare >= 16384'
+
+# 9.2.7 Ensure 'Windows Firewall: Private: Logging: Log dropped packets' is set to 'Yes'
+  - id: 15072 
+    title: "Ensure 'Windows Firewall: Private: Logging: Log dropped packets' is set to 'Yes'"
+    description: "Use this option to log when Windows Firewall with Advanced Security discards an inbound packet for any reason. The log records why and when the packet was dropped. Look for entries with the word DROP in the action column of the log. The recommended state for this setting is: Yes."
+    rationale: "If events are not recorded it may be difficult or impossible to determine the root cause of system problems or the unauthorized activities of malicious users."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to Yes: Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Windows Firewall with Advanced Security\\Windows Firewall with Advanced Security\\Windows Firewall Properties\\Private Profile\\Logging Customize\\Log dropped packets."
+    compliance:
+      - cis: ["9.2.7"]
+      - cis_csc: ["6.2"]
+      - pci_dss: ["10.6.1"]
+      - nist_800_53: ["AU.6"]
+      - gpg13: ["4.12"]
+      - gdpr_IV: [35.7.d]
+      - hipaa: ["164.312.b"]
+    references:
+      - 'CCE-35972-9'
+    condition: all
+    rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PrivateProfile\Logging -> LogDroppedPackets -> 1'
+
+# 9.2.8 Ensure 'Windows Firewall: Private: Logging: Log successful connections' is set to 'Yes'
+  - id: 15073 
+    title: "Ensure 'Windows Firewall: Private: Logging: Log successful connections' is set to 'Yes'"
+    description: "Use this option to log when Windows Firewall with Advanced Security allows an inbound connection. The log records why and when the connection was formed. Look for entries with the word ALLOW in the action column of the log. The recommended state for this setting is: Yes."
+    rationale: "If events are not recorded it may be difficult or impossible to determine the root cause of system problems or the unauthorized activities of malicious users."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to Yes: Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Windows Firewall with Advanced Security\\Windows Firewall with Advanced Security\\Windows Firewall Properties\\Private Profile\\Logging Customize\\Log successful connections."
+    compliance:
+      - cis: ["9.2.8"]
+      - cis_csc: ["6.2"]
+      - pci_dss: ["10.6.1"]
+      - nist_800_53: ["AU.6"]
+      - gpg13: ["4.12"]
+      - gdpr_IV: [35.7.d]
+      - hipaa: ["164.312.b"]
+    references:
+      - 'CCE-37387-8'
+    condition: all
+    rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PrivateProfile\Logging -> LogSuccessfulConnections -> 1'
+
+###############################################
+# 9.3 Public Profile
+###############################################
+
+# 9.3.1 Ensure 'Windows Firewall: Public: Firewall state' is set to 'On (recommended)'
+  - id: 15074 
+    title: "Ensure 'Windows Firewall: Public: Firewall state' is set to 'On (recommended)'"
+    description: "Select On (recommended) to have Windows Firewall with Advanced Security use the settings for this profile to filter network traffic. If you select Off, Windows Firewall with Advanced Security will not use any of the firewall rules or connection security rules for this profile. The recommended state for this setting is: On (recommended)."
+    rationale: "If the firewall is turned off all traffic will be able to access the system and an attacker may be more easily able to remotely exploit a weakness in a network service."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to On (recommended): Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Windows Firewall with Advanced Security\\Windows Firewall with Advanced Security\\Windows Firewall Properties\\Public Profile\\Firewall state."
+    compliance:
+      - cis: ["9.3.1"]
+      - cis_csc: ["9.2"]
+      - pci_dss: ["1.2.3"]
+    references:
+      - 'CCE-37862-0'
+    condition: all
+    rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PublicProfile -> EnableFirewall -> 1'
+
+# 9.3.2 Ensure 'Windows Firewall: Public: Inbound connections' is set to 'Block (default)'
+  - id: 15075 
+    title: "Ensure 'Windows Firewall: Public: Inbound connections' is set to 'Block (default)'"
+    description: "This setting determines the behavior for inbound connections that do not match an inbound firewall rule. The recommended state for this setting is: Block (default)."
+    rationale: "If the firewall allows all traffic to access the system then an attacker may be more easily able to remotely exploit a weakness in a network service."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to Block (default): Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Windows Firewall with Advanced Security\\Windows Firewall with Advanced Security\\Windows Firewall Properties\\Public Profile\\Inbound connections."
+    compliance:
+      - cis: ["9.3.2"]
+      - cis_csc: ["9.2"]
+      - pci_dss: ["1.2.3"]
+    references:
+      - 'CCE-36057-8'
+    condition: all
+    rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PublicProfile -> DefaultInboundAction -> 1'
+
+# 9.3.3 Ensure 'Windows Firewall: Public: Outbound connections' is set to 'Allow (default)'
+  - id: 15076 
+    title: "Ensure 'Windows Firewall: Public: Outbound connections' is set to 'Allow (default)'"
+    description: "This setting determines the behavior for outbound connections that do not match an outbound firewall rule. The recommended state for this setting is: Allow (default). Note: If you set Outbound connections to Block and then deploy the firewall policy by using a GPO, computers that receive the GPO settings cannot receive subsequent Group Policy updates unless you create and deploy an outbound rule that enables Group Policy to work. Predefined rules for Core Networking include outbound rules that enable Group Policy to work. Ensure that these outbound rules are active, and thoroughly test firewall profiles before deploying."
+    rationale: "Some people believe that it is prudent to block all outbound connections except those specifically approved by the user or administrator. Microsoft disagrees with this opinion, blocking outbound connections by default will force users to deal with a large number of dialog boxes prompting them to authorize or block applications such as their web browser or instant messaging software. Additionally, blocking outbound traffic has little value because if an attacker has compromised the system they can reconfigure the firewall anyway."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to Allow (default): Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Windows Firewall with Advanced Security\\Windows Firewall with Advanced Security\\Windows Firewall Properties\\Public Profile\\Outbound connections."
+    compliance:
+      - cis: ["9.3.3"]
+      - cis_csc: ["9.2"]
+      - pci_dss: ["1.2.3"]
+    references:
+      - 'CCE-37434-8'
+    condition: all
+    rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PublicProfile -> DefaultOutboundAction -> 0'
+
+# 9.3.4 Ensure 'Windows Firewall: Public: Settings: Display a notification' is set to 'No'
+  - id: 15077 
+    title: "Ensure 'Windows Firewall: Public: Settings: Display a notification' is set to 'No'"
+    description: "Select this option to have Windows Firewall with Advanced Security display notifications to the user when a program is blocked from receiving inbound connections. The recommended state for this setting is: No."
+    rationale: "Some organizations may prefer to avoid alarming users when firewall rules block certain types of network activity. However, notifications can be helpful when troubleshooting network issues involving the firewall."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to 'No': Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Windows Firewall with Advanced Security\\Windows Firewall with Advanced Security\\Windows Firewall Properties\\Public Profile\\Settings Customize\\Display a notification."
+    compliance:
+      - cis: ["9.3.4"]
+      - pci_dss: ["7.2"]
+    references:
+      - 'CCE-38043-6'
+    condition: all
+    rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PublicProfile -> DisableNotifications -> 1'
+
+# 9.3.5 Ensure 'Windows Firewall: Public: Settings: Apply local firewall rules' is set to 'No'
+  - id: 15078 
+    title: "Ensure 'Windows Firewall: Public: Settings: Apply local firewall rules' is set to 'No'"
+    description: "This setting controls whether local administrators are allowed to create local firewall rules that apply together with firewall rules configured by Group Policy. The recommended state for this setting is: No. Note: When the Apply local firewall rules setting is configured to No, it's recommended to also configure the Display a notification setting to No. Otherwise, users will continue to receive messages that ask if they want to unblock a restricted inbound connection, but the user's response will be ignored."
+    rationale: "iWhen in the Public profile, there should be no special local firewall exceptions per computer. These settings should be managed by a centralized policy."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to No: Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Windows Firewall with Advanced Security\\Windows Firewall with Advanced Security\\Windows Firewall Properties\\Public Profile\\Settings Customize\\Apply local firewall rules."
+    compliance:
+      - cis: ["9.3.5"]
+      - cis_csc: ["5.1"]
+      - pci_dss: ["7.2"]
+    references:
+      - 'CCE-37861-2'
+    condition: all
+    rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PublicProfile -> AllowLocalPolicyMerge -> 0'
+
+# 9.3.6 Ensure 'Windows Firewall: Public: Settings: Apply local connection security rules' is set to 'No'
+  - id: 15079 
+    title: "Ensure 'Windows Firewall: Public: Settings: Apply local connection security rules' is set to 'No'"
+    description: "This setting controls whether local administrators are allowed to create connection security rules that apply together with connection security rules configured by Group Policy. The recommended state for this setting is: No."
+    rationale: "Users with administrative privileges might create firewall rules that expose the system to remote attack."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to No: Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Windows Firewall with Advanced Security\\Windows Firewall with Advanced Security\\Windows Firewall Properties\\Public Profile\\Settings Customize\\Apply local connection security rules."
+    compliance:
+      - cis: ["9.3.6"]
+      - cis_csc: ["5.1"]
+      - pci_dss: ["7.2"]
+    references:
+      - 'CCE-36268-1'
+    condition: all
+    rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PublicProfile -> AllowLocalIPsecPolicyMerge -> 0'
+
+# 9.3.7 Ensure 'Windows Firewall: Public: Logging: Name' is set to '%SYSTEMROOT%\System32\logfiles\firewall\publicfw.log'
+  - id: 15080 
+    title: "Ensure 'Windows Firewall: Public: Logging: Name' is set to '%SYSTEMROOT%\\System32\\logfiles\\firewall\\publicfw.log'"
+    description: "Use this option to specify the path and name of the file in which Windows Firewall will write its log information. The recommended state for this setting is: %SYSTEMROOT%\\System32\\logfiles\\firewall\\publicfw.log."
+    rationale: "If events are not recorded it may be difficult or impossible to determine the root cause of system problems or the unauthorized activities of malicious users."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to %SYSTEMROOT%\\System32\\logfiles\\firewall\\publicfw.log: Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Windows Firewall with Advanced Security\\Windows Firewall with Advanced Security\\Windows Firewall Properties\\Public Profile\\Logging Customize\\Name"
+    compliance:
+      - cis: ["9.3.7"]
+      - cis_csc: ["6.2"]
+      - pci_dss: ["10.6.1"]
+      - nist_800_53: ["AU.6"]
+      - gpg13: ["4.12"]
+      - gdpr_IV: [35.7.d]
+      - hipaa: ["164.312.b"]
+    references:
+      - 'CCE-37266-4'
+    condition: all
+    rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PublicProfile\Logging -> LogFilePath -> r:%SYSTEMROOT%\\System32\\logfiles\\firewall\\publicfw.log'
+
+# 9.3.8 Ensure 'Windows Firewall: Public: Logging: Size limit (KB)' is set to '16384 KB or greater'
+  - id: 15081 
+    title: "Ensure 'Windows Firewall: Public: Logging: Size limit (KB)' is set to '16384 KB or greater'"
+    description: "Use this option to specify the size limit of the file in which Windows Firewall will write its log information. The recommended state for this setting is: 16,384 KB or greater."
+    rationale: "If events are not recorded it may be difficult or impossible to determine the root cause of system problems or the unauthorized activities of malicious users."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to 16,384 KB or greater: Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Windows Firewall with Advanced Security\\Windows Firewall with Advanced Security\\Windows Firewall Properties\\Public Profile\\Logging Customize\\Size limit (KB)."
+    compliance:
+      - cis: ["9.3.8"]
+      - cis_csc: ["6.3"]
+      - pci_dss: ["10.6.1"]
+      - nist_800_53: ["AU.6"]
+      - gpg13: ["4.12"]
+      - gdpr_IV: [35.7.d]
+      - hipaa: ["164.312.b"]
+    references:
+      - 'CCE-36395-2'
+    condition: all
+    rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PublicProfile\Logging -> LogFileSize -> n:^(\d+) compare >= 16384'
+
+# 9.3.9 Ensure 'Windows Firewall: Public: Logging: Log dropped packets' is set to 'Yes'
+  - id: 15082 
+    title: "Ensure 'Windows Firewall: Public: Logging: Log dropped packets' is set to 'Yes'"
+    description: "Use this option to log when Windows Firewall with Advanced Security discards an inbound packet for any reason. The log records why and when the packet was dropped. Look for entries with the word DROP in the action column of the log. The recommended state for this setting is: Yes."
+    rationale: "If events are not recorded it may be difficult or impossible to determine the root cause of system problems or the unauthorized activities of malicious users."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to Yes: Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Windows Firewall with Advanced Security\\Windows Firewall with Advanced Security\\Windows Firewall Properties\\Public Profile\\Logging Customize\\Log dropped packets."
+    compliance:
+      - cis: ["9.3.9"]
+      - cis_csc: ["6.2"]
+      - pci_dss: ["10.6.1"]
+      - nist_800_53: ["AU.6"]
+      - gpg13: ["4.12"]
+      - gdpr_IV: [35.7.d]
+      - hipaa: ["164.312.b"]
+    references:
+      - 'CCE-37265-6'
+    condition: all
+    rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PublicProfile\Logging -> LogDroppedPackets -> 1'
+
+# 9.3.9 Ensure 'Windows Firewall: Public: Logging: Log successful connections' is set to 'Yes'
+  - id: 15083 
+    title: "Ensure 'Windows Firewall: Public: Logging: Log successful connections' is set to 'Yes'"
+    description: "Use this option to log when Windows Firewall with Advanced Security allows an inbound connection. The log records why and when the connection was formed. Look for entries with the word ALLOW in the action column of the log. The recommended state for this setting is: Yes."
+    rationale: "If events are not recorded it may be difficult or impossible to determine the root cause of system problems or the unauthorized activities of malicious users."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to Yes: Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Windows Firewall with Advanced Security\\Windows Firewall with Advanced Security\\Windows Firewall Properties\\Public Profile\\Logging Customize\\Log successful connections."
+    compliance:
+      - cis: ["9.3.10"]
+      - cis_csc: ["6.2"]
+      - pci_dss: ["10.6.1"]
+      - nist_800_53: ["AU.6"]
+      - gpg13: ["4.12"]
+      - gdpr_IV: [35.7.d]
+      - hipaa: ["164.312.b"]
+    references:
+      - 'CCE-36394-5'
+    condition: all
+    rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsFirewall\PublicProfile\Logging -> LogSuccessfulConnections -> 1'
+
+
 
 
 ###############################################
@@ -76,5 +550,370 @@ checks:
 ###############################################
 # 19 Administrative Templates (User)
 ###############################################
+
+
+######################################
+# 18.8.4 Credentials Delegation
+######################################
+# 18.8.4.1 (L1) Ensure 'Encryption Oracle Remediation' is set to 'Enabled: Force Updated Clients' (Scored)
+  - id: 16115 
+    title: "Ensure 'Encryption Oracle Remediation' is set to 'Enabled: Force Updated Clients'"
+    description: "Some versions of the CredSSP protocol that is used by some applications (such as Remote Desktop Connection) are vulnerable to an encryption oracle attack against the client. This policy controls compatibility with vulnerable clients and servers and allows you to set the level of protection desired for the encryption oracle vulnerability. The recommended state for this setting is: Enabled: Force Updated Clients ."
+    rationale: "This setting is important to mitigate the CredSSP encryption oracle vulnerability, for which information was published by Microsoft on 03/13/2018 in CVE-2018-0886 | CredSSP Remote Code Execution Vulnerability. All versions of Windows Server from Server 2008 (non-R2) onwards are affected by this vulnerability, and will be compatible with this recommendation provided that they have been patched up through May 2018 (or later)." 
+    remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Force Updated Clients : Computer Configuration\Policies\Administrative Templates\System\Credentials Delegation\Encryption Oracle Remediation Note: This Group Policy path may not exist by default. It is provided by the Group Policy template CredSsp.admx/adml that is included with the Microsoft Windows 10 Release 1803 Administrative Templates (or newer)."
+    compliance:
+      - cis: ["18.8.4.1"]
+      - cis_csc: ["16"]
+      - pci_dss: ["8.2.1"]
+    condition: all
+    rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\CredSSP\Parameters -> AllowEncryptionOracle -> 1'
+
+# 18.8.4.2 (L1) Ensure 'Remote host allows delegation of non-exportable credentials' is set to 'Enabled' (Scored)
+  - id: 16115 
+    title: "Ensure 'Remote host allows delegation of non-exportable credentials' is set to 'Enabled'"
+    description: "Remote host allows delegation of non-exportable credentials. When using credential delegation, devices provide an exportable version of credentials to the remote host. This exposes users to the risk of credential theft from attackers on the remote host. The Restricted Admin Mode and Windows Defender Remote Credential Guard features are two options to help protect against this risk. The recommended state for this setting is: Enabled ."
+    rationale: "Restricted Admin Mode was designed to help protect administrator accounts by ensuring that reusable credentials are not stored in memory on remote devices that could potentially be compromised. Windows Defender Remote Credential Guard helps you protect your credentials over a Remote Desktop connection by redirecting Kerberos requests back to the device that is requesting the connection. Both features should be enabled and supported, as they reduce the chance of credential theft."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled : Computer Configuration\\Policies\\Administrative Templates\\System\\Credentials Delegation\\Remote host allows delegation of non-exportable credentials Note: This Group Policy path may not exist by default. It is provided by the Group Policy template CredSsp.admx/adml that is included with the Microsoft Windows 10 Release 1703 Administrative Templates (or newer)."
+    compliance:
+      - cis: ["18.8.4.2"]
+      - cis_csc: ["16"]
+      - pci_dss: ["8.2.1"]
+    references:
+      - 'https://docs.microsoft.com/en-us/windows/access-protection/remote-credential-guard'
+    condition: all
+    rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\CredentialsDelegation -> AllowProtectedCreds -> 1'
+
+##########################################
+# 18.8.14 Early Launch Antimalware
+##########################################
+# 18.8.14.1 (L1) Ensure 'Boot-Start Driver Initialization Policy' is set to 'Enabled: Good, unknown and bad but critical' (Scored)
+  - id: 16116 
+    title: "Ensure 'Boot-Start Driver Initialization Policy' is set to 'Enabled: Good, unknown and bad but critical'"
+    description: "This policy setting allows you to specify which boot-start drivers are initialized based on a classification determined by an Early Launch Antimalware boot-start driver. The Early Launch Antimalware boot-start driver can return the following classifications for each boot-start driver: - Good: The driver has been signed and has not been tampered with. - Bad: The driver has been identified as malware. It is recommended that you do not allow known bad drivers to be initialized. - Bad, but required for boot: The driver has been identified as malware, but the computer cannot successfully boot without loading this driver. - Unknown: This driver has not been attested to by your malware detection application and has not been classified by the Early Launch Antimalware boot-start driver. If you enable this policy setting you will be able to choose which boot-start drivers to initialize the next time the computer is started. If your malware detection application does not include an Early Launch Antimalware boot- start driver or if your Early Launch Antimalware boot-start driver has been disabled, this setting has no effect and all boot-start drivers are initialized. The recommended state for this setting is: Enabled: Good, unknown and bad but critical."
+    rationale: "This policy setting helps reduce the impact of malware that has already infected your system."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Good, unknown and bad but critical: Computer Configuration\\Policies\\Administrative Templates\\System\\Early Launch Antimalware\\Boot-Start Driver Initialization Policy Note: This Group Policy path may not exist by default. It is provided by the Group Policy template EarlyLaunchAM.admx/adml that is included with the Microsoft Windows 8.0 & Server 2012 (non-R2) Administrative Templates (or newer)."
+    compliance:
+      - cis: ["18.8.14.1"]
+      - cis_csc: ["8"]
+      - pci_dss: ["5.1.1"]
+      - nist_800_53: ["SI.3"]
+    references:
+      - 'CCE-37912-3'
+    condition: all
+    rules:
+      - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Policies\EarlyLaunch -> DriverLoadPolicy -> 3'
+
+# 18.8.21.2 (L1) Ensure 'Configure registry policy processing: Do not apply during periodic background processing' is set to 'Enabled: FALSE' (Scored)
+  - id: 16117 
+    title: "Ensure 'Configure registry policy processing: Do not apply during periodic background processing' is set to 'Enabled: FALSE'"
+    description: "The 'Do not apply during periodic background processing' option prevents the system from updating affected policies in the background while the computer is in use. When background updates are disabled, policy changes will not take effect until the next user logon or system restart. The recommended state for this setting is: Enabled: FALSE (unchecked)."
+    rationale: "Setting this option to false (unchecked) will ensure that domain policy changes take effect more quickly, as compared to waiting until the next user logon or system restart."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled, then set the Do not apply during periodic background processing option to FALSE (unchecked): Computer Configuration\\Policies\\Administrative Templates\\System\\Group Policy\\Configure registry policy processing Note: This Group Policy path may not exist by default. It is provided by the Group Policy template GroupPolicy.admx/adml that is included with the Microsoft Windows 8.0 & Server 2012 (non-R2) Administrative Templates (or newer)."
+    compliance:
+      - cis: ["18.8.21.2"]
+      - cis_csc: ["3.7"]
+      - pci_dss: ["6.4"]
+    references:
+      - 'CCE-36169-1'
+    condition: all
+    rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Group Policy\{35378EAC-683F-11D2-A89A-00C04FBBCFA2} -> NoBackgroundPolicy -> 0'
+
+# 18.8.21.3 (L1) Ensure 'Configure registry policy processing: Process even if the Group Policy objects have not changed' is set to 'Enabled: TRUE' (Scored)
+  - id: 16118 
+    title: "Ensure 'Configure registry policy processing: Process even if the Group Policy objects have not changed' is set to 'Enabled: TRUE'"
+    description: "The 'Process even if the Group Policy objects have not changed' option updates and reapplies policies even if the policies have not changed. The recommended state for this setting is: Enabled: TRUE (checked)."
+    rationale: "Setting this option to true (checked) will ensure unauthorized changes that might have been configured locally are forced to match the domain-based Group Policy settings again."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled, then set the Process even if the Group Policy objects have not changed option to TRUE (checked): Computer Configuration\\Policies\\Administrative Templates\\System\\Group Policy\\Configure registry policy processing Note: This Group Policy path may not exist by default. It is provided by the Group Policy template GroupPolicy.admx/adml that is included with the Microsoft Windows 8.0 & Server 2012 (non-R2) Administrative Templates (or newer)."
+    compliance:
+      - cis: ["18.8.21.3"]
+      - cis_csc: ["3.7"]
+      - pci_dss: ["11.5.1"]
+    references:
+      - 'CCE-36169-1'
+    condition: all
+    rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Group Policy\{35378EAC-683F-11D2-A89A-00C04FBBCFA2} -> NoGPOListChanges -> 0'
+
+# 18.8.21.4 (L1) Ensure 'Continue experiences on this device' is set to 'Disabled' (Scored)
+  - id: 16119 
+    title: "Ensure 'Continue experiences on this device' is set to 'Disabled'"
+    description: "This policy setting determines whether the Windows device is allowed to participate in cross-device experiences (continue experiences). The recommended state for this setting is: Disabled ."
+    rationale: "A cross-device experience is when a system can access app and send messages to other devices. In an enterprise managed environment only trusted systems should be communicating within the network. Access to any other system should be prohibited."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled : Computer Configuration\\Policies\\Administrative Templates\\System\\Group Policy\\Continue experiences on this device Note: This Group Policy path may not exist by default. It is provided by the Group Policy template GroupPolicy.admx/adml that is included with the Microsoft Windows 10 Release 1607 & Server 2016 Administrative Templates (or newer)."
+    compliance:
+      - cis: ["18.8.21.4"]
+      - cis_csc: ["9.1"]
+      - pci_dss: ["6.5.8"]
+      - nist_800_53: ["SA.11","AU.14","AC.7"]
+      - gdpr_IV: [35.7.d]
+      - hipaa: ["164.312.b"]
+    condition: all
+    rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System -> EnableCdp -> 0'
+
+# 18.8.21.5 (L1) Ensure 'Turn off background refresh of Group Policy' is set to 'Disabled' (Scored)
+  - id: 16120 
+    title: "Ensure 'Turn off background refresh of Group Policy' is set to 'Disabled'"
+    description: "This policy setting prevents Group Policy from being updated while the computer is in use. This policy setting applies to Group Policy for computers, users and Domain Controllers. The recommended state for this setting is: Disabled."
+    rationale: "This setting ensures that group policy changes take effect more quickly, as compared to waiting until the next user logon or system restart."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Administrative Templates\\System\\Group Policy\\Turn off background refresh of Group Policy Note: This Group Policy path is provided by the Group Policy template GroupPolicy.admx/adml that is included with all versions of the Microsoft Windows Administrative Templates."
+    compliance:
+      - cis: ["18.8.21.5"]
+      - cis_csc: ["3.7"]
+      - pci_dss: ["6.4"]
+    references:
+      - 'CCE-37712-7'
+    condition: all
+    rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System -> DisableBkGndGroupPolicy -> 0'
+
+
+# 18.8.22.1.1 (L1) Ensure 'Turn off downloading of print drivers over HTTP' is set to 'Enabled' (Scored)
+  - id: 16121 
+    title: "Ensure 'Turn off downloading of print drivers over HTTP' is set to 'Enabled'"
+    description: "This policy setting controls whether the computer can download print driver packages over HTTP. To set up HTTP printing, printer drivers that are not available in the standard operating system installation might need to be downloaded over HTTP. The recommended state for this setting is: Enabled."
+    rationale: "Users might download drivers that include malicious code."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\System\\Internet Communication Management\\Internet Communication settings\\Turn off downloading of print drivers over HTTP Note: This Group Policy path is provided by the Group Policy template ICM.admx/adml that is included with all versions of the Microsoft Windows Administrative Templates."
+    compliance:
+      - cis: ["18.8.22.1.1"]
+      - cis_csc: ["2"]
+      - pci_dss: ["6"]
+      - nist_800_53: ["SI.3"]
+    references:
+      - 'CCE-36625-2'
+    condition: all
+    rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Printers -> DisableWebPnPDownload -> 1'
+
+# 18.8.22.1.5 (L1) Ensure 'Turn off Internet download for Web publishing and online ordering wizards' is set to 'Enabled' (Scored)
+  - id: 16122 
+    title: "Ensure 'Turn off Internet download for Web publishing and online ordering wizards' is set to 'Enabled'"
+    description: "This policy setting controls whether Windows will download a list of providers for the Web publishing and online ordering wizards. The recommended state for this setting is: Enabled."
+    rationale: "Although the risk is minimal, enabling this setting will reduce the possibility of a user unknowingly downloading malicious content through this feature."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\System\\Internet Communication Management\\Internet Communication settings\\Turn off Internet download for Web publishing and online ordering wizards Note: This Group Policy path is provided by the Group Policy template ICM.admx/adml that is included with all versions of the Microsoft Windows Administrative Templates."
+    compliance:
+      - cis: ["18.8.22.1.5"]
+      - cis_csc: ["7"]
+      - pci_dss: ["2.2.5"]
+    references:
+      - 'CCE-36096-6'
+    condition: all
+    rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer -> NoWebServices -> 1'
+
+# 18.8.22.1.6 (L1) Ensure 'Turn off printing over HTTP' is set to 'Enabled' (Scored)
+  - id: 16123 
+    title: "Ensure 'Turn off printing over HTTP' is set to 'Enabled'"
+    description: "This policy setting allows you to disable the client computer's ability to print over HTTP, which allows the computer to print to printers on the intranet as well as the Internet. The recommended state for this setting is: Enabled."
+    rationale: "Information that is transmitted over HTTP through this capability is not protected and can be intercepted by malicious users. For this reason, it is not often used in enterprise managed environments."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\System\\Internet Communication Management\\Internet Communication settings\\Turn off printing over HTTP Note: This Group Policy path is provided by the Group Policy template ICM.admx/adml that is included with all versions of the Microsoft Windows Administrative Templates."
+    compliance:
+      - cis: ["18.8.22.1.6"]
+      - cis_csc: ["13.1"]
+      - pci_dss: ["2.2.5"]
+    references:
+      - 'CCE-36920-7'
+    condition: all
+    rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Printers -> DisableHTTPPrinting -> 1'
+
+
+# 18.8.26.1 (L1) Ensure 'Enumeration policy for external devices incompatible with Kernel DMA Protection' is set to 'Enabled: Block All' (Scored)
+  - id: 16123 
+    title: "Ensure 'Enumeration policy for external devices incompatible with Kernel DMA Protection' is set to 'Enabled: Block All'"
+    description: "This policy is intended to provide additional security against external DMA-capable devices. It allows for more control over the enumeration of external DMA-capable devices that are not compatible with DMA Remapping/device memory isolation and sandboxing. The recommended state for this setting is: Enabled: Block All .    Note: This policy does not apply to 1394, PCMCIA or ExpressCard devices. The protection also only applies to Windows 10 R1803 or higher, and also requires a UEFI BIOS to function."
+    rationale: "Device memory sandboxing allows the OS to leverage the I/O Memory Management Unit (IOMMU) of a device to block unpermitted I/O, or memory access, by the peripheral."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Block All : Computer Configuration\Policies\Administrative Templates\System\Kernel DMA Protection\Enumeration policy for external devices incompatible with Kernel DMA Protection Note: This Group Policy path may not exist by default. It is provided by the Group Policy template DmaGuard.admx/adml that is included with the Microsoft Windows 10 Release 1809 & Server 2019 Administrative Templates (or newer)."
+    compliance:
+      - cis: ["18.8.26.1"]
+      - cis_csc: ["13.1"]
+      - pci_dss: ["2.2.5"]
+    references:
+      - 'CCE-36920-7'
+    condition: all
+    rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Kernel DMA Protection -> DeviceEnumerationPolicy -> 1'
+
+
+################################################
+# 18.8.28 Logon
+################################################
+# 18.8.28.1 (L1) Ensure 'Block user from showing account details on sign-in' is set to 'Enabled' (Scored)
+  - id: 16124 
+    title: "Ensure 'Block user from showing account details on sign-in' is set to 'Enabled'"
+    description: "This policy prevents the user from showing account details (email address or user name) on the sign-in screen. The recommended state for this setting is: Enabled ."
+    rationale: "An attacker with access to the console (for example, someone with physical access or someone who is able to connect to the server through Remote Desktop Services) could view the name of the last user who logged on to the server. The attacker could then try to guess the password, use a dictionary, or use a brute-force attack to try and log on."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled : Computer Configuration\\Policies\\Administrative Templates\\System\\Logon\\Block user from showing account details on sign-in Note: This Group Policy path may not exist by default. It is provided by the Group Policy template Logon.admx/adml that is included with the Microsoft Windows 10 Release 1607 & Server 2016 Administrative Templates (or newer)."
+    compliance:
+      - cis: ["18.8.28.1"]
+      - cis_csc: ["16.5"]
+      - pci_dss: ["2.2.5"]
+    condition: all
+    rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System -> BlockUserFromShowingAccountDetailsOnSignin -> 1'
+
+# 18.8.28.2 (L1) Ensure 'Do not display network selection UI' is set to 'Enabled' (Scored)
+  - id: 16125 
+    title: "Ensure 'Do not display network selection UI' is set to 'Enabled'"
+    description: "This policy setting allows you to control whether anyone can interact with available networks UI on the logon screen. The recommended state for this setting is: Enabled."
+    rationale: "An unauthorized user could disconnect the PC from the network or can connect the PC to other available networks without signing into Windows."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\System\\Logon\\Do not display network selection UI Note: This Group Policy path may not exist by default. It is provided by the Group Policy template Logon.admx/adml that is included with the Microsoft Windows 8.1 & Server 2012 R2 Administrative Templates (or newer)."
+    compliance:
+      - cis: ["18.8.28.2"]
+      - cis_csc: ["5"]
+      - pci_dss: ["2.2.5"]
+    references:
+      - 'CCE-38353-9'
+    condition: all
+    rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System -> DontDisplayNetworkSelectionUI -> 1'
+
+# 18.8.28.3 (L1) Ensure 'Do not enumerate connected users on domain-joined computers' is set to 'Enabled' (Scored)
+  - id: 16126 
+    title: "Ensure 'Do not enumerate connected users on domain-joined computers' is set to 'Enabled'"
+    description: "This policy setting prevents connected users from being enumerated on domain-joined computers. The recommended state for this setting is: Enabled."
+    rationale: "A malicious user could use this feature to gather account names of other users, that information could then be used in conjunction with other types of attacks such as guessing passwords or social engineering. The value of this countermeasure is small because a user with domain credentials could gather the same account information using other methods."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\System\\Logon\\Do not enumerate connected users on domain-joined computers Note: This Group Policy path may not exist by default. It is provided by the Group Policy template Logon.admx/adml that is included with the Microsoft Windows 8.0 & Server 2012 (non-R2) Administrative Templates (or newer)."
+    compliance:
+      - cis: ["18.8.28.3"]
+      - cis_csc: ["16.9"]
+      - pci_dss: ["2.2.5"]
+    references:
+      - 'CCE-37838-0'
+    condition: all
+    rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System -> DontEnumerateConnectedUsers -> 1'
+
+# 18.8.28.4 (L1) Ensure 'Enumerate local users on domain-joined computers' is set to 'Disabled' (MS only) (Scored)
+  - id: 16127 
+    title: "Ensure 'Enumerate local users on domain-joined computers' is set to 'Disabled'"
+    description: "This policy setting allows local users to be enumerated on domain-joined computers. The recommended state for this setting is: Disabled."
+    rationale: "A malicious user could use this feature to gather account names of other users, that information could then be used in conjunction with other types of attacks such as guessing passwords or social engineering. The value of this countermeasure is small because a user with domain credentials could gather the same account information using other methods."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Administrative Templates\\System\\Logon\\Enumerate local users on domain-joined computers Note: This Group Policy path may not exist by default. It is provided by the Group Policy template Logon.admx/adml that is included with the Microsoft Windows 8.0 & Server 2012 (non-R2) Administrative Templates (or newer)."
+    compliance:
+      - cis: ["18.8.28.4"]
+      - cis_csc: ["16.9"]
+      - pci_dss: ["2.2.5"]
+    references:
+      - 'CCE-35894-5'
+    condition: all
+    rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System -> EnumerateLocalUsers -> 0'
+
+# 18.8.28.5 (L1) Ensure 'Turn off app notifications on the lock screen' is set to 'Enabled' (Scored)
+  - id: 16128 
+    title: "Ensure 'Turn off app notifications on the lock screen' is set to 'Enabled'"
+    description: "This policy setting allows you to prevent app notifications from appearing on the lock screen. The recommended state for this setting is: Enabled."
+    rationale: "App notifications might display sensitive business or personal data."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\System\\Logon\\Turn off app notifications on the lock screen Note: This Group Policy path may not exist by default. It is provided by the Group Policy template Logon.admx/adml that is included with the Microsoft Windows 8.0 & Server 2012 (non-R2) Administrative Templates (or newer)."
+    compliance:
+      - cis: ["18.8.28.5"]
+      - cis_csc: ["16.5"]
+      - pci_dss: ["2.2.5"]
+    references:
+      - 'CCE-35893-7'
+    condition: all
+    rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System -> DisableLockScreenAppNotifications -> 1'
+
+# 18.8.28.6 (L1) Ensure 'Turn off picture password sign-in' is set to 'Enabled' (Scored)
+  - id: 16129 
+    title: "Ensure 'Turn off picture password sign-in' is set to 'Enabled'"
+    description: "This policy setting allows you to control whether a domain user can sign in using a picture password. The recommended state for this setting is: Enabled . Note: If the picture password feature is permitted, the user's domain password is cached in the system vault when using it."
+    rationale: "Picture passwords bypass the requirement for a typed complex password. In a shared work environment, a simple shoulder surf where someone observed the on-screen gestures would allow that person to gain access to the system without the need to know the complex password. Vertical monitor screens with an image are much more visible at a distance than horizontal key strokes, increasing the likelihood of a successful observation of the mouse gestures."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled : Computer Configuration\\Policies\\Administrative Templates\\System\\Logon\\Turn off picture password sign-in Note: This Group Policy path may not exist by default. It is provided by the Group Policy  template CredentialProviders.admx/adml that is included with the Microsoft Windows 8.0 & Server 2012 (non-R2) Administrative Templates (or newer)."
+    compliance:
+      - cis: ["18.8.28.6"]
+      - cis_csc: ["16.5"]
+      - pci_dss: ["8.2"]
+    condition: all
+    rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System -> BlockDomainPicturePassword -> 1'
+
+# 18.8.28.7 (L1) Ensure 'Turn on convenience PIN sign-in' is set to 'Disabled' (Scored)
+  - id: 16130 
+    title: "Ensure 'Turn on convenience PIN sign-in' is set to 'Disabled'"
+    description: "This policy setting allows you to control whether a domain user can sign in using a convenience PIN. In Windows 10, convenience PIN was replaced with Passport, which has stronger security properties. To configure Passport for domain users, use the policies under Computer Configuration\\Administrative Templates\\Windows Components\\Microsoft Passport for Work. Note: The user's domain password will be cached in the system vault when using this feature. The recommended state for this setting is: Disabled."
+    rationale: "A PIN is created from a much smaller selection of characters than a password, so in most cases a PIN will be much less robust than a password."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Administrative Templates\\System\\Logon\\Turn on convenience PIN sign-in Note: This Group Policy path may not exist by default. It is provided by the Group Policy template CredentialProviders.admx/adml that is included with the Microsoft Windows 8.0 & Server 2012 (non-R2) Administrative Templates (or newer). Note #2: In older Microsoft Windows Administrative Templates, this setting was initially named Turn on PIN sign-in, but it was renamed starting with the Windows 10 Release 1511 Administrative Templates."
+    compliance:
+      - cis: ["18.8.28.7"]
+      - cis_csc: ["16.5"]
+      - pci_dss: ["8.2"]
+    references:
+      - 'CCE-37528-7'
+    condition: all
+    rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System -> AllowDomainPINLogon -> 0'
+
+
+
+# 18.8.34.6.3 (L1) Ensure 'Require a password when a computer wakes (on battery)' is set to 'Enabled' (Scored)
+  - id: 16132 
+    title: "Ensure 'Require a password when a computer wakes (on battery)' is set to 'Enabled'"
+    description: "Specifies whether or not the user is prompted for a password when the system resumes from sleep. The recommended state for this setting is: Enabled."
+    rationale: "Enabling this setting ensures that anyone who wakes an unattended computer from sleep state will have to provide logon credentials before they can access the system."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\System\\Power Management\\Sleep Settings\\Require a password when a computer wakes (on battery) Note: This Group Policy path may not exist by default. It is provided by the Group Policy template Power.admx/adml that is included with the Microsoft Windows 8.0 & Server 2012 (non-R2) Administrative Templates (or newer)."
+    compliance:
+      - cis: ["18.8.33.6.3"]
+      - cis_csc: ["16.5"]
+      - pci_dss: ["8.2"]
+    references:
+      - 'CCE-36881-1'
+    condition: all
+    rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Power\PowerSettings\0e796bdb-100d-47d6-a2d5-f7d2daa51f51 -> DCSettingIndex -> 1'
+
+# 18.8.34.6.4 (L1) Ensure 'Require a password when a computer wakes (plugged in)' is set to 'Enabled' (Scored)
+  - id: 16133 
+    title: "Ensure 'Require a password when a computer wakes (plugged in)' is set to 'Enabled'"
+    description: "Specifies whether or not the user is prompted for a password when the system resumes from sleep. The recommended state for this setting is: Enabled."
+    rationale: "Enabling this setting ensures that anyone who wakes an unattended computer from sleep state will have to provide logon credentials before they can access the system."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\System\\Power Management\\Sleep Settings\\Require a password when a computer wakes (plugged in) Note: This Group Policy path may not exist by default. It is provided by the Group Policy template Power.admx/adml that is included with the Microsoft Windows 8.0 & Server 2012 (non-R2) Administrative Templates (or newer)."
+    compliance:
+      - cis: ["18.8.33.6.4"]
+      - cis_csc: ["16.5"]
+      - pci_dss: ["8.2"]
+    references:
+      - 'CCE-37066-8'
+    condition: all
+    rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Power\PowerSettings\0e796bdb-100d-47d6-a2d5-f7d2daa51f51 -> ACSettingIndex -> 1'
+
+
+# 18.8.36.1 (L1) Ensure 'Configure Offer Remote Assistance' is set to 'Disabled' (Scored)
+  - id: 16134 
+    title: "Ensure 'Configure Offer Remote Assistance' is set to 'Disabled'"
+    description: "This policy setting allows you to turn on or turn off Offer (Unsolicited) Remote Assistance on this computer. Help desk and support personnel will not be able to proactively offer assistance, although they can still respond to user assistance requests. The recommended state for this setting is: Disabled."
+    rationale: "A user might be tricked and accept an unsolicited Remote Assistance offer from a malicious user."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Administrative Templates\\System\\Remote Assistance\\Configure Offer Remote Assistance Note: This Group Policy path may not exist by default. It is provided by the Group Policy template RemoteAssistance.admx/adml that is included with the Microsoft Windows 8.0 & Server 2012 (non-R2) Administrative Templates (or newer)."
+    compliance:
+      - cis: ["18.8.35.1"]
+      - cis_csc: ["9.1"]
+      - pci_dss: ["2.2.5"]
+    references:
+      - 'CCE-36388-7'
+    condition: all
+    rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services -> fAllowUnsolicited -> 0'
+
+# # 18.8.36.2 (L1) Ensure 'Configure Solicited Remote Assistance' is set to 'Disabled' (Scored)
+  - id: 16135 
+    title: "Ensure 'Configure Solicited Remote Assistance' is set to 'Disabled'"
+    description: "This policy setting allows you to turn on or turn off Solicited (Ask for) Remote Assistance on this computer. The recommended state for this setting is: Disabled."
+    rationale: "There is slight risk that a rogue administrator will gain access to another user's desktop session, however, they cannot connect to a user's computer unannounced or control it without permission from the user. When an expert tries to connect, the user can still choose to deny the connection or give the expert view-only privileges. The user must explicitly click the Yes button to allow the expert to remotely control the workstation."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Administrative Templates\\System\\Remote Assistance\\Configure Solicited Remote Assistance Note: This Group Policy path may not exist by default. It is provided by the Group Policy template RemoteAssistance.admx/adml that is included with the Microsoft Windows 8.0 & Server 2012 (non-R2) Administrative Templates (or newer)."
+    compliance:
+      - cis: ["18.8.36.2"]
+      - cis_csc: ["5.1"]
+      - pci_dss: ["2.2.5"]
+    references:
+      - 'CCE-37281-3'
+    condition: all
+    rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services -> fAllowToGetHelp -> 0'
 
 
