@@ -1207,12 +1207,12 @@ checks:
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\CloudContent -> DisableWindowsConsumerFeatures -> 1'
 
-# 18.9.14.1 (L1) Ensure 'Require pin for pairing' is set to 'Enabled' (Scored)
+# 18.9.14.1 (L1) Ensure 'Require pin for pairing' is set to 'Enabled: First Time' OR 'Enabled: Always' (Scored)
   - id: 15132 
-    title: "Ensure 'Require pin for pairing' is set to 'Enabled'"
-    description: "This policy setting controls whether or not a PIN is required for pairing to a wireless display device. The recommended state for this setting is: Enabled ."
+    title: "Ensure 'Require pin for pairing' is set to 'Enabled: First Time' OR 'Enabled: Always'"
+    description: "This policy setting controls whether or not a PIN is required for pairing to a wireless display device. The recommended state for this setting is: 'Enabled: First Time' OR 'Enabled: Always'."
     rationale: "If this setting is not configured or disabled then a PIN would not be required when pairing wireless display devices to the system, increasing the risk of unauthorized use."
-    remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled : Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Connect\\Require pin for pairing Note: This Group Policy path may not exist by default. It is provided by the Group Policy template WirelessDisplay.admx/adml that is included with the Microsoft Windows 10 Release 1607 & Server 2016 Administrative Templates (or newer)."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to 'Enabled: First Time' OR 'Enabled: Always' : Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Connect\\Require pin for pairing Note: This Group Policy path may not exist by default. It is provided by the Group Policy template WirelessDisplay.admx/adml that is included with the Microsoft Windows 10 Release 1607 & Server 2016 Administrative Templates (or newer)."
     compliance:
       - cis: ["18.9.14.1"]
       - cis_csc: ["15.8"]
@@ -1628,7 +1628,7 @@ checks:
       - 'CCE-CCE-36598-1'
     condition: all
     rules:
-      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services -> SecurityLayer -> 3'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services -> SecurityLayer -> 2'
 
 # 18.9.59.3.9.4 (L1) Ensure 'Require user authentication for remote connections by using Network Level Authentication' is set to 'Enabled' (Scored)
   - id: 215155 
