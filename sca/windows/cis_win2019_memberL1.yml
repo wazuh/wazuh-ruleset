@@ -1707,26 +1707,6 @@ checks:
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SessionManager\kernel -> DisableExceptionChainValidation -> 1'
 
-
-# 18.3.5 (L1) Ensure 'Extended Protection for LDAP Authentication (Domain Controllers only)' is set to 'Enabled: Enabled, always (recommended)' (DC Only) (Scored)
-  - id: 16250
-    title: "Ensure 'Extended Protection for LDAP Authentication (Domain Controllers only)' is set to 'Enabled: Enabled, always (recommended)'"
-    description: "This setting controls LDAP authentication over SSL/TLS to help make it more secure. The recommended state for this setting is: Enabled: Enabled, always (recommended) . Note: All LDAP clients must have the CVC-2017-8563 security update to be compatible with Domain Controllers that have this setting enabled."
-    rationale: "Configuring the LdapEnforceChannelBinding registry value can help to increase protection against \"man-in-the-middle" attacks.\"
-    remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Enabled, always (recommended) : Computer Configuration\\Policies\\Administrative Templates\\MS Security Guide\\Extended Protection for LDAP Authentication (Domain Controllers only) Note: This Group Policy path does not exist by default. An additional Group Policy template ( SecGuide.admx/adml ) is required"
-    compliance:
-      - cis: ["18.3.5"]
-      - cis_csc: ["16.5"]
-    references:
-      - 'CVC-2017-8563'
-      - 'https://support.microsoft.com/en-us/help/4034879/how-to-add-the-ldapenforcechannelbinding-registry-entry'
-      - 'https://blogs.technet.microsoft.com/secguide/2018/11/20/security-baseline-final-for-windows-10-v1809-and-windows-server-2019/'
-      - 'https://technet.microsoft.com/library/security/973811'
-      - 'https://support.microsoft.com/en-us/help/4034879/how-to-add-the-ldapenforcechannelbinding-registry-entry'
-    condition: all
-    rules:
-      - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\NTDS\Parameters -> LdapEnforceChannelBinding -> 2'
-
 # 18.3.6 Ensure 'WDigest Authentication' is set to 'Disabled'
   - id: 16098 
     title: "Ensure 'WDigest Authentication' is set to 'Disabled'"

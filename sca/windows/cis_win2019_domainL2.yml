@@ -65,6 +65,238 @@ checks:
 ###############################################
 
 
+###############################################
+# 18.1 Control Panel
+###############################################
+# 18.1.3 Ensure 'Allow Online Tips' is set to 'Disabled' (Scored)
+  - id: 16501 
+    title: "Ensure 'Allow Online Tips' is set to 'Disabled'"
+    description: "This policy setting configures the retrieval of online tips and help for the Settings app. The recommended state for this setting is: Disabled ."
+    rationale: "Due to privacy concerns, data should never be sent to any 3rd party since this data could contain sensitive information."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled : Computer Configuration\\Policies\\Administrative Templates\\Control Panel\\Allow Online Tips Note: This Group Policy path may not exist by default. It is provided by the Group Policy template ControlPanel.admx/adml that is included with the Microsoft Windows 10 Release 1709 Administrative Templates (or newer)."
+    compliance:
+      - cis: ["18.1.3"]
+      - cis_csc: ["9.1"]
+      - pci_dss: ["1.3.4"]
+    condition: all
+    rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer -> AllowOnlineTips -> 0'
+
+###############################################
+# 18.4 MSS (Legacy)
+###############################################
+# 18.4.5 Ensure 'MSS: (KeepAliveTime) How often keep-alive packets are sent in milliseconds' is set to 'Enabled: 300,000 or 5 minutes'
+  - id: 16502 
+    title: "Ensure 'MSS: (KeepAliveTime) How often keep-alive packets are sent in milliseconds' is set to 'Enabled: 300,000 or 5 minutes (recommended)'"
+    description: "This value controls how often TCP attempts to verify that an idle connection is still intact by sending a keep-alive packet."
+    rationale: "An attacker who is able to connect to network applications could establish numerous connections to cause a DoS condition."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: 300,000 or 5 minutes (recommended): Computer Configuration\\Policies\\Administrative Templates\\MSS (Legacy)\\MSS: (KeepAliveTime) How often keep-alive packets are sent in milliseconds."
+    compliance:
+      - cis: ["18.4.5"]
+      - cis_csc: ["9"]
+      - nist_800_53: ["SC.5"]
+    references:
+      - 'CCE-36868-8'
+    condition: all
+    rules:
+      - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters -> KeepAliveTime -> 300000'
+
+# 18.4.7 Ensure 'MSS: (PerformRouterDiscovery) Allow IRDP to detect and configure Default Gateway addresses (could lead to DoS)' is set to 'Disabled'
+  - id: 16503 
+    title: "Ensure 'MSS: (PerformRouterDiscovery) Allow IRDP to detect and configure Default Gateway addresses (could lead to DoS)' is set to 'Disabled'"
+    description: "This setting is used to enable or disable the Internet Router Discovery Protocol (IRDP), which allows the system to detect and configure default gateway addresses automatically as described in RFC 1256 on a per-interface basis."
+    rationale: "An attacker who has gained control of a computer on the same network segment could configure a computer on the network to impersonate a router."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Administrative Templates\\MSS (Legacy)\\MSS: (PerformRouterDiscovery) Allow IRDP to detect and configure Default Gateway addresses (could lead to DoS)."
+    compliance:
+      - cis: ["18.4.7"]
+      - cis_csc: ["9"]
+      - pci_dss: ["1.3.3"]
+    references:
+      - 'CCE-38065-9'
+    condition: all
+    rules:
+      - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters -> PerformRouterDiscovery -> 0'
+
+# 18.4.10 Ensure 'MSS: (TcpMaxDataRetransmissions IPv6) How many times unacknowledged data is retransmitted' is set to 'Enabled: 3'
+  - id: 16504 
+    title: "Ensure 'MSS: (TcpMaxDataRetransmissions IPv6) How many times unacknowledged data is retransmitted' is set to 'Enabled: 3'"
+    description: "This setting controls the number of times that TCP retransmits an individual data segment (non-connect segment) before the connection is aborted."
+    rationale: "A malicious user could exhaust a target computer's resources if it never sent any acknowledgment messages for data that was transmitted by the target computer."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: 3: Computer Configuration\\Policies\\Administrative Templates\\MSS (Legacy)\\MSS:(TcpMaxDataRetransmissions IPv6) How many times unacknowledged data is retransmitted."
+    compliance:
+      - cis: ["18.4.10"]
+      - cis_csc: ["9"]
+      - nist_800_53: ["SC.5"]
+    references:
+      - 'CCE-37846-3'
+      - 'https://blogs.technet.microsoft.com/secguide/2016/10/02/the-mss-settings/'
+    condition: all
+    rules:
+      - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP6\Parameters -> TcpMaxDataRetransmissions -> 3'
+
+# 18.4.11 Ensure 'MSS: (TcpMaxDataRetransmissions) How many times unacknowledged data is retransmitted' is set to 'Enabled: 3'
+  - id: 16505 
+    title: "Ensure 'MSS: (TcpMaxDataRetransmissions) How many times unacknowledged data is retransmitted' is set to 'Enabled: 3'"
+    description: "This setting controls the number of times that TCP retransmits an individual data segment (non-connect segment) before the connection is aborted."
+    rationale: "A malicious user could exhaust a target computer's resources if it never sent any acknowledgment messages for data that was transmitted by the target computer."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: 3: Computer Configuration\\Policies\\Administrative Templates\\MSS (Legacy)\\MSS:(TcpMaxDataRetransmissions) How many times unacknowledged data is retransmitted."
+    compliance:
+      - cis: ["18.4.11"]
+      - cis_csc: ["9"]
+      - nist_800_53: ["SC.5"]
+    references:
+      - 'CCE-36051-1'
+    condition: all
+    rules:
+      - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters -> TcpMaxDataRetransmissions -> 3'
+
+
+###############################################
+# 18.5 Network
+###############################################
+###############################################
+# 18.5.5 Fonts
+###############################################
+# 18.5.5.1 Ensure 'Enable Font Providers' is set to 'Disabled' (Scored)
+  - id: 16506 
+    title: "Ensure 'Enable Font Providers' is set to 'Disabled'"
+    description: "This policy setting determines whether Windows is allowed to download fonts and font catalog data from an online font provider.The recommended state for this setting is: Disabled ."
+    rationale: "In an enterprise managed environment the IT department should be managing the changes to the system configuration, to ensure all changes are tested and approved."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled : Computer Configuration\\Policies\\Administrative Templates\\Network\\Fonts\\Enable Font Providers Note: This Group Policy path may not exist by default. It is provided by the Group Policy template GroupPolicy.admx/adml that is included with the Microsoft Windows 10 Release 1607 & Server 2016 Administrative Templates (or newer)."
+    compliance:
+      - cis: ["18.5.5.1"]
+      - cis_csc: ["3", "13"]
+      - pci_dss: ["1.3.5"]
+    condition: all
+    rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System -> EnableFontProviders -> 0'
+
+# Section 18.5.9 - Link-Layer Topology Discovery
+# 18.5.9.1 Ensure 'Turn on Mapper I/O (LLTDIO) driver' is set to 'Disabled'
+  - id: 16507 
+    title: "Ensure 'Turn on Mapper I/O (LLTDIO) driver' is set to 'Disabled'"
+    description: "This policy setting changes the operational behavior of the Mapper I/O network protocol driver."
+    rationale: "To help protect from potentially discovering and connecting to unauthorized devices, this setting should be disabled to prevent responding to network traffic for network topology discovery."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Administrative Templates\\Network\\Link-Layer Topology Discovery\\Turn on Mapper I/O (LLTDIO) driver."
+    compliance:
+      - cis: ["18.5.9.1"]
+      - cis_csc: ["9"]
+      - pci_dss: ["2.2.5"]
+    references:
+      - 'CCE-38170-7'
+    condition: all
+    rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\LLTD -> AllowLLTDIOOnDomain -> 0'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\LLTD -> AllowLLTDIOOnPublicNet -> 0'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\LLTD -> EnableLLTDIO -> 0'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\LLTD -> ProhibitLLTDIOOnPrivateNet -> 0'
+
+# 18.5.9.2 (L2) Ensure 'Turn on Responder (RSPNDR) driver' is set to 'Disabled'
+  - id: 16508 
+    title: "Ensure 'Turn on Responder (RSPNDR) driver' is set to 'Disabled'"
+    description: "This policy setting changes the operational behavior of the Responder network protocol driver."
+    rationale: "To help protect from potentially discovering and connecting to unauthorized devices, this setting should be disabled to prevent responding to network traffic for network topology discovery."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Administrative Templates\\Network\\Link-Layer Topology Discovery\\Turn on Responder (RSPNDR) driver."
+    compliance:
+      - cis: ["18.5.9.2"]
+      - cis_csc: ["9"]
+      - pci_dss: ["2.2.5"]
+    references:
+      - 'CCE-37959-4'
+    condition: all
+    rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\LLTD -> AllowRspndrOnDomain -> 0'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\LLTD -> AllowRspndrOnPublicNet -> 0'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\LLTD -> EnableRspndr -> 0'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\LLTD -> ProhibitRspndrOnPrivateNet -> 0'
+
+# Section 18.5.10 - Microsoft Peer-to-Peer Networking Services
+  - id: 16509 
+    title: "Ensure 'Turn off Microsoft Peer-to-Peer Networking Services' is set to 'Enabled'"
+    description: "The Peer Name Resolution Protocol (PNRP) allows for distributed resolution of a name to an IPv6 address and port number."
+    rationale: "This setting enhances the security of the environment and reduces the overall risk exposure related to peer-to-peer networking."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\Network\\Microsoft Peer-to-Peer Networking Services\\Turn off Microsoft Peer-to-Peer Networking Services."
+    compliance:
+      - cis: ["18.5.10.2"]
+      - cis_csc: ["9.1"]
+      - pci_dss: ["2.2.5"]
+    references:
+      - 'CCE-37699-6'
+    condition: all
+    rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Peernet -> Disabled -> 1'
+
+# Section 18.5.19.2 - Parameters
+# 18.5.19.2.1 (L2) Disable IPv6 (Ensure TCPIP6 Parameter 'DisabledComponents' is set to '0xff (255)') (Scored)
+  - id: 16510 
+    title: "Disable IPv6 (Ensure TCPIP6 Parameter 'DisabledComponents' is set to '0xff (255)')"
+    rationale: "Since the vast majority of private enterprise managed networks have no need to utilize IPv6 (because they have access to private IPv4 addressing), disabling IPv6 components reduces a possible attack surface that is also harder to monitor the traffic on."
+    remediation: "To establish the recommended configuration, set the following Registry value to 0xff (255) (DWORD): HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Services\\TCPIP6\\Parameters:DisabledComponents."
+    compliance:
+      - cis: ["18.5.19.2.1"]
+      - cis_csc: ["9"]
+      - pci_dss: ["2.2.2"]
+      - nist_800_53: ["CM.1"]
+    condition: all
+    rules:
+      - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP6\Parameters -> DisabledComponents -> 255'
+
+# Section 18.5.20 - Windows Connect Now
+# 18.5.20.1 (L2) Ensure 'Configuration of wireless settings using Windows Connect Now' is set to 'Disabled' (Scored)
+  - id: 16511 
+    title: "Ensure 'Configuration of wireless settings using Windows Connect Now' is set to 'Disabled'"
+    description: "This policy setting allows the configuration of wireless settings using Windows Connect Now (WCN)."
+    rationale: "This setting enhances the security of the environment and reduces the overall risk exposure related to user configuration of wireless settings."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Administrative Templates\\Network\\Windows Connect Now\\Configuration of wireless settings using Windows Connect Now."
+    compliance:
+      - cis: ["18.5.20.1"]
+      - cis_csc: ["15.4"]
+      - pci_dss: ["2.2.5"]
+    references:
+      - 'CCE-37481-9'
+    condition: all
+    rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WCN\Registrars -> EnableRegistrars -> 0'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WCN\Registrars -> DisableUPnPRegistrar -> 0'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WCN\Registrars -> DisableInBand802DOT11Registrar -> 0'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WCN\Registrars -> DisableFlashConfigRegistrar -> 0'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WCN\Registrars -> DisableWPDRegistrar -> 0'
+
+# 18.5.20.2 (L2) Ensure 'Prohibit access of the Windows Connect Now wizards' is set to 'Enabled' (Scored)
+  - id: 16512 
+    title: "Ensure 'Prohibit access of the Windows Connect Now wizards' is set to 'Enabled'"
+    description: "This policy setting prohibits access to Windows Connect Now (WCN) wizards."
+    rationale: "Allowing standard users to access the Windows Connect Now wizard increases the risk and attack surface."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\Network\Network\\Windows Connect Now\\Prohibit access of the Windows Connect Now wizards."
+    compliance:
+      - cis: ["18.5.20.2"]
+      - cis_csc: ["15.4"]
+      - pci_dss: ["2.2.5"]
+    references:
+      - 'CCE-36109-7'
+    condition: all
+    rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WCN\UI -> DisableWcnUi -> 1'
+
+###############################################
+# 18.7 Start Menu and Taskbar
+###############################################
+
+# 18.7.1.1 (L2) Ensure 'Turn off notifications network usage' is set to 'Enabled' (Scored)
+  - id: 16750
+    title: "Ensure 'Turn off notifications network usage' is set to 'Enabled'"
+    description: "This policy setting blocks applications from using the network to send notifications to update tiles, tile badges, toast, or raw notifications. This policy setting turns off the connection between Windows and the Windows Push Notification Service (WNS). This policy setting also stops applications from being able to poll application services to update tiles. The recommended state for this setting is: Enabled ."
+    rationale: "Windows Push Notification Services (WNS) is a mechanism to receive 3rd-party notifications and updates from the cloud/Internet. In a high security environment, external systems, especially those hosted outside the organization, should be prevented from having an impact on the secure workstations."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled : Computer Configuration\\Policies\\Administrative Templates\\Start Menu and Taskbar\\Turn off notifications network usage Note: This Group Policy path may not exist by default. It is provided by the Group Policy template WPN.admx/adml that is included with the Microsoft Windows 8.0 & Server 2012 (non-R2) Administrative Templates (or newer)."
+    compliance:
+      - cis: ["18.7.1.1"]
+      - cis_csc: ["13"]
+    references:
+      - ''
+    condition: all
+    rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\CurrentVersion\PushNotifications -> NoCloudApplicationNotification -> 1'
+
 
 
 
