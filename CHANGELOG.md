@@ -1,19 +1,22 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [v3.13.0] 
+## [v3.13.0]
 
 ### Added
 
 - Added rules and decoders for macOS sshd logs ([#593](https://github.com/wazuh/wazuh-ruleset/pull/593))
+- Added TSC/SOC compliance mapping ([#613](https://github.com/wazuh/wazuh-ruleset/pull/613))
 
+### Changed
+
+- Changed description of Vulnerability Detector rules ([#638](https://github.com/wazuh/wazuh-ruleset/pull/638))
 
 ## [v3.12.1]
 
 ### Fixed
 
 - Fixed the Dropbear brute force rule entrypoint. ([#589](https://github.com/wazuh/wazuh-ruleset/pull/589))
-
 
 ## [v3.12.0]
 
