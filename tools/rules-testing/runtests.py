@@ -13,6 +13,7 @@ import sys
 import os.path
 from collections import OrderedDict
 import shutil
+import argparse
 
 class MultiOrderedDict(OrderedDict):
     def __setitem__(self, key, value):
@@ -96,11 +97,13 @@ class OssecTester(object):
             sys.stdout.write(".")
             sys.stdout.flush()
 
-    def run(self, selective_test=False):
+    def run(self, selective_test=False, geoip=False):
         for aFile in os.listdir(self._test_path):
             aFile = os.path.join(self._test_path, aFile)
             if aFile.endswith(".ini"):
                 if selective_test and not aFile.endswith(selective_test):
+                    continue
+                if aFile == os.path.join(self._test_path,"static_filters_geoip.ini") and geoip is False:
                     continue
                 print "- [ File = %s ] ---------" % (aFile)
                 tGroup = ConfigParser.RawConfigParser(dict_type=MultiOrderedDict)
@@ -127,16 +130,26 @@ class OssecTester(object):
             sys.exit(1)
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description='This script tests Wazuh rules.')
+    parser.add_argument('--geoip', '-g',
+                        action='store_true',
+                        dest='geoip',
+                        help='Use -g or --geoip to enable geoip tests (default: False)')
+    args = parser.parse_args()
+
     if len(sys.argv) == 2:
-        selective_test = sys.argv[1]
-        if not selective_test.endswith('.ini'):
-            selective_test += '.ini'
+        if sys.argv[1] == '-g' or sys.argv[1] == '--geoip':
+            selective_test = False
+        else:
+            selective_test = sys.argv[1]
+            if not selective_test.endswith('.ini'):
+                selective_test += '.ini'
     else:
         selective_test = False
-        ossec_init = {}
-        initconfigpath = "/etc/ossec-init.conf"
-        getOssecConfig(ossec_init, initconfigpath)
-        provisionDR(ossec_init["DIRECTORY"])
-        OT = OssecTester(ossec_init["DIRECTORY"])
-        OT.run(selective_test)
-        cleanDR(ossec_init["DIRECTORY"])
+    ossec_init = {}
+    initconfigpath = "/etc/ossec-init.conf"
+    getOssecConfig(ossec_init, initconfigpath)
+    provisionDR(ossec_init["DIRECTORY"])
+    OT = OssecTester(ossec_init["DIRECTORY"])
+    OT.run(selective_test, args.geoip)
+    cleanDR(ossec_init["DIRECTORY"])
