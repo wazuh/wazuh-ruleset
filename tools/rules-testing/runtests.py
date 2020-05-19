@@ -15,6 +15,7 @@ from collections import OrderedDict
 import shutil
 import argparse
 
+
 class MultiOrderedDict(OrderedDict):
     def __setitem__(self, key, value):
         if isinstance(value, list) and key in self:
@@ -22,18 +23,20 @@ class MultiOrderedDict(OrderedDict):
         else:
             super(MultiOrderedDict, self).__setitem__(key, value)
 
-def getOssecConfig(initconf,path):
+
+def getOssecConfig(initconf, path):
     if os.path.isfile(path):
         with open(path) as f:
             for line in f.readlines():
                 key, value = line.rstrip("\n").split("=")
-                initconf[key] = value.replace("\"","")
+                initconf[key] = value.replace("\"", "")
         if initconf["NAME"] != "Wazuh" or not os.path.exists(initconf["DIRECTORY"]):
             print "Seems like there is no correct Wazuh installation "
             sys.exit(1)
     else:
         print "Seems like there is no Wazuh installation or ossec-init.conf is missing."
         sys.exit(1)
+
 
 def provisionDR(bdir):
     if os.path.isfile("./rules/test_rules.xml") and os.path.isfile("./decoders/test_decoders.xml"):
@@ -43,6 +46,7 @@ def provisionDR(bdir):
         print "Test files are missing."
         sys.exit(1)
 
+
 def cleanDR(bdir):
     if os.path.isfile(bdir + "/etc/rules/test_rules.xml") and os.path.isfile(bdir + "/etc/decoders/test_decoders.xml"):
         os.remove(bdir + "/etc/rules/test_rules.xml")
@@ -50,6 +54,7 @@ def cleanDR(bdir):
     else:
         print "Could not clean rules and decoders test files"
         sys.exit(1)
+
 
 class OssecTester(object):
     def __init__(self, bdir):
@@ -70,13 +75,14 @@ class OssecTester(object):
             cmd += ["-D", self._base_dir]
         cmd += ['-U', "%s:%s:%s" % (rule, alert, decoder)]
         return cmd
+
     def runTest(self, log, rule, alert, decoder, section, name, negate=False):
         p = subprocess.Popen(
-                self.buildCmd(rule, alert, decoder),
-                stdout=subprocess.PIPE,
-                stderr=subprocess.STDOUT,
-                stdin=subprocess.PIPE,
-                shell=False)
+            self.buildCmd(rule, alert, decoder),
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            stdin=subprocess.PIPE,
+            shell=False)
         std_out = p.communicate(log)[0]
         if (p.returncode != 0 and not negate) or (p.returncode == 0 and negate):
             self._error = True
@@ -103,7 +109,7 @@ class OssecTester(object):
             if aFile.endswith(".ini"):
                 if selective_test and not aFile.endswith(selective_test):
                     continue
-                if aFile == os.path.join(self._test_path,"static_filters_geoip.ini") and geoip is False:
+                if aFile == os.path.join(self._test_path, "static_filters_geoip.ini") and geoip is False:
                     continue
                 print "- [ File = %s ] ---------" % (aFile)
                 tGroup = ConfigParser.RawConfigParser(dict_type=MultiOrderedDict)
@@ -124,10 +130,11 @@ class OssecTester(object):
                             else:
                                 neg = False
                             self.runTest(value, rule, alert, decoder,
-                            t, name, negate=neg)
+                                         t, name, negate=neg)
                 print ""
         if self._error:
             sys.exit(1)
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='This script tests Wazuh rules.')
