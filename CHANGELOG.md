@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 ### Added
 
 - Added rules and decoders for macOS sshd logs ([#593](https://github.com/wazuh/wazuh-ruleset/pull/593))
+- Added TSC/SOC compliance mapping ([#613](https://github.com/wazuh/wazuh-ruleset/pull/613))
 - Added rules and decoders for PaloAlto logs ([#658](https://github.com/wazuh/wazuh-ruleset/pull/658))
 
 
