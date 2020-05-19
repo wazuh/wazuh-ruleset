@@ -1737,8 +1737,10 @@ checks:
       - pci_dss: ["12.3.8"]
     condition: all
     rules:
-      - 'not f:/etc/bashrc -> n:^\s*\t*umask\s+(\d+) compare >= 900'
-      - 'not f:/etc/profile -> n:^\s*\t*umask\s+(\d+) compare >= 900'
+      - 'not f:/etc/bashrc -> n:^\s*\t*TMOUT\s*\t*=\s*\t*(\d+) compare > 900'
+      - 'not f:/etc/profile -> n:^\s*\t*TMOUT\s*\t*=\s*\t*(\d+) compare > 900'
+      - 'f:/etc/bashrc -> n:^\s*\t*TMOUT\s*\t*=\s*\t*(\d+) compare <= 900'
+      - 'f:/etc/profile -> n:^\s*\t*TMOUT\s*\t*=\s*\t*(\d+) compare <= 900'
 
 # 5.6 Ensure access to the su command is restricted (Scored)
   - id: 5668 
