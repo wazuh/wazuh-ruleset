@@ -1020,8 +1020,26 @@ checks:
       - 'c:dpkg -s iptables-persistent -> r:install ok installed'
       - 'c:find /etc/rc* -name *iptables-persistent* -> r:S\.'
 
+###############################################
 # 8 Logging and Auditing
+###############################################
+###############################################
+# 8.2 Configure rsyslog
+###############################################
 
+# 8.2.1 Install the rsyslog package (Scored)
+  - id: 2002
+    title: "Ensure the rsyslog Service is activated"
+    description: "The rsyslog package is a third party package that provides many enhancements to syslog, such as multi-threading, TCP communication, message filtering and data base support."
+    rationale: "The security enhancements of rsyslog such as connection-oriented (i.e. TCP) transmission of logs, the option to log to database formats, and the encryption of log data en route to a central logging server) justify installing and configuring the package."
+    remediation: "Install the rsyslog package: # apt-get install rsyslog"
+    compliance:
+      - cis: ["8.2.2"]
+    condition: all
+    rules:
+      - 'c:dpkg -s rsyslog -> r:install ok installed'
+
+# 8.2.2 Ensure the rsyslog Service is activated (Scored)
   - id: 1064
     title: "Ensure the rsyslog Service is activated"
     description: "Once the rsyslog package is installed it needs to be activated."
@@ -1033,6 +1051,7 @@ checks:
     rules:
       - 'c:find /etc/rc* -name *rsyslog* -> r:S\.'
 
+# 8.2.5 Configure rsyslog to send logs to a Remote Log Host (Scored)
   - id: 1065
     title: "Configure rsyslog to Send Logs to a Remote Log Host"
     description: "The rsyslog utility supports the ability to send logs it gathers to a remote log host running syslogd(8) or to receive messages from remote hosts, reducing administrative overhead."
@@ -1046,6 +1065,7 @@ checks:
     rules:
       - 'c:grep -Rh ^*.*[^I][^I]*@ /etc/rsyslog.conf /etc/rsyslog.d/ -> r:^*.* @@\.+'
 
+# 8.2.6 Accept remote rsyslog messages only on designated log hosts (Not Scored)
   - id: 1066
     title: "Accept Remote rsyslog Messages Only on Designated Log Hosts"
     description: "By default, rsyslog does not listen for log messages coming in from remote systems. The ModLoad tells rsyslog to load the imtcp.so module so it can listen over a network via TCP. The InputTCPServerRun option instructs rsyslogd to listen on the specified TCP port."
@@ -1060,6 +1080,7 @@ checks:
       - 'c:grep -Rh ^\$ModLoad[[:space:]][[:space:]]*imtcp.so /etc/rsyslog.conf /etc/rsyslog.d/ -> r:^$ModLoad\s*\t*imtcp.so'
       - 'c:grep -Rh ^\$InputTCPServerRun[[:space:]][[:space:]]*514 /etc/rsyslog.conf /etc/rsyslog.d/ -> r:^$InputTCPServerRun\s*\t*514'
 
+###############################################
 # 9 System Access, Authentication and Authorization
 
   - id: 1067
