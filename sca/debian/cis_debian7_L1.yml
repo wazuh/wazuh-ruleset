@@ -374,8 +374,23 @@ checks:
     rules:
       - 'f:/etc/inetd.conf -> !r:^# && r:time'
 
+###############################################
 # 6 Special Purpose Services
+###############################################
 
+# 6.1 Ensure the X Window system is not installed (Scored)
+  - id: 2000
+    title: "Ensure the X Window system is not installed"
+    description: "The X Window system provides a Graphical User Interface (GUI) where users can have multiple windows in which to run programs and various add on. The X Window system is typically used on desktops where users login, but not on servers where users typically do not login."
+    rationale: "Unless your organization specifically requires graphical login access via X Windows, remove it to reduce the potential attack surface."
+    remediation: "Uninstall X Windows: # apt-get purge xserver-xorg-core*"
+    compliance:
+      - cis: ["6.1"]
+    condition: none
+    rules:
+      - 'c:dpkg -l xserver-xorg-core* -> r:installed'
+
+# 6.2 Ensure Avahi Server is not enabled (Scored)
   - id: 1029
     title: "Ensure Avahi Server is not enabled"
     description: "Avahi is a free zeroconf implementation, including a system for multicast DNS/DNS-SD service discovery. Avahi allows programs to publish and discover services and hosts running on a local network with no specific configuration. For example, a user can plug a computer into a network and Avahi automatically finds printers to print to, files to look at and people to talk to, as well as network services running on the machine."
@@ -387,6 +402,7 @@ checks:
     rules:
       - 'c:find /etc/rc* -name *avahi-daemon* -> r:S\.'
 
+# 6.3 Ensure print server is not enabled (Scored)
   - id: 1030
     title: "Ensure print server is not enabled"
     description: "The Common Unix Print System (CUPS) provides the ability to print to both local and network printers. A system running CUPS can also accept print jobs from remote systems and print them to local printers. It also provides a web based remote administration capability."
@@ -398,6 +414,7 @@ checks:
     rules:
       - 'c:find /etc/rc* -name *cups* -> r:S\.'
 
+# 6.4 Ensure DHCP Server is not enabled (Scored)
   - id: 1031
     title: "Ensure DHCP Server is not enabled"
     description: "The Dynamic Host Configuration Protocol (DHCP) is a service that allows machines to be dynamically assigned IP addresses."
@@ -411,6 +428,7 @@ checks:
     rules:
       - 'c:find /etc/rc* -name *isc-dhcp-server* -> r:S\.'
 
+# 6.5 Ensure DHCP Server is not enabled (Scored)
   - id: 1032
     title: "Configure Network Time Protocol (NTP)"
     description: "The Network Time Protocol (NTP) is designed to synchronize system clocks across a variety of systems and use a source that is highly accurate. More information on NTP can be found at http://www.ntp.org. NTP can be configured to be a client and/or a server."
@@ -428,6 +446,7 @@ checks:
       - 'f:/etc/ntp.conf -> r:^server\s\.+'
       - 'f:/etc/ntp.conf -> r:^RUNASUSER\s*\t*=\s*\t*ntp'
 
+# 6.6 Ensure LDAP is not enabled (Scored)
   - id: 1033
     title: "Ensure LDAP is not enabled"
     description: "The Lightweight Directory Access Protocol (LDAP) was introduced as a replacement for NIS/YP. It is a service that provides a method for looking up information from a central database."
@@ -441,6 +460,7 @@ checks:
     rules:
       - 'c:dpkg -s slapd -> r:install ok installed'
 
+# 6.7 Ensure NFS and RPC are not enabled (Scored)
   - id: 1034
     title: "Ensure NFS and RPC are not enabled"
     description: "The Network File System (NFS) is one of the first and most widely distributed file systems in the UNIX environment. It provides the ability for systems to mount file systems of other servers through the network."
@@ -453,6 +473,7 @@ checks:
       - 'c:find /etc/rc* -name *rpcbind* -> r:S\.'
       - 'c:find /etc/rc* -name *nfs-kernel-server* -> r:S\.'
 
+# 6.8 Ensure DNS Server is not enabled (Scored)
   - id: 1035
     title: "Ensure DNS Server is not enabled"
     description: "The Domain Name System (DNS) is a hierarchical naming system that maps names to IP addresses for computers, services and other resources connected to a network."
@@ -464,6 +485,7 @@ checks:
     rules:
       - 'c:find /etc/rc* -name *bind9* -> r:S\.'
 
+# 6.9 Ensure FTP Server is not enabled (Scored)
   - id: 1036
     title: "Ensure FTP Server is not enabled"
     description: "The File Transfer Protocol (FTP) provides networked computers with the ability to transfer files."
@@ -475,6 +497,7 @@ checks:
     rules:
       - 'c:find /etc/rc* -name *vsftpd* -> r:S\.'
 
+# 6.10 Ensure HTTP Server is not enabled (Scored)
   - id: 1037
     title: "Ensure HTTP Server is not enabled"
     description: "HTTP or web servers provide the ability to host web site content."
@@ -486,6 +509,7 @@ checks:
     rules:
       - 'c:find /etc/rc* -name *apache2* -> r:S\.'
 
+# 6.11 Ensure IMAP and POP Server is not enabled (Scored)
   - id: 1038
     title: "Ensure IMAP and POP server is not enabled"
     description: "Dovecot is an open source IMAP and POP3 server for Linux based systems."
@@ -497,6 +521,7 @@ checks:
     rules:
       - 'c:find /etc/rc* -name *dovecot* -> r:S\.'
 
+# 6.12 Ensure Samba is not enabled (Scored)
   - id: 1039
     title: "Ensure Samba is not enabled"
     description: "The Samba daemon allows system administrators to configure their Linux systems to share file systems and directories with Windows desktops. Samba will advertise the file systems and directories via the Small Message Block (SMB) protocol. Windows desktop users will be able to mount these directories and file systems as letter drives on their systems."
@@ -508,6 +533,7 @@ checks:
     rules:
       - 'c:find /etc/rc* -name *smb* -> r:S\.'
 
+# 6.13 Ensure HTTP Proxy Server is not enabled (Scored)
   - id: 1040
     title: "Ensure HTTP Proxy Server is not enabled"
     description: "Squid is a standard proxy server used in many distributions and environments."
@@ -519,6 +545,7 @@ checks:
     rules:
       - 'c:find /etc/rc* -name *squid3* -> r:S\.'
 
+# 6.14 Ensure SNMP Server is not enabled (Scored)
   - id: 1041
     title: "Ensure SNMP Server is not enabled"
     description: "The Simple Network Management Protocol (SNMP) server is used to listen for SNMP commands from an SNMP management system, execute the commands or collect the information and then send results back to the requesting system."
@@ -530,6 +557,7 @@ checks:
     rules:
       - 'c:find /etc/rc* -name *snmpd* -> r:S\.'
 
+# 6.15 Ensure Mail Transfer Agent for Local-Only Mode (Scored)
   - id: 1042
     title: "Configure Mail Transfer Agent for Local-Only Mode"
     description: "Mail Transfer Agents (MTA), such as sendmail and Postfix, are used to listen for incoming mail and transfer the messages to the appropriate user or mail server. If the system is not intended to be a mail server, it is recommended that the MTA be configured to only process local mail."
@@ -541,6 +569,7 @@ checks:
     rules:
       - 'f:/etc/exim4/update-exim4.conf.conf -> r:^dc_local_interfaces= && r:\p127.0.0.1\s*\p\s*::1\p$|\p::1\s*\p\s*127.0.0.1\p$|\p127.0.0.1\p$|\p::1\p$'
 
+# 6.16 Ensure rsync service is not enabled (Scored)
   - id: 1043
     title: "Ensure rsync service is not enabled"
     description: "The rsyncd service can be used to synchronize files between systems over network links."
@@ -553,8 +582,14 @@ checks:
       - 'c:dpkg -s rsync -> r:install ok installed'
       - 'not f:/etc/default/rsync -> !r:^# && r:RSYNC_ENABLE\s*\t*=\s*\t*false'
 
+###############################################
 # 7 Network Configuration and Firewall
+###############################################
+###############################################
+# 7.1 Modify Network Parameters
+###############################################
 
+# 7.1.1 Disable IP Forwarding (Scored)
   - id: 1044
     title: "Disable IP Forwarding"
     description: "The net.ipv4.ip_forward flag is used to tell the server whether it can forward packets or not. If the server is not to be used as a router, set the flag to 0."
@@ -566,6 +601,7 @@ checks:
     rules:
       - 'c:/sbin/sysctl net.ipv4.ip_forward -> r:=\s*\t*0$'
 
+# 7.1.2 Disable Send Packet Redirects (Scored)
   - id: 1045
     title: "Disable Send Packet Redirects"
     description: "ICMP Redirects are used to send routing information to other hosts. As a host itself does not act as a router (in a host only configuration), there is no need to send redirects."
@@ -577,7 +613,12 @@ checks:
     rules:
       - 'c:/sbin/sysctl net.ipv4.conf.all.send_redirects -> r:=\s*\t*0$'
       - 'c:/sbin/sysctl net.ipv4.conf.default.send_redirects -> r:=\s*\t*0$'
+      
+###############################################
+# 7.2 Modify Network Parameters (Host and Router)
+###############################################
 
+# 7.2.1 Disable Source Routed Packet Acceptance (Scored)
   - id: 1046
     title: "Disable Source Routed Packet Acceptance"
     description: "In networking, source routing allows a sender to partially or fully specify the route packets take through a network. In contrast, non-source routed packets travel a path determined by routers in the network. In some cases, systems may not be routable or reachable from some locations (e.g. private addresses vs. Internet routable), and so source routed packets would need to be used."
@@ -590,6 +631,7 @@ checks:
       - 'c:/sbin/sysctl net.ipv4.conf.all.accept_source_route -> r:=\s*\t*0$'
       - 'c:/sbin/sysctl net.ipv4.conf.default.accept_source_route -> r:=\s*\t*0$'
 
+# 7.2.2 Disable ICMP Redirect Acceptance (Scored)
   - id: 1047
     title: "Disable ICMP Redirect Acceptance"
     description: "ICMP redirect messages are packets that convey routing information and tell your host (acting as a router) to send packets via an alternate path. It is a way of allowing an outside routing device to update your system routing tables. By setting net.ipv4.conf.all.accept_redirects to 0, the system will not accept any ICMP redirect messages, and therefore, won't allow outsiders to update the system's routing tables."
@@ -602,6 +644,7 @@ checks:
       - 'c:/sbin/sysctl net.ipv4.conf.all.accept_redirects -> r:=\s*\t*0$'
       - 'c:/sbin/sysctl net.ipv4.conf.default.accept_redirects -> r:=\s*\t*0$'
 
+# 7.2.3 Disable Secure ICMP Redirect Acceptance (Scored)
   - id: 1048
     title: "Disable Secure ICMP Redirect Acceptance"
     description: "Secure ICMP redirects are the same as ICMP redirects, except they come from gateways listed on the default gateway list. It is assumed that these gateways are known to your system, and that they are likely to be secure."
@@ -614,6 +657,7 @@ checks:
       - 'c:/sbin/sysctl net.ipv4.conf.all.secure_redirects -> r:=\s*\t*0$'
       - 'c:/sbin/sysctl net.ipv4.conf.default.secure_redirects -> r:=\s*\t*0$'
 
+# 7.2.4 Log Suspicious Packets (Scored)
   - id: 1049
     title: "Log Suspicious Packets"
     description: "When enabled, this feature logs packets with un-routable source addresses to the kernel log."
@@ -626,6 +670,7 @@ checks:
       - 'c:/sbin/sysctl net.ipv4.conf.all.log_martians -> r:=\s*\t*1$'
       - 'c:/sbin/sysctl net.ipv4.conf.default.log_martians -> r:=\s*\t*1$'
 
+# 7.2.5 Enable Ignore Broadcast Requests (Scored)
   - id: 1050
     title: "Enable Ignore Broadcast Requests"
     description: "Setting net.ipv4.icmp_echo_ignore_broadcasts to 1 will cause the system to ignore all ICMP echo and timestamp requests to broadcast and multicast addresses."
@@ -637,6 +682,7 @@ checks:
     rules:
       - 'c:/sbin/sysctl net.ipv4.icmp_echo_ignore_broadcasts -> r:=\s*\t*1$'
 
+# 7.2.6 Enable Bad Error Message Protection (Scored)
   - id: 1051
     title: "Enable Bad Error Message Protection"
     description: "Setting icmp_ignore_bogus_error_responses to 1 prevents the kernel from logging bogus responses (RFC-1122 non-compliant) from broadcast reframes, keeping file systems from filling up with useless log messages."
@@ -648,6 +694,7 @@ checks:
     rules:
       - 'c:/sbin/sysctl net.ipv4.icmp_ignore_bogus_error_responses -> r:=\s*\t*1$'
 
+# 7.2.7 Enable RFC-recommended Source Route Validation (Scored)
   - id: 1052
     title: "Enable RFC-recommended Source Route Validation"
     description: "Setting net.ipv4.conf.all.rp_filter and net.ipv4.conf.default.rp_filter to 1 forces the Linux kernel to utilize reverse path filtering on a received packet to determine if the packet was valid. Essentially, with reverse path filtering, if the return packet does not go out the same interface that the corresponding source packet came from, the packet is dropped (and logged if log_martians is set)."
@@ -660,6 +707,7 @@ checks:
       - 'c:/sbin/sysctl net.ipv4.conf.all.rp_filter -> r:=\s*\t*1$'
       - 'c:/sbin/sysctl net.ipv4.conf.default.rp_filter -> r:=\s*\t*1$'
 
+# 7.2.8 Enable TCP SYN Cookies (Scored)
   - id: 1053
     title: "Enable TCP SYN Cookies"
     description: "When tcp_syncookies is set, the kernel will handle TCP SYN packets normally until the half-open connection queue is full, at which time, the SYN cookie functionality kicks in. SYN cookies work by not using the SYN queue at all. Instead, the kernel simply replies to the SYN with a SYN|ACK, but will include a specially crafted TCP sequence number that encodes the source and destination IP address and port number and the time the packet was sent. A legitimate connection would send the ACK packet of the three way handshake with the specially crafted sequence number. This allows the server to verify that it has received a valid response to a SYN cookie and allow the connection, even though there is no corresponding SYN in the queue."
@@ -671,6 +719,7 @@ checks:
     rules:
       - 'c:/sbin/sysctl net.ipv4.tcp_syncookies -> r:=\s*\t*1$'
 
+# 7.3.1 Disable IPv6 Router Advertisements (Not Scored)
   - id: 1054
     title: "Disable IPv6 Router Advertisements"
     description: "This setting disables the systems ability to accept router advertisements"
@@ -683,6 +732,7 @@ checks:
       - 'c:/sbin/sysctl net.ipv6.conf.all.accept_ra -> r:=\s*\t*0$'
       - 'c:/sbin/sysctl net.ipv6.conf.default.accept_ra -> r:=\s*\t*0$'
 
+# 7.3.2 Disable IPv6 Redirect Acceptance (Not Scored)
   - id: 1055
     title: "Disable IPv6 Redirect Acceptance"
     description: "This setting prevents the system from accepting ICMP redirects. ICMP redirects tell the system about alternate routes for sending traffic."
@@ -695,6 +745,7 @@ checks:
       - 'c:/sbin/sysctl net.ipv6.conf.all.accept_redirects -> r:=\s*\t*0$'
       - 'c:/sbin/sysctl net.ipv6.conf.default.accept_redirects -> r:=\s*\t*0$'
 
+# 7.3.3 Disable IPv4 (Not Scored)
   - id: 1056
     title: "Disable IPv6"
     description: "Although IPv6 has many advantages over IPv4, few organizations have implemented IPv6."
@@ -711,6 +762,19 @@ checks:
       - 'f:/etc/sysctl.conf -> r:^net.ipv6.conf.default.disable_ipv6\s*\t*=\s*\t*1'
       - 'f:/etc/sysctl.conf -> r:^net.ipv6.conf.lo.disable_ipv6\s*\t*=\s*\t*1'
 
+# 7.4.1 Install TCP Wrappers (Scored)
+  - id: 2001
+    title: "Install TCP Wrappers"
+    description: "TCP Wrappers provides a simple access list and standardized logging method for services capable of supporting it. In the past, services that were called from inetd and xinetd supported the use of tcp wrappers. As inetd and xinetd have been falling in disuse, any service that can support tcp wrappers will have the libwrap.so library attached to it."
+    rationale: "TCP Wrappers provide a good simple access list mechanism to services that may not have that support built in. It is recommended that all services that can support TCP Wrappers, use it."
+    remediation: "Install tcpd : # apt-get install tcpd To verify if a service supports TCP Wrappers, run the following command: # ldd <path-to-daemon> | grep libwrap.so If there is any output, then the service supports TCP Wrappers."
+    compliance:
+      - cis: ["7.4.2"]
+    condition: all
+    rules:
+      - 'c:dpkg -s iptables -> r:install ok installed'
+
+# 7.4.2 Create /etc/hosts.allow (Not Scored)
   - id: 1057
     title: "Create /etc/hosts.allow"
     description: "The /etc/hosts.allow file specifies which IP addresses are permitted to connect to the host. It is intended to be used in conjunction with the /etc/hosts.deny file."
@@ -721,7 +785,20 @@ checks:
     condition: all
     rules:
       - 'f:/etc/hosts.allow'
+      
+# 7.4.3 Verify permissions on /etc/hosts.allow (Scored)
+  - id: 1058
+    title: "Verify permissions on /etc/hosts.allow"
+    description: "The /etc/hosts.allow file contains network information that is used by many system applications and therefore must be readable for these applications to operate."
+    rationale: "It is critical to ensure that the /etc/hosts.allow file is protected from unauthorized write access. Although it is protected by default, the file permissions could be changed either inadvertently or through malicious actions."
+    remediation: "If the permissions of the /etc/hosts.allow file are incorrect, run the following command to correct them: # /bin/chmod 644 /etc/hosts.allow"
+    compliance:
+      - cis: ["7.4.5"]
+    condition: all
+    rules:
+      - 'c:/bin/ls -l /etc/hosts.allow -> r:-rw-r--r--'
 
+# 7.4.4 Create /etc/hosts.deny (Not Scored)
   - id: 1058
     title: "Create /etc/hosts.deny"
     description: "The /etc/hosts.deny file specifies which IP addresses are not permitted to connect to the host. It is intended to be used in conjunction with the /etc/hosts.allow file."
@@ -734,6 +811,19 @@ checks:
       - 'f:/etc/hosts.deny'
       - 'f:/etc/hosts.deny -> r:^ALL:\s*ALL'
 
+# 7.4.5 Verify permissions on /etc/hosts.deny (Scored)
+  - id: 1058
+    title: "Verify permissions on /etc/hosts.deny"
+    description: "The /etc/hosts.deny file contains network information that is used by many system applications and therefore must be readable for these applications to operate."
+    rationale: "It is critical to ensure that the /etc/hosts.deny file is protected from unauthorized write access. Although it is protected by default, the file permissions could be changed either inadvertently or through malicious actions."
+    remediation: "If the permissions of the /etc/hosts.deny file are incorrect, run the following command to correct them: # /bin/chmod 644 /etc/hosts.deny"
+    compliance:
+      - cis: ["7.4.5"]
+    condition: all
+    rules:
+      - 'c:/bin/ls -l /etc/hosts.deny -> r:-rw-r--r--'
+
+# 7.5.1 Disable DCCP (Not Scored)
   - id: 1059
     title: "Disable DCCP"
     description: "The Datagram Congestion Control Protocol (DCCP) is a transport layer protocol that supports streaming media and telephony. DCCP provides a way to gain access to congestion control, without having to do it at the application layer, but does not provide in-sequence delivery."
@@ -745,6 +835,7 @@ checks:
     rules:
       - 'c:lsmod -> r:dccp'
 
+# 7.5.2 Disable SCTP (Not Scored)
   - id: 1060
     title: "Disable SCTP"
     description: "The Stream Control Transmission Protocol (SCTP) is a transport layer protocol used to support message oriented communication, with several streams of messages in one connection. It serves a similar function as TCP and UDP, incorporating features of both. It is message-oriented like UDP, and ensures reliable in-sequence transport of messages with congestion control like TCP."
@@ -756,6 +847,7 @@ checks:
     rules:
       - 'c:lsmod -> r:sctp'
 
+# 7.5.3 Disable RDS (Not Scored)
   - id: 1061
     title: "Disable RDS"
     description: "The Reliable Datagram Sockets (RDS) protocol is a transport layer protocol designed to provide low-latency, high-bandwidth communications between cluster nodes. It was developed by the Oracle Corporation."
@@ -767,6 +859,7 @@ checks:
     rules:
       - 'c:lsmod -> r:rds'
 
+# 7.5.4 Disable TIPC (Not Scored)
   - id: 1062
     title: "Disable TIPC"
     description: "The Transparent Inter-Process Communication (TIPC) protocol is designed to provide communication between cluster nodes."
@@ -778,6 +871,7 @@ checks:
     rules:
       - 'c:lsmod -> r:tipc'
 
+# 7.7 Ensure Firewall is active (Scored)
   - id: 1063
     title: "Ensure Firewall is active"
     description: "IPtables is an application that allows a system administrator to configure the IPv4 tables, chains and rules provided by the Linux kernel firewall.  The iptables-persistent package in Debian provides one way to ensure iptables rules are reapplied on reboot. Note: the audit and remediation included provide instructions for using iptables-persistent to reapply iptables rules.  Other methods are available which may be in use in your environment and may conflict with these steps."
