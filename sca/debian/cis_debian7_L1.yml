@@ -1035,6 +1035,7 @@ checks:
     remediation: "Install the rsyslog package: # apt-get install rsyslog"
     compliance:
       - cis: ["8.2.2"]
+      - cis_csc: ["6.2"]
     condition: all
     rules:
       - 'c:dpkg -s rsyslog -> r:install ok installed'
@@ -1047,6 +1048,7 @@ checks:
     remediation: "Enable rsyslog: # update-rc.d rsyslog enable"
     compliance:
       - cis: ["8.2.2"]
+      - cis_csc: ["6.2"]
     condition: all
     rules:
       - 'c:find /etc/rc* -name *rsyslog* -> r:S\.'
@@ -1059,6 +1061,7 @@ checks:
     remediation: "Edit the /etc/rsyslog.conf file and add the following line (where logfile.example.com is the name of your central log host).  *.* @@loghost.example.com    # Execute the following command to restart rsyslogd    # pkill -HUP rsyslogd    Note: The double \"at\" sign (@@) directs rsyslog to use TCP to send log messages to the server, which is a more reliable transport mechanism than the default UDP protocol."
     compliance:
       - cis: ["8.2.5"]
+      - cis_csc: ["6.6"]
     references:
       - rsyslog.conf(5) man page
     condition: all
@@ -1073,6 +1076,7 @@ checks:
     remediation: "For hosts that are designated as log hosts, edit the /etc/rsyslog.conf file and un-comment the following lines: $ModLoad imtcp.so    $InputTCPServerRun 514    Execute the following command to restart rsyslogd: # pkill -HUP rsyslogd"
     compliance:
       - cis: ["8.2.6"]
+      - cis_csc: ["9.1"]
     references:
       - rsyslog.conf(8) man page
     condition: all

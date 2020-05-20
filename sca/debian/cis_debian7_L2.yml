@@ -144,6 +144,8 @@ checks:
     remediation: "Set the max_log_file parameter in /etc/audit/auditd.conf max_log_file = <MB> Note: MB is the number of MegaBytes the file can be."
     compliance:
       - cis: ["8.1.1.1"]
+      - cis_csc: ["6.3"]
+      - pci_dss: ["10.7"]
     condition: all
     rules:
       - 'd:/etc/audit'
@@ -158,6 +160,8 @@ checks:
     remediation: "Add the following lines to the /etc/audit/auditd.conf file. space_left_action = email action_mail_acct = root admin_space_left_action = halt"
     compliance:
       - cis: ["8.1.1.2"]
+      - cis_csc: ["6.3"]
+      - pci_dss: ["10.7"]
     condition: all
     rules:
       - 'd:/etc/audit'
@@ -174,6 +178,8 @@ checks:
     remediation: "Add the following line to the /etc/audit/auditd.conf file. max_log_file_action = keep_logs"
     compliance:
       - cis: ["8.1.1.3"]
+      - cis_csc: ["6.3"]
+      - pci_dss: ["10.7"]
     condition: all
     rules:
       - 'd:/etc/audit'
@@ -188,6 +194,8 @@ checks:
     remediation: "Install auditd: # apt-get install auditd If needed enable auditd in /etc/rc*.d: # update-rc.d auditd enable"
     compliance:
       - cis: ["8.1.2"]
+      - cis_csc: ["6.2"]
+      - pci_dss: ["10.1","10.7"]
     condition: all
     rules:
       - 'c:dpkg -s auditd -> r:install ok installed'
@@ -201,6 +209,10 @@ checks:
     remediation: "Edit /etc/default/grub to include audit=1 as part of GRUB_CMDLINE_LINUX: GRUB_CMDLINE_LINUX=\"audit=1\"And run the following command to update the grub configuration: # update-grub"
     compliance:
       - cis: ["8.1.3"]
+      - cis_csc: ["6.2"]
+      - pci_dss: ["10.2.6","10.7"]
+      - gpg_13: ["7.9"]
+      - gdpr_IV: ["35.7.d","32.2"]
     condition: all
     rules:
       - 'f:/etc/default/grub -> r:^GRUB_CMDLINE_LINUX\s*=\s*\p*audit\s*=\s*1\p*'
@@ -213,6 +225,12 @@ checks:
     remediation: "For 64 bit systems, add the following lines to the /etc/audit/audit.rules file: -a always,exit -F arch=b64 -S adjtimex -S settimeofday -k time-change -a always,exit -F arch=b32 -S adjtimex -S settimeofday -S stime -k time-change -a always,exit -F arch=b64 -S clock_settime -k time-change -a always,exit -F arch=b32 -S clock_settime -k time-change -w /etc/localtime -p wa -k time-change # Execute the following command to restart auditd # pkill -P 1-HUP auditd For 32 bit systems, add the following lines to the /etc/audit/audit.rules file. -a always,exit -F arch=b32 -S adjtimex -S settimeofday -S stime -k time-change -a always,exit -F arch=b32 -S clock_settime -k time-change -w /etc/localtime -p wa -k time-change # Execute the following command to restart auditd # pkill -P 1-HUP auditd"
     compliance:
       - cis: ["8.1.4"]
+      - cis_csc: ["3.6"]
+      - pci_dss: ["10.4.2","10.2.7"]
+      - nist_800_53: ["AU.14","AU.6"]
+      - gpg_13: ["7.9"]
+      - gdpr_IV: ["32.2","35.7.d"]
+      - hipaa: ["164.312.b"]
     condition: all
     rules:
       - 'd:/etc/audit'
@@ -231,6 +249,12 @@ checks:
     remediation: "Add the following lines to the /etc/audit/audit.rules file. -w /etc/group -p wa -k identity -w /etc/passwd -p wa -k identity -w /etc/gshadow -p wa -k identity -w /etc/shadow -p wa -k identity -w /etc/security/opasswd -p wa -k identity # Execute the following command to restart auditd # pkill -P 1-HUP auditd"
     compliance:
       - cis: ["8.1.5"]
+      - cis_csc: ["5.4"]
+      - pci_dss: ["10.2.5"]
+      - hipaa: ["164.312.b"]
+      - nist_800_53: ["AU.14", "AC.7"]
+      - gpg_13: ["7.8"]
+      - gdpr_IV: ["35.7","32.2"]
     condition: all
     rules:
       - 'd:/etc/audit'
@@ -249,6 +273,12 @@ checks:
     remediation: "For 64 bit systems, add the following lines to the /etc/audit/audit.rules file. -a exit,always -F arch=b64 -S sethostname -S setdomainname -k system-locale -a exit,always -F arch=b32 -S sethostname -S setdomainname -k system-locale -w /etc/issue -p wa -k system-locale -w /etc/issue.net -p wa -k system-locale -w /etc/hosts -p wa -k system-locale -w /etc/network -p wa -k system-locale # Execute the following command to restart auditd # pkill -P 1-HUP auditd For 32 bit systems, add the following lines to the /etc/audit/audit.rules file. -a exit,always -F arch=b32 -S sethostname -S setdomainname -k system-locale -w /etc/issue -p wa -k system-locale -w /etc/issue.net -p wa -k system-locale -w /etc/hosts -p wa -k system-locale -w /etc/network -p wa -k system-locale # Execute the following command to restart auditd # pkill -P 1-HUP auditd"
     compliance:
       - cis: ["8.1.6"]
+      - cis_csc: ["3.6"]
+      - pci_dss: ["10.2.7"]
+      - nist_800_53: ["AU.14","AU.6"]
+      - gpg_13: ["7.9"]
+      - gdpr_IV: ["32.2","35.7.d"]
+      - hipaa: ["164.312.b"]
     condition: all
     rules:
       - 'f:/etc/audit'
@@ -268,6 +298,12 @@ checks:
     remediation: "Add the following lines to the /etc/audit/audit.rules file. Add the following lines to /etc/audit/audit.rules -w /etc/selinux/ -p wa -k MAC-policy # Execute the following command to restart auditd # pkill -P 1-HUP auditd"
     compliance:
       - cis: ["8.1.7"]
+      - cis_csc: ["3.6"]
+      - pci_dss: ["10.2.5"]
+      - hipaa: ["164.312.b"]
+      - nist_800_53: ["AU.14", "AC.7"]
+      - gpg_13: ["7.8"]
+      - gdpr_IV: ["35.7","32.2"]
     condition: all
     rules:
       - 'd:/etc/audit'
@@ -282,6 +318,12 @@ checks:
     remediation: "Add the following lines to the /etc/audit/audit.&& r:rules file. -w /var/log/faillog -p wa -k logins -w /var/log/lastlog -p wa -k logins -w /var/log/tallylog -p wa -k logins # Execute the following command to restart auditd # pkill -HUP -P 1 auditd"
     compliance:
       - cis: ["8.1.8"]
+      - cis_csc: ["5.5","16.10","16.4"]
+      - pci_dss: ["10.2.1", "10.2.4", "10.3"]
+      - nist_800_53: ["AC.7","AU.14"]
+      - gpg_13: ["7.8"]
+      - gdpr_IV: ["32.2","35.7.d"]
+      - hipaa: ["164.312.b"]
     condition: all
     rules:
       - 'd:/etc/audit'
@@ -298,6 +340,8 @@ checks:
     remediation: "Add the following lines to the /etc/audit/audit.rules file. -w /var/run/utmp -p wa -k session -w /var/log/wtmp -p wa -k session -w /var/log/btmp -p wa -k session # Execute the following command to restart auditd # pkill -HUP -P 1 auditd Note: Use the last command to read /var/log/wtmp (last with no parameters) and /var/run/utmp (last -f /var/run/utmp)"
     compliance:
       - cis: ["8.1.9"]
+      - cis_csc: ["5.5","16.10","16.4"]
+      - pci_dss: ["10.3"]
     condition: all
     rules:
       - 'd:/etc/audit'
@@ -314,6 +358,12 @@ checks:
     remediation: "For 64 bit systems, add the following lines to the /etc/audit/audit.rules file. -a always,exit -F arch=b64 -S chmod -S fchmod -S fchmodat -F auid>=1000 \\ -F auid!=4294967295 -k perm_mod -a always,exit -F arch=b32 -S chmod -S fchmod -S fchmodat -F auid>=1000 \\ -F auid!=4294967295 -k perm_mod -a always,exit -F arch=b64 -S chown -S fchown -S fchownat -S lchown -F auid>=1000 \\ -F auid!=4294967295 -k perm_mod -a always,exit -F arch=b32 -S chown -S fchown -S fchownat -S lchown -F auid>=1000 \\ -F auid!=4294967295 -k perm_mod -a always,exit -F arch=b64 -S setxattr -S lsetxattr -S fsetxattr -S removexattr -S \\ lremovexattr -S fremovexattr -F auid>=1000 -F auid!=4294967295 -k perm_mod -a always,exit -F arch=b32 -S setxattr -S lsetxattr -S fsetxattr -S removexattr -S \\ lremovexattr -S fremovexattr -F auid>=1000 -F auid!=4294967295 -k perm_mod # Execute the following command to restart auditd # pkill -HUP -P 1 auditd For 32 bit systems, add the following lines to the /etc/audit/audit.rules file. -a always,exit -F arch=b32 -S chmod -S fchmod -S fchmodat -F auid>=1000 \\ -F auid!=4294967295 -k perm_mod -a always,exit -F arch=b32 -S chown -S fchown -S fchownat -S lchown -F auid>=1000 \\ -F auid!=4294967295 -k perm_mod -a always,exit -F arch=b32 -S setxattr -S lsetxattr -S fsetxattr -S removexattr -S \\ lremovexattr -S fremovexattr -F auid>=1000 -F auid!=4294967295 -k perm_mod # Execute the following command to restart auditd # pkill -HUP -P 1 auditd"
     compliance:
       - cis: ["8.1.10"]
+      - cis_csc: ["3.6"]
+      - pci_dss: ["10.2.5"]
+      - hipaa: ["164.312.b"]
+      - nist_800_53: ["AU.14", "AC.7"]
+      - gpg_13: ["7.8"]
+      - gdpr_IV: ["35.7","32.2"]
     condition: all
     rules:
       - 'd:/etc/audit'
@@ -333,6 +383,12 @@ checks:
     remediation: "For 64 bit systems, add the following lines to the /etc/audit/audit.rules file. -a always,exit -F arch=b64 -S creat -S open -S openat -S truncate -S ftruncate \\ -F exit=-EACCES -F auid>=1000 -F auid!=4294967295 -k access -a always,exit -F arch=b32 -S creat -S open -S openat -S truncate -S ftruncate \\ -F exit=-EACCES -F auid>=1000 -F auid!=4294967295 -k access -a always,exit -F arch=b64 -S creat -S open -S openat -S truncate -S ftruncate \\ -F exit=-EPERM -F auid>=1000 -F auid!=4294967295 -k access -a always,exit -F arch=b32 -S creat -S open -S openat -S truncate -S ftruncate \\ -F exit=-EPERM -F auid>=1000 -F auid!=4294967295 -k access # Execute the following command to restart auditd # pkill -HUP -P 1 auditd For 32 bit systems, add the following lines to the /etc/audit/audit.rules file. -a always,exit -F arch=b32 -S creat -S open -S openat -S truncate -S ftruncate \\ -F exit=-EACCES -F auid>=1000 -F auid!=4294967295 -k access -a always,exit -F arch=b32 -S creat -S open -S openat -S truncate -S ftruncate \\ -F exit=-EPERM -F auid>=1000 -F auid!=4294967295 -k access # Execute the following command to restart auditd # pkill -HUP -P 1 auditd"
     compliance:
       - cis: ["8.1.11"]
+      - cis_csc: ["14.6"]
+      - pci_dss: ["10.2.4"]
+      - nist_800_53: ["AC.7"]
+      - gpg_13: ["7.8"]
+      - gdpr_IV: ["32.2","35.7.d"]
+      - hipaa: ["164.312.b"]
     condition: all
     rules:
       - 'd:/etc/audit'
@@ -350,6 +406,12 @@ checks:
     remediation: "For 64 bit systems, add the following lines to the /etc/audit/audit.rules file. -a always,exit -F arch=b64 -S mount -F auid>=1000 -F auid!=4294967295 -k mounts -a always,exit -F arch=b32 -S mount -F auid>=1000 -F auid!=4294967295 -k mounts # Execute the following command to restart auditd # pkill -HUP -P 1 auditd For 32 bit systems, add the following lines to the /etc/audit/audit.rules file. -a always,exit -F arch=b32 -S mount -F auid>=1000 -F auid!=4294967295 -k mounts # Execute the following command to restart auditd # pkill -HUP -P 1 auditd"
     compliance:
       - cis: ["8.1.13"]
+      - cis_csc: ["13"]
+      - pci_dss: ["10.2.7"]
+      - nist_800_53: ["AU.14","AU.6"]
+      - gpg_13: ["7.9"]
+      - gdpr_IV: ["32.2","35.7.d"]
+      - hipaa: ["164.312.b"]
     condition: all
     rules:
       - 'd:/etc/audit'
@@ -365,6 +427,7 @@ checks:
     remediation: "At a minimum, configure the audit system to collect file deletion events for all users and root. For 64 bit systems, add the following to the /etc/audit/audit.rules file. -a always,exit -F arch=b64 -S unlink -S unlinkat -S rename -S renameat -F auid>=1000 \\ -F auid!=4294967295 -k delete -a always,exit -F arch=b32 -S unlink -S unlinkat -S rename -S renameat -F auid>=1000 \\ -F auid!=4294967295 -k delete # Execute the following command to restart auditd # pkill -HUP -P 1 auditd For 32 bit systems, add the following to the /etc/audit/audit.rules file. -a always,exit -F arch=b32 -S unlink -S unlinkat -S rename -S renameat -F auid>=1000 \\ -F auid!=4294967295 -k delete # Execute the following command to restart auditd # pkill -P 1-HUP auditd"
     compliance:
       - cis: ["8.1.14"]
+      - pci_dss: ["10.5.5"]
     condition: all
     rules:
       - 'd:/etc/audit'
@@ -380,6 +443,12 @@ checks:
     remediation: "Add the following lines to the /etc/audit/audit.rules file. -w /etc/sudoers -p wa -k scope # Execute the following command to restart auditd # pkill -HUP -P 1 auditd"
     compliance:
       - cis: ["8.1.15"]
+      - cis_csc: ["5.4"]
+      - pci_dss: ["10.2.5"]
+      - hipaa: ["164.312.b"]
+      - nist_800_53: ["AU.14", "AC.7"]
+      - gpg_13: ["7.8"]
+      - gdpr_IV: ["35.7","32.2"]
     condition: all
     rules:
       - 'd:/etc/audit'
@@ -394,6 +463,12 @@ checks:
     remediation: "Add the following lines to the /etc/audit/audit.rules file. -w /var/log/sudo.log -p wa -k actions # Execute the following command to restart auditd # pkill -HUP -P 1 auditd Note: The system must be configured with su disabled (See Item 9.5 Restrict Access to the su Command) to force all command execution through sudo. This will not be effective on the console, as administrators can log in as root"
     compliance:
       - cis: ["8.1.16"]
+      - cis_csc: ["5.1","5.5"]
+      - pci_dss: ["10.2.2"]
+      - nist_800_53: ["AU.14","AC.6","AC.7"]
+      - gpg_13: ["7.8"]
+      - gdpr_IV: ["32.2","35.7.d"]
+      - hipaa: ["164.312.b"]
     condition: all
     rules:
       - 'd:/etc/audit'
@@ -408,6 +483,12 @@ checks:
     remediation: "Add the following lines to the /etc/audit/audit.rules file. -w /sbin/insmod -p x -k modules -w /sbin/rmmod -p x -k modules -w /sbin/modprobe -p x -k modules For 32 bit systems, add -a always,exit -F arch=b32 -S init_module -S delete_module -k modules For 64 bit systems, add -a always,exit -F arch=b64 -S init_module -S delete_module -k modules"
     compliance:
       - cis: ["8.1.17"]
+      - cis_csc: ["3"]
+      - pci_dss: ["10.2.7"]
+      - nist_800_53: ["AU.14","AU.6"]
+      - gpg_13: ["7.9"]
+      - gdpr_IV: ["32.2","35.7.d"]
+      - hipaa: ["164.312.b"]
     condition: all
     rules:
       - 'd:/etc/audit'
@@ -425,6 +506,8 @@ checks:
     remediation: "Add the following lines to the /etc/audit/audit.rules file. -e 2 Note: This must be the last line in the /etc/audit/audit.rules file"
     compliance:
       - cis: ["8.1.18"]
+      - cis_csc: ["3","6"]
+      - pci_dss: ["10.5"]
     condition: all
     rules:
       - 'd:/etc/audit'
@@ -443,6 +526,8 @@ checks:
     remediation: "Install AIDE: # apt-get install aide Initialize AIDE: # aideinit # cp /var/lib/aide/aide.db.new /var/lib/aide/aide.db Note: The prelinking feature can interfere with AIDE because it alters binaries to speed up their start up times. Run /usr/sbin/prelink -ua to restore the binaries to their prelinked state, thus avoiding false positives from AIDE."
     compliance:
       - cis: ["8.3.1"]
+      - cis_csc: ["3.5"]
+      - pci_dss: ["11.5"]
     condition: all
     rules:
       - 'c:dpkg -s aide -> r:install ok installed'
@@ -455,6 +540,8 @@ checks:
     remediation: "Execute the following command: # crontab -u root -e Add the following line to the crontab: 0 5 * * * /usr/sbin/aide --check Note: The checking in this instance occurs every day at 5am. Alter the frequency and time of the checks in compliance with site policy."
     compliance:
       - cis: ["8.3.2"]
+      - cis_csc: ["3.5"]
+      - pci_dss: ["11.5"]
     condition: all
     rules:
       - 'f:/etc/crontab -> r:\s*\t*/usr/sbin/aide\s*\t*--check'
