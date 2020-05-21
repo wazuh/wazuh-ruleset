@@ -1426,6 +1426,109 @@ checks:
       - 'f:/etc/motd -> r:\v|\r|\m|\s'
       - 'f:/etc/issue.net -> r:\v|\r|\m|\s'
 
+
+###############################################
+# 12 Verify System File Permissions
+###############################################
+
+# 12.1 Verify Permissions on /etc/passwd (Scored)
+  - id: 2004
+    title: "Verify permissions on /etc/passwd"
+    description: "The /etc/passwd file contains user account information that is used by many system utilities and therefore must be readable for these utilities to operate."
+    rationale: "It is critical to ensure that the /etc/passwd file is protected from unauthorized write access. Although it is protected by default, the file permissions could be changed either inadvertently or through malicious actions."
+    remediation: "If the permissions of the /etc/passwd file are incorrect, run the following command to correct them: # /bin/chmod 644 /etc/passwd"
+    compliance:
+      - cis: ["12.1"]
+      - cis_csc: ["16.14"]
+      - pci_dss: ["2.2.4"]
+      - tsc: ["CC5.2","CC6.1","CC6.8","CC7.1","CC7.2","CC8.1"]
+      - nist_800_53: ["CM.1"]
+    condition: all
+    rules:
+      - 'c:/bin/ls -l /etc/passwd -> r:-rw-r--r--'
+
+# 12.2 Verify Permissions on /etc/shadow (Scored)
+  - id: 2005
+    title: "Verify permissions on /etc/shadow"
+    description: "The /etc/shadow file is used to store the information about user accounts that is critical to the security of those accounts, such as the hashed password and other security information."
+    rationale: "If attackers can gain read access to the /etc/shadow file, they can easily run a password cracking program against the hashed password to break it. Other security information that is stored in the /etc/shadow file (such as expiration) could also be useful to subvert the user accounts."
+    remediation: "If the permissions of the /etc/shadow file are incorrect, run the following command to correct them: # /bin/chmod 644 /etc/shadow"
+    compliance:
+      - cis: ["12.2"]
+      - cis_csc: ["16.14"]
+      - pci_dss: ["2.2.4"]
+      - tsc: ["CC5.2","CC6.1","CC6.8","CC7.1","CC7.2","CC8.1"]
+      - nist_800_53: ["CM.1"]
+    condition: all
+    rules:
+      - 'c:/bin/ls -l /etc/shadow -> r:-rw-r--r--'
+
+# 12.3 Verify Permissions on /etc/group (Scored)
+  - id: 2006
+    title: "Verify permissions on /etc/group"
+    description: "The /etc/group file contains a list of all the valid groups defined in the system. The command below allows read/write access for root and read access for everyone else."
+    rationale: "The /etc/group file needs to be protected from unauthorized changes by non-privileged users, but needs to be readable as this information is used with many non-privileged programs."
+    remediation: "If the permissions of the /etc/group file are incorrect, run the following command to correct them: # /bin/chmod 644 /etc/group"
+    compliance:
+      - cis: ["12.3"]
+      - cis_csc: ["16.14"]
+      - pci_dss: ["2.2.4"]
+      - tsc: ["CC5.2","CC6.1","CC6.8","CC7.1","CC7.2","CC8.1"]
+      - nist_800_53: ["CM.1"]
+    condition: all
+    rules:
+      - 'c:/bin/ls -l /etc/group -> r:-rw-r--r--'
+
+# 12.4 Verify User/Group Ownership on /etc/passwd
+  - id: 2007
+    title: "Verify User/Group Ownership on /etc/passwd"
+    description: "The /etc/passwd file contains a list of all the valid userIDs defined in the system, but not the passwords. The command below sets the owner and group of the file to root."
+    rationale: "The /etc/passwd file needs to be protected from unauthorized changes by non-priliveged users, but needs to be readable as this information is used with many non-privileged programs."
+    remediation: "If the user and group ownership of the /etc/passwd file are incorrect, run the following command to correct them: # /bin/chown root:root /etc/passwd"
+    compliance:
+      - cis: ["12.4"]
+      - cis_csc: ["16.14"]
+      - pci_dss: ["2.2.4"]
+      - tsc: ["CC5.2","CC6.1","CC6.8","CC7.1","CC7.2","CC8.1"]
+      - nist_800_53: ["CM.1"]
+    condition: all
+    rules:
+      - 'c:/bin/ls -l /etc/passwd -> r:root\s*\t*root'
+
+# 12.5 Verify User/Group Ownership on /etc/shadow (Scored)
+  - id: 2008
+    title: "Verify User/Group Ownership on /etc/shadow"
+    description: "The /etc/shadow file contains the one-way cipher text passwords for each user defined in the /etc/passwd file. The command below sets the user and group ownership of the file to root."
+    rationale: "If attackers can gain read access to the /etc/shadow file, they can easily run a password cracking program against the hashed password to break it. Other security information that is stored in the /etc/shadow file (such as expiration) could also be useful to subvert the user accounts."
+    remediation: "If the ownership of the /etc/shadow file are incorrect, run the following command to correct them: # /bin/chown root:shadow /etc/shadow"
+    compliance:
+      - cis: ["12.5"]
+      - cis_csc: ["16.14"]
+      - pci_dss: ["2.2.4"]
+      - tsc: ["CC5.2","CC6.1","CC6.8","CC7.1","CC7.2","CC8.1"]
+      - nist_800_53: ["CM.1"]
+    condition: all
+    rules:
+      - 'c:/bin/ls -l /etc/shadow -> r:root\s*\t*root'
+
+# 12.6 Verify User/Group Ownership on /etc/group (Scored)
+  - id: 2009
+    title: "Verify User/Group Ownership on /etc/group"
+    description: "The /etc/group file contains a list of all the valid groups defined in the system. The command below allows read/write access for root and read access for everyone else."
+    rationale: "The /etc/group file needs to be protected from unauthorized changes by non-priliveged users, but needs to be readable as this information is used with many non-privileged programs."
+    remediation: "If the ownership of the /etc/group file are incorrect, run the following command to correct them: # /bin/chown root:root /etc/group"
+    compliance:
+      - cis: ["12.6"]
+      - cis_csc: ["16.14"]
+      - pci_dss: ["2.2.4"]
+      - tsc: ["CC5.2","CC6.1","CC6.8","CC7.1","CC7.2","CC8.1"]
+      - nist_800_53: ["CM.1"]
+    condition: all
+    rules:
+      - 'c:/bin/ls -l /etc/group -> r:root\s*\t*root'
+
+
+###############################################
 # 13 Review User and Group Settings
 
   - id: 1093
