@@ -280,15 +280,15 @@ checks:
     title: "Disable Prelink"
     description: "The prelinking feature changes binaries in an attempt to decrease their startup time."
     rationale: "The prelinking feature can interfere with the operation of AIDE, because it changes binaries. Prelinking can also increase the vulnerability of the system if a malicious user is able to compromise a common library such as libc."
-    remediation: "Run the command: 32 | P a g e# /usr/sbin/prelink -ua to restore binaries to a normal, non-prelinked state, then remove prelink: # apt-get purge prelink"
+    remediation: "Run the command: # /usr/sbin/prelink -ua to restore binaries to a normal, non-prelinked state, then remove prelink: # apt-get purge prelink"
     compliance:
       - cis: ["4.4"]
       - pci_dss: ["2.2.4"]
       - nist_800_53: ["CM.1"]
       - tsc: ["CC5.2"]
-    condition: all
+    condition: none
     rules:
-      - 'c:rpm -q prelink -> package prelink is not installed'
+      - 'c:dpkg -s prelink -> r:install ok installed'
 
 # 4.5 Activate AppArmor (Scored)
   - id: 1320
@@ -298,9 +298,12 @@ checks:
     remediation: "Install apparmor and apparmor-utils if missing (additional profiles can be found in the apparmor-profiles package): # apt-get install apparmor apparmor-profiles apparmor-utils Add apparmor=1 and security=apparmor to GRUB_CMDLINE_LINUX in /etc/default/grub : GRUB_CMDLINE_LINUX=\"apparmor=1 security=apparmor\" Update grub configuration (reboot will be required to apply changes): # update-grub Set all profiles to enforce mode: # aa-enforce /etc/apparmor.d/* Any unconfined processes may need to have a profile created or activated for them and then be restarted."
     compliance:
       - cis: ["4.5"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
     condition: all
     rules:
-      - 'c:apparmor_status -> n:^(\d+)\sprofiles\sare\sloaded compare >= 4'
+      - 'c:apparmor_status -> n:(\d+) profiles are loaded compare >= 4'
       - 'c:apparmor_status -> r:0 profiles are in complain mode'
       - 'c:apparmor_status -> r:0 processes are unconfined but have a profile defined'
 
@@ -1000,8 +1003,9 @@ checks:
       - 'c:grep -Rh ^\$ModLoad[[:space:]][[:space:]]*imtcp.so /etc/rsyslog.conf /etc/rsyslog.d/ -> r:^$ModLoad\s*\t*imtcp.so'
       - 'c:grep -Rh ^\$InputTCPServerRun[[:space:]][[:space:]]*514 /etc/rsyslog.conf /etc/rsyslog.d/ -> r:^$InputTCPServerRun\s*\t*514'
 
+#######################################################
 # 9 System Access, Authentication and Authorization
-
+#######################################################
 # 9.1.1 Enable cron Daemon (Scored)
   - id: 1067
     title: "Enable cron Daemon"
@@ -1371,7 +1375,10 @@ checks:
       - pci_dss: ["8.1"]
     condition: all
     rules:
-      - 'f:/etc/ssh/sshd_config -> !r:^# && r:AllowUsers\s+\w+|AllowGroups\s+\w+|DenyUsers\s+\w+|DenyGroups\s+\w+'
+      - 'f:/etc/ssh/sshd_config -> !r:^# && r:AllowUsers\s+\w+'
+      - 'f:/etc/ssh/sshd_config -> !r:^# && r:AllowGroups\s+\w+'
+      - 'f:/etc/ssh/sshd_config -> !r:^# && r:DenyUsers\s+\w+'
+      - 'f:/etc/ssh/sshd_config -> !r:^# && r:DenyGroups\s+\w+'
 
 # 9.3.14 Set SSH Banner (Scored)
   - id: 1083
@@ -1406,8 +1413,10 @@ checks:
       - 'f:/etc/pam.d/su -> !r:^# && r:auth && r:required && r:pam_wheel.so && r:use_uid'
       - 'f:/etc/group -> !r:^# && r:wheel:'
 
+######################################
 # 10 User Accounts and Environment
-
+######################################
+# 10.1.1 Set Password Expiration Days (Scored)
   - id: 1085
     title: "Set Password Expiration Days"
     description: "The PASS_MAX_DAYS parameter in /etc/login.defs allows an administrator to force passwords to expire once they reach a defined age. It is recommended that the PASS_MAX_DAYS parameter be set to less than or equal to 90 days."
@@ -1415,10 +1424,12 @@ checks:
     remediation: "Set the PASS_MAX_DAYS parameter to 90 in /etc/login.defs: PASS_MAX_DAYS 90    Modify user parameters for all users with a password set to match: # chage --maxdays 90 <user>"
     compliance:
       - cis: ["10.1.1"]
+      - pci_dss: ["8.2.4"]
     condition: all
     rules:
       - 'f:/etc/login.defs -> n:^PASS_MAX_DAYS\s*\t*(\d+) compare <= 90'
 
+# 10.1.2 Set Password Change Minimum Number of Days (Scored)
   - id: 1086
     title: "Set Password Change Minimum Number of Days"
     description: "The PASS_MIN_DAYS parameter in /etc/login.defs allows an administrator to prevent users from changing their password until a minimum number of days have passed since the last time the user changed their password. It is recommended that PASS_MIN_DAYS parameter be set to 7 or more days."
@@ -1426,10 +1437,12 @@ checks:
     remediation: "Set the PASS_MIN_DAYS parameter to 7 in /etc/login.defs: PASS_MIN_DAYS 7    Modify user parameters for all users with a password set to match: # chage --mindays 7 <user>"
     compliance:
       - cis: ["10.1.2"]
+      - pci_dss: ["3.6.1"]
     condition: all
     rules:
       - 'f:/etc/login.defs -> n:^PASS_MIN_DAYS\s*\t*(\d+) compare >= 7'
 
+# 10.1.3 Set Password Expiring Warning Days (Scored)
   - id: 1087
     title: "Set Password Expiring Warning Days"
     description: "The PASS_WARN_AGE parameter in /etc/login.defs allows an administrator to notify users that their password will expire in a defined number of days. It is recommended that the PASS_WARN_AGE parameter be set to 7 or more days."
@@ -1437,10 +1450,12 @@ checks:
     remediation: "Set the PASS_WARN_AGE parameter to 7 in /etc/login.defs: PASS_WARN_AGE 7    Modify user parameters for all users with a password set to match: # chage --warndays 7 <user>"
     compliance:
       - cis: ["10.1.3"]
+      - pci_dss: ["3.6.1"]
     condition: all
     rules:
       - 'f:/etc/login.defs -> n:^PASS_WARN_AGE\s*\t*(\d+) compare >= 7'
 
+# 10.3 Set Default Group for root Account (Scored)
   - id: 1088
     title: "Set Default Group for root Account"
     description: "The usermod command can be used to specify which group the root user belongs to. This affects permissions of files that are created by the root user."
@@ -1448,10 +1463,12 @@ checks:
     remediation: "# usermod -g 0 root"
     compliance:
       - cis: ["10.3"]
+      - pci_dss: ["3.6.1"]
     condition: all
     rules:
       - 'f:/etc/passwd -> !r:^# && r:root:\w+:\w+:0:'
 
+# 10.4 Set Default umask for Users (Scored)
   - id: 1089
     title: "Set Default umask for Users"
     description: "The default umask determines the permissions of files created by users. The user creating the file has the discretion of making their files and directories readable by others via the chmod command. Users who wish to allow their files and directories to be readable by others by default may choose a different default umask by inserting the umask command into the standard shell configuration files (.profile, .bashrc, etc.) in their home directories."
@@ -1459,11 +1476,13 @@ checks:
     remediation: "Edit the /etc/bash.bashrc and /etc/profile.d/cis.sh files (and the appropriate files for any other shell supported on your system) and add the following the UMASK parameter as shown: umask 077"
     compliance:
       - cis: ["10.4"]
+      - pci_dss: ["3.6.1"]
     condition: all
     rules:
       - 'c:grep -Rh ^umask[[:space:]][[:space:]]*077 /etc/profile.d/ -> !r:^# && r:umask\s*\t*077'
       - 'f:/etc/bash.bashrc -> !r:^# && r:umask\s*\t*077'
 
+# 10.5 Lock Inactive User Accounts (Scored)
   - id: 1090
     title: "Lock Inactive User Accounts"
     description: "User accounts that have been inactive for over a given period of time can be automatically disabled. It is recommended that accounts that are inactive for 35 or more days be disabled."
@@ -1471,11 +1490,15 @@ checks:
     remediation: "# useradd -D -f 35"
     compliance:
       - cis: ["10.5"]
+      - pci_dss: ["3.6.1"]
     condition: all
     rules:
       - 'f:/etc/default/useradd -> n:^INACTIVE=(\d+) compare <= 35'
 
+##########################################
 # 11 Warning Banners
+##########################################
+# 11.1 Set Warning Banner for Standard Login Services (Scored)
   - id: 1091
     title: "Set Warning Banner for Standard Login Services"
     description: "The contents of the /etc/issue file are displayed prior to the login prompt on the system's console and serial devices, and also prior to logins via telnet. The contents of the /etc/motd file is generally displayed after all successful logins, no matter where the user is logging in from, but is thought to be less useful because it only provides notification to the user after the machine has been accessed."
@@ -1483,6 +1506,11 @@ checks:
     remediation: "# touch /etc/motd    # echo \"Authorized uses only. All activity may be monitored and reported.\" > /etc/issue    # echo \"Authorized uses only. All activity may be monitored and reported.\" > /etc/issue.net    # chown root:root /etc/motd    # chmod 644 /etc/motd    # chown root:root /etc/issue    # chmod 644 /etc/issue    # chown root:root /etc/issue.net    # chmod 644 /etc/issue.net"
     compliance:
       - cis: ["11.1"]
+      - pci_dss: ["10.2.5"]
+      - hipaa: ["164.312.b"]
+      - nist_800_53: ["AU.14", "AC.7"]
+      - gpg_13: ["7.8"]
+      - gdpr_IV: ["35.7","32.2"]
     condition: all
     rules:
       - 'f:/etc/motd'
@@ -1492,6 +1520,7 @@ checks:
       - 'c:stat -c%u-%g-%a /etc/issue -> 0-0-644'
       - 'c:stat -c%u-%g-%a /etc/issue.net -> 0-0-644'
 
+# 11.2 Remove OS Information from Login Warning Banners (Scored)
   - id: 1092
     title: "Remove OS Information from Login Warning Banners"
     description: "Unix-based systems have typically displayed information about the OS release and patch level upon logging in to the system. This information can be useful to developers who are developing software for a particular OS platform."
@@ -1499,6 +1528,11 @@ checks:
     remediation: "Edit the /etc/motd, /etc/issue and /etc/issue.net files and remove any lines containing \\m, \\r, \\s or \\v."
     compliance:
       - cis: ["11.2"]
+      - pci_dss: ["10.2.5"]
+      - hipaa: ["164.312.b"]
+      - nist_800_53: ["AU.14", "AC.7"]
+      - gpg_13: ["7.8"]
+      - gdpr_IV: ["35.7","32.2"]
     condition: none
     rules:
       - 'f:/etc/issue -> r:\v|\r|\m|\s'
