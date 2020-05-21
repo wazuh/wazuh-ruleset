@@ -857,7 +857,7 @@ checks:
       - cis_csc: ["3", "11"]
       - pci_dss: ["2.2.3"]
       - nist_800_53: ["CM.1"]
-      - tsc: ["CC5.2"],"CC6.1","CC6.8","CC7.1","CC7.2","CC8.1"]
+      - tsc: ["CC5.2","CC6.1","CC6.8","CC7.1","CC7.2","CC8.1"]
       - gpg_13: ["4.3"]
       - gdpr_IV: ["35.7.d"]
       - hipaa: ["164.312.b"]
@@ -877,7 +877,7 @@ checks:
       - cis_csc: ["3", "11"]
       - pci_dss: ["2.2.3"]
       - nist_800_53: ["CM.1"]
-      - tsc: ["CC5.2"],"CC6.1","CC6.8","CC7.1","CC7.2","CC8.1"]
+      - tsc: ["CC5.2","CC6.1","CC6.8","CC7.1","CC7.2","CC8.1"]
       - gpg_13: ["4.3"]
       - gdpr_IV: ["35.7.d"]
       - hipaa: ["164.312.b"]
@@ -902,7 +902,7 @@ checks:
       - pci_dss: ["1.3.5"]
     condition: all
     rules:
-      - 'c:dpkg -s iptables -> r:install ok installed'
+      - 'c:dpkg -s tcpd -> r:install ok installed'
 
 # 7.4.2 Create /etc/hosts.allow (Not Scored)
   - id: 1057
@@ -919,7 +919,7 @@ checks:
       - 'f:/etc/hosts.allow'
       
 # 7.4.3 Verify permissions on /etc/hosts.allow (Scored)
-  - id: 1058
+  - id: 2100
     title: "Verify permissions on /etc/hosts.allow"
     description: "The /etc/hosts.allow file contains network information that is used by many system applications and therefore must be readable for these applications to operate."
     rationale: "It is critical to ensure that the /etc/hosts.allow file is protected from unauthorized write access. Although it is protected by default, the file permissions could be changed either inadvertently or through malicious actions."
@@ -948,7 +948,7 @@ checks:
       - 'f:/etc/hosts.deny -> r:^ALL:\s*ALL'
 
 # 7.4.5 Verify permissions on /etc/hosts.deny (Scored)
-  - id: 1058
+  - id: 2101
     title: "Verify permissions on /etc/hosts.deny"
     description: "The /etc/hosts.deny file contains network information that is used by many system applications and therefore must be readable for these applications to operate."
     rationale: "It is critical to ensure that the /etc/hosts.deny file is protected from unauthorized write access. Although it is protected by default, the file permissions could be changed either inadvertently or through malicious actions."
@@ -1461,7 +1461,7 @@ checks:
       - nist_800_53: ["CM.1"]
     condition: all
     rules:
-      - 'c:/bin/ls -l /etc/shadow -> r:-rw-r--r--'
+      - 'c:/bin/ls -l /etc/shadow -> r:-rw-r-----'
 
 # 12.3 Verify Permissions on /etc/group (Scored)
   - id: 2006
@@ -1509,7 +1509,7 @@ checks:
       - nist_800_53: ["CM.1"]
     condition: all
     rules:
-      - 'c:/bin/ls -l /etc/shadow -> r:root\s*\t*root'
+      - 'c:/bin/ls -l /etc/shadow -> r:root\s*\t*shadow'
 
 # 12.6 Verify User/Group Ownership on /etc/group (Scored)
   - id: 2009
