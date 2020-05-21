@@ -1530,7 +1530,9 @@ checks:
 
 ###############################################
 # 13 Review User and Group Settings
+###############################################
 
+# 13.1 Ensure Password Fields are Not Empty
   - id: 1093
     title: "Ensure Password Fields are Not Empty"
     description: "An account with an empty password field means that anybody may log in as that user without providing a password."
@@ -1538,10 +1540,13 @@ checks:
     remediation: "If any accounts in the /etc/shadow file do not have a password, run the following command to lock the account until it can be determined why it does not have a password: # /usr/bin/passwd -l <username>    Also, check to see if the account is logged in and investigate what it is being used for to determine if it needs to be forced off."
     compliance:
       - cis: ["13.1"]
+      - cis_csc: ["16"]
+      - pci_dss: ["8.2"]
     condition: none
     rules:
       - 'f:/etc/shadow -> r:^\w+::'
 
+# 13.2 Verify No Legacy "+" Entries Exist in /etc/passwd File
   - id: 1094
     title: "Verify No Legacy \"+\" Entries Exist in /etc/passwd File"
     description: "The character + in various files used to be markers for systems to insert data from NIS maps at a certain point in a system configuration file. These entries are no longer required on most systems, but may exist in files that have been imported from other platforms."
@@ -1549,10 +1554,18 @@ checks:
     remediation: "Delete these entries if they exist."
     compliance:
       - cis: ["13.2"]
+      - cis_csc: ["16.9"]
+      - pci_dss: ["2.2.3"]
+      - tsc: ["CC5.2","CC6.1","CC6.8","CC7.1","CC7.2","CC8.1"]
+      - nist_800_53: ["CM.1"]
+      - gpg_13: ["4.3"]
+      - gdpr_IV: ["35.7.d"]
+      - hipaa: ["164.312.b"]
     condition: none
     rules:
       - 'f:/etc/passwd -> !r:^# && r:^+:'
 
+# 13.3 Verify No Legacy "+" Entries Exist in /etc/shadow File
   - id: 1095
     title: "Verify No Legacy \"+\" Entries Exist in /etc/shadow File"
     description: "The character + in various files used to be markers for systems to insert data from NIS maps at a certain point in a system configuration file. These entries are no longer required on most systems, but may exist in files that have been imported from other platforms."
@@ -1560,9 +1573,18 @@ checks:
     remediation: "Delete these entries if they exist."
     compliance:
       - cis: ["13.3"]
+      - cis_csc: ["16.9"]
+      - pci_dss: ["2.2.3"]
+      - tsc: ["CC5.2","CC6.1","CC6.8","CC7.1","CC7.2","CC8.1"]
+      - nist_800_53: ["CM.1"]
+      - gpg_13: ["4.3"]
+      - gdpr_IV: ["35.7.d"]
+      - hipaa: ["164.312.b"]
     condition: none
     rules:
       - 'f:/etc/shadow -> !r:^# && r:^+:'
+
+# 13.4 Verify No Legacy "+" Entries Exist in /etc/group File
   - id: 1096
     title: "Verify No Legacy \"+\" Entries Exist in /etc/group File"
     description: "The character + in various files used to be markers for systems to insert data from NIS maps at a certain point in a system configuration file. These entries are no longer required on most systems, but may exist in files that have been imported from other platforms."
@@ -1570,10 +1592,18 @@ checks:
     remediation: "Delete these entries if they exist."
     compliance:
       - cis: ["13.4"]
+      - cis_csc: ["16.9"]
+      - pci_dss: ["2.2.3"]
+      - tsc: ["CC5.2","CC6.1","CC6.8","CC7.1","CC7.2","CC8.1"]
+      - nist_800_53: ["CM.1"]
+      - gpg_13: ["4.3"]
+      - gdpr_IV: ["35.7.d"]
+      - hipaa: ["164.312.b"]
     condition: none
     rules:
       - 'f:/etc/group -> !r:^# && r:^+:'
 
+# 13.5 Verify No UID 0 Accounts Exist Other Than root
   - id: 1097
     title: "Verify No UID 0 Accounts Exist Other Than root"
     description: "Any account with UID 0 has superuser privileges on the system."
@@ -1581,10 +1611,18 @@ checks:
     remediation: "Delete any other entries that are displayed."
     compliance:
       - cis: ["13.5"]
+      - cis_csc: ["5.1"]
+      - pci_dss: ["10.2.5"]
+      - tsc: ["CC6.1","CC6.8","CC7.2","CC7.3","CC7.4","CC8.1"]
+      - hipaa: ["164.312.b"]
+      - nist_800_53: ["AU.14", "AC.7"]
+      - gpg_13: ["7.8"]
+      - gdpr_IV: ["35.7","32.2"]
     condition: none
     rules:
       - 'f:/etc/passwd -> !r:^# && !r:^\s*\t*root: && r:^\w+:\w+:0:'
 
+# 13.20 Ensure shadow group is empty
   - id: 1098
     title: "Ensure shadow group is empty"
     description: "The shadow group allows system programs which require access the ability to read the /etc/shadow file. No users should be assigned to the shadow group."
@@ -1592,6 +1630,10 @@ checks:
     remediation: "Remove all users from the shadow group, and change the primary group of any users with shadow as their primary group."
     compliance:
       - cis: ["13.20"]
+      - cis_csc: ["16.14"]
+      - pci_dss: ["2.2.4"]
+      - tsc: ["CC5.2","CC6.1","CC6.8","CC7.1","CC7.2","CC8.1"]
+      - nist_800_53: ["CM.1"]
     condition: none
     rules:
       - 'f:/etc/group -> !r:^# && r:shadow:\w*:\w*:\S+'
