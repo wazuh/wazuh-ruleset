@@ -194,6 +194,8 @@ checks:
     compliance:
       - cis: ["4.1.2"]
       - cis_csc: ["6.2", "6.3"]
+      - pci_dss: ["10.1","10.7"]
+      - tsc: [CC6.1", "CC6.2", "CC6.3", "CC7.2", "CC7.3", "CC7.4"]
     condition: all
     rules:
       - 'c:systemctl is-enabled auditd -> r:^enabled'
@@ -206,6 +208,10 @@ checks:
     compliance:
       - cis: ["4.1.3"]
       - cis_csc: ["6.2", "6.3"]
+      - pci_dss: ["10.2.6","10.7"]
+      - gpg_13: ["7.9"]
+      - gdpr_IV: ["35.7.d","32.2"]
+      - tsc: ["CC6.1", "CC6.8", "CC7.2", "CC7.3", "CC7.4"]
     condition: all
     rules:
       - 'f:/etc/default/grub -> r:^GRUB_CMDLINE_LINUX\s*=\s*\.*audit\s*=\s*1\.*'
@@ -218,6 +224,12 @@ checks:
     compliance:
       - cis: ["4.1.4"]
       - cis_csc: ["3.6", "5.5"]
+      - pci_dss: ["10.4.2","10.2.7"]
+      - nist_800_53: ["AU.14","AU.6"]
+      - gpg_13: ["7.9"]
+      - gdpr_IV: ["32.2","35.7.d"]
+      - hipaa: ["164.312.b"]
+      - tsc: ["CC6.1","CC6.3", "CC6.8", "CC7.2", "CC7.3", "CC7.4"]
     condition: all
     rules:
       - 'd:/etc/audit'
@@ -236,6 +248,12 @@ checks:
     compliance:
       - cis: ["4.1.5"]
       - cis_csc: ["5.4", "4.8"]
+      - pci_dss: ["10.2.5"]
+      - hipaa: ["164.312.b"]
+      - nist_800_53: ["AU.14", "AC.7"]
+      - gpg_13: ["7.8"]
+      - gdpr_IV: ["35.7","32.2"]
+      - tsc: ["CC7.2", "CC6.1", "CC6.8", "CC7.3", "CC7.4"]
     condition: all
     rules:
       - 'd:/etc/audit'
@@ -254,6 +272,12 @@ checks:
     compliance:
       - cis: ["4.1.6"]
       - cis_csc: ["3.6", "5.5"]
+      - pci_dss: ["10.2.7"]
+      - nist_800_53: ["AU.14","AU.6"]
+      - gpg_13: ["7.9"]
+      - gdpr_IV: ["32.2","35.7.d"]
+      - hipaa: ["164.312.b"]
+      - tsc: ["CC7.2", "CC6.1", "CC6.8", "CC7.3", "CC7.4"]
     condition: all
     rules:
       - 'd:/etc/audit'
@@ -273,6 +297,12 @@ checks:
     compliance:
       - cis: ["4.1.7"]
       - cis_csc: ["3.6", "5.5"]
+      - pci_dss: ["10.2.5"]
+      - hipaa: ["164.312.b"]
+      - nist_800_53: ["AU.14", "AC.7"]
+      - gpg_13: ["7.8"]
+      - gdpr_IV: ["35.7","32.2"]
+      - tsc: ["CC7.2", "CC6.1", "CC6.8", "CC7.3", "CC7.4"]
     condition: all
     rules:
       - 'd:/etc/audit'
@@ -288,6 +318,12 @@ checks:
     compliance:
       - cis: ["4.1.7"]
       - cis_csc: ["3.6", "5.5"]
+      - pci_dss: ["10.2.5"]
+      - hipaa: ["164.312.b"]
+      - nist_800_53: ["AU.14", "AC.7"]
+      - gpg_13: ["7.8"]
+      - gdpr_IV: ["35.7","32.2"]
+      - tsc: ["CC7.2", "CC6.1", "CC6.8", "CC7.3", "CC7.4"]
     condition: all
     rules:
       - 'd:/etc/audit'
@@ -303,6 +339,12 @@ checks:
     compliance:
       - cis: ["4.1.8"]
       - cis_csc: ["5.5", "16.10", "16.4", "4.9", "16.11", "16.13"]
+      - pci_dss: ["10.2.1", "10.2.4", "10.3"]
+      - nist_800_53: ["AC.7","AU.14"]
+      - gpg_13: ["7.8"]
+      - gdpr_IV: ["32.2","35.7.d"]
+      - hipaa: ["164.312.b"]
+      - tsc: ["CC7.2", "CC6.1", "CC6.8", "CC7.3", "CC7.4"]
     condition: all
     rules:
       - 'd:/etc/audit'
@@ -319,6 +361,9 @@ checks:
     compliance:
       - cis: ["4.1.9"]
       - cis_csc: ["5.5", "16.10", "16.4", "4.9", "16.11", "16.13"]
+      - pci_dss: ["10.3"]
+      - nist_800_53: ["AC.7","AU.14"]
+      - hipaa: ["164.312.b"]
     condition: all
     rules:
       - 'd:/etc/audit'
@@ -335,6 +380,12 @@ checks:
     compliance:
       - cis: ["4.1.10"]
       - cis_csc: ["3.6", "5.5"]
+      - pci_dss: ["10.4.2","10.2.7"]
+      - nist_800_53: ["AU.14","AU.6"]
+      - gpg_13: ["7.9"]
+      - gdpr_IV: ["32.2","35.7.d"]
+      - hipaa: ["164.312.b"]
+      - tsc: ["CC7.2", "CC6.1", "CC6.8", "CC7.3", "CC7.4"]
     condition: all
     rules:
       - 'd:/etc/audit'
@@ -354,6 +405,12 @@ checks:
     compliance:
       - cis: ["4.1.11"]
       - cis_csc: ["14.6", "14.9"]
+      - pci_dss: ["10.2.4"]
+      - nist_800_53: ["AC.7"]
+      - gpg_13: ["7.8"]
+      - gdpr_IV: ["32.2","35.7.d"]
+      - hipaa: ["164.312.b"]
+      - tsc: ["CC7.2", "CC6.1", "CC6.8", "CC7.3", "CC7.4"]
     condition: all
     rules:
       - 'd:/etc/audit'
@@ -371,6 +428,12 @@ checks:
     compliance:
       - cis: ["4.1.13"]
       - cis_csc: ["13", "5.1"]
+      - pci_dss: ["10.2.7"]
+      - nist_800_53: ["AU.14","AU.6"]
+      - gpg_13: ["7.9"]
+      - gdpr_IV: ["32.2","35.7.d"]
+      - hipaa: ["164.312.b"]
+      - tsc: ["CC7.2", "CC6.1", "CC6.8", "CC7.3", "CC7.4"]
     condition: all
     rules:
       - 'd:/etc/audit'
@@ -386,6 +449,10 @@ checks:
     compliance:
       - cis: ["4.1.14"]
       - cis_csc: ["13"]
+      - pci_dss: ["10.5.5"]
+      - nist_800_53: ["AU.14"]
+      - hipaa: ["164.312.b"]
+      - tsc: ["CC6.1", "CC7.2", "CC7.3", "CC7.4"]
     condition: all
     rules:
       - 'd:/etc/audit'
@@ -401,6 +468,12 @@ checks:
     compliance:
       - cis: ["4.1.15"]
       - cis_csc: ["5.4", "4.8"]
+      - pci_dss: ["10.2.5"]
+      - hipaa: ["164.312.b"]
+      - nist_800_53: ["AU.14", "AC.7"]
+      - gpg_13: ["7.8"]
+      - gdpr_IV: ["35.7","32.2"]
+      - tsc: ["CC7.2", "CC6.1", "CC6.8", "CC7.3", "CC7.4"]
     condition: all
     rules:
       - 'd:/etc/audit'
@@ -416,6 +489,12 @@ checks:
     compliance:
       - cis: ["4.1.16"]
       - cis_csc: ["5.1", "5.5", "4.9"]
+      - pci_dss: ["10.2.2"]
+      - nist_800_53: ["AU.14","AC.6","AC.7"]
+      - gpg_13: ["7.8"]
+      - gdpr_IV: ["32.2","35.7.d"]
+      - hipaa: ["164.312.b"]
+      - tsc: ["CC7.2", "CC6.1", "CC6.8", "CC7.3", "CC7.4"]
     condition: all
     rules:
       - 'd:/etc/audit'
@@ -430,6 +509,12 @@ checks:
     compliance:
       - cis: ["4.1.17"]
       - cis_csc: ["3", "5.1"]
+      - pci_dss: ["10.2.7"]
+      - nist_800_53: ["AU.14","AU.6"]
+      - gpg_13: ["7.9"]
+      - gdpr_IV: ["32.2","35.7.d"]
+      - hipaa: ["164.312.b"]
+      - tsc: ["CC7.2", "CC6.1", "CC6.8", "CC7.3", "CC7.4"]
     condition: all
     rules:
       - 'd:/etc/audit'
@@ -447,6 +532,10 @@ checks:
     compliance:
       - cis: ["4.1.18"]
       - cis_csc: ["3", "6", "6.2", "6.3"]
+      - pci_dss: ["10.5"]
+      - nist_800_53: ["AU.9"]
+      - hipaa: ["164.312.b"]
+      - tsc: ["CC7.2"]
     condition: all
     rules:
       - 'd:/etc/audit'
@@ -461,6 +550,31 @@ checks:
     compliance:
       - cis: ["5.2.6"]
       - cis_csc: ["16", "9.2"]
+      - pci_dss: ["2.2.3"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
+      - gpg_13: ["4.3"]
+      - gdpr_IV: ["35.7.d"]
+      - hipaa: ["164.312.b"]
     condition: all
     rules:
       - 'f:/etc/ssh/sshd_config -> !r:^# && r:X11Forwarding\s+no'
+
+# 5.4.5 Ensure default user shell timeout is 900 seconds or less (Scored)
+  - id: 2218 
+    title: "Ensure default user shell timeout is 900 seconds or less"
+    description: "The default TMOUT determines the shell timeout for users. The TMOUT value is measured in seconds."
+    rationale: "Having no timeout value associated with a shell could allow an unauthorized user access to another user's shell session (e.g. user walks away from their computer and doesn't lock the screen). Setting a timeout value at least reduces the risk of this happening."
+    remediation: "Edit the /etc/bashrc, /etc/profile files, and /etc/profile.d*.sh (and the appropriate files for any other shell supported on your system) and add or edit any umask parameters as follows: TMOUT=600"
+    compliance:
+      - cis: ["5.4.5"]
+      - cis_csc: ["16.4"]
+      - pci_dss: ["12.3.8"]
+    condition: all
+    rules:
+      - 'not d:/etc/profile.d -> .sh -> n:^\s*\t*TMOUT\s*\t*=\s*\t*(\d+) compare > 900'
+      - 'not f:/etc/bash.bashrc -> n:^\s*\t*TMOUT\s*\t*=\s*\t*(\d+) compare > 900'
+      - 'not f:/etc/profile -> n:^\s*\t*TMOUT\s*\t*=\s*\t*(\d+) compare > 900'
+      - 'd:/etc/profile.d -> .sh -> n:^\s*\t*TMOUT\s*\t*=\s*\t*(\d+) compare <= 900'
+      - 'f:/etc/bash.bashrc -> n:^\s*\t*TMOUT\s*\t*=\s*\t*(\d+) compare <= 900'
+      - 'f:/etc/profile -> n:^\s*\t*TMOUT\s*\t*=\s*\t*(\d+) compare <= 900'
