@@ -226,8 +226,10 @@ checks:
     condition: none
     rules:
       - 'f:/etc/shadow -> r:^root:*:|^root:!:'
-
+###########################################
 # 4 Additional Process Hardening
+###########################################
+# 4.1 Restrict Core Dumps (Scored)
   - id: 1016
     title: "Restrict Core Dumps"
     description: "A core dump is the memory of an executable program. It is generally used to determine why a program aborted. It can also be used to glean confidential information from a core file. The system provides the ability to set a soft limit for core dumps, but this can be overridden by the user."
@@ -235,11 +237,30 @@ checks:
     remediation: "Add the following line to the /etc/security/limits.conf file.  * hard core 0     Add the following line to the /etc/sysctl.conf file.  fs.suid_dumpable = 0"
     compliance:
       - cis: ["4.1"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
     condition: all
     rules:
       - 'c:sysctl fs.suid_dumpable -> r:=\s*0$'
       - 'c:grep -Rh ^*[[:space:]]*hard[[:space:]][[:space:]]*core[[:space:]][[:space:]]* /etc/security/limits.conf /etc/security/limits.d -> r:\s0$|\t0$'
 
+# 4.2 Enable XD/NX Support on 32-bit x86 Systems (Not Scored)
+  - id: 1300
+    title: "Enable XD/NX Support on 32-bit x86 Systems"
+    description: "Recent processors in the x86 family support the ability to prevent code execution on a per memory page basis. Generically and on AMD processors, this ability is called No Execute (NX), while on Intel processors it is called Execute Disable (XD). This ability can help prevent exploitation of buffer overflow vulnerabilities and should be activated whenever possible. Extra steps must be taken to ensure that this protection is enabled, particularly on 32-bit x86 systems. Other processors, such as Itanium and POWER, have included such support since inception and the standard kernel for those platforms supports the feature."
+    rationale: "Enabling any feature that can protect against buffer overflow attacks enhances the security of the system."
+    remediation: "On 32 bit systems install a kernel with PAE support, no installation is required on 64 bit systems: If necessary configure your bootloader to load the new kernel and reboot the system. You may need to enable NX or XD support in your bios."
+    compliance:
+      - cis: ["4.2"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
+    condition: all
+    rules:
+      - 'c:dmesg -> r:NX \(Execute Disable\) protection: active'
+
+# 4.3 Enable Randomized Virtual Memory Region Placement (Scored)
   - id: 1017
     title: "Enable Randomized Virtual Memory Region Placement"
     description: "Set the system flag to force randomized virtual memory region placement."
@@ -247,12 +268,50 @@ checks:
     remediation: "Add the following line to the /etc/sysctl.conf file.  kernel.randomize_va_space = 2"
     compliance:
       - cis: ["4.3"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
     condition: all
     rules:
       - 'c:sysctl kernel.randomize_va_space -> r:^kernel.randomize_va_space\s*\t*=\s*\t*2'
 
-# 5 OS Services
+# 4.4 Disable prelink
+  - id: 1301
+    title: "Disable Prelink"
+    description: "The prelinking feature changes binaries in an attempt to decrease their startup time."
+    rationale: "The prelinking feature can interfere with the operation of AIDE, because it changes binaries. Prelinking can also increase the vulnerability of the system if a malicious user is able to compromise a common library such as libc."
+    remediation: "Run the command: # /usr/sbin/prelink -ua to restore binaries to a normal, non-prelinked state, then remove prelink: # apt-get purge prelink"
+    compliance:
+      - cis: ["4.4"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
+    condition: none
+    rules:
+      - 'c:dpkg -s prelink -> r:install ok installed'
 
+# 4.5 Activate AppArmor (Scored)
+  - id: 1320
+    title: "Activate AppArmor"
+    description: "AppArmor provides a Mandatory Access Control (MAC) system that greatly augments the default Discretionary Access Control (DAC) model."
+    rationale: "For an action to occur, both the traditional DAC permissions must be satisfied as well as the AppArmor MAC rules. The action will not be allowed if either one of these models does not permit the action. In this way, AppArmor rules can only make a system's permissions more restrictive and secure."
+    remediation: "Install apparmor and apparmor-utils if missing (additional profiles can be found in the apparmor-profiles package): # apt-get install apparmor apparmor-profiles apparmor-utils Add apparmor=1 and security=apparmor to GRUB_CMDLINE_LINUX in /etc/default/grub : GRUB_CMDLINE_LINUX=\"apparmor=1 security=apparmor\" Update grub configuration (reboot will be required to apply changes): # update-grub Set all profiles to enforce mode: # aa-enforce /etc/apparmor.d/* Any unconfined processes may need to have a profile created or activated for them and then be restarted."
+    compliance:
+      - cis: ["4.5"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
+    condition: all
+    rules:
+      - 'c:apparmor_status -> n:(\d+) profiles are loaded compare >= 4'
+      - 'c:apparmor_status -> r:0 profiles are in complain mode'
+      - 'c:apparmor_status -> r:0 processes are unconfined but have a profile defined'
+
+
+######################################
+# 5 OS Services
+######################################
+# 5.1.1 Ensure NIS is not installed (Scored)
   - id: 1018
     title: "Ensure NIS is not installed"
     description: "The Network Information Service (NIS), formerly known as Yellow Pages, is a client-server directory service protocol used to distribute system configuration files."
@@ -260,10 +319,17 @@ checks:
     remediation: "Uninstall the nis package: # apt-get purge nis"
     compliance:
       - cis: ["5.1.1"]
+      - pci_dss: ["2.2.3"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
+      - gpg_13: ["4.3"]
+      - gdpr_IV: ["35.7.d"]
+      - hipaa: ["164.312.b"]
     condition: none
     rules:
       - 'c:dpkg -s nis -> r:install ok installed'
 
+# 5.1.2 Ensure rsh server is not enabled (Scored)
   - id: 1019
     title: "Ensure rsh server is not enabled"
     description: "The Berkeley rsh-server (rsh, rlogin, rcp) package contains legacy services that exchange credentials in clear-text."
@@ -271,10 +337,36 @@ checks:
     remediation: "Remove or comment out any shell, login, or exec lines in /etc/inetd.conf: #shell stream tcp nowait root /usr/sbin/tcpd /usr/sbin/in.rshd    #login stream tcp nowait root /usr/sbin/tcpd /usr/sbin/in.rlogind    #exec stream tcp nowait root /usr/sbin/tcpd /usr/sbin/in.rexecd"
     compliance:
       - cis: ["5.1.2"]
+      - pci_dss: ["2.2.3"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
+      - gpg_13: ["4.3"]
+      - gdpr_IV: ["35.7.d"]
+      - hipaa: ["164.312.b"]
     condition: none
     rules:
       - 'f:/etc/inetd.conf -> !r:^# && r:^shell|^login|^exec'
 
+# 5.1.3 Ensure rsh client is not installed (Scored)
+  - id: 1302
+    title: "Ensure rsh client is not installed"
+    description: "The rsh package contains the client commands for the rsh services."
+    rationale: "These legacy clients contain numerous security exposures and have been replaced with the more secure SSH package. Even if the server is removed, it is best to ensure the clients are also removed to prevent users from inadvertently attempting to use these commands and therefore exposing their credentials. Note that removing the rsh package removes the clients for rsh , rcp and rlogin ."
+    remediation: "Uninstall the rsh-client and rsh-reload-client packages: # apt-get purge rsh-client rsh-reload-client"
+    compliance:
+      - cis: ["5.1.4"]
+      - pci_dss: ["2.2.3"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
+      - gpg_13: ["4.3"]
+      - gdpr_IV: ["35.7.d"]
+      - hipaa: ["164.312.b"]
+    condition: none
+    rules:
+      - 'c:dpkg -s rsh-client -> r:install ok installed'
+      - 'c:dpkg -s rsh-redone-client -> r:install ok installed'
+
+# 5.1.4 Ensure talk server is not enabled (Scored)
   - id: 1020
     title: "Ensure talk server is not enabled"
     description: "The talk software makes it possible for users to send and receive messages across systems through a terminal session. The talk client (allows initiate of talk sessions) is installed by default."
@@ -282,10 +374,35 @@ checks:
     remediation: "Remove or comment out any talk or ntalk lines in /etc/inetd.conf: #talk dgram udp wait nobody.tty /usr/sbin/in.talkd in.talkd    #ntalk dgram udp wait nobody.tty /usr/sbin/in.ntalkd in.ntalkd"
     compliance:
       - cis: ["5.1.4"]
+      - pci_dss: ["2.2.3"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
+      - gpg_13: ["4.3"]
+      - gdpr_IV: ["35.7.d"]
+      - hipaa: ["164.312.b"]
     condition: none
     rules:
       - 'f:/etc/inetd.conf -> !r:^# && r:^talk|^ntalk'
 
+# 5.1.5 Ensure talk client is not installed (Scored)
+  - id: 1303
+    title: "Ensure talk client is not installed"
+    description: "The talk software makes it possible for users to send and receive messages across systems through a terminal session. The talk client, which allows initialization of talk sessions, is installed by default."
+    rationale: "The software presents a security risk as it uses unencrypted protocols for communication."
+    remediation: "Uninstall the talk package: # apt-get purge talk"
+    compliance:
+      - cis: ["2.3.3"]
+      - pci_dss: ["2.2.3"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
+      - gpg_13: ["4.3"]
+      - gdpr_IV: ["35.7.d"]
+      - hipaa: ["164.312.b"]
+    condition: none
+    rules:
+      - 'c:dpkg -s talk -> r:install ok installed'
+
+# 5.1.6 Ensure telnet server is not enabled (Scored)
   - id: 1021
     title: "Ensure telnet server is not enabled"
     description: "The telnet-server package contains the telnet daemon, which accepts connections from users from other systems via the telnet protocol."
@@ -293,10 +410,17 @@ checks:
     remediation: "Remove or comment out any telnet lines in /etc/inetd.conf: #telnet stream tcp nowait telnetd /usr/sbin/tcpd /usr/sbin/in.telnetd"
     compliance:
       - cis: ["5.1.6"]
+      - pci_dss: ["2.2.3"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
+      - gpg_13: ["4.3"]
+      - gdpr_IV: ["35.7.d"]
+      - hipaa: ["164.312.b"]
     condition: none
     rules:
       - 'f:/etc/inetd.conf -> !r:^# && r:telnet'
 
+# 5.1.7 Ensure tftp-server is not enabled (Scored)
   - id: 1022
     title: "Ensure tftp-server is not enabled"
     description: "Trivial File Transfer Protocol (TFTP) is a simple file transfer protocol, typically used to automatically transfer configuration or boot machines from a boot server. The packages tftp and atftp are both used to define and support a TFTP server."
@@ -304,10 +428,17 @@ checks:
     remediation: "Remove or comment out any tftp lines in /etc/inetd.conf: #tftp stream tcp nowait root internal"
     compliance:
       - cis: ["5.1.7"]
+      - pci_dss: ["2.2.3"]
+      - nist_800_53: ["CM.1","AC.4","SC.7"]
+      - tsc: ["CC5.2"]
+      - gpg_13: ["4.3"]
+      - gdpr_IV: ["35.7.d"]
+      - hipaa: ["164.312.b"]
     condition: none
     rules:
       - 'f:/etc/inetd.conf -> !r:^# && r:tftp'
 
+# 5.1.8 Ensure xinetd is not enabled (Scored)
   - id: 1023
     title: "Ensure xinetd is not enabled"
     description: "The eXtended InterNET Daemon (xinetd) is an open source super daemon that replaced the original inetd daemon. The xinetd daemon listens for well known services and dispatches the appropriate daemon to properly respond to service requests.  Note: Several other services recommended to be disabled in this benchmark have xinetd versions as well, if xinetd is required in your environment ensure they are disabled in xinetd configuration as well."
@@ -315,10 +446,17 @@ checks:
     remediation: "Disable xinetd: # update-rc.d xinetd disable"
     compliance:
       - cis: ["5.1.8"]
+      - pci_dss: ["2.2.3"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
+      - gpg_13: ["4.3"]
+      - gdpr_IV: ["35.7.d"]
+      - hipaa: ["164.312.b"]
     condition: none
     rules:
       - 'c:find /etc/rc* -name *xinetd* -> r:S\.'
 
+# 5.2 Ensure chargen is not enabled (Scored)
   - id: 1024
     title: "Ensure chargen is not enabled"
     description: "chargen is a network service that responds with 0 to 512 ASCII characters for each connection it receives. This service is intended for debugging and testing purposes. It is recommended that this service be disabled."
@@ -326,10 +464,17 @@ checks:
     remediation: "Remove or comment out any chargen lines in /etc/inetd.conf: #chargen stream tcp nowait root internal"
     compliance:
       - cis: ["5.2"]
+      - pci_dss: ["2.2.3"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
+      - gpg_13: ["4.3"]
+      - gdpr_IV: ["35.7.d"]
+      - hipaa: ["164.312.b"]
     condition: none
     rules:
       - 'f:/etc/inetd.conf -> !r:^# && r:chargen'
 
+# 5.3 Ensure daytime is not enabled (Scored)
   - id: 1025
     title: "Ensure daytime is not enabled"
     description: "daytime is a network service that responds with the server's current date and time. This service is intended for debugging and testing purposes. It is recommended that this service be disabled."
@@ -337,10 +482,17 @@ checks:
     remediation: "Remove or comment out any daytime lines in /etc/inetd.conf: #daytime stream tcp nowait root internal"
     compliance:
       - cis: ["5.3"]
+      - pci_dss: ["2.2.3"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
+      - gpg_13: ["4.3"]
+      - gdpr_IV: ["35.7.d"]
+      - hipaa: ["164.312.b"]
     condition: none
     rules:
       - 'f:/etc/inetd.conf -> !r:^# && r:daytime'
 
+# 5.4 Ensure echo is not enabled (Scored)
   - id: 1026
     title: "Ensure echo is not enabled"
     description: "echo is a network service that responds to clients with the data sent to it by the client. This service is intended for debugging and testing purposes. It is recommended that this service be disabled."
@@ -348,10 +500,17 @@ checks:
     remediation: "Remove or comment out any echo lines in /etc/inetd.conf: #echo stream tcp nowait root internal"
     compliance:
       - cis: ["5.4"]
+      - pci_dss: ["2.2.3"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
+      - gpg_13: ["4.3"]
+      - gdpr_IV: ["35.7.d"]
+      - hipaa: ["164.312.b"]
     condition: none
     rules:
       - 'f:/etc/inetd.conf -> !r:^# && r:echo'
 
+# 5.5 Ensure discard is not enabled (Scored)
   - id: 1027
     title: "Ensure discard is not enabled"
     description: "discard is a network service that simply discards all data it receives. This service is intended for debugging and testing purposes. It is recommended that this service be disabled."
@@ -359,10 +518,17 @@ checks:
     remediation: "Remove or comment out any discard lines in /etc/inetd.conf: #discard stream tcp nowait root internal"
     compliance:
       - cis: ["5.5"]
+      - pci_dss: ["2.2.3"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
+      - gpg_13: ["4.3"]
+      - gdpr_IV: ["35.7.d"]
+      - hipaa: ["164.312.b"]
     condition: none
     rules:
       - 'f:/etc/inetd.conf -> !r:^# && r:discard'
 
+# 5.6 Ensure time is not enabled (Scored)
   - id: 1028
     title: "Ensure time is not enabled"
     description: "time is a network service that responds with the server's current date and time as a 32 bit integer. This service is intended for debugging and testing purposes. It is recommended that this service be disabled."
@@ -370,6 +536,12 @@ checks:
     remediation: "Remove or comment out any time lines in /etc/inetd.conf: #time stream tcp nowait root internal"
     compliance:
       - cis: ["5.6"]
+      - pci_dss: ["2.2.3"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
+      - gpg_13: ["4.3"]
+      - gdpr_IV: ["35.7.d"]
+      - hipaa: ["164.312.b"]
     condition: none
     rules:
       - 'f:/etc/inetd.conf -> !r:^# && r:time'
@@ -1117,9 +1289,11 @@ checks:
       - 'c:grep -Rh ^\$ModLoad[[:space:]][[:space:]]*imtcp.so /etc/rsyslog.conf /etc/rsyslog.d/ -> r:^$ModLoad\s*\t*imtcp.so'
       - 'c:grep -Rh ^\$InputTCPServerRun[[:space:]][[:space:]]*514 /etc/rsyslog.conf /etc/rsyslog.d/ -> r:^$InputTCPServerRun\s*\t*514'
 
+
 ###############################################
 # 9 System Access, Authentication and Authorization
-
+#######################################################
+# 9.1.1 Enable cron Daemon (Scored)
   - id: 1067
     title: "Enable cron Daemon"
     description: "The cron daemon is used to execute batch jobs on the system."
@@ -1127,11 +1301,108 @@ checks:
     remediation: "Enable cron: # update-rc.d cron enable    Enable anacron: # update-rc.d anacron enable"
     compliance:
       - cis: ["9.1.1"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
     condition: all
     rules:
       - 'c:find /etc/rc* -name *cron* -> r:S\.'
       - 'c:find /etc/rc* -name *anacron* -> r:S\.'
 
+# 9.1.2 Set User/Group Owner and Permission on /etc/crontab (Scored)
+  - id: 1304 
+    title: "Set User/Group Owner and Permission on /etc/crontab"
+    description: "The /etc/crontab file is used by cron to control its own jobs. The commands in this item make sure that root is the user and group owner of the file and that only the owner can access the file."
+    rationale: "This file contains information on what system jobs are run by cron. Write access to these files could provide unprivileged users with the ability to elevate their privileges. Read access to these files could provide users with the ability to gain insight on system jobs that run on the system and could provide them a way to gain unauthorized privileged access."
+    remediation: "Run the following commands to set ownership and permissions on /etc/crontab : chown root:root /etc/crontab and chmod og-rwx /etc/crontab"
+    compliance:
+      - cis: ["9.1.2"]
+      - pci_dss: ["2.2.4"]
+      - hipaa: ["164.312.b"]
+      - nist_800_53: ["AU.14", "AC.7"]
+      - gpg_13: ["7.8"]
+      - gdpr_IV: ["35.7","32.2"]
+    condition: all
+    rules:
+      - 'c:stat /etc/crontab -> r:^Access: \(0600/-rw-------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
+
+# 9.1.3 Set User/Group Owner and Permission on /etc/cron.hourly (Scored)
+  - id: 1305 
+    title: "Set User/Group Owner and Permission on /etc/cron.hourly"
+    description: "This directory contains system cron jobs that need to run on an hourly basis. The files in this directory cannot be manipulated by the crontab command, but are instead edited by system administrators using a text editor. The commands below restrict read/write and search access to user and group root, preventing regular users from accessing this directory."
+    rationale: "Granting write access to this directory for non-privileged users could provide them the means for gaining unauthorized elevated privileges. Granting read access to this directory could give an unprivileged user insight in how to gain elevated privileges or circumvent auditing controls."
+    remediation: "Run the following commands to set ownership and permissions on /etc/cron.hourly : chown root:root /etc/cron.hourly and chmod og-rwx /etc/cron.hourly"
+    compliance:
+      - cis: ["9.1.3"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
+    condition: all
+    rules:
+      - 'c:stat /etc/cron.hourly -> r:^Access: \(0700/drwx------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
+
+# 9.1.4 Set User/Group Owner and Permission on /etc/cron.daily (Scored)
+  - id: 1306 
+    title: "Set User/Group Owner and Permission on /etc/cron.daily"
+    description: "The /etc/cron.daily directory contains system cron jobs that need to run on a daily basis. The files in this directory cannot be manipulated by the crontab command, but are instead edited by system administrators using a text editor. The commands below restrict read/write and search access to user and group root, preventing regular users from accessing this directory."
+    rationale: "Granting write access to this directory for non-privileged users could provide them the means for gaining unauthorized elevated privileges. Granting read access to this directory could give an unprivileged user insight in how to gain elevated privileges or circumvent auditing controls."
+    remediation: "Run the following commands to set ownership and permissions on /etc/cron.daily : chown root:root /etc/cron.daily and chmod og-rwx /etc/cron.daily"
+    compliance:
+      - cis: ["9.1.4"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
+    condition: all
+    rules:
+      - 'c:stat /etc/cron.daily -> r:^Access: \(0700/drwx------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
+
+# 9.1.5 Set User/Group Owner and Permission on /etc/cron.weekly (Scored)
+  - id: 1307 
+    title: "Set User/Group Owner and Permission on /etc/cron.weekly"
+    description: "The /etc/cron.weekly directory contains system cron jobs that need to run on a weekly basis. The files in this directory cannot be manipulated by the crontab command, but are instead edited by system administrators using a text editor. The commands below restrict read/write and search access to user and group root, preventing regular users from accessing this directory."
+    rationale: "Granting write access to this directory for non-privileged users could provide them the means for gaining unauthorized elevated privileges. Granting read access to this directory could give an unprivileged user insight in how to gain elevated privileges or circumvent auditing controls."
+    remediation: "Run the following commands to set ownership and permissions on /etc/cron.weekly : chown root:root /etc/cron.weekly and chmod og-rwx /etc/cron.weekly"
+    compliance:
+      - cis: ["9.1.5"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
+    condition: all
+    rules:
+      - 'c:stat /etc/cron.weekly -> r:^Access: \(0700/drwx------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
+
+
+# 9.1.6 Set User/Group Owner and Permission on /etc/cron.monthly (Scored)
+  - id: 1308 
+    title: "Set User/Group Owner and Permission on /etc/cron.monthly"
+    description: "The /etc/cron.monthly directory contains system cron jobs that need to run on a monthly basis. The files in this directory cannot be manipulated by the crontab command, but are instead edited by system administrators using a text editor. The commands below restrict read/write and search access to user and group root, preventing regular users from accessing this directory."
+    rationale: "Granting write access to this directory for non-privileged users could provide them the means for gaining unauthorized elevated privileges. Granting read access to this directory could give an unprivileged user insight in how to gain elevated privileges or circumvent auditing controls."
+    remediation: "Run the following commands to set ownership and permissions on /etc/cron.monthly : chown root:root /etc/cron.monthly and chmod og-rwx /etc/cron.monthly"
+    compliance:
+      - cis: ["9.1.6"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
+    condition: all
+    rules:
+      - 'c:stat /etc/cron.monthly -> r:^Access: \(0700/drwx------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
+
+# 9.1.7 Set User/Group Owner and Permission on /etc/cron.d (Scored)
+  - id: 1309 
+    title: "Set User/Group Owner and Permission on /etc/cron.d"
+    description: "Configure /etc/cron.allow and /etc/at.allow to allow specific users to use these services. If /etc/cron.allow or /etc/at.allow do not exist, then /etc/at.deny and /etc/cron.deny are checked. Any user not specifically defined in those files is allowed to use at and cron. By removing the files, only users in /etc/cron.allow and /etc/at.allow are allowed to use at and cron. Note that even though a given user is not listed in cron.allow , cron jobs can still be run as that user. The cron.allow file only controls administrative access to the crontab command for scheduling and modifying cron jobs."
+    rationale: "On many systems, only the system administrator is authorized to schedule cron jobs. Using the cron.allow file to control who can run cron jobs enforces this policy. It is easier to manage an allow list than a deny list. In a deny list, you could potentially add a user ID to the system and forget to add it to the deny files."
+    remediation: "Run the following commands to remove /etc/cron.deny and /etc/at.deny and create and set permissions and ownership for /etc/cron.allow and /etc/at.allow: rm /etc/cron.deny;rm /etc/at.deny;touch /etc/cron.allow; touch /etc/at.allow; chmod og-rwx /etc/cron.allow; chmod og-rwx /etc/at.allow; chown root:root /etc/cron.allow and chown root:root /etc/at.allow"
+    compliance:
+      - cis: ["9.1.7"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
+    condition: all
+    rules:
+      - 'c:stat /etc/cron.d -> r:^Access: \(0700/drwx------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
+
+# 9.1.8 Restrict at/cron to Authorized Users (Scored)
   - id: 1068
     title: "Restrict at/cron to Authorized Users"
     description: "Configure /etc/cron.allow and /etc/at.allow to allow specific users to use these services. If /etc/cron.allow or /etc/at.allow do not exist, then /etc/at.deny and /etc/cron.deny are checked. Any user not specifically defined in those files is allowed to use at and cron. By removing the files, only users in /etc/cron.allow and /etc/at.allow are allowed to use at and cron. Note that even though a given user is not listed in cron.allow, cron jobs can still be run as that user. The cron.allow file only controls administrative access to the crontab command for scheduling and modifying cron jobs."
@@ -1139,6 +1410,9 @@ checks:
     remediation: "# /bin/rm /etc/cron.deny    # /bin/rm /etc/at.deny    # touch /etc/cron.allow    # touch /etc/at.allow    # chmod og-rwx /etc/cron.allow    # chmod og-rwx /etc/at.allow    # chown root:root /etc/cron.allow    # chown root:root /etc/at.allow"
     compliance:
       - cis: ["9.1.8"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
     condition: all
     rules:
       - 'f:/etc/cron.allow'
@@ -1148,6 +1422,11 @@ checks:
       - 'c:stat -c%u-%g-%a /etc/cron.allow -> r:^0-0-600'
       - 'c:stat -c%u-%g-%a /etc/at.allow -> r:^0-0-600'
 
+###########################################
+# 9.2 Configure PAM
+###########################################
+
+# 9.2.1 Set Password Creation Requirement Parameters Using pam_cracklib (Scored)
   - id: 1069
     title: "Set Password Creation Requirement Parameters Using pam_cracklib"
     description: "The pam_cracklib module checks the strength of passwords. It performs checks such as making sure a password is not a dictionary word, it is a certain length, contains a mix of characters (e.g. alphabet, numeric, other) and more. The following are definitions of the pam_cracklib.so options.  # retry=3 - Allow 3 tries before sending back a failure.  # minlen=14 - password must be 14 characters or more # dcredit=-1 - provide at least one digit # ucredit=-1 - provide at least one uppercase character # ocredit=-1 - provide at least one special character # lcredit=-1 - provide at least one lowercase character    The setting shown above is one possible policy. Alter these values to conform to your own organization's password policies."
@@ -1155,11 +1434,13 @@ checks:
     remediation: "1) Install the libpam-cracklib package: # apt-get install libpam-cracklib 2) Set the pam_cracklib.so parameters as follows in /etc/pam.d/common-password: password required pam_cracklib.so retry=3 minlen=14 dcredit=-1 ucredit=-1 ocredit=-1 lcredit=-1"
     compliance:
       - cis: ["9.2.1"]
+      - pci_dss: ["8.2.3"]
     condition: all
     rules:
       - 'c:dpkg -s libpam-cracklib -> r:install ok installed'
       - 'f:/etc/pam.d/common-password -> !r:^# && r:password\s*\t*required\s*\t*pam_cracklib.so && r:retry=\d && n:minlen=(\d+) compare >= 14 && r:dcredit=-\d+ && r:ucredit=-\d+ && r:ocredit=-\d+ && r:lcredit=-\d+'
 
+# 9.2.2 Set Lockout for Failed Password Attempts (Not Scored)
   - id: 1070
     title: "Set Lockout for Failed Password Attempts"
     description: "Lock out users after n unsuccessful consecutive login attempts. The first sets of changes are made to the PAM configuration file /etc/pam.d/login. The second set of changes are applied to the program specific PAM configuration file. The second set of changes must be applied to each program that will lock out users.  Check the documentation for each secondary program for instructions on how to configure them to work with PAM.  Set the lockout number to the policy in effect at your site."
@@ -1167,10 +1448,12 @@ checks:
     remediation: "Edit the /etc/pam.d/login file and add the auth line below: auth required pam_tally2.so onerr=fail audit silent deny=5 unlock_time=900    Note: If a user has been locked out because they have reached the maximum consecutive failure count defined by deny= in the pam_tally2.so module, the user can be unlocked by issuing the command /sbin/pam_tally2 -u <username> --reset. This command sets the failed count to 0, effectively unlocking the user."
     compliance:
       - cis: ["9.2.2"]
+      - pci_dss: ["8.2.5"]
     condition: all
     rules:
       - 'f:/etc/pam.d/login -> !r:^# && r:auth\s*\t*required\s*\t*pam_tally2.so && r:onerr=fail && r:audit && r:silent && r:deny=\d && r:unlock_time=\d\d\d+'
 
+# 9.2.3 Limit Password Reuse (Scored)
   - id: 1071
     title: "Limit Password Reuse"
     description: "The /etc/security/opasswd file stores the users' old passwords and can be checked to ensure that users are not recycling recent passwords."
@@ -1178,10 +1461,15 @@ checks:
     remediation: "Set the pam_unix.so remember parameter to 5 in /etc/pam.d/common-password: password [success=1 default=ignore]  pam_unix.so obscure sha512 remember=5    Note: The default password setting in this document is the last 5 passwords. Change this number to conform to your site's password policy."
     compliance:
       - cis: ["9.2.3"]
+      - pci_dss: ["8.2.5"]
     condition: all
     rules:
       - 'f:/etc/pam.d/common-password -> !r:^# && r:password && r:pam_unix.so && n:remember\s*\t*=\s*\t*(\d+) compare >= 5'
 
+###########################################
+# 9.3 Configure SSH
+###########################################
+# 9.3.1 Set SSH Protocol to 2 (Scored)
   - id: 1072
     title: "Set SSH Protocol to 2"
     description: "SSH supports two different and incompatible protocols: SSH1 and SSH2. SSH1 was the original protocol and was subject to security issues. SSH2 is more advanced and secure."
@@ -1189,10 +1477,14 @@ checks:
     remediation: "Edit the /etc/ssh/sshd_config file to set the parameter as follows: Protocol 2"
     compliance:
       - cis: ["9.3.1"]
+      - pci_dss: ["4.1"]
+      - hipaa: ["164.312.a.2.IV", "164.312.e.1", "164.312.e.2.I", "164.312.e.2.II"]
+      - nist_800_53: ["SC.8"]
     condition: all
     rules:
       - 'f:/etc/ssh/sshd_config -> !r:^# && r:Protocol\s*\t*2'
 
+# 9.3.2 Set LogLevel to INFO (Scored)
   - id: 1073
     title: "Set LogLevel to INFO"
     description: "The INFO parameter specifices that record login and logout activity will be logged."
@@ -1200,10 +1492,29 @@ checks:
     remediation: "Edit the /etc/ssh/sshd_config file to set the parameter as follows: LogLevel INFO"
     compliance:
       - cis: ["9.3.2"]
+      - pci_dss: ["4.1"]
+      - hipaa: ["164.312.a.2.IV", "164.312.e.1", "164.312.e.2.I", "164.312.e.2.II"]
+      - nist_800_53: ["SC.8"]
     condition: all
     rules:
       - 'f:/etc/ssh/sshd_config -> !r:^# && r:^\s*\t*LogLevel\s+INFO'
 
+# 9.3.3 Set Permissions on /etc/ssh/sshd_config (Scored)
+  - id: 1310 
+    title: "Set Permissions on /etc/ssh/sshd_config"
+    description: "The /etc/ssh/sshd_config file contains configuration specifications for sshd. The command below sets the owner and group of the file to root."
+    rationale: "The /etc/ssh/sshd_config file needs to be protected from unauthorized changes by non-privileged users."
+    remediation: "If the user and group ownership of the /etc/ssh/sshd_config file are incorrect, run the following command to correct them: # chown root:root /etc/ssh/sshd_config If the permissions are incorrect, run the following command to correct them: # chmod 600 /etc/ssh/sshd_config"
+    compliance:
+      - cis: ["9.3.3"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
+    condition: all
+    rules:
+      - 'c:stat /etc/ssh/sshd_config -> r:^Access: \(0600/-rw-------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
+
+# 9.3.4 Disable SSH X11 Forwarding (Scored)
   - id: 1074
     title: "Disable SSH X11 Forwarding"
     description: "The X11Forwarding parameter provides the ability to tunnel X11 traffic through the connection to enable remote graphic connections."
@@ -1211,10 +1522,17 @@ checks:
     remediation: "Edit the /etc/ssh/sshd_config file to set the parameter as follows: X11Forwarding no"
     compliance:
       - cis: ["9.3.4"]
+      - pci_dss: ["2.2.3"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
+      - gpg_13: ["4.3"]
+      - gdpr_IV: ["35.7.d"]
+      - hipaa: ["164.312.b"]
     condition: all
     rules:
       - 'f:/etc/ssh/sshd_config -> r:^X11Forwarding\s+no'
 
+# 9.3.5 Set SSH MaxAuthTries to 4 or Less (Scored)
   - id: 1075
     title: "Set SSH MaxAuthTries to 4 or Less"
     description: "The MaxAuthTries parameter specifies the maximum number of authentication attempts permitted per connection. When the login failure count reaches half the number, error messages will be written to the syslog file detailing the login failure."
@@ -1222,10 +1540,14 @@ checks:
     remediation: "Edit the /etc/ssh/sshd_config file to set the parameter as follows: MaxAuthTries 4"
     compliance:
       - cis: ["9.3.5"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
     condition: all
     rules:
       - 'f:/etc/ssh/sshd_config -> n:^MaxAuthTries\s*\t*(\d+) compare <= 4'
 
+# 9.3.6 Set SSH IgnoreRhosts to Yes (Scored)
   - id: 1076
     title: "Set SSH IgnoreRhosts to Yes"
     description: "The IgnoreRhosts parameter specifies that .rhosts and .shosts files will not be used in RhostsRSAAuthentication or HostbasedAuthentication."
@@ -1233,10 +1555,14 @@ checks:
     remediation: "Edit the /etc/ssh/sshd_config file to set the parameter as follows: IgnoreRhosts yes"
     compliance:
       - cis: ["9.3.6"]
+      - pci_dss: ["4.1"]
+      - hipaa: ["164.312.a.2.IV", "164.312.e.1", "164.312.e.2.I", "164.312.e.2.II"]
+      - nist_800_53: ["SC.8"]
     condition: all
     rules:
       - 'f:/etc/ssh/sshd_config -> !r:^# && r:IgnoreRhosts\s+yes'
 
+# 9.3.7 Set SSH HostbasedAuthentication to No (Scored)
   - id: 1077
     title: "Set SSH HostbasedAuthentication to No"
     description: "The HostbasedAuthentication parameter specifies if authentication is allowed through trusted hosts via the user of .rhosts, or /etc/hosts.equiv, along with successful public key client host authentication. This option only applies to SSH Protocol Version 2."
@@ -1244,10 +1570,14 @@ checks:
     remediation: "Edit the /etc/ssh/sshd_config file to set the parameter as follows: HostbasedAuthentication no"
     compliance:
       - cis: ["9.3.7"]
+      - pci_dss: ["4.1"]
+      - hipaa: ["164.312.a.2.IV", "164.312.e.1", "164.312.e.2.I", "164.312.e.2.II"]
+      - nist_800_53: ["SC.8"]
     condition: all
     rules:
       - 'f:/etc/ssh/sshd_config -> !r:^# && r:HostbasedAuthentication\s+no'
 
+# 9.3.8 Disable SSH Root Login (Scored)
   - id: 1078
     title: "Disable SSH Root Login"
     description: "The PermitRootLogin parameter specifies if the root user can log in using ssh(1). The default is no."
@@ -1255,10 +1585,14 @@ checks:
     remediation: "Edit the /etc/ssh/sshd_config file to set the parameter as follows: PermitRootLogin no"
     compliance:
       - cis: ["9.3.8"]
+      - pci_dss: ["4.1"]
+      - hipaa: ["164.312.a.2.IV", "164.312.e.1", "164.312.e.2.I", "164.312.e.2.II"]
+      - nist_800_53: ["SC.8"]
     condition: all
     rules:
       - 'f:/etc/ssh/sshd_config -> !r:^# && r:PermitRootLogin\s+no'
 
+# 9.3.9 Set SSH PermitEmptyPasswords to No (Scored)
   - id: 1079
     title: "Set SSH PermitEmptyPasswords to No"
     description: "The PermitEmptyPasswords parameter specifies if the server allows login to accounts with empty password strings."
@@ -1266,10 +1600,14 @@ checks:
     remediation: "Edit the /etc/ssh/sshd_config file to set the parameter as follows: PermitEmptyPasswords no"
     compliance:
       - cis: ["9.3.9"]
+      - pci_dss: ["4.1"]
+      - hipaa: ["164.312.a.2.IV", "164.312.e.1", "164.312.e.2.I", "164.312.e.2.II"]
+      - nist_800_53: ["SC.8"]
     condition: all
     rules:
       - 'f:/etc/ssh/sshd_config -> !r:^# && r:PermitEmptyPasswords\s+no'
 
+# 9.3.10 Do Not Allow Users to Set Environment Options (Scored)
   - id: 1080
     title: "Do Not Allow Users to Set Environment Options"
     description: "The PermitUserEnvironment option allows users to present environment options to the ssh daemon."
@@ -1277,10 +1615,29 @@ checks:
     remediation: "Edit the /etc/ssh/sshd_config file to set the parameter as follows: PermitUserEnvironment no"
     compliance:
       - cis: ["9.3.10"]
+      - pci_dss: ["4.1"]
+      - hipaa: ["164.312.a.2.IV", "164.312.e.1", "164.312.e.2.I", "164.312.e.2.II"]
+      - nist_800_53: ["SC.8"]
     condition: all
     rules:
       - 'f:/etc/ssh/sshd_config -> !r:^# && r:PermitUserEnvironment\s+no'
 
+# 9.3.11 Use Only Approved Cipher in Counter Mode (Scored)
+  - id: 1321
+    title: "Use Only Approved Cipher in Counter Mode"
+    description: "This variable limits the types of ciphers that SSH can use during communication."
+    rationale: "Based on research conducted at various institutions, it was determined that the symmetric portion of the SSH Transport Protocol (as described in RFC 4253) has security weaknesses that allowed recovery of up to 32 bits of plaintext from a block of ciphertext that was encrypted with the Cipher Block Chaining (CBD) method. From that research, new Counter mode algorithms (as described in RFC4344) were designed that are not vulnerable to these types of attacks and these algorithms are now recommended for standard use."
+    remediation: "Edit the /etc/ssh/sshd_config file to set the parameter as follows: Ciphers aes128-ctr,aes192-ctr,aes256-ctr"
+    compliance:
+      - cis: ["9.3.11"]
+    condition: all
+    rules:
+      - 'f:/etc/ssh/sshd_config -> !r:^# && r:Ciphers\.+aes128-ctr'
+      - 'f:/etc/ssh/sshd_config -> !r:^# && r:Ciphers\.+aes192-ctr'
+      - 'f:/etc/ssh/sshd_config -> !r:^# && r:Ciphers\.+aes256-ctr'
+
+
+# 9.3.12 Set Idle Timeout Interval for User Login (Scored)
   - id: 1081
     title: "Set Idle Timeout Interval for User Login"
     description: "The two options ClientAliveInterval and ClientAliveCountMax control the timeout of ssh sessions. When the ClientAliveInterval variable is set, ssh sessions that have no activity for the specified length of time are terminated. When the ClientAliveCountMax variable is set, sshd will send client alive messages at every ClientAliveInterval interval. When the number of consecutive client alive messages are sent with no response from the client, the ssh session is terminated. For example, if the ClientAliveInterval is set to 15 seconds and the ClientAliveCountMax is set to 3, the client ssh session will be terminated after 45 seconds of idle time."
@@ -1288,11 +1645,13 @@ checks:
     remediation: "Edit the /etc/ssh/sshd_config file to set the parameter as follows: ClientAliveInterval 300    ClientAliveCountMax 0"
     compliance:
       - cis: ["9.3.12"]
+      - pci_dss: ["12.3.8"]
     condition: all
     rules:
       - 'f:/etc/ssh/sshd_config -> !r:^# && n:ClientAliveInterval\s*\t*(\d+) compare <= 300'
       - 'f:/etc/ssh/sshd_config -> !r:^# && r:ClientAliveCountMax\s+0'
 
+# 9.3.13 Limit Access via SSH (Scored)
   - id: 1082
     title: "Limit Access via SSH"
     description: "There are several options available to limit which users and group can access the system via SSH. It is recommended that at least one of the following options be leveraged: AllowUsers, AllowGroups, DenyUsers, DenyGroups."
@@ -1300,10 +1659,15 @@ checks:
     remediation: "Edit the /etc/ssh/sshd_config file to set one or more of the parameter as follows: AllowUsers <userlist>    AllowGroups <grouplist>    DenyUsers <userlist>    DenyGroups <grouplist>"
     compliance:
       - cis: ["9.3.13"]
+      - pci_dss: ["8.1"]
     condition: all
     rules:
-      - 'f:/etc/ssh/sshd_config -> !r:^# && r:AllowUsers\s+\w+|AllowGroups\s+\w+|DenyUsers\s+\w+|DenyGroups\s+\w+'
+      - 'f:/etc/ssh/sshd_config -> !r:^# && r:AllowUsers\s+\w+'
+      - 'f:/etc/ssh/sshd_config -> !r:^# && r:AllowGroups\s+\w+'
+      - 'f:/etc/ssh/sshd_config -> !r:^# && r:DenyUsers\s+\w+'
+      - 'f:/etc/ssh/sshd_config -> !r:^# && r:DenyGroups\s+\w+'
 
+# 9.3.14 Set SSH Banner (Scored)
   - id: 1083
     title: "Set SSH Banner"
     description: "The Banner parameter specifies a file whose contents must be sent to the remote user before authentication is permitted. By default, no banner is displayed."
@@ -1311,10 +1675,14 @@ checks:
     remediation: "Edit the /etc/ssh/sshd_config file to set the parameter as follows: Banner /etc/issue.net"
     compliance:
       - cis: ["9.3.14"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
     condition: all
     rules:
       - 'f:/etc/ssh/sshd_config -> !r:^# && r:Banner\s*\t*/etc/issue.net|^Banner\s\t*/etc/issue'
 
+# 9.5 Restrict Access to the su Command (Scored)
   - id: 1084
     title: "Restrict Access to the su Command"
     description: "The su command allows a user to run a command or shell as another user. The program has been superseded by sudo, which allows for more granular control over privileged access. Normally, the su command can be executed by any user. By uncommenting the pam_wheel.so statement in /etc/pam.d/su, the su command will only allow users in the wheel group to execute su."
@@ -1322,13 +1690,20 @@ checks:
     remediation: "1) Add the following line to the /etc/pam.d/su file: auth required pam_wheel.so use_uid 2) Once this is done, create a comma separated list of users in the wheel statement in the /etc/group file."
     compliance:
       - cis: ["9.5"]
+      - pci_dss: ["10.2.5"]
+      - hipaa: ["164.312.b"]
+      - nist_800_53: ["AU.14", "AC.7"]
+      - gpg_13: ["7.8"]
+      - gdpr_IV: ["35.7","32.2"]
     condition: all
     rules:
       - 'f:/etc/pam.d/su -> !r:^# && r:auth && r:required && r:pam_wheel.so && r:use_uid'
       - 'f:/etc/group -> !r:^# && r:wheel:'
 
+######################################
 # 10 User Accounts and Environment
-
+######################################
+# 10.1.1 Set Password Expiration Days (Scored)
   - id: 1085
     title: "Set Password Expiration Days"
     description: "The PASS_MAX_DAYS parameter in /etc/login.defs allows an administrator to force passwords to expire once they reach a defined age. It is recommended that the PASS_MAX_DAYS parameter be set to less than or equal to 90 days."
@@ -1336,10 +1711,12 @@ checks:
     remediation: "Set the PASS_MAX_DAYS parameter to 90 in /etc/login.defs: PASS_MAX_DAYS 90    Modify user parameters for all users with a password set to match: # chage --maxdays 90 <user>"
     compliance:
       - cis: ["10.1.1"]
+      - pci_dss: ["8.2.4"]
     condition: all
     rules:
       - 'f:/etc/login.defs -> n:^PASS_MAX_DAYS\s*\t*(\d+) compare <= 90'
 
+# 10.1.2 Set Password Change Minimum Number of Days (Scored)
   - id: 1086
     title: "Set Password Change Minimum Number of Days"
     description: "The PASS_MIN_DAYS parameter in /etc/login.defs allows an administrator to prevent users from changing their password until a minimum number of days have passed since the last time the user changed their password. It is recommended that PASS_MIN_DAYS parameter be set to 7 or more days."
@@ -1347,10 +1724,12 @@ checks:
     remediation: "Set the PASS_MIN_DAYS parameter to 7 in /etc/login.defs: PASS_MIN_DAYS 7    Modify user parameters for all users with a password set to match: # chage --mindays 7 <user>"
     compliance:
       - cis: ["10.1.2"]
+      - pci_dss: ["3.6.1"]
     condition: all
     rules:
       - 'f:/etc/login.defs -> n:^PASS_MIN_DAYS\s*\t*(\d+) compare >= 7'
 
+# 10.1.3 Set Password Expiring Warning Days (Scored)
   - id: 1087
     title: "Set Password Expiring Warning Days"
     description: "The PASS_WARN_AGE parameter in /etc/login.defs allows an administrator to notify users that their password will expire in a defined number of days. It is recommended that the PASS_WARN_AGE parameter be set to 7 or more days."
@@ -1358,10 +1737,12 @@ checks:
     remediation: "Set the PASS_WARN_AGE parameter to 7 in /etc/login.defs: PASS_WARN_AGE 7    Modify user parameters for all users with a password set to match: # chage --warndays 7 <user>"
     compliance:
       - cis: ["10.1.3"]
+      - pci_dss: ["3.6.1"]
     condition: all
     rules:
       - 'f:/etc/login.defs -> n:^PASS_WARN_AGE\s*\t*(\d+) compare >= 7'
 
+# 10.3 Set Default Group for root Account (Scored)
   - id: 1088
     title: "Set Default Group for root Account"
     description: "The usermod command can be used to specify which group the root user belongs to. This affects permissions of files that are created by the root user."
@@ -1369,10 +1750,12 @@ checks:
     remediation: "# usermod -g 0 root"
     compliance:
       - cis: ["10.3"]
+      - pci_dss: ["3.6.1"]
     condition: all
     rules:
       - 'f:/etc/passwd -> !r:^# && r:root:\w+:\w+:0:'
 
+# 10.4 Set Default umask for Users (Scored)
   - id: 1089
     title: "Set Default umask for Users"
     description: "The default umask determines the permissions of files created by users. The user creating the file has the discretion of making their files and directories readable by others via the chmod command. Users who wish to allow their files and directories to be readable by others by default may choose a different default umask by inserting the umask command into the standard shell configuration files (.profile, .bashrc, etc.) in their home directories."
@@ -1380,11 +1763,13 @@ checks:
     remediation: "Edit the /etc/bash.bashrc and /etc/profile.d/cis.sh files (and the appropriate files for any other shell supported on your system) and add the following the UMASK parameter as shown: umask 077"
     compliance:
       - cis: ["10.4"]
+      - pci_dss: ["3.6.1"]
     condition: all
     rules:
       - 'c:grep -Rh ^umask[[:space:]][[:space:]]*077 /etc/profile.d/ -> !r:^# && r:umask\s*\t*077'
       - 'f:/etc/bash.bashrc -> !r:^# && r:umask\s*\t*077'
 
+# 10.5 Lock Inactive User Accounts (Scored)
   - id: 1090
     title: "Lock Inactive User Accounts"
     description: "User accounts that have been inactive for over a given period of time can be automatically disabled. It is recommended that accounts that are inactive for 35 or more days be disabled."
@@ -1392,11 +1777,15 @@ checks:
     remediation: "# useradd -D -f 35"
     compliance:
       - cis: ["10.5"]
+      - pci_dss: ["3.6.1"]
     condition: all
     rules:
       - 'f:/etc/default/useradd -> n:^INACTIVE=(\d+) compare <= 35'
 
+##########################################
 # 11 Warning Banners
+##########################################
+# 11.1 Set Warning Banner for Standard Login Services (Scored)
   - id: 1091
     title: "Set Warning Banner for Standard Login Services"
     description: "The contents of the /etc/issue file are displayed prior to the login prompt on the system's console and serial devices, and also prior to logins via telnet. The contents of the /etc/motd file is generally displayed after all successful logins, no matter where the user is logging in from, but is thought to be less useful because it only provides notification to the user after the machine has been accessed."
@@ -1404,6 +1793,11 @@ checks:
     remediation: "# touch /etc/motd    # echo \"Authorized uses only. All activity may be monitored and reported.\" > /etc/issue    # echo \"Authorized uses only. All activity may be monitored and reported.\" > /etc/issue.net    # chown root:root /etc/motd    # chmod 644 /etc/motd    # chown root:root /etc/issue    # chmod 644 /etc/issue    # chown root:root /etc/issue.net    # chmod 644 /etc/issue.net"
     compliance:
       - cis: ["11.1"]
+      - pci_dss: ["10.2.5"]
+      - hipaa: ["164.312.b"]
+      - nist_800_53: ["AU.14", "AC.7"]
+      - gpg_13: ["7.8"]
+      - gdpr_IV: ["35.7","32.2"]
     condition: all
     rules:
       - 'f:/etc/motd'
@@ -1413,6 +1807,7 @@ checks:
       - 'c:stat -c%u-%g-%a /etc/issue -> 0-0-644'
       - 'c:stat -c%u-%g-%a /etc/issue.net -> 0-0-644'
 
+# 11.2 Remove OS Information from Login Warning Banners (Scored)
   - id: 1092
     title: "Remove OS Information from Login Warning Banners"
     description: "Unix-based systems have typically displayed information about the OS release and patch level upon logging in to the system. This information can be useful to developers who are developing software for a particular OS platform."
@@ -1420,6 +1815,11 @@ checks:
     remediation: "Edit the /etc/motd, /etc/issue and /etc/issue.net files and remove any lines containing \\m, \\r, \\s or \\v."
     compliance:
       - cis: ["11.2"]
+      - pci_dss: ["10.2.5"]
+      - hipaa: ["164.312.b"]
+      - nist_800_53: ["AU.14", "AC.7"]
+      - gpg_13: ["7.8"]
+      - gdpr_IV: ["35.7","32.2"]
     condition: none
     rules:
       - 'f:/etc/issue -> r:\v|\r|\m|\s'
