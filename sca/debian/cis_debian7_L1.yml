@@ -546,8 +546,27 @@ checks:
     rules:
       - 'f:/etc/inetd.conf -> !r:^# && r:time'
 
+###############################################
 # 6 Special Purpose Services
+###############################################
 
+# 6.1 Ensure the X Window system is not installed (Scored)
+  - id: 2000
+    title: "Ensure the X Window system is not installed"
+    description: "The X Window system provides a Graphical User Interface (GUI) where users can have multiple windows in which to run programs and various add on. The X Window system is typically used on desktops where users login, but not on servers where users typically do not login."
+    rationale: "Unless your organization specifically requires graphical login access via X Windows, remove it to reduce the potential attack surface."
+    remediation: "Uninstall X Windows: # apt-get purge xserver-xorg-core*"
+    compliance:
+      - cis: ["6.1"]
+      - cis_csc: ["2"]
+      - pci_dss: ["2.2.2"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2","CC6.1","CC6.8","CC7.1","CC7.2","CC8.1"]
+    condition: none
+    rules:
+      - 'c:dpkg -l xserver-xorg-core* -> r:installed'
+
+# 6.2 Ensure Avahi Server is not enabled (Scored)
   - id: 1029
     title: "Ensure Avahi Server is not enabled"
     description: "Avahi is a free zeroconf implementation, including a system for multicast DNS/DNS-SD service discovery. Avahi allows programs to publish and discover services and hosts running on a local network with no specific configuration. For example, a user can plug a computer into a network and Avahi automatically finds printers to print to, files to look at and people to talk to, as well as network services running on the machine."
@@ -555,10 +574,15 @@ checks:
     remediation: "Disable avahi-daemon: # update-rc.d avahi-daemon disable"
     compliance:
       - cis: ["6.2"]
+      - cis_csc: ["9.1"]
+      - pci_dss: ["2.2.2"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2","CC6.1","CC6.8","CC7.1","CC7.2","CC8.1"]
     condition: none
     rules:
       - 'c:find /etc/rc* -name *avahi-daemon* -> r:S\.'
 
+# 6.3 Ensure print server is not enabled (Scored)
   - id: 1030
     title: "Ensure print server is not enabled"
     description: "The Common Unix Print System (CUPS) provides the ability to print to both local and network printers. A system running CUPS can also accept print jobs from remote systems and print them to local printers. It also provides a web based remote administration capability."
@@ -566,10 +590,15 @@ checks:
     remediation: "Disable cups: # update-rc.d cups disable"
     compliance:
       - cis: ["6.3"]
+      - cis_csc: ["9.1"]
+      - pci_dss: ["2.2.2"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2","CC6.1","CC6.8","CC7.1","CC7.2","CC8.1"]
     condition: none
     rules:
       - 'c:find /etc/rc* -name *cups* -> r:S\.'
 
+# 6.4 Ensure DHCP Server is not enabled (Scored)
   - id: 1031
     title: "Ensure DHCP Server is not enabled"
     description: "The Dynamic Host Configuration Protocol (DHCP) is a service that allows machines to be dynamically assigned IP addresses."
@@ -579,10 +608,15 @@ checks:
       - "https://www.isc.org/dhcp/"
     compliance:
       - cis: ["6.4"]
+      - cis_csc: ["9.1"]
+      - pci_dss: ["2.2.2"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2","CC6.1","CC6.8","CC7.1","CC7.2","CC8.1"]
     condition: none
     rules:
       - 'c:find /etc/rc* -name *isc-dhcp-server* -> r:S\.'
 
+# 6.5 Ensure DHCP Server is not enabled (Scored)
   - id: 1032
     title: "Configure Network Time Protocol (NTP)"
     description: "The Network Time Protocol (NTP) is designed to synchronize system clocks across a variety of systems and use a source that is highly accurate. More information on NTP can be found at http://www.ntp.org. NTP can be configured to be a client and/or a server."
@@ -590,6 +624,10 @@ checks:
     remediation: "Install ntp: # apt-get install ntp    Ensure the following lines are in /etc/ntp.conf: restrict -4 default kod nomodify notrap nopeer noquery     restrict -6 default kod nomodify notrap nopeer noquery    Also, make sure /etc/ntp.conf has at least one NTP server specified: server <ntp-server>    Note: <ntp-server> is the IP address or hostname of a trusted time server. Configuring an NTP server is outside the scope of this benchmark."
     compliance:
       - cis: ["6.5"]
+      - cis_csc: ["9.1"]
+      - pci_dss: ["2.2.2"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2","CC6.1","CC6.8","CC7.1","CC7.2","CC8.1"]
     references:
       - http://www.ntp.org/
     condition: all
@@ -600,6 +638,7 @@ checks:
       - 'f:/etc/ntp.conf -> r:^server\s\.+'
       - 'f:/etc/ntp.conf -> r:^RUNASUSER\s*\t*=\s*\t*ntp'
 
+# 6.6 Ensure LDAP is not enabled (Scored)
   - id: 1033
     title: "Ensure LDAP is not enabled"
     description: "The Lightweight Directory Access Protocol (LDAP) was introduced as a replacement for NIS/YP. It is a service that provides a method for looking up information from a central database."
@@ -607,12 +646,17 @@ checks:
     remediation: "Uninstall the slapd package: # apt-get purge slapd"
     compliance:
       - cis: ["6.6"]
+      - cis_csc: ["9.1"]
+      - pci_dss: ["2.2.2"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2","CC6.1","CC6.8","CC7.1","CC7.2","CC8.1"]
     references:
       - http://www.openldap.org
     condition: none
     rules:
       - 'c:dpkg -s slapd -> r:install ok installed'
 
+# 6.7 Ensure NFS and RPC are not enabled (Scored)
   - id: 1034
     title: "Ensure NFS and RPC are not enabled"
     description: "The Network File System (NFS) is one of the first and most widely distributed file systems in the UNIX environment. It provides the ability for systems to mount file systems of other servers through the network."
@@ -620,11 +664,16 @@ checks:
     remediation: "Disable rpcbind: # update-rc.d rpcbind disable    Disable nfs-kernel-server: # update-rc.d nfs-kernel-server disable"
     compliance:
       - cis: ["6.7"]
+      - cis_csc: ["9.1"]
+      - pci_dss: ["2.2.2"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2","CC6.1","CC6.8","CC7.1","CC7.2","CC8.1"]
     condition: none
     rules:
       - 'c:find /etc/rc* -name *rpcbind* -> r:S\.'
       - 'c:find /etc/rc* -name *nfs-kernel-server* -> r:S\.'
 
+# 6.8 Ensure DNS Server is not enabled (Scored)
   - id: 1035
     title: "Ensure DNS Server is not enabled"
     description: "The Domain Name System (DNS) is a hierarchical naming system that maps names to IP addresses for computers, services and other resources connected to a network."
@@ -632,10 +681,15 @@ checks:
     remediation: "Disable bind9: # update-rc.d bind9 disable"
     compliance:
       - cis: ["6.8"]
+      - cis_csc: ["9.1"]
+      - pci_dss: ["2.2.2"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2","CC6.1","CC6.8","CC7.1","CC7.2","CC8.1"]
     condition: none
     rules:
       - 'c:find /etc/rc* -name *bind9* -> r:S\.'
 
+# 6.9 Ensure FTP Server is not enabled (Scored)
   - id: 1036
     title: "Ensure FTP Server is not enabled"
     description: "The File Transfer Protocol (FTP) provides networked computers with the ability to transfer files."
@@ -643,10 +697,15 @@ checks:
     remediation: "Disable vsftpd: # update-rc.d vsftpd disable"
     compliance:
       - cis: ["6.9"]
+      - cis_csc: ["9.1"]
+      - pci_dss: ["2.2.2"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2","CC6.1","CC6.8","CC7.1","CC7.2","CC8.1"]
     condition: none
     rules:
       - 'c:find /etc/rc* -name *vsftpd* -> r:S\.'
 
+# 6.10 Ensure HTTP Server is not enabled (Scored)
   - id: 1037
     title: "Ensure HTTP Server is not enabled"
     description: "HTTP or web servers provide the ability to host web site content."
@@ -654,10 +713,15 @@ checks:
     remediation: "Disable apache2: # update-rc.d apache2 disable"
     compliance:
       - cis: ["6.10"]
+      - cis_csc: ["9.1"]
+      - pci_dss: ["2.2.2"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2","CC6.1","CC6.8","CC7.1","CC7.2","CC8.1"]
     condition: none
     rules:
       - 'c:find /etc/rc* -name *apache2* -> r:S\.'
 
+# 6.11 Ensure IMAP and POP Server is not enabled (Scored)
   - id: 1038
     title: "Ensure IMAP and POP server is not enabled"
     description: "Dovecot is an open source IMAP and POP3 server for Linux based systems."
@@ -665,10 +729,15 @@ checks:
     remediation: "Disable dovecot: # update-rc.d dovecot disable"
     compliance:
       - cis: ["6.11"]
+      - cis_csc: ["9.1"]
+      - pci_dss: ["2.2.2"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2","CC6.1","CC6.8","CC7.1","CC7.2","CC8.1"]
     condition: none
     rules:
       - 'c:find /etc/rc* -name *dovecot* -> r:S\.'
 
+# 6.12 Ensure Samba is not enabled (Scored)
   - id: 1039
     title: "Ensure Samba is not enabled"
     description: "The Samba daemon allows system administrators to configure their Linux systems to share file systems and directories with Windows desktops. Samba will advertise the file systems and directories via the Small Message Block (SMB) protocol. Windows desktop users will be able to mount these directories and file systems as letter drives on their systems."
@@ -676,10 +745,15 @@ checks:
     remediation: "Disable samba: # update-rc.d samba disable"
     compliance:
       - cis: ["6.12"]
+      - cis_csc: ["9.1"]
+      - pci_dss: ["2.2.2"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2","CC6.1","CC6.8","CC7.1","CC7.2","CC8.1"]
     condition: none
     rules:
       - 'c:find /etc/rc* -name *smb* -> r:S\.'
 
+# 6.13 Ensure HTTP Proxy Server is not enabled (Scored)
   - id: 1040
     title: "Ensure HTTP Proxy Server is not enabled"
     description: "Squid is a standard proxy server used in many distributions and environments."
@@ -687,10 +761,15 @@ checks:
     remediation: "Disable squid3: # update-rc.d squid3 disable"
     compliance:
       - cis: ["6.13"]
+      - cis_csc: ["9.1"]
+      - pci_dss: ["2.2.2"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2","CC6.1","CC6.8","CC7.1","CC7.2","CC8.1"]
     condition: none
     rules:
       - 'c:find /etc/rc* -name *squid3* -> r:S\.'
 
+# 6.14 Ensure SNMP Server is not enabled (Scored)
   - id: 1041
     title: "Ensure SNMP Server is not enabled"
     description: "The Simple Network Management Protocol (SNMP) server is used to listen for SNMP commands from an SNMP management system, execute the commands or collect the information and then send results back to the requesting system."
@@ -698,10 +777,15 @@ checks:
     remediation: "Disable snmpd: # update-rc.d snmpd disable"
     compliance:
       - cis: ["6.14"]
+      - cis_csc: ["9.1"]
+      - pci_dss: ["2.2.2"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2","CC6.1","CC6.8","CC7.1","CC7.2","CC8.1"]
     condition: none
     rules:
       - 'c:find /etc/rc* -name *snmpd* -> r:S\.'
 
+# 6.15 Ensure Mail Transfer Agent for Local-Only Mode (Scored)
   - id: 1042
     title: "Configure Mail Transfer Agent for Local-Only Mode"
     description: "Mail Transfer Agents (MTA), such as sendmail and Postfix, are used to listen for incoming mail and transfer the messages to the appropriate user or mail server. If the system is not intended to be a mail server, it is recommended that the MTA be configured to only process local mail."
@@ -709,10 +793,15 @@ checks:
     remediation: "Edit /etc/exim4/update-exim4.conf.conf and edit the dc_local_interfaces line to remove non loopback addresses: dc_local_interfaces='127.0.0.1 ; ::1'    Run update-exim4.conf: # update-exim4.conf    Reload exim4 configuration: # service exim4 reload"
     compliance:
       - cis: ["6.15"]
+      - cis_csc: ["9.1"]
+      - pci_dss: ["2.2.2"]
+      - nist_800_53: ["CM.1","AC.4","SC.7"]
+      - tsc: ["CC5.2","CC6.4","CC6.6","CC6.7","CC6.1","CC6.8","CC7.1","CC7.2","CC8.1"]
     condition: all
     rules:
       - 'f:/etc/exim4/update-exim4.conf.conf -> r:^dc_local_interfaces= && r:\p127.0.0.1\s*\p\s*::1\p$|\p::1\s*\p\s*127.0.0.1\p$|\p127.0.0.1\p$|\p::1\p$'
 
+# 6.16 Ensure rsync service is not enabled (Scored)
   - id: 1043
     title: "Ensure rsync service is not enabled"
     description: "The rsyncd service can be used to synchronize files between systems over network links."
@@ -720,13 +809,26 @@ checks:
     remediation: "Set RSYNC_ENABLE to false in /etc/default/rsync: RSYNC_ENABLE=false"
     compliance:
       - cis: ["6.16"]
+      - cis_csc: ["9.1"]
+      - pci_dss: ["2.2.3"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2","CC6.1","CC6.8","CC7.1","CC7.2","CC8.1"]
+      - gpg_13: ["4.3"]
+      - gdpr_IV: ["35.7.d"]
+      - hipaa: ["164.312.b"]
     condition: none
     rules:
       - 'c:dpkg -s rsync -> r:install ok installed'
       - 'not f:/etc/default/rsync -> !r:^# && r:RSYNC_ENABLE\s*\t*=\s*\t*false'
 
+###############################################
 # 7 Network Configuration and Firewall
+###############################################
+###############################################
+# 7.1 Modify Network Parameters
+###############################################
 
+# 7.1.1 Disable IP Forwarding (Scored)
   - id: 1044
     title: "Disable IP Forwarding"
     description: "The net.ipv4.ip_forward flag is used to tell the server whether it can forward packets or not. If the server is not to be used as a router, set the flag to 0."
@@ -734,10 +836,15 @@ checks:
     remediation: "Set the net.ipv4.ip_forward parameter to 0 in /etc/sysctl.conf: net.ipv4.ip_forward=0    Modify active kernel parameters to match: # /sbin/sysctl -w net.ipv4.ip_forward=0    # /sbin/sysctl -w net.ipv4.route.flush=1"
     compliance:
       - cis: ["7.1.1"]
+      - cis_csc: ["3", "11"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2","CC6.1","CC6.8","CC7.1","CC7.2","CC8.1"]
     condition: all
     rules:
       - 'c:/sbin/sysctl net.ipv4.ip_forward -> r:=\s*\t*0$'
 
+# 7.1.2 Disable Send Packet Redirects (Scored)
   - id: 1045
     title: "Disable Send Packet Redirects"
     description: "ICMP Redirects are used to send routing information to other hosts. As a host itself does not act as a router (in a host only configuration), there is no need to send redirects."
@@ -745,11 +852,20 @@ checks:
     remediation: "Set the net.ipv4.conf.all.send_redirects and net.ipv4.conf.default.send_redirects parameters to 0 in /etc/sysctl.conf: net.ipv4.conf.all.send_redirects=0    net.ipv4.conf.default.send_redirects=0    Modify active kernel parameters to match: # /sbin/sysctl -w net.ipv4.conf.all.send_redirects=0    # /sbin/sysctl -w net.ipv4.conf.default.send_redirects=0    # /sbin/sysctl -w net.ipv4.route.flush=1"
     compliance:
       - cis: ["7.1.2"]
+      - cis_csc: ["3", "11"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2","CC6.1","CC6.8","CC7.1","CC7.2","CC8.1"]
     condition: all
     rules:
       - 'c:/sbin/sysctl net.ipv4.conf.all.send_redirects -> r:=\s*\t*0$'
       - 'c:/sbin/sysctl net.ipv4.conf.default.send_redirects -> r:=\s*\t*0$'
+      
+###############################################
+# 7.2 Modify Network Parameters (Host and Router)
+###############################################
 
+# 7.2.1 Disable Source Routed Packet Acceptance (Scored)
   - id: 1046
     title: "Disable Source Routed Packet Acceptance"
     description: "In networking, source routing allows a sender to partially or fully specify the route packets take through a network. In contrast, non-source routed packets travel a path determined by routers in the network. In some cases, systems may not be routable or reachable from some locations (e.g. private addresses vs. Internet routable), and so source routed packets would need to be used."
@@ -757,11 +873,16 @@ checks:
     remediation: "Set the net.ipv4.conf.all.accept_source_route and net.ipv4.conf.default.accept_source_route parameters to 0 in /etc/sysctl.conf: net.ipv4.conf.all.accept_source_route=0    net.ipv4.conf.default.accept_source_route=0    Modify active kernel parameters to match: # /sbin/sysctl -w net.ipv4.conf.all.accept_source_route=0    # /sbin/sysctl -w net.ipv4.conf.default.accept_source_route=0    # /sbin/sysctl -w net.ipv4.route.flush=1"
     compliance:
       - cis: ["7.2.1"]
+      - cis_csc: ["3", "11"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2","CC6.1","CC6.8","CC7.1","CC7.2","CC8.1"]
     condition: all
     rules:
       - 'c:/sbin/sysctl net.ipv4.conf.all.accept_source_route -> r:=\s*\t*0$'
       - 'c:/sbin/sysctl net.ipv4.conf.default.accept_source_route -> r:=\s*\t*0$'
 
+# 7.2.2 Disable ICMP Redirect Acceptance (Scored)
   - id: 1047
     title: "Disable ICMP Redirect Acceptance"
     description: "ICMP redirect messages are packets that convey routing information and tell your host (acting as a router) to send packets via an alternate path. It is a way of allowing an outside routing device to update your system routing tables. By setting net.ipv4.conf.all.accept_redirects to 0, the system will not accept any ICMP redirect messages, and therefore, won't allow outsiders to update the system's routing tables."
@@ -769,11 +890,16 @@ checks:
     remediation: "Set the net.ipv4.conf.all.accept_redirects and net.ipv4.conf.default.accept_redirects parameters to 0 in /etc/sysctl.conf: net.ipv4.conf.all.accept_redirects=0    net.ipv4.conf.default.accept_redirects=0    Modify active kernel parameters to match: # /sbin/sysctl -w net.ipv4.conf.all.accept_redirects=0    # /sbin/sysctl -w net.ipv4.conf.default.accept_redirects=0    # /sbin/sysctl -w net.ipv4.route.flush=1"
     compliance:
       - cis: ["7.2.2"]
+      - cis_csc: ["3", "11"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2","CC6.1","CC6.8","CC7.1","CC7.2","CC8.1"]
     condition: all
     rules:
       - 'c:/sbin/sysctl net.ipv4.conf.all.accept_redirects -> r:=\s*\t*0$'
       - 'c:/sbin/sysctl net.ipv4.conf.default.accept_redirects -> r:=\s*\t*0$'
 
+# 7.2.3 Disable Secure ICMP Redirect Acceptance (Scored)
   - id: 1048
     title: "Disable Secure ICMP Redirect Acceptance"
     description: "Secure ICMP redirects are the same as ICMP redirects, except they come from gateways listed on the default gateway list. It is assumed that these gateways are known to your system, and that they are likely to be secure."
@@ -781,11 +907,16 @@ checks:
     remediation: "Set the net.ipv4.conf.all.secure_redirects and net.ipv4.conf.default.secure_redirects parameters to 0 in /etc/sysctl.conf: net.ipv4.conf.all.secure_redirects=0    net.ipv4.conf.default.secure_redirects=0    Modify active kernel parameters to match: # /sbin/sysctl -w net.ipv4.conf.all.secure_redirects=0    # /sbin/sysctl -w net.ipv4.conf.default.secure_redirects=0    # /sbin/sysctl -w net.ipv4.route.flush=1"
     compliance:
       - cis: ["7.2.3"]
+      - cis_csc: ["3", "11"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2","CC6.1","CC6.8","CC7.1","CC7.2","CC8.1"]
     condition: all
     rules:
       - 'c:/sbin/sysctl net.ipv4.conf.all.secure_redirects -> r:=\s*\t*0$'
       - 'c:/sbin/sysctl net.ipv4.conf.default.secure_redirects -> r:=\s*\t*0$'
 
+# 7.2.4 Log Suspicious Packets (Scored)
   - id: 1049
     title: "Log Suspicious Packets"
     description: "When enabled, this feature logs packets with un-routable source addresses to the kernel log."
@@ -793,11 +924,16 @@ checks:
     remediation: "Set the net.ipv4.conf.all.log_martians and net.ipv4.conf.default.log_martians parameters to 1 in /etc/sysctl.conf: net.ipv4.conf.all.log_martians=1    net.ipv4.conf.default.log_martians=1    Modify active kernel parameters to match: # /sbin/sysctl -w net.ipv4.conf.all.log_martians=1    # /sbin/sysctl -w net.ipv4.conf.default.log_martians=1    # /sbin/sysctl -w net.ipv4.route.flush=1"
     compliance:
       - cis: ["7.2.4"]
+      - cis_csc: ["6"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2","CC6.1","CC6.8","CC7.1","CC7.2","CC8.1"]
     condition: all
     rules:
       - 'c:/sbin/sysctl net.ipv4.conf.all.log_martians -> r:=\s*\t*1$'
       - 'c:/sbin/sysctl net.ipv4.conf.default.log_martians -> r:=\s*\t*1$'
 
+# 7.2.5 Enable Ignore Broadcast Requests (Scored)
   - id: 1050
     title: "Enable Ignore Broadcast Requests"
     description: "Setting net.ipv4.icmp_echo_ignore_broadcasts to 1 will cause the system to ignore all ICMP echo and timestamp requests to broadcast and multicast addresses."
@@ -805,10 +941,15 @@ checks:
     remediation: "Set the net.ipv4.icmp_echo_ignore_broadcasts parameter to 1 in /etc/sysctl.conf: net.ipv4.icmp_echo_ignore_broadcasts=1    Modify active kernel parameters to match: # /sbin/sysctl -w net.ipv4.icmp_echo_ignore_broadcasts=1    # /sbin/sysctl -w net.ipv4.route.flush=1"
     compliance:
       - cis: ["7.2.5"]
+      - cis_csc: ["3", "11"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2","CC6.1","CC6.8","CC7.1","CC7.2","CC8.1"]
     condition: all
     rules:
       - 'c:/sbin/sysctl net.ipv4.icmp_echo_ignore_broadcasts -> r:=\s*\t*1$'
 
+# 7.2.6 Enable Bad Error Message Protection (Scored)
   - id: 1051
     title: "Enable Bad Error Message Protection"
     description: "Setting icmp_ignore_bogus_error_responses to 1 prevents the kernel from logging bogus responses (RFC-1122 non-compliant) from broadcast reframes, keeping file systems from filling up with useless log messages."
@@ -816,10 +957,15 @@ checks:
     remediation: "Set the net.ipv4.icmp_ignore_bogus_error_responses parameter to 1 in /etc/sysctl.conf: net.ipv4.icmp_ignore_bogus_error_responses=1    Modify active kernel parameters to match: # /sbin/sysctl -w net.ipv4.icmp_ignore_bogus_error_responses=1    # /sbin/sysctl -w net.ipv4.route.flush=1"
     compliance:
       - cis: ["7.2.6"]
+      - cis_csc: ["3", "11"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2","CC6.1","CC6.8","CC7.1","CC7.2","CC8.1"]
     condition: all
     rules:
       - 'c:/sbin/sysctl net.ipv4.icmp_ignore_bogus_error_responses -> r:=\s*\t*1$'
 
+# 7.2.7 Enable RFC-recommended Source Route Validation (Scored)
   - id: 1052
     title: "Enable RFC-recommended Source Route Validation"
     description: "Setting net.ipv4.conf.all.rp_filter and net.ipv4.conf.default.rp_filter to 1 forces the Linux kernel to utilize reverse path filtering on a received packet to determine if the packet was valid. Essentially, with reverse path filtering, if the return packet does not go out the same interface that the corresponding source packet came from, the packet is dropped (and logged if log_martians is set)."
@@ -827,11 +973,16 @@ checks:
     remediation: "Set the net.ipv4.conf.all.rp_filter and net.ipv4.conf.default.rp_filter parameters to 1 in /etc/sysctl.conf: net.ipv4.conf.all.rp_filter=1    net.ipv4.conf.default.rp_filter=1    Modify active kernel parameters to match: # /sbin/sysctl -w net.ipv4.conf.all.rp_filter=1    # /sbin/sysctl -w net.ipv4.conf.default.rp_filter=1    # /sbin/sysctl -w net.ipv4.route.flush=1"
     compliance:
       - cis: ["7.2.7"]
+      - cis_csc: ["3", "11"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2","CC6.1","CC6.8","CC7.1","CC7.2","CC8.1"]
     condition: all
     rules:
       - 'c:/sbin/sysctl net.ipv4.conf.all.rp_filter -> r:=\s*\t*1$'
       - 'c:/sbin/sysctl net.ipv4.conf.default.rp_filter -> r:=\s*\t*1$'
 
+# 7.2.8 Enable TCP SYN Cookies (Scored)
   - id: 1053
     title: "Enable TCP SYN Cookies"
     description: "When tcp_syncookies is set, the kernel will handle TCP SYN packets normally until the half-open connection queue is full, at which time, the SYN cookie functionality kicks in. SYN cookies work by not using the SYN queue at all. Instead, the kernel simply replies to the SYN with a SYN|ACK, but will include a specially crafted TCP sequence number that encodes the source and destination IP address and port number and the time the packet was sent. A legitimate connection would send the ACK packet of the three way handshake with the specially crafted sequence number. This allows the server to verify that it has received a valid response to a SYN cookie and allow the connection, even though there is no corresponding SYN in the queue."
@@ -839,10 +990,15 @@ checks:
     remediation: "Set the net.ipv4.tcp_syncookies parameter to 1 in /etc/sysctl.conf: net.ipv4.tcp_syncookies=1    Modify active kernel parameters to match: # /sbin/sysctl -w net.ipv4.tcp_syncookies=1    # /sbin/sysctl -w net.ipv4.route.flush=1"
     compliance:
       - cis: ["7.2.8"]
+      - cis_csc: ["3", "11"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2","CC6.1","CC6.8","CC7.1","CC7.2","CC8.1"]
     condition: all
     rules:
       - 'c:/sbin/sysctl net.ipv4.tcp_syncookies -> r:=\s*\t*1$'
 
+# 7.3.1 Disable IPv6 Router Advertisements (Not Scored)
   - id: 1054
     title: "Disable IPv6 Router Advertisements"
     description: "This setting disables the systems ability to accept router advertisements"
@@ -850,11 +1006,19 @@ checks:
     remediation: "Set the net.ipv6.conf.all.accept_ra and net.ipv6.conf.default.accept_ra parameter to 0 in /etc/sysctl.conf: net.ipv6.conf.all.accept_ra=0    net.ipv6.conf.default.accept_ra=0    Modify active kernel parameters to match: # /sbin/sysctl -w net.ipv6.conf.all.accept_ra=0    # /sbin/sysctl -w net.ipv6.conf.default.accept_ra=0    # /sbin/sysctl -w net.ipv6.route.flush=1"
     compliance:
       - cis: ["7.3.1"]
+      - cis_csc: ["3", "11"]
+      - pci_dss: ["2.2.3"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2","CC6.1","CC6.8","CC7.1","CC7.2","CC8.1"]
+      - gpg_13: ["4.3"]
+      - gdpr_IV: ["35.7.d"]
+      - hipaa: ["164.312.b"]
     condition: all
     rules:
       - 'c:/sbin/sysctl net.ipv6.conf.all.accept_ra -> r:=\s*\t*0$'
       - 'c:/sbin/sysctl net.ipv6.conf.default.accept_ra -> r:=\s*\t*0$'
 
+# 7.3.2 Disable IPv6 Redirect Acceptance (Not Scored)
   - id: 1055
     title: "Disable IPv6 Redirect Acceptance"
     description: "This setting prevents the system from accepting ICMP redirects. ICMP redirects tell the system about alternate routes for sending traffic."
@@ -862,11 +1026,19 @@ checks:
     remediation: "Set the net.ipv6.conf.all.accept_redirects and net.ipv6.conf.default.accept_redirects parameters to 0 in /etc/sysctl.conf: net.ipv6.conf.all.accept_redirects=0    net.ipv6.conf.default.accept_redirects=0    Modify active kernel parameters to match: # /sbin/sysctl -w net.ipv6.conf.all.accept_redirects=0    # /sbin/sysctl -w net.ipv6.conf.default.accept_redirects=0    # /sbin/sysctl -w net.ipv6.route.flush=1"
     compliance:
       - cis: ["7.3.2"]
+      - cis_csc: ["3", "11"]
+      - pci_dss: ["2.2.3"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2","CC6.1","CC6.8","CC7.1","CC7.2","CC8.1"]
+      - gpg_13: ["4.3"]
+      - gdpr_IV: ["35.7.d"]
+      - hipaa: ["164.312.b"]
     condition: all
     rules:
       - 'c:/sbin/sysctl net.ipv6.conf.all.accept_redirects -> r:=\s*\t*0$'
       - 'c:/sbin/sysctl net.ipv6.conf.default.accept_redirects -> r:=\s*\t*0$'
 
+# 7.3.3 Disable IPv6 (Not Scored)
   - id: 1056
     title: "Disable IPv6"
     description: "Although IPv6 has many advantages over IPv4, few organizations have implemented IPv6."
@@ -874,6 +1046,13 @@ checks:
     remediation: "Create or edit the file /etc/sysctl.conf and add the following lines: net.ipv6.conf.all.disable_ipv6=1    net.ipv6.conf.default.disable_ipv6=1    net.ipv6.conf.lo.disable_ipv6=1    Run the following command or reboot to apply the changes: # sysctl -p"
     compliance:
       - cis: ["7.3.3"]
+      - cis_csc: ["3", "11"]
+      - pci_dss: ["2.2.3"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2","CC6.1","CC6.8","CC7.1","CC7.2","CC8.1"]
+      - gpg_13: ["4.3"]
+      - gdpr_IV: ["35.7.d"]
+      - hipaa: ["164.312.b"]
     condition: all
     rules:
       - 'c:sysctl net.ipv6.conf.all.disable_ipv6 -> r:=\s*\t*1$'
@@ -883,6 +1062,21 @@ checks:
       - 'f:/etc/sysctl.conf -> r:^net.ipv6.conf.default.disable_ipv6\s*\t*=\s*\t*1'
       - 'f:/etc/sysctl.conf -> r:^net.ipv6.conf.lo.disable_ipv6\s*\t*=\s*\t*1'
 
+# 7.4.1 Install TCP Wrappers (Scored)
+  - id: 2001
+    title: "Install TCP Wrappers"
+    description: "TCP Wrappers provides a simple access list and standardized logging method for services capable of supporting it. In the past, services that were called from inetd and xinetd supported the use of tcp wrappers. As inetd and xinetd have been falling in disuse, any service that can support tcp wrappers will have the libwrap.so library attached to it."
+    rationale: "TCP Wrappers provide a good simple access list mechanism to services that may not have that support built in. It is recommended that all services that can support TCP Wrappers, use it."
+    remediation: "Install tcpd : # apt-get install tcpd To verify if a service supports TCP Wrappers, run the following command: # ldd <path-to-daemon> | grep libwrap.so If there is any output, then the service supports TCP Wrappers."
+    compliance:
+      - cis: ["7.4.2"]
+      - cis_csc: ["9.2"]
+      - pci_dss: ["1.3.5"]
+    condition: all
+    rules:
+      - 'c:dpkg -s tcpd -> r:install ok installed'
+
+# 7.4.2 Create /etc/hosts.allow (Not Scored)
   - id: 1057
     title: "Create /etc/hosts.allow"
     description: "The /etc/hosts.allow file specifies which IP addresses are permitted to connect to the host. It is intended to be used in conjunction with the /etc/hosts.deny file."
@@ -890,10 +1084,27 @@ checks:
     remediation: "Create /etc/hosts.allow: # echo \"ALL: <net>/<mask>, <net>/<mask>, ...\" >/etc/hosts.allow  where each <net>/<mask> combination  (for example, \"192.168.1.0/255.255.255.0\") represents one network block in use by your organization that requires access to this system."
     compliance:
       - cis: ["7.4.2"]
+      - cis_csc: ["9.2"]
+      - pci_dss: ["1.3.5"]
     condition: all
     rules:
       - 'f:/etc/hosts.allow'
+      
+# 7.4.3 Verify permissions on /etc/hosts.allow (Scored)
+  - id: 2100
+    title: "Verify permissions on /etc/hosts.allow"
+    description: "The /etc/hosts.allow file contains network information that is used by many system applications and therefore must be readable for these applications to operate."
+    rationale: "It is critical to ensure that the /etc/hosts.allow file is protected from unauthorized write access. Although it is protected by default, the file permissions could be changed either inadvertently or through malicious actions."
+    remediation: "If the permissions of the /etc/hosts.allow file are incorrect, run the following command to correct them: # /bin/chmod 644 /etc/hosts.allow"
+    compliance:
+      - cis: ["7.4.5"]
+      - cis_csc: ["5.1"]
+      - pci_dss: ["1.3.5"]
+    condition: all
+    rules:
+      - 'c:/bin/ls -l /etc/hosts.allow -> r:-rw-r--r--'
 
+# 7.4.4 Create /etc/hosts.deny (Not Scored)
   - id: 1058
     title: "Create /etc/hosts.deny"
     description: "The /etc/hosts.deny file specifies which IP addresses are not permitted to connect to the host. It is intended to be used in conjunction with the /etc/hosts.allow file."
@@ -901,11 +1112,28 @@ checks:
     remediation: "Create /etc/hosts.deny: # echo \"ALL: ALL\" >> /etc/hosts.deny"
     compliance:
       - cis: ["7.4.4"]
+      - cis_csc: ["9.2"]
+      - pci_dss: ["1.3.5"]
     condition: all
     rules:
       - 'f:/etc/hosts.deny'
       - 'f:/etc/hosts.deny -> r:^ALL:\s*ALL'
 
+# 7.4.5 Verify permissions on /etc/hosts.deny (Scored)
+  - id: 2101
+    title: "Verify permissions on /etc/hosts.deny"
+    description: "The /etc/hosts.deny file contains network information that is used by many system applications and therefore must be readable for these applications to operate."
+    rationale: "It is critical to ensure that the /etc/hosts.deny file is protected from unauthorized write access. Although it is protected by default, the file permissions could be changed either inadvertently or through malicious actions."
+    remediation: "If the permissions of the /etc/hosts.deny file are incorrect, run the following command to correct them: # /bin/chmod 644 /etc/hosts.deny"
+    compliance:
+      - cis: ["7.4.5"]
+      - cis_csc: ["5.1"]
+      - pci_dss: ["1.3.5"]
+    condition: all
+    rules:
+      - 'c:/bin/ls -l /etc/hosts.deny -> r:-rw-r--r--'
+
+# 7.5.1 Disable DCCP (Not Scored)
   - id: 1059
     title: "Disable DCCP"
     description: "The Datagram Congestion Control Protocol (DCCP) is a transport layer protocol that supports streaming media and telephony. DCCP provides a way to gain access to congestion control, without having to do it at the application layer, but does not provide in-sequence delivery."
@@ -913,10 +1141,18 @@ checks:
     remediation: "# echo \"install dccp /bin/true\" >> /etc/modprobe.d/CIS.conf"
     compliance:
       - cis: ["7.5.1"]
+      - cis_csc: ["9.1"]
+      - pci_dss: ["2.2.3"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2","CC6.1","CC6.8","CC7.1","CC7.2","CC8.1"]
+      - gpg_13: ["4.3"]
+      - gdpr_IV: ["35.7.d"]
+      - hipaa: ["164.312.b"]
     condition: none
     rules:
       - 'c:lsmod -> r:dccp'
 
+# 7.5.2 Disable SCTP (Not Scored)
   - id: 1060
     title: "Disable SCTP"
     description: "The Stream Control Transmission Protocol (SCTP) is a transport layer protocol used to support message oriented communication, with several streams of messages in one connection. It serves a similar function as TCP and UDP, incorporating features of both. It is message-oriented like UDP, and ensures reliable in-sequence transport of messages with congestion control like TCP."
@@ -924,10 +1160,18 @@ checks:
     remediation: "# echo \"install sctp /bin/true\" >> /etc/modprobe.d/CIS.conf"
     compliance:
       - cis: ["7.5.2"]
+      - cis_csc: ["9.1"]
+      - pci_dss: ["2.2.3"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2","CC6.1","CC6.8","CC7.1","CC7.2","CC8.1"]
+      - gpg_13: ["4.3"]
+      - gdpr_IV: ["35.7.d"]
+      - hipaa: ["164.312.b"]
     condition: none
     rules:
       - 'c:lsmod -> r:sctp'
 
+# 7.5.3 Disable RDS (Not Scored)
   - id: 1061
     title: "Disable RDS"
     description: "The Reliable Datagram Sockets (RDS) protocol is a transport layer protocol designed to provide low-latency, high-bandwidth communications between cluster nodes. It was developed by the Oracle Corporation."
@@ -935,10 +1179,18 @@ checks:
     remediation: "# echo \"install rds /bin/true\" >> /etc/modprobe.d/CIS.conf"
     compliance:
       - cis: ["7.5.3"]
+      - cis_csc: ["9.1"]
+      - pci_dss: ["2.2.3"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2","CC6.1","CC6.8","CC7.1","CC7.2","CC8.1"]
+      - gpg_13: ["4.3"]
+      - gdpr_IV: ["35.7.d"]
+      - hipaa: ["164.312.b"]
     condition: none
     rules:
       - 'c:lsmod -> r:rds'
 
+# 7.5.4 Disable TIPC (Not Scored)
   - id: 1062
     title: "Disable TIPC"
     description: "The Transparent Inter-Process Communication (TIPC) protocol is designed to provide communication between cluster nodes."
@@ -946,10 +1198,18 @@ checks:
     remediation: "# echo \"install tipc /bin/true\" >> /etc/modprobe.d/CIS.conf"
     compliance:
       - cis: ["7.5.4"]
+      - cis_csc: ["9.1"]
+      - pci_dss: ["2.2.3"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2","CC6.1","CC6.8","CC7.1","CC7.2","CC8.1"]
+      - gpg_13: ["4.3"]
+      - gdpr_IV: ["35.7.d"]
+      - hipaa: ["164.312.b"]
     condition: none
     rules:
       - 'c:lsmod -> r:tipc'
 
+# 7.7 Ensure Firewall is active (Scored)
   - id: 1063
     title: "Ensure Firewall is active"
     description: "IPtables is an application that allows a system administrator to configure the IPv4 tables, chains and rules provided by the Linux kernel firewall.  The iptables-persistent package in Debian provides one way to ensure iptables rules are reapplied on reboot. Note: the audit and remediation included provide instructions for using iptables-persistent to reapply iptables rules.  Other methods are available which may be in use in your environment and may conflict with these steps."
@@ -957,14 +1217,35 @@ checks:
     remediation: "Install the iptables and iptables-persistent packages: # apt-get install iptables iptables-persistent    Enable the iptables-persistent service: # update-rc.d iptables-persistent enable"
     compliance:
       - cis: ["7.7"]
+      - cis_csc: ["9.2"]
+      - pci_dss: ["1.1"]
     condition: all
     rules:
       - 'c:dpkg -s iptables -> r:install ok installed'
       - 'c:dpkg -s iptables-persistent -> r:install ok installed'
       - 'c:find /etc/rc* -name *iptables-persistent* -> r:S\.'
 
+###############################################
 # 8 Logging and Auditing
+###############################################
+###############################################
+# 8.2 Configure rsyslog
+###############################################
 
+# 8.2.1 Install the rsyslog package (Scored)
+  - id: 2002
+    title: "Ensure the rsyslog Service is activated"
+    description: "The rsyslog package is a third party package that provides many enhancements to syslog, such as multi-threading, TCP communication, message filtering and data base support."
+    rationale: "The security enhancements of rsyslog such as connection-oriented (i.e. TCP) transmission of logs, the option to log to database formats, and the encryption of log data en route to a central logging server) justify installing and configuring the package."
+    remediation: "Install the rsyslog package: # apt-get install rsyslog"
+    compliance:
+      - cis: ["8.2.2"]
+      - cis_csc: ["6.2"]
+    condition: all
+    rules:
+      - 'c:dpkg -s rsyslog -> r:install ok installed'
+
+# 8.2.2 Ensure the rsyslog Service is activated (Scored)
   - id: 1064
     title: "Ensure the rsyslog Service is activated"
     description: "Once the rsyslog package is installed it needs to be activated."
@@ -972,10 +1253,12 @@ checks:
     remediation: "Enable rsyslog: # update-rc.d rsyslog enable"
     compliance:
       - cis: ["8.2.2"]
+      - cis_csc: ["6.2"]
     condition: all
     rules:
       - 'c:find /etc/rc* -name *rsyslog* -> r:S\.'
 
+# 8.2.5 Configure rsyslog to send logs to a Remote Log Host (Scored)
   - id: 1065
     title: "Configure rsyslog to Send Logs to a Remote Log Host"
     description: "The rsyslog utility supports the ability to send logs it gathers to a remote log host running syslogd(8) or to receive messages from remote hosts, reducing administrative overhead."
@@ -983,12 +1266,14 @@ checks:
     remediation: "Edit the /etc/rsyslog.conf file and add the following line (where logfile.example.com is the name of your central log host).  *.* @@loghost.example.com    # Execute the following command to restart rsyslogd    # pkill -HUP rsyslogd    Note: The double \"at\" sign (@@) directs rsyslog to use TCP to send log messages to the server, which is a more reliable transport mechanism than the default UDP protocol."
     compliance:
       - cis: ["8.2.5"]
+      - cis_csc: ["6.6"]
     references:
       - rsyslog.conf(5) man page
     condition: all
     rules:
       - 'c:grep -Rh ^*.*[^I][^I]*@ /etc/rsyslog.conf /etc/rsyslog.d/ -> r:^*.* @@\.+'
 
+# 8.2.6 Accept remote rsyslog messages only on designated log hosts (Not Scored)
   - id: 1066
     title: "Accept Remote rsyslog Messages Only on Designated Log Hosts"
     description: "By default, rsyslog does not listen for log messages coming in from remote systems. The ModLoad tells rsyslog to load the imtcp.so module so it can listen over a network via TCP. The InputTCPServerRun option instructs rsyslogd to listen on the specified TCP port."
@@ -996,6 +1281,7 @@ checks:
     remediation: "For hosts that are designated as log hosts, edit the /etc/rsyslog.conf file and un-comment the following lines: $ModLoad imtcp.so    $InputTCPServerRun 514    Execute the following command to restart rsyslogd: # pkill -HUP rsyslogd"
     compliance:
       - cis: ["8.2.6"]
+      - cis_csc: ["9.1"]
     references:
       - rsyslog.conf(8) man page
     condition: all
@@ -1003,7 +1289,8 @@ checks:
       - 'c:grep -Rh ^\$ModLoad[[:space:]][[:space:]]*imtcp.so /etc/rsyslog.conf /etc/rsyslog.d/ -> r:^$ModLoad\s*\t*imtcp.so'
       - 'c:grep -Rh ^\$InputTCPServerRun[[:space:]][[:space:]]*514 /etc/rsyslog.conf /etc/rsyslog.d/ -> r:^$InputTCPServerRun\s*\t*514'
 
-#######################################################
+
+###############################################
 # 9 System Access, Authentication and Authorization
 #######################################################
 # 9.1.1 Enable cron Daemon (Scored)
@@ -1539,8 +1826,113 @@ checks:
       - 'f:/etc/motd -> r:\v|\r|\m|\s'
       - 'f:/etc/issue.net -> r:\v|\r|\m|\s'
 
-# 13 Review User and Group Settings
 
+###############################################
+# 12 Verify System File Permissions
+###############################################
+
+# 12.1 Verify Permissions on /etc/passwd (Scored)
+  - id: 2004
+    title: "Verify permissions on /etc/passwd"
+    description: "The /etc/passwd file contains user account information that is used by many system utilities and therefore must be readable for these utilities to operate."
+    rationale: "It is critical to ensure that the /etc/passwd file is protected from unauthorized write access. Although it is protected by default, the file permissions could be changed either inadvertently or through malicious actions."
+    remediation: "If the permissions of the /etc/passwd file are incorrect, run the following command to correct them: # /bin/chmod 644 /etc/passwd"
+    compliance:
+      - cis: ["12.1"]
+      - cis_csc: ["16.14"]
+      - pci_dss: ["2.2.4"]
+      - tsc: ["CC5.2","CC6.1","CC6.8","CC7.1","CC7.2","CC8.1"]
+      - nist_800_53: ["CM.1"]
+    condition: all
+    rules:
+      - 'c:/bin/ls -l /etc/passwd -> r:-rw-r--r--'
+
+# 12.2 Verify Permissions on /etc/shadow (Scored)
+  - id: 2005
+    title: "Verify permissions on /etc/shadow"
+    description: "The /etc/shadow file is used to store the information about user accounts that is critical to the security of those accounts, such as the hashed password and other security information."
+    rationale: "If attackers can gain read access to the /etc/shadow file, they can easily run a password cracking program against the hashed password to break it. Other security information that is stored in the /etc/shadow file (such as expiration) could also be useful to subvert the user accounts."
+    remediation: "If the permissions of the /etc/shadow file are incorrect, run the following command to correct them: # /bin/chmod 644 /etc/shadow"
+    compliance:
+      - cis: ["12.2"]
+      - cis_csc: ["16.14"]
+      - pci_dss: ["2.2.4"]
+      - tsc: ["CC5.2","CC6.1","CC6.8","CC7.1","CC7.2","CC8.1"]
+      - nist_800_53: ["CM.1"]
+    condition: all
+    rules:
+      - 'c:/bin/ls -l /etc/shadow -> r:-rw-r-----'
+
+# 12.3 Verify Permissions on /etc/group (Scored)
+  - id: 2006
+    title: "Verify permissions on /etc/group"
+    description: "The /etc/group file contains a list of all the valid groups defined in the system. The command below allows read/write access for root and read access for everyone else."
+    rationale: "The /etc/group file needs to be protected from unauthorized changes by non-privileged users, but needs to be readable as this information is used with many non-privileged programs."
+    remediation: "If the permissions of the /etc/group file are incorrect, run the following command to correct them: # /bin/chmod 644 /etc/group"
+    compliance:
+      - cis: ["12.3"]
+      - cis_csc: ["16.14"]
+      - pci_dss: ["2.2.4"]
+      - tsc: ["CC5.2","CC6.1","CC6.8","CC7.1","CC7.2","CC8.1"]
+      - nist_800_53: ["CM.1"]
+    condition: all
+    rules:
+      - 'c:/bin/ls -l /etc/group -> r:-rw-r--r--'
+
+# 12.4 Verify User/Group Ownership on /etc/passwd
+  - id: 2007
+    title: "Verify User/Group Ownership on /etc/passwd"
+    description: "The /etc/passwd file contains a list of all the valid userIDs defined in the system, but not the passwords. The command below sets the owner and group of the file to root."
+    rationale: "The /etc/passwd file needs to be protected from unauthorized changes by non-priliveged users, but needs to be readable as this information is used with many non-privileged programs."
+    remediation: "If the user and group ownership of the /etc/passwd file are incorrect, run the following command to correct them: # /bin/chown root:root /etc/passwd"
+    compliance:
+      - cis: ["12.4"]
+      - cis_csc: ["16.14"]
+      - pci_dss: ["2.2.4"]
+      - tsc: ["CC5.2","CC6.1","CC6.8","CC7.1","CC7.2","CC8.1"]
+      - nist_800_53: ["CM.1"]
+    condition: all
+    rules:
+      - 'c:/bin/ls -l /etc/passwd -> r:root\s*\t*root'
+
+# 12.5 Verify User/Group Ownership on /etc/shadow (Scored)
+  - id: 2008
+    title: "Verify User/Group Ownership on /etc/shadow"
+    description: "The /etc/shadow file contains the one-way cipher text passwords for each user defined in the /etc/passwd file. The command below sets the user and group ownership of the file to root."
+    rationale: "If attackers can gain read access to the /etc/shadow file, they can easily run a password cracking program against the hashed password to break it. Other security information that is stored in the /etc/shadow file (such as expiration) could also be useful to subvert the user accounts."
+    remediation: "If the ownership of the /etc/shadow file are incorrect, run the following command to correct them: # /bin/chown root:shadow /etc/shadow"
+    compliance:
+      - cis: ["12.5"]
+      - cis_csc: ["16.14"]
+      - pci_dss: ["2.2.4"]
+      - tsc: ["CC5.2","CC6.1","CC6.8","CC7.1","CC7.2","CC8.1"]
+      - nist_800_53: ["CM.1"]
+    condition: all
+    rules:
+      - 'c:/bin/ls -l /etc/shadow -> r:root\s*\t*shadow'
+
+# 12.6 Verify User/Group Ownership on /etc/group (Scored)
+  - id: 2009
+    title: "Verify User/Group Ownership on /etc/group"
+    description: "The /etc/group file contains a list of all the valid groups defined in the system. The command below allows read/write access for root and read access for everyone else."
+    rationale: "The /etc/group file needs to be protected from unauthorized changes by non-priliveged users, but needs to be readable as this information is used with many non-privileged programs."
+    remediation: "If the ownership of the /etc/group file are incorrect, run the following command to correct them: # /bin/chown root:root /etc/group"
+    compliance:
+      - cis: ["12.6"]
+      - cis_csc: ["16.14"]
+      - pci_dss: ["2.2.4"]
+      - tsc: ["CC5.2","CC6.1","CC6.8","CC7.1","CC7.2","CC8.1"]
+      - nist_800_53: ["CM.1"]
+    condition: all
+    rules:
+      - 'c:/bin/ls -l /etc/group -> r:root\s*\t*root'
+
+
+###############################################
+# 13 Review User and Group Settings
+###############################################
+
+# 13.1 Ensure Password Fields are Not Empty
   - id: 1093
     title: "Ensure Password Fields are Not Empty"
     description: "An account with an empty password field means that anybody may log in as that user without providing a password."
@@ -1548,10 +1940,13 @@ checks:
     remediation: "If any accounts in the /etc/shadow file do not have a password, run the following command to lock the account until it can be determined why it does not have a password: # /usr/bin/passwd -l <username>    Also, check to see if the account is logged in and investigate what it is being used for to determine if it needs to be forced off."
     compliance:
       - cis: ["13.1"]
+      - cis_csc: ["16"]
+      - pci_dss: ["8.2"]
     condition: none
     rules:
       - 'f:/etc/shadow -> r:^\w+::'
 
+# 13.2 Verify No Legacy "+" Entries Exist in /etc/passwd File
   - id: 1094
     title: "Verify No Legacy \"+\" Entries Exist in /etc/passwd File"
     description: "The character + in various files used to be markers for systems to insert data from NIS maps at a certain point in a system configuration file. These entries are no longer required on most systems, but may exist in files that have been imported from other platforms."
@@ -1559,10 +1954,18 @@ checks:
     remediation: "Delete these entries if they exist."
     compliance:
       - cis: ["13.2"]
+      - cis_csc: ["16.9"]
+      - pci_dss: ["2.2.3"]
+      - tsc: ["CC5.2","CC6.1","CC6.8","CC7.1","CC7.2","CC8.1"]
+      - nist_800_53: ["CM.1"]
+      - gpg_13: ["4.3"]
+      - gdpr_IV: ["35.7.d"]
+      - hipaa: ["164.312.b"]
     condition: none
     rules:
       - 'f:/etc/passwd -> !r:^# && r:^+:'
 
+# 13.3 Verify No Legacy "+" Entries Exist in /etc/shadow File
   - id: 1095
     title: "Verify No Legacy \"+\" Entries Exist in /etc/shadow File"
     description: "The character + in various files used to be markers for systems to insert data from NIS maps at a certain point in a system configuration file. These entries are no longer required on most systems, but may exist in files that have been imported from other platforms."
@@ -1570,9 +1973,18 @@ checks:
     remediation: "Delete these entries if they exist."
     compliance:
       - cis: ["13.3"]
+      - cis_csc: ["16.9"]
+      - pci_dss: ["2.2.3"]
+      - tsc: ["CC5.2","CC6.1","CC6.8","CC7.1","CC7.2","CC8.1"]
+      - nist_800_53: ["CM.1"]
+      - gpg_13: ["4.3"]
+      - gdpr_IV: ["35.7.d"]
+      - hipaa: ["164.312.b"]
     condition: none
     rules:
       - 'f:/etc/shadow -> !r:^# && r:^+:'
+
+# 13.4 Verify No Legacy "+" Entries Exist in /etc/group File
   - id: 1096
     title: "Verify No Legacy \"+\" Entries Exist in /etc/group File"
     description: "The character + in various files used to be markers for systems to insert data from NIS maps at a certain point in a system configuration file. These entries are no longer required on most systems, but may exist in files that have been imported from other platforms."
@@ -1580,10 +1992,18 @@ checks:
     remediation: "Delete these entries if they exist."
     compliance:
       - cis: ["13.4"]
+      - cis_csc: ["16.9"]
+      - pci_dss: ["2.2.3"]
+      - tsc: ["CC5.2","CC6.1","CC6.8","CC7.1","CC7.2","CC8.1"]
+      - nist_800_53: ["CM.1"]
+      - gpg_13: ["4.3"]
+      - gdpr_IV: ["35.7.d"]
+      - hipaa: ["164.312.b"]
     condition: none
     rules:
       - 'f:/etc/group -> !r:^# && r:^+:'
 
+# 13.5 Verify No UID 0 Accounts Exist Other Than root
   - id: 1097
     title: "Verify No UID 0 Accounts Exist Other Than root"
     description: "Any account with UID 0 has superuser privileges on the system."
@@ -1591,10 +2011,18 @@ checks:
     remediation: "Delete any other entries that are displayed."
     compliance:
       - cis: ["13.5"]
+      - cis_csc: ["5.1"]
+      - pci_dss: ["10.2.5"]
+      - tsc: ["CC6.1","CC6.8","CC7.2","CC7.3","CC7.4","CC8.1"]
+      - hipaa: ["164.312.b"]
+      - nist_800_53: ["AU.14", "AC.7"]
+      - gpg_13: ["7.8"]
+      - gdpr_IV: ["35.7","32.2"]
     condition: none
     rules:
       - 'f:/etc/passwd -> !r:^# && !r:^\s*\t*root: && r:^\w+:\w+:0:'
 
+# 13.20 Ensure shadow group is empty
   - id: 1098
     title: "Ensure shadow group is empty"
     description: "The shadow group allows system programs which require access the ability to read the /etc/shadow file. No users should be assigned to the shadow group."
@@ -1602,6 +2030,10 @@ checks:
     remediation: "Remove all users from the shadow group, and change the primary group of any users with shadow as their primary group."
     compliance:
       - cis: ["13.20"]
+      - cis_csc: ["16.14"]
+      - pci_dss: ["2.2.4"]
+      - tsc: ["CC5.2","CC6.1","CC6.8","CC7.1","CC7.2","CC8.1"]
+      - nist_800_53: ["CM.1"]
     condition: none
     rules:
       - 'f:/etc/group -> !r:^# && r:shadow:\w*:\w*:\S+'
