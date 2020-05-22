@@ -8,158 +8,191 @@
 
 <group name="wazuhapi">
 
-  <rule id="30000" level="0">
+  <rule id="66500" level="0">
     <decoded_as>wazuhapi</decoded_as>
     <description></description>
   </rule>
 
 <!-- WazuhAPI 2019-02-27 15:23:17 user: [::ffff:11.0.0.19] GET /version? - 200 - error: '0'. -->
-  <rule id="30001" level="3">
-    <if_sid>30000</if_sid>
+  <rule id="66501" level="3">
+    <if_sid>66500</if_sid>
     <regex>^WazuhAPI \d+-\d+-\d+ \d+:\d+:\d+ \S+: [(\S+)] \w+ \S+ - \d+</regex>
     <description>Wazuh API request received.</description>
+    <group>pci_dss_10.6.1,tsc_CC6.1,tsc_CC6.8,tsc_CC7.2,tsc_CC7.3,</group>
   </rule>
 
   <!-- Childs -->
 
-    <rule id="30002" level="3">
-      <if_sid>30001</if_sid>
+    <rule id="66502" level="3">
+      <if_sid>66501</if_sid>
       <match>GET</match>
       <description>Wazuh API GET request received.</description>
+      <group>pci_dss_10.6.1,tsc_CC6.1,tsc_CC6.8,tsc_CC7.2,tsc_CC7.3,</group>
     </rule>
 
-      <rule id="30003" level="8">
-        <if_sid>30002</if_sid>
+      <rule id="66503" level="8">
+        <if_sid>66502</if_sid>
         <description>Wazuh API request $(method) $(request) with error code $(errorcode)</description>
+        <group>pci_dss_10.6.1,tsc_CC6.1,tsc_CC6.8,tsc_CC7.2,tsc_CC7.3,</group>
       </rule>
 
-      <rule id="30004" level="3">
-        <if_sid>30003</if_sid>
+      <rule id="66504" level="3">
+        <if_sid>66503</if_sid>
         <field name="errorcode">0</field>
         <description>Wazuh API request $(method) $(request)</description>
+        <group>pci_dss_10.6.1,tsc_CC6.1,tsc_CC6.8,tsc_CC7.2,tsc_CC7.3,</group>
       </rule>
 
-    <rule id="30005" level="7">
-      <if_sid>30001</if_sid>
+    <rule id="66505" level="7">
+      <if_sid>66501</if_sid>
       <match>POST</match>
       <description>Wazuh API request POST received.</description>
+      <mitre>
+        <id>T1492</id>
+      </mitre>
+      <group>pci_dss_10.6.1,pci_dss_10.2.7,tsc_CC6.1,tsc_CC6.8,tsc_CC7.2,tsc_CC7.3,tsc_CC7.4,hipaa_164.312.e</group>
     </rule>
 
-      <rule id="30006" level="7">
-        <if_sid>30005</if_sid>
+      <rule id="66506" level="7">
+        <if_sid>66505</if_sid>
         <description>Wazuh API request $(method) $(request) with error code $(errorcode)</description>
+        <group>pci_dss_10.6.1,tsc_CC6.1,tsc_CC6.8,tsc_CC7.2,tsc_CC7.3,</group>
       </rule>
 
-      <rule id="30007" level="7">
-        <if_sid>30005</if_sid>
+      <rule id="66507" level="7">
+        <if_sid>66505</if_sid>
         <field name="errorcode">0</field>
         <description>Wazuh API request $(method) $(request)</description>
+        <group>pci_dss_10.6.1,tsc_CC6.1,tsc_CC6.8,tsc_CC7.2,tsc_CC7.3,</group>
       </rule>
 
-    <rule id="30008" level="10">
-      <if_sid>30001</if_sid>
+    <rule id="66508" level="10">
+      <if_sid>66501</if_sid>
       <match>DELETE</match>
       <description>Wazuh API request DELETE received.</description>
+      <mitre>
+        <id>T1492</id>
+      </mitre>
+      <group>pci_dss_10.6.1,pci_dss_10.2.7,tsc_CC6.1,tsc_CC6.8,tsc_CC7.2,tsc_CC7.3,tsc_CC7.4,hipaa_164.312.e</group>
     </rule>
 
-      <rule id="30009" level="3">
-        <if_sid>30008</if_sid>
+      <rule id="66509" level="3">
+        <if_sid>66508</if_sid>
         <description>Wazuh API request $(method) $(request) got the error $(errorcode)</description>
+        <group>pci_dss_10.6.1,tsc_CC6.1,tsc_CC6.8,tsc_CC7.2,tsc_CC7.3,</group>
       </rule>
 
-      <rule id="30010" level="3">
-        <if_sid>30008</if_sid>
+      <rule id="66510" level="3">
+        <if_sid>66508</if_sid>
         <field name="errorcode">0</field>
         <description>Wazuh API request $(method) $(request)</description>
+        <group>pci_dss_10.6.1,tsc_CC6.1,tsc_CC6.8,tsc_CC7.2,tsc_CC7.3,</group>
       </rule>
 
-    <rule id="30011" level="7">
-      <if_sid>30001</if_sid>
+    <rule id="66511" level="7">
+      <if_sid>66501</if_sid>
       <match>PUT</match>
       <description>Wazuh API request PUT received.</description>
+      <mitre>
+        <id>T1492</id>
+      </mitre>
+      <group>pci_dss_10.6.1,pci_dss_10.2.7,tsc_CC6.1,tsc_CC6.8,tsc_CC7.2,tsc_CC7.3,tsc_CC7.4,hipaa_164.312.e</group>
     </rule>
 
-    <rule id="30012" level="3">
-        <if_sid>30011</if_sid>
+    <rule id="66512" level="3">
+        <if_sid>66511</if_sid>
         <description>Wazuh API request $(method) $(request) got the error $(errorcode)</description>
+        <group>pci_dss_10.6.1,tsc_CC6.1,tsc_CC6.8,tsc_CC7.2,tsc_CC7.3,</group>
       </rule>
 
-    <rule id="30013" level="3">
-      <if_sid>30011</if_sid>
+    <rule id="66513" level="3">
+      <if_sid>66511</if_sid>
       <field name="errorcode">0</field>
       <description>Wazuh API request $(method) $(request)</description>
+      <group>pci_dss_10.6.1,tsc_CC6.1,tsc_CC6.8,tsc_CC7.2,tsc_CC7.3,</group>
     </rule>
 
 
 <!-- WazuhAPI 2019-03-19 13:46:48 foo: Agent does not exist: 500 --> <!-- exceptions -->
   <!-- This is a generic exception log, the rule should work for every exception -->
-  <rule id="30014" level="12">
-    <if_sid>30000</if_sid>
+  <rule id="66514" level="12">
+    <if_sid>66500</if_sid>
     <regex>^WazuhAPI \d+-\d+-\d+ \d+:\d+:\d+ \S+: \.+: \d+</regex>
     <description>An exception was given, the message is: $(exception_message)</description>
+    <group>pci_dss_10.6.1,pci_dss_10.6.3,tsc_CC6.1,tsc_CC6.8,tsc_CC7.2,tsc_CC7.3,</group>
   </rule>
 
 <!-- app.js logs -->
   <!-- WazuhAPI 2019-03-18 16:08:13 user: [::1] User: "user" - Authentication failed. -->
-    <rule id="30015" level="9">
-      <if_sid>30000</if_sid>
+    <rule id="66515" level="9">
+      <if_sid>66500</if_sid>
       <match>Authentication failed</match>
       <description>Authentication with api from user $(apiuser) failed.</description>
+      <group>pci_dss_10.6.1,pci_dss_10.2.4,pci_dss_10.2.5,tsc_CC6.1,tsc_CC6.8,tsc_CC7.2,tsc_CC7.3,tsc_CC7.4,hipaa_164.312.d,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
     </rule>
 
   <!-- WazuhAPI 2019-03-18 16:08:13 : [::1] Authentication error: 15 - Error message -->
-    <rule id="30016" level="9">
-      <if_sid>30000</if_sid>
+    <rule id="66516" level="9">
+      <if_sid>66500</if_sid>
       <match>Authentication error</match>
       <description>Authentication with api failed with the error $(auth_error) and the message: $(error_message).</description>
+      <group>pci_dss_10.6.1,pci_dss_10.2.4,pci_dss_10.2.5,tsc_CC6.1,tsc_CC6.8,tsc_CC7.2,tsc_CC7.3,tsc_CC7.4,hipaa_164.312.d,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
     </rule>
 
   <!-- WazuhAPI 2019-03-18 16:08:13 user: Internal Error -->
-    <rule id="30017" level="12">
-      <if_sid>30000</if_sid>
+    <rule id="66517" level="12">
+      <if_sid>66500</if_sid>
       <match>Internal Error</match>
       <description>Internal error detected in the API.</description>
+      <group>pci_dss_10.6.1,tsc_CC6.1,tsc_CC6.8,tsc_CC7.2,tsc_CC7.3,</group>
     </rule>
 
     <!-- WazuhAPI 2019-03-18 16:08:13 user: Internal Error: uncaughtException -->
-      <rule id="30018" level="12">
-        <if_sid>30017</if_sid>
+      <rule id="66518" level="12">
+        <if_sid>66517</if_sid>
         <match>Internal Error: uncaughtException</match>
         <description>Internal error detected in the API, an uncaught exception was thrown.</description>
+        <group>pci_dss_10.6.1,pci_dss_10.6.3,tsc_CC6.1,tsc_CC6.8,tsc_CC7.2,tsc_CC7.3,</group>
       </rule>
 
   <!-- WazuhAPI 2019-03-18 16:08:13 user: Exiting... -->
-    <rule id="30019" level="10">
-      <if_sid>30000</if_sid>
+    <rule id="66519" level="10">
+      <if_sid>66500</if_sid>
       <match>Exiting...</match>
       <description>The API has just exited.</description>
+      <group>pci_dss_10.6.1,tsc_CC6.1,tsc_CC6.8,tsc_CC7.2,tsc_CC7.3,</group>
     </rule>
 
     <!-- Childs -->
 
-      <rule id="30020" level="10">
-        <if_sid>30019</if_sid>
+      <rule id="66520" level="10">
+        <if_sid>66519</if_sid>
         <match>Exiting... (SIGTERM)</match>
         <description>The API has just exited. (SIGTERM)</description>
+        <group>pci_dss_10.6.1,tsc_CC6.1,tsc_CC6.8,tsc_CC7.2,tsc_CC7.3,</group>
       </rule>
 
-      <rule id="30021" level="10">
-        <if_sid>30019</if_sid>
+      <rule id="66521" level="10">
+        <if_sid>66519</if_sid>
         <match>Exiting... (SIGINT)</match>
         <description>The API has just exited. (SIGINT)</description>
+        <group>pci_dss_10.6.1,tsc_CC6.1,tsc_CC6.8,tsc_CC7.2,tsc_CC7.3,</group>
       </rule>
   <!-- WazuhAPI 2019-02-27 15:22:22 : Listening on: http://:::55000 -->
-    <rule id="30022" level="3">
-      <if_sid>30000</if_sid>
+    <rule id="66522" level="3">
+      <if_sid>66500</if_sid>
       <match>Listening on</match>
       <description>Api is hearing at $(apiurl)</description>
+      <group>pci_dss_10.6.1,tsc_CC6.1,tsc_CC6.8,tsc_CC7.2,tsc_CC7.3,</group>
     </rule> 
 
   <!-- WazuhAPI 2019-03-18 16:08:13 Error: Address in use (port "550"): Close the program using that port or change the port. -->
-    <rule id="30023" level="10">
-      <if_sid>30000</if_sid>
+    <rule id="66523" level="10">
+      <if_sid>66500</if_sid>
       <match>Address in use</match>
       <description>Another instance is using the port $(port)</description>
+      <group>pci_dss_10.6.1,tsc_CC6.1,tsc_CC6.8,tsc_CC7.2,tsc_CC7.3,</group>
     </rule>
 
 </group>
+
