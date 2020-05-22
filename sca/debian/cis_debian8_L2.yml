@@ -171,6 +171,35 @@ checks:
     rules:
       - 'c:ps -eZ -> r:initrc && !r:tr|ps|egrep|bash|awk'
 
+  - id: 3020
+    title: "Ensure AppArmor is enabled in the bootloader configuration"
+    description: "Configure AppArmor to be enabled at boot time and verify that it has not been overwrittenby the bootloader boot parameters."
+    rationale: "AppArmor must be enabled at boot time in your grub configuration to ensure that the controls it provides are not overridden."
+    remediation: "Edit /etc/default/grub and add the appermor=1 and security=apparmor parameters to the GRUB_CMDLINE_LINUX= line   GRUB_CMDLINE_LINUX=\"apparmor=1 security=apparmor\"      update the grub configuration # update-grub    Notes: This recommendation is designed around the grub bootloader, if LILO or another bootloader is in use in your environment enact equivalent settings."
+    compliance:
+      - cis: ["1.6.1.1"]
+      - cis_csc: ["14.4"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+    condition: none
+    rules:
+      - 'f:/boot/grub/grub.cfg -> r:linux && !r:apparmor=1'
+      - 'f:/boot/grub/grub.cfg -> r:linux && !r:security=apparmor'
+
+  - id: 3021
+    title: "Ensure all AppArmor Profiles are enforcing"
+    description: "AppArmor profiles define what resources applicatons are able to access."
+    rationale: "Security configuration requirements vary from site to site. Some sites may mandate a policy that is stricter than the default policy, which is perfectly acceptable. This item is intended to ensure that any policies that exist on the system are activated.."
+    remediation: "Run the following command to set all profiles to enforce mode: # aa-enforce /etc/apparmor.d/* Any unconfined processes may need to have a profile created or activated for them and then be restarted."
+    compliance:
+      - cis: ["1.6.1.2"]
+      - cis_csc: ["14.4"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+    condition: all
+    rules:
+      - 'c:apparmor status -> r:0 profiles are in complain mode && r:0 processes are unconfined && n:(\d+) profiles are loaded compare > 0'
+
   - id: 2506
     title: "Ensure SELinux or AppArmor are installed"
     description: "SELinux and AppArmor provide Mandatory Access Controls."

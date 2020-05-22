@@ -524,6 +524,21 @@ checks:
       - 'c:dpkg -s openbsd-inetd -> r:install ok installed'
       - 'c:dpkg -s inetutils-inetd -> r:install ok installed'
 
+  - id: 3013 
+    title: "Ensure time synchronization is in use"
+    description: "System time should be synchronized between all systems in an environment. This is typically done by establishing an authoritative time server or set of servers and having all systems synchronize their clocks to them."
+    rationale: "Time synchronization is important to support time sensitive security mechanisms like Kerberos and also ensures log files have consistent time records across the enterprise, which aids in forensic investigations."
+    remediation: "On physical systems or virtual systems where host based time synchronization is not available install NTP or chrony using one of the following commands: # apt-get install ntp # apt-get install chrony     On virtual systems where host based time synchronization is available consult your virtualization software documentation and setup host based synchronization."
+    compliance:
+      - cis: ["2.2.2.1"]
+      - cis_csc: ["6.1"]
+      - pci_dss: ["10.4"]
+      - nist_800_53: ["AU.8"]
+    condition: any
+    rules:
+      - 'c:dpkg -s ntp -> r:install ok installed'
+      - 'c:dpkg -s chrony -> r:install ok installed'
+
   - id: 2028
     title: "Ensure ntp is configured"
     description: "ntp is a daemon which implements the Network Time Protocol (NTP). It is designed to synchronize system clocks across a variety of systems and use a source that is highly accurate. More information on NTP can be found at http://www.ntp.org. ntp can be configured to be a client and/or a server. This recommendation only applies if ntp is in use on the system."
@@ -553,6 +568,21 @@ checks:
     condition: all
     rules:
       - 'f:/etc/chrony.conf -> r:^server\.+$|^pool\.+$'
+
+  - id: 3014
+    title: "Ensure the X Window system is not installed"
+    description: "The X Window system provides a Graphical User Interface (GUI) where users can have multiple windows in which to run programs and various add on. The X Window system is typically used on desktops where users login, but not on servers where users typically do not login."
+    rationale: "Unless your organization specifically requires graphical login access via X Windows, remove it to reduce the potential attack surface."
+    remediation: "Uninstall X Windows: # apt-get remove xserver-xorg*"
+    compliance:
+      - cis: ["2.2.2"]
+      - cis_csc: ["2"]
+      - pci_dss: ["2.2.2"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2","CC6.1","CC6.8","CC7.1","CC7.2","CC8.1"]
+    condition: none
+    rules:
+      - 'c:dpkg -l xserver-xorg-core* -> r:install ok installed'
 
   - id: 2030
     title: "Ensure Avahi Server is not enabled"
@@ -783,6 +813,23 @@ checks:
     rules:
       - 'c:dpkg -s telnet -> r:install ok installed'
 
+  - id: 3015 
+    title: "Ensure LDAP client is not installed"
+    description: "The Lightweight Directory Access Protocol (LDAP) was introduced as a replacement for NIS/YP. It is a service that provides a method for looking up information from a central database."
+    rationale: "If the system will not need to act as an LDAP client, it is recommended that the software be removed to reduce the potential attack surface."
+    remediation: "Run the following command to uninstall openldap-clients : # apt-geet remove ldap-utils"
+    compliance:
+      - cis: ["2.3.5"]
+      - cis_csc: ["2"]
+      - pci_dss: ["2.2.3"]
+      - nist_800_53: ["CM.1"]
+      - gpg_13: ["4.3"]
+      - gdpr_IV: ["35.7.d"]
+      - hipaa: ["164.312.b"]
+    condition: all
+    rules:
+      - 'c:dpkg -s ldap-utils -> r:install ok installed'
+
 # 3 Network Configuration
   - id: 2048
     title: "Ensure IP forwarding is disabled"
@@ -951,6 +998,19 @@ checks:
       - 'c:grep -Rh net\.ipv6\.conf\.all\.accept_ra /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv6.conf.all.accept_ra\s*=\s*0$'
       - 'c:grep -Rh net\.ipv6\.conf\.default\.accept_ra /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv6.conf.default.accept_ra\s*=\s*0$'
 
+  - id: 3016
+    title: "Install TCP Wrappers"
+    description: "TCP Wrappers provides a simple access list and standardized logging method for services capable of supporting it. In the past, services that were called from inetd and xinetd supported the use of tcp wrappers. As inetd and xinetd have been falling in disuse, any service that can support tcp wrappers will have the libwrap.so library attached to it."
+    rationale: "TCP Wrappers provide a good simple access list mechanism to services that may not have that support built in. It is recommended that all services that can support TCP Wrappers, use it."
+    remediation: "Install tcpd : # apt-get install tcpd To verify if a service supports TCP Wrappers, run the following command: # ldd <path-to-daemon> | grep libwrap.so If there is any output, then the service supports TCP Wrappers."
+    compliance:
+      - cis: ["3.3.1"]
+      - cis_csc: ["9.2"]
+      - pci_dss: ["1.3.5"]
+    condition: all
+    rules:
+      - 'c:dpkg -s tcpd -> r:install ok installed'
+
   - id: 2059
     title: "Ensure /etc/hosts.allow is configured"
     description: "The /etc/hosts.allow file specifies which IP addresses are permitted to connect to the host. It is intended to be used in conjunction with the /etc/hosts.deny file."
@@ -975,6 +1035,32 @@ checks:
     rules:
       - 'f:/etc/hosts.deny'
       - 'f:/etc/hosts.deny -> r:^ALL:\s*ALL'
+
+  - id: 3017
+    title: "Verify permissions on /etc/hosts.allow"
+    description: "The /etc/hosts.allow file contains network information that is used by many system applications and therefore must be readable for these applications to operate."
+    rationale: "It is critical to ensure that the /etc/hosts.allow file is protected from unauthorized write access. Although it is protected by default, the file permissions could be changed either inadvertently or through malicious actions."
+    remediation: "Run the following commands to set permissions on /etc/hosts.allow :  # chown root:root /etc/hosts.allow  # chmod 644 /etc/hosts.allow"
+    compliance:
+      - cis: ["3.3.4"]
+      - cis_csc: ["5.1"]
+      - pci_dss: ["1.3.5"]
+    condition: all
+    rules:
+      - 'c:stat /etc/hosts.allow -> r:^Access: \(0644/-rw-r--r--\)\s*\t*Uid:\s*\t*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\t*\(\s*\t*0/\s*\t*root\)$'
+
+  - id: 3018
+    title: "Verify permissions on /etc/hosts.deny"
+    description: "The /etc/hosts.deny file contains network information that is used by many system applications and therefore must be readable for these applications to operate."
+    rationale: "It is critical to ensure that the /etc/hosts.deny file is protected from unauthorized write access. Although it is protected by default, the file permissions could be changed either inadvertently or through malicious actions."
+    remediation: "Run the following commands to set permissions on /etc/hosts.deny : # chown root:root /etc/hosts.deny  # chmod 644 /etc/hosts.deny"
+    compliance:
+      - cis: ["3.3.5"]
+      - cis_csc: ["5.1"]
+      - pci_dss: ["1.3.5"]
+    condition: all
+    rules:
+      - 'c:stat /etc/hosts.deny -> r:^Access: \(0644/-rw-r--r--\)\s*\t*Uid:\s*\t*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\t*\(\s*\t*0/\s*\t*root\)$'
 
   - id: 2061
     title: "Ensure DCCP is disabled"
@@ -1044,6 +1130,22 @@ checks:
       - 'c:iptables -L -> r:^Chain FORWARD && r:policy DROP'
       - 'c:iptables -L -> r:^Chain OUTPUT && r:policy DROP'
 
+  - id: 3019 
+    title: "Ensure loopback traffic is configured"
+    description: "Configure the loopback interface to accept traffic. Configure all other interfaces to deny traffic to the loopback network (127.0.0.0/8)."
+    rationale: "Loopback traffic is generated between processes on machine and is typically critical to operation of the system. The loopback interface is the only place that loopback network (127.0.0.0/8) traffic should be seen, all other interfaces should ignore traffic on this network as an anti-spoofing measure."
+    remediation: "Run the following commands to implement the loopback rules: # iptables -A INPUT -i lo -j ACCEPT # iptables -A OUTPUT -o lo -j ACCEPT # iptables -A INPUT -s 127.0.0.0/8 -j DROP"
+    compliance:
+      - cis: ["3.5.1.2"]
+      - cis_csc: ["9.2"]
+      - pci_dss: ["1.2.1"]
+    condition: all
+    rules:
+      - 'c:iptables -L INPUT -v -n -> r:\.*ACCEPT\.*all\.*lo\.**\.*0.0.0.0/0\.*0.0.0.0/0'
+      - 'c:iptables -L INPUT -v -n -> r:\.*DROP\.*all\.**\.**\.*127.0.0.0/8\.*0.0.0.0/0'
+      - 'c:iptables -L OUTPUT -v -n -> r:\.*ACCEPT\.*all\.**\.*lo\.*0.0.0.0/0\.*0.0.0.0/0'
+
+
   - id: 2066
     title: "Ensure IPv6 default deny firewall policy"
     description: "A default deny all policy on connections ensures that any unconfigured network usage will be rejected."
@@ -1058,6 +1160,21 @@ checks:
       - 'c:ip6tables -L -> r:^Chain FORWARD && r:policy DROP'
       - 'c:ip6tables -L -> r:^Chain OUTPUT && r:policy DROP'
 
+  - id: 5608 
+    title: "Ensure IPv6 loopback traffic is configured"
+    description: "Configure the loopback interface to accept traffic. Configure all other interfaces to deny traffic to the loopback network (::1)."
+    rationale: "Loopback traffic is generated between processes on machine and is typically critical to operation of the system. The loopback interface is the only place that loopback network (::1) traffic should be seen, all other interfaces should ignore traffic on this network as an anti-spoofing measure."
+    remediation: "Run the following commands to implement the loopback rules: # iptables -A INPUT -i lo -j ACCEPT # iptables -A OUTPUT -o lo -j ACCEPT # iptables -A INPUT -s ::1 -j DROP"
+    compliance:
+      - cis: ["3.5.2.2"]
+      - cis_csc: ["9.2"]
+      - pci_dss: ["1.2.1"]
+    condition: all
+    rules:
+      - 'c:iptables -L INPUT -v -n -> r:\.*ACCEPT\.*all\.*lo\.**\.*0.0.0.0/0\.*0.0.0.0/0'
+      - 'c:iptables -L INPUT -v -n -> r:\.*DROP\.*all\.**\.**\.*127.0.0.0/8\.*0.0.0.0/0'
+      - 'c:iptables -L OUTPUT -v -n -> r:\.*ACCEPT\.*all\.**\.*lo\.*0.0.0.0/0\.*0.0.0.0/0'
+
   - id: 2067
     title: "Ensure iptables is installed"
     description: "iptables allows configuration of the IPv4 tables in the linux kernel and the rules stored within them. Most firewall configuration utilities operate as a front end to iptables."
@@ -1066,6 +1183,7 @@ checks:
     compliance:
       - cis: ["3.5.3"]
       - cis_csc: ["9.2", "9.4"]
+      - pci_dss: ["1.1"]
     condition: all
     rules:
       - 'c:dpkg -s iptables -> r:install ok installed'
