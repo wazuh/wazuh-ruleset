@@ -36,6 +36,8 @@ checks:
     compliance:
       - cis: ["1.1.5"]
       - cis_csc: ["13", "5.1"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
     references:
       - http://tldp.org/HOWTO/LVM-HOWTO/
     condition: all
@@ -50,6 +52,8 @@ checks:
     compliance:
       - cis: ["1.1.6"]
       - cis_csc: ["13", "5.1"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
     references:
       - http://tldp.org/HOWTO/LVM-HOWTO/
     condition: all
@@ -64,6 +68,8 @@ checks:
     compliance:
       - cis: ["1.1.10"]
       - cis_csc: ["6.3", "6.4"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
     references:
       - http://tldp.org/HOWTO/LVM-HOWTO/
     condition: all
@@ -78,6 +84,8 @@ checks:
     compliance:
       - cis: ["1.1.11"]
       - cis_csc: ["6.3", "6.4"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
     references:
       - http://tldp.org/HOWTO/LVM-HOWTO/
     condition: all
@@ -92,6 +100,8 @@ checks:
     compliance:
       - cis: ["1.1.12"]
       - cis_csc: ["13", "5.1"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
     references:
       - http://tldp.org/HOWTO/LVM-HOWTO/
     condition: all
@@ -106,6 +116,8 @@ checks:
     compliance:
       - cis: ["1.1.21"]
       - cis_csc: ["8.3", "8.4", "8.5"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
     condition: none
     rules:
       - 'c:systemctl is-enabled autofs -> r:^enabled'
@@ -150,6 +162,7 @@ checks:
     remediation: "Edit the /etc/selinux/config file to set the SELINUXTYPE parameter: SELINUXTYPE=targeted"
     compliance:
       - cis: ["1.6.1.3"]
+      - cis_csc: ["14.4"]
       - pci_dss: ["2.2.4"]
       - nist_800_53: ["CM.1"]
     condition: all
@@ -208,6 +221,8 @@ checks:
     compliance:
       - cis: ["1.6.3"]
       - cis_csc: ["14.4", "14.6"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
     condition: any
     rules:
       - 'c:dpkg -s selinux-basics -> r:install ok installed'
