@@ -13,7 +13,7 @@ All notable changes to this project will be documented in this file.
 ### Changed
 
 - Changed description of Vulnerability Detector rules ([#638](https://github.com/wazuh/wazuh-ruleset/pull/638))
-
+- Changed squid decoders ([#672](https://github.com/wazuh/wazuh-ruleset/pull/672))
 ## [v3.12.1]
 
 ### Fixed
