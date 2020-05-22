@@ -283,9 +283,9 @@ checks:
 # 1.4 Secure Boot Settings
   - id: 3000 
     title: "Ensure permissions on bootloader config are configured"
-    description: "The grub configuration file contains information on boot settings and passwords for unlocking boot options. The grub configuration is usually located at /boot/grub2/grub.cfg and linked as /etc/grub2.cfg . Additional settings can be found in the /boot/grub2/user.cfg file."
+    description: "The grub configuration file contains information on boot settings and passwords for unlocking boot options. The grub configuration is usually grub.cfg stored in /boot/grub."
     rationale: "Setting the permissions to read and write for root only prevents non-root users from seeing the boot parameters or changing them. Non-root users who read the boot parameters may be able to identify weaknesses in security upon boot and be able to exploit them."
-    remediation: "Run the following commands to set permissions on your grub configuration: chown root:root /boot/grub2/grub.cfg, chmod og-rwx /boot/grub2/grub.cfg, chown root:root /boot/grub2/user.cfg, chmod og-rwx /boot/grub2/user.cfg"
+    remediation: "Run the following commands to set permissions on your grub configuration: chown root:root /boot/grub/grub.cfg, chmod og-rwx /boot/grub/grub.cfg"
     compliance:
       - cis: ["1.4.1"]
       - cis_csc: ["5.1"]
@@ -293,8 +293,7 @@ checks:
       - nist_800_53: ["CM.1"]
     condition: all
     rules:
-      - 'c:stat /boot/grub2/grub.cfg -> r:Access:\s*\(0600/-rw-------\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*0/\s*\t*root\)'
-      - 'c:stat /boot/grub2/user.cfg -> r:Access:\s*\(0600/-rw-------\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*0/\s*\t*root\)|cannot stat'
+      - 'c:stat /boot/grub/grub.cfg -> r:Access:\s*\(0600/-rw-------\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*0/\s*\t*root\)'
 
   - id: 2020
     title: "Ensure bootloader password is set"
@@ -375,7 +374,7 @@ checks:
       - nist_800_53: ["CM.1"]
     condition: none
     rules:
-      - 'c:dpkg -s prelink -> install ok installed'
+      - 'c:dpkg -s prelink -> r:install ok installed'
 
 # 1.7 Warning Banners
   - id: 3007 
@@ -568,21 +567,6 @@ checks:
     condition: all
     rules:
       - 'f:/etc/chrony.conf -> r:^server\.+$|^pool\.+$'
-
-  - id: 3014
-    title: "Ensure the X Window system is not installed"
-    description: "The X Window system provides a Graphical User Interface (GUI) where users can have multiple windows in which to run programs and various add on. The X Window system is typically used on desktops where users login, but not on servers where users typically do not login."
-    rationale: "Unless your organization specifically requires graphical login access via X Windows, remove it to reduce the potential attack surface."
-    remediation: "Uninstall X Windows: # apt-get remove xserver-xorg*"
-    compliance:
-      - cis: ["2.2.2"]
-      - cis_csc: ["2"]
-      - pci_dss: ["2.2.2"]
-      - nist_800_53: ["CM.1"]
-      - tsc: ["CC5.2","CC6.1","CC6.8","CC7.1","CC7.2","CC8.1"]
-    condition: none
-    rules:
-      - 'c:dpkg -l xserver-xorg-core* -> r:install ok installed'
 
   - id: 2030
     title: "Ensure Avahi Server is not enabled"
@@ -817,7 +801,7 @@ checks:
     title: "Ensure LDAP client is not installed"
     description: "The Lightweight Directory Access Protocol (LDAP) was introduced as a replacement for NIS/YP. It is a service that provides a method for looking up information from a central database."
     rationale: "If the system will not need to act as an LDAP client, it is recommended that the software be removed to reduce the potential attack surface."
-    remediation: "Run the following command to uninstall openldap-clients : # apt-geet remove ldap-utils"
+    remediation: "Run the following command to uninstall openldap-clients : # apt-get remove ldap-utils"
     compliance:
       - cis: ["2.3.5"]
       - cis_csc: ["2"]
@@ -826,7 +810,7 @@ checks:
       - gpg_13: ["4.3"]
       - gdpr_IV: ["35.7.d"]
       - hipaa: ["164.312.b"]
-    condition: all
+    condition: none
     rules:
       - 'c:dpkg -s ldap-utils -> r:install ok installed'
 
@@ -1160,20 +1144,20 @@ checks:
       - 'c:ip6tables -L -> r:^Chain FORWARD && r:policy DROP'
       - 'c:ip6tables -L -> r:^Chain OUTPUT && r:policy DROP'
 
-  - id: 5608 
+  - id: 3022 
     title: "Ensure IPv6 loopback traffic is configured"
     description: "Configure the loopback interface to accept traffic. Configure all other interfaces to deny traffic to the loopback network (::1)."
     rationale: "Loopback traffic is generated between processes on machine and is typically critical to operation of the system. The loopback interface is the only place that loopback network (::1) traffic should be seen, all other interfaces should ignore traffic on this network as an anti-spoofing measure."
-    remediation: "Run the following commands to implement the loopback rules: # iptables -A INPUT -i lo -j ACCEPT # iptables -A OUTPUT -o lo -j ACCEPT # iptables -A INPUT -s ::1 -j DROP"
+    remediation: "Run the following commands to implement the loopback rules: # ip6tables -A INPUT -i lo -j ACCEPT # ip6tables -A OUTPUT -o lo -j ACCEPT # ip6tables -A INPUT -s ::1 -j DROP"
     compliance:
       - cis: ["3.5.2.2"]
       - cis_csc: ["9.2"]
       - pci_dss: ["1.2.1"]
     condition: all
     rules:
-      - 'c:iptables -L INPUT -v -n -> r:\.*ACCEPT\.*all\.*lo\.**\.*0.0.0.0/0\.*0.0.0.0/0'
-      - 'c:iptables -L INPUT -v -n -> r:\.*DROP\.*all\.**\.**\.*127.0.0.0/8\.*0.0.0.0/0'
-      - 'c:iptables -L OUTPUT -v -n -> r:\.*ACCEPT\.*all\.**\.*lo\.*0.0.0.0/0\.*0.0.0.0/0'
+      - 'c:ip6tables -L INPUT -v -n -> r:\.*ACCEPT\.*all\.*lo\.**\.*::/0\.*::/0'
+      - 'c:ip6tables -L INPUT -v -n -> r:\.*DROP\.*all\.**\.**\.*::1\.*::/0'
+      - 'c:ip6tables -L OUTPUT -v -n -> r:\.*ACCEPT\.*all\.**\.*lo\.*::/0\.*::/0'
 
   - id: 2067
     title: "Ensure iptables is installed"

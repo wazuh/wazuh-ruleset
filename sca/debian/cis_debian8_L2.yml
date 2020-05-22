@@ -116,7 +116,7 @@ checks:
     title: "Ensure SELinux is not disabled in bootloader configuration"
     description: "Configure SELINUX to be enabled at boot time and verify that it has not been overwritten by the grub boot parameters."
     rationale: "SELinux must be enabled at boot time in your grub configuration to ensure that the controls it provides are not overridden."
-    remediation: "Edit /etc/default/grub and remove all instances of selinux=0 and enforcing=0 from all CMDLINE_LINUX parameters: GRUB_CMDLINE_LINUX_DEFAULT=\"quiet\" GRUB_CMDLINE_LINUX=\"\"  || Run the following command to update the grub2 configuration: grub2-mkconfig -o /boot/grub2/grub.cfg"
+    remediation: "Edit /etc/default/grub and remove all instances of selinux=0 and enforcing=0 from all CMDLINE_LINUX parameters: GRUB_CMDLINE_LINUX_DEFAULT=\"quiet\" GRUB_CMDLINE_LINUX=\"\"  || Run the following command to update the grub2 configuration: # update-grub"
     compliance:
       - cis: ["1.6.1.1"]
       - cis_csc: ["14.4"]
@@ -124,7 +124,7 @@ checks:
       - nist_800_53: ["CM.1"]
     condition: none
     rules:
-      - 'f:/boot/grub2/grub.cfg -> r:linux\.*selinux=0|linux\.*enforcing=0'
+      - 'f:/boot/grub/grub.cfg -> r:linux\.*selinux=0|linux\.*enforcing=0'
 
   - id: 3004 
     title: "Ensure the SELinux state is enforcing"
