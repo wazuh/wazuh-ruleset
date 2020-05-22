@@ -1,0 +1,125 @@
+<!--
+  -  Filezilla rules
+  -  Created by Wazuh, Inc.
+  -  Copyright (C) 2015-2020, Wazuh Inc.
+  -  This program is a free software; you can redistribute it and/or modify it under the terms of GPLv2.
+-->
+
+<!-- ID: 67500 - 67549 -->
+
+<group name="windows,windows_filezilla,">
+
+  <rule id="67500" level="0">
+    <decoded_as>filezilla</decoded_as>
+    <description>Grouping for the filezilla rules.</description>
+  </rule>
+
+  <!--
+    - Failed login,
+    - multiple failed login and
+    - banned temporaly for too many failed logins
+    -->
+
+  <rule id="67501" level="3">
+    <if_sid>67500</if_sid>
+    <match>530</match>
+    <description>Failed login in FTP</description>
+    <group>authentication_failed,pci_dss_10.2.4,pci_dss_10.2.5,gpg13_7.1,gdpr_IV_35.7.d,gdpr_IV_32.2,hipaa_164.312.b,nist_800_53_AU.14,nist_800_53_AC.7,tsc_CC6.1,tsc_CC6.8,tsc_CC7.2,tsc_CC7.3,</group>
+  </rule>
+
+  <rule id="67502" level="10" frequency="8" timeframe="180">
+    <if_sid>67500</if_sid>
+    <if_matched_sid>67501</if_matched_sid> 
+    <description>Multiple failed logins in a small period of time.</description>
+    <mitre>
+      <id>T1110</id>
+    </mitre>
+    <group>authentication_failures,pci_dss_10.2.4,pci_dss_10.2.5,pci_dss_11.4,gdpr_IV_35.7.d,gdpr_IV_32.2,hipaa_164.312.b,nist_800_53_AU.14,nist_800_53_AC.7,nist_800_53_SI.4,tsc_CC6.1,tsc_CC6.8,tsc_CC7.2,tsc_CC7.3,</group>
+  </rule>
+
+  <rule id="67503" level="10">
+    <if_sid>67500</if_sid>
+    <match>421 Temporarily banned for too many failed login attempts</match>
+    <description>Temporarily banned for too many failed login attempts</description>
+    <group>authentication_failed,access_denied,pci_dss_10.2.4,pci_dss_10.2.5,gdpr_IV_35.7.d,gdpr_IV_32.2,hipaa_164.312.b,nist_800_53_AU.6,tsc_CC7.2,tsc_CC7.3,</group>
+  </rule>
+
+  <!--
+    - Action not allowed,
+    - multiple actions not allowed
+    -->
+
+  <rule id="67504" level="3">
+    <if_sid>67500</if_sid>
+    <match>550 Permission denied</match>
+    <description>Permission denied</description>
+  </rule>
+
+  <rule id="67505" level="3">
+    <if_sid>67500</if_sid>
+    <match>550 Can't create directory. Permission denied</match>
+    <description>Permission denied</description>
+    <group>pci_dss_10.2.4,gpg13_7.1,gdpr_IV_35.7.d,gdpr_IV_32.2,hipaa_164.312.b,nist_800_53_AU.14,nist_800_53_AC.7,tsc_CC6.1,tsc_CC6.8,tsc_CC7.2,tsc_CC7.3,</group>
+  </rule>
+
+  <rule id="67506" level="10" frequency="10" timeframe="180">
+    <if_sid>67500</if_sid>
+    <if_matched_sid>67504</if_matched_sid> 
+    <description>Multiple action not allowed in a small period of time.</description>
+    <mitre>
+      <id>T1110</id>
+    </mitre>
+    <group>pci_dss_10.2.4,pci_dss_10.2.5,pci_dss_11.4,pci_dss_8.1.5,gdpr_IV_35.7.d,gdpr_IV_32.2,hipaa_164.312.b,hipaa_164.312.a.1,nist_800_53_AU.14,nist_800_53_AC.7,nist_800_53_SI.4,nist_800_53_AC.2,tsc_CC6.1,tsc_CC6.8,tsc_CC7.2,tsc_CC7.3,</group> 
+  </rule>
+
+  <!-- 
+    - IP not allowed to connect to the user
+    -->
+
+  <rule id="67507" level="3">
+    <if_sid>67500</if_sid>
+    <match>521</match>
+    <description>This user is not allowed to connect from this IP</description>
+    <group>access_denied,pci_dss_10.2.4,pci_dss_10.2.5,gdpr_IV_35.7.d,gdpr_IV_32.2,hipaa_164.312.b,nist_800_53_AU.6,tsc_CC7.2,tsc_CC7.3,</group>
+  </rule>
+
+  <!-- 
+    - Directory created,
+    - file transferred
+    -->
+
+  <rule id="67508" level="0">
+    <if_sid>67500</if_sid>
+    <match>MKD</match>
+    <description>Directory created via FTP</description>
+  </rule>
+
+  <rule id="67509" level="0">
+    <if_sid>67500</if_sid>
+    <match>226 Successfully transferred</match>
+    <description>File transferred via FTP</description>
+  </rule>
+
+  <!--
+    -  Logged on,
+    - timed out
+  -->
+
+  <rule id="67512" level="0">
+    <if_sid>67500</if_sid>
+    <match>230 Logged on</match>
+    <description>Logged on via FTP</description>
+    <mitre>
+       <id>T1078</id>
+    </mitre>
+    <group>authentication_success,pci_dss_10.2.5,gpg13_7.1,gpg13_7.2,gdpr_IV_32.2,hipaa_164.312.b,nist_800_53_AU.14,nist_800_53_AC.7,tsc_CC6.8,tsc_CC7.2,tsc_CC7.3,</group>
+  </rule>
+
+  <rule id="67513" level="0">
+    <if_sid>67500</if_sid>
+    <match>421 Connection timed out</match>
+    <description>User disconnected due to time out.</description>
+    <group>pci_dss_8.1.5,gdpr_IV_35.7.d,hipaa_164.312.a.1,nist_800_53_AC.2,tsc_CC6.1,</group>
+  </rule>
+
+</group>
