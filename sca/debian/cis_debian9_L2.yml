@@ -28,7 +28,7 @@ requirements:
 
 checks:
 
-  - id: 3500
+  - id: 3600
     title: "Ensure separate partition exists for /var"
     description: "The /var directory is used by daemons and other system services to temporarily store dynamic data. Some directories created by these processes may be world-writable."
     rationale: "Since the /var directory may contain world-writable files and directories, there is a risk of resource exhaustion if it is not bound to a separate partition."
@@ -36,13 +36,16 @@ checks:
     compliance:
       - cis: ["1.1.6"]
       - cis_csc: ["5.1"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
     references:
       - http://tldp.org/HOWTO/LVM-HOWTO/
     condition: all
     rules:
       - 'c:mount -> r:\s/var\s'
 
-  - id: 3501
+  - id: 3601
     title: "Ensure separate partition exists for /var/tmp"
     description: "The /var/tmp directory is a world-writable directory used for temporary storage by all users and some applications."
     rationale: "Since the /var/tmp directory is intended to be world-writable, there is a risk of resource exhaustion if it is not bound to a separate partition. In addition, making /var/tmp its own file system allows an administrator to set the noexec option on the mount, making /var/tmp useless for an attacker to install executable code. It would also prevent an attacker from establishing a hardlink to a system setuid program and wait for it to be updated."
@@ -50,11 +53,16 @@ checks:
     compliance:
       - cis: ["1.1.7"]
       - cis_csc: ["5.1"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
+    references:
+      - http://tldp.org/HOWTO/LVM-HOWTO/
     condition: all
     rules:
       - 'c:mount -> r:\s/var/tmp\s'
 
-  - id: 3502
+  - id: 3602
     title: "Ensure separate partition exists for /var/log"
     description: "The /var/log directory is used by system services to store log data."
     rationale: "There are two important reasons to ensure that system logs are stored on a separate partition: protection against resource exhaustion (since logs can grow quite large) and protection of audit data."
@@ -62,13 +70,16 @@ checks:
     compliance:
       - cis: ["1.1.11"]
       - cis_csc: ["6.4"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
     references:
       - http://tldp.org/HOWTO/LVM-HOWTO/
     condition: all
     rules:
       - 'c:mount -> r:\s/var/log\s'
 
-  - id: 3503
+  - id: 3603
     title: "Ensure separate partition exists for /var/log/audit"
     description: "The auditing daemon, auditd, stores log data in the /var/log/audit directory."
     rationale: "There are two important reasons to ensure that data gathered by auditd is stored on a separate partition: protection against resource exhaustion (since the audit.log file can grow quite large) and protection of audit data. The audit daemon calculates how much free space is left and performs actions based on the results. If other processes (such as syslog) consume space in the same partition as auditd, it may not perform as desired."
@@ -76,13 +87,16 @@ checks:
     compliance:
       - cis: ["1.1.12"]
       - cis_csc: ["6.4"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
     references:
       - http://tldp.org/HOWTO/LVM-HOWTO/
     condition: all
     rules:
       - 'c:mount -> r:\s/var/log/audit\s'
 
-  - id: 3504
+  - id: 3604
     title: "Ensure separate partition exists for /home"
     description: "The /home directory is used to support disk storage needs of local users."
     rationale: "If the system is intended to support local users, create a separate partition for the /home directory to protect against resource exhaustion and restrict the type of files that can be stored under /home."
@@ -90,26 +104,128 @@ checks:
     compliance:
       - cis: ["1.1.13"]
       - cis_csc: ["5.1"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
     references:
       - http://tldp.org/HOWTO/LVM-HOWTO/
     condition: all
     rules:
       - 'c:mount -> r:\s/home\s'
 
-  - id: 3505
+  - id: 3605
     title: "Disable Automounting"
     description: "autofs allows automatic mounting of devices, typically including CD/DVDs and USB drives."
     rationale: "With automounting enabled anyone with physical access could attach a USB drive or disc and have it's contents available in system even if they lacked permissions to mount it themselves."
     remediation: "Run the following command to disable autofs: # systemctl disable autofs"
     compliance:
       - cis: ["1.1.22"]
-      - cis_csc: ["8.3", "8.5"]
+      - cis_csc: ["8.4", "8.5"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
     condition: none
     rules:
       - 'c:systemctl is-enabled autofs -> r:^enabled'
 
-# 4 Additional Process Hardening
-  - id: 3506
+# 1.6 Configure SELinux
+
+  - id: 3606 
+    title: "Ensure SELinux is not disabled in bootloader configuration"
+    description: "Configure SELINUX to be enabled at boot time and verify that it has not been overwritten by the grub boot parameters."
+    rationale: "SELinux must be enabled at boot time in your grub configuration to ensure that the controls it provides are not overridden."
+    remediation: "Edit /etc/default/grub and remove all instances of selinux=0 and enforcing=0 from all CMDLINE_LINUX parameters: GRUB_CMDLINE_LINUX_DEFAULT=\"quiet\" GRUB_CMDLINE_LINUX=\"\"  || Run the following command to update the grub2 configuration: # update-grub"
+    compliance:
+      - cis: ["1.6.1.1"]
+      - cis_csc: ["14.6"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
+    condition: none
+    rules:
+      - 'f:/boot/grub/grub.cfg -> r:linux\.*selinux=0|linux\.*enforcing=0'
+
+  - id: 3607 
+    title: "Ensure the SELinux state is enforcing"
+    description: "Set SELinux to enable when the system is booted."
+    rationale: "SELinux must be enabled at boot time in to ensure that the controls it provides are in effect at all times."
+    remediation: "Edit the /etc/selinux/config file to set the SELINUX parameter: SELINUX=enforcing"
+    compliance:
+      - cis: ["1.6.1.2"]
+      - cis_csc: ["14.6"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
+    condition: all
+    rules:
+      - 'c:sestatus -> r:^SELinux status:\s+enabled$'
+      - 'c:sestatus -> r:^Current mode:\s+enforcing$'
+      - 'c:sestatus -> r:^Mode from config file:\s+enforcing$'
+      - 'f:/etc/selinux/config -> r:^\s*SELINUX\s*=\s*enforcing'
+
+  - id: 3608 
+    title: "Ensure SELinux policy is configured"
+    description: "Configure SELinux to meet or exceed the default targeted policy, which constrains daemons and system software only."
+    rationale: "Security configuration requirements vary from site to site. Some sites may mandate a policy that is stricter than the default policy, which is perfectly acceptable. This item is intended to ensure that at least the default recommendations are met."
+    remediation: "Edit the /etc/selinux/config file to set the SELINUXTYPE parameter: SELINUXTYPE=targeted"
+    compliance:
+      - cis: ["1.6.1.3"]
+      - cis_csc: ["14.6"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
+    condition: all
+    rules:
+      - 'c:sestatus -> r:^Loaded policy name:\s+targeted$'
+      - 'f:/etc/selinux/config -> r:^\s*SELINUXTYPE\s*=\s*targeted|^\s*SELINUXTYPE\s*=\s*mls'
+
+  - id: 3609 
+    title: "Ensure no unconfined daemons exist"
+    description: "Daemons that are not defined in SELinux policy will inherit the security context of their parent process."
+    rationale: "Since daemons are launched and descend from the init process, they will inherit the security context label initrc_t . This could cause the unintended consequence of giving the process more permission than it requires."
+    remediation: "Investigate any unconfined daemons found during the audit action. They may need to have an existing security context assigned to them or a policy built for them."
+    compliance:
+      - cis: ["1.6.1.4"]
+      - cis_csc: ["14.6"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
+    condition: none
+    rules:
+      - 'c:ps -eZ -> r:initrc && !r:tr|ps|egrep|bash|awk'
+
+  - id: 3610
+    title: "Ensure AppArmor is enabled in the bootloader configuration"
+    description: "Configure AppArmor to be enabled at boot time and verify that it has not been overwrittenby the bootloader boot parameters."
+    rationale: "AppArmor must be enabled at boot time in your grub configuration to ensure that the controls it provides are not overridden."
+    remediation: "Edit /etc/default/grub and add the appermor=1 and security=apparmor parameters to the GRUB_CMDLINE_LINUX= line   GRUB_CMDLINE_LINUX=\"apparmor=1 security=apparmor\"      update the grub configuration # update-grub    Notes: This recommendation is designed around the grub bootloader, if LILO or another bootloader is in use in your environment enact equivalent settings."
+    compliance:
+      - cis: ["1.6.2.1"]
+      - cis_csc: ["14.6"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
+    condition: none
+    rules:
+      - 'f:/boot/grub/grub.cfg -> r:linux && !r:apparmor=1'
+      - 'f:/boot/grub/grub.cfg -> r:linux && !r:security=apparmor'
+
+  - id: 3611
+    title: "Ensure all AppArmor Profiles are enforcing"
+    description: "AppArmor profiles define what resources applicatons are able to access."
+    rationale: "Security configuration requirements vary from site to site. Some sites may mandate a policy that is stricter than the default policy, which is perfectly acceptable. This item is intended to ensure that any policies that exist on the system are activated.."
+    remediation: "Run the following command to set all profiles to enforce mode: # aa-enforce /etc/apparmor.d/* Any unconfined processes may need to have a profile created or activated for them and then be restarted."
+    compliance:
+      - cis: ["1.6.2.2"]
+      - cis_csc: ["14.6"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
+    condition: all
+    rules:
+      - 'c:apparmor status -> r:0 profiles are in complain mode && r:0 processes are unconfined && n:(\d+) profiles are loaded compare > 0'
+
+  - id: 3612
     title: "Ensure SELinux or AppArmor are installed"
     description: "SELinux and AppArmor provide Mandatory Access Controls."
     rationale: "Without a Mandatory Access Control system installed only the default Discretionary Access Control system will be available."
@@ -117,6 +233,9 @@ checks:
     compliance:
       - cis: ["1.6.3"]
       - cis_csc: ["14.6"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
     condition: any
     rules:
       - 'c:dpkg -s selinux-basics -> r:install ok installed'
@@ -124,7 +243,7 @@ checks:
 
 # 2 Services
 
-  - id: 3507
+  - id: 3613
     title: "Ensure CUPS is not enabled"
     description: "The Common Unix Print System (CUPS) provides the ability to print to both local and network printers. A system running CUPS can also accept print jobs from remote systems and print them to local printers. It also provides a web based remote administration capability."
     rationale: "If the system does not need to print jobs or accept print jobs from other systems, it is recommended that CUPS be disabled to reduce the potential attack surface."
@@ -132,8 +251,11 @@ checks:
     compliance:
       - cis: ["2.2.4"]
       - cis_csc: ["9.2"]
+      - pci_dss: ["2.2.2"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
     references:
-      - 'http://www.cups.org'
+      - 'https://www.cups.org'
     condition: none
     rules:
       - 'c:systemctl is-enabled cups -> r:^enabled'
