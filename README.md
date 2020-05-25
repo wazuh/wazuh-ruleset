@@ -31,6 +31,7 @@ The ruleset includes compliance mapping with PCI DSS v3.1 and CIS.
 ## Full documentation
 
 Full documentation at [documentation.wazuh.com](https://documentation.wazuh.com/current/user-manual/ruleset/index.html)
+Custom rules at [custom rules and decoders Wazuh documentation](https://documentation.wazuh.com/3.12/user-manual/ruleset/custom.html)
 
 ## Branches
 
