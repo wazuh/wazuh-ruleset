@@ -38,6 +38,7 @@ checks:
       - cis_csc: ["13", "5.1"]
       - pci_dss: ["2.2.4"]
       - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
     references:
       - http://tldp.org/HOWTO/LVM-HOWTO/
     condition: all
@@ -54,6 +55,7 @@ checks:
       - cis_csc: ["13", "5.1"]
       - pci_dss: ["2.2.4"]
       - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
     references:
       - http://tldp.org/HOWTO/LVM-HOWTO/
     condition: all
@@ -70,6 +72,7 @@ checks:
       - cis_csc: ["6.3", "6.4"]
       - pci_dss: ["2.2.4"]
       - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
     references:
       - http://tldp.org/HOWTO/LVM-HOWTO/
     condition: all
@@ -86,6 +89,7 @@ checks:
       - cis_csc: ["6.3", "6.4"]
       - pci_dss: ["2.2.4"]
       - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
     references:
       - http://tldp.org/HOWTO/LVM-HOWTO/
     condition: all
@@ -102,6 +106,7 @@ checks:
       - cis_csc: ["13", "5.1"]
       - pci_dss: ["2.2.4"]
       - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
     references:
       - http://tldp.org/HOWTO/LVM-HOWTO/
     condition: all
@@ -118,6 +123,7 @@ checks:
       - cis_csc: ["8.3", "8.4", "8.5"]
       - pci_dss: ["2.2.4"]
       - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
     condition: none
     rules:
       - 'c:systemctl is-enabled autofs -> r:^enabled'
@@ -134,6 +140,7 @@ checks:
       - cis_csc: ["14.4"]
       - pci_dss: ["2.2.4"]
       - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
     condition: none
     rules:
       - 'f:/boot/grub/grub.cfg -> r:linux\.*selinux=0|linux\.*enforcing=0'
@@ -148,6 +155,7 @@ checks:
       - cis_csc: ["14.4"]
       - pci_dss: ["2.2.4"]
       - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
     condition: all
     rules:
       - 'c:sestatus -> r:^SELinux status:\s+enabled$'
@@ -165,6 +173,7 @@ checks:
       - cis_csc: ["14.4"]
       - pci_dss: ["2.2.4"]
       - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
     condition: all
     rules:
       - 'c:sestatus -> r:^Loaded policy name:\s+targeted$'
@@ -180,6 +189,7 @@ checks:
       - cis_csc: ["14.4"]
       - pci_dss: ["2.2.4"]
       - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
     condition: none
     rules:
       - 'c:ps -eZ -> r:initrc && !r:tr|ps|egrep|bash|awk'
@@ -194,6 +204,7 @@ checks:
       - cis_csc: ["14.4"]
       - pci_dss: ["2.2.4"]
       - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
     condition: none
     rules:
       - 'f:/boot/grub/grub.cfg -> r:linux && !r:apparmor=1'
@@ -209,6 +220,7 @@ checks:
       - cis_csc: ["14.4"]
       - pci_dss: ["2.2.4"]
       - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
     condition: all
     rules:
       - 'c:apparmor status -> r:0 profiles are in complain mode && r:0 processes are unconfined && n:(\d+) profiles are loaded compare > 0'
@@ -223,6 +235,7 @@ checks:
       - cis_csc: ["14.4", "14.6"]
       - pci_dss: ["2.2.4"]
       - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
     condition: any
     rules:
       - 'c:dpkg -s selinux-basics -> r:install ok installed'
@@ -238,6 +251,9 @@ checks:
     compliance:
       - cis: ["2.2.4"]
       - cis_csc: ["9.1", "9.2"]
+      - pci_dss: ["2.2.2"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
     references:
       - 'https://www.cups.org'
     condition: none
