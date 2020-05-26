@@ -264,7 +264,10 @@ checks:
     remediation: "Run the following command to disable autofs: # systemctl disable autofs"
     compliance:
       - cis: ["1.1.22"]
-      - cis_csc: ["8.4", "8.5"]
+      - cis_csc: ["8.4","8.5"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
     condition: none
     rules:
       - 'c:systemctl is-enabled autofs -> r:^enabled'
@@ -279,6 +282,9 @@ checks:
     compliance:
       - cis: ["1.3.1"]
       - cis_csc: ["4.3"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
     condition: any
     rules:
       - 'c:dpkg -s sudo -> r:install ok installed'
@@ -291,6 +297,9 @@ checks:
     compliance:
       - cis: ["1.3.2"]
       - cis_csc: ["4.3"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
     condition: any
     rules:
       - 'f:/etc/sudoers -> r:^\s*\t*Defaults\s*\t*use_pty'
@@ -304,6 +313,9 @@ checks:
     compliance:
       - cis: ["1.3.3"]
       - cis_csc: ["6.3"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
     condition: any
     rules:
       - 'f:/etc/sudoers -> r:^\s*\t*Defaults\s*\t*logfile=/\w+'
