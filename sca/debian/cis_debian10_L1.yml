@@ -1216,6 +1216,18 @@ checks:
     rules:
       - 'c:find /var/log -type f -ls -> r:-\w\w\w\ww\w\w\w\w|-\w\w\w\w\wx\w\w\w|-\w\w\w\w\w\w\ww\w|-\w\w\w\w\w\wr\w\w|-\w\w\w\w\w\w\w\wx'
 
+  - id: 4012 
+    title: "Ensure logrotate assigns appropriate permissions"
+    description: "Log files stored in /var/log/ contain logged information from many services on the system, or on log hosts others as well."
+    rationale: "It is important to ensure that log files have the correct permissions to ensure that sensitive data is archived and protected."
+    remediation: "Edit /etc/logrotate.conf and update the create line to read 0640 or more restrictive, following local site policy   Example: create 0640 root utmp"
+    compliance:
+      - cis: ["4.4"]
+      - cis_csc: ["14.6"]
+    condition: all
+    rules:
+      - 'f:/etc/logrotate.conf -> r:^\s*\t*create\s*\t*0640|^\s*\t*create\s*\t*0600'
+
 
 ############################################################
 # 5 Access, Authentication and Authorization
