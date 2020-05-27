@@ -318,8 +318,8 @@ checks:
       - tsc: ["CC5.2"]
     condition: any
     rules:
-      - 'f:/etc/sudoers -> r:^\s*\t*Defaults\s*\t*logfile=/\w+'
-      - 'd:/etc/sudoers.d -> r:\.* -> r:^\s*\t*Defaults\s*\t*logfile=/\w+'
+      - 'f:/etc/sudoers -> r:^\s*\t*Defaults\s*\t*logfile='
+      - 'd:/etc/sudoers.d -> r:\.* -> r:^\s*\t*Defaults\s*\t*logfile='
 
 # 1.4 Filesystem Integrity Checking
   - id: 3018
@@ -509,7 +509,7 @@ checks:
       - tsc: ["CC5.2"]
     condition: all
     rules:
-      - 'c:apparmor status -> r:0 processes are unconfined'
+      - 'c:apparmor_status -> r:0 processes are unconfined'
 
 # 1.8 Warning Banners
   - id: 3107 
@@ -948,7 +948,7 @@ checks:
       - tsc: ["CC5.2","CC6.4","CC6.6","CC6.7"]
     condition: none
     rules:
-      - 'c:netstat -an -> r:\.*:25\.*LISTEN && !r:127.0.0.1:25\.+LISTEN|::1:25\.*LISTEN'
+      - 'c:ss -lntu -> r:\.*:25\.*LISTEN && !r:127.0.0.1:25\.+LISTEN|::1:25\.*LISTEN'
 
   - id: 3142
     title: "Ensure rsync service is not enabled"
@@ -1152,7 +1152,7 @@ checks:
     title: "Ensure remote rsyslog messages are only accepted on designated log hosts"
     description: "By default, rsyslog does not listen for log messages coming in from remote systems. The ModLoad tells rsyslog to load the imtcp.so module so it can listen over a network via TCP. The InputTCPServerRun option instructs rsyslogd to listen on the specified TCP port."
     rationale: "The guidance in the section ensures that remote log hosts are configured to only accept rsyslog data from hosts within the specified domain and that those systems that are not designed to be log hosts do not accept any remote rsyslog messages. This provides protection from spoofed log data and ensures that system administrators are reviewing reasonably complete syslog data in a central location."
-    remediation: "For hosts that are designated as log hosts, edit the /etc/rsyslog.conf file and un-comment or add the following lines:$ModLoad imtcp & $InputTCPServerRun 514. For hosts that are not designated as log hosts, edit the /etc/rsyslog.conf file and comment or remove the following lines: # $ModLoad imtcp # $InputTCPServerRun 514. Run the following command to reload the rsyslogd configuration: # pkill -HUP rsyslogd"
+    remediation: "For hosts that are designated as log hosts, edit the /etc/rsyslog.conf file and un-comment or add the following lines: $ModLoad imtcp        $InputTCPServerRun 514. For hosts that are not designated as log hosts, edit the /etc/rsyslog.conf file and comment or remove the following lines: # $ModLoad imtcp # $InputTCPServerRun 514. Run the following command to reload the rsyslogd configuration: # pkill -HUP rsyslogd"
     compliance:
       - cis: ["4.2.1.6"]
       - cis_csc: ["9.2"]
