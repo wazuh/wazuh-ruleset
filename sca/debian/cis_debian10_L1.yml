@@ -282,88 +282,8 @@ checks:
       - 'c:grep -Rh net\.ipv6\.conf\.all\.accept_ra /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv6.conf.all.accept_ra\s*=\s*0$'
       - 'c:grep -Rh net\.ipv6\.conf\.default\.accept_ra /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv6.conf.default.accept_ra\s*=\s*0$'
 
-#####################################################################
-# 3.4 Uncommon Network Protocols
-#####################################################################
-# 3.4.1 Ensure DCCP is disabled (Scored)
-  - id: 3161
-    title: "Ensure DCCP is disabled"
-    description: "The Datagram Congestion Control Protocol (DCCP) is a transport layer protocol that supports streaming media and telephony. DCCP provides a way to gain access to congestion control, without having to do it at the application layer, but does not provide in- sequence delivery."
-    rationale: "If the protocol is not required, it is recommended that the drivers not be installed to reduce the potential attack surface."
-    remediation: "Edit or create a file in the /etc/modprobe.d/ directory ending in .conf Example: vim /etc/modprobe.d/dccp.conf and add the following line: install dccp /bin/true"
-    compliance:
-      - cis: ["3.4.1"]
-      - cis_csc: ["9.2"]
-      - pci_dss: ["2.2.3"]
-      - nist_800_53: ["CM.1"]
-      - gpg_13: ["4.3"]
-      - gdpr_IV: ["35.7.d"]
-      - hipaa: ["164.312.b"]
-      - tsc: ["CC5.2"]
-    condition: none
-    rules:
-      - 'not c:modprobe -n -v dccp -> r:install /bin/true'
-      - 'c:lsmod -> r:dccp'
 
-# 3.4.2 Ensure SCTP is disabled (Scored)
-  - id: 3162
-    title: "Ensure SCTP is disabled"
-    description: "The Stream Control Transmission Protocol (SCTP) is a transport layer protocol used to support message oriented communication, with several streams of messages in one connection. It serves a similar function as TCP and UDP, incorporating features of both. It is message-oriented like UDP, and ensures reliable in-sequence transport of messages with congestion control like TCP."
-    rationale: "If the protocol is not being used, it is recommended that kernel module not be loaded, disabling the service to reduce the potential attack surface."
-    remediation: "Edit or create a file in the /etc/modprobe.d/ directory ending in .conf Example: vim /etc/modprobe.d/sctp.conf and add the following line: install sctp /bin/true"
-    compliance:
-      - cis: ["3.4.2"]
-      - cis_csc: ["9.2"]
-      - pci_dss: ["2.2.3"]
-      - nist_800_53: ["CM.1"]
-      - gpg_13: ["4.3"]
-      - gdpr_IV: ["35.7.d"]
-      - hipaa: ["164.312.b"]
-      - tsc: ["CC5.2"]
-    condition: none
-    rules:
-      - 'not c:modprobe -n -v sctp -> r:install /bin/true'
-      - 'c:lsmod -> r:sctp'
 
-# 3.4.3 Ensure RDS is disabled (Scored)
-  - id: 3163
-    title: "Ensure RDS is disabled"
-    description: "The Reliable Datagram Sockets (RDS) protocol is a transport layer protocol designed to provide low-latency, high-bandwidth communications between cluster nodes. It was developed by the Oracle Corporation."
-    rationale: "If the protocol is not being used, it is recommended that kernel module not be loaded, disabling the service to reduce the potential attack surface."
-    remediation: "Edit or create a file in the /etc/modprobe.d/ directory ending in .conf Example: vim /etc/modprobe.d/rds.conf and add the following line: install rds /bin/true"
-    compliance:
-      - cis: ["3.4.3"]
-      - cis_csc: ["9.2"]
-      - pci_dss: ["2.2.3"]
-      - nist_800_53: ["CM.1"]
-      - gpg_13: ["4.3"]
-      - gdpr_IV: ["35.7.d"]
-      - hipaa: ["164.312.b"]
-      - tsc: ["CC5.2"]
-    condition: none
-    rules:
-      - 'not c:modprobe -n -v rds -> r:install /bin/true'
-      - 'c:lsmod -> r:rds'
-
-# 3.4.4 Ensure TIPC is disabled (Scored)
-  - id: 3164
-    title: "Ensure TIPC is disabled"
-    description: "The Transparent Inter-Process Communication (TIPC) protocol is designed to provide communication between cluster nodes."
-    rationale: "If the protocol is not being used, it is recommended that kernel module not be loaded, disabling the service to reduce the potential attack surface."
-    remediation: "Edit or create a file in the /etc/modprobe.d/ directory ending in .conf Example: vim /etc/modprobe.d/tipc.conf and add the following line: install tipc /bin/true"
-    compliance:
-      - cis: ["3.4.4"]
-      - cis_csc: ["9.2"]
-      - pci_dss: ["2.2.3"]
-      - nist_800_53: ["CM.1"]
-      - gpg_13: ["4.3"]
-      - gdpr_IV: ["35.7.d"]
-      - hipaa: ["164.312.b"]
-      - tsc: ["CC5.2"]
-    condition: none
-    rules:
-      - 'not c:modprobe -n -v tipc -> r:install /bin/true'
-      - 'c:lsmod -> r:tipc'
 
 #################################################################
 # 3.5 Firewall configuration
@@ -391,7 +311,7 @@ checks:
 # 3.5.2 Configure UncomplicatedFirewall
 #################################################################
 # 3.5.2.1 Ensure ufw service is enabled (Scored)
- - id: 3402
+  - id: 3402
     title: "Ensure ufw service is enabled"
     description: "UncomplicatedFirewall (ufw) is a frontend for iptables. ufw provides a framework for managing netfilter, as well as a command-line and available graphical user interface for manipulating the firewall. Ensure that the ufw service is enabled to protect your system."
     rationale: "The ufw service must be enabled and running in order for ufw to protect the system"
@@ -403,8 +323,8 @@ checks:
       - tsc: ["CC8.1"]
     condition: all
     rules:
-      - 'c:systemctl is-enabled ufw -> r:^enabled'
-      - 'c:ufw status -> r:Status: active'
+      - 'c:systemctl is-enabled ufw -> enabled'
+      - 'c:ufw status -> Status: active'
 
 # 3.5.2.2 Ensure default deny firewall policy (Scored)
   - id: 3403
@@ -419,45 +339,13 @@ checks:
       - tsc: ["CC8.1"]
     condition: all
     rules:
-      - 'c:ufw status verbose -> r:^incoming && r:deny|reject'
-      - 'c:ufw status verbose -> r:^outgoing && r:deny|reject'
-      - 'c:ufw status verbose -> r:^routed && r:deny|reject'
-
-# 3.5.2.3 Ensure loopback traffic is configured (Scored)
-  - id: 3404 
-    title: "Ensure loopback traffic is configured"
-    description: "Configure the loopback interface to accept traffic. Configure all other interfaces to deny traffic to the loopback network (127.0.0.0/8)."
-    rationale: "Loopback traffic is generated between processes on machine and is typically critical to operation of the system. The loopback interface is the only place that loopback network (127.0.0.0/8) traffic should be seen, all other interfaces should ignore traffic on this network as an anti-spoofing measure."
-    remediation: "Run the following commands to implement the loopback rules: # iptables -A INPUT -i lo -j ACCEPT # iptables -A OUTPUT -o lo -j ACCEPT # iptables -A INPUT -s 127.0.0.0/8 -j DROP"
-    compliance:
-      - cis: ["3.5.2.3"]
-      - cis_csc: ["9.4"]
-      - pci_dss: ["1.2.1"]
-      - tsc: ["CC8.1"]
-    condition: all
-    rules:
-      - 'c:iptables -L INPUT -v -n -> r:\.*ACCEPT\.*all\.*lo\.**\.*0.0.0.0/0\.*0.0.0.0/0'
-      - 'c:iptables -L INPUT -v -n -> r:\.*DROP\.*all\.**\.**\.*127.0.0.0/8\.*0.0.0.0/0'
-      - 'c:iptables -L OUTPUT -v -n -> r:\.*ACCEPT\.*all\.**\.*lo\.*0.0.0.0/0\.*0.0.0.0/0'
+      - 'c:ufw status verbose -> r:^Default && r:deny\W+(incoming)|reject\W+(incoming)'
+      - 'c:ufw status verbose -> r:^Default && r:deny\W+(outgoing)|reject\W+(outgoing)'
+      - 'c:ufw status verbose -> r:^Default && r:deny\W+(routed)|reject\W+(routed)'
 
 ######################################################################
 # 3.5.3 Configure nftables
 ######################################################################
-# 3.4.3.1 Ensure iptables are flushed (Not Scored)
-  - id: 3405 
-    title: "Ensure iptables are flushed"
-    description: "nftables is a replacement for iptables, ip6tables, ebtables and arptables"
-    rationale: "It is possible to mix iptables and nftables. However, this increases complexity and also the chance to introduce errors. For simplicity flush out all iptables rules, and ensure it is not loaded."
-    remediation: "Run the following commands to flush iptables: For iptables: # iptables -F and For ip6tables: # ip6tables -F"
-    compliance:
-      - cis: ["3.5.3.1"]
-      - cis_csc: ["9.4"]
-      - pci_dss: ["1.2"]
-      - tsc: ["CC6.6"]
-    condition: all
-    rules:
-      - 'c:iptables -L -> !r:^\s*Chain | !r:^\s*target'
-      - 'c:ip6tables -L -> !r:^\s*Chain | !r:^\s*target'
 
 # 3.5.3.2 Ensure a table exists (Scored)
   - id: 3406 
@@ -538,7 +426,7 @@ checks:
       - tsc: ["CC6.6"]
     condition: all
     rules:
-      - 'c:systemctl is-enabled nftables -> r:^enabled'
+      - 'c:systemctl is-enabled nftables -> enabled'
 
 #######################################################################
 # 3.5.4 Configure iptables
@@ -601,7 +489,7 @@ checks:
       - 'c:ip6tables -L -> r:^Chain OUTPUT && r:policy DROP'
 
 # 3.5.4.2.2 Ensure IPv6 loopback traffic is configured (Scored)
-  - id: 3222 
+  - id: 3466
     title: "Ensure IPv6 loopback traffic is configured"
     description: "Configure the loopback interface to accept traffic. Configure all other interfaces to deny traffic to the loopback network (::1)."
     rationale: "Loopback traffic is generated between processes on machine and is typically critical to operation of the system. The loopback interface is the only place that loopback network (::1) traffic should be seen, all other interfaces should ignore traffic on this network as an anti-spoofing measure."
@@ -840,7 +728,7 @@ checks:
       - tsc: ["CC6.7"]
     condition: none
     rules:
-      - 'c:sshd -T -> !r:^# && r:Protocol\s*\t*1'
+      - 'c:sshd -T -> r:Protocol\s*\t*1'
 
 # 5.2.5 Ensure SSH LogLevel is appropriate (Scored)
   - id: 3416
@@ -859,7 +747,7 @@ checks:
       - tsc: ["CC6.7"]
     condition: all
     rules:
-      - 'c:sshd -T -> !r:^# && r:LogLevel\s+INFO|LogLevel\s+VERBOSE'
+      - 'c:sshd -T -> r:LogLevel\s+INFO|LogLevel\s+VERBOSE'
 
 # 5.2.6 Ensure SSH X11 forwarding is disabled (Scored)
   - id: 3417
@@ -878,7 +766,7 @@ checks:
       - hipaa: ["164.312.b"]
     condition: all
     rules:
-      - 'c:sshd -T -> !r:^# && r:X11Forwarding\s+no'
+      - 'c:sshd -T -> r:X11Forwarding\s+no'
 
 # 5.2.7 Ensure SSH MaxAuthTries is set to 4 or less (Scored)
   - id: 3077
@@ -1116,24 +1004,6 @@ checks:
     rules:
       - 'c:sshd -T -> r:^\s*usepam\s+yes'
 
-# 5.2.21 Ensure SSH AllowTcpForwarding is disabled (Scored)
-  - id: 3419 
-    title: "Ensure SSH AllowTcpForwarding is disabled"
-    description: "SSH port forwarding is a mechanism in SSH for tunneling application ports from the client to the server, or servers to clients. It can be used for adding encryption to legacy applications, going through firewalls, and some system administrators and IT professionals use it for opening backdoors into the internal network from their home machines."
-    rationale: "Leaving port forwarding enabled can expose the organization to security risks and back-doors. SSH connections are protected with strong encryption. This makes their contents invisible to most deployed network monitoring and traffic filtering solutions. This invisibility carries considerable risk potential if it is used for malicious purposes such as data exfiltration. Cybercriminals or malware could exploit SSH to hide their unauthorized communications, or to exfiltrate stolen data from the target network."
-    remediation: "Edit the /etc/ssh/sshd_config file to set the parameter as follows: AllowTcpForwarding no"
-    compliance:
-      - cis: ["5.2.21"]
-      - cis_csc: ["9.2"]
-      - pci_dss: ["4.1"]
-      - hipaa: ["164.312.a.2.IV", "164.312.e.1", "164.312.e.2.I", "164.312.e.2.II"]
-      - nist_800_53: ["SC.8"]
-      - tsc: ["CC6.1","CC6.7","CC7.2"]
-    references:
-      - https://www.ssh.com/ssh/tunneling/example
-    condition: all
-    rules:
-      - 'c:sshd -T -> r:^\s*AllowTcpForwarding\s+no'
 
 # 5.2.23 Ensure SSH MaxSessions is limited (Scored)
   - id: 3420 
@@ -1149,7 +1019,7 @@ checks:
       - tsc: ["CC5.2"]
     condition: all
     rules:
-      - 'c:sshd -T -> n:^\s*MaxSessions\s+(\d+) compare <= 10'
+      - 'c:sshd -T -> n:^MaxSessions\s+(\d+) compare <= 10'
 
 ######################################################
 # 5.3 Configure PAM
@@ -1311,18 +1181,18 @@ checks:
 
 
 # 5.4.5 Ensure default user shell timeout is 900 seconds or less (Scored)
-  - id: 5668 
+  - id: 3467 
     title: "Ensure default user shell timeout is 900 seconds or less"
     description: "The default TMOUT determines the shell timeout for users. The TMOUT value is measured in seconds."
     rationale: "Having no timeout value associated with a shell could allow an unauthorized user access to another user's shell session (e.g. user walks away from their computer and doesn't lock the screen). Setting a timeout value at least reduces the risk of this happening."
-    remediation: "Edit the /etc/bashrc , /etc/profile and /etc/profile.d/*.sh files (and the appropriate files for any other shell supported on your system) and add or edit any umask parameters as follows: readonly TMOUT=900 ; export TMOUT . Note that setting the value to readonly prevents unwanted modification during runtime."
+    remediation: "Edit the /etc/bash.bashrc , /etc/profile and /etc/profile.d/*.sh files (and the appropriate files for any other shell supported on your system) and add or edit any umask parameters as follows: readonly TMOUT=900 ; export TMOUT . Note that setting the value to readonly prevents unwanted modification during runtime."
     compliance:
       - cis: ["5.4.5"]
       - cis_csc: ["16.11"]
       - pci_dss: ["12.3.8"]
     condition: all
     rules:
-      - 'f:/etc/bashrc -> !r:^# && n:TMOUT\s*=\s*(\d+) compare <= 900'
+      - 'f:/etc/bash.bashrc -> !r:^# && n:TMOUT\s*=\s*(\d+) compare <= 900'
       - 'f:/etc/profile -> !r:^# && n:TMOUT\s*=\s*(\d+) compare <= 900'
       - 'd:/etc/profile.d -> .sh -> !r:^# && n:TMOUT\s*=\s*(\d+) compare <= 900'
 

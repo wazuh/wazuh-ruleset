@@ -62,9 +62,9 @@ checks:
       - gdpr_IV: ["35.7.d"]
       - hipaa: ["164.312.b"]
       - tsc: ["CC6.6","CC5.2"]
-    condition: all
+    condition: none
     rules:
-      - 'f:/boot/grub/grub.cfg -> r:^\s*linux\.+ipv6.disable=1'
+      - 'f:/boot/grub/grub.cfg -> r:^\s*linux && !r:ipv6.disable=1'
 
 # 3.1.2 Ensure wireless interfaces are disabled (Scored)  
   - id: 3801 
@@ -84,6 +84,90 @@ checks:
       - 'c:nmcli radio wifi -> r:^disabled'
       - 'c:nmcli radio wwan -> r:^disabled'  
 
+
+#####################################################################
+# 3.4 Uncommon Network Protocols
+#####################################################################
+# 3.4.1 Ensure DCCP is disabled (Scored)
+  - id: 3161
+    title: "Ensure DCCP is disabled"
+    description: "The Datagram Congestion Control Protocol (DCCP) is a transport layer protocol that supports streaming media and telephony. DCCP provides a way to gain access to congestion control, without having to do it at the application layer, but does not provide in- sequence delivery."
+    rationale: "If the protocol is not required, it is recommended that the drivers not be installed to reduce the potential attack surface."
+    remediation: "Edit or create a file in the /etc/modprobe.d/ directory ending in .conf Example: vim /etc/modprobe.d/dccp.conf and add the following line: install dccp /bin/true"
+    compliance:
+      - cis: ["3.4.1"]
+      - cis_csc: ["9.2"]
+      - pci_dss: ["2.2.3"]
+      - nist_800_53: ["CM.1"]
+      - gpg_13: ["4.3"]
+      - gdpr_IV: ["35.7.d"]
+      - hipaa: ["164.312.b"]
+      - tsc: ["CC5.2"]
+    condition: none
+    rules:
+      - 'not c:modprobe -n -v dccp -> r:install /bin/true'
+      - 'c:lsmod -> r:dccp'
+
+# 3.4.2 Ensure SCTP is disabled (Scored)
+  - id: 3162
+    title: "Ensure SCTP is disabled"
+    description: "The Stream Control Transmission Protocol (SCTP) is a transport layer protocol used to support message oriented communication, with several streams of messages in one connection. It serves a similar function as TCP and UDP, incorporating features of both. It is message-oriented like UDP, and ensures reliable in-sequence transport of messages with congestion control like TCP."
+    rationale: "If the protocol is not being used, it is recommended that kernel module not be loaded, disabling the service to reduce the potential attack surface."
+    remediation: "Edit or create a file in the /etc/modprobe.d/ directory ending in .conf Example: vim /etc/modprobe.d/sctp.conf and add the following line: install sctp /bin/true"
+    compliance:
+      - cis: ["3.4.2"]
+      - cis_csc: ["9.2"]
+      - pci_dss: ["2.2.3"]
+      - nist_800_53: ["CM.1"]
+      - gpg_13: ["4.3"]
+      - gdpr_IV: ["35.7.d"]
+      - hipaa: ["164.312.b"]
+      - tsc: ["CC5.2"]
+    condition: none
+    rules:
+      - 'not c:modprobe -n -v sctp -> r:install /bin/true'
+      - 'c:lsmod -> r:sctp'
+
+
+# 3.4.3 Ensure RDS is disabled (Scored)
+  - id: 3163
+    title: "Ensure RDS is disabled"
+    description: "The Reliable Datagram Sockets (RDS) protocol is a transport layer protocol designed to provide low-latency, high-bandwidth communications between cluster nodes. It was developed by the Oracle Corporation."
+    rationale: "If the protocol is not being used, it is recommended that kernel module not be loaded, disabling the service to reduce the potential attack surface."
+    remediation: "Edit or create a file in the /etc/modprobe.d/ directory ending in .conf Example: vim /etc/modprobe.d/rds.conf and add the following line: install rds /bin/true"
+    compliance:
+      - cis: ["3.4.3"]
+      - cis_csc: ["9.2"]
+      - pci_dss: ["2.2.3"]
+      - nist_800_53: ["CM.1"]
+      - gpg_13: ["4.3"]
+      - gdpr_IV: ["35.7.d"]
+      - hipaa: ["164.312.b"]
+      - tsc: ["CC5.2"]
+    condition: none
+    rules:
+      - 'not c:modprobe -n -v rds -> r:install /bin/true'
+      - 'c:lsmod -> r:rds'
+
+# 3.4.4 Ensure TIPC is disabled (Scored)
+  - id: 3164
+    title: "Ensure TIPC is disabled"
+    description: "The Transparent Inter-Process Communication (TIPC) protocol is designed to provide communication between cluster nodes."
+    rationale: "If the protocol is not being used, it is recommended that kernel module not be loaded, disabling the service to reduce the potential attack surface."
+    remediation: "Edit or create a file in the /etc/modprobe.d/ directory ending in .conf Example: vim /etc/modprobe.d/tipc.conf and add the following line: install tipc /bin/true"
+    compliance:
+      - cis: ["3.4.4"]
+      - cis_csc: ["9.2"]
+      - pci_dss: ["2.2.3"]
+      - nist_800_53: ["CM.1"]
+      - gpg_13: ["4.3"]
+      - gdpr_IV: ["35.7.d"]
+      - hipaa: ["164.312.b"]
+      - tsc: ["CC5.2"]
+    condition: none
+    rules:
+      - 'not c:modprobe -n -v tipc -> r:install /bin/true'
+      - 'c:lsmod -> r:tipc'
 
 ############################################################
 # 4 Logging and Auditing
@@ -111,9 +195,26 @@ checks:
       - hipaa: ["164.312.b"]
     condition: all
     rules:
-      - 'f:/etc/ssh/sshd_config -> !r:^# && r:X11Forwarding\s+no'
+      - 'f:/etc/ssh/sshd_config -> r:X11Forwarding\s+no'
 
-
+# 5.2.21 Ensure SSH AllowTcpForwarding is disabled (Scored)
+  - id: 3419 
+    title: "Ensure SSH AllowTcpForwarding is disabled"
+    description: "SSH port forwarding is a mechanism in SSH for tunneling application ports from the client to the server, or servers to clients. It can be used for adding encryption to legacy applications, going through firewalls, and some system administrators and IT professionals use it for opening backdoors into the internal network from their home machines."
+    rationale: "Leaving port forwarding enabled can expose the organization to security risks and back-doors. SSH connections are protected with strong encryption. This makes their contents invisible to most deployed network monitoring and traffic filtering solutions. This invisibility carries considerable risk potential if it is used for malicious purposes such as data exfiltration. Cybercriminals or malware could exploit SSH to hide their unauthorized communications, or to exfiltrate stolen data from the target network."
+    remediation: "Edit the /etc/ssh/sshd_config file to set the parameter as follows: AllowTcpForwarding no"
+    compliance:
+      - cis: ["5.2.21"]
+      - cis_csc: ["9.2"]
+      - pci_dss: ["4.1"]
+      - hipaa: ["164.312.a.2.IV", "164.312.e.1", "164.312.e.2.I", "164.312.e.2.II"]
+      - nist_800_53: ["SC.8"]
+      - tsc: ["CC6.1","CC6.7","CC7.2"]
+    references:
+      - https://www.ssh.com/ssh/tunneling/example
+    condition: all
+    rules:
+      - 'c:sshd -T -> r:^\s*AllowTcpForwarding\s+no'
 
 ############################################################
 # 6 System Maintenance
