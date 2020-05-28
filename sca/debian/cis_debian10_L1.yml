@@ -379,23 +379,6 @@ checks:
       - 'c:nft list ruleset -> r:hook forward'
       - 'c:nft list ruleset -> r:hook output'
 
-# 3.5.3.4 Ensure loopback traffic is configured (Scored)
-  - id: 3408 
-    title: "Ensure loopback traffic is configured"
-    description: "Configure the loopback interface to accept traffic. Configure all other interfaces to deny traffic to the loopback network (127.0.0.0/8)."
-    rationale: "Loopback traffic is generated between processes on machine and is typically critical to operation of the system. The loopback interface is the only place that loopback network (127.0.0.0/8) traffic should be seen, all other interfaces should ignore traffic on this network as an anti-spoofing measure."
-    remediation: "Run the following commands to implement the loopback rules: # nft add rule inet filter input iif lo accept # nft create rule inet filter input ip saddr 127.0.0.0/8 counter drop IF IPv6 is enabled on the system, run the following command to implement the IPv6 loopback rule: # nft add rule inet filter input ip6 saddr ::1 counter drop"
-    compliance:
-      - cis: ["3.5.3.4"]
-      - cis_csc: ["9.4"]
-      - pci_dss: ["1.2.1"]
-      - tsc: ["CC6.6"]
-    condition: all
-    rules:
-      - 'c:iptables -L INPUT -v -n -> r:\.*ACCEPT\.*all\.*lo\.**\.*0.0.0.0/0\.*0.0.0.0/0'
-      - 'c:iptables -L INPUT -v -n -> r:\.*DROP\.*all\.**\.**\.*127.0.0.0/8\.*0.0.0.0/0'
-      - 'c:iptables -L OUTPUT -v -n -> r:\.*ACCEPT\.*all\.**\.*lo\.*0.0.0.0/0\.*0.0.0.0/0'
-
 # 3.5.3.6 Ensure default deny firewall policy (Scored)
   - id: 3409 
     title: "Ensure default deny firewall policy"
