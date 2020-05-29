@@ -264,6 +264,14 @@ ID: 80200 - 80499
         <same_field>aws.httpRequest.clientIp</same_field>
         <options>no_full_log</options>
     </rule>
+ 
+    <rule id="80443" level="3">
+        <if_sid>80440</if_sid>
+        <match>"ALLOW"</match>
+        <description>AWS WAF - Allowed request.</description>
+        <group>aws_waf,aws_waf_allow,</group>
+        <options>no_full_log</options>
+    </rule>
   
     <!-- AWS Config -->
     <!-- Documentation: https://docs.aws.amazon.com/config/latest/developerguide/WhatIsConfig.html -->
