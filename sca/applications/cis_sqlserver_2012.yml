@@ -137,7 +137,7 @@ checks:
       - 'https://docs.microsoft.com/en-us/sql/database-engine/configure-windows/remote-admin-connections-server-configuration-option'
     condition: all
     rules:  
-      - "c:sqlcmd -Q \"USE master; GO SELECT name, CAST(value as int) as value_configured, CAST(value_in_use as int) as value_in_use FROM sys.configurations WHERE name = 'remote admin connections' AND SERVERPROPERTY('IsClustered') = 0;\" -> r:0\\s+0|\\^W+$"
+      - "c:sqlcmd -Q \"USE master; SELECT name, CAST(value as int) as value_configured, CAST(value_in_use as int) as value_in_use FROM sys.configurations WHERE name = 'remote admin connections' AND SERVERPROPERTY('IsClustered') = 0;\" -> r:0\\s*\\t*0|0 rows affected"
 
 # 2.8 Ensure 'Scan For Startup Procs' Server Configuration Option is set to '0' (Scored)
   - id: 12507
@@ -166,9 +166,9 @@ checks:
     references:
       - 'https://docs.microsoft.com/en-us/sql/relational-databases/security/trustworthy-database-property'
       - 'https://support.microsoft.com/it-it/help/2183687/guidelines-for-using-the-trustworthy-database-setting-in-sql-server'
-    condition: none
+    condition: all
     rules:  
-      - "c:sqlcmd -Q \"SELECT name FROM sys.databases WHERE is_trustworthy_on = 1 AND name != 'msdb';\" -> r:\\w+"
+      - "c:sqlcmd -Q \"SELECT name FROM sys.databases WHERE is_trustworthy_on = 1 AND name != 'msdb';\" -> r:0 rows affected"
 
 # 2.11 Ensure SQL Server is configured to use non-standard ports (Not Scored)
   - id: 12509
