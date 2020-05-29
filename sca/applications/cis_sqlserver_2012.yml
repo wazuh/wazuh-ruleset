@@ -292,3 +292,37 @@ checks:
     rules:  
       - "c:sqlcmd -Q \"SELECT * FROM master.sys.server_permissions WHERE (grantee_principal_id = SUSER_SID(N'public') and state_desc LIKE 'GRANT%') AND NOT (state_desc = 'GRANT' and [permission_name] = 'VIEW ANY DATABASE' and class_desc = 'SERVER') AND NOT (state_desc = 'GRANT' and [permission_name] = 'CONNECT' and class_desc = 'ENDPOINT' and major_id = 2) AND NOT (state_desc = 'GRANT' and [permission_name] = 'CONNECT' and class_desc = 'ENDPOINT' and major_id = 3) AND NOT (state_desc = 'GRANT' and [permission_name] = 'CONNECT' and class_desc = 'ENDPOINT' and major_id = 4) AND NOT (state_desc = 'GRANT' and [permission_name] = 'CONNECT' and class_desc = 'ENDPOINT' and major_id = 5); \" -> r:0 rows affected"
 
+
+###########################################################
+# 4 Password Policies
+###########################################################
+
+# 4.2 Ensure 'CHECK_EXPIRATION' Option is set to 'ON' for All SQL Authenticated Logins Within the Sysadmin Role (Scored)
+  - id: 12601
+    title: "Ensure 'CHECK_EXPIRATION' Option is set to 'ON' for All SQL Authenticated Logins Within the Sysadmin Role"
+    description: "Applies the same password expiration policy used in Windows to passwords used inside SQL Server."
+    rationale: "Ensuring SQL logins comply with the secure password policy applied by the Windows Server Benchmark will ensure the passwords for SQL logins with sysadmin privileges are changed on a frequent basis to help prevent compromise via a brute force attack. CONTROL SERVER is an equivalent permission to sysadmin and logins with that permission should also be required to have expiring passwords."
+    remediation: "For each <login_name> found by the Audit Procedure, execute the following T-SQL statement: ALTER LOGIN <login_name> WITH CHECK_EXPIRATION = ON;"
+    compliance:
+      - cis: ["4.2"]
+      - cis_csc: ["16.2, 16.10"]
+    references:
+      - 'http://msdn.microsoft.com/en-us/library/ms161959(v=sql.110).aspx'
+    condition: all
+    rules:  
+      - "c:sqlcmd -Q \"SELECT l.[name], 'sysadmin membership' AS 'Access_Method' FROM sys.sql_logins AS l WHERE IS_SRVROLEMEMBER('sysadmin',name) = 1 AND l.is_expiration_checked <> 1 UNION ALL SELECT l.[name], 'CONTROL SERVER' AS 'Access_Method' FROM sys.sql_logins AS l JOIN sys.server_permissions AS p ON l.principal_id = p.grantee_principal_id WHERE p.type = 'CL' AND p.state IN ('G', 'W') AND l.is_expiration_checked <> 1; -> n:(\\d+) rows affected compare == 0\""
+
+# 4.3 Ensure 'CHECK_POLICY' Option is set to 'ON' for All SQL Authenticated Logins (Scored)
+  - id: 12602
+    title: "Ensure 'CHECK_POLICY' Option is set to 'ON' for All SQL Authenticated Logins"
+    description: "Applies the same password complexity policy used in Windows to passwords used insideSQL Server."
+    rationale: "Ensure SQL authenticated login passwords comply with the secure password policy applied by the Windows Server Benchmark so that they cannot be easily compromised via brute force attack."
+    remediation: "For each <login_name> found by the Audit Procedure, execute the following T-SQL statement: ALTER LOGIN <login_name> WITH CHECK_POLICY = ON; Note: In the case of AWS RDS do not perform this remediation for the Master account."
+    compliance:
+      - cis: ["4.3"]
+      - cis_csc: ["16, 4.4"]
+    references:
+      - 'http://msdn.microsoft.com/en-us/library/ms161959(v=sql.110).aspx'
+    condition: all
+    rules:  
+      - "c:sqlcmd -Q \"SELECT name, is_disabled FROM sys.sql_logins WHERE is_policy_checked = 0;\" -> 0 rows affected"
