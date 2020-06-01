@@ -274,6 +274,7 @@ checks:
       - cis: ["3.1"]
       - cis_csc: ["16.9"]
       - pci_dss: ["8.2.1"]
+      - tsc: ["CC6.1"]
     references:
       - 'https://docs.microsoft.com/en-us/sql/database-engine/configure-windows/server-properties-security-page'
     condition: all
@@ -354,6 +355,7 @@ checks:
       - cis: ["4.2"]
       - cis_csc: ["16.2, 16.10"]
       - pci_dss: ["8.2"]
+      - tsc: ["CC6.1"]
     references:
       - 'http://msdn.microsoft.com/en-us/library/ms161959(v=sql.110).aspx'
     condition: all
@@ -370,6 +372,7 @@ checks:
       - cis: ["4.3"]
       - cis_csc: ["16, 4.4"]
       - pci_dss: ["8.2"]
+      - tsc: ["CC6.1"]
     references:
       - 'http://msdn.microsoft.com/en-us/library/ms161959(v=sql.110).aspx'
     condition: all
@@ -389,6 +392,8 @@ checks:
       - cis: ["5.1"]
       - cis_csc: ["6.3"]
       - pci_dss: ["10.7"]
+      - nist_800_53: ["CM.1","AU.4"]
+      - tsc: ["CC5.2"]
     references:
       - 'http://msdn.microsoft.com/en-us/library/ms177285(v=sql.110).aspx'
     condition: all
@@ -404,6 +409,11 @@ checks:
     compliance:
       - cis: ["5.2"]
       - cis_csc: ["6.2"]
+      - nist_800_53: ["SI.2","SA.11","SI.4"]
+      - gpg_13: ["4.3"]
+      - gdpr_IV: ["35.7.d"]
+      - hipaa: ["164.312.b"]
+      - tsc: ["A1.2","CC6.8"]
     references:
       - 'https://docs.microsoft.com/en-us/sql/database-engine/configure-windows/default-trace-enabled-server-configuration-option'
     condition: all
@@ -419,12 +429,17 @@ checks:
     compliance:
       - cis: ["5.3"]
       - cis_csc: ["16.10"]
+      - pci_dss: ["10.2.5"]
+      - hipaa: ["164.312.b"]
+      - nist_800_53: ["AU.14", "AC.7"]
+      - gpg_13: ["7.8"]
+      - gdpr_IV: ["35.7","32.2"]
+      - tsc: ["CC6.1","CC6.8","CC7.2","CC7.3","CC7.4"]
     references:
       - 'https://docs.microsoft.com/en-us/sql/database-engine/configure-windows/server-properties-security-page'
-    condition: any
+    condition: all
     rules:  
-      - "c:sqlcmd -Q \"EXEC xp_loginconfig 'audit level';\" -> r:failure"
-      - "c:sqlcmd -Q \"EXEC xp_loginconfig 'audit level';\" -> r:all"
+      - "c:sqlcmd -Q \"EXEC xp_loginconfig\" -> r:failure"
 
 # 5.4 Ensure 'SQL Server Audit' is set to capture both 'failed' and 'successful logins' (Scored)
   - id: 12523
@@ -435,6 +450,12 @@ checks:
     compliance:
       - cis: ["5.4"]
       - cis_csc: ["5.5"]
+      - pci_dss: ["10.2.5"]
+      - hipaa: ["164.312.b"]
+      - nist_800_53: ["AU.14", "AC.7"]
+      - gpg_13: ["7.8"]
+      - gdpr_IV: ["35.7","32.2"]
+      - tsc: ["CC6.1","CC6.8","CC7.2","CC7.3","CC7.4"]
     references:
       - 'https://msdn.microsoft.com/en-us/library/cc280525(v=sql.110).aspx'
     condition: all
@@ -457,6 +478,12 @@ checks:
     compliance:
       - cis: ["6.2"]
       - cis_csc: ["18"]
+      - pci_dss: ["10.2.5"]
+      - hipaa: ["164.312.b"]
+      - nist_800_53: ["AU.14", "AC.7"]
+      - gpg_13: ["7.8"]
+      - gdpr_IV: ["35.7","32.2"]
+      - tsc: ["CC6.1","CC6.8","CC7.2","CC7.3","CC7.4"]
     references:
       - 'http://msdn.microsoft.com/en-us/library/ms345101(v=sql.110).aspx'
       - 'http://msdn.microsoft.com/en-us/library/ms189790(v=sql.110).aspx'
