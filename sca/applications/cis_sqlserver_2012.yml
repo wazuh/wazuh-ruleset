@@ -316,11 +316,13 @@ checks:
     compliance:
       - cis: ["3.1"]
       - cis_csc: ["16.9"]
+      - pci_dss: ["8.2.1"]
+      - tsc: ["CC6.1"]
     references:
       - 'https://docs.microsoft.com/en-us/sql/database-engine/configure-windows/server-properties-security-page'
     condition: all
     rules:  
-      - "c:sqlcmd -Q \"SELECT SERVERPROPERTY('IsIntegratedSecurityOnly') as [login_mode];\" -> r:^0"
+      - "c:sqlcmd -Q \"SELECT SERVERPROPERTY('IsIntegratedSecurityOnly') as [login_mode];\" -> r:^1"
 
 # 3.8 Ensure only the default permissions specified by Microsoft are granted to the public server role (Scored)
   - id: 12516
@@ -331,6 +333,7 @@ checks:
     compliance:
       - cis: ["3.8"]
       - cis_csc: ["5.1"]
+      - pci_dss: ["7.1"]
     references:
       - 'https://docs.microsoft.com/en-us/sql/relational-databases/security/authentication-access/server-level-roles'
       - 'https://docs.microsoft.com/en-us/sql/relational-databases/security/authentication-access/server-level-roles#permissions-of-fixed-server-roles'
@@ -338,18 +341,6 @@ checks:
     rules:  
       - "c:sqlcmd -Q \"SELECT * FROM master.sys.server_permissions WHERE (grantee_principal_id = SUSER_SID(N'public') and state_desc LIKE 'GRANT%') AND NOT (state_desc = 'GRANT' and [permission_name] = 'VIEW ANY DATABASE' and class_desc = 'SERVER') AND NOT (state_desc = 'GRANT' and [permission_name] = 'CONNECT' and class_desc = 'ENDPOINT' and major_id = 2) AND NOT (state_desc = 'GRANT' and [permission_name] = 'CONNECT' and class_desc = 'ENDPOINT' and major_id = 3) AND NOT (state_desc = 'GRANT' and [permission_name] = 'CONNECT' and class_desc = 'ENDPOINT' and major_id = 4) AND NOT (state_desc = 'GRANT' and [permission_name] = 'CONNECT' and class_desc = 'ENDPOINT' and major_id = 5); \" -> r:0 rows affected"
 
-# 3.9 Ensure Windows BUILTIN groups are not SQL Logins (Scored)
-  - id: 12517
-    title: "Ensure Windows BUILTIN groups are not SQL Logins"
-    description: "Prior to SQL Server 2008, the BUILTIN\\Administrators group was added a SQL Server login with sysadmin privileges during installation by default. Best practices promote creating an Active Directory level group containing approved DBA staff accounts and using this controlled AD group as the login with sysadmin privileges. The AD group should be specified during SQL Server installation and the BUILTIN\\Administrators group would therefore have no need to be a login."
-    rationale: "The BUILTIN groups (Administrators, Everyone, Authenticated Users, Guests, etc) generally contain very broad memberships which would not meet the best practice of ensuring only the necessary users have been granted access to a SQL Server instance. These groups should not be used for any level of access into a SQL Server Database Engine instance."
-    remediation: "1. For each BUILTIN login, if needed create a more restrictive AD group containing only the required user accounts. 2. Add the AD group or individual Windows accounts as a SQL Server login and grant it the permissions required. 3. Drop the BUILTIN login using the syntax below after replacing <name> in [BUILTIN\\<name>] .USE [master] GO DROP LOGIN [BUILTIN\\<name>] GO"
-    compliance:
-      - cis: ["3.9"]
-      - cis_csc: ["14.4"]
-    condition: all
-    rules:  
-      - "c:sqlcmd -Q \"SELECT pr.[name], pe.[permission_name], pe.[state_desc] FROM sys.server_principals pr JOIN sys.server_permissions pe ON pr.principal_id = pe.grantee_principal_id WHERE pr.name like 'BUILTIN%';\" -> r:0 rows affected"
 
 # 3.10 Ensure Windows local groups are not SQL Logins (Scored)
   - id: 12518
@@ -360,9 +351,10 @@ checks:
     compliance:
       - cis: ["3.10"]
       - cis_csc: ["14.4"]
+      - pci_dss: ["7.1"]
     condition: all
     rules:  
-      - "c:sqlcmd -Q \"USE [master] GO SELECT pr.[name] AS LocalGroupName, pe.[permission_name], pe.[state_desc] FROM sys.server_principals pr JOIN sys.server_permissions pe ON pr.[principal_id] = pe.[grantee_principal_id] WHERE pr.[type_desc] = 'WINDOWS_GROUP' AND pr.[name] like CAST(SERVERPROPERTY('MachineName') AS nvarchar) + '%';\" -> r:0 rows affected"
+      - "c:sqlcmd -Q \"USE [master] SELECT pr.[name] AS LocalGroupName, pe.[permission_name], pe.[state_desc] FROM sys.server_principals pr JOIN sys.server_permissions pe ON pr.[principal_id] = pe.[grantee_principal_id] WHERE pr.[type_desc] = 'WINDOWS_GROUP' AND pr.[name] like CAST(SERVERPROPERTY('MachineName') AS nvarchar) + '%';\" -> r:0 rows affected"
 
 # 3.11 Ensure the public role in the msdb database is not granted access to SQL Agent proxies (Scored)
   - id: 12519
@@ -373,16 +365,16 @@ checks:
     compliance:
       - cis: ["3.11"]
       - cis_csc: ["14.4"]
+      - pci_dss: ["7.1"]
     references:
       - 'https://support.microsoft.com/en-us/help/2160741/best-practices-in-configuring-sql-server-agent-proxy-account'
     condition: all
     rules:  
-      - "c:sqlcmd -Q \"USE [msdb] GO SELECT sp.name AS proxyname FROM dbo.sysproxylogin spl JOIN sys.database_principals dp ON dp.sid = spl.sid JOIN sysproxies sp ON sp.proxy_id = spl.proxy_id WHERE principal_id = USER_ID('public'); GO\" -> r:0 rows affected"
+      - "c:sqlcmd -Q \"USE [msdb] SELECT sp.name AS proxyname FROM dbo.sysproxylogin spl JOIN sys.database_principals dp ON dp.sid = spl.sid JOIN sysproxies sp ON sp.proxy_id = spl.proxy_id WHERE principal_id = USER_ID('public');\" -> r:0 rows affected"
 
 ###########################################################
 # 4 Password Policies
 ###########################################################
-
 # 4.2 Ensure 'CHECK_EXPIRATION' Option is set to 'ON' for All SQL Authenticated Logins Within the Sysadmin Role (Scored)
   - id: 12601
     title: "Ensure 'CHECK_EXPIRATION' Option is set to 'ON' for All SQL Authenticated Logins Within the Sysadmin Role"
@@ -392,11 +384,13 @@ checks:
     compliance:
       - cis: ["4.2"]
       - cis_csc: ["16.2, 16.10"]
+      - pci_dss: ["8.2"]
+      - tsc: ["CC6.1"]
     references:
       - 'http://msdn.microsoft.com/en-us/library/ms161959(v=sql.110).aspx'
     condition: all
     rules:  
-      - "c:sqlcmd -Q \"SELECT l.[name], 'sysadmin membership' AS 'Access_Method' FROM sys.sql_logins AS l WHERE IS_SRVROLEMEMBER('sysadmin',name) = 1 AND l.is_expiration_checked <> 1 UNION ALL SELECT l.[name], 'CONTROL SERVER' AS 'Access_Method' FROM sys.sql_logins AS l JOIN sys.server_permissions AS p ON l.principal_id = p.grantee_principal_id WHERE p.type = 'CL' AND p.state IN ('G', 'W') AND l.is_expiration_checked <> 1; -> n:(\\d+) rows affected compare == 0\""
+      - "c:sqlcmd -Q \"SELECT l.[name], 'sysadmin membership' AS 'Access_Method' FROM sys.sql_logins AS l WHERE IS_SRVROLEMEMBER('sysadmin',name) = 1 AND l.is_expiration_checked <> 1 UNION ALL SELECT l.[name], 'CONTROL SERVER' AS 'Access_Method' FROM sys.sql_logins AS l JOIN sys.server_permissions AS p ON l.principal_id = p.grantee_principal_id WHERE p.type = 'CL' AND p.state IN ('G', 'W') AND l.is_expiration_checked <> 1;\" -> r:0 rows affected"
 
 # 4.3 Ensure 'CHECK_POLICY' Option is set to 'ON' for All SQL Authenticated Logins (Scored)
   - id: 12602
@@ -407,11 +401,13 @@ checks:
     compliance:
       - cis: ["4.3"]
       - cis_csc: ["16, 4.4"]
+      - pci_dss: ["8.2"]
+      - tsc: ["CC6.1"]
     references:
       - 'http://msdn.microsoft.com/en-us/library/ms161959(v=sql.110).aspx'
     condition: all
     rules:  
-      - "c:sqlcmd -Q \"SELECT name, is_disabled FROM sys.sql_logins WHERE is_policy_checked = 0;\" -> 0 rows affected"
+      - "c:sqlcmd -Q \"SELECT name, is_disabled FROM sys.sql_logins WHERE is_policy_checked = 0;\" -> r:0 rows affected"
 
 ##########################################################
 # 5 Auditing and Logging
@@ -425,11 +421,14 @@ checks:
     compliance:
       - cis: ["5.1"]
       - cis_csc: ["6.3"]
+      - pci_dss: ["10.7"]
+      - nist_800_53: ["CM.1","AU.4"]
+      - tsc: ["CC5.2"]
     references:
       - 'http://msdn.microsoft.com/en-us/library/ms177285(v=sql.110).aspx'
     condition: all
     rules:  
-      - "c:sqlcmd -Q \"EXEC master.sys.xp_instance_regwrite N'HKEY_LOCAL_MACHINE', N'Software\\Microsoft\\MSSQLServer\\MSSQLServer', N'NumErrorLogs', REG_DWORD, <NumberAbove12>;\" -> n:^\\s*(\\d+) compare >= 12" 
+      - "c:sqlcmd -Q \"DECLARE @NumErrorLogs int; EXEC master.sys.xp_instance_regread N'HKEY_LOCAL_MACHINE', N'Software\\Microsoft\\MSSQLServer\\MSSQLServer', N'NumErrorLogs', @NumErrorLogs OUTPUT; SELECT ISNULL(@NumErrorLogs, -1) AS [NumberOfLogFiles];\" -> n:^\\s*(\\d+) compare >= 12" 
 
 # 5.2 Ensure 'Default Trace Enabled' Server Configuration Option is set to '1' (Scored)
   - id: 12521
@@ -440,44 +439,17 @@ checks:
     compliance:
       - cis: ["5.2"]
       - cis_csc: ["6.2"]
+      - nist_800_53: ["SI.2","SA.11","SI.4"]
+      - gpg_13: ["4.3"]
+      - gdpr_IV: ["35.7.d"]
+      - hipaa: ["164.312.b"]
+      - tsc: ["A1.2","CC6.8"]
     references:
       - 'https://docs.microsoft.com/en-us/sql/database-engine/configure-windows/default-trace-enabled-server-configuration-option'
     condition: all
     rules:  
       - "c:sqlcmd -Q \"SELECT name, CAST(value as int) as value_configured, CAST(value_in_use as int) as value_in_use FROM sys.configurations WHERE name = 'default trace enabled';\" -> r:1\\s+1" 
 
-# 5.3 Ensure 'Login Auditing' is set to 'failed logins' (Scored)
-  - id: 12522
-    title: "Ensure 'Login Auditing' is set to 'failed logins'"
-    description: "This setting will record failed authentication attempts for SQL Server logins to the SQL Server Errorlog. This is the default setting for SQL Server. Historically, this setting has been available in all versions and editions of SQL Server. Prior to the availability of SQL Server Audit, this was the only provided mechanism for capturing logins (successful or failed)."
-    rationale: "Capturing failed logins provides key information that can be used to detect\\confirm password guessing attacks. Capturing successful login attempts can be used to confirm server access during forensic investigations, but using this audit level setting to also capture successful logins creates excessive noise in the SQL Server Errorlog which can hamper a DBA trying to troubleshoot problems. Elsewhere in this benchmark, we recommend using the newer lightweight SQL Server Audit feature to capture both successful and failed logins."
-    remediation: "Perform either the GUI or T-SQL method shown: GUI Method 1. Open SQL Server Management Studio. 82 | P a g e2. Right click the target instance and select Properties and navigate to the Security tab. 3. Select the option Failed logins only under the Login Auditing section and click OK. 4. Restart the SQL Server instance. T-SQL Method 1. Run: EXEC xp_instance_regwrite N'HKEY_LOCAL_MACHINE', N'Software\\Microsoft\\MSSQLServer\\MSSQLServer', N'AuditLevel', REG_DWORD, 2 2. Restart the SQL Server instance."
-    compliance:
-      - cis: ["5.3"]
-      - cis_csc: ["16.10"]
-    references:
-      - 'https://docs.microsoft.com/en-us/sql/database-engine/configure-windows/server-properties-security-page'
-    condition: all
-    rules:  
-      - "c:sqlcmd -Q \"EXEC xp_loginconfig 'audit level';\" -> r:failure|all"
-
-# 5.4 Ensure 'SQL Server Audit' is set to capture both 'failed' and 'successful logins' (Scored)
-  - id: 12523
-    title: "Ensure 'SQL Server Audit' is set to capture both 'failed' and 'successful logins'"
-    description: "SQL Server Audit is capable of capturing both failed and successful logins and writing them to one of three places: the application event log, the security event log, or the file system. We will use it to capture any login attempt to SQL Server, as well as any attempts to change audit policy. This will also serve to be a second source to record failed login attempts."
-    rationale: "By utilizing Audit instead of the traditional setting under the Security tab to capture successful logins, we reduce the noise in the ERRORLOG . This keeps it smaller and easier to read for DBAs who are attempting to troubleshoot issues with the SQL Server. Also, the Audit object can write to the security event log, though this requires operating system configuration. This gives an additional option for where to store login events, especially in conjunction with an SIEM."
-    remediation: "Perform either the GUI or T-SQL method shown: GUI Method 1.Expand the SQL Server in Object Explorer. 2.Expand the Security folder 3.Right-click on the Audits folder and choose New Audit... 4.Specify a name for the Server Audit. 5.Specify the audit destination details and then click OK to save the Server Audit. 6.Right-click on Server Audit Specifications and choose New Server Audit Specification... 7. Name the Server Audit Specification 8. Select the just created Server Audit in the Audit drop-down selection. 9. Click the drop-down under Audit Action Type and select AUDIT_CHANGE_GROUP . 10. Click the new drop-down under Audit Action Type and select FAILED_LOGIN_GROUP . 11. Click the new drop-down under Audit Action Type and select SUCCESSFUL_LOGIN_GROUP . 12. Click OK to save the Server Audit Specification. 13. Right-click on the new Server Audit Specification and select Enable Server Audit Specification. 14. Right-click on the new Server Audit and select Enable Server Audit. T-SQL Method Execute code similar to: CREATE SERVER AUDIT TrackLogins TO APPLICATION_LOG; GO CREATE SERVER AUDIT SPECIFICATION TrackAllLogins FOR SERVER AUDIT TrackLogins ADD (FAILED_LOGIN_GROUP), ADD (SUCCESSFUL_LOGIN_GROUP), ADD (AUDIT_CHANGE_GROUP) WITH (STATE = ON); GO ALTER SERVER AUDIT TrackLogins WITH (STATE = ON); GO"
-    compliance:
-      - cis: ["5.4"]
-      - cis_csc: ["5.5"]
-    references:
-      - 'https://msdn.microsoft.com/en-us/library/cc280525(v=sql.110).aspx'
-    condition: all
-    rules:  
-      - "c:sqlcmd -Q \"SELECT S.name AS 'Audit Name' , CASE S.is_state_enabled WHEN 1 THEN 'Y' WHEN 0 THEN 'N' END AS 'Audit Enabled' , S.type_desc AS 'Write Location' , SA.name AS 'Audit Specification Name' , CASE SA.is_state_enabled WHEN 1 THEN 'Y' WHEN 0 THEN 'N' END AS 'Audit Specification Enabled' , SAD.audit_action_name , SAD.audited_result FROM sys.server_audit_specification_details AS SAD JOIN sys.server_audit_specifications AS SA ON SAD.server_specification_id = SA.server_specification_id JOIN sys.server_audits AS S ON SA.audit_guid = S.audit_guid WHERE SAD.audit_action_id IN ('CNAU', 'LGFL', 'LGSD');\" -> r:3 rows affected"
-      - "c:sqlcmd -Q \"SELECT S.name AS 'Audit Name' , CASE S.is_state_enabled WHEN 1 THEN 'Y' WHEN 0 THEN 'N' END AS 'Audit Enabled' , S.type_desc AS 'Write Location' , SA.name AS 'Audit Specification Name' , CASE SA.is_state_enabled WHEN 1 THEN 'Y' WHEN 0 THEN 'N' END AS 'Audit Specification Enabled' , SAD.audit_action_name , SAD.audited_result FROM sys.server_audit_specification_details AS SAD JOIN sys.server_audit_specifications AS SA ON SAD.server_specification_id = SA.server_specification_id JOIN sys.server_audits AS S ON SA.audit_guid = S.audit_guid WHERE SAD.audit_action_id IN ('CNAU', 'LGFL', 'LGSD');\" -> r:AUDIT_CHANGE_GROUP"
-      - "c:sqlcmd -Q \"SELECT S.name AS 'Audit Name' , CASE S.is_state_enabled WHEN 1 THEN 'Y' WHEN 0 THEN 'N' END AS 'Audit Enabled' , S.type_desc AS 'Write Location' , SA.name AS 'Audit Specification Name' , CASE SA.is_state_enabled WHEN 1 THEN 'Y' WHEN 0 THEN 'N' END AS 'Audit Specification Enabled' , SAD.audit_action_name , SAD.audited_result FROM sys.server_audit_specification_details AS SAD JOIN sys.server_audit_specifications AS SA ON SAD.server_specification_id = SA.server_specification_id JOIN sys.server_audits AS S ON SA.audit_guid = S.audit_guid WHERE SAD.audit_action_id IN ('CNAU', 'LGFL', 'LGSD');\" -> r:FAILED_LOGIN_GROUP"
-      - "c:sqlcmd -Q \"SELECT S.name AS 'Audit Name' , CASE S.is_state_enabled WHEN 1 THEN 'Y' WHEN 0 THEN 'N' END AS 'Audit Enabled' , S.type_desc AS 'Write Location' , SA.name AS 'Audit Specification Name' , CASE SA.is_state_enabled WHEN 1 THEN 'Y' WHEN 0 THEN 'N' END AS 'Audit Specification Enabled' , SAD.audit_action_name , SAD.audited_result FROM sys.server_audit_specification_details AS SAD JOIN sys.server_audit_specifications AS SA ON SAD.server_specification_id = SA.server_specification_id JOIN sys.server_audits AS S ON SA.audit_guid = S.audit_guid WHERE SAD.audit_action_id IN ('CNAU', 'LGFL', 'LGSD');\" -> r:SUCCESSFUL_LOGIN_GROUP"
 
 
 ###########################################################
@@ -492,6 +464,12 @@ checks:
     compliance:
       - cis: ["6.2"]
       - cis_csc: ["18"]
+      - pci_dss: ["10.2.5"]
+      - hipaa: ["164.312.b"]
+      - nist_800_53: ["AU.14", "AC.7"]
+      - gpg_13: ["7.8"]
+      - gdpr_IV: ["35.7","32.2"]
+      - tsc: ["CC6.1","CC6.8","CC7.2","CC7.3","CC7.4"]
     references:
       - 'http://msdn.microsoft.com/en-us/library/ms345101(v=sql.110).aspx'
       - 'http://msdn.microsoft.com/en-us/library/ms189790(v=sql.110).aspx'
