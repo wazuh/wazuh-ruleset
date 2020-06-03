@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 - Added TSC/SOC compliance mapping ([#613](https://github.com/wazuh/wazuh-ruleset/pull/613))
 - Added rules and decoders for PaloAlto logs ([#658](https://github.com/wazuh/wazuh-ruleset/pull/658))
 - Added rules and decoder to monitor the FIM database status. ([#4717](https://github.com/wazuh/wazuh/pull/4717))
+- Added rules for WAF. ([#687](https://github.com/wazuh/wazuh-ruleset/pull/687))
 
 ### Changed
 
