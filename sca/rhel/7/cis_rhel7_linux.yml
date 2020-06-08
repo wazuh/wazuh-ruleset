@@ -2375,6 +2375,7 @@ checks:
       - cis: ["4.1.18"]
       - cis_csc: ["3","6"]
       - pci_dss: ["10.5"]
+      - tsc: ["CC6.1","CC7.2","CC7.3","CC7.4"]
     condition: all
     rules:
       - 'c:tail -1 /etc/audit/audit.rules -> -e 2'
@@ -2392,9 +2393,12 @@ checks:
     compliance:
       - cis: ["4.2.1.1"]
       - cis_csc: ["6.2"]
+      - pci_dss: ["10.5"]
+      - tsc: ["CC6.1","CC7.2","CC7.3","CC7.4"]
     condition: all
     rules:
       - 'c:systemctl is-enabled rsyslog -> enabled'
+
 # 4.2.1.3 Ensure rsyslog default file permissions configured (Scored)
   - id: 5630 
     title: "Ensure rsyslog default file permissions configured"
@@ -2404,9 +2408,11 @@ checks:
     compliance:
       - cis: ["4.2.1.3"]
       - cis_csc: ["5.1"]  
+      - pci_dss: ["10.5"]
+      - tsc: ["CC6.1","CC7.2","CC7.3","CC7.4"]
     condition: all
     rules:
-      - 'f:/etc/rsyslog.conf -> r:^\$FileCreateMode 0600|^\$FileCreateMode 0640'
+      - 'f:/etc/rsyslog.conf -> r:^\$FileCreateMode 0600|^\$FileCreateMode 0640|^\$FileCreateMode 0440|^\$FileCreateMode 0400|^\$FileCreateMode 0040|^\$FileCreateMode 0000'
 
 # 4.2.1.4 Ensure rsyslog is configured to send logs to a remote log host (Scored)
   - id: 5631 
@@ -2417,6 +2423,8 @@ checks:
     compliance:
       - cis: ["4.2.1.4"]
       - cis_csc: ["6.6"]
+      - pci_dss: ["10.5"]
+      - tsc: ["CC6.1","CC7.2","CC7.3","CC7.4"]
     condition: all
     rules:
       - 'c:grep *.*[^I][^I]*@ /etc/rsyslog.conf /etc/rsyslog.d/*.conf -> !r:# && r:*.* @@\.+'
@@ -2432,6 +2440,8 @@ checks:
     compliance:
       - cis: ["4.2.2.1"]
       - cis_csc: ["6.2"]
+      - pci_dss: ["10.5"]
+      - tsc: ["CC6.1","CC7.2","CC7.3","CC7.4"]
     condition: all
     rules:
       - 'c:systemctl is-enabled syslog-ng -> enabled'
@@ -2444,10 +2454,12 @@ checks:
     remediation: "Edit the /etc/syslog-ng/syslog-ng.conf and set perm option to 0640 or more restrictive:     options { chain_hostnames(off); flush_lines(0); perm(0640); stats_freq(3600); threaded(yes); };"
     compliance:
       - cis: ["4.2.2.3"]
-      - cis_csc: ["5.1"]      
+      - cis_csc: ["5.1"]    
+      - pci_dss: ["10.5"]  
+      - tsc: ["CC6.1","CC7.2","CC7.3","CC7.4"]
     condition: all
     rules:
-      - 'f:/etc/syslog-ng/syslog-ng.conf -> r:^options && r:perm\(0600\)|perm\(0640\)|perm\(0440\)|perm\(0400\)|perm\(0000\)'
+      - 'f:/etc/syslog-ng/syslog-ng.conf -> r:^options && r:perm\(0600\)|perm\(0640\)|perm\(0440\)|perm\(0400\)|perm\(0040\)|perm\(0000\)'
 
 # 4.2.2.4 Ensure syslog-ng is configured to send logs to a remote log host (Not Scored)
   - id: 5634 
@@ -2458,6 +2470,8 @@ checks:
     compliance:
       - cis: ["4.2.2.4"]
       - cis_csc: ["6.6"]
+      - pci_dss: ["10.5"]
+      - tsc: ["CC6.1","CC7.2","CC7.3","CC7.4"]
     condition: all
     rules:
       - 'f:/etc/syslog-ng/syslog-ng.conf -> r:destination logserver'
@@ -2472,6 +2486,8 @@ checks:
     compliance:
       - cis: ["4.2.3"]
       - cis_csc: ["6.2"]
+      - pci_dss: ["10.5"]
+      - tsc: ["CC6.1","CC7.2","CC7.3","CC7.4"]
     condition: any
     rules:
       - 'not c:rpm -q rsyslog -> r:^package rsyslog is not installed'
@@ -2486,6 +2502,8 @@ checks:
     compliance:
       - cis: ["4.2.4"]
       - cis_csc: ["5.1"]
+      - pci_dss: ["10.5"]
+      - tsc: ["CC6.1","CC7.2","CC7.3","CC7.4"]
     condition: none
     rules:
       - 'c:find /var/log -type f -ls -> r:-\w\w\w\ww\w\w\w\w|-\w\w\w\w\wx\w\w\w|-\w\w\w\w\w\w\ww\w|-\w\w\w\w\w\wr\w\w|-\w\w\w\w\w\w\w\wx'
@@ -2527,7 +2545,7 @@ checks:
       - tsc: ["CC5.2"]
     condition: all
     rules:
-      - 'c:stat /etc/crontab -> r:^Access: \(0600/-rw-------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
+      - 'c:stat /etc/crontab -> r:^Access: \(0\w00/-\w\w\w------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
 
 
 # 5.1.3 Ensure permissions on /etc/cron.hourly are configured (Scored)
@@ -2544,7 +2562,7 @@ checks:
       - tsc: ["CC5.2"]
     condition: all
     rules:
-      - 'c:stat /etc/cron.hourly -> r:^Access: \(0700/drwx------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
+      - 'c:stat /etc/cron.hourly -> r:^Access: \(0\d00/\w\w\w\w------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
 
 # 5.1.4 Ensure permissions on /etc/cron.daily are configured (Scored)
   - id: 5640 
@@ -2560,7 +2578,7 @@ checks:
       - tsc: ["CC5.2"]
     condition: all
     rules:
-      - 'c:stat /etc/cron.daily -> r:^Access: \(0700/drwx------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
+      - 'c:stat /etc/cron.daily -> r:^Access: \(0\d00/\w\w\w\w------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
 
 # 5.1.5 Ensure permissions on /etc/cron.weekly are configured (Scored)
   - id: 5641 
@@ -2576,7 +2594,7 @@ checks:
       - tsc: ["CC5.2"]
     condition: all
     rules:
-      - 'c:stat /etc/cron.weekly -> r:^Access: \(0700/drwx------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
+      - 'c:stat /etc/cron.weekly -> r:^Access: \(0\d00/\w\w\w\w------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
 
 
 # 5.1.6 Ensure permissions on /etc/cron.monthly are configured (Scored)
@@ -2593,7 +2611,7 @@ checks:
       - tsc: ["CC5.2"]
     condition: all
     rules:
-      - 'c:stat /etc/cron.monthly -> r:^Access: \(0700/drwx------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
+      - 'c:stat /etc/cron.monthly -> r:^Access: \(0\w00/\w\w\w\w------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
 
 # 5.1.7 Ensure permissions on /etc/cron.d are configured (Scored)
   - id: 5643 
@@ -2609,7 +2627,7 @@ checks:
       - tsc: ["CC5.2"]
     condition: all
     rules:
-      - 'c:stat /etc/cron.d -> r:^Access: \(0700/drwx------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
+      - 'c:stat /etc/cron.d -> r:^Access: \(0\d00/\w\w\w\w------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
 
 # 5.1.8 Ensure at/cron is restricted to authorized users (Scored)
   - id: 5644 
@@ -2627,8 +2645,8 @@ checks:
     rules:
       - 'c:stat /etc/cron.deny -> r:No such file or directory$'
       - 'c:stat /etc/at.deny -> r:No such file or directory$'
-      - 'c:stat /etc/cron.allow -> r:^Access: \(0600/-rw-------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
-      - 'c:stat /etc/at.allow -> r:^Access: \(0600/-rw-------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
+      - 'c:stat /etc/cron.allow -> r:^Access: \(0\d00/\w\w\w\w------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
+      - 'c:stat /etc/at.allow -> r:^Access: \(0\d00/\w\w\w\w------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
 
 
 
@@ -2653,7 +2671,7 @@ checks:
       - tsc: ["CC5.2"]
     condition: all
     rules:
-      - 'c:stat /etc/ssh/sshd_config -> r:^Access: \(0600/-rw-------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
+      - 'c:stat /etc/ssh/sshd_config -> r:^Access: \(0\d00/\w\w\w\w------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
 
 # 5.2.2 Set SSH Protocol to 2 (Scored)
   - id: 5646 
@@ -3145,7 +3163,7 @@ checks:
       - tsc: ["CC5.2"]
     condition: all
     rules:
-      - 'c:stat /etc/passwd- -> r:Access:\s*\(0644/-rw-r--r--\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*0/\s*\t*root\)|Access:\s*\(0640/-rw-r-----\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*0/\s*\t*root\)|Access:\s*\(0604/-rw----r--\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*0/\s*\t*root\)|Access:\s*\(0600/-rw-------\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*0/\s*\t*root\)'
+      - 'c:stat /etc/passwd- -> r:Access:\s*\(0\d\d\d/-\w\w-\w--\w--\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*0/\s*\t*root\)'
 
 # 6.1.7 Configure /etc/shadow- permissions (Scored)
   - id: 5675 
@@ -3177,7 +3195,7 @@ checks:
       - tsc: ["CC5.2"]
     condition: all
     rules:
-      - 'c:stat /etc/group- -> r:Access:\s*\(0644/-rw-r--r--\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*0/\s*\t*root\)|Access:\s*\(0640/-rw-r-----\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*0/\s*\t*root\)|Access:\s*\(0604/-rw----r--\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*0/\s*\t*root\)|Access:\s*\(0600/-rw-------\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*0/\s*\t*root\)'
+      - 'c:stat /etc/group- -> r:Access:\s*\(0\w\w\w/-\w\w-\w--\w--\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*0/\s*\t*root\)'
 
 # 6.1.9 Configure /etc/gshadow- permissions (Scored)
   - id: 5677 
