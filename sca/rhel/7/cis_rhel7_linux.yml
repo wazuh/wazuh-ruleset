@@ -879,8 +879,8 @@ checks:
       - 'f:/etc/dconf/profile/gdm -> r:user-db:user'
       - 'f:/etc/dconf/profile/gdm -> r:system-db:gdm'
       - 'f:/etc/dconf/profile/gdm -> r:file-db:/usr/share/gdm/greeter-dconf-defaults'
-      - 'f:/etc/dconf/db/gdm.d/01-banner-message -> r:banner-message-enable=true'
-      - 'f:/etc/dconf/db/gdm.d/01-banner-message -> r:banner-message-text=\.+'
+      - 'd:/etc/dconf/db/gdm.d/ -> r:\. -> r:banner-message-enable=true'
+      - 'd:/etc/dconf/db/gdm.d/ -> r:\. -> r:banner-message-text=\.+'
 
 
 # 1.8 Ensure updates, patches, and additional security software are installed(Scored)
@@ -2349,7 +2349,7 @@ checks:
     title: "Ensure kernel module loading and unloading is collected"
     description: "Monitor the loading and unloading of kernel modules. The programs insmod (install a kernel module), rmmod (remove a kernel module), and modprobe (a more sophisticated program to load and unload modules, as well as some other features) control loading and unloading of modules. The init_module (load a module) and delete_module (delete a module) system calls control loading and unloading of modules. Any execution of the loading and unloading module programs and system calls will trigger an audit record with an identifier of \"modules\"."
     rationale: "Monitoring the use of insmod , rmmod and modprobe could provide system administrators with evidence that an unauthorized user loaded or unloaded a kernel module, possibly compromising the security of the system. Monitoring of the init_module and delete_module system calls would reflect an unauthorized user attempting to use a different program to load and unload modules."
-    remediation: "Edit or create a file in the /etc/audit/rules.d/ directory ending in .rules .Example: vi /etc/audit/rules.d/modules.rules and add the following lines:   -w /var/log/sudo.log -p wa -k actions. Notes: Reloading the auditd config to set active settings may require a system reboot."
+    remediation: "Edit or create a file in the /etc/audit/rules.d/ directory ending in .rules. Example: vi /etc/audit/rules.d/modules.rules and add the following lines:   -w /var/log/sudo.log -p wa -k actions. Notes: Reloading the auditd config to set active settings may require a system reboot."
     compliance:
       - cis: ["4.1.17"]
       - cis_csc: ["3"]
@@ -2371,7 +2371,7 @@ checks:
     title: "Ensure the audit configuration is immutable"
     description: "Set system audit so that audit rules cannot be modified with auditctl . Setting the flag \"-e 2\" forces audit to be put in immutable mode. Audit changes can only be made on system reboot."
     rationale: "In immutable mode, unauthorized users cannot execute changes to the audit system to potentially hide malicious activity and then put the audit rules back. Users would most likely notice a system reboot and that could alert administrators of an attempt to make unauthorized audit changes."
-    remediation: "Edit or create a file in the /etc/audit/rules.d/ directory ending in .rules .Example: vi /etc/audit/rules.d/99-finalize.rules and add the following line.   -e 2     at the end of the file. Notes: This setting will ensure reloading the auditd config to set active settings requires a system reboot."
+    remediation: "Edit or create a file in the /etc/audit/rules.d/ directory ending in .rules. Example: vi /etc/audit/rules.d/99-finalize.rules and add the following line.   -e 2     at the end of the file. Notes: This setting will ensure reloading the auditd config to set active settings requires a system reboot."
     compliance:
       - cis: ["4.1.18"]
       - cis_csc: ["3","6"]
