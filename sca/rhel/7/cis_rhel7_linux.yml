@@ -2329,7 +2329,7 @@ checks:
     title: "Ensure system administrator actions (sudolog) are collected"
     description: "Monitor the sudo log file. If the system has been properly configured to disable the use of the su command and force all administrators to have to log in first and then use sudo to execute privileged commands, then all administrator commands will be logged to /var/log/sudo.log . Any time a command is executed, an audit event will be triggered as the /var/log/sudo.log file will be opened for write and the executed administration command will be written to the log."
     rationale: "Changes in /var/log/sudo.log indicate that an administrator has executed a command or the log file itself has been tampered with. Administrators will want to correlate the events written to the audit trail with the records written to /var/log/sudo.log to verify if unauthorized commands have been executed."
-    remediation: "Edit or create a file in the /etc/audit/rules.d/ directory ending in .rules .Example: vi /etc/audit/rules.d/audit.rules and add the following lines:   -w /var/log/sudo.log -p wa -k actions .Notes: The system must be configured with su disabled (See Item 5.6 Ensure access to the su command is restricted) to force all command execution through sudo . This will not be effective on the console, as administrators can log in as root. Reloading the auditd config to set active settings may require a system reboot."
+    remediation: "Edit or create a file in the /etc/audit/rules.d/ directory ending in .rules. Example: vi /etc/audit/rules.d/audit.rules and add the following lines:   -w /var/log/sudo.log -p wa -k actions .Notes: The system must be configured with su disabled (See Item 5.6 Ensure access to the su command is restricted) to force all command execution through sudo . This will not be effective on the console, as administrators can log in as root. Reloading the auditd config to set active settings may require a system reboot."
     compliance:
       - cis: ["4.1.16"]
       - cis_csc: ["5.1","5.5"]
@@ -2348,7 +2348,7 @@ checks:
     title: "Ensure kernel module loading and unloading is collected"
     description: "Monitor the loading and unloading of kernel modules. The programs insmod (install a kernel module), rmmod (remove a kernel module), and modprobe (a more sophisticated program to load and unload modules, as well as some other features) control loading and unloading of modules. The init_module (load a module) and delete_module (delete a module) system calls control loading and unloading of modules. Any execution of the loading and unloading module programs and system calls will trigger an audit record with an identifier of \"modules\"."
     rationale: "Monitoring the use of insmod , rmmod and modprobe could provide system administrators with evidence that an unauthorized user loaded or unloaded a kernel module, possibly compromising the security of the system. Monitoring of the init_module and delete_module system calls would reflect an unauthorized user attempting to use a different program to load and unload modules."
-    remediation: "Edit or create a file in the /etc/audit/rules.d/ directory ending in .rules .Example: vi /etc/audit/rules.d/audit.rules and add the following lines:   -w /var/log/sudo.log -p wa -k actions. Notes: Reloading the auditd config to set active settings may require a system reboot."
+    remediation: "Edit or create a file in the /etc/audit/rules.d/ directory ending in .rules. Example: vi /etc/audit/rules.d/audit.rules and add the following lines:   -w /var/log/sudo.log -p wa -k actions. Notes: Reloading the auditd config to set active settings may require a system reboot."
     compliance:
       - cis: ["4.1.17"]
       - cis_csc: ["3"]
@@ -2370,7 +2370,7 @@ checks:
     title: "Ensure the audit configuration is immutable"
     description: "Set system audit so that audit rules cannot be modified with auditctl . Setting the flag \"-e 2\" forces audit to be put in immutable mode. Audit changes can only be made on system reboot."
     rationale: "In immutable mode, unauthorized users cannot execute changes to the audit system to potentially hide malicious activity and then put the audit rules back. Users would most likely notice a system reboot and that could alert administrators of an attempt to make unauthorized audit changes."
-    remediation: "Edit or create a file in the /etc/audit/rules.d/ directory ending in .rules .Example: vi /etc/audit/rules.d/audit.rules and add the following line to the end.   -e 2"
+    remediation: "Edit or create a file in the /etc/audit/rules.d/ directory ending in .rules. Example: vi /etc/audit/rules.d/audit.rules and add the following line to the end.   -e 2"
     compliance:
       - cis: ["4.1.18"]
       - cis_csc: ["3","6"]
