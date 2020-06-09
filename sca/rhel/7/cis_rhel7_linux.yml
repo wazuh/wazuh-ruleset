@@ -29,6 +29,7 @@ requirements:
     - 'f:/etc/redhat-release -> r:^Better && r:release 7'
     - 'f:/etc/redhat-release -> r:^OpenVZ && r:release 7'
     - 'f:/etc/system-release -> r:^Amazon && r:release 2'
+    - 'f:/etc/redhat-release -> r:^CentOS && r:release 7'
 
 variables:
   $sshd_file: /etc/ssh/sshd_config
@@ -2124,7 +2125,6 @@ checks:
       - 'f:/etc/audit/audit.rules -> r:^-a && r:always,exit|exit,always && r:-F arch=b32 && r:-S adjtimex && r:-S settimeofday && r:-S stime && r:-k time-change'
       - 'f:/etc/audit/audit.rules -> r:^-a && r:always,exit|exit,always && r:-F arch=b32 && r:-S clock_settime && r:-k time-change'
       - 'f:/etc/audit/audit.rules -> r:-w /etc/localtime && r:-p wa && r:-k time-change'
-      - 'c:auditctl -l -> r:-a always,exit -F arch=b32 -S stime,settimeofday,adjtimex -F key=time-change'
 
 # 4.1.5 Ensure events that modify user/group information are collected (Scored)
   - id: 5616 
@@ -2330,7 +2330,7 @@ checks:
     title: "Ensure system administrator actions (sudolog) are collected"
     description: "Monitor the sudo log file. If the system has been properly configured to disable the use of the su command and force all administrators to have to log in first and then use sudo to execute privileged commands, then all administrator commands will be logged to /var/log/sudo.log . Any time a command is executed, an audit event will be triggered as the /var/log/sudo.log file will be opened for write and the executed administration command will be written to the log."
     rationale: "Changes in /var/log/sudo.log indicate that an administrator has executed a command or the log file itself has been tampered with. Administrators will want to correlate the events written to the audit trail with the records written to /var/log/sudo.log to verify if unauthorized commands have been executed."
-    remediation: "Edit or create a file in the /etc/audit/rules.d/ directory ending in .rules. Example: vi /etc/audit/rules.d/audit.rules and add the following lines:   -w /var/log/sudo.log -p wa -k actions .Notes: The system must be configured with su disabled (See Item 5.6 Ensure access to the su command is restricted) to force all command execution through sudo . This will not be effective on the console, as administrators can log in as root. Reloading the auditd config to set active settings may require a system reboot."
+    remediation: "Edit or create a file in the /etc/audit/rules.d/ directory ending in .rules .Example: vi /etc/audit/rules.d/audit.rules and add the following lines:   -w /var/log/sudo.log -p wa -k actions .Notes: The system must be configured with su disabled (See Item 5.6 Ensure access to the su command is restricted) to force all command execution through sudo . This will not be effective on the console, as administrators can log in as root. Reloading the auditd config to set active settings may require a system reboot."
     compliance:
       - cis: ["4.1.16"]
       - cis_csc: ["5.1","5.5"]
@@ -2365,7 +2365,7 @@ checks:
       - 'f:/etc/audit/audit.rules -> r:-w /sbin/rmmod && r:-p x && r:-k modules'
       - 'f:/etc/audit/audit.rules -> r:-w /sbin/modprobe && r:-p x && r:-k modules'
       - 'f:/etc/audit/audit.rules -> r:^-a && r:always,exit|exit,always && r:-F arch=b\d\d && r:-S init_module && r:-S delete_module && r:-k modules'
-
+      
 # 4.1.18 Ensure the audit configuration is immutable (Scored)
   - id: 5628 
     title: "Ensure the audit configuration is immutable"
