@@ -13,6 +13,8 @@ import sys
 import os.path
 from collections import OrderedDict
 import shutil
+import argparse
+
 
 class MultiOrderedDict(OrderedDict):
     def __setitem__(self, key, value):
@@ -21,18 +23,20 @@ class MultiOrderedDict(OrderedDict):
         else:
             super(MultiOrderedDict, self).__setitem__(key, value)
 
-def getOssecConfig(initconf,path):
+
+def getOssecConfig(initconf, path):
     if os.path.isfile(path):
         with open(path) as f:
             for line in f.readlines():
                 key, value = line.rstrip("\n").split("=")
-                initconf[key] = value.replace("\"","")
+                initconf[key] = value.replace("\"", "")
         if initconf["NAME"] != "Wazuh" or not os.path.exists(initconf["DIRECTORY"]):
             print "Seems like there is no correct Wazuh installation "
             sys.exit(1)
     else:
         print "Seems like there is no Wazuh installation or ossec-init.conf is missing."
         sys.exit(1)
+
 
 def provisionDR(bdir):
     if os.path.isfile("./rules/test_rules.xml") and os.path.isfile("./decoders/test_decoders.xml"):
@@ -42,6 +46,7 @@ def provisionDR(bdir):
         print "Test files are missing."
         sys.exit(1)
 
+
 def cleanDR(bdir):
     if os.path.isfile(bdir + "/etc/rules/test_rules.xml") and os.path.isfile(bdir + "/etc/decoders/test_decoders.xml"):
         os.remove(bdir + "/etc/rules/test_rules.xml")
@@ -49,6 +54,7 @@ def cleanDR(bdir):
     else:
         print "Could not clean rules and decoders test files"
         sys.exit(1)
+
 
 class OssecTester(object):
     def __init__(self, bdir):
@@ -69,13 +75,14 @@ class OssecTester(object):
             cmd += ["-D", self._base_dir]
         cmd += ['-U', "%s:%s:%s" % (rule, alert, decoder)]
         return cmd
+
     def runTest(self, log, rule, alert, decoder, section, name, negate=False):
         p = subprocess.Popen(
-                self.buildCmd(rule, alert, decoder),
-                stdout=subprocess.PIPE,
-                stderr=subprocess.STDOUT,
-                stdin=subprocess.PIPE,
-                shell=False)
+            self.buildCmd(rule, alert, decoder),
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            stdin=subprocess.PIPE,
+            shell=False)
         std_out = p.communicate(log)[0]
         if (p.returncode != 0 and not negate) or (p.returncode == 0 and negate):
             self._error = True
@@ -96,11 +103,13 @@ class OssecTester(object):
             sys.stdout.write(".")
             sys.stdout.flush()
 
-    def run(self, selective_test=False):
+    def run(self, selective_test=False, geoip=False):
         for aFile in os.listdir(self._test_path):
             aFile = os.path.join(self._test_path, aFile)
             if aFile.endswith(".ini"):
                 if selective_test and not aFile.endswith(selective_test):
+                    continue
+                if aFile == os.path.join(self._test_path, "static_filters_geoip.ini") and geoip is False:
                     continue
                 print "- [ File = %s ] ---------" % (aFile)
                 tGroup = ConfigParser.RawConfigParser(dict_type=MultiOrderedDict)
@@ -121,22 +130,33 @@ class OssecTester(object):
                             else:
                                 neg = False
                             self.runTest(value, rule, alert, decoder,
-                            t, name, negate=neg)
+                                         t, name, negate=neg)
                 print ""
         if self._error:
             sys.exit(1)
 
+
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description='This script tests Wazuh rules.')
+    parser.add_argument('--geoip', '-g',
+                        action='store_true',
+                        dest='geoip',
+                        help='Use -g or --geoip to enable geoip tests (default: False)')
+    args = parser.parse_args()
+
     if len(sys.argv) == 2:
-        selective_test = sys.argv[1]
-        if not selective_test.endswith('.ini'):
-            selective_test += '.ini'
+        if sys.argv[1] == '-g' or sys.argv[1] == '--geoip':
+            selective_test = False
+        else:
+            selective_test = sys.argv[1]
+            if not selective_test.endswith('.ini'):
+                selective_test += '.ini'
     else:
         selective_test = False
-        ossec_init = {}
-        initconfigpath = "/etc/ossec-init.conf"
-        getOssecConfig(ossec_init, initconfigpath)
-        provisionDR(ossec_init["DIRECTORY"])
-        OT = OssecTester(ossec_init["DIRECTORY"])
-        OT.run(selective_test)
-        cleanDR(ossec_init["DIRECTORY"])
+    ossec_init = {}
+    initconfigpath = "/etc/ossec-init.conf"
+    getOssecConfig(ossec_init, initconfigpath)
+    provisionDR(ossec_init["DIRECTORY"])
+    OT = OssecTester(ossec_init["DIRECTORY"])
+    OT.run(selective_test, args.geoip)
+    cleanDR(ossec_init["DIRECTORY"])
