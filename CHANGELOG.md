@@ -7,10 +7,14 @@ All notable changes to this project will be documented in this file.
 
 - Added rules and decoders for macOS sshd logs ([#593](https://github.com/wazuh/wazuh-ruleset/pull/593))
 - Added TSC/SOC compliance mapping ([#613](https://github.com/wazuh/wazuh-ruleset/pull/613))
+- Added rules and decoders for PaloAlto logs ([#658](https://github.com/wazuh/wazuh-ruleset/pull/658))
+- Added rules and decoder to monitor the FIM database status. ([#4717](https://github.com/wazuh/wazuh/pull/4717))
+- Added rules for WAF. ([#687](https://github.com/wazuh/wazuh-ruleset/pull/687))
 
 ### Changed
 
 - Changed description of Vulnerability Detector rules ([#638](https://github.com/wazuh/wazuh-ruleset/pull/638))
+- Changed squid decoders ([#672](https://github.com/wazuh/wazuh-ruleset/pull/672))
 
 ## [v3.12.1]
 
