@@ -463,7 +463,7 @@ checks:
     title: "Ensure core dumps are restricted"
     description: "A core dump is the memory of an executable program. It is generally used to determine why a program aborted. It can also be used to glean confidential information from a core file."
     rationale: "Setting a hard limit on core dumps prevents users from overriding the soft variable. If core dumps are required, consider setting limits for user groups (see limits.conf). In addition, setting the fs.suid_dumpable variable to 0 will prevent setuid programs from dumping core."
-    remediation: "Add the following line to /etc/security/limits.conf or a /etc/security/limits.d/* file: * hard core 0. Set the following parameter in /etc/sysctl.conf or a /etc/sysctl.d/* file: fs.suid_dumpable = 0 and set the active kernel parameter"
+    remediation: "Add the following line to /etc/security/limits.conf or a /etc/security/limits.d/* file: * hard core 0. Set the following parameter in /etc/sysctl.conf or a /etc/sysctl.d/* file: fs.suid_dumpable = 0. Run the following command to set the active kernel parameter: # sysctl -w fs.suid_dumpable=0"
     compliance:
       - cis: ["1.5.1"]
       - cis_csc: ["13"]
@@ -498,7 +498,7 @@ checks:
     title: "Ensure address space layout randomization (ASLR) is enabled"
     description: "Address space layout randomization (ASLR) is an exploit mitigation technique which randomly arranges the address space of key data areas of a process."
     rationale: "Randomly placing virtual memory regions will make it difficult to write memory page exploits as the memory placement will be consistently shifting."
-    remediation: "Set the following parameter in /etc/sysctl.conf or a /etc/sysctl.d/* file: kernel.randomize_va_space = 2 and set the active kernel parameter"
+    remediation: "Set the following parameter in /etc/sysctl.conf or a /etc/sysctl.d/* file: kernel.randomize_va_space = 2. Run the following command to set the active kernel parameter # sysctl -w kernel.randomize_va_space=2"
     compliance:
       - cis: ["1.5.3"]
       - cis_csc: ["8.4"]
@@ -3018,7 +3018,3 @@ checks:
     condition: none
     rules:
       - 'f:/etc/passwd -> !r:^# && !r:^\s*\t*root: && r:^\w+:\w+:0:'
-
-
-
-
