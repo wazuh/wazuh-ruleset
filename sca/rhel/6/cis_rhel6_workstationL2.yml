@@ -1,0 +1,707 @@
+# Security Configuration Assessment
+# CIS Checks for RHEL 6
+# Copyright (C) 2015-2020, Wazuh Inc.
+#
+# This program is free software; you can redistribute it
+# and/or modify it under the terms of the GNU General Public
+# License (version 2) as published by the FSF - Free Software
+# Foundation
+#
+# Based on:
+# Center for Internet Security Benchmark for Red Hat Enterprise Linux 6 v2.1.0 - 12-27-2017
+
+policy:
+  id: "cis_rhel6_workstationL2"
+  file: "cis_rhel6_workstationL2.yml"
+  name: "CIS Benchmark for Red Hat Enterprise Linux 6"
+  description: "This document provides prescriptive guidance for establishing a secure configuration posture for Red Hat Enterprise Linux 6 systems running on x86 and x64 platforms. This document was tested against Red Hat Enterprise Linux 6.9."
+  references:
+    - https://www.cisecurity.org/cis-benchmarks/
+
+requirements:
+  title: "Check RHEL6 version"
+  description: "Requirements for running the policy against RHEL 6 family."
+  condition: any
+  rules:
+    - 'f:/etc/redhat-release -> r:^Red Hat Enterprise Linux && r:release 6'
+    - 'f:/etc/redhat-release -> r:^Cloud && r:release 6'
+    - 'f:/etc/redhat-release -> r:^Oracle && r:release 6'
+    - 'f:/etc/redhat-release -> r:^Better && r:release 6'
+    - 'f:/etc/system-release -> r:^Amazon Linux AMI'
+
+variables:
+  $sshd_file: /etc/ssh/sshd_config
+
+checks:
+
+# 1.1.1.8 FAT: filesystem
+  - id: 5007 
+    title: "Ensure mounting of FAT filesystems is disabled"
+    description: "The FAT filesystem format is primarily used on older windows systems and portable USB drives or flash modules. It comes in three types FAT12 , FAT16 , and FAT32 all of which are supported by the vfat kernel module."
+    rationale: "Removing support for unneeded filesystem types reduces the local attack surface of the system. If this filesystem type is not needed, disable it."
+    remediation: "Edit or create the file /etc/modprobe.d/CIS.conf and add the following line: install vfat /bin/true. Run the following command to unload the vfat module: rmmod vfat"
+    compliance:
+      - cis: ["1.1.1.8"]
+      - cis_csc: ["13"]
+      - pci_dss: ["2.2.5"]
+      - tsc: ["CC6.3"]
+    references:
+      - AJ Lewis, "LVM HOWTO", https://tldp.org/HOWTO/LVM-HOWTO/
+    condition: all
+    rules:
+      - 'c:modprobe -n -v vfat -> r:install /bin/true|Module vfat not found'
+      - 'not c:lsmod -> r:vfat'
+
+# 1.1.2 /tmp: partition
+  - id: 5008 
+    title: "Ensure separate partition exists for /tmp"
+    description: "The /tmp directory is a world-writable directory used for temporary storage by all users and some applications."
+    rationale: "Since the /tmp directory is intended to be world-writable, there is a risk of resource exhaustion if it is not bound to a separate partition. In addition, making /tmp its own file system allows an administrator to set the noexec option on the mount, making /tmp useless for an attacker to install executable code. It would also prevent an attacker from establishing a hardlink to a system setuid program and wait for it to be updated. Once the program was updated, the hardlink would be broken and the attacker would have his own copy of the program. If the program happened to have a security vulnerability, the attacker could continue to exploit the known flaw."
+    remediation: "For new installations, during installation create a custom partition setup and specify a separate partition for /tmp. For systems that were previously installed, create a new partition and configure /etc/fstab as appropriate."
+    compliance:
+      - cis: ["1.1.2"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
+    references:
+      - AJ Lewis, "LVM HOWTO", https://tldp.org/HOWTO/LVM-HOWTO/
+    condition: all
+    rules:
+      - 'c:mount -> r:\s/tmp\s'
+
+
+# 1.1.6 Build considerations - Partition scheme.
+  - id: 5012 
+    title: "Ensure separate partition exists for /var"
+    description: "The /var directory is used by daemons and other system services to temporarily store dynamic data. Some directories created by these processes may be world-writable."
+    rationale: "Since the /var directory may contain world-writable files and directories, there is a risk of resource exhaustion if it is not bound to a separate partition."
+    remediation: "For new installations, during installation create a custom partition setup and specify a separate partition for /var. For systems that were previously installed, create a new partition and configure /etc/fstab as appropriate."
+    compliance:
+      - cis: ["1.1.6"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
+    references:
+      - AJ Lewis, "LVM HOWTO", https://tldp.org/HOWTO/LVM-HOWTO/
+    condition: all
+    rules:
+      - 'c:mount -> r:\s/var\s'
+
+# 1.1.7 bind mount /var/tmp to /tmp
+  - id: 5013 
+    title: "Ensure separate partition exists for /var/tmp"
+    description: "The /var/tmp directory is a world-writable directory used for temporary storage by all users and some applications."
+    rationale: "Since the /var/tmp directory is intended to be world-writable, there is a risk of resource exhaustion if it is not bound to a separate partition. In addition, making /var/tmp its own file system allows an administrator to set the noexec option on the mount, making /var/tmp useless for an attacker to install executable code."
+    remediation: "For new installations, during installation create a custom partition setup and specify a separate partition for /var/tmp. For systems that were previously installed, create a new partition and configure /etc/fstab as appropriate."
+    compliance:
+      - cis: ["1.1.7"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
+    condition: all
+    rules:
+      - 'c:mount -> r:\s/var/tmp\s'
+
+# 1.1.11 /var/log: partition
+  - id: 5017 
+    title: "Ensure separate partition exists for /var/log"
+    description: "The /var/log directory is used by system services to store log data ."
+    rationale: "There are two important reasons to ensure that system logs are stored on a separate partition: protection against resource exhaustion (since logs can grow quite large) and protection of audit data."
+    remediation: "For new installations, during installation create a custom partition setup and specify a separate partition for /var/log. For systems that were previously installed, create a new partition and configure /etc/fstab as appropriate."
+    compliance:
+      - cis: ["1.1.11"]
+      - cis_csc: ["6.3"]
+      - pci_dss: ["2.2.4","10.7"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
+    references:
+      - AJ Lewis, "LVM HOWTO", https://tldp.org/HOWTO/LVM-HOWTO/
+    condition: all
+    rules:
+      - 'c:mount -> r:\s/var/log\s'
+
+# 1.1.12 /var/log/audit: partition
+  - id: 5018 
+    title: "Ensure separate partition exists for /var/log/audit"
+    description: "The auditing daemon, auditd , stores log data in the /var/log/audit directory."
+    rationale: "There are two important reasons to ensure that data gathered by auditd is stored on a separate partition: protection against resource exhaustion (since the audit.log file can grow quite large) and protection of audit data."
+    remediation: "For new installations, during installation create a custom partition setup and specify a separate partition for /var/log/audit. For systems that were previously installed, create a new partition and configure /etc/fstab as appropriate."
+    compliance:
+      - cis: ["1.1.12"]
+      - cis_csc: ["6.3"]
+      - pci_dss: ["2.2.4","10.7"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
+    references:
+      - AJ Lewis, "LVM HOWTO", https://tldp.org/HOWTO/LVM-HOWTO/
+    condition: all
+    rules:
+      - 'c:mount -> r:\s/var/log/audit\s'
+
+# 1.1.13 /home: partition
+  - id: 5019 
+    title: "Ensure separate partition exists for /home"
+    description: "The /home directory is used to support disk storage needs of local users."
+    rationale: "If the system is intended to support local users, create a separate partition for the /home directory to protect against resource exhaustion and restrict the type of files that can be stored under /home."
+    remediation: "For new installations, during installation create a custom partition setup and specify a separate partition for /home. For systems that were previously installed, create a new partition and configure /etc/fstab as appropriate."
+    compliance:
+      - cis: ["1.1.13"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
+    references:
+      - AJ Lewis, "LVM HOWTO", https://tldp.org/HOWTO/LVM-HOWTO/
+    condition: all
+    rules:
+      - 'c:mount -> r:\s/home\s'
+
+
+# 1.1.22 Disable Automounting
+  - id: 5024 
+    title: "Disable Automounting"
+    description: "autofs allows automatic mounting of devices, typically including CD/DVDs and USB drives."
+    rationale: "With automounting enabled anyone with physical access could attach a USB drive or disc and have its contents available in system even if they lacked permissions to mount it themselves."
+    remediation: "Run the following command to disable autofs: # chkconfig autofs off"
+    compliance:
+      - cis: ["1.1.22"]
+      - cis_csc: ["8.3"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
+    condition: none
+    rules:
+      - 'c:chkconfig --list autofs -> r:^\s*\t*autofs\.*on'
+
+
+
+###############################################
+# 1.2 Configure Software Updates
+###############################################
+
+# 1.2.5 Disable the rhnsd Daemon (Not Scored)
+  - id: 5707 
+    title: "Disable the rhnsd Daemon"
+    description: "The rhnsd daemon polls the Red Hat Network web site for scheduled actions and, if there are, executes those actions."
+    rationale: "Patch management policies may require that organizations test the impact of a patch before it is deployed in a production environment. Having patches automatically deployed could have a negative impact on the environment. It is best to not allow an action by default but only after appropriate consideration has been made. It is recommended that the service be disabled unless the risk is understood and accepted or you are running your own satellite . This item is not scored because organizations may have addressed the risk."
+    remediation: "Run the following command to disable rhnsd : # chkconfig rhnsd off"
+    compliance:
+      - cis: ["1.2.5"]
+      - pci_dss: ["2.2.5"]
+      - tsc: ["CC6.3"]
+    condition: all
+    rules:
+      - 'c:chkconfig --list rhnsd -> r:^rhnsd\s*\t*0:off\s*\t*1:off\s*\t*2:off\s*\t*3:off\s*\t*4:off\s*\t*5:off\s*\t*6:off'
+
+
+
+###############################################
+# 1.6 Configure SELinux
+###############################################
+
+# 1.6.1.1 SELinux not disabled
+  - id: 5036 
+    title: "Ensure SELinux is not disabled in bootloader configuration"
+    description: "Configure SELINUX to be enabled at boot time and verify that it has not been overwritten by the grub boot parameters."
+    rationale: "SELinux must be enabled at boot time in your grub configuration to ensure that the controls it provides are not overridden."
+    remediation: "Edit /boot/grub/grub.conf and remove all instances of selinux=0 and enforcing=0 on all kernel lines"
+    compliance:
+      - cis: ["1.6.1.1"]
+      - cis_csc: ["14.4"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
+    condition: none
+    rules:
+      - 'f:/boot/grub/grub.conf -> r:^\s*\t*kernel\.*selinux=0|^\s*\t*kernel\.*enforcing=0'
+
+# 1.6.1.2 Set selinux state
+  - id: 5037 
+    title: "Ensure the SELinux state is enforcing"
+    description: "Set SELinux to enable when the system is booted."
+    rationale: "SELinux must be enabled at boot time in to ensure that the controls it provides are in effect at all times."
+    remediation: "Edit the /etc/selinux/config file to set the SELINUX parameter: SELINUX=enforcing"
+    compliance:
+      - cis: ["1.6.1.2"]
+      - cis_csc: ["14.4"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
+    condition: all
+    rules:
+      - 'c:sestatus -> r:^SELinux status:\s+enabled'
+      - 'c:sestatus -> r:^Current mode:\s+enforcing'
+      - 'c:sestatus -> r:^Mode from config file:\s+enforcing'
+      - 'f:/etc/selinux/config -> r:^SELINUX\s*=\s*enforcing'
+
+# 1.6.1.3 Set selinux policy
+  - id: 5038 
+    title: "Ensure SELinux policy is configured"
+    description: "Configure SELinux to meet or exceed the default targeted policy, which constrains daemons and system software only."
+    rationale: "Security configuration requirements vary from site to site. Some sites may mandate a policy that is stricter than the default policy, which is perfectly acceptable. This item is intended to ensure that at least the default recommendations are met."
+    remediation: "Edit the /etc/selinux/config file to set the SELINUXTYPE parameter: SELINUXTYPE=targeted"
+    compliance:
+      - cis: ["1.6.1.3"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
+    condition: all
+    rules:
+      - 'c:sestatus -> r:^Policy from config file:\s+targeted|^Policy from config file:\s+mls'
+      - 'f:/etc/selinux/config -> r:^\s*SELINUXTYPE\s*=\s*targeted|^\s*SELINUXTYPE\s*=\s*mls'
+
+# 1.6.1.5 Disable MCS Translation service mcstrans
+  - id: 5040 
+    title: "Ensure the MCS Translation Service (mcstrans) is not installed"
+    description: "The mcstransd daemon provides category label information to client processes requesting information. The label translations are defined in /etc/selinux/targeted/setrans.conf"
+    rationale: "Since this service is not used very often, remove it to reduce the amount of potentially vulnerable code running on the system."
+    remediation: "Run the following command to uninstall mcstrans: # yum remove mcstrans"
+    compliance:
+      - cis: ["1.6.1.5"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
+    condition: none
+    rules:
+      - 'c:rpm -qa mcstrans -> r:mcstrans'
+
+# 1.6.1.6 Ensure no unconfined daemons exist
+  - id: 5041 
+    title: "Ensure no unconfined daemons exist"
+    description: "Daemons that are not defined in SELinux policy will inherit the security context of their parent process."
+    rationale: "Since daemons are launched and descend from the init process, they will inherit the security context label initrc_t . This could cause the unintended consequence of giving the process more permission than it requires."
+    remediation: "Investigate any unconfined daemons found during the audit action. They may need to have an existing security context assigned to them or a policy built for them."
+    compliance:
+      - cis: ["1.6.1.6"]
+      - cis_csc: ["14.4"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
+    condition: none
+    rules:
+      - 'c:ps -eZ -> r:initrc && !r:tr|ps|egrep|bash|awk'
+# 1.6.2 Install SELinux
+  - id: 5042 
+    title: "Ensure SELinux is installed"
+    description: "SELinux provides Mandatory Access Controls."
+    rationale: "Without a Mandatory Access Control system installed only the default Discretionary Access Control system will be available."
+    remediation: "Run the following command to install libselinux: yum install libselinux"
+    compliance:
+      - cis: ["1.6.2"]
+      - cis_csc: ["14.4"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
+    condition: all
+    rules:
+      - 'c:rpm -q libselinux -> r:libselinux-\S+'
+
+###############################################
+# 4 Logging and Auditing
+###############################################
+###############################################
+# 4.1 Configure System Accounting (auditd)
+###############################################
+
+# 4.1.1.1 Ensure audit log storage size is configured (Not Scored)
+  - id: 5109 
+    title: "Ensure audit log storage size is configured"
+    description: "Configure the maximum size of the audit log file. Once the log reaches the maximum size, it will be rotated and a new log file will be started."
+    rationale: "It is important that an appropriate size is determined for log files so that they do not impact the system and audit data is not lost."
+    remediation: "Set the following parameter in /etc/audit/auditd.conf in accordance with site policy: max_log_file = <MB>"
+    compliance:
+      - cis: ["4.1.1.1"]
+      - cis_csc: ["6.3"]
+      - pci_dss: ["10.7"]
+    condition: all
+    rules:
+      - 'f:/etc/audit/auditd.conf -> r:^max_log_file\s*=\s*\d+'
+
+# 4.1.1.2 Ensure system is disabled when audit logs are full (Scored)
+  - id: 5110 
+    title: "Ensure system is disabled when audit logs are full"
+    description: "The auditd daemon can be configured to halt the system when the audit logs are full."
+    rationale: "In high security contexts, the risk of detecting unauthorized access or nonrepudiation exceeds the benefit of the system's availability."
+    remediation: "Set the following parameters in /etc/audit/auditd.conf: space_left_action = email   action_mail_acct = root   admin_space_left_action = halt"
+    compliance:
+      - cis: ["4.1.1.2"]
+      - cis_csc: ["6.3"]
+      - pci_dss: ["10.7"]
+    condition: all
+    rules:
+      - 'f:/etc/audit/auditd.conf -> r:^space_left_action\s*=\s*email'
+      - 'f:/etc/audit/auditd.conf -> r:^action_mail_acct\s*=\s*root'
+      - 'f:/etc/audit/auditd.conf -> r:^admin_space_left_action\s*=\s*halt'
+
+# 4.1.1.3 Ensure audit logs are not automatically deleted (Scored)
+  - id: 5111 
+    title: "Ensure audit logs are not automatically deleted"
+    description: "The max_log_file_action setting determines how to handle the audit log file reaching the max file size. A value of keep_logs will rotate the logs but never delete old logs."
+    rationale: "In high security contexts, the benefits of maintaining a long audit history exceed the cost of storing the audit history."
+    remediation: "Set the following parameter in /etc/audit/auditd.conf: max_log_file_action = keep_logs"
+    compliance:
+      - cis: ["4.1.1.3"]
+      - cis_csc: ["6.3"]
+      - pci_dss: ["10.7"]
+    condition: all
+    rules:
+      - 'f:/etc/audit/auditd.conf -> r:^max_log_file_action\s*=\s*keep_logs'
+
+# 4.1.2 Ensure auditd service is enabled (Scored)
+  - id: 5112 
+    title: "Ensure auditd service is enabled"
+    description: "Turn on the auditd daemon to record system events."
+    rationale: "The capturing of system events provides system administrators with information to allow them to determine if unauthorized access to their system is occurring."
+    remediation: "Run the following command to enable auditd : # chkconfig auditd on"
+    compliance:
+      - cis: ["4.1.2"]
+      - cis_csc: ["6.2"]
+      - pci_dss: ["10.1","10.7"]
+      - tsc: ["CC6.1","CC6.2","CC6.3","CC7.2","CC7.3","CC7.4"]
+    condition: all
+    rules:
+      - 'c:chkconfig --list auditd -> r:2:on && r:3:on && r:4:on && r:5:on'
+
+
+# 4.1.3 Ensure auditing for processes that start prior to auditd is enabled (Scored)
+  - id: 5113 
+    title: "Ensure auditing for processes that start prior to auditd is enabled"
+    description: "Configure grub so that processes that are capable of being audited can be audited even if they start up prior to auditd startup."
+    rationale: "Audit events need to be captured on processes that start up prior to auditd, so thatpotential malicious activity cannot go undetected."
+    remediation: "Edit /boot/grub/grub.conf to include audit=1 on all kernel lines. Notes: This recommendation is designed around the grub bootloader, if LILO or another bootloader is in use in your environment enact equivalent settings."
+    compliance:
+      - cis: ["4.1.3"]
+      - cis_csc: ["6.2"]
+      - pci_dss: ["10.2.6","10.7"]
+      - gpg_13: ["7.9"]
+      - gdpr_IV: ["35.7.d","32.2"]
+      - tsc: ["CC6.1","CC6.8","CC7.2","CC7.3","CC7.4"]
+    condition: none
+    rules:
+      - 'f:/boot/grub/grub.conf -> r:^\s*\t*kernel && !r:audit=1'
+      
+# 4.1.4 Ensure events that modify date and time information are collected (Scored)
+  - id: 5114 
+    title: "Ensure events that modify date and time information are collected"
+    description: "Capture events where the system date and/or time has been modified. The parameters in this section are set to determine if the adjtimex (tune kernel clock), settimeofday (Set time, using timeval and timezone structures) stime (using seconds since 1/1/1970) or clock_settime (allows for the setting of several internal clocks and timers) system calls have been executed and always write an audit record to the /var/log/audit.log file upon exit, tagging the records with the identifier \"time-change\"."
+    rationale: "Unexpected changes in system date and/or time could be a sign of malicious activity on the system."
+    remediation: "For 32 bit systems add the following lines to the /etc/audit/audit.rules file: -a always,exit -F arch=b32 -S adjtimex -S settimeofday -S stime -k time-change   -a always,exit -F arch=b32 -S clock_settime -k time-change   -w /etc/localtime -p wa -k time-change   For 64 bit systems add the following lines to the /etc/audit/audit.rules file:   -a always,exit -F arch=b64 -S adjtimex -S settimeofday -k time-change   -a always,exit -F arch=b32 -S adjtimex -S settimeofday -S stime -k time-change   -a always,exit -F arch=b64 -S clock_settime -k time-change   -a always,exit -Farch=b32 -S clock_settime -k time-change   -w /etc/localtime -p wa -k time-change"
+    compliance:
+      - cis: ["4.1.4"]
+      - cis_csc: ["3.6"]
+      - pci_dss: ["10.4.2","10.2.7"]
+      - nist_800_53: ["AU.14","AU.6"]
+      - gpg_13: ["7.9"]
+      - gdpr_IV: ["32.2","35.7.d"]
+      - hipaa: ["164.312.b"]
+      - tsc: ["CC6.1","CC6.8","CC7.2","CC7.3","CC7.4"]
+    condition: all
+    rules:
+      - 'f:/etc/audit/audit.rules -> r:^-a && r:always,exit|exit,always && r:-F arch=b32 && r:-S adjtimex && r:-S settimeofday && r:-S stime && r:-k time-change'
+      - 'f:/etc/audit/audit.rules -> r:^-a && r:always,exit|exit,always && r:-F arch=b32 && r:-S clock_settime && r:-k time-change'
+      - 'f:/etc/audit/audit.rules -> r:-w /etc/localtime && r:-p wa && r:-k time-change'
+
+# 4.1.5 Ensure events that modify user/group information are collected (Scored)
+  - id: 5115 
+    title: "Ensure events that modify user/group information are collected"
+    description: "Record events affecting the group , passwd (user IDs), shadow and gshadow (passwords) or /etc/security/opasswd (old passwords, based on remember parameter in the PAM configuration) files. The parameters in this section will watch the files to see if they have been opened for write or have had attribute changes (e.g. permissions) and tag them with the identifier \"identity\" in the audit log file."
+    rationale: "Unexpected changes to these files could be an indication that the system has been compromised and that an unauthorized user is attempting to hide their activities or compromise additional accounts."
+    remediation: "Add the following lines to the /etc/audit/audit.rules file:    -w /etc/group -p wa -k identity    -w /etc/passwd -p wa -k identity    -w /etc/gshadow -p wa -k identity    -w /etc/shadow -p wa -k identity    -w /etc/security/opasswd -p wa -k identity"
+    compliance:
+      - cis: ["4.1.5"]
+      - cis_csc: ["5.4"]
+      - pci_dss: ["10.2.5"]
+      - hipaa: ["164.312.b"]
+      - nist_800_53: ["AU.14", "AC.7"]
+      - gpg_13: ["7.8"]
+      - gdpr_IV: ["35.7","32.2"]
+      - tsc: ["CC6.1","CC6.8","CC7.2","CC7.3","CC7.4"]
+    condition: all
+    rules:
+      - 'f:/etc/audit/audit.rules -> r:-w /etc/group && r:-p wa && r:-k identity'
+      - 'f:/etc/audit/audit.rules -> r:-w /etc/passwd && r:-p wa && r:-k identity'
+      - 'f:/etc/audit/audit.rules -> r:-w /etc/gshadow && r:-p wa && r:-k identity'
+      - 'f:/etc/audit/audit.rules -> r:-w /etc/shadow && r:-p wa && r:-k identity'
+      - 'f:/etc/audit/audit.rules -> r:-w /etc/security/opasswd && r:-p wa && r:-k identity'
+
+# 4.1.6 Ensure events that modify the system's network environment are collected (Scored)
+  - id: 5116 
+    title: "Ensure events that modify the system's network environment are collected"
+    description: "Record changes to network environment files or system calls. The below parameters monitor the sethostname (set the systems host name) or setdomainname (set the systems domainname) system calls, and write an audit event on system call exit. The other parameters monitor the /etc/issue and /etc/issue.net files (messages displayed pre-login), /etc/hosts (file containing host names and associated IP addresses), /etc/sysconfig/network file and /etc/sysconfig/network-scripts/ directory (containing network interface scripts and configurations)."
+    rationale: "Monitoring sethostname and setdomainname will identify potential unauthorized changes to host and domainname of a system. The changing of these names could potentially break security parameters that are set based on those names. The /etc/hosts file is monitored for changes in the file that can indicate an unauthorized intruder is trying to change machine associations with IP addresses and trick users and processes into connecting to unintended machines. Monitoring /etc/issue and /etc/issue.net is important, as intruders could put disinformation into those files and trick users into providing information to the intruder. Monitoring /etc/sysconfig/network and /etc/sysconfig/network-scripts/ is important as it can show if network interfaces or scripts are being modified in a way that can lead to the machine becoming unavailable or compromised. All audit records will be tagged with the identifier \"system-locale.\""
+    remediation: "For 32 bit systems add the following lines to the /etc/audit/audit.rules file:    -a always,exit -F arch=b32 -S sethostname -S setdomainname -k system-locale    -w /etc/issue -p wa -k system-locale    -w /etc/issue.net -p wa -k system-locale    -w /etc/hosts -p wa -k system-locale    -w /etc/sysconfig/network -p wa -k system-locale    -w /etc/sysconfig/network-scripts/ -p wa -k system-locale        For 64 bit systems add the following lines to the /etc/audit/audit.rules file:    -a always,exit -F arch=b64 -S sethostname -S setdomainname -k system-locale    -a always,exit -F arch=b32 -S sethostname -S setdomainname -k system-locale    -w /etc/issue -p wa -k system-locale    -w /etc/issue.net -p wa -k system-locale    -w /etc/hosts -p wa -k system-locale    -w /etc/sysconfig/network -p wa -k system-locale    -w /etc/sysconfig/network-scripts/ -p wa -k system-locale"
+    compliance:
+      - cis: ["4.1.6"]
+      - cis_csc: ["3.6"]
+      - pci_dss: ["10.2.7"]
+      - nist_800_53: ["AU.14","AU.6"]
+      - gpg_13: ["7.9"]
+      - gdpr_IV: ["32.2","35.7.d"]
+      - hipaa: ["164.312.b"]
+      - tsc: ["CC6.1","CC6.8","CC7.2","CC7.3","CC7.4"]
+    condition: all
+    rules:
+      - 'f:/etc/audit/audit.rules -> r:^-a && r:always,exit|exit,always && r:-F arch=b32 && r:-S sethostname && r:-S setdomainname && r:-k system-locale'
+      - 'f:/etc/audit/audit.rules -> r:-w /etc/issue && r:-p wa && r:-k system-locale'
+      - 'f:/etc/audit/audit.rules -> r:-w /etc/issue.net && r:-p wa && r:-k system-locale'
+      - 'f:/etc/audit/audit.rules -> r:-w /etc/hosts && r:-p wa && r:-k system-locale'
+      - 'f:/etc/audit/audit.rules -> r:-w /etc/sysconfig/network && r:-p wa && r:-k system-locale'
+      - 'f:/etc/audit/audit.rules -> r:-w /etc/sysconfig/network-scripts/ && r:-p wa && r:-k system-locale'
+
+# 4.1.7 Ensure events that modify the system's Mandatory Access Controls are collected (Scored)
+  - id: 5117 
+    title: "Ensure events that modify the system's Mandatory Access Controls are collected"
+    description: "Monitor SELinux mandatory access controls. The parameters below monitor any write access (potential additional, deletion or modification of files in the directory) or attribute changes to the /etc/selinux or directory."
+    rationale: "Changes to files in these directories could indicate that an unauthorized user is attempting to modify access controls and change security contexts, leading to a compromise of the system."
+    remediation: "Add the following lines to the /etc/audit/audit.rules file: -w /etc/selinux/ -p wa -k MAC-policy -w /usr/share/selinux/ -p wa -k MAC-policy"
+    compliance:
+      - cis: ["4.1.7"]
+      - cis_csc: ["3.6"]
+      - pci_dss: ["10.2.5"]
+      - hipaa: ["164.312.b"]
+      - nist_800_53: ["AU.14", "AC.7"]
+      - gpg_13: ["7.8"]
+      - gdpr_IV: ["35.7","32.2"]
+      - tsc: ["CC6.1","CC6.8","CC7.2","CC7.3","CC7.4"]
+    condition: all
+    rules:
+      - 'f:/etc/audit/audit.rules -> r:-w /etc/selinux/ && r:-p wa && r:-k MAC-policy'
+      - 'f:/etc/audit/audit.rules -> r:-w /usr/share/selinux/ && r:-p wa && r:-k MAC-policy'
+
+# 4.1.8 Ensure login and logout events are collected (Scored)
+  - id: 5118 
+    title: "Ensure login and logout events are collected"
+    description: "Monitor login and logout events. The parameters below track changes to files associated with login/logout events. The file /var/log/lastlog maintain records of the last time a user successfully logged in. The /var/run/failock directory maintains records of login failures via the pam_faillock module."
+    rationale: "Monitoring login/logout events could provide a system administrator with information associated with brute force attacks against user logins."
+    remediation: "Add the following lines to the /etc/audit/audit.rules file:  -w /var/log/lastlog -p wa -k logins   -w /var/run/faillock/ -p wa -k logins"
+    compliance:
+      - cis: ["4.1.8"]
+      - cis_csc: ["5.5","16.10","16.4"]
+      - pci_dss: ["10.2.1", "10.2.4", "10.3"]
+      - nist_800_53: ["AC.7","AU.14"]
+      - gpg_13: ["7.8"]
+      - gdpr_IV: ["32.2","35.7.d"]
+      - hipaa: ["164.312.b"]
+      - tsc: ["CC6.1","CC6.8","CC7.2","CC7.3","CC7.4"]
+    condition: all
+    rules:
+      - 'f:/etc/audit/audit.rules -> r:-w /var/log/lastlog && r:-p wa && r:-k logins'
+      - 'f:/etc/audit/audit.rules -> r:-w /var/run/faillock/ && r:-p wa && r:-k logins'
+
+# 4.1.9 Ensure session initiation information is collected (Scored)
+  - id: 5119 
+    title: "Ensure session initiation information is collected"
+    description: "Monitor session initiation events. The parameters in this section track changes to the files associated with session events. The file /var/run/utmp file tracks all currently logged in users. All audit records will be tagged with the identifier \"session.\" The /var/log/wtmp file tracks logins, logouts, shutdown, and reboot events. The file /var/log/btmp keeps track of failed login attempts and can be read by entering the command /usr/bin/last -f /var/log/btmp . All audit records will be tagged with the identifier \"logins.\"."
+    rationale: "Monitoring these files for changes could alert a system administrator to logins occurring at unusual hours, which could indicate intruder activity (i.e. a user logging in at a time when they do not normally log in)."
+    remediation: "Add the following lines to the /etc/audit/audit.rules file:   -w /var/run/utmp -p wa -k session   -w /var/log/wtmp -p wa -k logins   -w /var/log/btmp -p wa -k logins"
+    compliance:
+    compliance:
+      - cis: ["4.1.8"]
+      - cis_csc: ["5.5","16.10","16.4"]
+      - pci_dss: ["10.3"]
+    condition: all
+    rules:
+      - 'f:/etc/audit/audit.rules -> r:-w /var/run/utmp && r:-p wa && r:-k session'
+      - 'f:/etc/audit/audit.rules -> r:-w /var/log/wtmp && r:-p wa && r:-k logins'
+      - 'f:/etc/audit/audit.rules -> r:-w /var/log/btmp && r:-p wa && r:-k logins'
+
+# 4.1.10 Ensure discretionary access control permission modification events are collected (Scored)
+  - id: 5120 
+    title: "Ensure discretionary access control permission modification events are collected"
+    description: "Monitor changes to file permissions, attributes, ownership and group. The parameters in this section track changes for system calls that affect file permissions and attributes. The chmod , fchmod and fchmodat system calls affect the permissions associated with a file. The chown , fchown , fchownat and lchown system calls affect owner and group attributes on a file. The setxattr , lsetxattr , fsetxattr (set extended file attributes) and removexattr , lremovexattr , fremovexattr (remove extended file attributes) control extended file attributes. In all cases, an audit record will only be written for non-system user ids (auid >= 500) and will ignore Daemon events (auid = 4294967295). All audit records will be tagged with the identifier \"perm_mod.\""
+    rationale: "Monitoring for changes in file attributes could alert a system administrator to activity that could indicate intruder activity or policy violation."
+    remediation: "For 32 bit systems add the following lines to the /etc/audit/audit.rules file:   -a always,exit -F arch=b32 -S chmod -S fchmod -S fchmodat -F auid>=500 -F auid!=4294967295 -k perm_mod   -a always,exit -F arch=b32 -S chown -S fchown -S fchownat -S lchown -F auid>=500 -F auid!=4294967295 -k perm_mod   -a always,exit -F arch=b32 -S setxattr -S lsetxattr -S fsetxattr -S removexattr -S lremovexattr -S fremovexattr -F auid>=500 -F auid!=4294967295 -k perm_mod   For 64 bit systems add the following lines to the /etc/audit/audit.rules file:   -a always,exit -F arch=b64 -S chmod -S fchmod -S fchmodat -F auid>=500 -F auid!=4294967295 -k perm_mod   -a always,exit -F arch=b32 -S chmod -S fchmod -S fchmodat -F auid>=500 -F auid!=4294967295 -k perm_mod   -a always,exit -F arch=b64 -S chown -S fchown -S fchownat -S lchown -F auid>=500 -F auid!=4294967295 -k perm_mod   -a always,exit -F arch=b32 -S chown -S fchown -S fchownat -S lchown -F auid>=500 -F auid!=4294967295 -k perm_mod   -a always,exit -F arch=b64 -S setxattr -S lsetxattr -S fsetxattr -S removexattr -S lremovexattr -S fremovexattr -F auid>=500 -F auid!=4294967295 -k perm_mod   -a always,exit -F arch=b32 -S setxattr -S lsetxattr -S fsetxattr -S removexattr -S lrem"
+    compliance:
+      - cis: ["4.1.10"]
+      - cis_csc: ["3.6"]
+      - pci_dss: ["10.2.5"]
+      - hipaa: ["164.312.b"]
+      - nist_800_53: ["AU.14", "AC.7"]
+      - gpg_13: ["7.8"]
+      - gdpr_IV: ["35.7","32.2"]
+      - tsc: ["CC6.1","CC6.8","CC7.2","CC7.3","CC7.4"]
+    condition: all
+    rules:
+      - 'f:/etc/audit/audit.rules -> r:^-a && r:always,exit|exit,always && r:-F arch=b32 && r:-S chmod && r:-S fchmod && r:-S fchmodat && r:-F auid>=500 && r:-F auid!=4294967295 && r:-k perm_mod'
+      - 'f:/etc/audit/audit.rules -> r:^-a && r:always,exit|exit,always && r:-F arch=b32 && r:-S chown && r:-S fchown && r:-S fchownat && r:-S lchown && r:-F auid>=500 && r:-F auid!=4294967295 && r:-k perm_mod'
+      - 'f:/etc/audit/audit.rules -> r:^-a && r:always,exit|exit,always && r:-F arch=b32 && r:-S setxattr && r:-S lsetxattr && r:-S fsetxattr && r:-S removexattr && r:-S lremovexattr && r:-S fremovexattr && r:-F auid>=500 && r:-F auid!=4294967295 && r:-k perm_mod'
+
+# 4.1.11 Ensure unsuccessful unauthorized file access attempts are collected (Scored)
+  - id: 5121 
+    title: "Ensure unsuccessful unauthorized file access attempts are collected"
+    description: "Monitor for unsuccessful attempts to access files. The parameters below are associated  with system calls that control creation ( creat ), opening ( open , openat ) and truncation (  truncate , ftruncate ) of files. An audit log record will only be written if the user is a non-  privileged user (auid > = 500), is not a Daemon event (auid=4294967295) and if the  system call returned EACCES (permission denied to the file) or EPERM (some other  permanent error associated with the specific system call). All audit records will be tagged  with the identifier \"access.\""
+    rationale: "Failed attempts to open, create or truncate files could be an indication that an individual or process is trying to gain unauthorized access to the system."
+    remediation: "For 32 bit systems add the following lines to the /etc/audit/audit.rules file:   -a always,exit -F arch=b32 -S creat -S open -S openat -S truncate -S ftruncate -F exit=-EACCES -F auid>=500 -F auid!=4294967295 -k access   -a always,exit -F arch=b32 -S creat -S open -S openat -S truncate -S ftruncate -F exit=-EPERM -F auid>=500 -F auid!=4294967295 -k access   For 64 bit systems add the following lines to the /etc/audit/audit.rules file:   -a always,exit -F arch=b64 -S creat -S open -S openat -S truncate -S ftruncate -F exit=-EACCES -F auid>=500 -F auid!=4294967295 -k access   -a always,exit -F arch=b32 -S creat -S open -S openat -S truncate -S ftruncate -F exit=-EACCES -F auid>=500 -F auid!=4294967295 -k access   -a always,exit -F arch=b64 -S creat -S open -S openat -S truncate -S ftruncate -F exit=-EPERM -F auid>=500 -F auid!=4294967295 -k access   -a always,exit -F arch=b32 -S creat -S open -S openat -S truncate -S ftruncate -F exit=-EPERM -F auid>=500 -F auid!=4294967295 -k access"
+    compliance:
+      - cis: ["4.1.11"]
+      - cis_csc: ["14.6"]
+      - pci_dss: ["10.2.4"]
+      - nist_800_53: ["AC.7"]
+      - gpg_13: ["7.8"]
+      - gdpr_IV: ["32.2","35.7.d"]
+      - hipaa: ["164.312.b"]
+      - tsc: ["CC6.1","CC6.8","CC7.2","CC7.3","CC7.4"]
+    condition: all
+    rules:
+      - 'f:/etc/audit/audit.rules -> r:^-a && r:always,exit|exit,always && r:-F arch=b32 && r:-S creat && r:-S open && r:-S openat && r:-S truncate && r:-S ftruncate && r:-F exit=-EACCES && r:-F auid>=500 && r:-F auid!=4294967295 && r:-k access'
+      - 'f:/etc/audit/audit.rules -> r:^-a && r:always,exit|exit,always && r:-F arch=b32 && r:-S creat && r:-S open && r:-S openat && r:-S truncate && r:-S ftruncate && r:-F exit=-EPERM && r:-F auid>=500 && r:-F auid!=4294967295 && r:-k access'
+
+# 4.1.13 Ensure successful file system mounts are collected (Scored)
+  - id: 5122 
+    title: "Ensure successful file system mounts are collected"
+    description: "Monitor the use of the mount system call. The mount (and umount ) system call controls the mounting and unmounting of file systems. The parameters below configure the system to create an audit record when the mount system call is used by a non-privileged user."
+    rationale: "It is highly unusual for a non privileged user to mount file systems to the system. While tracking mount commands gives the system administrator evidence that external media may have been mounted (based on a review of the source of the mount and confirming it's an external media type), it does not conclusively indicate that data was exported to the media. System administrators who wish to determine if data were exported, would also have to track successful open , creat and truncate system calls requiring write access to a file under the mount point of the external media file system. This could give a fair indication that a write occurred. The only way to truly prove it, would be to track successful writes to the external media. Tracking write system calls could quickly fill up the audit log and is not recommended. Recommendations on configuration options to track data export to media is beyond the scope of this document."
+    remediation: "For 32 bit systems add the following lines to the /etc/audit/audit.rules file:   -a always,exit -F arch=b32 -S mount -F auid>=500 -F auid!=4294967295 -k mounts   For 64 bit systems add the following lines to the /etc/audit/audit.rules file:   -a always,exit -F arch=b64 -S mount -F auid>=500 -F auid!=4294967295 -k mounts   -a always,exit -F arch=b32 -S mount -F auid>=500 -F auid!=4294967295 -k mounts"
+    compliance:
+      - cis: ["4.1.13"]
+      - cis_csc: ["13"]
+      - pci_dss: ["10.2.7"]
+      - nist_800_53: ["AU.14","AU.6"]
+      - gpg_13: ["7.9"]
+      - gdpr_IV: ["32.2","35.7.d"]
+      - hipaa: ["164.312.b"]
+      - tsc: ["CC6.1","CC6.8","CC7.2","CC7.3","CC7.4"]
+    condition: all
+    rules:
+      - 'f:/etc/audit/audit.rules -> r:^-a && r:always,exit|exit,always && r:-F arch=b32 && r:-S mount && r:-F auid>=500 && r:-F auid!=4294967295 && r:-k mounts'
+
+
+# 4.1.14 Ensure file deletion events by users are collected (Scored)
+  - id: 5123 
+    title: "Ensure file deletion events by users are collected"
+    description: "Monitor the use of system calls associated with the deletion or renaming of files and file attributes. This configuration statement sets up monitoring for the unlink (remove a file), unlinkat (remove a file attribute), rename (rename a file) and renameat (rename a file attribute) system calls and tags them with the identifier \"delete\"."
+    rationale: "Monitoring these calls from non-privileged users could provide a system administrator with evidence that inappropriate removal of files and file attributes associated with protected files is occurring. While this audit option will look at all events, system administrators will want to look for specific privileged files that are being deleted or altered."
+    remediation: "For 32 bit systems add the following lines to the /etc/audit/audit.rules file:   -a always,exit -F arch=b32 -S unlink -S unlinkat -S rename -S renameat -F auid>=500 -F auid!=4294967295 -k delete   For 64 bit systems add the following lines to the /etc/audit/audit.rules file:   -a always,exit -F arch=b64 -S unlink -S unlinkat -S rename -S renameat -F auid>=500 -F auid!=4294967295 -k delete   -a always,exit -F arch=b32 -S unlink -S unlinkat -S rename -S renameat -F auid>=500 -F auid!=4294967295 -k delete"
+    compliance:
+      - cis: ["4.1.14"]
+      - pci_dss: ["10.5.5"]
+      - tsc: ["PI1.4","PI1.5","CC7.1","CC7.2","CC7.3","CC8.1"]
+    condition: all
+    rules:
+      - 'f:/etc/audit/audit.rules -> r:^-a && r:always,exit|exit,always && r:-F arch=b32 && r:-S unlink && r:-S unlinkat && r:-S rename && r:-S renameat && r:-F auid>=500 && r:-F auid!=4294967295 && r:-k delete'
+
+# 4.1.15 Ensure changes to system administration scope (sudoers) is collected (Scored)
+  - id: 5124 
+    title: "Ensure changes to system administration scope (sudoers) is collected"
+    description: "Monitor scope changes for system administrations. If the system has been properly configured to force system administrators to log in as themselves first and then use the sudo command to execute privileged commands, it is possible to monitor changes in scope. The file /etc/sudoers will be written to when the file or its attributes have changed. The audit records will be tagged with the identifier \"scope.\""
+    rationale: "Changes in the /etc/sudoers file can indicate that an unauthorized change has been made to scope of system administrator activity."
+    remediation: "Add the following line to the /etc/audit/audit.rules file:   -w /etc/sudoers -p wa -k scope   -w /etc/sudoers.d/ -p wa -k scope"
+    compliance:
+      - cis: ["4.1.15"]
+      - cis_csc: ["5.4"]
+      - pci_dss: ["10.2.5"]
+      - hipaa: ["164.312.b"]
+      - nist_800_53: ["AU.14", "AC.7"]
+      - gpg_13: ["7.8"]
+      - gdpr_IV: ["35.7","32.2"]
+      - tsc: ["CC6.1","CC6.8","CC7.2","CC7.3","CC7.4"]
+    condition: all
+    rules:
+      - 'f:/etc/audit/audit.rules -> r:-w /etc/sudoers && r:-p wa && r:-k scope'
+      - 'f:/etc/audit/audit.rules -> r:-w /etc/sudoers.d/ && r:-p wa && r:-k scope'
+
+# 4.1.16 Ensure system administrator actions (sudolog) are collected (Scored)
+  - id: 5125 
+    title: "Ensure system administrator actions (sudolog) are collected"
+    description: "Monitor the sudo log file. If the system has been properly configured to disable the use of the su command and force all administrators to have to log in first and then use sudo to execute privileged commands, then all administrator commands will be logged to /var/log/sudo.log . Any time a command is executed, an audit event will be triggered as the /var/log/sudo.log file will be opened for write and the executed administration command will be written to the log."
+    rationale: "Changes in /var/log/sudo.log indicate that an administrator has executed a command or the log file itself has been tampered with. Administrators will want to correlate the events written to the audit trail with the records written to /var/log/sudo.log to verify if unauthorized commands have been executed."
+    remediation: "Add the following line to the /etc/audit/audit.rules file:   -w /var/log/sudo.log -p wa -k actions"
+    compliance:
+      - cis: ["4.1.16"]
+      - cis_csc: ["5.1","5.5"]
+      - pci_dss: ["10.2.2"]
+      - nist_800_53: ["AU.14","AC.6","AC.7"]
+      - gpg_13: ["7.8"]
+      - gdpr_IV: ["32.2","35.7.d"]
+      - hipaa: ["164.312.b"]
+      - tsc: ["CC6.1","CC6.8","CC7.2","CC7.3","CC7.4"]
+    condition: all
+    rules:
+      - 'f:/etc/audit/audit.rules -> r:-w /var/log/sudo.log && r:-p wa && r:-k actions'
+
+# 4.1.17 Ensure kernel module loading and unloading is collected (Scored)
+  - id: 5126 
+    title: "Ensure kernel module loading and unloading is collected"
+    description: "Monitor the loading and unloading of kernel modules. The programs insmod (install a kernel module), rmmod (remove a kernel module), and modprobe (a more sophisticated program to load and unload modules, as well as some other features) control loading and unloading of modules. The init_module (load a module) and delete_module (delete a module) system calls control loading and unloading of modules. Any execution of the loading and unloading module programs and system calls will trigger an audit record with an identifier of \"modules\"."
+    rationale: "Monitoring the use of insmod , rmmod and modprobe could provide system administrators with evidence that an unauthorized user loaded or unloaded a kernel module, possibly compromising the security of the system. Monitoring of the init_module and delete_module system calls would reflect an unauthorized user attempting to use a different program to load and unload modules."
+    remediation: "Add the following line to the /etc/audit/audit.rules file:   -w /var/log/sudo.log -p wa -k actions"
+    compliance:
+      - cis: ["4.1.17"]
+      - cis_csc: ["3"]
+      - pci_dss: ["10.2.7"]
+      - nist_800_53: ["AU.14","AU.6"]
+      - gpg_13: ["7.9"]
+      - gdpr_IV: ["32.2","35.7.d"]
+      - hipaa: ["164.312.b"]
+      - tsc: ["CC6.1","CC6.8","CC7.2","CC7.3","CC7.4"]
+    condition: all
+    rules:
+      - 'f:/etc/audit/audit.rules -> r:-w /sbin/insmod && r:-p x && r:-k modules'
+      - 'f:/etc/audit/audit.rules -> r:-w /sbin/rmmod && r:-p x && r:-k modules'
+      - 'f:/etc/audit/audit.rules -> r:-w /sbin/modprobe && r:-p x && r:-k modules'
+      - 'f:/etc/audit/audit.rules -> r:^-a && r:always,exit|exit,always && r:-F arch=b\d\d && r:-S init_module && r:-S delete_module && r:-k modules'
+
+# 4.1.18 Ensure the audit configuration is immutable (Scored)
+  - id: 5127 
+    title: "Ensure the audit configuration is immutable"
+    description: "Set system audit so that audit rules cannot be modified with auditctl . Setting the flag \"-e 2\" forces audit to be put in immutable mode. Audit changes can only be made on system reboot."
+    rationale: "In immutable mode, unauthorized users cannot execute changes to the audit system to potentially hide malicious activity and then put the audit rules back. Users would most likely notice a system reboot and that could alert administrators of an attempt to make unauthorized audit changes."
+    remediation: "Add the following line to the end of the /etc/audit/audit.rules file.   -e 2"
+    compliance:
+      - cis: ["4.1.18"]
+      - cis_csc: ["3","6"]
+      - pci_dss: ["10.5"]
+      - tsc: ["CC6.1","CC7.2","CC7.3","CC7.4"]
+    condition: all
+    rules:
+      - 'c:tail -1 /etc/audit/audit.rules -> r:^-e 2'
+
+# 5.4.5 Ensure default user shell timeout is 900 seconds or less (Scored)
+  - id: 5166 
+    title: "Ensure default user shell timeout is 900 seconds or less"
+    description: "The default TMOUT determines the shell timeout for users. The TMOUT value is measured in seconds."
+    rationale: "Having no timeout value associated with a shell could allow an unauthorized user access to another user's shell session (e.g. user walks away from their computer and doesn't lock the screen). Setting a timeout value at least reduces the risk of this happening."
+    remediation: "Edit the /etc/bashrc and /etc/profile files (and the appropriate files for any other shell supported on your system) and add or edit any umask parameters as follows: TMOUT=600"
+    compliance:
+      - cis: ["5.4.5"]
+      - cis_csc: ["16.4"]
+      - pci_dss: ["12.3.8"]
+    condition: all
+    rules:
+      - 'not f:/etc/bashrc -> n:^\s*\t*TMOUT\s*\t*=\s*\t*(\d+) compare > 900'
+      - 'not f:/etc/profile -> n:^\s*\t*TMOUT\s*\t*=\s*\t*(\d+) compare > 900'
+      - 'f:/etc/bashrc -> n:^\s*\t*TMOUT\s*\t*=\s*\t*(\d+) compare <= 900'
+      - 'f:/etc/profile -> n:^\s*\t*TMOUT\s*\t*=\s*\t*(\d+) compare <= 900'
+
+
+
+###############################################
+# 6 System Maintenance
+###############################################
+###############################################
+# 6.1 System File Permissions
+###############################################
+
+
+# 6.1.2 Configure /etc/passwd permissions (Scored)
+  - id: 5168 
+    title: "Ensure permissions on /etc/passwd are configured"
+    description: "The /etc/passwd file contains user account information that is used by many system utilities and therefore must be readable for these utilities to operate."
+    rationale: "It is critical to ensure that the /etc/passwd file is protected from unauthorized write access. Although it is protected by default, the file permissions could be changed either inadvertently or through malicious actions."
+    remediation: "Run the following command to set permissions on /etc/passwd: # chown root:root /etc/passwd # chmod 644 /etc/passwd"
+    compliance:
+      - cis: ["6.1.2"]
+      - cis_csc: ["16.14"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
+    condition: all
+    rules:
+      - 'c:stat /etc/passwd -> r:Access:\s*\(0644/-rw-r--r--\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*0/\s*\t*root\)'
+
+
+
+
+
+
+
+
