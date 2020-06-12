@@ -37,7 +37,7 @@ checks:
 
 
 # 1.1.1.8 FAT: filesystem
-  - id: 5700 
+  - id: 5667 
     title: "Ensure mounting of FAT filesystems is disabled"
     description: "The FAT filesystem format is primarily used on older windows systems and portable USB drives or flash modules. It comes in three types FAT12 , FAT16 , and FAT32 all of which are supported by the vfat kernel module."
     rationale: "Removing support for unneeded filesystem types reduces the local attack surface of the system. If this filesystem type is not needed, disable it."
@@ -56,7 +56,7 @@ checks:
 
 
   # 1.1.2 /tmp: partition
-  - id: 5701 
+  - id: 5668 
     title: "Ensure separate partition exists for /tmp"
     description: "The /tmp directory is a world-writable directory used for temporary storage by all users and some applications."
     rationale: "Since the /tmp directory is intended to be world-writable, there is a risk of resource exhaustion if it is not bound to a separate partition. In addition, making /tmp its own file system allows an administrator to set the noexec option on the mount, making /tmp useless for an attacker to install executable code. It would also prevent an attacker from establishing a hardlink to a system setuid program and wait for it to be updated. Once the program was updated, the hardlink would be broken and the attacker would have his own copy of the program. If the program happened to have a security vulnerability, the attacker could continue to exploit the known flaw."
@@ -74,7 +74,7 @@ checks:
 
 
 # 1.1.6 Build considerations - Partition scheme.
-  - id: 5702 
+  - id: 5669 
     title: "Ensure separate partition exists for /var"
     description: "The /var directory is used by daemons and other system services to temporarily store dynamic data. Some directories created by these processes may be world-writable."
     rationale: "Since the /var directory may contain world-writable files and directories, there is a risk of resource exhaustion if it is not bound to a separate partition."
@@ -91,7 +91,7 @@ checks:
       - 'c:mount -> r:\s/var\s'
 
 # 1.1.7 bind mount /var/tmp to /tmp
-  - id: 5703 
+  - id: 5670 
     title: "Ensure separate partition exists for /var/tmp"
     description: "The /var/tmp directory is a world-writable directory used for temporary storage by all users and some applications."
     rationale: "Since the /var/tmp directory is intended to be world-writable, there is a risk of resource exhaustion if it is not bound to a separate partition. In addition, making /var/tmp its own file system allows an administrator to set the noexec option on the mount, making /var/tmp useless for an attacker to install executable code."
@@ -108,7 +108,7 @@ checks:
 
 
 # 1.1.11 /var/log: partition
-  - id: 5704 
+  - id: 5671 
     title: "Ensure separate partition exists for /var/log"
     description: "The /var/log directory is used by system services to store log data ."
     rationale: "There are two important reasons to ensure that system logs are stored on a separate partition: protection against resource exhaustion (since logs can grow quite large) and protection of audit data."
@@ -126,7 +126,7 @@ checks:
       - 'c:mount -> r:\s/var/log\s'
 
 # 1.1.12 /var/log/audit: partition
-  - id: 5705 
+  - id: 5672 
     title: "Ensure separate partition exists for /var/log/audit"
     description: "The auditing daemon, auditd , stores log data in the /var/log/audit directory."
     rationale: "There are two important reasons to ensure that data gathered by auditd is stored on a separate partition: protection against resource exhaustion (since the audit.log file can grow quite large) and protection of audit data."
@@ -144,7 +144,7 @@ checks:
       - 'c:mount -> r:\s/var/log/audit\s'
 
 # 1.1.13 /home: partition
-  - id: 5706 
+  - id: 5673 
     title: "Ensure separate partition exists for /home"
     description: "The /home directory is used to support disk storage needs of local users."
     rationale: "If the system is intended to support local users, create a separate partition for the /home directory to protect against resource exhaustion and restrict the type of files that can be stored under /home."
@@ -167,7 +167,7 @@ checks:
 
 
 # 1.2.5 Disable the rhnsd Daemon (Not Scored)
-  - id: 5707 
+  - id: 5674 
     title: "Disable the rhnsd Daemon"
     description: "The rhnsd daemon polls the Red Hat Network web site for scheduled actions and, if there are, executes those actions."
     rationale: "Patch management policies may require that organizations test the impact of a patch before it is deployed in a production environment. Having patches automatically deployed could have a negative impact on the environment. It is best to not allow an action by default but only after appropriate consideration has been made. It is recommended that the service be disabled unless the risk is understood and accepted or you are running your own satellite . This item is not scored because organizations may have addressed the risk."
@@ -185,7 +185,7 @@ checks:
 # 1.6 Configure SELinux
 ###############################################
 # 1.6.1.1 SELinux not disabled
-  - id: 5708 
+  - id: 5675 
     title: "Ensure SELinux is not disabled in bootloader configuration"
     description: "Configure SELINUX to be enabled at boot time and verify that it has not been overwritten by the grub boot parameters."
     rationale: "SELinux must be enabled at boot time in your grub configuration to ensure that the controls it provides are not overridden."
@@ -200,7 +200,7 @@ checks:
     rules:
       - 'f:/boot/grub2/grub.cfg -> r:linux\.+selinux=0|linux\.+enforcing=0'
 # 1.6.1.2 Set selinux state
-  - id: 5709 
+  - id: 5676 
     title: "Ensure the SELinux state is enforcing"
     description: "Set SELinux to enable when the system is booted."
     rationale: "SELinux must be enabled at boot time in to ensure that the controls it provides are in effect at all times."
@@ -219,7 +219,7 @@ checks:
       - 'f:/etc/selinux/config -> r:^SELINUX=enforcing'
 
 # 1.6.1.3 Set selinux policy
-  - id: 5710 
+  - id: 5677 
     title: "Ensure SELinux policy is configured"
     description: "Configure SELinux to meet or exceed the default targeted policy, which constrains daemons and system software only."
     rationale: "Security configuration requirements vary from site to site. Some sites may mandate a policy that is stricter than the default policy, which is perfectly acceptable. This item is intended to ensure that at least the default recommendations are met."
@@ -236,7 +236,7 @@ checks:
 
 
 # 1.6.1.4 Remove SETroubleshoot
-  - id: 5711 
+  - id: 5678 
     title: "Ensure SETroubleshoot is not installed"
     description: "The SETroubleshoot service notifies desktop users of SELinux denials through a user-friendly interface. The service provides important information around configuration errors, unauthorized intrusions, and other potential errors."
     rationale: "The SETroubleshoot service is an unnecessary daemon to have running on a server, especially if X Windows is disabled."
@@ -252,7 +252,7 @@ checks:
 
 
 # 1.6.1.5 Disable MCS Translation service mcstrans
-  - id: 5712 
+  - id: 5679 
     title: "Ensure the MCS Translation Service (mcstrans) is not installed"
     description: "The mcstransd daemon provides category label information to client processes requesting information. The label translations are defined in /etc/selinux/targeted/setrans.conf"
     rationale: "Since this service is not used very often, remove it to reduce the amount of potentially vulnerable code running on the system."
@@ -267,7 +267,7 @@ checks:
       - 'c:rpm -qa mcstrans -> r:mcstrans'
 
 # 1.6.1.6 Ensure no unconfined daemons exist
-  - id: 5713 
+  - id: 5680 
     title: "Ensure no unconfined daemons exist"
     description: "Daemons that are not defined in SELinux policy will inherit the security context of their parent process."
     rationale: "Since daemons are launched and descend from the init process, they will inherit the security context label initrc_t . This could cause the unintended consequence of giving the process more permission than it requires."
@@ -283,7 +283,7 @@ checks:
       - 'c:ps -eZ -> r:initrc && !r:tr|ps|egrep|bash|awk'
 
 # 1.6.2 Install SELinux
-  - id: 5714 
+  - id: 5681 
     title: "Ensure SELinux is installed"
     description: "SELinux provides Mandatory Access Controls."
     rationale: "Without a Mandatory Access Control system installed only the default Discretionary Access Control system will be available."
@@ -299,7 +299,7 @@ checks:
       - 'c:rpm -q libselinux -> r:libselinux-\S+'
 
 # 5.4.5 Ensure default user shell timeout is 900 seconds or less (Scored)
-  - id: 5715 
+  - id: 5682 
     title: "Ensure default user shell timeout is 900 seconds or less"
     description: "The default TMOUT determines the shell timeout for users. The TMOUT value is measured in seconds."
     rationale: "Having no timeout value associated with a shell could allow an unauthorized user access to another user's shell session (e.g. user walks away from their computer and doesn't lock the screen). Setting a timeout value at least reduces the risk of this happening."
