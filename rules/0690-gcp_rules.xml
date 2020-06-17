@@ -40,7 +40,7 @@ ID: 65000 - 65499
 
     <rule id="65004" level="2">
         <if_sid>65002</if_sid>
-        <field name="gcp.severity">^INFO</field>
+        <field name="gcp.severity">^INFO$</field>
         <description>GCP info event with source IP $(gcp.jsonPayload.sourceIP) from $(gcp.resource.labels.location) with response code $(gcp.jsonPayload.responseCode)</description>
         <options>no_full_log</options>
     </rule>
