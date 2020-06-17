@@ -104,14 +104,14 @@ ID: 65000 - 65499
     <rule id="65013" level="3">
         <if_sid>65003</if_sid>
         <field name="gcp.severity">^NOTICE$</field>
-        <description>GCP notice event with source IP $(gcp.jsonPayload.sourceIP) from $(gcp.resource.labels.location) with response code $(gcp.jsonPayload.responseCode)</description>
+        <description>GCP notice event from VM $(gcp.jsonPayload.vmInstanceName) with source IP $(gcp.jsonPayload.sourceIP) from $(gcp.resource.labels.location) with response code $(gcp.jsonPayload.responseCode)</description>
         <options>no_full_log</options>
     </rule>
 
     <rule id="65014" level="7">
         <if_sid>65003</if_sid>
         <field name="gcp.severity">^ERROR$</field>
-        <description>GCP error from VM $(gcp.jsonPayload.vmInstanceName) with source IP $(gcp.jsonPayload.sourceIP) from $(gcp.resource.labels.location) with response code $(gcp.jsonPayload.responseCode)</description>
+        <description>GCP error event from VM $(gcp.jsonPayload.vmInstanceName) with source IP $(gcp.jsonPayload.sourceIP) from $(gcp.resource.labels.location) with response code $(gcp.jsonPayload.responseCode)</description>
         <options>no_full_log</options>
     </rule>
 
