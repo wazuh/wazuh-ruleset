@@ -16,6 +16,13 @@ All notable changes to this project will be documented in this file.
 - Changed description of Vulnerability Detector rules ([#638](https://github.com/wazuh/wazuh-ruleset/pull/638))
 - Changed squid decoders ([#672](https://github.com/wazuh/wazuh-ruleset/pull/672))
 
+### Fixed
+
+- Fix the provider name so that Windows Eventlog logs match with the Wazuh rules. ([#662](https://github.com/wazuh/wazuh-ruleset/pull/662))
+- Fixed static filters related to the system_name field. ([#684](https://github.com/wazuh/wazuh-ruleset/pull/684))
+- Remove trailing whitespaces in the group name section of the ruleset. Thanks to Kevin Branch (@branchnetconsulting). ([#667](https://github.com/wazuh/wazuh-ruleset/pull/667))
+- Remove invalid zeroes from rules id. Thanks to @lucanus81. ([#691](https://github.com/wazuh/wazuh-ruleset/pull/691))
+
 ## [v3.12.1]
 
 ### Fixed
