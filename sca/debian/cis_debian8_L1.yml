@@ -40,7 +40,7 @@ checks:
       - tsc: ["CC6.3"]
     condition: all
     rules:
-      - 'c:/sbin/modprobe -n -v cramfs -> r:^install /bin/true'
+      - 'c:modprobe -n -v cramfs -> r:^install /bin/true'
       - 'not c:lsmod -> r:cramfs'
 
   - id: 2001
@@ -55,7 +55,7 @@ checks:
       - tsc: ["CC6.3"]
     condition: all
     rules:
-      - 'c:/sbin/modprobe -n -v freevxfs -> r:^install /bin/true'
+      - 'c:modprobe -n -v freevxfs -> r:^install /bin/true'
       - 'not c:lsmod -> r:freevxfs'
 
   - id: 2002
@@ -70,7 +70,7 @@ checks:
       - tsc: ["CC6.3"]
     condition: all
     rules:
-      - 'c:/sbin/modprobe -n -v jffs2 -> r:^install /bin/true'
+      - 'c:modprobe -n -v jffs2 -> r:^install /bin/true'
       - 'not c:lsmod -> r:jffs2'
 
   - id: 2003
@@ -85,7 +85,7 @@ checks:
       - tsc: ["CC6.3"]
     condition: all
     rules:
-      - 'c:/sbin/modprobe -n -v hfs -> r:^install /bin/true'
+      - 'c:modprobe -n -v hfs -> r:^install /bin/true'
       - 'not c:lsmod -> r:hfs'
 
   - id: 2004
@@ -100,7 +100,7 @@ checks:
       - tsc: ["CC6.3"]
     condition: all
     rules:
-      - 'c:/sbin/modprobe -n -v hfsplus -> r:^install /bin/true'
+      - 'c:modprobe -n -v hfsplus -> r:^install /bin/true'
       - 'not c:lsmod -> r:hfsplus'
 
   - id: 2005
@@ -115,7 +115,7 @@ checks:
       - tsc: ["CC6.3"]
     condition: all
     rules:
-      - 'c:/sbin/modprobe -n -v squashfs -> r:^install /bin/true'
+      - 'c:modprobe -n -v squashfs -> r:^install /bin/true'
       - 'not c:lsmod -> r:squashfs'
 
   - id: 2006
@@ -130,7 +130,7 @@ checks:
       - tsc: ["CC6.3"]
     condition: all
     rules:
-      - 'c:/sbin/modprobe -n -v udf -> r:^install /bin/true'
+      - 'c:modprobe -n -v udf -> r:^install /bin/true'
       - 'not c:lsmod -> r:udf'
 
 # 2 Filesystem Configuration
@@ -1422,9 +1422,29 @@ checks:
     compliance:
       - cis: ["4.2.1.1"]
       - cis_csc: ["6.2", "6.3"]
+      - pci_dss: ["10.1"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2", "CC6.1", "CC6.2", "CC6.3", "CC7.2", "CC7.3", "CC7.4"]
+      - hipaa: ["164.312.b"]
     condition: all
     rules:
       - 'c:systemctl is-enabled rsyslog -> r:^enabled'
+
+# 4.2.1.3 Ensure rsyslog default file permissions configured (Scored)
+  - id: 2203 
+    title: "Ensure rsyslog default file permissions configured"
+    description: "rsyslog will create logfiles that do not already exist on the system. This setting controls what permissions will be applied to these newly created files."
+    rationale: "It is important to ensure that log files have the correct permissions to ensure that sensitive data is archived and protected."
+    remediation: "Edit the /etc/rsyslog.conf and /etc/rsyslog.d/*.conf files and set $FileCreateMode to 0640 or more restrictive:   $FileCreateMode 0640"
+    compliance:
+      - cis: ["4.2.1.3"]
+      - cis_csc: ["5.1"]  
+      - pci_dss: ["10.5.1","10.5.2"]
+      - nist_800_53: ["CM.1","AU.9"]
+      - tsc: ["CC5.2", "CC6.1", "CC7.2", "CC.7.3", "CC7.4"]
+    condition: all
+    rules:
+      - 'f:/etc/rsyslog.conf -> r:^\$FileCreateMode 0600|^\$FileCreateMode 0640'
 
   - id: 2069
     title: "Ensure rsyslog is configured to send logs to a remote log host"
@@ -1434,6 +1454,9 @@ checks:
     compliance:
       - cis: ["4.2.1.4"]
       - cis_csc: ["6.6", "6.8"]
+      - pci_dss: ["10.5.3"]
+      - nist_800_53: ["CM.1","AU.4"]
+      - tsc: ["CC5.2"]
     references:
       - rsyslog.conf(5) man page
     condition: all
@@ -1448,12 +1471,81 @@ checks:
     compliance:
       - cis: ["4.2.1.5"]
       - cis_csc: ["9.1", "9.2"]
+      - pci_dss: ["10.5.1"]
     references:
       - rsyslog.conf(8) man page
     condition: all
     rules:
       - 'c:grep -Rh ^\$ModLoad[[:space:]]*imtcp /etc/rsyslog.conf /etc/rsyslog.d/ -> r:^\$ModLoad\s*\t*imtcp'
       - 'c:grep -Rh ^\$InputTCPServerRun /etc/rsyslog.conf /etc/rsyslog.d/ -> r:^\$InputTCPServerRun\s*\t*514'
+
+# 4.2.2.1 Ensure syslog-ng service is enabled (Scored)
+  - id: 2200 
+    title: "Ensure syslog-ng service is enabled"
+    description: "Once the syslog-ng package is installed it needs to be activated."
+    rationale: "If the syslog-ng service is not activated the system may default to the syslogd service or lack logging instead."
+    remediation: "Run the following command to enable rsyslog :   # systemctl enable syslog-ng"
+    compliance:
+      - cis: ["4.2.2.1"]
+      - cis_csc: ["6.2"]
+      - pci_dss: ["10.1"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2", "CC6.1", "CC6.2", "CC6.3", "CC7.2", "CC7.3", "CC7.4"]
+      - hipaa: ["164.312.b"]
+    condition: all
+    rules:
+      - 'c:systemctl is-enabled syslog-ng -> enabled'
+
+# 4.2.2.3 Ensure syslog-ng default file permissions configured (Scored)
+  - id: 2201 
+    title: "Ensure syslog-ng default file permissions configured"
+    description: "syslog-ng will create logfiles that do not already exist on the system. This setting controls what permissions will be applied to these newly created files."
+    rationale: "It is important to ensure that log files have the correct permissions to ensure that sensitive syslog-ng data is archived and protected."
+    remediation: "Edit the /etc/syslog-ng/syslog-ng.conf and set perm option to 0640 or more restrictive:     options { chain_hostnames(off); flush_lines(0); perm(0640); stats_freq(3600); threaded(yes); };"
+    compliance:
+      - cis: ["4.2.2.3"]
+      - cis_csc: ["5.1"]  
+      - pci_dss: ["10.5.1","10.5.2"]
+      - nist_800_53: ["CM.1","AU.9"]
+      - tsc: ["CC5.2", "CC6.1", "CC7.2", "CC.7.3", "CC7.4"]
+    condition: all
+    rules:
+      - 'f:/etc/syslog-ng/syslog-ng.conf -> r:^options && r:perm\(0600\)|perm\(0640\)|perm\(0440\)|perm\(0400\)|perm\(0000\)'
+
+# 4.2.2.4 Ensure syslog-ng is configured to send logs to a remote log host (Not Scored)
+  - id: 2202 
+    title: "Ensure syslog-ng is configured to send logs to a remote log host"
+    description: "The syslog-ng utility supports the ability to send logs it gathers to a remote log host or to receive messages from remote hosts, reducing administrative overhead."
+    rationale: "Storing log data on a remote host protects log integrity from local attacks. If an attacker gains root access on the local system, they could tamper with or remove log data that is stored on the local system."
+    remediation: "Edit the /etc/syslog-ng/syslog-ng.conf file and add the following lines (where logfile.example.com is the name of your central log host).    destination logserver { tcp(\"logfile.example.com\" port(514)); };    log { source(src); destination(logserver); };   Run the following command to reload the rsyslogd configuration: # pkill -HUP syslog-ng"
+    compliance:
+      - cis: ["4.2.2.4"]
+      - cis_csc: ["6.6"]
+      - pci_dss: ["10.5.3"]
+      - nist_800_53: ["CM.1","AU.4"]
+      - tsc: ["CC5.2"]
+    condition: all
+    rules:
+      - 'f:/etc/syslog-ng/syslog-ng.conf -> r:destination logserver'
+      - 'f:/etc/syslog-ng/syslog-ng.conf -> r:log\.+source\.+destination'
+
+# 4.2.3 Ensure rsyslog or syslog-ng is installed (Scored)
+  - id: 2204 
+    title: "Ensure rsyslog or syslog-ng is installed"
+    description: "The rsyslog and syslog-ng software are recommended replacements to the original syslogd daemon which provide improvements over syslogd , such as connection-oriented (i.e. TCP) transmission of logs, the option to log to database formats, and the encryption of log data en route to a central logging server."
+    rationale: "The security enhancements of rsyslog and syslog-ng such as connection-oriented (i.e. TCP) transmission of logs, the option to log to database formats, and the encryption of log data en route to a central logging server) justify installing and configuring the package."
+    remediation: "nstall rsyslog or syslog-ng using one of the following commands: # apt-get install rsyslog # apt-get install syslog-ng"
+    compliance:
+      - cis: ["4.2.3"]
+      - cis_csc: ["6.2"]
+      - pci_dss: ["10.1"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2", "CC6.1", "CC6.2", "CC6.3", "CC7.2", "CC7.3", "CC7.4"]
+      - hipaa: ["164.312.b"]
+    condition: any
+    rules:
+      - 'c:dpkg -s rsyslog -> r:install ok installed'
+      - 'c:dpkg -s syslog-ng -> r:install ok installed'
 
 # 5 Access, Authentication and Authorization
   - id: 2071
@@ -1464,9 +1556,116 @@ checks:
     compliance:
       - cis: ["5.1.1"]
       - cis_csc: ["6", "5.1"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
     condition: all
     rules:
       - 'c:systemctl is-enabled cron -> r:^enabled$'
+
+
+# 5.1.2 Ensure permissions on /etc/crontab are configured (Scored)
+  - id: 2205 
+    title: "Ensure permissions on /etc/crontab are configured"
+    description: "The /etc/crontab file is used by cron to control its own jobs. The commands in this item make sure that root is the user and group owner of the file and that only the owner can access the file."
+    rationale: "This file contains information on what system jobs are run by cron. Write access to these files could provide unprivileged users with the ability to elevate their privileges. Read access to these files could provide users with the ability to gain insight on system jobs that run on the system and could provide them a way to gain unauthorized privileged access."
+    remediation: "Run the following commands to set ownership and permissions on /etc/crontab : chown root:root /etc/crontab and chmod og-rwx /etc/crontab"
+    compliance:
+      - cis: ["5.1.2"]
+      - cis_csc: ["5.1"]
+      - pci_dss: ["2.2.4"]
+      - hipaa: ["164.312.b"]
+      - nist_800_53: ["AU.14", "AC.7"]
+      - tsc: ["CC7.2", "CC6.1"]
+      - gpg_13: ["7.8"]
+      - gdpr_IV: ["35.7","32.2"]
+    condition: all
+    rules:
+      - 'c:stat /etc/crontab -> r:^Access: \(0600/-rw-------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
+
+
+# 5.1.3 Ensure permissions on /etc/cron.hourly are configured (Scored)
+  - id: 2206 
+    title: "Ensure permissions on /etc/cron.hourly are configured"
+    description: "This directory contains system cron jobs that need to run on an hourly basis. The files in this directory cannot be manipulated by the crontab command, but are instead edited by system administrators using a text editor. The commands below restrict read/write and search access to user and group root, preventing regular users from accessing this directory."
+    rationale: "Granting write access to this directory for non-privileged users could provide them the means for gaining unauthorized elevated privileges. Granting read access to this directory could give an unprivileged user insight in how to gain elevated privileges or circumvent auditing controls."
+    remediation: "Run the following commands to set ownership and permissions on /etc/cron.hourly : chown root:root /etc/cron.hourly and chmod og-rwx /etc/cron.hourly"
+    compliance:
+      - cis: ["5.1.3"]
+      - cis_csc: ["5.1"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
+
+    condition: all
+    rules:
+      - 'c:stat /etc/cron.hourly -> r:^Access: \(0700/drwx------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
+
+# 5.1.4 Ensure permissions on /etc/cron.daily are configured (Scored)
+  - id: 2207 
+    title: "Ensure permissions on /etc/cron.daily are configured"
+    description: "The /etc/cron.daily directory contains system cron jobs that need to run on a daily basis. The files in this directory cannot be manipulated by the crontab command, but are instead edited by system administrators using a text editor. The commands below restrict read/write and search access to user and group root, preventing regular users from accessing this directory."
+    rationale: "Granting write access to this directory for non-privileged users could provide them the means for gaining unauthorized elevated privileges. Granting read access to this directory could give an unprivileged user insight in how to gain elevated privileges or circumvent auditing controls."
+    remediation: "Run the following commands to set ownership and permissions on /etc/cron.daily : chown root:root /etc/cron.daily and chmod og-rwx /etc/cron.daily"
+    compliance:
+      - cis: ["5.1.4"]
+      - cis_csc: ["5.1"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
+    condition: all
+    rules:
+      - 'c:stat /etc/cron.daily -> r:^Access: \(0700/drwx------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
+
+# 5.1.5 Ensure permissions on /etc/cron.weekly are configured (Scored)
+  - id: 2208 
+    title: "Ensure permissions on /etc/cron.weekly are configured"
+    description: "The /etc/cron.weekly directory contains system cron jobs that need to run on a weekly basis. The files in this directory cannot be manipulated by the crontab command, but are instead edited by system administrators using a text editor. The commands below restrict read/write and search access to user and group root, preventing regular users from accessing this directory."
+    rationale: "Granting write access to this directory for non-privileged users could provide them the means for gaining unauthorized elevated privileges. Granting read access to this directory could give an unprivileged user insight in how to gain elevated privileges or circumvent auditing controls."
+    remediation: "Run the following commands to set ownership and permissions on /etc/cron.weekly : chown root:root /etc/cron.weekly and chmod og-rwx /etc/cron.weekly"
+    compliance:
+      - cis: ["5.1.5"]
+      - cis_csc: ["5.1"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
+    condition: all
+    rules:
+      - 'c:stat /etc/cron.weekly -> r:^Access: \(0700/drwx------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
+
+
+# 5.1.6 Ensure permissions on /etc/cron.monthly are configured (Scored)
+  - id: 2209 
+    title: "Ensure permissions on /etc/cron.monthly are configured"
+    description: "The /etc/cron.monthly directory contains system cron jobs that need to run on a monthly basis. The files in this directory cannot be manipulated by the crontab command, but are instead edited by system administrators using a text editor. The commands below restrict read/write and search access to user and group root, preventing regular users from accessing this directory."
+    rationale: "Granting write access to this directory for non-privileged users could provide them the means for gaining unauthorized elevated privileges. Granting read access to this directory could give an unprivileged user insight in how to gain elevated privileges or circumvent auditing controls."
+    remediation: "Run the following commands to set ownership and permissions on /etc/cron.monthly : chown root:root /etc/cron.monthly and chmod og-rwx /etc/cron.monthly"
+    compliance:
+      - cis: ["5.1.6"]
+      - cis_csc: ["5.1"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
+    condition: all
+    rules:
+      - 'c:stat /etc/cron.monthly -> r:^Access: \(0700/drwx------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
+
+# 5.1.7 Ensure permissions on /etc/cron.d are configured (Scored)
+  - id: 2210 
+    title: "Ensure permissions on /etc/cron.d are configured"
+    description: "Configure /etc/cron.allow and /etc/at.allow to allow specific users to use these services. If /etc/cron.allow or /etc/at.allow do not exist, then /etc/at.deny and /etc/cron.deny are checked. Any user not specifically defined in those files is allowed to use at and cron. By removing the files, only users in /etc/cron.allow and /etc/at.allow are allowed to use at and cron. Note that even though a given user is not listed in cron.allow , cron jobs can still be run as that user. The cron.allow file only controls administrative access to the crontab command for scheduling and modifying cron jobs."
+    rationale: "On many systems, only the system administrator is authorized to schedule cron jobs. Using the cron.allow file to control who can run cron jobs enforces this policy. It is easier to manage an allow list than a deny list. In a deny list, you could potentially add a user ID to the system and forget to add it to the deny files."
+    remediation: "Run the following commands to remove /etc/cron.deny and /etc/at.deny and create and set permissions and ownership for /etc/cron.allow and /etc/at.allow: rm /etc/cron.deny;rm /etc/at.deny;touch /etc/cron.allow; touch /etc/at.allow; chmod og-rwx /etc/cron.allow; chmod og-rwx /etc/at.allow; chown root:root /etc/cron.allow and chown root:root /etc/at.allow"
+    compliance:
+      - cis: ["5.1.7"]
+      - cis_csc: ["5.1"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
+    condition: all
+    rules:
+      - 'c:stat /etc/cron.d -> r:^Access: \(0700/drwx------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
+
 
   - id: 2072
     title: "Ensure at/cron is restricted to authorized users"
@@ -1476,6 +1675,9 @@ checks:
     compliance:
       - cis: ["5.1.8"]
       - cis_csc: ["16"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
     condition: all
     rules:
       - 'f:/etc/cron.allow'
@@ -1493,6 +1695,9 @@ checks:
     compliance:
       - cis: ["5.2.1"]
       - cis_csc: ["5.1"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
     condition: all
     rules:
       - 'c:stat -c%u-%g-%a /etc/ssh/sshd_config -> r:^0-0-600'
@@ -1505,6 +1710,10 @@ checks:
     compliance:
       - cis: ["5.2.4"]
       - cis_csc: ["3.4", "4.5"]
+      - pci_dss: ["4.1"]
+      - hipaa: ["164.312.a.2.IV", "164.312.e.1", "164.312.e.2.I", "164.312.e.2.II"]
+      - nist_800_53: ["SC.8"]
+      - tsc: ["CC6.7"]
     condition: all
     rules:
       - 'f:/etc/ssh/sshd_config -> !r:^# && r:Protocol\s*\t*2'
@@ -1519,6 +1728,10 @@ checks:
     compliance:
       - cis: ["5.2.5"]
       - cis_csc: ["16", "6.2", "6.3"]
+      - pci_dss: ["4.1"]
+      - hipaa: ["164.312.a.2.IV", "164.312.e.1", "164.312.e.2.I", "164.312.e.2.II"]
+      - nist_800_53: ["SC.8"]
+      - tsc: ["CC6.7"]
     condition: all
     rules:
       - 'f:/etc/ssh/sshd_config -> !r:^# && r:LogLevel\s+INFO|LogLevel\s+VERBOSE'
@@ -1531,6 +1744,12 @@ checks:
     compliance:
       - cis: ["5.2.6"]
       - cis_csc: ["16", "9.2"]
+      - pci_dss: ["2.2.3"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
+      - gpg_13: ["4.3"]
+      - gdpr_IV: ["35.7.d"]
+      - hipaa: ["164.312.b"]
     condition: all
     rules:
       - 'f:/etc/ssh/sshd_config -> !r:^# && r:X11Forwarding\s+no'
@@ -1543,6 +1762,9 @@ checks:
     compliance:
       - cis: ["5.2.7"]
       - cis_csc: ["16", "16.13"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
     condition: all
     rules:
       - 'f:/etc/ssh/sshd_config -> !r:^# && n:^MaxAuthTries\s*\t*(\d+) compare <= 4'
@@ -1555,6 +1777,10 @@ checks:
     compliance:
       - cis: ["5.2.8"]
       - cis_csc: ["9", "9.2"]
+      - pci_dss: ["4.1"]
+      - hipaa: ["164.312.a.2.IV", "164.312.e.1", "164.312.e.2.I", "164.312.e.2.II"]
+      - nist_800_53: ["SC.8"]
+      - tsc: ["CC6.7"]
     condition: all
     rules:
       - 'f:/etc/ssh/sshd_config -> !r:^# && r:IgnoreRhosts\s+yes'
@@ -1567,6 +1793,10 @@ checks:
     compliance:
       - cis: ["5.2.9"]
       - cis_csc: ["9", "16.3"]
+      - pci_dss: ["4.1"]
+      - hipaa: ["164.312.a.2.IV", "164.312.e.1", "164.312.e.2.I", "164.312.e.2.II"]
+      - nist_800_53: ["SC.8"]
+      - tsc: ["CC6.7"]
     condition: all
     rules:
       - 'f:/etc/ssh/sshd_config -> !r:^# && r:HostbasedAuthentication\s+no'
@@ -1579,6 +1809,10 @@ checks:
     compliance:
       - cis: ["5.2.10"]
       - cis_csc: ["5.8", "4.3"]
+      - pci_dss: ["4.1"]
+      - hipaa: ["164.312.a.2.IV", "164.312.e.1", "164.312.e.2.I", "164.312.e.2.II"]
+      - nist_800_53: ["SC.8"]
+      - tsc: ["CC6.7"]
     condition: all
     rules:
       - 'f:/etc/ssh/sshd_config -> !r:^# && r:PermitRootLogin\s+no'
@@ -1593,6 +1827,10 @@ checks:
     compliance:
       - cis: ["5.2.11"]
       - cis_csc: ["16", "16.3"]
+      - pci_dss: ["4.1"]
+      - hipaa: ["164.312.a.2.IV", "164.312.e.1", "164.312.e.2.I", "164.312.e.2.II"]
+      - nist_800_53: ["SC.8"]
+      - tsc: ["CC6.7"]
     condition: all
     rules:
       - 'f:/etc/ssh/sshd_config -> !r:^# && r:PermitEmptyPasswords\s+no'
@@ -1605,9 +1843,74 @@ checks:
     compliance:
       - cis: ["5.2.12"]
       - cis_csc: ["16", "5.1"]
+      - pci_dss: ["4.1"]
+      - hipaa: ["164.312.a.2.IV", "164.312.e.1", "164.312.e.2.I", "164.312.e.2.II"]
+      - nist_800_53: ["SC.8"]
+      - tsc: ["CC6.7", "CC6.1", "CC7.2"]
     condition: all
     rules:
       - 'f:/etc/ssh/sshd_config -> !r:^# && r:PermitUserEnvironment\s+no'
+
+# 5.2.13 Ensure only strong ciphers are used (Scored)
+  - id: 2212
+    title: "Ensure only strong ciphers are used"
+    description: "This variable limits the ciphers that SSH can use during communication."
+    rationale: "Weak ciphers that are used for authentication to the cryptographic module cannot be relied upon to provide confidentiality or integrity, and system data may be compromised The DES, Triple DES, and Blowfish ciphers, as used in SSH, have a birthday bound of approximately four billion blocks, which makes it easier for remote attackers to obtain cleartext data via a birthday attack against a long-duration encrypted session, aka a \"Sweet32\" attack The RC4 algorithm, as used in the TLS protocol and SSL protocol, does not properly combine state data with key data during the initialization phase, which makes it easier for remote attackers to conduct plaintext-recovery attacks against the initial bytes of a stream by sniffing network traffic that occasionally relies on keys affected by the Invariance Weakness, and then using a brute-force approach involving LSB values, aka the \"Bar Mitzvah\" issue The passwords used during an SSH session encrypted with RC4 can be recovered by an attacker who is able to capture and replay the session Error handling in the SSH protocol; Client and Server, when using a block cipher algorithm in Cipher Block Chaining (CBC) mode, makes it easier for remote attackers to recover certain plaintext data from an arbitrary block of ciphertext in an SSH session via unknown vectors The mm_newkeys_from_blob function in monitor_wrap.c, when an AES-GCM cipher is used, does not properly initialize memory for a MAC context data structure, which allows remote authenticated users to bypass intended ForceCommand and login-shell restrictions via packet data that provides a crafted callback address" 
+    remediation: "Edit the /etc/ssh/sshd_config file add/modify the Ciphers line to contain a comma separated list of the site approved ciphers Example: Ciphers chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr"
+    compliance:
+      - cis: ["5.2.13"]
+      - cis_csc: ["3.4"]
+      - pci_dss: ["4.1"]
+      - hipaa: ["164.312.a.2.IV", "164.312.e.1", "164.312.e.2.I", "164.312.e.2.II"]
+      - nist_800_53: ["SC.8"]
+      - tsc: ["CC6.7", "CC6.1", "CC7.2"]
+    reference:
+      - 'https://nvd.nist.gov/vuln/detail/CVE-2016-2183'
+      - 'https://nvd.nist.gov/vuln/detail/CVE-2015-2808'
+      - 'https://nvd.nist.gov/vuln/detail/CVE-2008-5161'
+      - 'https://nvd.nist.gov/vuln/detail/CVE-2013-4548'
+      - 'https://www.kb.cert.org/vuls/id/565052'
+      - 'https://www.openssh.com/txt/cbc.adv'
+    condition: none
+    rules:
+      - 'c:sshd -T -> r:ciphers && r:3des-cbc|aes128-cbc|aes192-cbc|aes256-cbc|arcfour|arcfour128|arcfour256|blowfish-cbc|cast128-cbc|rijndael-cbc@lysator.liu.se'
+
+# 5.2.14 Ensure only sytrong MAC algorithms are used (Scored)
+  - id: 2213
+    title: "Ensure only strong MAC algorithms are used"
+    description: "This variable limits the types of MAC algorithms that SSH can use during communication."
+    rationale: "MD5 and 96-bit MAC algorithms are considered weak and have been shown to increase exploitability in SSH downgrade attacks. Weak algorithms continue to have a great deal of attention as a weak spot that can be exploited with expanded computing power. An attacker that breaks the algorithm could take advantage of a MiTM position to decrypt the SSH tunnel and capture credentials and information" 
+    remediation: "Edit the /etc/ssh/sshd_config file and add/modify the MACs line to contain a comma separated list of the site approved MACs Example: MACs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,hmac-sha2- 512,hmac-sha2-256"
+    compliance:
+      - cis: ["5.2.14"]
+      - cis_csc: ["3.4"]
+      - pci_dss: ["4.1"]
+      - hipaa: ["164.312.a.2.IV", "164.312.e.1", "164.312.e.2.I", "164.312.e.2.II"]
+      - nist_800_53: ["SC.8"]
+      - tsc: ["CC6.7", "CC6.1", "CC7.2"]
+    reference:
+      - 'http://www.mitls.org/pages/attacks/SLOTH'
+    condition: none
+    rules:
+      - 'c:sshd -T -> r:MACs && r:hmac-md5|hmac-md5-96|hmac-ripemd160|hmac-sha1|hmac-sha1-96|umac-64@openssh.com|umac-128@openssh.com|hmac-md5-etm@openssh.com|hmac-md5-96-etm@openssh.com|hmac-ripemd160-etm@openssh.com|hmac-sha1-etm@openssh.com|hmac-sha1-96-etm@openssh.com|umac-64-etm@openssh.com|umac-128-etm@openssh.com'
+
+# 5.2.15 Ensure only strong Key Exchange algorithms are used (Scored)
+  - id: 2214
+    title: "Ensure only strong Key Exchange algorithms are used"
+    description: "Key exchange is any method in cryptography by which cryptographic keys are exchanged between two parties, allowing use of a cryptographic algorithm. If the sender and receiver wish to exchange encrypted messages, each must be equipped to encrypt messages to be sent and decrypt messages received"
+    rationale: "Key exchange methods that are considered weak should be removed. A key exchange method may be weak because too few bits are used, or the hashing algorithm is considered too weak. Using weak algorithms could expose connections to man-in-the-middle attacks" 
+    remediation: "Edit the /etc/ssh/sshd_config file add/modify the KexAlgorithms line to contain a comma separated list of the site approved key exchange algorithms Example: KexAlgorithms curve25519-sha256@libssh.org,ecdh-sha2-nistp521,ecdh-sha2-nistp384,ecdh-sha2-nistp256,diffie-hellman-group-exchange-sha256"
+    compliance:
+      - cis: ["5.2.15"]
+      - cis_csc: ["3.4"]
+      - pci_dss: ["4.1"]
+      - hipaa: ["164.312.a.2.IV", "164.312.e.1", "164.312.e.2.I", "164.312.e.2.II"]
+      - nist_800_53: ["SC.8"]
+      - tsc: ["CC6.7", "CC6.1", "CC7.2"]
+    condition: none
+    rules:
+      - 'c:sshd -T -> r:kexalgorithms && r:diffie-hellman-group1-sha1|diffie-hellman-group14-sha1|diffie-hellman-group-exchange-sha1'
+
 
   - id: 2083
     title: "Ensure SSH Idle Timeout Interval is configured"
@@ -1617,10 +1920,26 @@ checks:
     compliance:
       - cis: ["5.2.16"]
       - cis_csc: ["16.4", "16.11"]
+      - pci_dss: ["12.3.8"]
     condition: all
     rules:
       - 'f:/etc/ssh/sshd_config -> !r:^# && n:ClientAliveInterval\s*\t*(\d+) compare <= 300 && n:ClientAliveInterval\s*\t*(\d+) compare != 0'
       - 'f:/etc/ssh/sshd_config -> !r:^# && n:ClientAliveCountMax\s*\t*(\d+) compare <= 3'
+
+
+# 5.2.17 Ensure SSH LoginGraceTime is set to one minute or less (Scored)
+  - id: 2215
+    title: "Ensure SSH LoginGraceTime is set to one minute or less"
+    description: "The LoginGraceTime parameter specifies the time allowed for successful authentication to the SSH server. The longer the Grace period is the more open unauthenticated connections can exist. Like other session controls in this session the Grace Period should be limited to appropriate organizational limits to ensure the service is available for needed access."
+    rationale: "Setting the LoginGraceTime parameter to a low number will minimize the risk of successful brute force attacks to the SSH server. It will also limit the number of concurrent unauthenticated connections While the recommended setting is 60 seconds (1 Minute), set the number based on site policy."
+    remediation: "Edit the /etc/ssh/sshd_config file to set the parameter as follows: LoginGraceTime 60"
+    compliance:
+      - cis: ["5.2.17"]
+      - cis_csc: ["16"]
+      - pci_dss: ["8.1"]
+    condition: all
+    rules:
+      - 'c:sshd -T -> r:logingracetime && n:LoginGraceTime\s*\t*(\d+) compare <= 60'
 
   - id: 2084
     title: "Ensure SSH access is limited"
@@ -1630,6 +1949,7 @@ checks:
     compliance:
       - cis: ["5.2.18"]
       - cis_csc: ["5.1", "5.8", "4.3"]
+      - pci_dss: ["8.1"]
     condition: all
     rules:
       - 'f:/etc/ssh/sshd_config -> !r:^# && r:AllowUsers\s+\w+|AllowGroups\s+\w+|DenyUsers\s+\w+|DenyGroups\s+\w+'
@@ -1642,11 +1962,14 @@ checks:
     compliance:
       - cis: ["5.2.19"]
       - cis_csc: ["5.1"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
     condition: all
     rules:
       - 'f:/etc/ssh/sshd_config -> !r:^# && r:Banner\s*\t*/etc/issue.net|Banner\s\t*/etc/issue'
 
-# 5.3 Configure PAM
+# 5.3 Configure PAM
 
   - id: 2086
     title: "Ensure password creation requirements are configured"
@@ -1656,6 +1979,7 @@ checks:
     compliance:
       - cis: ["5.3.1"]
       - cis_csc: ["5.7", "16.12", "4.4"]
+      - pci_dss: ["8.2.3"]
     condition: all
     rules:
       - 'c:dpkg -s libpam-pwquality -> r:install ok installed'
@@ -1674,6 +1998,7 @@ checks:
     compliance:
       - cis: ["5.3.2"]
       - cis_csc: ["16.7"]
+      - pci_dss: ["8.2.5"]
     condition: all
     rules:
       - 'f:/etc/pam.d/common-auth -> !r:^# && r:auth\s*\t*required\s*\t*pam_tally2.so && r:onerr=fail && r:audit && r:silent && r:deny\s*=\s*\d && r:unlock_time\s*=\s*\d\d\d+'
@@ -1686,9 +2011,24 @@ checks:
     compliance:
       - cis: ["5.3.3"]
       - cis_csc: ["16"]
+      - pci_dss: ["8.2.5"]
     condition: all
     rules:
       - 'f:/etc/pam.d/common-password -> !r:^# && r:password\s*\t*required\s*\t*pam_pwhistory.so && n:remember\s*\t*=\s*\t*(\d+) compare >= 5'
+
+# 5.3.4 Ensure password hashing algorithm is SHA-512 (Scored)
+  - id: 2216 
+    title: "Ensure password hashing algorithm is SHA-512"
+    description: "The commands below change password encryption from md5 to sha512 (a much stronger hashing algorithm). All existing accounts will need to perform a password change to upgrade the stored hashes to the new algorithm."
+    rationale: "The SHA-512 algorithm provides much stronger hashing than MD5, thus providing additional protection to the system by increasing the level of effort for an attacker to successfully determine passwords. Note that these change only apply to accounts configured on the local system."
+    remediation: "Edit the /etc/pam.d/common-password file to include the sha512 option for pam_unix.so as shown: password [success=1 default=ignore] pam_unix.so sha512"
+    compliance:
+      - cis: ["5.3.4"]
+      - cis_csc: ["16.14"]
+      - pci_dss: ["3.6.1"]
+    condition: all
+    rules:
+      - 'f:/etc/pam.d/common-password -> r:^password\.+pam_unix.so\.+sha512'
 
 # 5.4 User Accounts and Environment
 
@@ -1700,6 +2040,7 @@ checks:
     compliance:
       - cis: ["5.4.1.1"]
       - cis_csc: ["4.4", "16"]
+      - pci_dss: ["8.2.4"]
     condition: all
     rules:
       - 'f:/etc/login.defs -> n:^\s*\t*PASS_MAX_DAYS\s*\t*(\d+) compare <= 365'
@@ -1712,6 +2053,7 @@ checks:
     compliance:
       - cis: ["5.4.1.2"]
       - cis_csc: ["4.4", "16"]
+      - pci_dss: ["3.6.1"]
     condition: all
     rules:
       - 'f:/etc/login.defs -> n:^\s*\t*PASS_MIN_DAYS\s*\t*(\d+) compare >= 7'
@@ -1724,6 +2066,7 @@ checks:
     compliance:
       - cis: ["5.4.1.3"]
       - cis_csc: ["4.4", "16"]
+      - pci_dss: ["3.6.1"]
     condition: all
     rules:
       - 'f:/etc/login.defs -> n:^\s*\t*PASS_WARN_AGE\s*\t*(\d+) compare >= 7'
@@ -1736,6 +2079,7 @@ checks:
     compliance:
       - cis: ["5.4.1.4"]
       - cis_csc: ["4.4", "16"]
+      - pci_dss: ["3.6.1"]
     condition: all
     rules:
       - 'c:useradd -D -> n:^INACTIVE=(\d+) compare <= 30'
@@ -1748,9 +2092,27 @@ checks:
     compliance:
       - cis: ["5.4.3"]
       - cis_csc: ["5", "5.1"]
+      - pci_dss: ["3.6.1"]
     condition: all
     rules:
       - 'f:/etc/passwd -> !r:^# && r:root:\w+:\w+:0:'
+
+# 5.4.4 Ensure default user umask is 027 or more restrictive (Scored)
+  - id: 2217 
+    title: "Ensure default user umask is 027 or more restrictive"
+    description: "The default umask determines the permissions of files created by users. The user creating the file has the discretion of making their files and directories readable by others via the chmod command. Users who wish to allow their files and directories to be readable by others by default may choose a different default umask by inserting the umask command into the standard shell configuration files ( .profile , .bashrc , etc.) in their home directories."
+    rationale: "Setting a very secure default value for umask ensures that users make a conscious choice about their file permissions. A default umask setting of 077 causes files and directories created by users to not be readable by any other user on the system. A umask of 027 would make files and directories readable by users in the same Unix group, while a umask of 022 would make files readable by every user on the system."
+    remediation: "Edit the /etc/bash.bashrc , /etc/profile and /etc/profile.d/*.sh files (and the appropriate files for any other shell supported on your system) and add or edit any umask parameters as follows: umask 027"
+    compliance:
+      - cis: ["5.4.4"]
+      - cis_csc: ["13"]
+      - pci_dss: ["3.6.1"]
+    condition: none
+    rules:
+      - 'f:/etc/bash.bashrc -> n:^\s*\t*umask\s+(\d+) compare >= 027'
+      - 'f:/etc/profile -> n:^\s*\t*umask\s+(\d+) compare >= 027'
+      - 'd:/etc/profile.d -> .sh -> n:^\s*\t*umask\s+(\d+) compare >= 027'
+
 
   - id: 2094
     title: "Ensure access to the su command is restricted"
@@ -1760,10 +2122,144 @@ checks:
     compliance:
       - cis: ["5.6"]
       - cis_csc: ["5.1"]
+      - pci_dss: ["10.2.5"]
+      - hipaa: ["164.312.b"]
+      - nist_800_53: ["AU.14", "AC.7"]
+      - tsc: ["CC7.2", "CC6.1", "CC6.8", "CC7.3", "CC7.4"]
+      - gpg_13: ["7.8"]
+      - gdpr_IV: ["35.7","32.2"]
     condition: all
     rules:
       - 'f:/etc/pam.d/su -> !r:^# && r:auth\s*\t*required\s*\t*pam_wheel.so'
       - 'f:/etc/group -> !r:^# && r:sudo:\w+:\d+:\.'
+
+# 6.1.2 Ensure permissions on /etc/passwd are configured (Scored)
+  - id: 2219 
+    title: "Ensure permissions on /etc/passwd are configured"
+    description: "The /etc/passwd file contains user account information that is used by many system utilities and therefore must be readable for these utilities to operate."
+    rationale: "It is critical to ensure that the /etc/passwd file is protected from unauthorized write access. Although it is protected by default, the file permissions could be changed either inadvertently or through malicious actions."
+    remediation: "Run the following command to set permissions on /etc/passwd: # chown root:root /etc/passwd # chmod 644 /etc/passwd"
+    compliance:
+      - cis: ["6.1.2"]
+      - cis_csc: ["16.14"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
+    condition: all
+    rules:
+      - 'c:stat /etc/passwd -> r:Access:\s*\(0644/-rw-r--r--\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*0/\s*\t*root\)'
+
+# 6.1.3 Ensure permissions on /etc/shadow are configured (Scored)
+  - id: 2220 
+    title: "Ensure permissions on /etc/shadow are configured"
+    description: "The /etc/shadow file is used to store the information about user accounts that is critical to the security of those accounts, such as the hashed password and other security information."
+    rationale: "If attackers can gain read access to the /etc/shadow file, they can easily run a password cracking program against the hashed password to break it. Other security information that is stored in the /etc/shadow file (such as expiration) could also be useful to subvert the user accounts."
+    remediation: "Run the one following commands to set permissions on /etc/shadow : # chown root:shadow /etc/shadow # chmod o-rwx,g-wx /etc/shadow"
+    compliance:
+      - cis: ["6.1.3"]
+      - cis_csc: ["16.14"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
+    condition: all
+    rules:
+      - 'c:stat -c%u-%g-%a /etc/shadow -> n:0-42-6(\d)0 compare <= 4'
+
+# 6.1.4 Configure /etc/group permissions (Scored)
+  - id: 2221 
+    title: "Ensure permissions on /etc/group are configured"
+    description: "The /etc/group file contains a list of all the valid groups defined in the system. The command below allows read/write access for root and read access for everyone else."
+    rationale: "The /etc/group file needs to be protected from unauthorized changes by non-privileged users, but needs to be readable as this information is used with many non-privileged programs."
+    remediation: "Run the following command to set permissions on /etc/group: # chown root:root /etc/group # chmod 644 /etc/group"
+    compliance:
+      - cis: ["6.1.4"]
+      - cis_csc: ["16.14"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
+    condition: all
+    rules:
+      - 'c:stat /etc/group -> r:Access:\s*\(0644/-rw-r--r--\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*0/\s*\t*root\)'
+
+# 6.1.5 Ensure permissions on /etc/gshadow are configured (Scored)
+  - id: 2222 
+    title: "Ensure permissions on /etc/gshadow are configured"
+    description: "The /etc/gshadow file is used to store the information about groups that is critical to the security of those accounts, such as the hashed password and other security information."
+    rationale: "If attackers can gain read access to the /etc/gshadow file, they can easily run a password cracking program against the hashed password to break it. Other security information that is stored in the /etc/gshadow file (such as group administrators) could also be useful to subvert the group"
+    remediation: "Run the following commands to set permissions on /etc/gshadow : # chown root:shadow /etc/gshadow # chmod o-rwx,g-rw /etc/gshadow"
+    compliance:
+      - cis: ["6.1.5"]
+      - cis_csc: ["16.14"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
+    condition: all
+    rules:
+      - 'c:stat -c%u-%g-%a /etc/gshadow -> n:0-42-6(\d)0 compare <= 4'
+
+# 6.1.6 Ensure permissions on /etc/passwd- are configured (Scored)
+  - id: 2223 
+    title: "Ensure permissions on /etc/passwd- are configured"
+    description: "The /etc/passwd- file contains backup user account information."
+    rationale: "It is critical to ensure that the /etc/passwd- file is protected from unauthorized access. Although it is protected by default, the file permissions could be changed either inadvertently or through malicious actions."
+    remediation: "Run the following command to set permissions on /etc/passwd-: # chown root:root /etc/passwd- # chmod 644 /etc/passwd-"
+    compliance:
+      - cis: ["6.1.6"]
+      - cis_csc: ["16.14"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
+    condition: all
+    rules:
+      - 'c:stat /etc/passwd- -> r:Access:\s*\(0644/-rw-r--r--\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*0/\s*\t*root\)|Access:\s*\(0640/-rw-r-----\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*0/\s*\t*root\)|Access:\s*\(0604/-rw----r--\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*0/\s*\t*root\)|Access:\s*\(0600/-rw-------\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*0/\s*\t*root\)'
+
+# 6.1.7 Ensure permissions on /etc/shadow- are configured (Scored)
+  - id: 2224 
+    title: "Ensure permissions on /etc/shadow- are configured"
+    description: "The /etc/shadow- file is used to store backup information about user accounts that is critical to the security of those accounts, such as the hashed password and other security information."
+    rationale: "It is critical to ensure that the /etc/shadow- file is protected from unauthorized access. Although it is protected by default, the file permissions could be changed either inadvertently or through malicious actions."
+    remediation: "Run the one of the following chown commands as appropriate and the chmod to set permissions on /etc/shadow- : # chown root:root /etc/shadow- # chown root:shadow /etc/shadow- # chmod o-rwx,g-rw /etc/shadow-"
+    compliance:
+      - cis: ["6.1.7"]
+      - cis_csc: ["16.14"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
+    condition: all
+    rules:
+      - 'c:stat -c%u-%g-%a /etc/shadow- -> n:0-42-6(\d)0 compare <= 4'
+
+# 6.1.8 Configure /etc/group- permissions (Scored)
+  - id: 2225 
+    title: "Ensure permissions on /etc/group- are configured"
+    description: "The /etc/group- file contains a backup list of all the valid groups defined in the system."
+    rationale: "It is critical to ensure that the /etc/group- file is protected from unauthorized access. Although it is protected by default, the file permissions could be changed either inadvertently or through malicious actions."
+    remediation: "Run the following command to set permissions on /etc/group-: # chown root:root /etc/group- # chmod 644 /etc/group-"
+    compliance:
+      - cis: ["6.1.8"]
+      - cis_csc: ["16.14"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
+    condition: all
+    rules:
+      - 'c:stat /etc/group- -> r:Access:\s*\(0644/-rw-r--r--\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*0/\s*\t*root\)|Access:\s*\(0640/-rw-r-----\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*0/\s*\t*root\)|Access:\s*\(0604/-rw----r--\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*0/\s*\t*root\)|Access:\s*\(0600/-rw-------\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*0/\s*\t*root\)'
+
+# 6.1.9 Ensure permissions on /etc/gshadow- are configured (Scored)
+  - id: 2226 
+    title: "Ensure permissions on /etc/gshadow- are configured"
+    description: "The /etc/gshadow- file is used to store backup information about groups that is critical to the security of those accounts, such as the hashed password and other security information."
+    rationale: "It is critical to ensure that the /etc/gshadow- file is protected from unauthorized access. Although it is protected by default, the file permissions could be changed either inadvertently or through malicious actions."
+    remediation: "# chown root:root /etc/gshadow- # chown root:shadow /etc/gshadow- # chmod o-rwx,g-rw /etc/gshadow-"
+    compliance:
+      - cis: ["6.1.9"]
+      - cis_csc: ["16.14"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
+    condition: all
+    rules:
+     - 'c:stat -c%u-%g-%a /etc/gshadow- -> n:0-42-6(\d)0 compare <= 4'
 
 # 6.2 User and Group Settings
 
@@ -1775,6 +2271,7 @@ checks:
     compliance:
       - cis: ["6.2.1"]
       - cis_csc: ["16", "4.4"]
+      - pci_dss: ["8.2"]
     condition: none
     rules:
       - 'f:/etc/shadow -> r:^\w+::'
@@ -1787,6 +2284,12 @@ checks:
     compliance:
       - cis: ["6.2.2"]
       - cis_csc: ["16.9", "16.2"]
+      - pci_dss: ["2.2.3"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
+      - gpg_13: ["4.3"]
+      - gdpr_IV: ["35.7.d"]
+      - hipaa: ["164.312.b"]
     condition: none
     rules:
       - 'f:/etc/passwd -> !r:^# && r:^+:'
@@ -1799,6 +2302,12 @@ checks:
     compliance:
       - cis: ["6.2.3"]
       - cis_csc: ["16.9", "16.2"]
+      - pci_dss: ["2.2.3"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
+      - gpg_13: ["4.3"]
+      - gdpr_IV: ["35.7.d"]
+      - hipaa: ["164.312.b"]
     condition: none
     rules:
       - 'f:/etc/shadow -> !r:^# && r:^+:'
@@ -1811,6 +2320,12 @@ checks:
     compliance:
       - cis: ["6.2.4"]
       - cis_csc: ["16.9", "16.2"]
+      - pci_dss: ["2.2.3"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
+      - gpg_13: ["4.3"]
+      - gdpr_IV: ["35.7.d"]
+      - hipaa: ["164.312.b"]
     condition: none
     rules:
       - 'f:/etc/group -> !r:^# && r:^+:'
@@ -1823,6 +2338,12 @@ checks:
     compliance:
       - cis: ["6.2.5"]
       - cis_csc: ["5.1"]
+      - pci_dss: ["10.2.5"]
+      - hipaa: ["164.312.b"]
+      - nist_800_53: ["AU.14", "AC.7"]
+      - tsc: ["CC7.2", "CC6.1", "CC6.8", "CC7.3", "CC7.4"]
+      - gpg_13: ["7.8"]
+      - gdpr_IV: ["35.7","32.2"]
     condition: none
     rules:
       - 'f:/etc/passwd -> !r:^# && !r:^root: && r:^\w+:\w+:0:'
@@ -1835,6 +2356,12 @@ checks:
     compliance:
       - cis: ["6.2.20"]
       - cis_csc: ["5.1"]
+      - pci_dss: ["10.2.5"]
+      - hipaa: ["164.312.b"]
+      - nist_800_53: ["AU.14", "AC.7"]
+      - tsc: ["CC7.2", "CC6.1", "CC6.8", "CC7.3", "CC7.4"]
+      - gpg_13: ["7.8"]
+      - gdpr_IV: ["35.7","32.2"]
     condition: none
     rules:
       - 'f:/etc/group -> !r:^# && r:shadow:\w*:\w*:\S+'
