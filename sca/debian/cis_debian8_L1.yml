@@ -639,8 +639,7 @@ checks:
     rules:
       - 'f:/etc/ntp.conf -> r:^restrict\s+-4\s+default|^restrict\s+default && r:\s+kod\s+ && r:\s+nomodify\s+ && r:\s+notrap\s+ && r:\s+nopeer\s+ && r:\s+noquery'
       - 'f:/etc/ntp.conf -> r:^restrict\s+-6\s+default && r:\s+kod\s+ && r:\s+nomodify\s+ && r:\s+notrap\s+ && r:\s+nopeer\s+ && r:\s+noquery'
-      - 'f:/etc/ntp.conf -> r:^server\.+$|^pool\.+$'
-      - 'f:/etc/ntp.conf -> r:^server\s\.+'
+      - 'f:/etc/ntp.conf -> r:^server\.+|^pool\.+'
       - 'f:/etc/init.d/ntp -> r:^RUNASUSER\s*\t*=\s*\t*ntp'
 
   - id: 2029
@@ -656,7 +655,24 @@ checks:
       - tsc: ["CC5.2"]
     condition: all
     rules:
-      - 'f:/etc/chrony.conf -> r:^server\.+$|^pool\.+$'
+      - 'f:/etc/chrony.conf -> r:^server\.+|^pool\.+'
+
+
+# 2.2.2 Ensure the X Window system is not installed (Scored)
+  - id: 20000
+    title: "Ensure the X Window system is not installed"
+    description: "The X Window System provides a Graphical User Interface (GUI) where users can have multiple windows in which to run programs and various add on. The X Windows system is typically used on workstations where users login, but not on servers where users typically do not login."
+    rationale: "Unless your organization specifically requires graphical login access via X Windows, remove it to reduce the potential attack surface."
+    remediation: "Run the following command to remove the X Windows System packages: apt-get remove xserver-xorg*"
+    compliance:
+      - cis: ["2.2.2"]
+      - cis_csc: ["2"]
+      - pci_dss: ["2.2.2"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2","CC6.1","CC6.8","CC7.1","CC7.2","CC8.1"]
+    condition: none
+    rules:
+      - 'c:dpkg -l xserver-xorg-core* -> r:^\wi\s*xserver-xorg'
 
   - id: 2030
     title: "Ensure Avahi Server is not enabled"
@@ -671,7 +687,7 @@ checks:
       - tsc: ["CC5.2"]
     condition: none
     rules:
-      - 'c:systemctl is-enabled avahi-daemon -> r:^enabled'
+      - 'c:systemctl is-enabled avahi-daemon -> enabled'
 
   - id: 2031
     title: "Ensure CUPS is not enabled"
@@ -688,7 +704,7 @@ checks:
       - https://www.cups.org
     condition: none
     rules:
-      - 'c:systemctl is-enabled cups -> r:^enabled'
+      - 'c:systemctl is-enabled cups -> enabled'
 
   - id: 2032
     title: "Ensure DHCP Server is not enabled"
@@ -705,8 +721,8 @@ checks:
       - tsc: ["CC5.2"]
     condition: none
     rules:
-      - 'c:systemctl is-enabled isc-dhcp-server -> r:^enabled'
-      - 'c:systemctl is-enabled isc-dhcp-server6 -> r:^enabled'
+      - 'c:systemctl is-enabled isc-dhcp-server -> enabled'
+      - 'c:systemctl is-enabled isc-dhcp-server6 -> enabled'
 
   - id: 2033
     title: "Ensure LDAP server is not enabled"
@@ -723,7 +739,7 @@ checks:
       - https://www.openldap.org
     condition: none
     rules:
-      - 'c:systemctl is-enabled slapd -> r:^enabled'
+      - 'c:systemctl is-enabled slapd -> enabled'
 
   - id: 2034
     title: "Ensure NFS and RPC are not enabled"
@@ -738,8 +754,8 @@ checks:
       - tsc: ["CC5.2"]
     condition: none
     rules:
-      - 'c:systemctl is-enabled nfs-server -> r:^enabled'
-      - 'c:systemctl is-enabled rpcbind -> r:^enabled'
+      - 'c:systemctl is-enabled nfs-server -> enabled'
+      - 'c:systemctl is-enabled rpcbind -> enabled'
 
   - id: 2035
     title: "Ensure DNS Server is not enabled"
@@ -754,7 +770,7 @@ checks:
       - tsc: ["CC5.2"]
     condition: none
     rules:
-      - 'c:systemctl is-enabled bind9 -> r:^enabled'
+      - 'c:systemctl is-enabled bind9 -> enabled'
 
   - id: 2036
     title: "Ensure FTP Server is not enabled"
@@ -769,7 +785,7 @@ checks:
       - tsc: ["CC5.2"]
     condition: none
     rules:
-      - 'c:systemctl is-enabled vsftpd -> r:^enabled'
+      - 'c:systemctl is-enabled vsftpd -> enabled'
 
   - id: 2037
     title: "Ensure HTTP Server is not enabled"
@@ -784,7 +800,7 @@ checks:
       - tsc: ["CC5.2"]
     condition: none
     rules:
-      - 'c:systemctl is-enabled apache2 -> r:^enabled'
+      - 'c:systemctl is-enabled apache2 -> enabled'
 
   - id: 2038
     title: "Ensure IMAP and POP3 server is not enabled"
@@ -814,7 +830,7 @@ checks:
       - tsc: ["CC5.2"]
     condition: none
     rules:
-      - 'c:systemctl is-enabled smbd -> r:^enabled'
+      - 'c:systemctl is-enabled smbd -> enabled'
 
   - id: 2040
     title: "Ensure HTTP Proxy Server is not enabled"
@@ -829,7 +845,7 @@ checks:
       - tsc: ["CC5.2"]
     condition: none
     rules:
-      - 'c:systemctl is-enabled squid -> r:^enabled'
+      - 'c:systemctl is-enabled squid -> enabled'
 
   - id: 2041
     title: "Ensure SNMP Server is not enabled"
@@ -844,7 +860,7 @@ checks:
       - tsc: ["CC5.2"]
     condition: none
     rules:
-      - 'c:systemctl is-enabled snmpd -> r:^enabled'
+      - 'c:systemctl is-enabled snmpd -> enabled'
 
   - id: 3023 
     title: "Ensure mail transfer agent is configured for local-only mode"
@@ -873,7 +889,7 @@ checks:
       - nist_800_53: ["CM.1"]
     condition: none
     rules:
-      - 'c:systemctl is-enabled rsync -> r:^enabled'
+      - 'c:systemctl is-enabled rsync -> enabled'
 
   - id: 2043
     title: "Ensure NIS Server is not enabled"
@@ -891,7 +907,7 @@ checks:
       - tsc: ["CC5.2"]
     condition: none
     rules:
-      - 'c:systemctl is-enabled nis -> r:^enabled'
+      - 'c:systemctl is-enabled nis -> enabled'
 
   - id: 2044
     title: "Ensure NIS Client is not installed"
