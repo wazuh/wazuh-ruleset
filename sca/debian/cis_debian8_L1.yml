@@ -626,7 +626,7 @@ checks:
     title: "Ensure ntp is configured"
     description: "ntp is a daemon which implements the Network Time Protocol (NTP). It is designed to synchronize system clocks across a variety of systems and use a source that is highly accurate. More information on NTP can be found at http://www.ntp.org. ntp can be configured to be a client and/or a server. This recommendation only applies if ntp is in use on the system."
     rationale: "If ntp is in use on the system proper configuration is vital to ensuring time synchronization is working properly."
-    remediation: "Remediation: Install ntp: # apt-get install ntp    Ensure the following lines are in /etc/ntp.conf: restrict -4 default kod nomodify notrap nopeer noquery     restrict -6 default kod nomodify notrap nopeer noquery    Also, make sure /etc/ntp.conf has at least one NTP server specified: server <ntp-server>    Note: <ntp-server> is the IP address or hostname of a trusted time server. Configuring an NTP server is outside the scope of this benchmark."
+    remediation: "Add or edit restrict lines in /etc/ntp.conf to match the following:   restrict -4 default kod nomodify notrap nopeer noquery      restrict -6 default kod nomodify notrap nopeer noquery  . Add or edit server or pool lines to /etc/ntp.conf as appropriate:   server <remote-server> . Configure ntp to run as the ntp user by adding or editing the /etc/init.d/ntp file:   RUNASUSER=ntp"
     compliance:
       - cis: ["2.2.1.2"]
       - cis_csc: ["6.1"]
@@ -655,7 +655,7 @@ checks:
       - tsc: ["CC5.2"]
     condition: all
     rules:
-      - 'f:/etc/chrony.conf -> r:^server\.+|^pool\.+'
+      - 'f:/etc/chrony/chrony.conf -> r:^server\.+|^pool\.+'
 
 
 # 2.2.2 Ensure the X Window system is not installed (Scored)
@@ -929,7 +929,7 @@ checks:
 
   - id: 2045
     title: "Ensure rsh client is not installed"
-    description: "The rshpackage contains the client commands for the rsh services."
+    description: "The rsh package contains the client commands for the rsh services."
     rationale: "These legacy clients contain numerous security exposures and have been replaced with the more secure SSH package. Even if the server is removed, it is best to ensure the clients are also removed to prevent users from inadvertently attempting to use these commands and therefore exposing their credentials. Note that removing the rshpackage removes the clients for rsh, rcpand rlogin."
     remediation: "Run the following command to uninstall rsh: apt-get remove rsh-client rsh-redone-client"
     compliance:
@@ -948,7 +948,7 @@ checks:
 
   - id: 2046
     title: "Ensure talk client is not installed"
-    description: "The talksoftware makes it possible for users to send and receive messages across systems through a terminal session. The talkclient, which allows initialization of talk sessions, is installed by default."
+    description: "The talk software makes it possible for users to send and receive messages across systems through a terminal session. The talkclient, which allows initialization of talk sessions, is installed by default."
     rationale: "The software presents a security risk as it uses unencrypted protocols for communication."
     remediation: "Run the following command to uninstall talk: apt-get remove talk"
     compliance:
@@ -986,7 +986,7 @@ checks:
     title: "Ensure LDAP client is not installed"
     description: "The Lightweight Directory Access Protocol (LDAP) was introduced as a replacement for NIS/YP. It is a service that provides a method for looking up information from a central database."
     rationale: "If the system will not need to act as an LDAP client, it is recommended that the software be removed to reduce the potential attack surface."
-    remediation: "Run the following command to uninstall openldap-clients : # apt-get remove ldap-utils"
+    remediation: "Uninstall ldap-utils using the appropriate package manager or manual installation:   # apt-get remove ldap-utils"
     compliance:
       - cis: ["2.3.5"]
       - cis_csc: ["2"]
