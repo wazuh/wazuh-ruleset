@@ -383,7 +383,7 @@ checks:
     title: "Ensure core dumps are restricted"
     description: "A core dump is the memory of an executable program. It is generally used to determine why a program aborted. It can also be used to glean confidential information from a core file. The system provides the ability to set a soft limit for core dumps, but this can be overridden by the user."
     rationale: "Setting a hard limit on core dumps prevents users from overriding the soft variable. If core dumps are required, consider setting limits for user groups (see limits.conf(5) ). In addition, setting the fs.suid_dumpable variable to 0 will prevent setuid programs from dumping core."
-    remediation: "Add the following line to the /etc/security/limits.conf file.  * hard core 0     Add the following line to the /etc/sysctl.conf file: fs.suid_dumpable = 0 and set the active kernel parameter."
+    remediation: "Add the following line to the /etc/security/limits.conf file.  * hard core 0     Add the following line to the /etc/sysctl.conf file: fs.suid_dumpable = 0. Run the following command to set the active kernel parameter:   # sysctl -w fs.suid_dumpable=0"
     compliance:
       - cis: ["1.5.1"]
       - cis_csc: ["13"]
@@ -431,7 +431,7 @@ checks:
     title: "Ensure prelink is disabled"
     description: "prelink is a program that modifies ELF shared libraries and ELF dynamically linked binaries in such a way that the time needed for the dynamic linker to perform relocations at startup significantly decreases."
     rationale: "The prelinking feature can interfere with the operation of AIDE, because it changes binaries. Prelinking can also increase the vulnerability of the system if a malicious user is able to compromise a common library such as libc."
-    remediation: "Run the following commands to restore binaries to normal and uninstall prelink: prelink -ua && yum remove prelink"
+    remediation: "Run the following commands to restore binaries to normal and uninstall prelink: prelink -ua && apt-get remove prelink"
     compliance:
       - cis: ["1.5.4"]
       - cis_csc: ["3.5"]
