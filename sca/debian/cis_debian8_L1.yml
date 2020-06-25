@@ -1439,7 +1439,7 @@ checks:
     remediation: "Run the following command to enable rsyslog: # systemctl enable rsyslog"
     compliance:
       - cis: ["4.2.1.1"]
-      - cis_csc: ["6.2", "6.3"]
+      - cis_csc: ["6.2"]
       - pci_dss: ["10.1"]
       - nist_800_53: ["CM.1"]
       - tsc: ["CC5.2", "CC6.1", "CC6.2", "CC6.3", "CC7.2", "CC7.3", "CC7.4"]
@@ -1460,9 +1460,10 @@ checks:
       - pci_dss: ["10.5.1","10.5.2"]
       - nist_800_53: ["CM.1","AU.9"]
       - tsc: ["CC5.2", "CC6.1", "CC7.2", "CC.7.3", "CC7.4"]
-    condition: all
+    condition: any
     rules:
-      - 'f:/etc/rsyslog.conf -> r:^\$FileCreateMode 0600|^\$FileCreateMode 0640'
+      - 'f:/etc/rsyslog.conf -> r:^\$FileCreateMode 06\d0|^\$FileCreateMode 04\d0|^\$FileCreateMode 02\d0|^\$FileCreateMode 00\d0 && r:^\$FileCreateMode 0\d40|^\$FileCreateMode 0\d00'
+      - 'd:/etc/rsyslog.d/ -> r:\. -> r:^\$FileCreateMode 06\d0|^\$FileCreateMode 04\d0|^\$FileCreateMode 02\d0|^\$FileCreateMode 00\d0 && r:^\$FileCreateMode 0\d40|^\$FileCreateMode 0\d00'
 
   - id: 2069
     title: "Ensure rsyslog is configured to send logs to a remote log host"
@@ -1471,7 +1472,7 @@ checks:
     remediation: "Edit the /etc/rsyslog.conf and /etc/rsyslog.d/*.conf files and add the following line (where loghost.example.com is the name of your central log host): *.* @@loghost.example.com. Run the following command to reload the rsyslogd configuration: # pkill -HUP rsyslogd"
     compliance:
       - cis: ["4.2.1.4"]
-      - cis_csc: ["6.6", "6.8"]
+      - cis_csc: ["6.6"]
       - pci_dss: ["10.5.3"]
       - nist_800_53: ["CM.1","AU.4"]
       - tsc: ["CC5.2"]
@@ -1488,7 +1489,7 @@ checks:
     remediation: "For hosts that are designated as log hosts, edit the /etc/rsyslog.conf file and un-comment or add the following lines:$ModLoad imtcp & $InputTCPServerRun 514. For hosts that are not designated as log hosts, edit the /etc/rsyslog.conf file and comment or remove the following lines: # $ModLoad imtcp # $InputTCPServerRun 514. Run the following command to reload the rsyslogd configuration: # pkill -HUP rsyslogd"
     compliance:
       - cis: ["4.2.1.5"]
-      - cis_csc: ["9.1", "9.2"]
+      - cis_csc: ["9.1"]
       - pci_dss: ["10.5.1"]
     references:
       - rsyslog.conf(8) man page
