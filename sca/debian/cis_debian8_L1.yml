@@ -1208,7 +1208,7 @@ checks:
     title: "Install TCP Wrappers"
     description: "TCP Wrappers provides a simple access list and standardized logging method for services capable of supporting it. In the past, services that were called from inetd and xinetd supported the use of tcp wrappers. As inetd and xinetd have been falling in disuse, any service that can support tcp wrappers will have the libwrap.so library attached to it."
     rationale: "TCP Wrappers provide a good simple access list mechanism to services that may not have that support built in. It is recommended that all services that can support TCP Wrappers, use it."
-    remediation: "Install tcpd : # apt-get install tcpd To verify if a service supports TCP Wrappers, run the following command: # ldd <path-to-daemon> | grep libwrap.so If there is any output, then the service supports TCP Wrappers."
+    remediation: "Install tcpd : # apt-get install tcpd    Notes: To verify if a service supports TCP Wrappers, run the following command: # ldd <path-to-daemon> | grep libwrap.so If there is any output, then the service supports TCP Wrappers."
     compliance:
       - cis: ["3.3.1"]
       - cis_csc: ["9.2"]
@@ -1224,7 +1224,7 @@ checks:
     remediation: "Run the following command to create /etc/hosts.allow: # echo \"ALL: <net>/<mask>, <net>/<mask>, ...\" >/etc/hosts.allow. Where each <net>/<mask> combination  (for example, \"192.168.1.0/255.255.255.0\") represents one network block in use by your organization that requires access to this system."
     compliance:
       - cis: ["3.3.2"]
-      - cis_csc: ["9.2", "9.4"]
+      - cis_csc: ["9.2"]
       - pci_dss: ["1.3.5"]
     condition: all
     rules:
@@ -1237,7 +1237,7 @@ checks:
     remediation: "Run the following command to create /etc/hosts.deny: # echo \"ALL: ALL\" >> /etc/hosts.deny"
     compliance:
       - cis: ["3.3.3"]
-      - cis_csc: ["9.2", "9.4"]
+      - cis_csc: ["9.2"]
       - pci_dss: ["1.3.5"]
     condition: all
     rules:
