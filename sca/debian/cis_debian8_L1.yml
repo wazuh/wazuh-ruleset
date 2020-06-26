@@ -1727,6 +1727,8 @@ checks:
       - 'c:stat -c%u-%g-%a /etc/cron.allow -> r:^0-0-600'
       - 'c:stat -c%u-%g-%a /etc/at.allow -> r:^0-0-600'
 
+# 5.2 SSH Server Configuration
+
   - id: 2073
     title: "Ensure permissions on /etc/ssh/sshd_config are configured"
     description: "The /etc/ssh/sshd_config file contains configuration specifications for sshd. The command below sets the owner and group of the file to root."
@@ -1856,8 +1858,6 @@ checks:
     condition: all
     rules:
       - 'f:/etc/ssh/sshd_config -> !r:^# && r:PermitRootLogin\s+no'
-
-# 5.2 SSH Server Configuration
 
   - id: 2081
     title: "Ensure SSH PermitEmptyPasswords is disabled"
@@ -2084,6 +2084,7 @@ checks:
     condition: all
     rules:
       - 'f:/etc/login.defs -> n:^\s*\t*PASS_MAX_DAYS\s*\t*(\d+) compare <= 365'
+      - 'not f:/etc/login.defs -> n:^\s*\t*PASS_MAX_DAYS\s*\t*(\d+) compare < 0'
 
   - id: 2090
     title: "Ensure minimum days between password changes is 7 or more"
@@ -2123,6 +2124,7 @@ checks:
     condition: all
     rules:
       - 'c:useradd -D -> n:^INACTIVE=(\d+) compare <= 30'
+      - 'not f:/etc/login.defs -> n:^\s*\t*PASS_MAX_DAYS\s*\t*(\d+) compare < 0'
 
   - id: 2093
     title: "Ensure default group for the root account is GID 0"
@@ -2149,9 +2151,12 @@ checks:
       - pci_dss: ["3.6.1"]
     condition: none
     rules:
-      - 'f:/etc/bash.bashrc -> n:^\s*\t*umask\s+(\d+) compare >= 027'
-      - 'f:/etc/profile -> n:^\s*\t*umask\s+(\d+) compare >= 027'
-      - 'd:/etc/profile.d -> .sh -> n:^\s*\t*umask\s+(\d+) compare >= 027'
+      - 'f:/etc/bash.bashrc -> !r:^\s*\t*# && r:umask \d0\d|umask \d1\d|umask \d4\d|umask \d5\d'
+      - 'f:/etc/bash.bashrc -> !r:^\s*\t*# && n:umask \d\d(\d) compare != 7'
+      - 'f:/etc/profile -> !r:^\s*\t*# && r:umask \d0\d|umask \d1\d|umask \d4\d|umask \d5\d'
+      - 'f:/etc/profile -> !r:^\s*\t*# && n:umask \d\d(\d) compare != 7'
+      - 'd:/etc/profile.d -> .sh -> !r:^\s*\t*# && r:umask \d0\d|umask \d1\d|umask \d4\d|umask \d5\d'
+      - 'd:/etc/profile.d -> .sh -> !r:^\s*t*# && n:umask \d\d(\d) compare != 7'
 
 
   - id: 2094
