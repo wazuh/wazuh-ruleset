@@ -2199,7 +2199,7 @@ checks:
     title: "Ensure permissions on /etc/shadow are configured"
     description: "The /etc/shadow file is used to store the information about user accounts that is critical to the security of those accounts, such as the hashed password and other security information."
     rationale: "If attackers can gain read access to the /etc/shadow file, they can easily run a password cracking program against the hashed password to break it. Other security information that is stored in the /etc/shadow file (such as expiration) could also be useful to subvert the user accounts."
-    remediation: "Run the one following commands to set permissions on /etc/shadow : # chown root:shadow /etc/shadow # chmod o-rwx,g-wx /etc/shadow"
+    remediation: "Run the following commands to set permissions on /etc/shadow : # chown root:shadow /etc/shadow # chmod o-rwx,g-wx /etc/shadow"
     compliance:
       - cis: ["6.1.3"]
       - cis_csc: ["16.14"]
@@ -2208,7 +2208,7 @@ checks:
       - tsc: ["CC5.2"]
     condition: all
     rules:
-      - 'c:stat -c%u-%g-%a /etc/shadow -> n:0-42-6(\d)0 compare <= 4'
+      - 'c:stat /etc/shadow -> r:Access:\s*\(0\d\d0/-\w\w-\w-----\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*\d+/\s*\t*shadow\)'
 
 # 6.1.4 Configure /etc/group permissions (Scored)
   - id: 2221 
@@ -2231,7 +2231,7 @@ checks:
     title: "Ensure permissions on /etc/gshadow are configured"
     description: "The /etc/gshadow file is used to store the information about groups that is critical to the security of those accounts, such as the hashed password and other security information."
     rationale: "If attackers can gain read access to the /etc/gshadow file, they can easily run a password cracking program against the hashed password to break it. Other security information that is stored in the /etc/gshadow file (such as group administrators) could also be useful to subvert the group"
-    remediation: "Run the following commands to set permissions on /etc/gshadow : # chown root:shadow /etc/gshadow # chmod o-rwx,g-rw /etc/gshadow"
+    remediation: "Run the following commands to set permissions on /etc/gshadow : # chown root:shadow /etc/gshadow # chmod o-rwx,g-wx /etc/gshadow"
     compliance:
       - cis: ["6.1.5"]
       - cis_csc: ["16.14"]
@@ -2240,7 +2240,7 @@ checks:
       - tsc: ["CC5.2"]
     condition: all
     rules:
-      - 'c:stat -c%u-%g-%a /etc/gshadow -> n:0-42-6(\d)0 compare <= 4'
+      - 'c:stat /etc/gshadow -> r:Access:\s*\(0\d\d0/-\w\w-\w-----\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*\d+/\s*\t*shadow\)'
 
 # 6.1.6 Ensure permissions on /etc/passwd- are configured (Scored)
   - id: 2223 
@@ -2272,7 +2272,7 @@ checks:
       - tsc: ["CC5.2"]
     condition: all
     rules:
-      - 'c:stat -c%u-%g-%a /etc/shadow- -> n:0-42-6(\d)0 compare <= 4'
+      - 'c:stat /etc/shadow- -> r:Access:\s*\(0\d\d0/-\w\w-\w-----\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\) && r:Gid:\s*\(\s*\t*\d+/\s*\t*shadow\)|Gid:\s*\(\s*\t*0/\s*\t*root\)'
 
 # 6.1.8 Configure /etc/group- permissions (Scored)
   - id: 2225 
@@ -2295,7 +2295,7 @@ checks:
     title: "Ensure permissions on /etc/gshadow- are configured"
     description: "The /etc/gshadow- file is used to store backup information about groups that is critical to the security of those accounts, such as the hashed password and other security information."
     rationale: "It is critical to ensure that the /etc/gshadow- file is protected from unauthorized access. Although it is protected by default, the file permissions could be changed either inadvertently or through malicious actions."
-    remediation: "# chown root:root /etc/gshadow- # chown root:shadow /etc/gshadow- # chmod o-rwx,g-rw /etc/gshadow-"
+    remediation: "Run the one of the following chown commands as appropriate and the chmod to set permissions on /etc/gshadow- : # chown root:root /etc/gshadow- # chown root:shadow /etc/gshadow- # chmod o-rwx,g-wx /etc/gshadow-"
     compliance:
       - cis: ["6.1.9"]
       - cis_csc: ["16.14"]
@@ -2304,7 +2304,7 @@ checks:
       - tsc: ["CC5.2"]
     condition: all
     rules:
-     - 'c:stat -c%u-%g-%a /etc/gshadow- -> n:0-42-6(\d)0 compare <= 4'
+      - 'c:stat /etc/gshadow- -> r:Access:\s*\(0\d\d0/-\w\w-\w-----\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\) && r:Gid:\s*\(\s*\t*\d+/\s*\t*shadow\)|Gid:\s*\(\s*\t*0/\s*\t*root\)'
 
 # 6.2 User and Group Settings
 
