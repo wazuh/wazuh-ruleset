@@ -1550,7 +1550,7 @@ checks:
       - tsc: ["CC5.2", "CC6.1", "CC7.2", "CC.7.3", "CC7.4"]
     condition: all
     rules:
-      - 'f:/etc/syslog-ng/syslog-ng.conf -> r:^options && r:perm\(0600\)|perm\(0640\)|perm\(0440\)|perm\(0400\)|perm\(0000\)'
+      - 'f:/etc/syslog-ng/syslog-ng.conf -> r:^options && r:perm\(06\d0\)|perm\(04\d0\)|perm\(02\d0\)|perm\(00\d0\) && r:perm\(0\d40\)|perm\(0\d00\)'
 
 # 4.2.2.4 Ensure syslog-ng is configured to send logs to a remote log host (Not Scored)
   - id: 2202 
@@ -1601,7 +1601,7 @@ checks:
       - tsc: ["CC5.2"]
     condition: all
     rules:
-      - 'c:systemctl is-enabled cron -> r:^enabled$'
+      - 'c:systemctl is-enabled cron -> enabled'
 
 
 # 5.1.2 Ensure permissions on /etc/crontab are configured (Scored)
@@ -1621,7 +1621,7 @@ checks:
       - gdpr_IV: ["35.7","32.2"]
     condition: all
     rules:
-      - 'c:stat /etc/crontab -> r:^Access: \(0600/-rw-------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
+      - 'c:stat /etc/crontab -> r:^Access: \(0\d00/\w\w\w-------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
 
 
 # 5.1.3 Ensure permissions on /etc/cron.hourly are configured (Scored)
@@ -1639,7 +1639,7 @@ checks:
 
     condition: all
     rules:
-      - 'c:stat /etc/cron.hourly -> r:^Access: \(0700/drwx------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
+      - 'c:stat /etc/cron.hourly -> r:^Access: \(0\d00/\w\w\w\w------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
 
 # 5.1.4 Ensure permissions on /etc/cron.daily are configured (Scored)
   - id: 2207 
@@ -1655,7 +1655,7 @@ checks:
       - tsc: ["CC5.2"]
     condition: all
     rules:
-      - 'c:stat /etc/cron.daily -> r:^Access: \(0700/drwx------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
+      - 'c:stat /etc/cron.daily -> r:^Access: \(0\d00/\w\w\w\w------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
 
 # 5.1.5 Ensure permissions on /etc/cron.weekly are configured (Scored)
   - id: 2208 
@@ -1671,7 +1671,7 @@ checks:
       - tsc: ["CC5.2"]
     condition: all
     rules:
-      - 'c:stat /etc/cron.weekly -> r:^Access: \(0700/drwx------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
+      - 'c:stat /etc/cron.weekly -> r:^Access: \(0\d00/\w\w\w\w------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
 
 
 # 5.1.6 Ensure permissions on /etc/cron.monthly are configured (Scored)
@@ -1688,7 +1688,7 @@ checks:
       - tsc: ["CC5.2"]
     condition: all
     rules:
-      - 'c:stat /etc/cron.monthly -> r:^Access: \(0700/drwx------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
+      - 'c:stat /etc/cron.monthly -> r:^Access: \(0\d00/\w\w\w\w------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
 
 # 5.1.7 Ensure permissions on /etc/cron.d are configured (Scored)
   - id: 2210 
@@ -1704,7 +1704,7 @@ checks:
       - tsc: ["CC5.2"]
     condition: all
     rules:
-      - 'c:stat /etc/cron.d -> r:^Access: \(0700/drwx------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
+      - 'c:stat /etc/cron.d -> r:^Access: \(0\d00/\w\w\w\w------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
 
 
   - id: 2072
@@ -1724,8 +1724,8 @@ checks:
       - 'f:/etc/at.allow'
       - 'not f:/etc/cron.deny'
       - 'not f:/etc/at.deny'
-      - 'c:stat -c%u-%g-%a /etc/cron.allow -> r:^0-0-600'
-      - 'c:stat -c%u-%g-%a /etc/at.allow -> r:^0-0-600'
+      - 'c:stat -c%u-%g-%a /etc/cron.allow -> r:^0-0-\d00'
+      - 'c:stat -c%u-%g-%a /etc/at.allow -> r:^0-0-\d00'
 
   - id: 2073
     title: "Ensure permissions on /etc/ssh/sshd_config are configured"
@@ -1740,7 +1740,7 @@ checks:
       - tsc: ["CC5.2"]
     condition: all
     rules:
-      - 'c:stat -c%u-%g-%a /etc/ssh/sshd_config -> r:^0-0-600'
+      - 'c:stat -c%u-%g-%a /etc/ssh/sshd_config -> r:^0-0-\d00'
 
   - id: 2074
     title: "Ensure SSH Protocol is set to 2"
@@ -1756,7 +1756,7 @@ checks:
       - tsc: ["CC6.7"]
     condition: all
     rules:
-      - 'f:/etc/ssh/sshd_config -> !r:^# && r:Protocol\s*\t*2'
+      - 'c:sshd -T -> r:Protocol\s*2'
 
   - id: 2075
     title: "Ensure SSH LogLevel is appropriate"
@@ -1774,7 +1774,7 @@ checks:
       - tsc: ["CC6.7"]
     condition: all
     rules:
-      - 'f:/etc/ssh/sshd_config -> !r:^# && r:LogLevel\s+INFO|LogLevel\s+VERBOSE'
+      - 'c:sshd -T -> r:LogLevel\s+INFO|LogLevel\s+VERBOSE'
 
   - id: 2076
     title: "Ensure SSH X11 forwarding is disabled"
@@ -1790,9 +1790,11 @@ checks:
       - gpg_13: ["4.3"]
       - gdpr_IV: ["35.7.d"]
       - hipaa: ["164.312.b"]
+    reference:
+      - 'https://www.ssh.com/ssh/sshd_config/'
     condition: all
     rules:
-      - 'f:/etc/ssh/sshd_config -> !r:^# && r:X11Forwarding\s+no'
+      - 'c:sshd -T -> r:X11Forwarding\s+no'
 
   - id: 2077
     title: "Ensure SSH MaxAuthTries is set to 4 or less"
@@ -1807,7 +1809,7 @@ checks:
       - tsc: ["CC5.2"]
     condition: all
     rules:
-      - 'f:/etc/ssh/sshd_config -> !r:^# && n:^MaxAuthTries\s*\t*(\d+) compare <= 4'
+      - 'c:sshd -T -> n:MaxAuthTries\s*\t*(\d+) compare <= 4'
 
   - id: 2078
     title: "Ensure SSH IgnoreRhosts is enabled"
@@ -1823,7 +1825,7 @@ checks:
       - tsc: ["CC6.7"]
     condition: all
     rules:
-      - 'f:/etc/ssh/sshd_config -> !r:^# && r:IgnoreRhosts\s+yes'
+      - 'c:sshd -T -> r:IgnoreRhosts\s+yes'
 
   - id: 2079
     title: "Ensure SSH HostbasedAuthentication is disabled"
@@ -1839,7 +1841,7 @@ checks:
       - tsc: ["CC6.7"]
     condition: all
     rules:
-      - 'f:/etc/ssh/sshd_config -> !r:^# && r:HostbasedAuthentication\s+no'
+      - 'c:sshd -T -> r:HostbasedAuthentication\s+no'
 
   - id: 2080
     title: "Ensure SSH root login is disabled"
@@ -1855,7 +1857,7 @@ checks:
       - tsc: ["CC6.7"]
     condition: all
     rules:
-      - 'f:/etc/ssh/sshd_config -> !r:^# && r:PermitRootLogin\s+no'
+      - 'c:sshd -T -> r:PermitRootLogin\s+no'
 
 # 5.2 SSH Server Configuration
 
@@ -1873,7 +1875,7 @@ checks:
       - tsc: ["CC6.7"]
     condition: all
     rules:
-      - 'f:/etc/ssh/sshd_config -> !r:^# && r:PermitEmptyPasswords\s+no'
+      - 'c:sshd -T -> r:PermitEmptyPasswords\s+no'
 
   - id: 2082
     title: "Ensure SSH PermitUserEnvironment is disabled"
@@ -1889,7 +1891,7 @@ checks:
       - tsc: ["CC6.7", "CC6.1", "CC7.2"]
     condition: all
     rules:
-      - 'f:/etc/ssh/sshd_config -> !r:^# && r:PermitUserEnvironment\s+no'
+      - 'c:sshd -T -> r:PermitUserEnvironment\s+no'
 
 # 5.2.13 Ensure only strong ciphers are used (Scored)
   - id: 2212
@@ -1963,8 +1965,8 @@ checks:
       - pci_dss: ["12.3.8"]
     condition: all
     rules:
-      - 'f:/etc/ssh/sshd_config -> !r:^# && n:ClientAliveInterval\s*\t*(\d+) compare <= 300 && n:ClientAliveInterval\s*\t*(\d+) compare != 0'
-      - 'f:/etc/ssh/sshd_config -> !r:^# && n:ClientAliveCountMax\s*\t*(\d+) compare <= 3'
+      - 'c:sshd -T -> n:ClientAliveInterval\s*\t*(\d+) compare <= 300 && n:ClientAliveInterval\s*\t*(\d+) compare != 0'
+      - 'c:sshd -T -> n:ClientAliveCountMax\s*\t*(\d+) compare <= 3'
 
 
 # 5.2.17 Ensure SSH LoginGraceTime is set to one minute or less (Scored)
@@ -1979,7 +1981,7 @@ checks:
       - pci_dss: ["8.1"]
     condition: all
     rules:
-      - 'c:sshd -T -> r:logingracetime && n:LoginGraceTime\s*\t*(\d+) compare <= 60'
+      - 'c:sshd -T -> n:LoginGraceTime\s*\t*(\d+) compare <= 60 && n:LoginGraceTime\s*\t*(\d+) compare != 0'
 
   - id: 2084
     title: "Ensure SSH access is limited"
@@ -1992,7 +1994,7 @@ checks:
       - pci_dss: ["8.1"]
     condition: all
     rules:
-      - 'f:/etc/ssh/sshd_config -> !r:^# && r:AllowUsers\s+\w+|AllowGroups\s+\w+|DenyUsers\s+\w+|DenyGroups\s+\w+'
+      - 'c:sshd -T -> r:AllowUsers\s+\w+|AllowGroups\s+\w+|DenyUsers\s+\w+|DenyGroups\s+\w+'
 
   - id: 2085
     title: "Ensure SSH warning banner is configured"
@@ -2007,7 +2009,7 @@ checks:
       - tsc: ["CC5.2"]
     condition: all
     rules:
-      - 'f:/etc/ssh/sshd_config -> !r:^# && r:Banner\s*\t*/etc/issue.net|Banner\s\t*/etc/issue'
+      - 'c:sshd -T -> r:Banner\s*\t*/etc/issue.net'
 
 # 5.3 Configure PAM
 
@@ -2041,7 +2043,7 @@ checks:
       - pci_dss: ["8.2.5"]
     condition: all
     rules:
-      - 'f:/etc/pam.d/common-auth -> !r:^# && r:auth\s*\t*required\s*\t*pam_tally2.so && r:onerr=fail && r:audit && r:silent && r:deny\s*=\s*\d && r:unlock_time\s*=\s*\d\d\d+'
+      - 'f:/etc/pam.d/common-auth -> !r:^# && r:auth\s*\t*required\s*\t*pam_tally2.so && r:onerr=fail && r:audit && r:silent && r:deny\s*=\s*\d+ && r:unlock_time\s*=\s*\d+'
 
   - id: 2088
     title: "Ensure password reuse is limited"
@@ -2052,9 +2054,10 @@ checks:
       - cis: ["5.3.3"]
       - cis_csc: ["16"]
       - pci_dss: ["8.2.5"]
-    condition: all
+    condition: none
     rules:
-      - 'f:/etc/pam.d/common-password -> !r:^# && r:password\s*\t*required\s*\t*pam_pwhistory.so && n:remember\s*\t*=\s*\t*(\d+) compare >= 5'
+      - 'f:/etc/pam.d/common-password -> !r:^# && r:password\s*\t*required\s*\t*pam_pwhistory.so && n:remember\s*\t*=\s*\t*(\d+) compare < 5'
+      - 'f:/etc/pam.d/common-password -> !r:^# && r:password\s*\t*required\s*\t*pam_pwhistory.so && !r:remember'
 
 # 5.3.4 Ensure password hashing algorithm is SHA-512 (Scored)
   - id: 2216 
@@ -2066,9 +2069,9 @@ checks:
       - cis: ["5.3.4"]
       - cis_csc: ["16.14"]
       - pci_dss: ["3.6.1"]
-    condition: all
+    condition: none
     rules:
-      - 'f:/etc/pam.d/common-password -> r:^password\.+pam_unix.so\.+sha512'
+      - 'f:/etc/pam.d/common-password -> r:^password\.+pam_unix.so && !r:sha512'
 
 # 5.4 User Accounts and Environment
 
@@ -2242,7 +2245,7 @@ checks:
     title: "Ensure permissions on /etc/passwd- are configured"
     description: "The /etc/passwd- file contains backup user account information."
     rationale: "It is critical to ensure that the /etc/passwd- file is protected from unauthorized access. Although it is protected by default, the file permissions could be changed either inadvertently or through malicious actions."
-    remediation: "Run the following command to set permissions on /etc/passwd-: # chown root:root /etc/passwd- # chmod 644 /etc/passwd-"
+    remediation: "Run the following command to set permissions on /etc/passwd-: # chown root:root /etc/passwd- # chmod u-x,go-wx /etc/passwd-"
     compliance:
       - cis: ["6.1.6"]
       - cis_csc: ["16.14"]
@@ -2251,7 +2254,7 @@ checks:
       - tsc: ["CC5.2"]
     condition: all
     rules:
-      - 'c:stat /etc/passwd- -> r:Access:\s*\(0644/-rw-r--r--\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*0/\s*\t*root\)|Access:\s*\(0640/-rw-r-----\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*0/\s*\t*root\)|Access:\s*\(0604/-rw----r--\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*0/\s*\t*root\)|Access:\s*\(0600/-rw-------\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*0/\s*\t*root\)'
+      - 'c:stat /etc/passwd- -> r:Access:\s*\(0\d\d\d/-\w\w-\w--\w--\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*0/\s*\t*root\)'
 
 # 6.1.7 Ensure permissions on /etc/shadow- are configured (Scored)
   - id: 2224 
@@ -2274,7 +2277,7 @@ checks:
     title: "Ensure permissions on /etc/group- are configured"
     description: "The /etc/group- file contains a backup list of all the valid groups defined in the system."
     rationale: "It is critical to ensure that the /etc/group- file is protected from unauthorized access. Although it is protected by default, the file permissions could be changed either inadvertently or through malicious actions."
-    remediation: "Run the following command to set permissions on /etc/group-: # chown root:root /etc/group- # chmod 644 /etc/group-"
+    remediation: "Run the following command to set permissions on /etc/group-: # chown root:root /etc/group- # chmod u-x,go-wx /etc/group-"
     compliance:
       - cis: ["6.1.8"]
       - cis_csc: ["16.14"]
@@ -2283,7 +2286,7 @@ checks:
       - tsc: ["CC5.2"]
     condition: all
     rules:
-      - 'c:stat /etc/group- -> r:Access:\s*\(0644/-rw-r--r--\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*0/\s*\t*root\)|Access:\s*\(0640/-rw-r-----\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*0/\s*\t*root\)|Access:\s*\(0604/-rw----r--\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*0/\s*\t*root\)|Access:\s*\(0600/-rw-------\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*0/\s*\t*root\)'
+      - 'c:stat /etc/group- -> r:Access:\s*\(0\d\d\d/-\w\w-\w--\w--\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*0/\s*\t*root\)'
 
 # 6.1.9 Ensure permissions on /etc/gshadow- are configured (Scored)
   - id: 2226 
