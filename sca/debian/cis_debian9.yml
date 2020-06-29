@@ -41,7 +41,7 @@ checks:
       - tsc: ["CC6.3"]
     condition: all
     rules:
-      - 'c:/sbin/modprobe -n -v freevxfs -> r:^install /bin/true'
+      - 'c:modprobe -n -v freevxfs -> r:^install /bin/true'
       - 'not c:lsmod -> r:freevxfs'
 
   - id: 3002
@@ -56,7 +56,7 @@ checks:
       - tsc: ["CC6.3"]
     condition: all
     rules:
-      - 'c:/sbin/modprobe -n -v jffs2 -> r:^install /bin/true'
+      - 'c:modprobe -n -v jffs2 -> r:^install /bin/true'
       - 'not c:lsmod -> r:jffs2'
 
   - id: 3003
@@ -71,7 +71,7 @@ checks:
       - tsc: ["CC6.3"]
     condition: all
     rules:
-      - 'c:/sbin/modprobe -n -v hfs -> r:^install /bin/true'
+      - 'c:modprobe -n -v hfs -> r:^install /bin/true'
       - 'not c:lsmod -> r:hfs'
 
   - id: 3004
@@ -86,7 +86,7 @@ checks:
       - tsc: ["CC6.3"]
     condition: all
     rules:
-      - 'c:/sbin/modprobe -n -v hfsplus -> r:^install /bin/true'
+      - 'c:modprobe -n -v hfsplus -> r:^install /bin/true'
       - 'not c:lsmod -> r:hfsplus'
 
   - id: 3006
@@ -101,7 +101,7 @@ checks:
       - tsc: ["CC6.3"]
     condition: all
     rules:
-      - 'c:/sbin/modprobe -n -v udf -> r:^install /bin/true'
+      - 'c:modprobe -n -v udf -> r:^install /bin/true'
       - 'not c:lsmod -> r:udf'
 
 # 2 Filesystem Configuration
@@ -153,7 +153,7 @@ checks:
     rules:
       - 'c:mount -> r:\s/tmp\s && r:nosuid'
 
-  - id: 3209
+  - id: 4609
     title: "Ensure noexec option set on /tmp partition"
     description: "The noexec mount option specifies that the filesystem cannot contain executable binaries."
     rationale: "Since the /tmp filesystem is only intended for temporary file storage, set this option to ensure that users cannot run executable binaries from /tmp ."
@@ -1380,7 +1380,7 @@ checks:
       - 'c:grep -Rh net\.ipv6\.conf\.all\.accept_ra /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv6.conf.all.accept_ra\s*=\s*0$'
       - 'c:grep -Rh net\.ipv6\.conf\.default\.accept_ra /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv6.conf.default.accept_ra\s*=\s*0$'
 
-  - id: 3216
+  - id: 6216
     title: "Install TCP Wrappers"
     description: "TCP Wrappers provides a simple access list and standardized logging method for services capable of supporting it. In the past, services that were called from inetd and xinetd supported the use of tcp wrappers. As inetd and xinetd have been falling in disuse, any service that can support tcp wrappers will have the libwrap.so library attached to it."
     rationale: "TCP Wrappers provide a good simple access list mechanism to services that may not have that support built in. It is recommended that all services that can support TCP Wrappers, use it."
@@ -1434,7 +1434,7 @@ checks:
     rules:
       - 'c:stat /etc/hosts.allow -> r:^Access: \(0644/-rw-r--r--\)\s*\t*Uid:\s*\t*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\t*\(\s*\t*0/\s*\t*root\)$'
 
-  - id: 3218
+  - id: 6218
     title: "Verify permissions on /etc/hosts.deny"
     description: "The /etc/hosts.deny file contains network information that is used by many system applications and therefore must be readable for these applications to operate."
     rationale: "It is critical to ensure that the /etc/hosts.deny file is protected from unauthorized write access. Although it is protected by default, the file permissions could be changed either inadvertently or through malicious actions."
@@ -1542,7 +1542,7 @@ checks:
       - 'c:iptables -L -> r:^Chain FORWARD && r:policy DROP'
       - 'c:iptables -L -> r:^Chain OUTPUT && r:policy DROP'
 
-  - id: 3219 
+  - id: 6219 
     title: "Ensure loopback traffic is configured"
     description: "Configure the loopback interface to accept traffic. Configure all other interfaces to deny traffic to the loopback network (127.0.0.0/8)."
     rationale: "Loopback traffic is generated between processes on machine and is typically critical to operation of the system. The loopback interface is the only place that loopback network (127.0.0.0/8) traffic should be seen, all other interfaces should ignore traffic on this network as an anti-spoofing measure."
@@ -1575,7 +1575,7 @@ checks:
       - 'c:ip6tables -L -> r:^Chain FORWARD && r:policy DROP'
       - 'c:ip6tables -L -> r:^Chain OUTPUT && r:policy DROP'
 
-  - id: 3222 
+  - id: 6222 
     title: "Ensure IPv6 loopback traffic is configured"
     description: "Configure the loopback interface to accept traffic. Configure all other interfaces to deny traffic to the loopback network (::1)."
     rationale: "Loopback traffic is generated between processes on machine and is typically critical to operation of the system. The loopback interface is the only place that loopback network (::1) traffic should be seen, all other interfaces should ignore traffic on this network as an anti-spoofing measure."
