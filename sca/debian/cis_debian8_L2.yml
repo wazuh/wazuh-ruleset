@@ -632,7 +632,7 @@ checks:
     rules:
       - 'd:/etc/audit'
       - 'f:/etc/audit/audit.rules'
-      - 'f:/etc/audit/audit.rules -> r:^\s*\t*-e 2$'
+      - 'c:tail -1 /etc/audit/audit.rules -> -e 2'
 
   - id: 2528
     title: "Ensure SSH X11 forwarding is disabled"
