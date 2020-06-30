@@ -471,7 +471,7 @@ checks:
     condition: all
     rules:
       - 'c:sysctl fs.suid_dumpable -> r:=\s*\t*0$'
-      - 'c:grep -Rh fs\.suid_dumpable /etc/sysctl.conf /etc/sysctl.d -> r:=\s*\t*0$'
+      - 'c:grep -Rh fs\.suid_dumpable /etc/sysctl.conf /etc/sysctl.d -> !r:^# && r:=\s*\t*0$'
       - 'c:grep -Rh ^*[[:space:]]*hard[[:space:]][[:space:]]*core[[:space:]][[:space:]]* /etc/security/limits.conf /etc/security/limits.d -> r:\s*\t*0$'
 
   - id: 3101 
@@ -537,7 +537,8 @@ checks:
       - tsc: ["CC5.2"]
     condition: none
     rules:
-      - 'f:/boot/grub/grub.cfg -> r:linux\.*selinux=0|linux\.*enforcing=0'
+      - 'f:/boot/grub/grub.cfg -> r:^\s*\t*linux && !r:selinux=1'
+      - 'f:/boot/grub/grub.cfg -> r:^\s*\t*linux && !r:security=selinux'
 
   - id: 3607 
     title: "Ensure the SELinux state is enforcing"
@@ -556,6 +557,7 @@ checks:
       - 'c:sestatus -> r:^Current mode:\s+enforcing$'
       - 'c:sestatus -> r:^Mode from config file:\s+enforcing$'
       - 'f:/etc/selinux/config -> r:^\s*SELINUX\s*=\s*enforcing'
+      - 'f:/boot/grub/grub.cfg -> r:^\s*\t*linux && !r:enforcing=1'
 
   - id: 3608 
     title: "Ensure SELinux policy is configured"
@@ -570,8 +572,8 @@ checks:
       - tsc: ["CC5.2"]
     condition: all
     rules:
-      - 'c:sestatus -> r:^Loaded policy name:\s+targeted$'
-      - 'f:/etc/selinux/config -> r:^\s*SELINUXTYPE\s*=\s*targeted|^\s*SELINUXTYPE\s*=\s*mls'
+      - 'c:sestatus -> r:^Loaded policy name:\s+default|^Loaded policy name:\s+mls'
+      - 'f:/etc/selinux/config -> r:^\s*SELINUXTYPE\s*=\s*default|^\s*SELINUXTYPE\s*=\s*mls'
 
   - id: 3609 
     title: "Ensure no unconfined daemons exist"
@@ -602,8 +604,8 @@ checks:
       - tsc: ["CC5.2"]
     condition: none
     rules:
-      - 'f:/boot/grub/grub.cfg -> r:linux && !r:apparmor=1'
-      - 'f:/boot/grub/grub.cfg -> r:linux && !r:security=apparmor'
+      - 'f:/boot/grub/grub.cfg -> r:^\s*\t*linux && !r:apparmor=1'
+      - 'f:/boot/grub/grub.cfg -> r:^\s*\t*linux && !r:security=apparmor'
 
   - id: 3611
     title: "Ensure all AppArmor Profiles are enforcing"
@@ -618,7 +620,9 @@ checks:
       - tsc: ["CC5.2"]
     condition: all
     rules:
-      - 'c:apparmor status -> r:0 profiles are in complain mode && r:0 processes are unconfined && n:(\d+) profiles are loaded compare > 0'
+      - 'c:apparmor status -> r:0 profiles are in complain mode' 
+      - 'c:apparmor status -> r:0 processes are unconfined'
+      - 'c:apparmor status -> n:(\d+) profiles are loaded compare > 0'
 
   - id: 3612
     title: "Ensure SELinux or AppArmor are installed"
@@ -649,7 +653,7 @@ checks:
       - pci_dss: ["7.1"]
     condition: none
     rules:
-      - 'f:/etc/motd -> r:\\v|\\r|\\m|\\s|Debian|Ubuntu'
+      - 'f:/etc/motd -> r:\\v|\\r|\\m|\\s|Debian'
       
   - id: 3024
     title: "Ensure local login warning banner is configured properly"
@@ -661,7 +665,7 @@ checks:
       - cis_csc: ["5.1"]
     condition: none
     rules:
-      - 'f:/etc/issue -> r:\\v|\\r|\\m|\\s|Debian|Ubuntu'
+      - 'f:/etc/issue -> r:\\v|\\r|\\m|\\s|Debian'
 
   - id: 3108 
     title: "Ensure remote login warning banner is configured properly"
@@ -674,7 +678,7 @@ checks:
       - pci_dss: ["7.1"]
     condition: none
     rules:
-      - 'f:/etc/issue.net -> r:\\v|\\r|\\m|\\s'
+      - 'f:/etc/issue.net -> r:\\v|\\r|\\m|\\s|Debian'
 
   - id: 3109 
     title: "Ensure permissions on /etc/motd are configured"
@@ -835,8 +839,7 @@ checks:
     rules:
       - 'f:/etc/ntp.conf -> r:^restrict\s+-4\s+default|^restrict\s+default && r:\s+kod\s+ && r:\s+nomodify\s+ && r:\s+notrap\s+ && r:\s+nopeer\s+ && r:\s+noquery'
       - 'f:/etc/ntp.conf -> r:^restrict\s+-6\s+default && r:\s+kod\s+ && r:\s+nomodify\s+ && r:\s+notrap\s+ && r:\s+nopeer\s+ && r:\s+noquery'
-      - 'f:/etc/ntp.conf -> r:^server\.+$|^pool\.+$'
-      - 'f:/etc/ntp.conf -> r:^server\s\.+'
+      - 'f:/etc/ntp.conf -> r:^server\.+|^pool\.+'
       - 'f:/etc/init.d/ntp -> r:^RUNASUSER\s*\t*=\s*\t*ntp'
 
   - id: 3129
@@ -852,7 +855,23 @@ checks:
       - tsc: ["CC5.2"]
     condition: all
     rules:
-      - 'f:/etc/chrony.conf -> r:^server\.+$|^pool\.+$'
+      - 'f:/etc/chrony.conf -> r:^server\.+|^pool\.+'
+
+# 2.2.2 Ensure the X Window system is not installed (Scored)
+  - id: 20000
+    title: "Ensure the X Window system is not installed"
+    description: "The X Window System provides a Graphical User Interface (GUI) where users can have multiple windows in which to run programs and various add on. The X Windows system is typically used on workstations where users login, but not on servers where users typically do not login."
+    rationale: "Unless your organization specifically requires graphical login access via X Windows, remove it to reduce the potential attack surface."
+    remediation: "Run the following command to remove the X Windows System packages: apt-get remove xserver-xorg*"
+    compliance:
+      - cis: ["2.2.2"]
+      - cis_csc: ["2.6"]
+      - pci_dss: ["2.2.2"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2","CC6.1","CC6.8","CC7.1","CC7.2","CC8.1"]
+    condition: none
+    rules:
+      - 'c:dpkg -l xserver-xorg-core* -> r:^\wi\s*xserver-xorg'
 
   - id: 3130
     title: "Ensure Avahi Server is not enabled"
@@ -867,7 +886,7 @@ checks:
       - tsc: ["CC5.2"]
     condition: none
     rules:
-      - 'c:systemctl is-enabled avahi-daemon -> r:^enabled'
+      - 'c:systemctl is-enabled avahi-daemon -> enabled'
 
   - id: 3131
     title: "Ensure CUPS is not enabled"
@@ -884,7 +903,7 @@ checks:
       - https://www.cups.org
     condition: none
     rules:
-      - 'c:systemctl is-enabled cups -> r:^enabled'
+      - 'c:systemctl is-enabled cups -> enabled'
 
   - id: 3132
     title: "Ensure DHCP Server is not enabled"
@@ -901,8 +920,8 @@ checks:
       - tsc: ["CC5.2"]
     condition: none
     rules:
-      - 'c:systemctl is-enabled isc-dhcp-server -> r:^enabled'
-      - 'c:systemctl is-enabled isc-dhcp-server6 -> r:^enabled'
+      - 'c:systemctl is-enabled isc-dhcp-server -> enabled'
+      - 'c:systemctl is-enabled isc-dhcp-server6 -> enabled'
 
   - id: 3133
     title: "Ensure LDAP server is not enabled"
@@ -919,7 +938,7 @@ checks:
       - https://www.openldap.org
     condition: none
     rules:
-      - 'c:systemctl is-enabled slapd -> r:^enabled'
+      - 'c:systemctl is-enabled slapd -> enabled'
 
   - id: 3134
     title: "Ensure NFS and RPC are not enabled"
@@ -934,8 +953,8 @@ checks:
       - tsc: ["CC5.2"]
     condition: none
     rules:
-      - 'c:systemctl is-enabled nfs-server -> r:^enabled'
-      - 'c:systemctl is-enabled rpcbind -> r:^enabled'
+      - 'c:systemctl is-enabled nfs-server -> enabled'
+      - 'c:systemctl is-enabled rpcbind -> enabled'
 
   - id: 3135
     title: "Ensure DNS Server is not enabled"
@@ -950,7 +969,7 @@ checks:
       - tsc: ["CC5.2"]
     condition: none
     rules:
-      - 'c:systemctl is-enabled bind9 -> r:^enabled'
+      - 'c:systemctl is-enabled bind9 -> enabled'
 
   - id: 3136
     title: "Ensure FTP Server is not enabled"
@@ -965,7 +984,7 @@ checks:
       - tsc: ["CC5.2"]
     condition: none
     rules:
-      - 'c:systemctl is-enabled vsftpd -> r:^enabled'
+      - 'c:systemctl is-enabled vsftpd -> enabled'
 
   - id: 3137
     title: "Ensure HTTP Server is not enabled"
@@ -980,7 +999,7 @@ checks:
       - tsc: ["CC5.2"]
     condition: none
     rules:
-      - 'c:systemctl is-enabled apache2 -> r:^enabled'
+      - 'c:systemctl is-enabled apache2 -> enabled'
 
   - id: 3138
     title: "Ensure IMAP and POP3 server is not enabled"
@@ -1010,7 +1029,7 @@ checks:
       - tsc: ["CC5.2"]
     condition: none
     rules:
-      - 'c:systemctl is-enabled smbd -> r:^enabled'
+      - 'c:systemctl is-enabled smbd -> enabled'
 
   - id: 3040
     title: "Ensure HTTP Proxy Server is not enabled"
@@ -1025,7 +1044,7 @@ checks:
       - tsc: ["CC5.2"]
     condition: none
     rules:
-      - 'c:systemctl is-enabled squid -> r:^enabled'
+      - 'c:systemctl is-enabled squid -> enabled'
 
   - id: 3041
     title: "Ensure SNMP Server is not enabled"
@@ -1040,7 +1059,7 @@ checks:
       - tsc: ["CC5.2"]
     condition: none
     rules:
-      - 'c:systemctl is-enabled snmpd -> r:^enabled'
+      - 'c:systemctl is-enabled snmpd -> enabled'
 
   - id: 3123 
     title: "Ensure mail transfer agent is configured for local-only mode"
@@ -1069,7 +1088,7 @@ checks:
       - nist_800_53: ["CM.1"]
     condition: none
     rules:
-      - 'c:systemctl is-enabled rsync -> r:^enabled'
+      - 'c:systemctl is-enabled rsync -> enabled'
 
   - id: 3143
     title: "Ensure NIS Server is not enabled"
@@ -1087,7 +1106,7 @@ checks:
       - tsc: ["CC5.2"]
     condition: none
     rules:
-      - 'c:systemctl is-enabled nis -> r:^enabled'
+      - 'c:systemctl is-enabled nis -> enabled'
 
   - id: 3144
     title: "Ensure NIS Client is not installed"
@@ -1669,7 +1688,7 @@ checks:
       - tsc: [CC6.1", "CC6.2", "CC6.3", "CC7.2", "CC7.3", "CC7.4"]
     condition: all
     rules:
-      - 'c:systemctl is-enabled auditd -> r:^enabled'
+      - 'c:systemctl is-enabled auditd -> enabled'
 
   - id: 3512
     title: "Ensure auditing for processes that start prior to auditd is enabled"
@@ -1683,9 +1702,9 @@ checks:
       - gpg_13: ["7.9"]
       - gdpr_IV: ["35.7.d","32.2"]
       - tsc: ["CC6.1", "CC6.8", "CC7.2", "CC7.3", "CC7.4"]
-    condition: all
+    condition: none
     rules:
-      - 'f:/etc/default/grub -> r:^GRUB_CMDLINE_LINUX\s*=\s*\.*audit\s*=\s*1\.*'
+      - 'f:/boot/grub/grub.cfg -> r:^\s*\t*linux && !r:audit=1'
 
   - id: 3513
     title: "Ensure events that modify date and time information are collected"
@@ -1707,8 +1726,6 @@ checks:
       - 'f:/etc/audit/audit.rules'
       - 'f:/etc/audit/audit.rules -> r:^-a && r:always,exit|exit,always && r:-F arch=b32 && r:-S adjtimex && r:-S settimeofday && r:-S stime && r:-k time-change'
       - 'f:/etc/audit/audit.rules -> r:^-a && r:always,exit|exit,always && r:-F arch=b32 && r:-S clock_settime && r:-k time-change'
-      - 'f:/etc/audit/audit.rules -> r:^-a && r:always,exit|exit,always && r:-F arch=b64 && r:-S adjtimex && r:-S settimeofday && r:-k time-change'
-      - 'f:/etc/audit/audit.rules -> r:^-a && r:always,exit|exit,always && r:-F arch=b64 && r:-S clock_settime && r:-k time-change'
       - 'f:/etc/audit/audit.rules -> r:^-w && r:/etc/localtime && r:-p wa && r:-k time-change'
 
   - id: 3514
@@ -1754,40 +1771,16 @@ checks:
       - 'd:/etc/audit'
       - 'f:/etc/audit/audit.rules'
       - 'f:/etc/audit/audit.rules -> r:^-a && r:exit,always|always,exit && r:-F arch=b32 && r:-S sethostname && r:-S setdomainname && r:-k system-locale'
-      - 'f:/etc/audit/audit.rules -> r:^-a && r:exit,always|always,exit && r:-F arch=b64 && r:-S sethostname && r:-S setdomainname && r:-k system-locale'
       - 'f:/etc/audit/audit.rules -> r:^-w && r:/etc/issue && r:-p wa && r:-k system-locale'
       - 'f:/etc/audit/audit.rules -> r:^-w && r:/etc/issue.net && r:-p wa && r:-k system-locale'
       - 'f:/etc/audit/audit.rules -> r:^-w && r:/etc/hosts && r:-p wa && r:-k system-locale'
       - 'f:/etc/audit/audit.rules -> r:^-w && r:/etc/network && r:-p wa && r:-k system-locale'
 
   - id: 3516
-    title: "Ensure events that modify the system's Mandatory Access Controls are collected (SELinux)"
-    description: "Monitor SELinux mandatory access control. The parameters below monitor any write access (potential additional, deletion or modification of files in the directory) or attribute changes to the /etc/selinux directory."
-    rationale: "Changes to files in that directory could indicate that an unauthorized user is attempting to modify access controls and change security contexts, leading to a compromise of the system."
-    remediation: "On systems using SELinux add the following line to the /etc/audit/audit.rules file: -w /etc/selinux/ -p wa -k MAC-policy | -w /usr/share/selinux/ -p wa -k MAC-policy. Notes: Reloading the auditd config to set active settings may require a system reboot."
-    compliance:
-      - cis: ["4.1.7"]
-      - cis_csc: ["5.5"]
-      - pci_dss: ["10.2.5"]
-      - hipaa: ["164.312.b"]
-      - nist_800_53: ["AU.14", "AC.7"]
-      - gpg_13: ["7.8"]
-      - gdpr_IV: ["35.7","32.2"]
-      - tsc: ["CC7.2", "CC6.1", "CC6.8", "CC7.3", "CC7.4"]
-    condition: all
-    rules:
-      - 'd:/etc/audit'
-      - 'f:/etc/audit/audit.rules'
-      - 'f:/etc/audit/audit.rules -> r:^-w && r:/etc/selinux/ && r:-p wa && r:-k MAC-policy'
-      - 'f:/etc/audit/audit.rules -> r:^-w && r:/usr/share/selinux/ && r:-p wa && r:-k MAC-policy'
-
-
-
-  - id: 3517
-    title: "Ensure events that modify the system's Mandatory Access Controls are collected (AppArmor)"
-    description: "Monitor AppArmor mandatory access control. The parameters below monitor any write access (potential additional, deletion or modification of files in the directory) or attribute changes to the /etc/apparmor and /etc/apparmor.d directories."
+    title: "Ensure events that modify the system's Mandatory Access Controls are collected"
+    description: "Monitor SELinux/AppArmor mandatory access controls. The parameters below monitor any write access (potential additional, deletion or modification of files in the directory) or attribute changes to the /etc/selinux or /etc/apparmor and /etc/apparmor.d directories."
     rationale: "Changes to files in these directories could indicate that an unauthorized user is attempting to modify access controls and change security contexts, leading to a compromise of the system."
-    remediation: "On systems using AppArmor add the following line to the /etc/audit/audit.rules file: -w /etc/apparmor/ -p wa -k MAC-policy | -w /etc/apparmor.d/ -p wa -k MAC-policy. Notes: Reloading the auditd config to set active settings may require a system reboot."
+    remediation: "On systems using SELinux add the following line to the /etc/audit/audit.rules file: -w /etc/selinux/ -p wa -k MAC-policy  | -w /usr/share/selinux/ -p wa -k MAC-policy On systems using AppArmor add the following line to the /etc/audit/audit.rules file: -w /etc/apparmor/ -p wa -k MAC-policy | -w /etc/apparmor.d/ -p wa -k MAC-policy"
     compliance:
       - cis: ["4.1.7"]
       - cis_csc: ["5.5"]
@@ -1801,8 +1794,8 @@ checks:
     rules:
       - 'd:/etc/audit'
       - 'f:/etc/audit/audit.rules'
-      - 'f:/etc/audit/audit.rules -> r:^-w && r:/etc/apparmor/ && r:-p wa && r:-k MAC-policy'
-      - 'f:/etc/audit/audit.rules -> r:^-w && r:/etc/apparmor.d/ && r:-p wa && r:-k MAC-policy'
+      - 'f:/etc/audit/audit.rules -> r:^-w && r:/etc/selinux/|/etc/apparmor/ && r:-p wa && r:-k MAC-policy'
+      - 'f:/etc/audit/audit.rules -> r:^-w && r:/usr/share/selinux/|/etc/apparmor.d/ && r:-p wa && r:-k MAC-policy'
 
   - id: 3518
     title: "Ensure login and logout events are collected"
@@ -1863,11 +1856,8 @@ checks:
     rules:
       - 'd:/etc/audit'
       - 'f:/etc/audit/audit.rules'
-      - 'f:/etc/audit/audit.rules -> r:^-a && r:always,exit|exit,always && r:-F arch=b64 && r:-S chmod && r:-S fchmod && r:-S fchmodat && r:-F auid>=1000 && r:-F auid!=4294967295 && r:-k perm_mod'
       - 'f:/etc/audit/audit.rules -> r:^-a && r:always,exit|exit,always && r:-F arch=b32 && r:-S chmod && r:-S fchmod && r:-S fchmodat && r:-F auid>=1000 && r:-F auid!=4294967295 && r:-k perm_mod'
-      - 'f:/etc/audit/audit.rules -> r:^-a && r:always,exit|exit,always && r:-F arch=b64 && r:-S chown && r:-S fchown && r:-S fchownat && r:-S lchown && r:-F auid>=1000 && r:-F auid!=4294967295 && r:-k perm_mod'
       - 'f:/etc/audit/audit.rules -> r:^-a && r:always,exit|exit,always && r:-F arch=b32 && r:-S chown && r:-S fchown && r:-S fchownat && r:-S lchown && r:-F auid>=1000 && r:-F auid!=4294967295 && r:-k perm_mod'
-      - 'f:/etc/audit/audit.rules -> r:^-a && r:always,exit|exit,always && r:-F arch=b64 && r:-S setxattr && r:-S lsetxattr && r:-S fsetxattr && r:-S removexattr && r:-S lremovexattr && r:-S fremovexattr && r:-F auid>=1000 && r:-F auid!=4294967295 && r:-k perm_mod'
       - 'f:/etc/audit/audit.rules -> r:^-a && r:always,exit|exit,always && r:-F arch=b32 && r:-S setxattr && r:-S lsetxattr && r:-S fsetxattr && r:-S removexattr && r:-S lremovexattr && r:-S fremovexattr && r:-F auid>=1000 && r:-F auid!=4294967295 && r:-k perm_mod'
 
   - id: 3521
@@ -1888,9 +1878,7 @@ checks:
     rules:
       - 'd:/etc/audit'
       - 'f:/etc/audit/audit.rules'
-      - 'f:/etc/audit/audit.rules -> r:^-a && r:always,exit|exit,always && r:-F arch=b64 && r:-S creat && r:-S open && r:-S openat && r:-S truncate && r:-F exit=-EACCES && r:-F auid>=1000 && r:-F auid!=4294967295 && r:-k access'
       - 'f:/etc/audit/audit.rules -> r:^-a && r:always,exit|exit,always && r:-F arch=b32 && r:-S creat && r:-S open && r:-S openat && r:-S truncate && r:-F exit=-EACCES && r:-F auid>=1000 && r:-F auid!=4294967295 && r:-k access'
-      - 'f:/etc/audit/audit.rules -> r:^-a && r:always,exit|exit,always && r:-F arch=b64 && r:-S creat && r:-S open && r:-S openat && r:-S truncate && r:-F exit=-EPERM && r:-F auid>=1000 && r:-F auid!=4294967295 && r:-k access'
       - 'f:/etc/audit/audit.rules -> r:^-a && r:always,exit|exit,always && r:-F arch=b32 && r:-S creat && r:-S open && r:-S openat && r:-S truncate && r:-F exit=-EPERM && r:-F auid>=1000 && r:-F auid!=4294967295 && r:-k access'
 
   - id: 3522
@@ -1911,7 +1899,6 @@ checks:
     rules:
       - 'd:/etc/audit'
       - 'f:/etc/audit/audit.rules'
-      - 'f:/etc/audit/audit.rules -> r:^-a && r:always,exit|exit,always && r:-F arch=b64 && r:-S mount && r:-F auid>=1000 && r:-F auid!=4294967295 && r:-k mounts'
       - 'f:/etc/audit/audit.rules -> r:^-a && r:always,exit|exit,always && r:-F arch=b32 && r:-S mount && r:-F auid>=1000 && r:-F auid!=4294967295 && r:-k mounts'
 
   - id: 3523
@@ -1930,7 +1917,6 @@ checks:
     rules:
       - 'd:/etc/audit'
       - 'f:/etc/audit/audit.rules'
-      - 'f:/etc/audit/audit.rules -> r:^-a && r:always,exit|exit,always && r:-F arch=b64 && r:-S unlink && r:-S unlinkat && r:-S rename && r:-S renameat && r:-F auid>=1000 && r:-F auid!=4294967295 && r:-k delete'
       - 'f:/etc/audit/audit.rules -> r:^-a && r:always,exit|exit,always && r:-F arch=b32 && r:-S unlink && r:-S unlinkat && r:-S rename && r:-S renameat && r:-F auid>=1000 && r:-F auid!=4294967295 && r:-k delete'
 
   - id: 3524
@@ -1995,7 +1981,7 @@ checks:
       - 'f:/etc/audit/audit.rules -> r:^-w && r:/sbin/insmod && r:-p x && r:-k modules'
       - 'f:/etc/audit/audit.rules -> r:^-w && r:/sbin/rmmod && r:-p x && r:-k modules'
       - 'f:/etc/audit/audit.rules -> r:^-w && r:/sbin/modprobe && r:-p x && r:-k modules'
-      - 'f:/etc/audit/audit.rules -> r:^-a && r:always,exit|exit,always && r:-F arch=b64 && r:-S init_module && r:-S delete_module && r:-k modules'
+      - 'f:/etc/audit/audit.rules -> r:^-a && r:always,exit|exit,always && r:-F arch=b32|-F arch=b64 && r:-S init_module && r:-S delete_module && r:-k modules'
 
   - id: 3527
     title: "Ensure the audit configuration is immutable"
@@ -2013,7 +1999,7 @@ checks:
     rules:
       - 'd:/etc/audit'
       - 'f:/etc/audit/audit.rules'
-      - 'f:/etc/audit/audit.rules -> r:^\s*\t*-e 2$'
+      - 'c:tail -1 /etc/audit/audit.rules -> -e 2'
 
 
   - id: 3068
@@ -2030,7 +2016,7 @@ checks:
       - hipaa: ["164.312.b"]
     condition: all
     rules:
-      - 'c:systemctl is-enabled rsyslog -> r:^enabled'
+      - 'c:systemctl is-enabled rsyslog -> enabled'
 
 # 4.2.1.3 Ensure rsyslog default file permissions configured (Scored)
   - id: 3203 
