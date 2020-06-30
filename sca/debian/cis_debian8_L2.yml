@@ -614,7 +614,7 @@ checks:
       - 'f:/etc/audit/audit.rules -> r:^-w && r:/sbin/insmod && r:-p x && r:-k modules'
       - 'f:/etc/audit/audit.rules -> r:^-w && r:/sbin/rmmod && r:-p x && r:-k modules'
       - 'f:/etc/audit/audit.rules -> r:^-w && r:/sbin/modprobe && r:-p x && r:-k modules'
-      - 'f:/etc/audit/audit.rules -> r:^-a && r:always,exit|exit,always && r:-F arch=b32 && r:-S init_module && r:-S delete_module && r:-k modules'
+      - 'f:/etc/audit/audit.rules -> r:^-a && r:always,exit|exit,always && r:-F arch=b32|-F arch=b64 && r:-S init_module && r:-S delete_module && r:-k modules'
 
   - id: 2527
     title: "Ensure the audit configuration is immutable"
