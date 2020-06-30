@@ -427,8 +427,8 @@ checks:
     rules:
       - 'd:/etc/audit'
       - 'f:/etc/audit/audit.rules'
-      - 'f:/etc/audit/audit.rules -> r:^-w && r:/etc/selinux/ && r:-p wa && r:-k MAC-policy'
-      - 'f:/etc/audit/audit.rules -> r:^-w && r:/usr/share/selinux/ && r:-p wa && r:-k MAC-policy'
+      - 'f:/etc/audit/audit.rules -> r:^-w && r:/etc/selinux/|/etc/apparmor/ && r:-p wa && r:-k MAC-policy'
+      - 'f:/etc/audit/audit.rules -> r:^-w && r:/usr/share/selinux/|/etc/apparmor.d/ && r:-p wa && r:-k MAC-policy'
 
   - id: 2518
     title: "Ensure login and logout events are collected"
