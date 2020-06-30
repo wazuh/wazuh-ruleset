@@ -108,7 +108,7 @@ checks:
   - id: 3007
     title: "Ensure /tmp is configured"
     description: "The /tmp directory is a world-writable directory used for temporary storage by all users and some applications."
-    rationale: "Since the /tmp directory is intended to be world-writable, there is a risk of resource exhaustion if it is not bound to a separate partition. In addition, making /tmp its own file system allows an administrator to set the noexec option on the mount, making /tmp useless for an attacker to install executable code. It would also prevent an attacker from establishing a hardlink to a system setuid program and wait for it to be updated. Once the program was updated, the hardlink would be broken and the attacker would have his own copy of the program. If the program happened to have a security vulnerability, the attacker could continue to exploit the known flaw."
+    rationale: "Making /tmp its own file system allows an administrator to set the noexec option on the mount, making /tmp useless for an attacker to install executable code. It would also prevent an attacker from establishing a hardlink to a system setuid program and wait for it to be updated. Once the program was updated, the hardlink would be broken and the attacker would have his own copy of the program. If the program happened to have a security vulnerability, the attacker could continue to exploit the known flaw."
     remediation: "Configure /etc/fstab as appropriate. Example: tmpfs /tmp tmpfs defaults,rw,nosuid,nodev,noexec,relatime 0 0 or Run the following commands to enable systemd /tmp mounting: systemctl unmask tmp.mount systemctl enable tmp.mount Edit /etc/systemd/system/local-fs.target.wants/tmp.mount to configure the /tmp mount"
     compliance:
       - cis: ["1.1.2"]
@@ -128,7 +128,7 @@ checks:
     title: "Ensure nodev option set on /tmp partition"
     description: "The nodev mount option specifies that the filesystem cannot contain special devices."
     rationale: "Since the /tmp filesystem is not intended to support devices, set this option to ensure that users cannot attempt to create block or character special devices in /tmp."
-    remediation: "Edit /etc/systemd/system/local-fs.target.wants/tmp.mount to configure the /tmp mount and run the following commands to enable systemd /tmp mounting: systemctl unmask tmp.mount systemctl enable tmp.mount"
+    remediation: "Edit /etc/systemd/system/local-fs.target.wants/tmp.mount to configure the /tmp mount: [Mount] What=tmpfs  Where=/tmp  Type=tmpfs  Options=mode=1777,strictatime,noexec,nodev,nosuid      and run the following commands to enable systemd /tmp mounting: systemctl unmask tmp.mount systemctl enable tmp.mount"
     compliance:
       - cis: ["1.1.3"]
       - cis_csc: ["5.1"]
@@ -398,7 +398,7 @@ checks:
     title: "Ensure filesystem integrity is regularly checked"
     description: "Periodic checking of the filesystem integrity is needed to detect changes to the filesystem."
     rationale: "Periodic file checking allows the system administrator to determine on a regular basis if critical files have been changed in an unauthorized fashion."
-    remediation: "Run the following command to install AIDE: # apt-get install aide aide-common Configure AIDE as appropriate for your environment. Consult the AIDE documentation for options. Initialize AIDE: # aideinit"
+    remediation: "Run the following command: # crontab -u root -e   Add the following line to the crontab:   0 5 * * * /usr/bin/aide.wrapper --config /etc/aide/aide.conf --check"
     compliance:
       - cis: ["1.3.2"]
       - cis_csc: ["14.9"]
@@ -525,10 +525,10 @@ checks:
 # 1.6 Configure SELinux
 
   - id: 3606 
-    title: "Ensure SELinux is not disabled in bootloader configuration"
+    title: "Ensure SELinux is enabled in the bootloader configuration"
     description: "Configure SELINUX to be enabled at boot time and verify that it has not been overwritten by the grub boot parameters."
     rationale: "SELinux must be enabled at boot time in your grub configuration to ensure that the controls it provides are not overridden."
-    remediation: "Edit /etc/default/grub and remove all instances of selinux=0 and enforcing=0 from all CMDLINE_LINUX parameters: GRUB_CMDLINE_LINUX_DEFAULT=\"quiet\" GRUB_CMDLINE_LINUX=\"\"  || Run the following command to update the grub2 configuration: # update-grub"
+    remediation: "Run the following command to configure GRUB and PAM and to create /.autorelabel:  # selinux-activate      Edit /etc/default/grub and add the following parameters to the GRUB_CMDLINE_LINUX= line:     selinux=1  security=selinux              example:   GRUB_CMDLINE_LINUX_DEFAULT=\"quiet\"     GRUB_CMDLINE_LINUX=\"selinux=1 security=selinux enforcing=1 audit=1\" Run the following command to update the grub2configuration:    # update-grub"
     compliance:
       - cis: ["1.6.1.1"]
       - cis_csc: ["14.6"]
@@ -544,7 +544,7 @@ checks:
     title: "Ensure the SELinux state is enforcing"
     description: "Set SELinux to enable when the system is booted."
     rationale: "SELinux must be enabled at boot time in to ensure that the controls it provides are in effect at all times."
-    remediation: "Edit the /etc/selinux/config file to set the SELINUX parameter: SELINUX=enforcing"
+    remediation: "Edit the /etc/selinux/config file to set the SELINUX parameter: SELINUX=enforcing   Edit /etc/default/grub and add the following parameters to the GRUB_CMDLINE_LINUX= line: enforcing=1    Example:   GRUB_CMDLINE_LINUX_DEFAULT=\"quiet\"  GRUB_CMDLINE_LINUX=\"selinux=1 security=selinux enforcing=1 audit=1\"   Run the following command to update the grub2 configuration: # update-grub"
     compliance:
       - cis: ["1.6.1.2"]
       - cis_csc: ["14.6"]
@@ -557,7 +557,7 @@ checks:
       - 'c:sestatus -> r:^Current mode:\s+enforcing$'
       - 'c:sestatus -> r:^Mode from config file:\s+enforcing$'
       - 'f:/etc/selinux/config -> r:^\s*SELINUX\s*=\s*enforcing'
-      - 'f:/boot/grub/grub.cfg -> r:^\s*\t*linux && !r:enforcing=1'
+      - 'f:/boot/grub/grub.cfg -> r:^\s*\t*linux && r:enforcing=1'
 
   - id: 3608 
     title: "Ensure SELinux policy is configured"
@@ -773,7 +773,7 @@ checks:
   - id: 3126
     title: "Ensure xinetd is not installed"
     description: "The eXtended InterNET Daemon (xinetd) is an open source super daemon that replaced the original inetd daemon. The xinetddaemon listens for well known services and dispatches the appropriate daemon to properly respond to service requests."
-    rationale: "If there are no xinetdservices required, it is recommended that the daemon be disabled."
+    rationale: "If there are no xinetd services required, it is recommended that the package be removed."
     remediation: "Run the following commands to remove xinetd: # apt-get remove xinetd # apt-get purge xinetd"
     compliance:
       - cis: ["2.1.1"]
@@ -784,9 +784,9 @@ checks:
       - gdpr_IV: ["35.7.d"]
       - hipaa: ["164.312.b"]
       - tsc: ["CC5.2"]
-    condition: none
+    condition: all
     rules:
-      - 'c:dpkg -s xinetd -> r:install ok installed'
+      - 'c:dpkg -s xinetd -> r:dpkg-query: package \.+ is not installed'
 
   - id: 3127
     title: "Ensure openbsd-inetd is not installed"
@@ -1260,7 +1260,7 @@ checks:
 
   - id: 3151
     title: "Ensure ICMP redirects are not accepted"
-    description: "ICMP redirect messages are packets that convey routing information and tell your host (acting as a router) to send packets via an alternate path. It is a way of allowing an outside routing device to update your system routing tables. By setting net.ipv4.conf.all.accept_redirects to 0, the system will not accept any ICMP redirect messages, and therefore, won't allow outsiders to update the system's routing tables."
+    description: "ICMP redirect messages are packets that convey routing information and tell your host (acting as a router) to send packets via an alternate path. It is a way of allowing an outside routing device to update your system routing tables. By setting net.ipv4.conf.all.accept_redirects and net.ipv6.conf.all.accept_redirects to 0, the system will not accept any ICMP redirect messages, and therefore, won't allow outsiders to update the system's routing tables."
     rationale: "Attackers could use bogus ICMP redirect messages to maliciously alter the system routing tables and get them to send packets to incorrect networks and allow your system packets to be captured."
     remediation: "Set the following parameters in /etc/sysctl.conf or a /etc/sysctl.d/* file: net.ipv4.conf.all.accept_redirects = 0 net.ipv4.conf.default.accept_redirects = 0 net.ipv6.conf.all.accept_redirects = 0 net.ipv6.conf.default.accept_redirects = 0. Run the following commands to set the active kernel parameters: # sysctl -w net.ipv4.conf.all.accept_redirects=0 # sysctl -w net.ipv4.conf.default.accept_redirects=0 # sysctl -w net.ipv6.conf.all.accept_redirects=0 # sysctl -w net.ipv6.conf.default.accept_redirects=0 # sysctl -w net.ipv4.route.flush=1 # sysctl -w net.ipv6.route.flush=1"
     compliance:
