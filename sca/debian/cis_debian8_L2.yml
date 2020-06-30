@@ -143,7 +143,8 @@ checks:
       - tsc: ["CC5.2"]
     condition: none
     rules:
-      - 'f:/boot/grub/grub.cfg -> r:linux\.*selinux=0|linux\.*enforcing=0'
+      - 'f:/boot/grub/grub.cfg -> r:^\s*\t*linux && !r:selinux=1'
+      - 'f:/boot/grub/grub.cfg -> r:^\s*\t*linux && !r:security=selinux'
 
   - id: 3004 
     title: "Ensure the SELinux state is enforcing"
