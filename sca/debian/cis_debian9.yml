@@ -161,7 +161,7 @@ checks:
     remediation: "Edit /etc/systemd/system/local-fs.target.wants/tmp.mount to add noexec to the /tmp mount options: [Mount] Options=mode=1777,strictatime,noexec,nodev,nosuid Run the following command to remount /tmp : # mount -o remount,noexec /tmp"
     compliance:
       - cis: ["1.1.5"]
-      - cis_csc: ["5.1"]
+      - cis_csc: ["2.6", "8"]
       - pci_dss: ["2.2.4"]
       - nist_800_53: ["CM.1"]
       - tsc: ["CC5.2"]
@@ -557,7 +557,7 @@ checks:
       - 'c:sestatus -> r:^Current mode:\s+enforcing$'
       - 'c:sestatus -> r:^Mode from config file:\s+enforcing$'
       - 'f:/etc/selinux/config -> r:^\s*SELINUX\s*=\s*enforcing'
-      - 'f:/boot/grub/grub.cfg -> r:^\s*\t*linux && r:enforcing=1'
+      - 'not f:/boot/grub/grub.cfg -> r:^\s*\t*linux && !r:enforcing=1'
 
   - id: 3608 
     title: "Ensure SELinux policy is configured"
@@ -740,8 +740,8 @@ checks:
     rationale: "Warning messages inform users who are attempting to login to the system of their legal status regarding the system and must include the name of the organization that owns the system and any monitoring policies that are in place."
     remediation: "Edit or create the file /etc/gdm3/greeter.dconf-defaults and add: [org/gnome/login-screen], banner-message-enable=true, banner-message-text='Authorized uses only. All activity may be monitored and reported.'"
     compliance:
-      - cis_csc: ["5.1"]
       - cis: ["1.7.2"]
+      - cis_csc: ["5.1"]
       - pci_dss: ["2.2.2"]
       - nist_800_53: ["CM.1"]
       - tsc: ["CC5.2"]
@@ -1007,8 +1007,8 @@ checks:
     rationale: "Unless POP3 and/or IMAP servers are to be provided by this system, it is recommended that the package be removed to reduce the potential attack surface."
     remediation: "Run the following commands to remove exim: # apt-get remove exim4; # apt-get purge exim4"
     compliance:
-      - cis_csc: ["9.2"]
       - cis: ["2.2.11"]
+      - cis_csc: ["9.2"]
       - pci_dss: ["2.2.2"]
       - nist_800_53: ["CM.1"]
       - tsc: ["CC5.2"]
@@ -1305,7 +1305,7 @@ checks:
     remediation: "Set the following parameters in /etc/sysctl.conf or a /etc/sysctl.d/* file: net.ipv4.conf.all.log_martians = 1 net.ipv4.conf.default.log_martians = 1. Run the following commands to set the active kernel parameters: # sysctl -w net.ipv4.conf.all.log_martians=1 # sysctl -w net.ipv4.conf.default.log_martians=1 # sysctl -w net.ipv4.route.flush=1"
     compliance:
       - cis: ["3.2.4"]
-      - cis_csc: ["6.3"]
+      - cis_csc: ["6.2", "6.3"]
       - pci_dss: ["2.2.4"]
       - nist_800_53: ["CM.1"]
       - tsc: ["CC5.2"]
@@ -1436,7 +1436,7 @@ checks:
     remediation: "Run the following command to create /etc/hosts.deny: # echo \"ALL: ALL\" >> /etc/hosts.deny"
     compliance:
       - cis: ["3.3.3"]
-      - cis_csc: ["9.2", "9.4"]
+      - cis_csc: ["9.4"]
       - pci_dss: ["1.3.5"]
     condition: all
     rules:
@@ -2030,9 +2030,10 @@ checks:
       - pci_dss: ["10.5.1","10.5.2"]
       - nist_800_53: ["CM.1","AU.9"]
       - tsc: ["CC5.2", "CC6.1", "CC7.2", "CC.7.3", "CC7.4"]
-    condition: all
+    condition: any
     rules:
-      - 'f:/etc/rsyslog.conf -> r:^\$FileCreateMode 0600|^\$FileCreateMode 0640'
+      - 'f:/etc/rsyslog.conf -> r:^\$FileCreateMode 06\d0|^\$FileCreateMode 04\d0|^\$FileCreateMode 02\d0|^\$FileCreateMode 00\d0 && r:^\$FileCreateMode 0\d40|^\$FileCreateMode 0\d00'
+      - 'd:/etc/rsyslog.d/ -> r:\. -> r:^\$FileCreateMode 06\d0|^\$FileCreateMode 04\d0|^\$FileCreateMode 02\d0|^\$FileCreateMode 00\d0 && r:^\$FileCreateMode 0\d40|^\$FileCreateMode 0\d00'
 
   - id: 3069
     title: "Ensure rsyslog is configured to send logs to a remote log host"
@@ -2075,7 +2076,7 @@ checks:
     remediation: "Run the following command to enable rsyslog :   # systemctl enable syslog-ng"
     compliance:
       - cis: ["4.2.2.1"]
-      - cis_csc: ["6.2"]
+      - cis_csc: ["6.2", "6.3"]
       - pci_dss: ["10.1"]
       - nist_800_53: ["CM.1"]
       - tsc: ["CC5.2", "CC6.1", "CC6.2", "CC6.3", "CC7.2", "CC7.3", "CC7.4"]
@@ -2098,7 +2099,7 @@ checks:
       - tsc: ["CC5.2", "CC6.1", "CC7.2", "CC.7.3", "CC7.4"]
     condition: all
     rules:
-      - 'f:/etc/syslog-ng/syslog-ng.conf -> r:^options && r:perm\(0600\)|perm\(0640\)|perm\(0440\)|perm\(0400\)|perm\(0000\)'
+      - 'f:/etc/syslog-ng/syslog-ng.conf -> r:^options && r:perm\(06\d0\)|perm\(04\d0\)|perm\(02\d0\)|perm\(00\d0\) && r:perm\(0\d40\)|perm\(0\d00\)'
 
 # 4.2.2.4 Ensure syslog-ng is configured to send logs to a remote log host (Not Scored)
   - id: 3202 
@@ -2108,7 +2109,7 @@ checks:
     remediation: "Edit the /etc/syslog-ng/syslog-ng.conf file and add the following lines (where logfile.example.com is the name of your central log host).    destination logserver { tcp(\"logfile.example.com\" port(514)); };    log { source(src); destination(logserver); };   Run the following command to reload the rsyslogd configuration: # pkill -HUP syslog-ng"
     compliance:
       - cis: ["4.2.2.4"]
-      - cis_csc: ["6.6"]
+      - cis_csc: ["6.6", "6.8"]
       - pci_dss: ["10.5.3"]
       - nist_800_53: ["CM.1","AU.4"]
       - tsc: ["CC5.2"]
@@ -2125,7 +2126,7 @@ checks:
     remediation: "nstall rsyslog or syslog-ng using one of the following commands: # apt-get install rsyslog # apt-get install syslog-ng"
     compliance:
       - cis: ["4.2.3"]
-      - cis_csc: ["6.2"]
+      - cis_csc: ["6.2", "6.3"]
       - pci_dss: ["10.1"]
       - nist_800_53: ["CM.1"]
       - tsc: ["CC5.2", "CC6.1", "CC6.2", "CC6.3", "CC7.2", "CC7.3", "CC7.4"]
@@ -2152,7 +2153,7 @@ checks:
       - tsc: ["CC5.2"]
     condition: all
     rules:
-      - 'c:systemctl is-enabled cron -> r:^enabled$'
+      - 'c:systemctl is-enabled cron -> enabled'
 
 
 # 5.1.2 Ensure permissions on /etc/crontab are configured (Scored)
@@ -2172,7 +2173,7 @@ checks:
       - gdpr_IV: ["35.7","32.2"]
     condition: all
     rules:
-      - 'c:stat /etc/crontab -> r:^Access: \(0600/-rw-------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
+      - 'c:stat /etc/crontab -> r:^Access: \(0\d00/\w\w\w-------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
 
 
 # 5.1.3 Ensure permissions on /etc/cron.hourly are configured (Scored)
@@ -2190,7 +2191,7 @@ checks:
 
     condition: all
     rules:
-      - 'c:stat /etc/cron.hourly -> r:^Access: \(0700/drwx------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
+      - 'c:stat /etc/cron.hourly -> r:^Access: \(0\d00/\w\w\w\w------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
 
 # 5.1.4 Ensure permissions on /etc/cron.daily are configured (Scored)
   - id: 3207 
@@ -2206,7 +2207,7 @@ checks:
       - tsc: ["CC5.2"]
     condition: all
     rules:
-      - 'c:stat /etc/cron.daily -> r:^Access: \(0700/drwx------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
+      - 'c:stat /etc/cron.daily -> r:^Access: \(0\d00/\w\w\w\w------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
 
 # 5.1.5 Ensure permissions on /etc/cron.weekly are configured (Scored)
   - id: 3208 
@@ -2222,7 +2223,7 @@ checks:
       - tsc: ["CC5.2"]
     condition: all
     rules:
-      - 'c:stat /etc/cron.weekly -> r:^Access: \(0700/drwx------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
+      - 'c:stat /etc/cron.weekly -> r:^Access: \(0\d00/\w\w\w\w------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
 
 
 # 5.1.6 Ensure permissions on /etc/cron.monthly are configured (Scored)
@@ -2239,7 +2240,7 @@ checks:
       - tsc: ["CC5.2"]
     condition: all
     rules:
-      - 'c:stat /etc/cron.monthly -> r:^Access: \(0700/drwx------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
+      - 'c:stat /etc/cron.monthly -> r:^Access: \(0\d00/\w\w\w\w------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
 
 # 5.1.7 Ensure permissions on /etc/cron.d are configured (Scored)
   - id: 3210 
@@ -2255,7 +2256,7 @@ checks:
       - tsc: ["CC5.2"]
     condition: all
     rules:
-      - 'c:stat /etc/cron.d -> r:^Access: \(0700/drwx------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
+      - 'c:stat /etc/cron.d -> r:^Access: \(0\d00/\w\w\w\w------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
 
   - id: 3072
     title: "Ensure at/cron is restricted to authorized users"
@@ -2274,8 +2275,8 @@ checks:
       - 'f:/etc/at.allow'
       - 'not f:/etc/cron.deny'
       - 'not f:/etc/at.deny'
-      - 'c:stat -c%u-%g-%a /etc/cron.allow -> r:^0-0-600'
-      - 'c:stat -c%u-%g-%a /etc/at.allow -> r:^0-0-600'
+      - 'c:stat /etc/cron.allow -> r:^Access: \(0\d00/\w\w\w\w------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
+      - 'c:stat /etc/at.allow -> r:^Access: \(0\d00/\w\w\w\w------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
 
 # 5.2 SSH Server Configuration
 
@@ -2292,7 +2293,7 @@ checks:
       - tsc: ["CC5.2"]
     condition: all
     rules:
-      - 'c:stat -c%u-%g-%a /etc/ssh/sshd_config -> r:^0-0-600'
+      - 'c:stat /etc/ssh/sshd_config -> r:^Access: \(0\d00/\w\w\w\w------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
 
   - id: 3074
     title: "Ensure SSH Protocol is set to 2"
@@ -2326,7 +2327,7 @@ checks:
       - tsc: ["CC6.7"]
     condition: all
     rules:
-      - 'f:/etc/ssh/sshd_config -> !r:^# && r:LogLevel\s+INFO|LogLevel\s+VERBOSE'
+      - 'c:sshd -T -> r:LogLevel\s+INFO|LogLevel\s+VERBOSE'
 
   - id: 3076
     title: "Ensure SSH X11 forwarding is disabled"
@@ -2344,7 +2345,7 @@ checks:
       - hipaa: ["164.312.b"]
     condition: all
     rules:
-      - 'f:/etc/ssh/sshd_config -> !r:^# && r:X11Forwarding\s+no'
+      - 'c:sshd -T -> r:X11Forwarding\s+no'
 
   - id: 3077
     title: "Ensure SSH MaxAuthTries is set to 4 or less"
@@ -2359,7 +2360,7 @@ checks:
       - tsc: ["CC5.2"]
     condition: all
     rules:
-      - 'f:/etc/ssh/sshd_config -> !r:^# && n:^MaxAuthTries\s*\t*(\d+) compare <= 4'
+      - 'c:sshd -T -> n:MaxAuthTries\s*\t*(\d+) compare <= 4'
 
   - id: 3078
     title: "Ensure SSH IgnoreRhosts is enabled"
@@ -2375,7 +2376,7 @@ checks:
       - tsc: ["CC6.7"]
     condition: all
     rules:
-      - 'f:/etc/ssh/sshd_config -> !r:^# && r:IgnoreRhosts\s+yes'
+      - 'c:sshd -T -> r:IgnoreRhosts\s+yes'
 
   - id: 3079
     title: "Ensure SSH HostbasedAuthentication is disabled"
@@ -2391,7 +2392,7 @@ checks:
       - tsc: ["CC6.7"]
     condition: all
     rules:
-      - 'f:/etc/ssh/sshd_config -> !r:^# && r:HostbasedAuthentication\s+no'
+      - 'c:sshd -T -> r:HostbasedAuthentication\s+no'
 
   - id: 3080
     title: "Ensure SSH root login is disabled"
@@ -2407,7 +2408,7 @@ checks:
       - tsc: ["CC6.7"]
     condition: all
     rules:
-      - 'f:/etc/ssh/sshd_config -> !r:^# && r:PermitRootLogin\s+no'
+      - 'c:sshd -T -> r:PermitRootLogin\s+no'
 
   - id: 3081
     title: "Ensure SSH PermitEmptyPasswords is disabled"
@@ -2423,7 +2424,7 @@ checks:
       - tsc: ["CC6.7"]
     condition: all
     rules:
-      - 'f:/etc/ssh/sshd_config -> !r:^# && r:PermitEmptyPasswords\s+no'
+      - 'c:sshd -T -> r:PermitEmptyPasswords\s+no'
 
   - id: 3082
     title: "Ensure SSH PermitUserEnvironment is disabled"
@@ -2439,7 +2440,7 @@ checks:
       - tsc: ["CC6.7", "CC6.1", "CC7.2"]
     condition: all
     rules:
-      - 'f:/etc/ssh/sshd_config -> !r:^# && r:PermitUserEnvironment\s+no'
+      - 'c:sshd -T -> r:PermitUserEnvironment\s+no'
 
   - id: 3212
     title: "Ensure only strong ciphers are used"
@@ -2510,8 +2511,8 @@ checks:
       - pci_dss: ["12.3.8"]
     condition: all
     rules:
-      - 'f:/etc/ssh/sshd_config -> !r:^# && n:ClientAliveInterval\s*\t*(\d+) compare <= 300 && n:ClientAliveInterval\s*\t*(\d+) compare != 0'
-      - 'f:/etc/ssh/sshd_config -> !r:^# && n:ClientAliveCountMax\s*\t*(\d+) compare <= 3'
+      - 'c:sshd -T -> n:ClientAliveInterval\s*\t*(\d+) compare <= 300 && n:ClientAliveInterval\s*\t*(\d+) compare != 0'
+      - 'c:sshd -T -> n:ClientAliveCountMax\s*\t*(\d+) compare <= 3'
 
   - id: 3215
     title: "Ensure SSH LoginGraceTime is set to one minute or less"
@@ -2524,7 +2525,7 @@ checks:
       - pci_dss: ["8.1"]
     condition: all
     rules:
-      - 'c:sshd -T -> r:logingracetime && n:LoginGraceTime\s*\t*(\d+) compare <= 60'
+      - 'c:sshd -T -> n:LoginGraceTime\s*\t*(\d+) compare <= 60 && n:LoginGraceTime\s*\t*(\d+) compare != 0'
 
   - id: 3084
     title: "Ensure SSH access is limited"
@@ -2537,7 +2538,7 @@ checks:
       - pci_dss: ["8.1"]
     condition: all
     rules:
-      - 'f:/etc/ssh/sshd_config -> !r:^# && r:AllowUsers\s+\w+|AllowGroups\s+\w+|DenyUsers\s+\w+|DenyGroups\s+\w+'
+      - 'c:sshd -T -> r:AllowUsers\s+\w+|AllowGroups\s+\w+|DenyUsers\s+\w+|DenyGroups\s+\w+'
 
   - id: 3085
     title: "Ensure SSH warning banner is configured"
@@ -2552,7 +2553,7 @@ checks:
       - tsc: ["CC5.2"]
     condition: all
     rules:
-      - 'f:/etc/ssh/sshd_config -> !r:^# && r:Banner\s*\t*/etc/issue.net|Banner\s\t*/etc/issue'
+      - 'c:sshd -T -> r:Banner\s*\t*/etc/issue.net'
 
 # 5.3 Configure PAM
 
@@ -2570,10 +2571,6 @@ checks:
       - 'c:dpkg -s libpam-pwquality -> r:install ok installed'
       - 'f:/etc/pam.d/common-password -> !r:^# && r:password\s*\t*requisite\s*\t*pam_pwquality.so\s*\t*retry=\d'
       - 'f:/etc/security/pwquality.conf -> !r:^# && n:minlen\s*\t*=\s*\t*(\d+) compare >= 14'
-      - 'f:/etc/security/pwquality.conf -> !r:^# && r:dcredit'
-      - 'f:/etc/security/pwquality.conf -> !r:^# && r:ucredit'
-      - 'f:/etc/security/pwquality.conf -> !r:^# && r:ocredit'
-      - 'f:/etc/security/pwquality.conf -> !r:^# && r:lcredit'
 
   - id: 3087
     title: "Ensure lockout for failed password attempts is configured"
@@ -2586,8 +2583,8 @@ checks:
       - pci_dss: ["8.2.5"]
     condition: all
     rules:
-      - 'f:/etc/pam.d/common-auth -> !r:^# && r:auth\s*\t*required\s*\t*pam_tally2.so && r:onerr=fail && r:audit && r:silent && r:deny\s*=\s*\d && r:unlock_time\s*=\s*\d\d\d+'
-      - 'f:/etc/pam.d/common-account -> r:pam_tally2.so'
+      - 'f:/etc/pam.d/common-auth -> !r:^# && r:auth\s*\t*required\s*\t*pam_tally2.so && r:onerr=fail && r:audit && r:silent && r:deny\s*=\s*\d+ && r:unlock_time\s*=\s*\d+'
+      - 'f:/etc/pam.d/common-account -> !r:^# && r:pam_tally2.so'
 
   - id: 3088
     title: "Ensure password reuse is limited"
@@ -2598,9 +2595,10 @@ checks:
       - cis: ["5.3.3"]
       - cis_csc: ["16"]
       - pci_dss: ["8.2.5"]
-    condition: all
+    condition: none
     rules:
-      - 'f:/etc/pam.d/common-password -> !r:^# && r:password\s*\t*required\s*\t*pam_pwhistory.so && n:remember\s*\t*=\s*\t*(\d+) compare >= 5'
+      - 'f:/etc/pam.d/common-password -> !r:^# && r:password\s*\t*required\s*\t*pam_pwhistory.so && n:remember\s*\t*=\s*\t*(\d+) compare < 5'
+      - 'f:/etc/pam.d/common-password -> !r:^# && r:password\s*\t*required\s*\t*pam_pwhistory.so && !r:remember'
 
 # 5.3.4 Ensure password hashing algorithm is SHA-512 (Scored)
   - id: 3216 
@@ -2610,11 +2608,11 @@ checks:
     remediation: "Edit the /etc/pam.d/common-password file to include the sha512 option for pam_unix.so as shown: password [success=1 default=ignore] pam_unix.so sha512"
     compliance:
       - cis: ["5.3.4"]
-      - cis_csc: ["16.14"]
+      - cis_csc: ["16.4"]
       - pci_dss: ["3.6.1"]
-    condition: all
+    condition: none
     rules:
-      - 'f:/etc/pam.d/common-password -> r:^password\.+pam_unix.so\.+sha512'
+      - 'f:/etc/pam.d/common-password -> r:^password\.+pam_unix.so && !r:sha512'
 
 # 5.4 User Accounts and Environment
 
@@ -2630,6 +2628,7 @@ checks:
     condition: all
     rules:
       - 'f:/etc/login.defs -> n:^\s*\t*PASS_MAX_DAYS\s*\t*(\d+) compare <= 365'
+      - 'not f:/etc/login.defs -> n:^\s*\t*PASS_MAX_DAYS\s*\t*(\d+) compare < 0'
 
   - id: 3090
     title: "Ensure minimum days between password changes is 7 or more"
@@ -2669,6 +2668,7 @@ checks:
     condition: all
     rules:
       - 'c:useradd -D -> n:^INACTIVE=(\d+) compare <= 30'
+      - 'not c:useradd -D -> n:^INACTIVE=(\d+) compare < 0'
 
   - id: 3093
     title: "Ensure default group for the root account is GID 0"
@@ -2695,9 +2695,12 @@ checks:
       - pci_dss: ["3.6.1"]
     condition: none
     rules:
-      - 'f:/etc/bash.bashrc -> n:^\s*\t*umask\s+(\d+) compare >= 027'
-      - 'f:/etc/profile -> n:^\s*\t*umask\s+(\d+) compare >= 027'
-      - 'd:/etc/profile.d -> .sh -> n:^\s*\t*umask\s+(\d+) compare >= 027'
+      - 'f:/etc/bash.bashrc -> !r:^\s*\t*# && r:umask \d0\d|umask \d1\d|umask \d4\d|umask \d5\d'
+      - 'f:/etc/bash.bashrc -> !r:^\s*\t*# && n:umask \d\d(\d) compare != 7'
+      - 'f:/etc/profile -> !r:^\s*\t*# && r:umask \d0\d|umask \d1\d|umask \d4\d|umask \d5\d'
+      - 'f:/etc/profile -> !r:^\s*\t*# && n:umask \d\d(\d) compare != 7'
+      - 'd:/etc/profile.d -> .sh -> !r:^\s*\t*# && r:umask \d0\d|umask \d1\d|umask \d4\d|umask \d5\d'
+      - 'd:/etc/profile.d -> .sh -> !r:^\s*t*# && n:umask \d\d(\d) compare != 7'
 
 
 # 5.4.5 Ensure default user shell timeout is 900 seconds or less (Scored)
@@ -2708,7 +2711,7 @@ checks:
     remediation: "Edit the /etc/bashrc, /etc/profile files, and /etc/profile.d*.sh (and the appropriate files for any other shell supported on your system) and add or edit any umask parameters as follows: TMOUT=600"
     compliance:
       - cis: ["5.4.5"]
-      - cis_csc: ["16.4"]
+      - cis_csc: ["16.11"]
       - pci_dss: ["12.3.8"]
     condition: all
     rules:
@@ -2757,7 +2760,7 @@ checks:
       - tsc: ["CC5.2"]
     condition: all
     rules:
-      - 'c:stat -c%u-%g-%a /etc/gshadow -> n:0-42-6(\d)0 compare <= 4'
+      - 'c:stat /etc/gshadow -> r:Access:\s*\(0\d\d0/-\w\w-\w-----\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*\d+/\s*\t*shadow\)'
 
   - id: 3224 
     title: "Ensure permissions on /etc/shadow- are configured"
@@ -2772,7 +2775,7 @@ checks:
       - tsc: ["CC5.2"]
     condition: all
     rules:
-      - 'c:stat -c%u-%g-%a /etc/shadow- -> n:0-42-6(\d)0 compare <= 4'
+      - 'c:stat /etc/shadow- -> r:Access:\s*\(0\d\d0/-\w\w-\w-----\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*\d+/\s*\t*shadow\)'
 
   - id: 3226 
     title: "Ensure permissions on /etc/gshadow- are configured"
@@ -2787,7 +2790,7 @@ checks:
       - tsc: ["CC5.2"]
     condition: all
     rules:
-     - 'c:stat -c%u-%g-%a /etc/gshadow- -> n:0-42-6(\d)0 compare <= 4'
+     - 'c:stat /etc/gshadow- -> r:Access:\s*\(0\d\d0/-\w\w-\w-----\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*\d+/\s*\t*shadow\)'
      
   - id: 3219 
     title: "Ensure permissions on /etc/passwd are configured"
@@ -2817,7 +2820,7 @@ checks:
       - tsc: ["CC5.2"]
     condition: all
     rules:
-      - 'c:stat -c%u-%g-%a /etc/shadow -> n:0-42-6(\d)0 compare <= 4'
+      - 'c:stat /etc/shadow -> r:Access:\s*\(0\d\d0/-\w\w-\w-----\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*\d+/\s*\t*shadow\)'
 
   - id: 3221 
     title: "Ensure permissions on /etc/group are configured"
@@ -2847,7 +2850,7 @@ checks:
       - tsc: ["CC5.2"]
     condition: all
     rules:
-      - 'c:stat /etc/passwd- -> r:Access:\s*\(0644/-rw-r--r--\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*0/\s*\t*root\)|Access:\s*\(0640/-rw-r-----\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*0/\s*\t*root\)|Access:\s*\(0604/-rw----r--\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*0/\s*\t*root\)|Access:\s*\(0600/-rw-------\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*0/\s*\t*root\)'
+      - 'c:stat /etc/passwd- -> r:Access:\s*\(0\d\d\d/-\w\w-\w--\w--\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*0/\s*\t*root\)'
 
 
   - id: 3225 
@@ -2863,7 +2866,7 @@ checks:
       - tsc: ["CC5.2"]
     condition: all
     rules:
-      - 'c:stat /etc/group- -> r:Access:\s*\(0644/-rw-r--r--\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*0/\s*\t*root\)|Access:\s*\(0640/-rw-r-----\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*0/\s*\t*root\)|Access:\s*\(0604/-rw----r--\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*0/\s*\t*root\)|Access:\s*\(0600/-rw-------\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*0/\s*\t*root\)'
+      - 'c:stat /etc/group- -> r:Access:\s*\(0\d\d\d/-\w\w-\w--\w--\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*0/\s*\t*root\)'
 
 
 # 6.2 User and Group Settings
@@ -2960,7 +2963,7 @@ checks:
     remediation: "Remove all users from the shadow group, and change the primary group of any users with shadow as their primary group."
     compliance:
       - cis: ["6.2.20"]
-      - cis_csc: ["5.1"]
+      - cis_csc: ["16"]
       - pci_dss: ["10.2.5"]
       - hipaa: ["164.312.b"]
       - nist_800_53: ["AU.14", "AC.7"]
