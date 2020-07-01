@@ -1728,8 +1728,8 @@ checks:
       - 'f:/etc/at.allow'
       - 'not f:/etc/cron.deny'
       - 'not f:/etc/at.deny'
-      - 'c:stat -c%u-%g-%a /etc/cron.allow -> r:^0-0-\d00'
-      - 'c:stat -c%u-%g-%a /etc/at.allow -> r:^0-0-\d00'
+      - 'c:stat /etc/cron.allow -> r:^Access: \(0\d00/\w\w\w\w------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
+      - 'c:stat /etc/at.allow -> r:^Access: \(0\d00/\w\w\w\w------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
 
 # 5.2 SSH Server Configuration
 
@@ -1746,7 +1746,7 @@ checks:
       - tsc: ["CC5.2"]
     condition: all
     rules:
-      - 'c:stat -c%u-%g-%a /etc/ssh/sshd_config -> r:^0-0-\d00'
+      - 'c:stat /etc/ssh/sshd_config -> r:^Access: \(0\d00/\w\w\w\w------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
 
   - id: 2074
     title: "Ensure SSH Protocol is set to 2"
