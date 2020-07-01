@@ -2413,7 +2413,8 @@ checks:
       - tsc: ["CC6.1","CC7.2","CC7.3","CC7.4"]
     condition: all
     rules:
-      - 'f:/etc/rsyslog.conf -> r:^\$FileCreateMode 0600|^\$FileCreateMode 0640|^\$FileCreateMode 0440|^\$FileCreateMode 0400|^\$FileCreateMode 0040|^\$FileCreateMode 0000'
+      - 'f:/etc/rsyslog.conf -> r:^\$FileCreateMode 06\d0|^\$FileCreateMode 04\d0|^\$FileCreateMode 02\d0|^\$FileCreateMode 00\d0 && r:^\$FileCreateMode 0\d40|^\$FileCreateMode 0\d00'
+      - 'd:/etc/rsyslog.d/ -> r:\. -> r:^\$FileCreateMode 06\d0|^\$FileCreateMode 04\d0|^\$FileCreateMode 02\d0|^\$FileCreateMode 00\d0 && r:^\$FileCreateMode 0\d40|^\$FileCreateMode 0\d00'
 
 # 4.2.1.4 Ensure rsyslog is configured to send logs to a remote log host (Scored)
   - id: 6130 
@@ -3031,9 +3032,12 @@ checks:
       - tsc: ["CC6.1"]
     condition: none
     rules:
-      - 'f:/etc/bashrc -> n:^\s*\t*umask\s+(\d+) compare >= 027'
-      - 'f:/etc/profile -> n:^\s*\t*umask\s+(\d+) compare >= 027'
-      - 'd:/etc/profile.d -> .sh -> n:^\s*\t*umask\s+(\d+) compare >= 027'
+      - 'f:/etc/bash.bashrc -> !r:^\s*\t*# && r:umask \d0\d|umask \d1\d|umask \d4\d|umask \d5\d'
+      - 'f:/etc/bash.bashrc -> !r:^\s*\t*# && n:umask \d\d(\d) compare != 7'
+      - 'f:/etc/profile -> !r:^\s*\t*# && r:umask \d0\d|umask \d1\d|umask \d4\d|umask \d5\d'
+      - 'f:/etc/profile -> !r:^\s*\t*# && n:umask \d\d(\d) compare != 7'
+      - 'd:/etc/profile.d -> .sh -> !r:^\s*\t*# && r:umask \d0\d|umask \d1\d|umask \d4\d|umask \d5\d'
+      - 'd:/etc/profile.d -> .sh -> !r:^\s*t*# && n:umask \d\d(\d) compare != 7'
 
 
 # 5.4.5 Ensure default user shell timeout is 900 seconds or less (Scored)
