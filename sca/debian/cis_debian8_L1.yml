@@ -2131,7 +2131,7 @@ checks:
     condition: all
     rules:
       - 'c:useradd -D -> n:^INACTIVE=(\d+) compare <= 30'
-      - 'not f:/etc/login.defs -> n:^\s*\t*PASS_MAX_DAYS\s*\t*(\d+) compare < 0'
+      - 'not c:useradd -D -> n:^INACTIVE=(\d+) compare < 0'
 
   - id: 2093
     title: "Ensure default group for the root account is GID 0"
