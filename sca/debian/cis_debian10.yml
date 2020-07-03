@@ -98,7 +98,7 @@ checks:
     title: "Ensure mounting of squashfs filesystems is disabled"
     description: "The squashfs filesystem type is a compressed read-only Linux filesystem embedded in small footprint systems (similar to cramfs ). A squashfs image can be used without having to first decompress the image."
     rationale: "Removing support for unneeded filesystem types reduces the local attack surface of the system. If this filesystem type is not needed, disable it."
-    remediation: "Edit or create a file in the /etc/modprobe.d/directory ending in .conf  Example: vi /etc/modprobe.d/squashfs.confand add the following line: install squashfs /bin/true  Run the following command to unload the squashfsmodule: # rmmod squashfs"
+    remediation: "Edit or create a file in the /etc/modprobe.d/ directory ending in .conf  Example: vi /etc/modprobe.d/squashfs.confand add the following line: install squashfs /bin/true  Run the following command to unload the squashfsmodule: # rmmod squashfs"
     compliance:
       - cis: ["1.1.1.5"]
       - cis_csc: ["5.1"]
@@ -130,7 +130,7 @@ checks:
     title: "Ensure mounting of FAT filesystems is disabled"
     description: "The FAT filesystem format is primarily used on older windows systems and portable USB drives or flash modules. It comes in three types FAT12 , FAT16 , and FAT32 all of which are supported by the vfat kernel module."
     rationale: "Removing support for unneeded filesystem types reduces the local attack surface of the system. If this filesystem type is not needed, disable it."
-    remediation: "Edit or create the file /etc/modprobe.d/CIS.conf and add the following line: install vfat /bin/true. Run the following command to unload the vfat module: rmmod vfat"
+    remediation: "Edit or create a file in the /etc/modprobe.d/ directory ending in .conf Example: vi /etc/modprobe.d/vfat.conf: install vfat /bin/true. Run the following command to unload the vfat module: rmmod vfat"
     compliance:
       - cis: ["1.1.1.7"]
       - cis_csc: ["5.1"]
@@ -147,8 +147,8 @@ checks:
   - id: 3005
     title: "Ensure /tmp is configured"
     description: "The /tmp directory is a world-writable directory used for temporary storage by all users and some applications."
-    rationale: "Since the /tmp directory is intended to be world-writable, there is a risk of resource exhaustion if it is not bound to a separate partition. In addition, making /tmp its own file system allows an administrator to set the noexec option on the mount, making /tmp useless for an attacker to install executable code. It would also prevent an attacker from establishing a hardlink to a system setuid program and wait for it to be updated. Once the program was updated, the hardlink would be broken and the attacker would have his own copy of the program. If the program happened to have a security vulnerability, the attacker could continue to exploit the known flaw."
-    remediation: "Configure /etc/fstab as appropriate. Example: tmpfs /tmp tmpfs defaults,rw,nosuid,nodev,noexec,relatime 0 0 or Run the following commands to enable systemd /tmp mounting: systemctl unmask tmp.mount systemctl enable tmp.mount Edit /etc/systemd/system/local-fs.target.wants/tmp.mount to configure the /tmp mount"
+    rationale: "Making /tmp its own file system allows an administrator to set the noexec option on the mount, making /tmp useless for an attacker to install executable code. It would also prevent an attacker from establishing a hardlink to a system setuid program and wait for it to be updated. Once the program was updated, the hardlink would be broken and the attacker would have his own copy of the program. If the program happened to have a security vulnerability, the attacker could continue to exploit the known flaw. This can be accomplished by either mounting tmpfs to /tmp, or creating a separate partition for /tmp."
+    remediation: "Configure /etc/fstab as appropriate. Example: tmpfs /tmp tmpfs defaults,rw,nosuid,nodev,noexec,relatime 0 0 or Run the following commands to enable systemd /tmp mounting: systemctl unmask tmp.mount systemctl enable tmp.mount Edit /etc/systemd/system/local-fs.target.wants/tmp.mount to configure the /tmp mount: [Mount] What=tmpfs Where=/tmp Type=tmpfs Options=mode=1777,strictatime,noexec,nodev,nosuid"
     compliance:
       - cis: ["1.1.2"]
       - cis_csc: ["5.1"]
@@ -166,7 +166,7 @@ checks:
     title: "Ensure nodev option set on /tmp partition"
     description: "The nodev mount option specifies that the filesystem cannot contain special devices."
     rationale: "Since the /tmp filesystem is not intended to support devices, set this option to ensure that users cannot attempt to create block or character special devices in /tmp."
-    remediation: "Edit the /etc/fstab file and add nodev to the fourth field (mounting options) for the /tmp partition. See the fstab(5) manual page for more information. Run the following command to remount /tmp: # mount -o remount,nodev /tmp     OR      Edit /etc/systemd/system/local-fs.target.wants/tmp.mount to add nodevto the /tmp mount options:  [Mount]   Options=mode=1777,strictatime,noexec,nodev,nosuidRun the following command to remount /tmp:  # mount -o remount,nodev /tmp"
+    remediation: "Edit the /etc/fstab file and add nodev to the fourth field (mounting options) for the /tmp partition. See the fstab(5) manual page for more information. Run the following command to remount /tmp: # mount -o remount,nodev /tmp     OR      Edit /etc/systemd/system/local-fs.target.wants/tmp.mount to add nodevto the /tmp mount options:  [Mount]   Options=mode=1777,strictatime,noexec,nodev,nosuid Run the following command to remount /tmp:  # mount -o remount,nodev /tmp"
     compliance:
       - cis: ["1.1.3"]
       - cis_csc: ["5.1"]
@@ -176,7 +176,6 @@ checks:
     condition: all
     rules:
       - 'c:mount -> r:\s/tmp\s && r:nodev'
-      - 'c:systemctl is-enabled tmp.mount -> r:enabled'
 
   - id: 3007
     title: "Ensure nosuid option set on /tmp partition"
@@ -229,7 +228,7 @@ checks:
   - id: 3601
     title: "Ensure separate partition exists for /var/tmp"
     description: "The /var/tmp directory is a world-writable directory used for temporary storage by all users and some applications."
-    rationale: "Since the /var/tmp directory is intended to be world-writable, there is a risk of resource exhaustion if it is not bound to a separate partition. In addition, making /var/tmp its own file system allows an administrator to set the noexec option on the mount, making /var/tmp useless for an attacker to install executable code. It would also prevent an attacker from establishing a hardlink to a system setuid program and wait for it to be updated."
+    rationale: "Since the /var/tmp directory is intended to be world-writable, there is a risk of resource exhaustion if it is not bound to a separate partition. In addition, making /var/tmp its own file system allows an administrator to set the noexec option on the mount, making /var/tmp useless for an attacker to install executable code. It would also prevent an attacker from establishing a hardlink to a system setuid program and wait for it to be updated. Once the program was updated, the hardlink would be broken and the attacker would have his own copy of the program. If the program happened to have a security vulnerability, the attacker could continue to exploit the known flaw."
     remediation: "For new installations, during installation create a custom partition setup and specify a separate partition for /var/tmp. For systems that were previously installed, create a new partition and configure /etc/fstab as appropriate."
     compliance:
       - cis: ["1.1.7"]
@@ -251,6 +250,9 @@ checks:
     compliance:
       - cis: ["1.1.8"]
       - cis_csc: ["5.1"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
     condition: all
     rules:
       - 'c:mount -> r:\s/var/tmp\s && r:nodev'
@@ -263,6 +265,9 @@ checks:
     compliance:
       - cis: ["1.1.9"]
       - cis_csc: ["5.1"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
     condition: all
     rules:
       - 'c:mount -> r:\s/var/tmp\s && r:nosuid'
@@ -275,6 +280,9 @@ checks:
     compliance:
       - cis: ["1.1.10"]
       - cis_csc: ["2.6"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
     condition: all
     rules:
       - 'c:mount -> r:\s/var/tmp\s && r:noexec'
@@ -335,12 +343,15 @@ checks:
 
   - id: 3011
     title: "Ensure nodev option set on /home partition"
-    description: "When set on a file system, this option prevents character and block special devices from being defined, or if they exist, from being used as character and block special devices."
+    description: "The nodev mount option specifies that the filesystem cannot contain special devices."
     rationale: "Since the user partitions are not intended to support devices, set this option to ensure that users cannot attempt to create block or character special devices.  Note: The actions in the item refer to the /home partition, which is the default user partition that is defined in many distributions. If you have created other user partitions, it is recommended that the Remediation and Audit steps be applied to these partitions as well."
     remediation: "Edit the /etc/fstab file and add nodev to the fourth field (mounting options) for the /home partition. See the fstab(5) manual page for more information. # mount -o remount,nodev /home"
     compliance:
       - cis: ["1.1.14"]
       - cis_csc: ["5.1"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
     condition: all
     rules:
       - 'c:mount -> r:\s/home\s && r:nodev'
@@ -353,6 +364,11 @@ checks:
     compliance:
       - cis: ["1.1.15"]
       - cis_csc: ["5.1"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
+    references:
+      - https://manpages.debian.org/buster/initscripts/tmpfs.5.en.html
     condition: all
     rules:
       - 'c:mount -> r:\s/dev/shm\s && r:nodev'
@@ -365,6 +381,9 @@ checks:
     compliance:
       - cis: ["1.1.16"]
       - cis_csc: ["5.1"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
     condition: all
     rules:
       - 'c:mount -> r:\s/dev/shm\s && r:nosuid'
@@ -377,6 +396,9 @@ checks:
     compliance:
       - cis: ["1.1.17"]
       - cis_csc: ["2.6", "8"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
     condition: all
     rules:
       - 'c:mount -> r:\s/dev/shm\s && r:noexec'
@@ -394,7 +416,7 @@ checks:
       - tsc: ["CC5.2"]
     condition: none
     rules:
-      - 'c:systemctl is-enabled autofs -> r:^enabled'
+      - 'c:systemctl is-enabled autofs -> enabled'
 
 
   - id: 4002
@@ -406,6 +428,7 @@ checks:
       - cis: ["1.1.23"]
       - cis_csc: ["8.4", "8.5"]
       - pci_dss: ["2.2.5"]
+      - nist_800_53: ["CM.1"]
       - tsc: ["CC6.3"]
     condition: all
     rules:
@@ -425,9 +448,12 @@ checks:
       - pci_dss: ["2.2.4"]
       - nist_800_53: ["CM.1"]
       - tsc: ["CC5.2"]
+    references:
+      - http://www.sudo.ws/
     condition: any
     rules:
       - 'c:dpkg -s sudo -> r:install ok installed'
+      - 'c:dpkg -s sudo-ldap -> r:install ok installed'
 
   - id: 4005
     title: "Ensure sudo commands use pty"
@@ -486,6 +512,9 @@ checks:
       - cis_csc: ["14.9"]
       - pci_dss: ["11.5"]
       - tsc: ["PI1.4","PI1.5","CC6.8","CC7.2","CC7.3","CC7.4"]
+    references:
+      - https://github.com/konstruktoid/hardening/blob/master/config/aidecheck.service
+      - https://github.com/konstruktoid/hardening/blob/master/config/aidecheck.timer
     condition: all
     rules:
       - 'c:grep -Rh aide /etc/cron.d /etc/cron.daily /etc/cron.hourly /etc/cron.monthly /etc/cron.weekly /etc/crontab -> r:\.+'
@@ -510,7 +539,7 @@ checks:
     title: "Ensure bootloader password is set"
     description: "Setting the boot loader password will require that anyone rebooting the system must enter a password before being able to set command line boot parameters."
     rationale: "Requiring a boot password upon execution of the boot loader will prevent an unauthorized user from entering boot parameters or changing the boot partition. This prevents users from weakening security (e.g. turning off SELinux at boot time)."
-    remediation: "Create an encrypted password with grub-mkpasswd-pbkdf2 Create a custom /etc/grub.d configuration file: If there is a requirement to be able to boot/reboot without entering the password, edit /etc/grub.d/10_linux and add --unrestricted to the line CLASS= Example: CLASS=\"--class gnu-linux --class gnu --class os --unrestricted\" Run the following command to update the grub2 configuration: # update-grub"
+    remediation: "Create an encrypted password with grub-mkpasswd-pbkdf2 : # grub-mkpasswd-pbkdf2 Enter password: <password> Reenter password: <password> PBKDF2 hash of your password is <encrypted-password> Add the following into a custom /etc/grub.d configuration file: cat <<EOF set superusers=\"<username>\" password_pbkdf2 <username> <encrypted-password> EOF The superuser/user information and password should not be contained in the /etc/grub.d/00_header file as this file could be overwritten in a package update. If there is a requirement to be able to boot/reboot without entering the password, edit /etc/grub.d/10_linux and add --unrestricted to the line CLASS=  Example: CLASS=\"--class gnu-linux --class gnu --class os --unrestricted\" Run the following command to update the grub2 configuration: # update-grub"
     compliance:
       - cis: ["1.5.2"]
       - cis_csc: ["5.1"]
@@ -538,23 +567,7 @@ checks:
       - 'f:/etc/shadow -> r:^root:*:|^root:!:'
 
 
-# 1.5 Additional Process Hardening
-  - id: 3022
-    title: "Ensure core dumps are restricted"
-    description: "A core dump is the memory of an executable program. It is generally used to determine why a program aborted. It can also be used to glean confidential information from a core file. The system provides the ability to set a soft limit for core dumps, but this can be overridden by the user."
-    rationale: "Setting a hard limit on core dumps prevents users from overriding the soft variable. If core dumps are required, consider setting limits for user groups (see limits.conf(5) ). In addition, setting the fs.suid_dumpable variable to 0 will prevent setuid programs from dumping core."
-    remediation: "Add the following line to /etc/security/limits.conf or a /etc/security/limits.d/* file: * hard core 0 Set the following parameter in /etc/sysctl.conf or a /etc/sysctl.d/* file: fs.suid_dumpable = 0 Run the following command to set the active kernel parameter: # sysctl -w fs.suid_dumpable=0"
-    compliance:
-      - cis: ["1.5.1"]
-      - cis_csc: ["13"]
-      - pci_dss: ["2.2.4"]
-      - nist_800_53: ["CM.1"]
-      - tsc: ["CC5.2"]
-    condition: all
-    rules:
-      - 'c:sysctl fs.suid_dumpable -> r:=\s*\t*0$'
-      - 'c:grep -Rh fs\.suid_dumpable /etc/sysctl.conf /etc/sysctl.d -> r:=\s*\t*0$'
-      - 'c:grep -Rh ^*[[:space:]]*hard[[:space:]][[:space:]]*core[[:space:]][[:space:]]* /etc/security/limits.conf /etc/security/limits.d -> r:\s*\t*0$'
+# 1.6 Additional Process Hardening
 
   - id: 3101 
     title: "Ensure XD/NX support is enabled"
@@ -562,7 +575,7 @@ checks:
     rationale: "Enabling any feature that can protect against buffer overflow attacks enhances the security of the system."
     remediation: "On 32 bit systems install a kernel with PAE support, no installation is required on 64 bit systems: If necessary configure your bootloader to load the new kernel and reboot the system. You may need to enable NX or XD support in your bios."
     compliance:
-      - cis: ["1.5.2"]
+      - cis: ["1.6.1"]
       - cis_csc: ["8.3"]
       - pci_dss: ["2.2.4"]
       - nist_800_53: ["CM.1"]
@@ -577,7 +590,7 @@ checks:
     rationale: "Randomly placing virtual memory regions will make it difficult to write memory page exploits as the memory placement will be consistently shifting."
     remediation: "Set the following parameter in /etc/sysctl.conf or a /etc/sysctl.d/* file: kernel.randomize_va_space = 2 Run the following command to set the active kernel parameter: # sysctl -w kernel.randomize_va_space=2"
     compliance:
-      - cis: ["1.5.3"]
+      - cis: ["1.6.2"]
       - cis_csc: ["8.3"]
       - pci_dss: ["2.2.4"]
       - nist_800_53: ["CM.1"]
@@ -593,7 +606,7 @@ checks:
     rationale: "The prelinking feature can interfere with the operation of AIDE, because it changes binaries. Prelinking can also increase the vulnerability of the system if a malicious user is able to compromise a common library such as libc."
     remediation: "Run the following commands to restore binaries to normal and uninstall prelink: prelink -ua && yum remove prelink"
     compliance:
-      - cis: ["1.5.4"]
+      - cis: ["1.6.3"]
       - cis_csc: ["14.9"]
       - pci_dss: ["2.2.4"]
       - nist_800_53: ["CM.1"]
@@ -601,6 +614,23 @@ checks:
     condition: none
     rules:
       - 'c:dpkg -s prelink -> r:install ok installed'
+
+  - id: 3022
+    title: "Ensure core dumps are restricted"
+    description: "A core dump is the memory of an executable program. It is generally used to determine why a program aborted. It can also be used to glean confidential information from a core file. The system provides the ability to set a soft limit for core dumps, but this can be overridden by the user."
+    rationale: "Setting a hard limit on core dumps prevents users from overriding the soft variable. If core dumps are required, consider setting limits for user groups (see limits.conf(5) ). In addition, setting the fs.suid_dumpable variable to 0 will prevent setuid programs from dumping core."
+    remediation: "Add the following line to /etc/security/limits.conf or a /etc/security/limits.d/* file: * hard core 0 Set the following parameter in /etc/sysctl.conf or a /etc/sysctl.d/* file: fs.suid_dumpable = 0 Run the following command to set the active kernel parameter: # sysctl -w fs.suid_dumpable=0"
+    compliance:
+      - cis: ["1.6.4"]
+      - cis_csc: ["13"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
+    condition: all
+    rules:
+      - 'c:sysctl fs.suid_dumpable -> r:=\s*\t*0$'
+      - 'c:grep -Rh fs\.suid_dumpable /etc/sysctl.conf /etc/sysctl.d -> r:=\s*\t*0$'
+      - 'c:grep -Rh ^*[[:space:]]*hard[[:space:]][[:space:]]*core[[:space:]][[:space:]]* /etc/security/limits.conf /etc/security/limits.d -> r:\s*\t*0$'
 
 # 1.7 Mandatory Access Control
 
@@ -672,11 +702,12 @@ checks:
     title: "Ensure message of the day is configured properly"
     description: "The contents of the /etc/motd file are displayed to users after login and function as a message of the day for authenticated users. Unix-based systems have typically displayed information about the OS release and patch level upon logging in to the system. This information can be useful to developers who are developing software for a particular OS platform. If mingetty(8) supports the following options, they display operating system information: \\m - machine architecture \\r - operating system release \\s - operating system name \\v - operating system version"
     rationale: "Warning messages inform users who are attempting to login to the system of their legal status regarding the system and must include the name of the organization that owns the system and any monitoring policies that are in place. Displaying OS and patch level information in login banners also has the side effect of providing detailed system information to attackers attempting to target specific exploits of a system. Authorized users can easily get this information by running the \" uname -a \" command once they have logged in."
-    remediation: "Edit the /etc/motd file with the appropriate contents according to your site policy, remove any instances of \\m , \\r , \\s , or \\v."
+    remediation: "Edit the /etc/motd file with the appropriate contents according to your site policy, remove any instances of \m , \r , \s , \v or references to the OS platform OR If the motd is not used, this file can be removed. Run the following command to remove the motd file: # rm /etc/motd"
     compliance:
       - cis: ["1.8.1.1"]
       - cis_csc: ["5.1"]
       - pci_dss: ["7.1"]
+      - tsc: ["CC6.4"]
     condition: none
     rules:
       - 'f:/etc/motd -> r:\\v|\\r|\\m|\\s|Debian|Ubuntu'
@@ -689,6 +720,8 @@ checks:
     compliance:
       - cis: ["1.8.1.2"]
       - cis_csc: ["5.1"]
+      - pci_dss: ["7.1"]
+      - tsc: ["CC6.4"]
     condition: none
     rules:
       - 'f:/etc/issue -> r:\\v|\\r|\\m|\\s|Debian|Ubuntu'
@@ -697,11 +730,12 @@ checks:
     title: "Ensure remote login warning banner is configured properly"
     description: "The contents of the /etc/issue.net file are displayed to users prior to login for remote connections from configured services. Unix-based systems have typically displayed information about the OS release and patch level upon logging in to the system. This information can be useful to developers who are developing software for a particular OS platform. If mingetty(8) supports the following options, they display operating system information: \\m - machine architecture \\r - operating system release \\s - operating system name \\v - operating system version"
     rationale: "Warning messages inform users who are attempting to login to the system of their legal status regarding the system and must include the name of the organization that owns the system and any monitoring policies that are in place. Displaying OS and patch level information in login banners also has the side effect of providing detailed system information to attackers attempting to target specific exploits of a system. Authorized users can easily get this information by running the \" uname -a \" command once they have logged in."
-    remediation: "Edit the /etc/issue.net file with the appropriate contents according to your site policy, remove any instances of \\m , \\r , \\s , or \\v: # echo \"Authorized uses only. All activity may be monitored and reported.\" > /etc/issue.net"
+    remediation: "Edit the /etc/issue.net file with the appropriate contents according to your site policy, remove any instances of \\m , \\r , \\s , or \\v or references to the OS platform: # echo \"Authorized uses only. All activity may be monitored and reported.\" > /etc/issue.net"
     compliance:
       - cis: ["1.8.1.3"]
       - cis_csc: ["5.1"]
       - pci_dss: ["7.1"]
+      - tsc: ["CC6.4"]
     condition: none
     rules:
       - 'f:/etc/issue.net -> r:\\v|\\r|\\m|\\s'
@@ -710,7 +744,7 @@ checks:
     title: "Ensure permissions on /etc/motd are configured"
     description: "The contents of the /etc/motd file are displayed to users after login and function as a message of the day for authenticated users."
     rationale: "If the /etc/motd file does not have the correct ownership it could be modified by unauthorized users with incorrect or misleading information."
-    remediation: "Run the following commands to set permissions on /etc/motd: # chown root:root /etc/motd # chmod 644 /etc/motd"
+    remediation: "Run the following commands to set permissions on /etc/motd: # chown root:root /etc/motd # chmod u-x,go-wx /etc/motd"
     compliance:
       - cis: ["1.8.1.4"]
       - cis_csc: ["5.1"]
@@ -728,7 +762,7 @@ checks:
     title: "Ensure permissions on /etc/issue are configured"
     description: "The contents of the /etc/issue file are displayed to users prior to login for local terminals."
     rationale: "If the /etc/issue file does not have the correct ownership it could be modified by unauthorized users with incorrect or misleading information."
-    remediation: "Run the following commands to set permissions on /etc/issue: # chown root:root /etc/issue # chmod 644 /etc/issue"
+    remediation: "Run the following commands to set permissions on /etc/issue: # chown root:root /etc/issue # chmod u-x,go-wx /etc/issue"
     compliance:
       - cis: ["1.8.1.5"]
       - cis_csc: ["5.1"]
@@ -746,7 +780,7 @@ checks:
     title: "Ensure permissions on /etc/issue.net are configured"
     description: "The contents of the /etc/issue.net file are displayed to users prior to login for remote connections from configured services."
     rationale: "If the /etc/issue.net file does not have the correct ownership it could be modified by unauthorized users with incorrect or misleading information."
-    remediation: "Run the following commands to set permissions on /etc/issue.net: # chown root:root /etc/issue.net # chmod 644 /etc/issue.net"
+    remediation: "Run the following commands to set permissions on /etc/issue.net: # chown root:root /etc/issue.net # chmod u-x,go-wx /etc/issue.net"
     compliance:
       - cis: ["1.8.1.6"]
       - cis_csc: ["5.1"]
@@ -766,8 +800,8 @@ checks:
     rationale: "Warning messages inform users who are attempting to login to the system of their legal status regarding the system and must include the name of the organization that owns the system and any monitoring policies that are in place."
     remediation: "Edit or create the file /etc/gdm3/greeter.dconf-defaults and add: [org/gnome/login-screen], banner-message-enable=true, banner-message-text='Authorized uses only. All activity may be monitored and reported.'"
     compliance:
-      - cis_csc: ["5.1"]
       - cis: ["1.8.2"]
+      - cis_csc: ["5.1"]
       - pci_dss: ["2.2.2"]
       - nist_800_53: ["CM.1"]
       - tsc: ["CC5.2"]
@@ -802,8 +836,8 @@ checks:
   - id: 3126
     title: "Ensure xinetd is not installed"
     description: "The eXtended InterNET Daemon (xinetd) is an open source super daemon that replaced the original inetd daemon. The xinetddaemon listens for well known services and dispatches the appropriate daemon to properly respond to service requests."
-    rationale: "If there are no xinetdservices required, it is recommended that the daemon be disabled."
-    remediation: "Run the following commands to remove xinetd: # apt-get remove xinetd # apt-get purge xinetd"
+    rationale: "If there are no xinetd services required, it is recommended that the package be removed."
+    remediation: "Run the following command to remove xinetd: # apt purge xinetd"
     compliance:
       - cis: ["2.1.1"]
       - cis_csc: ["9.2"]
@@ -821,7 +855,7 @@ checks:
     title: "Ensure openbsd-inetd is not installed"
     description: "The inetd daemon listens for well known services and dispatches the appropriate daemon to properly respond to service requests."
     rationale: "If there are no inetd services required, it is recommended that the daemon be removed."
-    remediation: "Run the following command to uninstall openbsd-inetd: apt-get remove openbsd-inetd"
+    remediation: "Run the following command to uninstall openbsd-inetd: apt purge openbsd-inetd"
     compliance:
       - cis: ["2.1.2"]
       - cis_csc: ["9.2"]
@@ -839,7 +873,7 @@ checks:
     title: "Ensure time synchronization is in use"
     description: "System time should be synchronized between all systems in an environment. This is typically done by establishing an authoritative time server or set of servers and having all systems synchronize their clocks to them."
     rationale: "Time synchronization is important to support time sensitive security mechanisms like Kerberos and also ensures log files have consistent time records across the enterprise, which aids in forensic investigations."
-    remediation: "On physical systems or virtual systems where host based time synchronization is not available, configure systemd-timesyncd. If \"full featured\" and/or encrypted time synchronization is required, install NTP or chrony.  To install ntp: # apt-get install ntp   To install chrony: # apt-get install chrony     On virtual systems where host based time synchronization is available consult your virtualization software documentation and setup host based synchronization."
+    remediation: "On systems where host based time synchronization is not available, configure systemd-timesyncd. If \"full featured\" and/or encrypted time synchronization is required, install chrony or NTP. To install chrony: # atp install chrony To install ntp: # apt install ntp On virtual systems where host based time synchronization is available consult your virtualization software documentation and setup host based synchronization."
     compliance:
       - cis: ["2.2.1.1"]
       - cis_csc: ["6.1"]
@@ -850,7 +884,7 @@ checks:
     rules:
       - 'c:dpkg -s ntp -> r:install ok installed'
       - 'c:dpkg -s chrony -> r:install ok installed'
-      - 'c:systemctl is-enabled systemd-timescynd -> r:enabled'
+      - 'c:systemctl is-enabled systemd-timescynd -> enabled'
 
   - id: 4007
     title: "Ensure systemd-timesyncd is configured"
@@ -871,7 +905,7 @@ checks:
     title: "Ensure chrony is configured"
     description: "chrony is a daemon which implements the Network Time Protocol (NTP) is designed to synchronize system clocks across a variety of systems and use a source that is highly accurate. More information on chrony can be found at http://chrony.tuxfamily.org/. chrony can be configured to be a client and/or a server."
     rationale: "If chrony is in use on the system proper configuration is vital to ensuring time synchronization is working properly. This recommendation only applies if chrony is in use on the system."
-    remediation: "Add or edit server or pool lines to /etc/chrony/chrony.conf as appropriate: server <remote-server>"
+    remediation: "Add or edit server or pool lines to /etc/chrony/chrony.conf as appropriate: server <remote-server> Configure chrony to run as the chrony user by configuring the appropriate startup script for your distribution. Startup scripts are typically stored in /etc/init.d or /etc/systemd ."
     compliance:
       - cis: ["2.2.1.3"]
       - cis_csc: ["6.1"]
@@ -907,7 +941,7 @@ checks:
     title: "Ensure Avahi Server is not enabled"
     description: "Avahi is a free zeroconf implementation, including a system for multicast DNS/DNS-SD service discovery. Avahi allows programs to publish and discover services and hosts running on a local network with no specific configuration. For example, a user can plug a computer into a network and Avahi automatically finds printers to print to, files to look at and people to talk to, as well as network services running on the machine."
     rationale: "Automatic discovery of network services is not normally required for system functionality. It is recommended to disable the service to reduce the potential attach surface."
-    remediation: "Run the following command to disable avahi-daemon: # systemctl disable avahi-daemon"
+    remediation: "Run the following command to disable avahi-daemon: # systemctl --now disable avahi-daemon"
     compliance:
       - cis: ["2.2.3"]
       - cis_csc: ["9.2"]
@@ -916,13 +950,13 @@ checks:
       - tsc: ["CC5.2"]
     condition: none
     rules:
-      - 'c:systemctl is-enabled avahi-daemon -> r:^enabled'
+      - 'c:systemctl is-enabled avahi-daemon -> enabled'
 
   - id: 3131
     title: "Ensure CUPS is not enabled"
     description: "The Common Unix Print System (CUPS) provides the ability to print to both local and network printers. A system running CUPS can also accept print jobs from remote systems and print them to local printers. It also provides a web based remote administration capability."
     rationale: "If the system does not need to print jobs or accept print jobs from other systems, it is recommended that CUPS be disabled to reduce the potential attack surface."
-    remediation: "Run the following command to disable cups: # systemctl disable cups"
+    remediation: "Run the following command to disable cups: # systemctl --now disable cups"
     compliance:
       - cis: ["2.2.4"]
       - cis_csc: ["9.2"]
@@ -939,7 +973,7 @@ checks:
     title: "Ensure DHCP Server is not enabled"
     description: "The Dynamic Host Configuration Protocol (DHCP) is a service that allows machines to be dynamically assigned IP addresses."
     rationale: "Unless a system is specifically set up to act as a DHCP server, it is recommended that this service be disabled to reduce the potential attack surface."
-    remediation: "Run the following commands to disable dhcpd: # systemctl disable isc-dhcp-server # systemctl disable isc-dhcp-server6"
+    remediation: "Run the following commands to disable dhcpd: # systemctl --now disable isc-dhcp-server # systemctl --now disable isc-dhcp-server6"
     references:
       - https://www.isc.org/dhcp/
     compliance:
@@ -950,14 +984,14 @@ checks:
       - tsc: ["CC5.2"]
     condition: none
     rules:
-      - 'c:systemctl is-enabled isc-dhcp-server -> r:^enabled'
-      - 'c:systemctl is-enabled isc-dhcp-server6 -> r:^enabled'
+      - 'c:systemctl is-enabled isc-dhcp-server -> enabled'
+      - 'c:systemctl is-enabled isc-dhcp-server6 -> enabled'
 
   - id: 3133
     title: "Ensure LDAP server is not enabled"
     description: "The Lightweight Directory Access Protocol (LDAP) was introduced as a replacement for NIS/YP. It is a service that provides a method for looking up information from a central database."
     rationale: "If the system will not need to act as an LDAP server, it is recommended that the software be disabled to reduce the potential attack surface."
-    remediation: "Run the following command to disable slapd: # systemctl disable slapd"
+    remediation: "Run the following command to disable slapd: # systemctl --now disable slapd"
     compliance:
       - cis: ["2.2.6"]
       - cis_csc: ["9.2"]
@@ -968,13 +1002,13 @@ checks:
       - https://www.openldap.org
     condition: none
     rules:
-      - 'c:systemctl is-enabled slapd -> r:^enabled'
+      - 'c:systemctl is-enabled slapd -> enabled'
 
   - id: 3134
     title: "Ensure NFS and RPC are not enabled"
     description: "The Network File System (NFS) is one of the first and most widely distributed file systems in the UNIX environment. It provides the ability for systems to mount file systems of other servers through the network."
     rationale: "If the system does not export NFS shares or act as an NFS client, it is recommended that these services be disabled to reduce remote attack surface."
-    remediation: "Run the following commands to disable nfs and rpcbind: # systemctl disable nfs-server # systemctl disable rpcbind"
+    remediation: "Run the following commands to disable nfs and rpcbind: # systemctl --now disable nfs-server # systemctl --now disable rpcbind"
     compliance:
       - cis: ["2.2.7"]
       - cis_csc: ["9.2"]
@@ -983,14 +1017,14 @@ checks:
       - tsc: ["CC5.2"]
     condition: none
     rules:
-      - 'c:systemctl is-enabled nfs-server -> r:^enabled'
-      - 'c:systemctl is-enabled rpcbind -> r:^enabled'
+      - 'c:systemctl is-enabled nfs-server -> enabled'
+      - 'c:systemctl is-enabled rpcbind -> enabled'
 
   - id: 3135
     title: "Ensure DNS Server is not enabled"
     description: "The Domain Name System (DNS) is a hierarchical naming system that maps names to IP addresses for computers, services and other resources connected to a network."
     rationale: "Unless a system is specifically designated to act as a DNS server, it is recommended that the package be deleted to reduce the potential attack surface."
-    remediation: "Run the following command to disable named: # systemctl disable bind9"
+    remediation: "Run the following command to disable named: # systemctl --now disable bind9"
     compliance:
       - cis: ["2.2.8"]
       - cis_csc: ["9.2"]
@@ -999,13 +1033,13 @@ checks:
       - tsc: ["CC5.2"]
     condition: none
     rules:
-      - 'c:systemctl is-enabled bind9 -> r:^enabled'
+      - 'c:systemctl is-enabled bind9 -> enabled'
 
   - id: 3136
     title: "Ensure FTP Server is not enabled"
     description: "The File Transfer Protocol (FTP) provides networked computers with the ability to transfer files."
     rationale: "FTP does not protect the confidentiality of data or authentication credentials. It is recommended sftp be used if file transfer is required. Unless there is a need to run the system as a FTP server (for example, to allow anonymous downloads), it is recommended that the package be deleted to reduce the potential attack surface."
-    remediation: "Run the following command to disable vsftpd: # systemctl disable vsftpd"
+    remediation: "Run the following command to disable vsftpd: # systemctl --now disable vsftpd"
     compliance:
       - cis: ["2.2.9"]
       - cis_csc: ["9.2"]
@@ -1020,7 +1054,7 @@ checks:
     title: "Ensure HTTP Server is not enabled"
     description: "HTTP or web servers provide the ability to host web site content."
     rationale: "Unless there is a need to run the system as a web server, it is recommended that the package be deleted to reduce the potential attack surface."
-    remediation: "Run the following command to disable apache2: # systemctl disable apache2"
+    remediation: "Run the following command to disable apache2: # systemctl --now disable apache2"
     compliance:
       - cis: ["2.2.10"]
       - cis_csc: ["9.2"]
@@ -1035,22 +1069,22 @@ checks:
     title: "Ensure email services are not enabled"
     description: "dovecot is an open source mail submission and transport server for Linux based systems."
     rationale: "Unless mail transport services are to be provided by this system, it is recommended that the service be disabled or deleted to reduce the potential attack surface."
-    remediation: "Run the following commands to remove exim: # apt-get remove exim4; # apt-get purge exim4"
+    remediation: "Run one of the following commands to disable dovecot : # systemctl --now disable dovecot"
     compliance:
-      - cis_csc: ["9.2"]
       - cis: ["2.2.11"]
+      - cis_csc: ["9.2"]
       - pci_dss: ["2.2.2"]
       - nist_800_53: ["CM.1"]
       - tsc: ["CC5.2"]
     condition: none
     rules:
-      - 'c:systemctl is-enabled dovecot -> r:enabled'
+      - 'c:systemctl is-enabled dovecot -> enabled'
 
   - id: 3039
     title: "Ensure Samba is not enabled"
     description: "The Samba daemon allows system administrators to configure their Linux systems to share file systems and directories with Windows desktops. Samba will advertise the file systems and directories via the Small Message Block (SMB) protocol. Windows desktop users will be able to mount these directories and file systems as letter drives on their systems."
     rationale: "If there is no need to mount directories and file systems to Windows systems, then this service can be deleted to reduce the potential attack surface."
-    remediation: "Run the following command to disable smbd: # systemctl disable smbd"
+    remediation: "Run the following command to disable smbd: # systemctl --now disable smbd"
     compliance:
       - cis: ["2.2.12"]
       - cis_csc: ["9.2"]
@@ -1059,13 +1093,13 @@ checks:
       - tsc: ["CC5.2"]
     condition: none
     rules:
-      - 'c:systemctl is-enabled smbd -> r:^enabled'
+      - 'c:systemctl is-enabled smbd -> enabled'
 
   - id: 3040
     title: "Ensure HTTP Proxy Server is not enabled"
     description: "Squid is a standard proxy server used in many distributions and environments."
     rationale: "If there is no need for a proxy server, it is recommended that the squid proxy be deleted to reduce the potential attack surface."
-    remediation: "Run the following command to disable squid: # systemctl disable squid"
+    remediation: "Run the following command to disable squid: # systemctl --now disable squid"
     compliance:
       - cis: ["2.2.13"]
       - cis_csc: ["9.2"]
@@ -1074,13 +1108,13 @@ checks:
       - tsc: ["CC5.2"]
     condition: none
     rules:
-      - 'c:systemctl is-enabled squid -> r:^enabled'
+      - 'c:systemctl is-enabled squid -> enabled'
 
   - id: 3041
     title: "Ensure SNMP Server is not enabled"
     description: "The Simple Network Management Protocol (SNMP) server is used to listen for SNMP commands from an SNMP management system, execute the commands or collect the information and then send results back to the requesting system."
     rationale: "The SNMP server can communicate using SNMP v1, which transmits data in the clear and does not require authentication to execute commands. Unless absolutely necessary, it is recommended that the SNMP service not be used. If SNMP is required the server should be configured to disallow SNMP v1."
-    remediation: "Run the following command to disable snmpd: # systemctl disable snmpd"
+    remediation: "Run the following command to disable snmpd: # systemctl --now disable snmpd"
     compliance:
       - cis: ["2.2.14"]
       - cis_csc: ["9.2"]
@@ -1089,13 +1123,13 @@ checks:
       - tsc: ["CC5.2"]
     condition: none
     rules:
-      - 'c:systemctl is-enabled snmpd -> r:^enabled'
+      - 'c:systemctl is-enabled snmpd -> enabled'
 
   - id: 3123 
     title: "Ensure mail transfer agent is configured for local-only mode"
     description: "Mail Transfer Agents (MTA), such as sendmail and Postfix, are used to listen for incoming mail and transfer the messages to the appropriate user or mail server. If the system is not intended to be a mail server, it is recommended that the MTA be configured to only process local mail."
     rationale: "The software for all Mail Transfer Agents is complex and most have a long history of security issues. While it is important to ensure that the system can process local mail messages, it is not necessary to have the MTA's daemon listening on a port unless the server is intended to be a mail server that receives and processes mail from other systems."
-    remediation: "Edit /etc/postfix/main.cf and add the following line to the RECEIVING MAIL section. If the line already exists, change it to look like the line below: inet_interfaces = loopback-only . Restart postfix: # systemctl restart postfix"
+    remediation: "Edit /etc/exim4/update-exim4.conf.conf and and or modify following lines to look like the lines below: dc_eximconfig_configtype='local' dc_local_interfaces='127.0.0.1 ; ::1' dc_readhost='' dc_relay_domains='' dc_minimaldns='false' dc_relay_nets='' dc_smarthost='' dc_use_split_config='false' dc_hide_mailname='' dc_mailname_in_oh='true' dc_localdelivery='mail_spool' Restart exim4: # systemctl restart exim4"
     compliance:
       - cis: ["2.2.15"]
       - cis_csc: ["9.2"]
@@ -1110,7 +1144,7 @@ checks:
     title: "Ensure rsync service is not enabled"
     description: "The rsyncd service can be used to synchronize files between systems over network links."
     rationale: "The rsyncd service presents a security risk as it uses unencrypted protocols for communication."
-    remediation: "Run the following command to disable rsync: # systemctl disable rsync"
+    remediation: "Run the following command to disable rsync: # systemctl --now disable rsync"
     compliance:
       - cis: ["2.2.16"]
       - cis_csc: ["9.2"]
@@ -1118,13 +1152,13 @@ checks:
       - nist_800_53: ["CM.1"]
     condition: none
     rules:
-      - 'c:systemctl is-enabled rsync -> r:^enabled'
+      - 'c:systemctl is-enabled rsync -> enabled'
 
   - id: 3143
     title: "Ensure NIS Server is not enabled"
     description: "The Network Information Service (NIS) (formally known as Yellow Pages) is a client-server directory service protocol for distributing system configuration files. The NIS server is a collection of programs that allow for the distribution of configuration files."
     rationale: "The NIS service is inherently an insecure system that has been vulnerable to DOS attacks, buffer overflows and has poor authentication for querying NIS maps. NIS generally been replaced by such protocols as Lightweight Directory Access Protocol (LDAP). It is recommended that the service be disabled and other, more secure services be used"
-    remediation: "Run the following command to disable nis: # systemctl disable nis"
+    remediation: "Run the following command to disable nis: # systemctl --now disable nis"
     compliance:
       - cis: ["2.2.17"]
       - cis_csc: ["9.2"]
@@ -1136,13 +1170,13 @@ checks:
       - tsc: ["CC5.2"]
     condition: none
     rules:
-      - 'c:systemctl is-enabled nis -> r:^enabled'
+      - 'c:systemctl is-enabled nis -> enabled'
 
   - id: 3144
     title: "Ensure NIS Client is not installed"
     description: "The Network Information Service (NIS), formerly known as Yellow Pages, is a client-server directory service protocol used to distribute system configuration files."
     rationale: "The NIS service is inherently an insecure system that has been vulnerable to DOS attacks, buffer overflows and has poor authentication for querying NIS maps. NIS generally has been replaced by such protocols as Lightweight Directory Access Protocol (LDAP). It is recommended that the service be removed."
-    remediation: "Uninstall the nis package: # apt-get remove nis"
+    remediation: "Uninstall nis : apt purge nis"
     compliance:
       - cis: ["2.3.1"]
       - cis_csc: ["2.6"]
@@ -1158,12 +1192,12 @@ checks:
 
   - id: 3145
     title: "Ensure rsh client is not installed"
-    description: "The rshpackage contains the client commands for the rsh services."
-    rationale: "These legacy clients contain numerous security exposures and have been replaced with the more secure SSH package. Even if the server is removed, it is best to ensure the clients are also removed to prevent users from inadvertently attempting to use these commands and therefore exposing their credentials. Note that removing the rshpackage removes the clients for rsh, rcpand rlogin."
-    remediation: "Run the following command to uninstall rsh: apt-get remove rsh-client rsh-redone-client"
+    description: "The rsh-client package contains the client commands for the rsh services."
+    rationale: "These legacy clients contain numerous security exposures and have been replaced with the more secure SSH package. Even if the server is removed, it is best to ensure the clients are also removed to prevent users from inadvertently attempting to use these commands and therefore exposing their credentials. Note that removing the rsh package removes the clients for rsh , rcp and rlogin ."
+    remediation: "Uninstall rsh : apt purge rsh-client"
     compliance:
       - cis: ["2.3.2"]
-      - cis_csc: ["2.6", "4.5"]
+      - cis_csc: ["4.5"]
       - pci_dss: ["2.2.3"]
       - nist_800_53: ["CM.1"]
       - gpg_13: ["4.3"]
@@ -1173,13 +1207,12 @@ checks:
     condition: none
     rules:
       - 'c:dpkg -s rsh-client -> r:install ok installed'
-      - 'c:dpkg -s rsh-redone-client -> r:install ok installed'
 
   - id: 3146
     title: "Ensure talk client is not installed"
-    description: "The talksoftware makes it possible for users to send and receive messages across systems through a terminal session. The talkclient, which allows initialization of talk sessions, is installed by default."
+    description: "The talk software makes it possible for users to send and receive messages across systems through a terminal session. The talkclient, which allows initialization of talk sessions, is installed by default."
     rationale: "The software presents a security risk as it uses unencrypted protocols for communication."
-    remediation: "Run the following command to uninstall talk: apt-get remove talk"
+    remediation: "Uninstall talk : apt purge talk"
     compliance:
       - cis: ["2.3.3"]
       - cis_csc: ["2.6"]
@@ -1197,10 +1230,10 @@ checks:
     title: "Ensure telnet client is not installed"
     description: "The telnet package contains the telnet client, which allows users to start connections to other systems via the telnet protocol."
     rationale: "The telnet protocol is insecure and unencrypted. The use of an unencrypted transmission medium could allow an unauthorized user to steal credentials. The ssh package provides an encrypted session and stronger security and is included in most Linux distributions."
-    remediation: "Run the following command to uninstall telnet: # apt-get remove telnet"
+    remediation: "Uninstall telnet : # apt purge telnet"
     compliance:
       - cis: ["2.3.4"]
-      - cis_csc: ["2.6", "4.5"]
+      - cis_csc: ["4.5"]
       - pci_dss: ["2.2.3"]
       - nist_800_53: ["CM.1"]
       - gpg_13: ["4.3"]
@@ -1215,7 +1248,7 @@ checks:
     title: "Ensure LDAP client is not installed"
     description: "The Lightweight Directory Access Protocol (LDAP) was introduced as a replacement for NIS/YP. It is a service that provides a method for looking up information from a central database."
     rationale: "If the system will not need to act as an LDAP client, it is recommended that the software be removed to reduce the potential attack surface."
-    remediation: "Run the following command to uninstall openldap-clients : # apt-get remove ldap-utils"
+    remediation: "Uninstall ldap-utils : # apt purge ldap-utils"
     compliance:
       - cis: ["2.3.5"]
       - cis_csc: ["2.6"]
@@ -1281,7 +1314,7 @@ checks:
     title: "Ensure packet redirect sending is disabled"
     description: "ICMP Redirects are used to send routing information to other hosts. As a host itself does not act as a router (in a host only configuration), there is no need to send redirects."
     rationale: "An attacker could use a compromised host to send invalid ICMP redirects to other router devices in an attempt to corrupt routing and have users access a system set up by the attacker as opposed to a valid system."
-    remediation: "Set the net.ipv4.conf.all.send_redirects and net.ipv4.conf.default.send_redirects parameters to 0 in /etc/sysctl.conf: net.ipv4.conf.all.send_redirects=0    net.ipv4.conf.default.send_redirects=0    Modify active kernel parameters to match: # sysctl -w net.ipv4.conf.all.send_redirects=0    # sysctl -w net.ipv4.conf.default.send_redirects=0    # sysctl -w net.ipv4.route.flush=1"
+    remediation: "Set the following parameters in /etc/sysctl.conf or a /etc/sysctl.d/* file: net.ipv4.conf.all.send_redirects = 0 net.ipv4.conf.default.send_redirects = 0 Run the following commands to set the active kernel parameters: # sysctl -w net.ipv4.conf.all.send_redirects=0 # sysctl -w net.ipv4.conf.default.send_redirects=0 # sysctl -w net.ipv4.route.flush=1"
     compliance:
       - cis: ["3.2.1"]
       - cis_csc: ["5.1"]
@@ -1299,7 +1332,7 @@ checks:
     title: "Ensure IP forwarding is disabled"
     description: "The net.ipv4.ip_forward and net.ipv6.conf.all.forwarding flags are used to tell the system whether it can forward packets or not."
     rationale: "Setting the flags to 0 ensures that a system with multiple interfaces (for example, a hard proxy), will never be able to forward packets, and therefore, never serve as a router."
-    remediation: "Set the following parameter in /etc/sysctl.conf or a /etc/sysctl.d/* file: net.ipv4.ip_forward = 0 net.ipv6.conf.all.forwarding = 0. Run the following commands to set the active kernel parameters: # sysctl -w net.ipv4.ip_forward=0 # sysctl -w net.ipv6.conf.all.forwarding=0 # sysctl -w net.ipv4.route.flush=1 # sysctl -w net.ipv6.route.flush=1"
+    remediation: "Run the following command to restore the default parameter and set the active kernel parameter: # grep -Els \"^\s*net\.ipv4\.ip_forward\s*=\s*1\" /etc/sysctl.conf /etc/sysctl.d/*.conf /usr/lib/sysctl.d/*.conf /run/sysctl.d/*.conf | while read filename; do sed -ri \"s/^\s*(net\.ipv4\.ip_forward\s*)(=)(\s*\S+\b).*$/# *REMOVED* \1/\" $filename; done; sysctl -w net.ipv4.ip_forward=0; sysctl -w net.ipv4.route.flush=1 IF IPv6 is enabled: Run the following command to restore the default parameter and set the active kernel parameter: # grep -Els \"^\s*net\.ipv6\.conf\.all\.forwarding\s*=\s*1\" /etc/sysctl.conf /etc/sysctl.d/*.conf /usr/lib/sysctl.d/*.conf /run/sysctl.d/*.conf | while read filename; do sed -ri \"s/^\s*(net\.ipv6\.conf\.all\.forwarding\s*)(=)(\s*\S+\b).*$/# *REMOVED* \1/\" $filename; done; sysctl -w net.ipv6.conf.all.forwarding=0; sysctl -w net.ipv6.route.flush=1"
     compliance:
       - cis: ["3.2.2"]
       - cis_csc: ["5.1"]
@@ -1312,6 +1345,7 @@ checks:
       - 'c:grep -Rh net\.ipv4\.ip_forward /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.ip_forward\s*=\s*0$'
       - 'c:sysctl net.ipv6.conf.all.forwarding -> r:=\s*\t*0$'
       - 'c:grep -Rh net\.ipv6\.conf\.all\.forwarding /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv6.conf.all.forwarding\s*=\s*0$'
+
 #############################################################
 # 3.3 Network Parameters
 #############################################################
@@ -1320,8 +1354,7 @@ checks:
     title: "Ensure source routed packets are not accepted"
     description: "In networking, source routing allows a sender to partially or fully specify the route packets take through a network. In contrast, non-source routed packets travel a path determined by routers in the network. In some cases, systems may not be routable or reachable from some locations (e.g. private addresses vs. Internet routable), and so source routed packets would need to be used."
     rationale: "Setting net.ipv4.conf.all.accept_source_route, net.ipv4.conf.default.accept_source_route, net.ipv6.conf.all.accept_source_route and net.ipv6.conf.default.accept_source_route to 0 disables the system from accepting source routed packets. Assume this system was capable of routing packets to Internet routable addresses on one interface and private addresses on another interface. Assume that the private addresses were not routable to the Internet routable addresses and vice versa. Under normal routing circumstances, an attacker from the Internet routable addresses could not use the system as a way to reach the private address systems. If, however, source routed packets were allowed, they could be used to gain access to the private address systems as the route could be specified, rather than rely on routing protocols that did not allow this routing."
-    remediation: "Set the following parameters in /etc/sysctl.conf or a /etc/sysctl.d/* file: net.ipv4.conf.all.accept_source_route = 0 net.ipv4.conf.default.accept_source_route = 0 net.ipv6.conf.all.accept_source_route = 0 net.ipv6.conf.default.accept_source_route = 0. Run the following commands to set the active kernel parameters: # sysctl -w net.ipv4.conf.all.accept_source_route=0 # sysctl -w net.ipv4.conf.default.accept_source_route=0 # sysctl -w net.ipv6.conf.all.accept_source_route=0 # sysctl -w net.ipv6.conf.default.accept_source_route=0 # sysctl -w net.ipv4.route.flush=1 # sysctl -w net.ipv6.route.flush=1"
-    compliance:
+    remediation: "Set the following parameters in /etc/sysctl.conf or a /etc/sysctl.d/* file: net.ipv4.conf.all.accept_source_route = 0 net.ipv4.conf.default.accept_source_route = 0 Run the following commands to set the active kernel parameters: # sysctl -w net.ipv4.conf.all.accept_source_route=0 # sysctl -w net.ipv4.conf.default.accept_source_route=0 # sysctl -w net.ipv4.route.flush=1 IF IPv6 is enabled: Set the following parameters in /etc/sysctl.conf or a /etc/sysctl.d/* file: net.ipv6.conf.all.accept_source_route = 0 net.ipv6.conf.default.accept_source_route = 0 Run the following commands to set the active kernel parameters: # sysctl -w net.ipv6.conf.all.accept_source_route=0 # sysctl -w net.ipv6.conf.default.accept_source_route=0 # sysctl -w net.ipv6.route.flush=1"     compliance:
       - cis: ["3.3.1"]
       - cis_csc: ["5.1"]
       - pci_dss: ["2.2.4"]
@@ -1343,7 +1376,7 @@ checks:
     title: "Ensure ICMP redirects are not accepted"
     description: "ICMP redirect messages are packets that convey routing information and tell your host (acting as a router) to send packets via an alternate path. It is a way of allowing an outside routing device to update your system routing tables. By setting net.ipv4.conf.all.accept_redirects to 0, the system will not accept any ICMP redirect messages, and therefore, won't allow outsiders to update the system's routing tables."
     rationale: "Attackers could use bogus ICMP redirect messages to maliciously alter the system routing tables and get them to send packets to incorrect networks and allow your system packets to be captured."
-    remediation: "Set the following parameters in /etc/sysctl.conf or a /etc/sysctl.d/* file: net.ipv4.conf.all.accept_redirects = 0 net.ipv4.conf.default.accept_redirects = 0 net.ipv6.conf.all.accept_redirects = 0 net.ipv6.conf.default.accept_redirects = 0. Run the following commands to set the active kernel parameters: # sysctl -w net.ipv4.conf.all.accept_redirects=0 # sysctl -w net.ipv4.conf.default.accept_redirects=0 # sysctl -w net.ipv6.conf.all.accept_redirects=0 # sysctl -w net.ipv6.conf.default.accept_redirects=0 # sysctl -w net.ipv4.route.flush=1 # sysctl -w net.ipv6.route.flush=1"
+    remediation: "Set the following parameters in /etc/sysctl.conf or a /etc/sysctl.d/* file: net.ipv4.conf.all.accept_redirects = 0 net.ipv4.conf.default.accept_redirects = 0 Run the following commands to set the active kernel parameters: # sysctl -w net.ipv4.conf.all.accept_redirects=0 # sysctl -w net.ipv4.conf.default.accept_redirects=0 # sysctl -w net.ipv4.route.flush=1 IF IPv6 is enabled: Set the following parameters in /etc/sysctl.conf or a /etc/sysctl.d/* file: net.ipv6.conf.all.accept_redirects = 0 net.ipv6.conf.default.accept_redirects = 0 Run the following commands to set the active kernel parameters: # sysctl -w net.ipv6.conf.all.accept_redirects=0 # sysctl -w net.ipv6.conf.default.accept_redirects=0 # sysctl -w net.ipv6.route.flush=1"
     compliance:
       - cis: ["3.3.2"]
       - cis_csc: ["5.1"]
@@ -1437,7 +1470,7 @@ checks:
   - id: 3156
     title: "Ensure Reverse Path Filtering is enabled"
     description: "Setting net.ipv4.conf.all.rp_filter and net.ipv4.conf.default.rp_filter to 1 forces the Linux kernel to utilize reverse path filtering on a received packet to determine if the packet was valid. Essentially, with reverse path filtering, if the return packet does not go out the same interface that the corresponding source packet came from, the packet is dropped (and logged if log_martians is set)."
-    rationale: Setting these flags is a good way to deter attackers from sending your system bogus packets that cannot be responded to. One instance where this feature breaks down is if asymmetrical routing is employed. This would occur when using dynamic routing protocols (bgp, ospf, etc) on your system. If you are using asymmetrical routing on your system, you will not be able to enable this feature without breaking the routing.
+    rationale: "Setting these flags is a good way to deter attackers from sending your system bogus packets that cannot be responded to. One instance where this feature breaks down is if asymmetrical routing is employed. This would occur when using dynamic routing protocols (bgp, ospf, etc) on your system. If you are using asymmetrical routing on your system, you will not be able to enable this feature without breaking the routing."
     remediation: "Set the following parameters in /etc/sysctl.conf or a /etc/sysctl.d/* file: net.ipv4.conf.all.rp_filter = 1 net.ipv4.conf.default.rp_filter = 1. Run the following commands to set the active kernel parameters: # sysctl -w net.ipv4.conf.all.rp_filter=1 # sysctl -w net.ipv4.conf.default.rp_filter=1 # sysctl -w net.ipv4.route.flush=1"
     compliance:
       - cis: ["3.3.7"]
@@ -1614,6 +1647,8 @@ checks:
       - cis_csc: ["9.4"]
       - pci_dss: ["1.2.1"]
       - tsc: ["CC8.1"]
+    reference:
+      - "http://manpages.ubuntu.com/manpages/precise/en/man8/ufw.8.html"
     condition: all
     rules:
       - 'c:systemctl is-enabled ufw -> enabled'
@@ -1694,7 +1729,7 @@ checks:
     title: "Ensure nftables service is enabled"
     description: "The nftables service allows for the loading of nftables rulesets during boot, or starting of the nftables service."
     rationale: "The nftables service restores the nftables rules from the rules files referenced in the /etc/sysconfig/nftables.conf file durring boot or the starting of the nftables service."
-    remediation: "Run the following command to enable the nftables service: # systemctl --now enable nftables"
+    remediation: "Run the following command to enable the nftables service: # systemctl enable nftables"
     compliance:
       - cis: ["3.5.3.7"]
       - cis_csc: ["9.4"]
@@ -1754,7 +1789,7 @@ checks:
     rationale: "With a default accept policy the firewall will accept any packet that is not configured to be denied. It is easier to white list acceptable usage than to black list unacceptable usage."
     remediation: "Run the following commands to implement a default DROP policy: # ip6tables -P INPUT DROP # ip6tables -P OUTPUT DROP # ip6tables -P FORWARD DROP. Notes: Changing firewall settings while connected over network can result in being locked out of the system. Remediation will only affect the active system firewall, be sure to configure the default policy in your firewall management to apply on boot as well."
     compliance:
-      - cis: ["3.5.2.1"]
+      - cis: ["3.5.4.2.1"]
       - cis_csc: ["9.4"]
       - pci_dss: ["1.2.1"]
       - tsc: ["CC8.1"]
@@ -1793,10 +1828,14 @@ checks:
     title: "Ensure auditd is installed"
     description: "auditd is the userspace component to the Linux Auditing System. It's responsible for writing audit records to the disk"
     rationale: "The capturing of system events provides system administrators with information to allow them to determine if unauthorized access to their system is occurring."
-    remediation: "Run the following command to enable auditd: # systemctl enable auditd"
+    remediation: "Run the following command to enable auditd: # apt install auditd audispd-plugins"
     compliance:
       - cis: ["4.1.1.1"]
       - cis_csc: ["6.2", "6.3"]
+      - pci_dss: ["10.1"]
+      - nist_800_53: ["AU.2"]
+      - hipaa: ["164.312.b"]
+      - tsc: ["CC6.1","CC6.2","CC6.3","CC7.2","CC7.3","CC7.4"]
     condition: all
     rules:
       - 'c:dpkg -s auditd -> r:install ok installed'
@@ -1804,24 +1843,34 @@ checks:
 
   - id: 3511
     title: "Ensure auditd service is enabled"
-    description: "Turn on the auditd daemon to record system events."
+    description: "Enable and start the auditd daemon to record system events."
     rationale: "The capturing of system events provides system administrators with information to allow them to determine if unauthorized access to their system is occurring."
-    remediation: "Run the following command to enable auditd: # systemctl enable auditd"
+    remediation: "Run the following command to enable auditd: # systemctl --now enable auditd"
     compliance:
       - cis: ["4.1.1.2"]
       - cis_csc: ["6.2", "6.3"]
+      - pci_dss: ["10.1","10.7"]
+      - nist_800_53: ["AU.2"]
+      - hipaa: ["164.312.b"]
+      - tsc: ["CC6.1","CC6.2","CC6.3","CC7.2","CC7.3","CC7.4"]
     condition: all
     rules:
       - 'c:systemctl is-enabled auditd -> r:^enabled'
 
   - id: 3512
     title: "Ensure auditing for processes that start prior to auditd is enabled"
-    description: "Configure grub or lilo so that processes that are capable of being audited can be audited even if they start up prior to auditd startup."
+    description: "Configure grub so that processes that are capable of being audited can be audited even if they start up prior to auditd startup."
     rationale: "Audit events need to be captured on processes that start up prior to auditd, so that potential malicious activity cannot go undetected."
     remediation: "Edit /etc/default/grub and add audit=1 to GRUB_CMDLINE_LINUX: GRUB_CMDLINE_LINUX=\"audit=1\" Run the following command to update the grub2 configuration: # update-grub Notes: This recommendation is designed around the grub bootloader, if LILO or another bootloader is in use in your environment enact equivalent settings."
     compliance:
       - cis: ["4.1.1.3"]
       - cis_csc: ["6.2", "6.3"]
+      - pci_dss: ["10.2.6","10.7"]
+      - nist_800_53: ["AU.2"]
+      - gpg_13: ["7.9"]
+      - gdpr_IV: ["35.7.d","32.2"]
+      - hipaa: ["164.312.b"]
+      - tsc: ["CC6.1","CC6.8","CC7.2","CC7.3","CC7.4"]
     condition: all
     rules:
       - 'f:/etc/default/grub -> r:^GRUB_CMDLINE_LINUX\s*=\s*\.*audit\s*=\s*1\.*'
@@ -1834,27 +1883,14 @@ checks:
     compliance:
       - cis: ["4.1.2.1"]
       - cis_csc: ["6.4"]
+      - pci_dss: ["10.7"]
+      - nist_800_53: ["AU.4"]
+      - hipaa: ["164.312.b"]
     condition: all
     rules:
       - 'd:/etc/audit'
       - 'f:/etc/audit/auditd.conf'
       - 'f:/etc/audit/auditd.conf -> r:^\s*\t*max_log_file\s*\t*=\s*\t*\d+'
-
-  - id: 3509
-    title: "Ensure system is disabled when audit logs are full"
-    description: "The auditd daemon can be configured to halt the system when the audit logs are full."
-    rationale: "In high security contexts, the risk of detecting unauthorized access or nonrepudiation exceeds the benefit of the system's availability."
-    remediation: "Set the following parameters in /etc/audit/auditd.conf: space_left_action = email action_mail_acct = root admin_space_left_action = halt"
-    compliance:
-      - cis: ["4.1.2.2"]
-      - cis_csc: ["6.4"]
-    condition: all
-    rules:
-      - 'd:/etc/audit'
-      - 'f:/etc/audit/auditd.conf'
-      - 'f:/etc/audit/auditd.conf -> r:^\s*\t*action_mail_acct\s*\t*=\s*\t*root'
-      - 'f:/etc/audit/auditd.conf -> r:^\s*\t*space_left_action\s*\t*=\s*\t*email'
-      - 'f:/etc/audit/auditd.conf -> r:^\s*\t*admin_space_left_action\s*\t*=\s*\t*halt'
 
   - id: 3510
     title: "Ensure audit logs are not automatically deleted"
@@ -1862,13 +1898,34 @@ checks:
     rationale: "In high security contexts, the benefits of maintaining a long audit history exceed the cost of storing the audit history."
     remediation: "Set the following parameter in /etc/audit/auditd.conf: max_log_file_action = keep_logs"
     compliance:
-      - cis: ["4.1.2.3"]
+      - cis: ["4.1.2.2"]
       - cis_csc: ["6.4"]
+      - pci_dss: ["10.7"]
+      - nist_800_53: ["AU.9"]
+      - hipaa: ["164.312.b"]
     condition: all
     rules:
       - 'd:/etc/audit'
       - 'f:/etc/audit/auditd.conf'
       - 'f:/etc/audit/auditd.conf -> r:^\s*\t*max_log_file_action\s*\t*=\s*\t*keep_logs'
+
+  - id: 3509
+    title: "Ensure system is disabled when audit logs are full"
+    description: "The auditd daemon can be configured to halt the system when the audit logs are full."
+    rationale: "In high security contexts, the risk of detecting unauthorized access or nonrepudiation exceeds the benefit of the system's availability."
+    remediation: "Set the following parameters in /etc/audit/auditd.conf: space_left_action = email action_mail_acct = root admin_space_left_action = halt"
+    compliance:
+      - cis: ["4.1.2.3"]
+      - cis_csc: ["6.4"]
+      - pci_dss: ["10.7"]
+    condition: all
+    rules:
+      - 'd:/etc/audit'
+      - 'f:/etc/audit/auditd.conf'
+      - 'f:/etc/audit/auditd.conf -> r:^\s*\t*action_mail_acct\s*\t*=\s*\t*root'
+      - 'f:/etc/audit/auditd.conf -> r:^\s*\t*space_left_action\s*\t*=\s*\t*email'
+      - 'f:/etc/audit/auditd.conf -> r:^\s*\t*admin_space_left_action\s*\t*=\s*\t*halt'
+ 
 
   - id: 3513
     title: "Ensure events that modify date and time information are collected"
@@ -1878,6 +1935,12 @@ checks:
     compliance:
       - cis: ["4.1.3"]
       - cis_csc: ["5.5"]
+      - pci_dss: ["10.4.2","10.2.7"]
+      - nist_800_53: ["AU.14","AU.6"]
+      - gpg_13: ["7.9"]
+      - gdpr_IV: ["32.2","35.7.d"]
+      - hipaa: ["164.312.b"]
+      - tsc: ["CC6.1","CC6.8","CC7.2","CC7.3","CC7.4"]
     condition: all
     rules:
       - 'd:/etc/audit'
@@ -1896,6 +1959,12 @@ checks:
     compliance:
       - cis: ["4.1.4"]
       - cis_csc: ["4.8"]
+      - pci_dss: ["10.2.5"]
+      - hipaa: ["164.312.b"]
+      - nist_800_53: ["AU.14", "AC.7"]
+      - gpg_13: ["7.8"]
+      - gdpr_IV: ["35.7","32.2"]
+      - tsc: ["CC6.1","CC6.8","CC7.2","CC7.3","CC7.4"]
     condition: all
     rules:
       - 'd:/etc/audit'
@@ -1914,6 +1983,12 @@ checks:
     compliance:
       - cis: ["4.1.5"]
       - cis_csc: ["5.5"]
+      - pci_dss: ["10.2.5"]
+      - hipaa: ["164.312.b"]
+      - nist_800_53: ["AU.14", "AC.7"]
+      - gpg_13: ["7.8"]
+      - gdpr_IV: ["35.7","32.2"]
+      - tsc: ["CC6.1","CC6.8","CC7.2","CC7.3","CC7.4"]
     condition: all
     rules:
       - 'd:/etc/audit'
@@ -1933,6 +2008,12 @@ checks:
     compliance:
       - cis: ["4.1.6"]
       - cis_csc: ["5.5"]
+      - pci_dss: ["10.2.5"]
+      - hipaa: ["164.312.b"]
+      - nist_800_53: ["AU.14", "AC.7"]
+      - gpg_13: ["7.8"]
+      - gdpr_IV: ["35.7","32.2"]
+      - tsc: ["CC6.1","CC6.8","CC7.2","CC7.3","CC7.4"]
     condition: all
     rules:
       - 'd:/etc/audit'
@@ -1948,6 +2029,12 @@ checks:
     compliance:
       - cis: ["4.1.7"]
       - cis_csc: ["4.9", "16.11", "16.13"]
+      - pci_dss: ["10.2.1", "10.2.4", "10.3"]
+      - nist_800_53: ["AC.7","AU.14"]
+      - gpg_13: ["7.8"]
+      - gdpr_IV: ["32.2","35.7.d"]
+      - hipaa: ["164.312.b"]
+      - tsc: ["CC6.1","CC6.8","CC7.2","CC7.3","CC7.4"]
     condition: all
     rules:
       - 'd:/etc/audit'
@@ -1964,6 +2051,9 @@ checks:
     compliance:
       - cis: ["4.1.8"]
       - cis_csc: ["4.9", "16.11", "16.13"]
+      - pci_dss: ["10.3"]
+      - nist_800_53: ["AC.7","AU.14"]
+      - hipaa: ["164.312.b"]
     condition: all
     rules:
       - 'd:/etc/audit'
@@ -1980,6 +2070,12 @@ checks:
     compliance:
       - cis: ["4.1.9"]
       - cis_csc: ["5.5"]
+      - pci_dss: ["10.2.5"]
+      - hipaa: ["164.312.b"]
+      - nist_800_53: ["AU.14", "AC.7"]
+      - gpg_13: ["7.8"]
+      - gdpr_IV: ["35.7","32.2"]
+      - tsc: ["CC6.1","CC6.8","CC7.2","CC7.3","CC7.4"]
     condition: all
     rules:
       - 'd:/etc/audit'
@@ -1999,6 +2095,12 @@ checks:
     compliance:
       - cis: ["4.1.10"]
       - cis_csc: ["14.9"]
+      - pci_dss: ["10.2.4"]
+      - nist_800_53: ["AC.7"]
+      - gpg_13: ["7.8"]
+      - gdpr_IV: ["32.2","35.7.d"]
+      - hipaa: ["164.312.b"]
+      - tsc: ["CC6.1","CC6.8","CC7.2","CC7.3","CC7.4"]
     condition: all
     rules:
       - 'd:/etc/audit'
@@ -2016,6 +2118,12 @@ checks:
     compliance:
       - cis: ["4.1.12"]
       - cis_csc: ["13"]
+      - pci_dss: ["10.2.7"]
+      - nist_800_53: ["AU.14","AU.6"]
+      - gpg_13: ["7.9"]
+      - gdpr_IV: ["32.2","35.7.d"]
+      - hipaa: ["164.312.b"]
+      - tsc: ["CC6.1","CC6.8","CC7.2","CC7.3","CC7.4"]
     condition: all
     rules:
       - 'd:/etc/audit'
@@ -2046,6 +2154,10 @@ checks:
     compliance:
       - cis: ["4.1.14"]
       - cis_csc: ["4.8"]
+      - pci_dss: ["10.5.5"]
+      - nist_800_53: ["AU.14"]
+      - hipaa: ["164.312.b"]
+      - tsc: ["PI1.4","PI1.5","CC7.1","CC7.2","CC7.3","CC8.1"]
     condition: all
     rules:
       - 'd:/etc/audit'
@@ -2061,6 +2173,12 @@ checks:
     compliance:
       - cis: ["4.1.15"]
       - cis_csc: ["4.9"]
+      - pci_dss: ["10.2.2"]
+      - nist_800_53: ["AU.14","AC.6","AC.7"]
+      - gpg_13: ["7.8"]
+      - gdpr_IV: ["32.2","35.7.d"]
+      - hipaa: ["164.312.b"]
+      - tsc: ["CC6.1","CC6.8","CC7.2","CC7.3","CC7.4"]
     condition: all
     rules:
       - 'd:/etc/audit'
@@ -2075,6 +2193,12 @@ checks:
     compliance:
       - cis: ["4.1.16"]
       - cis_csc: ["5.1"]
+      - pci_dss: ["10.2.7"]
+      - nist_800_53: ["AU.14","AU.6"]
+      - gpg_13: ["7.9"]
+      - gdpr_IV: ["32.2","35.7.d"]
+      - hipaa: ["164.312.b"]
+      - tsc: ["CC6.1","CC6.8","CC7.2","CC7.3","CC7.4"]
     condition: all
     rules:
       - 'd:/etc/audit'
@@ -2092,6 +2216,9 @@ checks:
     compliance:
       - cis: ["4.1.17"]
       - cis_csc: ["6.2", "6.3"]
+      - pci_dss: ["10.5"]
+      - nist_800_53: ["AU.9"]
+      - hipaa: ["164.312.b"]
     condition: all
     rules:
       - 'd:/etc/audit'
@@ -2102,9 +2229,9 @@ checks:
 # 4.2,1 Configure rsyslog
   - id: 3204 
     title: "Ensure rsyslog is installed"
-    description: "The rsyslog and syslog-ng software are recommended replacements to the original syslogd daemon which provide improvements over syslogd , such as connection-oriented (i.e. TCP) transmission of logs, the option to log to database formats, and the encryption of log data en route to a central logging server."
-    rationale: "The security enhancements of rsyslog and syslog-ng such as connection-oriented (i.e. TCP) transmission of logs, the option to log to database formats, and the encryption of log data en route to a central logging server) justify installing and configuring the package."
-    remediation: "nstall rsyslog or syslog-ng using one of the following commands: # apt-get install rsyslog # apt-get install syslog-ng"
+    description: "The rsyslog software are recommended replacements to the original syslogd daemon which provide improvements over syslogd , such as connection-oriented (i.e. TCP) transmission of logs, the option to log to database formats, and the encryption of log data en route to a central logging server."
+    rationale: "The security enhancements of rsyslogsuch as connection-oriented (i.e. TCP) transmission of logs, the option to log to database formats, and the encryption of log data en route to a central logging server) justify installing and configuring the package."
+    remediation: "Install rsyslog: # apt install rsyslog"
     compliance:
       - cis: ["4.2.1.1"]
       - cis_csc: ["6.2"]
@@ -2115,12 +2242,11 @@ checks:
     condition: any
     rules:
       - 'c:dpkg -s rsyslog -> r:install ok installed'
-      - 'c:dpkg -s syslog-ng -> r:install ok installed'
   - id: 3068
     title: "Ensure rsyslog Service is enabled"
     description: "Once the rsyslog package is installed it needs to be activated."
     rationale: "If the rsyslog service is not activated the system will not have a syslog service running."
-    remediation: "Run the following command to enable rsyslog: # systemctl enable rsyslog"
+    remediation: "Run the following command to enable rsyslog: # systemctl --now enable rsyslog"
     compliance:
       - cis: ["4.2.1.2"]
       - cis_csc: ["6.2", "6.3"]
@@ -2151,7 +2277,7 @@ checks:
     title: "Ensure rsyslog is configured to send logs to a remote log host"
     description: "The rsyslog utility supports the ability to send logs it gathers to a remote log host running syslogd(8) or to receive messages from remote hosts, reducing administrative overhead."
     rationale: "Storing log data on a remote host protects log integrity from local attacks. If an attacker gains root access on the local system, they could tamper with or remove log data that is stored on the local system."
-    remediation: "Edit the /etc/rsyslog.conf and /etc/rsyslog.d/*.conf files and add the following line (where loghost.example.com is the name of your central log host): *.* @@loghost.example.com. Run the following command to reload the rsyslogd configuration: # pkill -HUP rsyslogd"
+    remediation: "Edit the /etc/rsyslog.conf and /etc/rsyslog.d/*.conf files and add one of the following lines: Newer syntax: <files to sent to the remote log server> action(type=\"omfwd\" target=\"<FQDN or ip of loghost>\" port=\"<port number>\" protocol=\"tcp\" ction.resumeRetryCount=\"<number of re-tries>\"  queue.type=\"linkList\" queue.size=<number of messages to queue>\") Example: *.* action(type=\"omfwd\" target=\"192.168.2.100\" port\"514\" protocol=\"tcp\" action.resumeRetryCount=\"100\" queue.type=\"linkList\" queue.size=\"1000\") Older syntax: *.* @@<FQDN or ip of loghost>"
     compliance:
       - cis: ["4.2.1.5"]
       - cis_csc: ["6.6", "6.8"]
@@ -2192,6 +2318,8 @@ checks:
       - pci_dss: ["10.5.3"]
       - nist_800_53: ["CM.1","AU.9","AU.4"]
       - tsc: ["CC5.2","CC7.2"]
+    references:
+      - "https://github.com/konstruktoid/hardening/blob/master/systemd.adoc#etcsystemdjournaldconf"
     condition: all
     rules:
       - 'f:/etc/systemd/journald.conf -> r:^\s*\t*ForwardToSyslog\s*=\s*yes'
@@ -2208,6 +2336,8 @@ checks:
       - pci_dss: ["10.7"]
       - nist_800_53: ["CM.1","AU.4"]
       - tsc: ["CC5.2"]
+    references:
+      - "https://github.com/konstruktoid/hardening/blob/master/systemd.adoc#etcsystemdjournaldconf"
     condition: all
     rules:
       - 'f:/etc/systemd/journald.conf -> r:^\s*\t*Compress\s*=\s*yes'
@@ -2217,13 +2347,15 @@ checks:
     title: "Ensure journald is configured to write logfiles to persistent disk"
     description: "Data from journald may be stored in volatile memory or persisted locally on the server. Logs in memory will be lost upon a system reboot. By persisting logs to local disk on the server they are protected from loss."
     rationale: "Writing log data to disk will provide the ability to forensically reconstruct events which may have impacted the operations or security of a system even after a system crash or reboot."
-    remediation: "Edit the /etc/systemd/journald.conf file and add the following line:   Compress=yes"
+    remediation: "Edit the /etc/systemd/journald.conf file and add the following line:   Storage=persistent"
     compliance:
       - cis: ["4.2.2.3"]
       - cis_csc: ["6.2","6.3"]
       - pci_dss: ["10.7"]
       - nist_800_53: ["CM.1","AU.4"]
       - tsc: ["CC5.2"]
+    references:
+      - "https://github.com/konstruktoid/hardening/blob/master/systemd.adoc#etcsystemdjournaldconf"
     condition: all
     rules:
       - 'f:/etc/systemd/journald.conf -> r:^\s*\t*Storage\s*=\s*persistent'
@@ -2233,7 +2365,7 @@ checks:
     title: "Ensure permissions on all logfiles are configured"
     description: "Log files stored in /var/log/ contain logged information from many services on the system, or on log hosts others as well."
     rationale: "It is important to ensure that log files have the correct permissions to ensure that sensitivebdata is archived and protected."
-    remediation: "Run the following command to set permissions on all existing log files: # find /var/log -type f -exec chmod g-wx,o-rwx {} +"
+    remediation: "Run the following command to set permissions on all existing log files: find /var/log -type f -exec chmod g-wx,o-rwx \"{}\" + -o -type d -exec chmod g-w,o-rwx \"{}\" +"
     compliance:
       - cis: ["4.2.3"]
       - cis_csc: ["5.1"]
@@ -2267,7 +2399,7 @@ checks:
     title: "Ensure cron daemon is enabled"
     description: "The cron daemon is used to execute batch jobs on the system."
     rationale: "While there may not be user jobs that need to be run on the system, the system does have maintenance jobs that may include security monitoring that have to run, and cron is used to execute them."
-    remediation: "Run the following command to enable cron: systemctl enable cron"
+    remediation: "Run the following command to enable cron: systemctl --now enable cron"
     compliance:
       - cis: ["5.1.1"]
       - cis_csc: ["6"]
@@ -2276,7 +2408,7 @@ checks:
       - tsc: ["CC5.2"]
     condition: all
     rules:
-      - 'c:systemctl is-enabled cron -> r:^enabled$'
+      - 'c:systemctl is-enabled cron -> enabled'
 
 
 # 5.1.2 Ensure permissions on /etc/crontab are configured (Scored)
@@ -2698,6 +2830,7 @@ checks:
       - cis: ["5.2.17"]
       - cis_csc: ["5.1"]
       - pci_dss: ["8.1"]
+      - tsc: ["CC6.1"]
     condition: all
     rules:
       - 'c:sshd -T -> r:logingracetime && n:LoginGraceTime\s*\t*(\d+) compare <= 60'
@@ -2712,6 +2845,7 @@ checks:
       - cis: ["5.2.18"]
       - cis_csc: ["4.3"]
       - pci_dss: ["8.1"]
+      - tsc: ["CC6.1"]
     condition: all
     rules:
       - 'f:/etc/ssh/sshd_config -> !r:^# && r:AllowUsers\s+\w+|AllowGroups\s+\w+|DenyUsers\s+\w+|DenyGroups\s+\w+'
@@ -2798,6 +2932,7 @@ checks:
       - cis: ["5.3.1"]
       - cis_csc: ["4.4"]
       - pci_dss: ["8.2.3"]
+      - tsc: ["CC6.1"]
     condition: all
     rules:
       - 'c:dpkg -s libpam-pwquality -> r:install ok installed'
@@ -2818,6 +2953,7 @@ checks:
       - cis: ["5.3.2"]
       - cis_csc: ["16.7"]
       - pci_dss: ["8.2.5"]
+      - tsc: ["CC6.1"]
     condition: all
     rules:
       - 'f:/etc/pam.d/common-auth -> !r:^# && r:auth\s*\t*required\s*\t*pam_tally2.so && r:onerr=fail && r:audit && r:silent && r:deny\s*=\s*\d && r:unlock_time\s*=\s*\d\d\d+'
@@ -2833,6 +2969,7 @@ checks:
       - cis: ["5.3.3"]
       - cis_csc: ["16"]
       - pci_dss: ["8.2.5"]
+      - tsc: ["CC6.1"]
     condition: all
     rules:
       - 'f:/etc/pam.d/common-password -> !r:^# && r:password\s*\t*required\s*\t*pam_pwhistory.so && n:remember\s*\t*=\s*\t*(\d+) compare >= 5'
@@ -2846,7 +2983,8 @@ checks:
     compliance:
       - cis: ["5.3.4"]
       - cis_csc: ["16.14"]
-      - pci_dss: ["3.6.1"]
+      - pci_dss: ["3.6.1","8.2.1"]
+      - tsc: ["CC6.1","CC6.7"]
     condition: all
     rules:
       - 'f:/etc/pam.d/common-password -> r:^password\.+pam_unix.so\.+sha512'
@@ -2867,6 +3005,7 @@ checks:
       - cis: ["5.4.1.1"]
       - cis_csc: ["4.4"]
       - pci_dss: ["8.2.4"]
+      - tsc: ["CC6.1"]
     condition: all
     rules:
       - 'f:/etc/login.defs -> n:^\s*\t*PASS_MAX_DAYS\s*\t*(\d+) compare <= 365'
@@ -2880,7 +3019,8 @@ checks:
     compliance:
       - cis: ["5.4.1.2"]
       - cis_csc: ["4.4", "16"]
-      - pci_dss: ["3.6.1"]
+      - pci_dss: ["8.2"]
+      - tsc: ["CC6.1"]
     condition: all
     rules:
       - 'f:/etc/login.defs -> n:^\s*\t*PASS_MIN_DAYS\s*\t*(\d+) compare >= 7'
@@ -2894,7 +3034,8 @@ checks:
     compliance:
       - cis: ["5.4.1.3"]
       - cis_csc: ["4.4"]
-      - pci_dss: ["3.6.1"]
+      - pci_dss: ["8.2"]
+      - tsc: ["CC6.1"]
     condition: all
     rules:
       - 'f:/etc/login.defs -> n:^\s*\t*PASS_WARN_AGE\s*\t*(\d+) compare >= 7'
@@ -2908,7 +3049,8 @@ checks:
     compliance:
       - cis: ["5.4.1.4"]
       - cis_csc: ["4.4", "16"]
-      - pci_dss: ["3.6.1"]
+      - pci_dss: ["8.2"]
+      - tsc: ["CC6.1"]
     condition: all
     rules:
       - 'c:useradd -D -> n:^INACTIVE=(\d+) compare <= 30'
@@ -2922,7 +3064,8 @@ checks:
     compliance:
       - cis: ["5.4.3"]
       - cis_csc: ["14.6"]
-      - pci_dss: ["3.6.1"]
+      - pci_dss: ["8.2"]
+      - tsc: ["CC6.1"]
     condition: all
     rules:
       - 'f:/etc/passwd -> !r:^# && r:root:\w+:\w+:0:'
@@ -2936,7 +3079,8 @@ checks:
     compliance:
       - cis: ["5.4.4"]
       - cis_csc: ["14.6"]
-      - pci_dss: ["3.6.1"]
+      - pci_dss: ["8.2"]
+      - tsc: ["CC6.1"]
     condition: none
     rules:
       - 'f:/etc/bash.bashrc -> n:^\s*\t*umask\s+(\d+) compare >= 027'
@@ -2965,7 +3109,7 @@ checks:
     title: "Ensure access to the su command is restricted"
     description: "The su command allows a user to run a command or shell as another user. The program has been superseded by sudo, which allows for more granular control over privileged access. Normally, the su command can be executed by any user. By uncommenting the pam_wheel.so statement in /etc/pam.d/su, the su command will only allow users in the sudo group to execute su."
     rationale: "Restricting the use of su, and using sudo in its place, provides system administrators better control of the escalation of user privileges to execute privileged commands. The sudo utility also provides a better logging and audit mechanism, as it can log each command executed via sudo, whereas su can only record that a user executed the su program."
-    remediation: "1) Add the following line to the /etc/pam.d/su file: auth required pam_wheel.so 2) Create a comma separated list of users in the sudo statement in the /etc/group file: sudo:x:10:root,<user list> Notes: The use_uid option to pam_wheel.so is a no-op on debian based systems. It is acceptable but not required as these systems use its behavior as default."
+    remediation: "Create an empty group that will be specified for use of the su command. The group should be named according to site policy. Example # groupadd sugroup Add the following line to the /etc/pam.d/su file, specifying the empty group: auth required pam_wheel.so use_uid group=sugroup"
     compliance:
       - cis: ["5.6"]
       - cis_csc: ["5.1"]
@@ -3009,7 +3153,7 @@ checks:
     title: "Ensure permissions on /etc/gshadow- are configured"
     description: "The /etc/gshadow- file is used to store backup information about groups that is critical to the security of those accounts, such as the hashed password and other security information."
     rationale: "It is critical to ensure that the /etc/gshadow- file is protected from unauthorized access. Although it is protected by default, the file permissions could be changed either inadvertently or through malicious actions."
-    remediation: "# chown root:root /etc/gshadow- # chown root:shadow /etc/gshadow- # chmod o-rwx,g-rw /etc/gshadow-"
+    remediation: "Run the one of the following chown commands as appropriate and the chmod to set permissions on /etc/gshadow- : # chown root:root /etc/gshadow- # chown root:shadow /etc/gshadow- # chmod o-rwx,g-wx /etc/gshadow-"
     compliance:
       - cis: ["6.1.3"]
       - cis_csc: ["16.4"]
@@ -3057,7 +3201,7 @@ checks:
     title: "Ensure permissions on /etc/passwd- are configured"
     description: "The /etc/passwd- file contains backup user account information."
     rationale: "It is critical to ensure that the /etc/passwd- file is protected from unauthorized access. Although it is protected by default, the file permissions could be changed either inadvertently or through malicious actions."
-    remediation: "Run the following command to set permissions on /etc/passwd-: # chown root:root /etc/passwd- # chmod 644 /etc/passwd-"
+    remediation: "Run the following command to set permissions on /etc/passwd-: # chown root:root /etc/passwd- # chmod u-x,go-rwx /etc/passwd-"
     compliance:
       - cis: ["6.1.6"]
       - cis_csc: ["16.4"]
@@ -3073,7 +3217,7 @@ checks:
     title: "Ensure permissions on /etc/shadow- are configured"
     description: "The /etc/shadow- file is used to store backup information about user accounts that is critical to the security of those accounts, such as the hashed password and other security information."
     rationale: "It is critical to ensure that the /etc/shadow- file is protected from unauthorized access. Although it is protected by default, the file permissions could be changed either inadvertently or through malicious actions."
-    remediation: "Run the one of the following chown commands as appropriate and the chmod to set permissions on /etc/shadow- : # chown root:root /etc/shadow- # chown root:shadow /etc/shadow- # chmod o-rwx,g-rw /etc/shadow-"
+    remediation: "Run the following commands to set permissions on /etc/shadow- : # chown root:shadow /etc/shadow- # chmod u-x,go-rwx /etc/shadow-"
     compliance:
       - cis: ["6.1.7"]
       - cis_csc: ["16.4"]
@@ -3089,7 +3233,7 @@ checks:
     title: "Ensure permissions on /etc/group- are configured"
     description: "The /etc/group- file contains a backup list of all the valid groups defined in the system."
     rationale: "It is critical to ensure that the /etc/group- file is protected from unauthorized access. Although it is protected by default, the file permissions could be changed either inadvertently or through malicious actions."
-    remediation: "Run the following command to set permissions on /etc/group-: # chown root:root /etc/group- # chmod 644 /etc/group-"
+    remediation: "Run the following command to set permissions on /etc/group-: # chown root:root /etc/group- # chmod u-x,go-rwx /etc/group-"
     compliance:
       - cis: ["6.1.8"]
       - cis_csc: ["16.4"]
@@ -3130,6 +3274,7 @@ checks:
       - cis: ["6.2.1"]
       - cis_csc: ["4.4"]
       - pci_dss: ["8.2"]
+      - tsc: ["CC6.1"]
     condition: none
     rules:
       - 'f:/etc/shadow -> r:^\w+::'
