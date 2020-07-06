@@ -457,7 +457,7 @@ checks:
 
   - id: 4005
     title: "Ensure sudo commands use pty"
-    description: "sudo can be configured to run only froma p seudo-pty"
+    description: "sudo can be configured to run only froma pseudo-pty"
     rationale: "Attackers can run a malicious program using sudo, which would again fork a background process that remains even when the main program has finished executing."
     remediation: "edit the file /etc/sudoers or a file in /etc/sudoers.d/ with visudo -f and add the following line: Defaults use_pty"
     compliance:
@@ -492,7 +492,7 @@ checks:
     title: "Ensure AIDE is installed"
     description: "AIDE takes a snapshot of filesystem state including modification times, permissions, and file hashes which can then be used to compare against the current state of the filesystem to detect modifications to the system."
     rationale: "By monitoring the filesystem state compromised files can be detected to prevent or limit the exposure of accidental or malicious misconfigurations or modified binaries."
-    remediation: "Install AIDE: # apt install aide aide-common. Configure AIDE as appropriate for your environment. Consult the AIDE documentation for options. Initialize AIDE: # aideinit"
+    remediation: "Install AIDE: # apt install aide aide-common. Configure AIDE as appropriate for your environment. Consult the AIDE documentation for options. Initialize AIDE: # aideinit .  Notes: The prelinking feature can interfere with AIDE because it alters binaries to speed up their start up times. Run prelink -ua to restore the binaries to their prelinked state, thus avoiding false positives from AIDE."
     compliance:
       - cis: ["1.4.1"]
       - cis_csc: ["14.9"]
@@ -506,7 +506,7 @@ checks:
     title: "Ensure filesystem integrity is regularly checked"
     description: "Periodic checking of the filesystem integrity is needed to detect changes to the filesystem."
     rationale: "Periodic file checking allows the system administrator to determine on a regular basis if critical files have been changed in an unauthorized fashion."
-    remediation: "Run the following command to install AIDE: # apt install aide aide-common Configure AIDE as appropriate for your environment. Consult the AIDE documentation for options. Initialize AIDE: # aideinit"
+    remediation: "If cron will be used to schedule and run aide check, run the following command:    # crontab -u root -e    Add the following line to the crontab:    0 5 * * * /usr/bin/aide.wrapper --config /etc/aide/aide.conf --check"
     compliance:
       - cis: ["1.4.2"]
       - cis_csc: ["14.9"]
@@ -540,7 +540,7 @@ checks:
     title: "Ensure bootloader password is set"
     description: "Setting the boot loader password will require that anyone rebooting the system must enter a password before being able to set command line boot parameters."
     rationale: "Requiring a boot password upon execution of the boot loader will prevent an unauthorized user from entering boot parameters or changing the boot partition. This prevents users from weakening security (e.g. turning off SELinux at boot time)."
-    remediation: "Create an encrypted password with grub-mkpasswd-pbkdf2 : # grub-mkpasswd-pbkdf2 Enter password: <password> Reenter password: <password> PBKDF2 hash of your password is <encrypted-password> Add the following into a custom /etc/grub.d configuration file: cat <<EOF set superusers=\"<username>\" password_pbkdf2 <username> <encrypted-password> EOF The superuser/user information and password should not be contained in the /etc/grub.d/00_header file as this file could be overwritten in a package update. If there is a requirement to be able to boot/reboot without entering the password, edit /etc/grub.d/10_linux and add --unrestricted to the line CLASS=  Example: CLASS=\"--class gnu-linux --class gnu --class os --unrestricted\" Run the following command to update the grub2 configuration: # update-grub"
+    remediation: "Create an encrypted password with grub-mkpasswd-pbkdf2 : # grub-mkpasswd-pbkdf2     Enter password: <password>      Reenter password: <password> PBKDF2 hash of your password is <encrypted-password> Add the following into a custom /etc/grub.d configuration file: cat <<EOF     set superusers=\"<username>\"   password_pbkdf2 <username> <encrypted-password>      EOF     The superuser/user information and password should not be contained in the /etc/grub.d/00_header file as this file could be overwritten in a package update. If there is a requirement to be able to boot/reboot without entering the password, edit /etc/grub.d/10_linux and add --unrestricted to the line CLASS=  Example: CLASS=\"--class gnu-linux --class gnu --class os --unrestricted\" Run the following command to update the grub2 configuration: # update-grub"
     compliance:
       - cis: ["1.5.2"]
       - cis_csc: ["5.1"]
@@ -742,7 +742,7 @@ checks:
       - tsc: ["CC6.4"]
     condition: none
     rules:
-      - 'f:/etc/issue.net -> r:\\v|\\r|\\m|\\s'
+      - 'f:/etc/issue.net -> r:\\v|\\r|\\m|\\s|Debian|Ubuntu'
 
   - id: 3109 
     title: "Ensure permissions on /etc/motd are configured"
@@ -918,7 +918,7 @@ checks:
       - tsc: ["CC5.2"]
     condition: all
     rules:
-      - 'f:/etc/chrony.conf -> r:^server\.+$|^pool\.+$'
+      - 'f:/etc/chrony/chrony.conf -> r:^server\.+|^pool\.+'
 
   - id: 3128
     title: "Ensure ntp is configured"
@@ -937,8 +937,7 @@ checks:
     rules:
       - 'f:/etc/ntp.conf -> r:^restrict\s+-4\s+default|^restrict\s+default && r:\s+kod\s+ && r:\s+nomodify\s+ && r:\s+notrap\s+ && r:\s+nopeer\s+ && r:\s+noquery'
       - 'f:/etc/ntp.conf -> r:^restrict\s+-6\s+default && r:\s+kod\s+ && r:\s+nomodify\s+ && r:\s+notrap\s+ && r:\s+nopeer\s+ && r:\s+noquery'
-      - 'f:/etc/ntp.conf -> r:^server\.+$|^pool\.+$'
-      - 'f:/etc/ntp.conf -> r:^server\s\.+'
+      - 'f:/etc/ntp.conf -> r:^server\.+|^pool\.+'
       - 'f:/etc/init.d/ntp -> r:^RUNASUSER\s*\t*=\s*\t*ntp'
 
 # 2.2.2 Ensure the X Window system is not installed (Scored)
@@ -3383,4 +3382,3 @@ checks:
     condition: none
     rules:
       - 'f:/etc/group -> !r:^# && r:shadow:\w*:\w*:\S+'
-
