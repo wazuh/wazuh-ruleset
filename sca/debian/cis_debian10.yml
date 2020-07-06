@@ -457,7 +457,7 @@ checks:
 
   - id: 4005
     title: "Ensure sudo commands use pty"
-    description: "sudo can be configured to run only froma p seudo-pty"
+    description: "sudo can be configured to run only froma pseudo-pty"
     rationale: "Attackers can run a malicious program using sudo, which would again fork a background process that remains even when the main program has finished executing."
     remediation: "edit the file /etc/sudoers or a file in /etc/sudoers.d/ with visudo -f and add the following line: Defaults use_pty"
     compliance:
@@ -492,7 +492,7 @@ checks:
     title: "Ensure AIDE is installed"
     description: "AIDE takes a snapshot of filesystem state including modification times, permissions, and file hashes which can then be used to compare against the current state of the filesystem to detect modifications to the system."
     rationale: "By monitoring the filesystem state compromised files can be detected to prevent or limit the exposure of accidental or malicious misconfigurations or modified binaries."
-    remediation: "Install AIDE: # apt install aide aide-common. Configure AIDE as appropriate for your environment. Consult the AIDE documentation for options. Initialize AIDE: # aideinit"
+    remediation: "Install AIDE: # apt install aide aide-common. Configure AIDE as appropriate for your environment. Consult the AIDE documentation for options. Initialize AIDE: # aideinit .  Notes: The prelinking feature can interfere with AIDE because it alters binaries to speed up their start up times. Run prelink -ua to restore the binaries to their prelinked state, thus avoiding false positives from AIDE."
     compliance:
       - cis: ["1.4.1"]
       - cis_csc: ["14.9"]
@@ -3375,4 +3375,3 @@ checks:
     condition: none
     rules:
       - 'f:/etc/group -> !r:^# && r:shadow:\w*:\w*:\S+'
-
