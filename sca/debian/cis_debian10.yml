@@ -1691,6 +1691,26 @@ checks:
       - 'c:ufw status verbose -> r:^Default && r:deny\W+(outgoing)|reject\W+(outgoing)'
       - 'c:ufw status verbose -> r:^Default && r:deny\W+(routed)|reject\W+(routed)'
 
+# 3.5.2.3 Ensure loopback traffic is configured (Scored)
+  - id: 2750 
+    title: "Ensure loopback traffic is configured"
+    description: "Configure the loopback interface to accept traffic. Configure all other interfaces to deny traffic to the loopback network (127.0.0.0/8 for IPv4 and ::1/128 for IPv6)."
+    rationale: "Loopback traffic is generated between processes on machine and is typically critical to operation of the system. The loopback interface is the only place that loopback network traffic should be seen, all other interfaces should ignore traffic on this network as an anti-spoofing measure."
+    remediation: "Run the following commands to implement the loopback rules: # ufw allow in on lo # ufw allow out on lo # sudo ufw deny in from 127.0.0.0/8 # sudo ufw deny in from ::1"
+    compliance:
+      - cis: ["3.5.2.3"]
+      - cis_csc: ["9.4"]
+      - pci_dss: ["1.2.1"]
+      - tsc: ["CC8.1"]
+    condition: all
+    rules:
+      - 'c:ufw status verbose -> r:Anywhere on lo\s*\t*ALLOW IN\s*\t*Anywhere'
+      - 'c:ufw status verbose -> r:Anywhere\s*\t*DENY IN\s*\t*127.0.0.0/8'
+      - 'c:ufw status verbose -> r:Anywhere \(v6\) on lo\s*\t*ALLOW IN\s*\t*Anywhere \(v6\)'
+      - 'c:ufw status verbose -> r:Anywhere \(v6\)\s*\t*DENY IN\s*\t*::1'
+      - 'c:ufw status verbose -> r:Anywhere\s*\t*ALLOW OUT\s*\t*Anywhere on lo'
+      - 'c:ufw status verbose -> r:Anywhere \(v6\)\s*\t*ALLOW OUT\s*\t*Anywhere \(v6\) on lo'
+
 ######################################################################
 # 3.5.3 Configure nftables
 ######################################################################
@@ -1767,7 +1787,7 @@ checks:
 #######################################################################
 # 3.5.4.1.1 Ensure default deny firewall policy (Scored)
   - id: 2600 
-    title: "Configure IPv4 iptables"
+    title: "Ensure default deny firewall policy"
     description: "A default deny all policy on connections ensures that any unconfigured network usage will be rejected."
     rationale: "With a default accept policy the firewall will accept any packet that is not configured to be denied. It is easier to white list acceptable usage than to black list unacceptable usage."
     remediation: "Run the following commands to implement a default DROP policy: # iptables -P INPUT DROP; # iptables -P OUTPUT DROP; # iptables -P FORWARD DROP"
