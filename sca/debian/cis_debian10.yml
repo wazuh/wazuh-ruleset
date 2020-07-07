@@ -2443,7 +2443,7 @@ checks:
       - gdpr_IV: ["35.7","32.2"]
     condition: all
     rules:
-      - 'c:stat /etc/crontab -> r:^Access: \(0600/-rw-------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
+      - 'c:stat /etc/crontab -> r:^Access: \(0\d00/-\w\w\w------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
 
 
 # 5.1.3 Ensure permissions on /etc/cron.hourly are configured (Scored)
@@ -2458,10 +2458,9 @@ checks:
       - pci_dss: ["2.2.4"]
       - nist_800_53: ["CM.1"]
       - tsc: ["CC5.2"]
-
     condition: all
     rules:
-      - 'c:stat /etc/cron.hourly -> r:^Access: \(0700/drwx------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
+      - 'c:stat /etc/cron.hourly -> r:^Access: \(0\d00/\w\w\w\w------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
 
 # 5.1.4 Ensure permissions on /etc/cron.daily are configured (Scored)
   - id: 2637 
@@ -2477,7 +2476,7 @@ checks:
       - tsc: ["CC5.2"]
     condition: all
     rules:
-      - 'c:stat /etc/cron.daily -> r:^Access: \(0700/drwx------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
+      - 'c:stat /etc/cron.daily -> r:^Access: \(0\d00/\w\w\w\w------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
 
 # 5.1.5 Ensure permissions on /etc/cron.weekly are configured (Scored)
   - id: 2638 
@@ -2493,7 +2492,7 @@ checks:
       - tsc: ["CC5.2"]
     condition: all
     rules:
-      - 'c:stat /etc/cron.weekly -> r:^Access: \(0700/drwx------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
+      - 'c:stat /etc/cron.weekly -> r:^Access: \(0\d00/\w\w\w\w------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
 
 
 # 5.1.6 Ensure permissions on /etc/cron.monthly are configured (Scored)
@@ -2510,7 +2509,7 @@ checks:
       - tsc: ["CC5.2"]
     condition: all
     rules:
-      - 'c:stat /etc/cron.monthly -> r:^Access: \(0700/drwx------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
+      - 'c:stat /etc/cron.monthly -> r:^Access: \(0\d00/\w\w\w\w------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
 
 # 5.1.7 Ensure permissions on /etc/cron.d are configured (Scored)
   - id: 2640 
@@ -2526,7 +2525,7 @@ checks:
       - tsc: ["CC5.2"]
     condition: all
     rules:
-      - 'c:stat /etc/cron.d -> r:^Access: \(0700/drwx------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
+      - 'c:stat /etc/cron.d -> r:^Access: \(0\d00/\w\w\w\w------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
 
 # 5.1.8 Ensure at/cron is restricted to authorized users (Scored)
   - id: 2641 
@@ -2546,8 +2545,8 @@ checks:
       - 'f:/etc/at.allow'
       - 'not f:/etc/cron.deny'
       - 'not f:/etc/at.deny'
-      - 'c:stat -c%u-%g-%a /etc/cron.allow -> r:^0-0-640'
-      - 'c:stat -c%u-%g-%a /etc/at.allow -> r:^0-0-640'
+      - 'c:stat /etc/cron.allow -> r:^Access: \(0\d\d0/\w\w\w\w\w-----\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
+      - 'c:stat /etc/at.allow -> r:^Access: \(0\d\d0/\w\w\w\w\w-----\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
 
 ######################################################
 # 5.2 SSH Server Configuration
@@ -2566,7 +2565,7 @@ checks:
       - tsc: ["CC5.2"]
     condition: all
     rules:
-      - 'c:stat -c%u-%g-%a /etc/ssh/sshd_config -> r:^0-0-600'
+      - 'c:stat /etc/ssh/sshd_config -> r:^Access: \(0\d00/\w\w\w\w------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
 
 # 5.2.2 Ensure permissions on SSH private host key files are configured (Scored)
   - id: 2643 
@@ -2582,9 +2581,9 @@ checks:
       - tsc: ["CC5.2"]
     condition: all
     rules:
-      - 'c:stat /etc/ssh/ssh_host_rsa_key -> r:^Access: \(0600/-rw-------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
-      - 'c:stat /etc/ssh/ssh_host_ecdsa_key -> r:^Access: \(0600/-rw-------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
-      - 'c:stat /etc/ssh/ssh_host_ed25519_key -> r:^Access: \(0600/-rw-------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
+      - 'c:stat /etc/ssh/ssh_host_rsa_key -> r:^Access: \(0\d00/-\w\w\w------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
+      - 'c:stat /etc/ssh/ssh_host_ecdsa_key -> r:^Access: \(0\d00/-\w\w\w------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
+      - 'c:stat /etc/ssh/ssh_host_ed25519_key -> r:^Access: \(0\d00/-\w\w\w------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
 
 # 5.2.3 Ensure permissions on SSH public host key files are configured (Scored)
   - id: 2644 
@@ -2600,9 +2599,9 @@ checks:
       - tsc: ["CC5.2"]
     condition: all
     rules:
-      - 'c:stat /etc/ssh/ssh_host_rsa_key.pub -> r:^Access: \(0644/-rw-r--r--\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
-      - 'c:stat /etc/ssh/ssh_host_ecdsa_key.pub -> r:^Access: \(0644/-rw-r--r--\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
-      - 'c:stat /etc/ssh/ssh_host_ed25519_key.pub -> r:^Access: \(0644/-rw-r--r--\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
+      - 'c:stat /etc/ssh/ssh_host_rsa_key.pub -> r:^Access: \(0\d\d\d/-\w\w\w\w--\w--\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
+      - 'c:stat /etc/ssh/ssh_host_ecdsa_key.pub -> r:^Access: \(0\d\d\d/-\w\w\w\w--\w--\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
+      - 'c:stat /etc/ssh/ssh_host_ed25519_key.pub -> r:^Access: \(0\d\d\d/-\w\w\w\w--\w--\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
 
 # 5.2.4 Ensure SSH Protocol is not set to 1 (Scored)
   - id: 2645 
@@ -2673,7 +2672,7 @@ checks:
       - tsc: ["CC5.2"]
     condition: all
     rules:
-      - 'c:sshd -T -> !r:^# && n:^MaxAuthTries\s*\t*(\d+) compare <= 4'
+      - 'c:sshd -T -> n:^MaxAuthTries\s*\t*(\d+) compare <= 4'
 
 # 5.2.8 Ensure SSH IgnoreRhosts is enabled (Scored)
   - id: 2649 
@@ -2690,7 +2689,7 @@ checks:
       - tsc: ["CC6.7"]
     condition: all
     rules:
-      - 'c:sshd -T -> !r:^# && r:IgnoreRhosts\s+yes'
+      - 'c:sshd -T -> r:IgnoreRhosts\s+yes'
 
 # 5.2.9 Ensure SSH HostbasedAuthentication is disabled (Scored)
   - id: 2650 
@@ -2707,7 +2706,7 @@ checks:
       - tsc: ["CC6.7"]
     condition: all
     rules:
-      - 'c:sshd -T -> !r:^# && r:HostbasedAuthentication\s+no'
+      - 'c:sshd -T -> r:HostbasedAuthentication\s+no'
 
 # 5.2.10 Ensure SSH root login is disabled (Scored)
   - id: 2651 
@@ -2724,7 +2723,7 @@ checks:
       - tsc: ["CC6.7"]
     condition: all
     rules:
-      - 'c:sshd -T -> !r:^# && r:PermitRootLogin\s+no'
+      - 'c:sshd -T -> r:PermitRootLogin\s+no'
 
 # 5.2.11 Ensure SSH PermitEmptyPasswords is disabled (Scored)
   - id: 2652 
@@ -2741,7 +2740,7 @@ checks:
       - tsc: ["CC6.7"]
     condition: all
     rules:
-      - 'c:sshd -T -> !r:^# && r:PermitEmptyPasswords\s+no'
+      - 'c:sshd -T -> r:PermitEmptyPasswords\s+no'
 
 # 5.2.12 Ensure SSH PermitUserEnvironment is disabled (Scored)
   - id: 2653 
@@ -2758,7 +2757,7 @@ checks:
       - tsc: ["CC6.7", "CC6.1", "CC7.2"]
     condition: all
     rules:
-      - 'c:sshd -T -> !r:^# && r:PermitUserEnvironment\s+no'
+      - 'c:sshd -T -> r:PermitUserEnvironment\s+no'
 
 # 5.2.13 Ensure only strong Ciphers are used (Scored)
   - id: 2654 
@@ -2776,6 +2775,8 @@ checks:
     reference:
       - 'https://nvd.nist.gov/vuln/detail/CVE-2016-2183'
       - 'https://nvd.nist.gov/vuln/detail/CVE-2015-2808'
+      - 'https://www.kb.cert.org/vuls/id/565052'
+      - 'https://www.openssh.com/txt/cbc.adv'
       - 'https://nvd.nist.gov/vuln/detail/CVE-2008-5161'
       - 'https://nvd.nist.gov/vuln/detail/CVE-2013-4548'
       - 'https://www.kb.cert.org/vuls/id/565052'
@@ -2789,7 +2790,7 @@ checks:
     title: "Ensure only strong MAC algorithms are used"
     description: "This variable limits the types of MAC algorithms that SSH can use during communication."
     rationale: "MD5 and 96-bit MAC algorithms are considered weak and have been shown to increase exploitability in SSH downgrade attacks. Weak algorithms continue to have a great deal of attention as a weak spot that can be exploited with expanded computing power. An attacker that breaks the algorithm could take advantage of a MiTM position to decrypt the SSH tunnel and capture credentials and information" 
-    remediation: "Edit the /etc/ssh/sshd_config file and add/modify the MACs line to contain a comma separated list of the site approved MACs Example: MACs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,hmac-sha2- 512,hmac-sha2-256"
+    remediation: "Edit the /etc/ssh/sshd_config file and add/modify the MACs line to contain a comma separated list of the site approved MACs Example: MACs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,hmac-sha2-512,hmac-sha2-256"
     compliance:
       - cis: ["5.2.14"]
       - cis_csc: ["14.4","16.5"]
@@ -2808,7 +2809,7 @@ checks:
     title: "Ensure only strong Key Exchange algorithms are used"
     description: "Key exchange is any method in cryptography by which cryptographic keys are exchanged between two parties, allowing use of a cryptographic algorithm. If the sender and receiver wish to exchange encrypted messages, each must be equipped to encrypt messages to be sent and decrypt messages received"
     rationale: "Key exchange methods that are considered weak should be removed. A key exchange method may be weak because too few bits are used, or the hashing algorithm is considered too weak. Using weak algorithms could expose connections to man-in-the-middle attacks" 
-    remediation: "Edit the /etc/ssh/sshd_config file add/modify the KexAlgorithms line to contain a comma separated list of the site approved key exchange algorithms Example: KexAlgorithms curve25519-sha256,curve25519-sha256@libssh.org,diffie-hellman- group14-sha256,diffie-hellman-group16-sha512,diffie-hellman-group18- sha512,ecdh-sha2-nistp521,ecdh-sha2-nistp384,ecdh-sha2-nistp256,diffie- hellman-group-exchange-sha256"
+    remediation: "Edit the /etc/ssh/sshd_config file add/modify the KexAlgorithms line to contain a comma separated list of the site approved key exchange algorithms Example: KexAlgorithms curve25519-sha256,curve25519-sha256@libssh.org,diffie-hellman-group14-sha256,diffie-hellman-group16-sha512,diffie-hellman-group18-sha512,ecdh-sha2-nistp521,ecdh-sha2-nistp384,ecdh-sha2-nistp256,diffie-hellman-group-exchange-sha256"
     compliance:
       - cis: ["5.2.15"]
       - cis_csc: ["14.4"]
@@ -2832,8 +2833,8 @@ checks:
       - pci_dss: ["12.3.8"]
     condition: all
     rules:
-      - 'f:/etc/ssh/sshd_config -> !r:^# && n:ClientAliveInterval\s*\t*(\d+) compare <= 300 && n:ClientAliveInterval\s*\t*(\d+) compare != 0'
-      - 'f:/etc/ssh/sshd_config -> !r:^# && n:ClientAliveCountMax\s*\t*(\d+) compare <= 3'
+      - 'c:sshd -T -> n:ClientAliveInterval\s*\t*(\d+) compare <= 300 && n:ClientAliveInterval\s*\t*(\d+) compare != 0'
+      - 'c:sshd -T -> n:ClientAliveCountMax\s*\t*(\d+) compare <= 3'
 
 # 5.2.17 Ensure SSH LoginGraceTime is set to one minute or less (Scored)
   - id: 2658 
@@ -2848,7 +2849,7 @@ checks:
       - tsc: ["CC6.1"]
     condition: all
     rules:
-      - 'c:sshd -T -> r:logingracetime && n:LoginGraceTime\s*\t*(\d+) compare <= 60'
+      - 'c:sshd -T -> n:LoginGraceTime\s*\t*(\d+) compare <= 60 && n:LoginGraceTime\s*\t*(\d+) compare != 0'
 
 # 5.2.18 Ensure SSH access is limited (Scored)
   - id: 2659 
@@ -2863,7 +2864,7 @@ checks:
       - tsc: ["CC6.1"]
     condition: all
     rules:
-      - 'f:/etc/ssh/sshd_config -> !r:^# && r:AllowUsers\s+\w+|AllowGroups\s+\w+|DenyUsers\s+\w+|DenyGroups\s+\w+'
+      - 'c:sshd -T -> r:AllowUsers\s+\w+|AllowGroups\s+\w+|DenyUsers\s+\w+|DenyGroups\s+\w+'
 
 # 5.2.19 Ensure SSH warning banner is configured (Scored)
   - id: 2660 
@@ -2879,7 +2880,7 @@ checks:
       - tsc: ["CC5.2"]
     condition: all
     rules:
-      - 'f:/etc/ssh/sshd_config -> !r:^# && r:Banner\s*\t*/etc/issue.net|Banner\s\t*/etc/issue'
+      - 'c:sshd -T -> r:Banner\s*\t*/etc/issue.net'
 
 # 5.2.20 Ensure SSH PAM is enabled (Scored)
   - id: 2661 
@@ -2918,6 +2919,18 @@ checks:
       - 'c:sshd -T -> r:^\s*AllowTcpForwarding\s+no'
 
 
+  - id: 6419 
+    title: "Ensure SSH MaxStartups is configured"
+    description: "The MaxStartups parameter specifies the maximum number of concurrent unauthenticated connections to the SSH daemon."
+    rationale: "To protect a system from denial of service due to a large number of pending authentication connection attempts, use the rate limiting function of MaxStartups to protect availability of sshd logins and prevent overwhelming the daemon."
+    remediation: "Edit the /etc/ssh/sshd_config file to set the parameter as follows: maxstartups 10:30:60"
+    compliance:
+      - cis: ["5.2.22"]
+      - cis_csc: ["5.1"]
+    condition: all
+    rules:
+      - 'c:sshd -T -> r:^\s*maxstartups\s+10:30:60'
+
 # 5.2.23 Ensure SSH MaxSessions is limited (Scored)
   - id: 2663 
     title: "Ensure SSH MaxSessions is limited"
@@ -2950,13 +2963,8 @@ checks:
       - tsc: ["CC6.1"]
     condition: all
     rules:
-      - 'c:dpkg -s libpam-pwquality -> r:install ok installed'
-      - 'f:/etc/pam.d/common-password -> !r:^# && r:password\s*\t*requisite\s*\t*pam_pwquality.so\s*\t*retry=\d'
       - 'f:/etc/security/pwquality.conf -> !r:^# && n:minlen\s*\t*=\s*\t*(\d+) compare >= 14'
-      - 'f:/etc/security/pwquality.conf -> !r:^# && r:dcredit'
-      - 'f:/etc/security/pwquality.conf -> !r:^# && r:ucredit'
-      - 'f:/etc/security/pwquality.conf -> !r:^# && r:ocredit'
-      - 'f:/etc/security/pwquality.conf -> !r:^# && r:lcredit'
+      - 'f:/etc/pam.d/common-password -> !r:^# && n:password\s*\t*requisite\s*\t*pam_pwquality.so\s*\t*retry=(\d+) compare <=3'
 
 # 5.3.2 Ensure lockout for failed password attempts is configured (Scored)
   - id: 2665 
@@ -2971,8 +2979,8 @@ checks:
       - tsc: ["CC6.1"]
     condition: all
     rules:
-      - 'f:/etc/pam.d/common-auth -> !r:^# && r:auth\s*\t*required\s*\t*pam_tally2.so && r:onerr=fail && r:audit && r:silent && r:deny\s*=\s*\d && r:unlock_time\s*=\s*\d\d\d+'
-      - 'f:/etc/pam.d/common-account -> r:pam_tally2.so'
+      - 'f:/etc/pam.d/common-auth -> !r:^# && r:auth\s*\t*required\s*\t*pam_tally2.so && r:onerr=fail && r:audit && r:silent && r:deny\s*=\s*\d+ && r:unlock_time\s*=\s*\d+'
+      - 'f:/etc/pam.d/common-account -> !r:^# && r:pam_tally2.so'
 
 # 5.3.3 Ensure password reuse is limited (Scored)
   - id: 2666 
@@ -2985,9 +2993,10 @@ checks:
       - cis_csc: ["16"]
       - pci_dss: ["8.2.5"]
       - tsc: ["CC6.1"]
-    condition: all
+    condition: none
     rules:
-      - 'f:/etc/pam.d/common-password -> !r:^# && r:password\s*\t*required\s*\t*pam_pwhistory.so && n:remember\s*\t*=\s*\t*(\d+) compare >= 5'
+      - 'f:/etc/pam.d/common-password -> !r:^# && r:password\s*\t*required\s*\t*pam_pwhistory.so && n:remember\s*\t*=\s*\t*(\d+) compare < 5'
+      - 'f:/etc/pam.d/common-password -> !r:^# && r:password\s*\t*required\s*\t*pam_pwhistory.so && !r:remember'
 
 # 5.3.4 Ensure password hashing algorithm is SHA-512 (Scored)
   - id: 2667 
@@ -3000,9 +3009,9 @@ checks:
       - cis_csc: ["16.14"]
       - pci_dss: ["3.6.1","8.2.1"]
       - tsc: ["CC6.1","CC6.7"]
-    condition: all
+    condition: none
     rules:
-      - 'f:/etc/pam.d/common-password -> r:^password\.+pam_unix.so\.+sha512'
+      - 'f:/etc/pam.d/common-password -> r:^password\.+pam_unix.so && !r:sha512'
 
 ####################################################
 # 5.4 User Accounts and Environment
@@ -3024,6 +3033,7 @@ checks:
     condition: all
     rules:
       - 'f:/etc/login.defs -> n:^\s*\t*PASS_MAX_DAYS\s*\t*(\d+) compare <= 365'
+      - 'not f:/etc/login.defs -> n:^\s*\t*PASS_MAX_DAYS\s*\t*(\d+) compare < 0'
 
 # 5.4.1.2 Ensure minimum days between password changes is configured
   - id: 2669 
@@ -3038,7 +3048,7 @@ checks:
       - tsc: ["CC6.1"]
     condition: all
     rules:
-      - 'f:/etc/login.defs -> n:^\s*\t*PASS_MIN_DAYS\s*\t*(\d+) compare >= 7'
+      - 'f:/etc/login.defs -> n:^\s*\t*PASS_MIN_DAYS\s*\t*(\d+) compare >= 1'
 
 # 5.4.1.3 Ensure password expiration warning days is 7 or more (Scored)
   - id: 2670 
@@ -3069,6 +3079,7 @@ checks:
     condition: all
     rules:
       - 'c:useradd -D -> n:^INACTIVE=(\d+) compare <= 30'
+      - 'not c:useradd -D -> n:^INACTIVE=(\d+) compare < 0'
 
 # 5.4.3 Ensure default group for the root account is GID 0 (Scored)
   - id: 2672 
@@ -3098,9 +3109,13 @@ checks:
       - tsc: ["CC6.1"]
     condition: none
     rules:
-      - 'f:/etc/bash.bashrc -> n:^\s*\t*umask\s+(\d+) compare >= 027'
-      - 'f:/etc/profile -> n:^\s*\t*umask\s+(\d+) compare >= 027'
-      - 'd:/etc/profile.d -> .sh -> n:^\s*\t*umask\s+(\d+) compare >= 027'
+      - 'f:/etc/bash.bashrc -> !r:^\s*\t*# && r:umask \d0\d|umask \d1\d|umask \d4\d|umask \d5\d'
+      - 'f:/etc/bash.bashrc -> !r:^\s*\t*# && n:umask \d\d(\d) compare != 7'
+      - 'f:/etc/profile -> !r:^\s*\t*# && r:umask \d0\d|umask \d1\d|umask \d4\d|umask \d5\d'
+      - 'f:/etc/profile -> !r:^\s*\t*# && n:umask \d\d(\d) compare != 7'
+      - 'd:/etc/profile.d -> .sh -> !r:^\s*\t*# && r:umask \d0\d|umask \d1\d|umask \d4\d|umask \d5\d'
+      - 'd:/etc/profile.d -> .sh -> !r:^\s*t*# && n:umask \d\d(\d) compare != 7'
+
 
 
 # 5.4.5 Ensure default user shell timeout is 900 seconds or less (Scored)
@@ -3115,9 +3130,12 @@ checks:
       - pci_dss: ["12.3.8"]
     condition: all
     rules:
-      - 'f:/etc/bash.bashrc -> !r:^# && n:TMOUT\s*=\s*(\d+) compare <= 900'
-      - 'f:/etc/profile -> !r:^# && n:TMOUT\s*=\s*(\d+) compare <= 900'
-      - 'd:/etc/profile.d -> .sh -> !r:^# && n:TMOUT\s*=\s*(\d+) compare <= 900'
+      - 'not d:/etc/profile.d -> .sh -> r:^\s*\t*readonly && n:TMOUT\s*\t*=\s*\t*(\d+) compare > 900'
+      - 'not f:/etc/bash.bashrc -> r:^\s*\t*readonly && n:TMOUT\s*\t*=\s*\t*(\d+) compare > 900'
+      - 'not f:/etc/profile -> r:^\s*\t*readonly && n:TMOUT\s*\t*=\s*\t*(\d+) compare > 900'
+      - 'd:/etc/profile.d -> .sh -> r:^\s*\t*readonly && n:TMOUT\s*\t*=\s*\t*(\d+) compare <= 900'
+      - 'f:/etc/bash.bashrc -> r:^\s*\t*readonly && n:TMOUT\s*\t*=\s*\t*(\d+) compare <= 900'
+      - 'f:/etc/profile -> r:^\s*\t*readonly && n:TMOUT\s*\t*=\s*\t*(\d+) compare <= 900'
 
 # 5.6 Ensure access to the su command is restricted (Scored)
   - id: 2675 
@@ -3136,9 +3154,7 @@ checks:
       - gdpr_IV: ["35.7","32.2"]
     condition: all
     rules:
-      - 'f:/etc/pam.d/su -> !r:^# && r:auth\s*\t*required\s*\t*pam_wheel.so'
-      - 'f:/etc/group -> !r:^# && r:sudo:\w+:\d+:\.'
-
+      - 'f:/etc/pam.d/su -> !r:^# && r:auth\s*\t*required\s*\t*pam_wheel.so && r:use_uid && r:group='
 
 ############################################################
 # 6 System Maintenance
@@ -3177,7 +3193,7 @@ checks:
       - tsc: ["CC5.2"]
     condition: all
     rules:
-     - 'c:stat -c%u-%g-%a /etc/gshadow- -> n:0-42-6(\d)0 compare <= 4'
+      - 'c:stat /etc/gshadow- -> r:Access:\s*\(0\d\d0/-\w\w-\w-----\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*\d+/\s*\t*shadow\)|Access:\s*\(0\d\d0/-\w\w-\w-----\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*0/\s*\t*root\)'
 
 # 6.1.4 Ensure permissions on /etc/shadow are configured (Scored)
   - id: 2678 
@@ -3193,7 +3209,7 @@ checks:
       - tsc: ["CC5.2"]
     condition: all
     rules:
-      - 'c:stat -c%u-%g-%a /etc/shadow -> n:0-42-6(\d)0 compare <= 4'
+      - 'c:stat /etc/shadow -> r:Access:\s*\(0\d\d0/-\w\w-\w-----\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*\d+/\s*\t*shadow\)'
 
 # 6.1.5 Ensure permissions on /etc/group are configured (Scored)
   - id: 2679 
@@ -3225,7 +3241,7 @@ checks:
       - tsc: ["CC5.2"]
     condition: all
     rules:
-      - 'c:stat /etc/passwd- -> r:Access:\s*\(0644/-rw-r--r--\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*0/\s*\t*root\)|Access:\s*\(0640/-rw-r-----\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*0/\s*\t*root\)|Access:\s*\(0604/-rw----r--\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*0/\s*\t*root\)|Access:\s*\(0600/-rw-------\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*0/\s*\t*root\)'
+      - 'c:stat /etc/passwd- -> r:Access:\s*\(0\d00/-\w\w-------\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*0/\s*\t*root\)'
 
 # 6.1.7 Ensure permissions on /etc/shadow- are configured (Scored)
   - id: 2681 
@@ -3241,7 +3257,7 @@ checks:
       - tsc: ["CC5.2"]
     condition: all
     rules:
-      - 'c:stat -c%u-%g-%a /etc/shadow- -> n:0-42-6(\d)0 compare <= 4'
+      - 'c:stat /etc/shadow- -> r:Access:\s*\(0\d\d0/-\w\w-\w-----\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*\d+/\s*\t*shadow\)|Access:\s*\(0\d\d0/-\w\w-\w-----\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*0/\s*\t*root\)'
 
 # 6.1.8 Ensure permissions on /etc/group- are configured (Scored)
   - id: 2682 
@@ -3257,7 +3273,7 @@ checks:
       - tsc: ["CC5.2"]
     condition: all
     rules:
-      - 'c:stat /etc/group- -> r:Access:\s*\(0644/-rw-r--r--\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*0/\s*\t*root\)|Access:\s*\(0640/-rw-r-----\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*0/\s*\t*root\)|Access:\s*\(0604/-rw----r--\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*0/\s*\t*root\)|Access:\s*\(0600/-rw-------\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*0/\s*\t*root\)'
+      - 'c:stat /etc/group- -> r:Access:\s*\(0\d00/-\w\w-------\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*0/\s*\t*root\)'
 
 # 6.1.9 Ensure permissions on /etc/gshadow are configured (Scored)
   - id: 2683 
@@ -3273,7 +3289,7 @@ checks:
       - tsc: ["CC5.2"]
     condition: all
     rules:
-      - 'c:stat -c%u-%g-%a /etc/gshadow -> n:0-42-6(\d)0 compare <= 4'
+      - 'c:stat /etc/gshadow -> r:Access:\s*\(0\d\d0/-\w\w-\w-----\)\s*Uid:\s*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\(\s*\t*\d+/\s*\t*shadow\)'
 
 ####################################################
 # 6.2 User and Group Settings
