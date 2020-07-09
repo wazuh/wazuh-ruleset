@@ -548,7 +548,7 @@ checks:
       - 'CCE-38258-0'
     condition: all
     rules:
-      - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters -> NullSessionPipes -> r:lsarpc|netlogon|samr'
+      - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters -> NullSessionPipes -> r:lsarpc && r:netlogon && r:samr'
 
   - id: 11029
     title: "Configure 'Network access: Remotely accessible registry paths'"
@@ -610,8 +610,9 @@ checks:
       - tsc: ["CC6.4"]
     references:
       - 'CCE-38095-6'
-    condition: all
+    condition: any
     rules:
+      - 'not r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters -> NullSessionShares'
       - 'not r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters -> NullSessionShares -> r:\.'
   - id: 11033
     title: "Ensure 'Network access: Sharing and security model for local accounts' is set to 'Classic - local users authenticate as themselves'"
@@ -699,7 +700,7 @@ checks:
       - 'CCE-37755-6'
     condition: all
     rules:
-      - 'r:HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\Kerberos\Parameters -> SupportedEncryptionTypes -> 2147483644'
+      - 'r:HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\Kerberos\Parameters -> SupportedEncryptionTypes -> r:r:2147483644|2147483640'
 
   - id: 11038
     title: "Ensure 'Network security: Do not store LAN Manager hash value on next password change' is set to 'Enabled'"
