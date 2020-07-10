@@ -1754,6 +1754,46 @@ checks:
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\mrxsmb10 -> Start -> 4'
 
+  - id: 16095 
+    title: "Ensure 'Configure SMB v1 server' is set to 'Disabled'"
+    description: "This setting configures the server-side processing of the Server Message Block version 1 (SMBv1) protocol. The recommended state for this setting is: Disabled ."
+    rationale: "Since September 2016, Microsoft has strongly encouraged that SMBv1 be disabled and no longer used on modern networks, as it is a 30 year old design that is much more vulnerable to attacks then much newer designs such as SMBv2 and SMBv3."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled : Computer Configuration\\Policies\\Administrative Templates\\MS Security Guide\\Configure SMB v1 server Note: This Group Policy path does not exist by default. An additional Group Policy template ( SecGuide.admx/adml ) is required"
+    compliance:
+      - cis: ["18.3.3"]
+      - cis_csc: ["9.1"]
+      - pci_dss: ["2.2.5"]
+      - tsc: ["CC6.3"]
+    references:
+      - 'https://techcommunity.microsoft.com/t5/storage-at-microsoft/stop-using-smb1/ba-p/425858'
+      - 'https://docs.microsoft.com/en-us/archive/blogs/staysafe/disable-smb-v1-in-managed-environments-with-ad-group-policy'
+      - 'https://docs.microsoft.com/en-us/archive/blogs/secguide/disabling-smbv1-through-group-policy'
+      - 'https://docs.microsoft.com/en-us/archive/blogs/secguide/security-baseline-for-windows-10-creators-update-v1703-final'
+    condition: all
+    rules:
+      - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters -> SMB1 -> 0'
+
+  - id: 16096 
+    title: "Ensure 'Enable Structured Exception Handling Overwrite Protection (SEHOP)' is set to 'Enabled'"
+    description: "Windows includes support for Structured Exception Handling Overwrite Protection (SEHOP). We recommend enabling this feature to improve the security profile of the computer. The recommended state for this setting is: Enabled ."
+    rationale: "This feature is designed to block exploits that use the Structured Exception Handler (SEH) overwrite technique. This protection mechanism is provided at run-time. Therefore, it helps protect applications regardless of whether they have been compiled with the latest improvements, such as the /SAFESEH option."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled : Computer Configuration\\Policies\\Administrative Templates\\MS Security Guide\\Enable Structured Exception Handling Overwrite Protection (SEHOP) Note: This Group Policy path does not exist by default. An additional Group Policy template ( SecGuide.admx/adml ) is required"
+    compliance:
+      - cis: ["18.3.4"]
+      - cis_csc: ["8.4"]
+      - pci_dss: ["6.2"]
+      - nist_800_53: ["SI.2","SA.11","SI.4"]
+      - gpg_13: ["4.3"]
+      - gdpr_IV: ["35.7.d"]
+      - hipaa: ["164.312.b"]
+      - tsc: ["A1.2","CC6.8"]
+    references:
+      - 'https://blogs.technet.microsoft.com/secguide/2017/08/30/security-baseline-for-windows-10-creators-update-v1703-final/'
+      - 'https://support.microsoft.com/en-us/help/956607/how-to-enable-structured-exception-handling-overwrite-protection-sehop'
+    condition: all
+    rules:
+      - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\kernel -> DisableExceptionChainValidation -> 0'
+
   - id: 11084
     title: "Ensure 'WDigest Authentication' is set to 'Disabled'"
     description: "When WDigest authentication is enabled, Lsass.exe retains a copy of the user's plaintext password in memory, where it can be at risk of theft. If this setting is not configured, WDigest authentication is disabled in Windows 8.1 and in Windows Server 2012 R2; it is enabled by default in earlier versions of Windows and Windows Server. The recommended state for this setting is: Disabled."
@@ -2006,6 +2046,22 @@ checks:
 
 # Section 18.5 - Network
 
+  - id: 16108 
+    title: "Ensure 'Turn off multicast name resolution' is set to 'Enabled'"
+    description: "LLMNR is a secondary name resolution protocol. With LLMNR, queries are sent using multicast over a local network link on a single subnet from a client computer to another client computer on the same subnet that also has LLMNR enabled. LLMNR does not require a DNS server or DNS client configuration, and provides name resolution in scenarios in which conventional DNS name resolution is not possible. The recommended state for this setting is: Enabled ."
+    rationale: "An attacker can listen on a network for these LLMNR (UDP/5355) or NBT-NS (UDP/137) broadcasts and respond to them, tricking the host into thinking that it knows the location of the requested system. Note: To completely mitigate local name resolution poisoning, in addition to this setting, the properties of each installed NIC should also be set to Disable NetBIOS over TCP/IP (on the WINS tab in the NIC properties). Unfortunately, there is no global setting to achieve this that automatically applies to all NICs - it is a per-NIC setting that varies with different NIC hardware installations."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled : Computer Configuration\\Policies\\Administrative Templates\\Network\\DNS Client\\Turn off multicast name resolution Note: This Group Policy path may not exist by default. It is provided by the Group Policy template DnsClient.admx/adml that is included with the Microsoft Windows 8.0 & Server 2012 (non-R2) Administrative Templates (or newer)."
+    compliance:
+      - cis: ["18.5.4.2"]
+      - cis_csc: ["9"]
+      - pci_dss: ["2.2.5"]
+      - tsc: ["CC6.3"]
+    references:
+      - 'CCE-37450-4'
+    condition: all
+    rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\DNSClient -> EnableMulticast -> 0'
+
 
   - id: 11505
     title: "Ensure 'Turn on Mapper I/O (LLTDIO) driver' is set to 'Disabled'"
@@ -2094,6 +2150,22 @@ checks:
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Network Connections -> NC_StdDomainUserSetLocation -> 1'
+
+
+
+  - id: 16094
+    title: "Ensure 'Hardened UNC Paths' is set to 'Enabled, with \"Require Mutual Authentication\" and \"Require Integrity\" set for all NETLOGON and SYSVOL shares'"
+    description: "This policy setting configures secure access to UNC paths. The recommended state for this setting is: Enabled, with \"Require Mutual Authentication\" and \"Require Integrity\" set for all NETLOGON and SYSVOL shares ."
+    rationale: "In February 2015, Microsoft released a new control mechanism to mitigate a security risk in Group Policy as part of the MS15-011 / MSKB 3000483 security update. This mechanism requires both the installation of the new security update and also the deployment of specific group policy settings to all computers on the domain from Windows Vista / Server 2008 (non-R2) or newer (the associated security patch to enable this feature was not released for Server 2003). A new group policy template ( NetworkProvider.admx/adml ) was also provided with the security update. Once the new GPO template is in place, the following are the minimum requirements to remediate the Group Policy security risk: \\\\*\\NETLOGON RequireMutualAuthentication=1, RequireIntegrity=1 \\\\*\\SYSVOL RequireMutualAuthentication=1, RequireIntegrity=1"
+    remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled with the following paths configured, at a minimum: \\\\*\\NETLOGON RequireMutualAuthentication=1, RequireIntegrity=1 \\\\*\\SYSVOL RequireMutualAuthentication=1, RequireIntegrity=1 Computer Configuration\\Policies\\Administrative Templates\\Network\\Network Provider\\Hardened UNC Paths Note: This Group Policy path does not exist by default. An additional Group Policy template ( NetworkProvider.admx/adml ) is required"
+    compliance:
+      - cis: ["18.5.14.1"]
+      - cis_csc: ["3"]
+    condition: all
+    rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\NetworkProvider\HardenedPaths -> \\*\NETLOGON -> r:RequireMutualAuthentication=1 && r:RequireIntegrity=1'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\NetworkProvider\HardenedPaths -> \\*\SYSVOL -> r:RequireMutualAuthentication=1 && r:RequireIntegrity=1'
+
 
 # Section 18.5 - Network
   - id: 11508
@@ -2204,6 +2276,22 @@ checks:
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\Audit -> ProcessCreationIncludeCmdLine_Enabled -> 0'
 
+  - id: 16115 
+    title: "Ensure 'Remote host allows delegation of non-exportable credentials' is set to 'Enabled'"
+    description: "Remote host allows delegation of non-exportable credentials. When using credential delegation, devices provide an exportable version of credentials to the remote host. This exposes users to the risk of credential theft from attackers on the remote host. The Restricted Admin Mode and Windows Defender Remote Credential Guard features are two options to help protect against this risk. The recommended state for this setting is: Enabled ."
+    rationale: "Restricted Admin Mode was designed to help protect administrator accounts by ensuring that reusable credentials are not stored in memory on remote devices that could potentially be compromised. Windows Defender Remote Credential Guard helps you protect your credentials over a Remote Desktop connection by redirecting Kerberos requests back to the device that is requesting the connection. Both features should be enabled and supported, as they reduce the chance of credential theft."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled : Computer Configuration\\Policies\\Administrative Templates\\System\\Credentials Delegation\\Remote host allows delegation of non-exportable credentials Note: This Group Policy path may not exist by default. It is provided by the Group Policy template CredSsp.admx/adml that is included with the Microsoft Windows 10 Release 1703 Administrative Templates (or newer)."
+    compliance:
+      - cis: ["18.8.4.1"]
+      - cis_csc: ["16"]
+      - pci_dss: ["8.2.1"]
+      - tsc: ["CC6.1"]
+    references:
+      - 'https://docs.microsoft.com/en-us/windows/access-protection/remote-credential-guard'
+    condition: all
+    rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\CredentialsDelegation -> AllowProtectedCreds -> 1'
+
   - id: 11097
     title: "Ensure 'Boot-Start Driver Initialization Policy' is set to 'Enabled: Good, unknown and bad but critical'"
     description: "This policy setting allows you to specify which boot-start drivers are initialized based on a classification determined by an Early Launch Antimalware boot-start driver. The Early Launch Antimalware boot-start driver can return the following classifications for each boot-start driver: -Good: The driver has been signed and has not been tampered with. -Bad: The driver has been identified as malware. It is recommended that you do not allow known bad drivers to be initialized. -Bad, but required for boot: The driver has been identified as malware, but the computer cannot successfully boot without loading this driver. -Unknown: This driver has not been attested to by your malware detection application and has not been classified by the Early Launch Antimalware boot-start driver. If you enable this policy setting you will be able to choose which boot-start drivers to initialize the next time the computer is started. If your malware detection application does not include an Early Launch Antimalware boot- start driver or if your Early Launch Antimalware boot-start driver has been disabled, this setting has no effect and all boot-start drivers are initialized. The recommended state for this setting is: Enabled: Good, unknown and bad but critical."
@@ -2269,7 +2357,7 @@ checks:
       - 'CCE-37712-7'
     condition: all
     rules:
-      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System -> DisableBkGndGroupPolicy -> 0'
+      - 'not r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System -> DisableBkGndGroupPolicy'
 
 # Section 18.8 - System
   - id: 11101
@@ -2383,7 +2471,7 @@ checks:
       - 'CCE-36352-3'
     condition: all
     rules:
-      - 'r:HKEY_LOCAL_MACHINE\Policies\Microsoft\Windows\Registration Wizard Control -> NoRegistration -> 1'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Registration Wizard Control -> NoRegistration -> 1'
 
 
   - id: 11515
@@ -2565,6 +2653,20 @@ checks:
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System -> DisableLockScreenAppNotifications -> 1'
+
+  - id: 16129 
+    title: "Ensure 'Turn off picture password sign-in' is set to 'Enabled'"
+    description: "This policy setting allows you to control whether a domain user can sign in using a picture password. The recommended state for this setting is: Enabled . Note: If the picture password feature is permitted, the user's domain password is cached in the system vault when using it."
+    rationale: "Picture passwords bypass the requirement for a typed complex password. In a shared work environment, a simple shoulder surf where someone observed the on-screen gestures would allow that person to gain access to the system without the need to know the complex password. Vertical monitor screens with an image are much more visible at a distance than horizontal key strokes, increasing the likelihood of a successful observation of the mouse gestures."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled : Computer Configuration\\Policies\\Administrative Templates\\System\\Logon\\Turn off picture password sign-in Note: This Group Policy path may not exist by default. It is provided by the Group Policy  template CredentialProviders.admx/adml that is included with the Microsoft Windows 8.0 & Server 2012 (non-R2) Administrative Templates (or newer)."
+    compliance:
+      - cis: ["18.8.27.5"]
+      - cis_csc: ["16.5"]
+      - pci_dss: ["8.2"]
+      - tsc: ["CC6.1"]
+    condition: all
+    rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System -> BlockDomainPicturePassword -> 1'
 
   - id: 11108
     title: "Ensure 'Turn on convenience PIN sign-in' is set to 'Disabled'"
@@ -2877,6 +2979,24 @@ checks:
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\CredUI -> EnumerateAdministrators -> 0'
+
+
+  - id: 16122
+    title: "Ensure 'Default Action and Mitigation Settings' is set to 'Enabled' (plus subsettings)"
+    description: "This setting configures the default action after detection and advanced ROP mitigation. The recommended state for this setting is: Default Action and Mitigation Settings - Enabled; Deep Hooks - Enabled;  Anti Detours - Enabled; Banned Functions - Enabled; Exploit Action - User Configured"
+    rationale: "These advanced mitigations for ROP mitigations apply to all configured software in EMET: Deep Hooks protects critical APIs and the subsequent lower level APIs used by the top level critical API. Anti Detours renders ineffective exploits that evade hooks by executing a copy of the hooked function prologue and then jump to the function past the prologue. Banned Functions will block calls to ntdll!LdrHotPatchRoutine to mitigate potential exploits abusing the API."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\EMET\\Default Action and Mitigation Settings .Note: This Group Policy path does not exist by default. An additional Group Policy template ( EMET.admx/adml ) is required - it is included with Microsoft Enhanced Mitigation Experience Toolkit (EMET)."
+    compliance:
+      - cis: ["18.9.24.2"]
+      - cis_csc: ["8.4"]
+    references:
+      - 'CCE-38427-1'
+    condition: all
+    rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\EMET\SysSettings -> AntiDetours -> 1'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\EMET\SysSettings -> BannedFunctions -> 1'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\EMET\SysSettings -> DeepHooks -> 1'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\EMET\SysSettings -> ExploitAction -> 2'
 
   - id: 12123
     title: "Ensure 'Application: Control Event Log behavior when the log file reaches its maximum size' is set to 'Disabled'"
