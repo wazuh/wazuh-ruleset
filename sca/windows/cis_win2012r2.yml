@@ -2987,6 +2987,9 @@ checks:
     compliance:
       - cis: ["18.9.24.2"]
       - cis_csc: ["8.4"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
     references:
       - 'CCE-38427-1'
     condition: all
@@ -2995,8 +2998,162 @@ checks:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\EMET\SysSettings -> BannedFunctions -> 1'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\EMET\SysSettings -> DeepHooks -> 1'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\EMET\SysSettings -> ExploitAction -> 2'
+      
+  - id: 16123
+    title: "Ensure 'Default Protections for Internet Explorer' is set to 'Enabled'"
+    description: "This setting determines if recommended EMET mitigations are applied to Internet Explorer. The recommended state for this setting is: Enabled ."
+    rationale: "Applying EMET mitigations to Internet Explorer will help reduce the reliability of exploits that target it."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled : Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\EMET\\Default Protections for Internet Explorer Note: This Group Policy path does not exist by default. An additional Group Policy template ( EMET.admx/adml ) is required - it is included with Microsoft Enhanced Mitigation Experience Toolkit (EMET)."
+    compliance:
+      - cis: ["18.9.24.3"]
+      - cis_csc: ["8.4"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
+    references:
+      - 'CCE-38428-9'
+    condition: all
+    rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\EMET\Defaults -> *\Internet Explorer\iexplore.exe'
 
-  - id: 15169 
+  - id: 16124
+    title: "Ensure 'Default Protections for Popular Software' is set to 'Enabled'"
+    description: "This setting determines if recommended EMET mitigations are applied to the following popular software: 7-Zip; Adobe Photoshop; Foxit Reader; Google Chrome; Google Talk; iTunes; Microsoft Live Writer;Microsoft Lync Communicator ;Microsoft Photo Gallery ;Microsoft SkyDrive; mIRC; Mozilla Firefox; Mozilla Thunderbird; Opera;Pidgin ;QuickTime Player; RealPlayer; Safari; Skype; VideoLAN VLC; Winamp; Windows Live Mail; Windows Media Player; WinRAR; WinZip. The recommended state for this setting is: Enabled ."
+    rationale: "Applying EMET mitigations to popular software packages will help reduce the reliability of exploits that target them."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled : Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\EMET\\Default Protections for Popular Software Note: This Group Policy path does not exist by default. An additional Group Policy template ( EMET.admx/adml ) is required - it is included with Microsoft Enhanced Mitigation Experience Toolkit (EMET)."
+    compliance:
+      - cis: ["18.9.24.4"]
+      - cis_csc: ["8.4"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
+    references:
+      - 'CCE-36750-8'
+    condition: all
+    rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\EMET\Defaults -> *\7-Zip\7z.exe'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\EMET\Defaults -> *\7-Zip\7zFM.exe'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\EMET\Defaults -> *\7-Zip\7zG.exe'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\EMET\Defaults -> *\Adobe\Adobe Photoshop CS*\Photoshop.exe'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\EMET\Defaults -> *\Foxit Reader\Foxit Reader.exe'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\EMET\Defaults -> *\Google\Chrome\Application\chrome.exe'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\EMET\Defaults -> *\Google\Google Talk\googletalk.exe'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\EMET\Defaults -> *\iTunes\iTunes.exe'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\EMET\Defaults -> *\Microsoft Lync\communicator.exe'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\EMET\Defaults -> *\mIRC\mirc.exe'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\EMET\Defaults -> *\Mozilla Firefox\firefox.exe'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\EMET\Defaults -> *\Mozilla Firefox\plugin-container.exe'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\EMET\Defaults -> *\Mozilla Thunderbird\plugin-container.exe'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\EMET\Defaults -> *\Mozilla Thunderbird\thunderbird.exe'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\EMET\Defaults -> *\Opera\*\opera.exe'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\EMET\Defaults -> *\Opera\opera.exe'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\EMET\Defaults -> *\Pidgin\pidgin.exe'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\EMET\Defaults -> *\QuickTime\QuickTimePlayer.exe'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\EMET\Defaults -> *\Real\RealPlayer\realconverter.exe'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\EMET\Defaults -> *\Real\RealPlayer\realplay.exe'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\EMET\Defaults -> *\Safari\Safari.exe'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\EMET\Defaults -> *\SkyDrive\SkyDrive.exe'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\EMET\Defaults -> *\Skype\Phone\Skype.exe'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\EMET\Defaults -> *\VideoLAN\VLC\vlc.exe'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\EMET\Defaults -> *\Winamp\winamp.exe'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\EMET\Defaults -> *\Windows Live\Mail\wlmail.exe'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\EMET\Defaults -> *\Windows Live\Photo Gallery\WLXPhotoGallery.exe'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\EMET\Defaults -> *\Windows Live\Writer\WindowsLiveWriter.exe'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\EMET\Defaults -> *\Windows Media Player\wmplayer.exe'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\EMET\Defaults -> *\WinRAR\rar.exe'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\EMET\Defaults -> *\WinRAR\unrar.exe'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\EMET\Defaults -> *\WinRAR\winrar.exe'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\EMET\Defaults -> *\WinZip\winzip32.exe'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\EMET\Defaults -> *\WinZip\winzip64.exe'
+
+  - id: 16125
+    title: "Ensure 'Default Protections for Recommended Software' is set to 'Enabled'"
+    description: "This setting determines if recommended EMET mitigations are applied to the following software: Adobe Acrobat; Adobe Acrobat Reader; Microsoft Office suite applications; Oracle Java; WordPad. The recommended state for this setting is: Enabled ."
+    rationale: "Applying EMET mitigations to recommended software will help reduce the reliability of exploits that target them."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\EMET\\Default Protections for Recommended Software Note: This Group Policy path does not exist by default. An additional Group Policy template ( EMET.admx/adml ) is required - it is included with Microsoft Enhanced Mitigation Experience Toolkit (EMET)."
+    compliance:
+      - cis: ["18.9.24.5"]
+      - cis_csc: ["8.4"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
+    references:
+      - 'CCE-36515-5'
+    condition: all
+    rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\EMET\Defaults -> *\Adobe\*\Reader\AcroRd32.exe'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\EMET\Defaults -> *\Adobe\Acrobat*\Acrobat\Acrobat.exe'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\EMET\Defaults -> *\Java\jre*\bin\java.exe'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\EMET\Defaults -> *\Java\jre*\bin\javaw.exe'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\EMET\Defaults -> *\Java\jre*\bin\javaws.exe'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\EMET\Defaults -> *\OFFICE1*\EXCEL.EXE'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\EMET\Defaults -> *\OFFICE1*\INFOPATH.EXE'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\EMET\Defaults -> *\OFFICE1*\LYNC.EXE'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\EMET\Defaults -> *\OFFICE1*\MSACCESS.EXE'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\EMET\Defaults -> *\OFFICE1*\MSPUB.EXE'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\EMET\Defaults -> *\OFFICE1*\OIS.EXE'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\EMET\Defaults -> *\OFFICE1*\OUTLOOK.EXE'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\EMET\Defaults -> *\OFFICE1*\POWERPNT.EXE'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\EMET\Defaults -> *\OFFICE1*\PPTVIEW.EXE'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\EMET\Defaults -> *\OFFICE1*\VISIO.EXE'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\EMET\Defaults -> *\OFFICE1*\VPREVIEW.EXE'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\EMET\Defaults -> *\OFFICE1*\WINWORD.EXE'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\EMET\Defaults -> *\Windows NT\Accessories\wordpad.exe'
+
+
+  - id: 16126
+    title: "Ensure 'System ASLR' is set to 'Enabled: Application Opt-In'"
+    description: "This setting determines how applications become enrolled in Address Space Layout Randomization (ASLR). The recommended state for this setting is: Enabled: Application Opt-In ."
+    rationale: "ASLR reduces the predictability of process memory, which in-turn helps reduce the reliability of exploits targeting memory corruption vulnerabilities."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Application Opt-In :Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\EMET\\System ASLR Note: This Group Policy path does not exist by default. An additional Group Policy template ( EMET.admx/adml ) is required - it is included with Microsoft Enhanced Mitigation Experience Toolkit (EMET)."
+    compliance:
+      - cis: ["18.9.24.6"]
+      - cis_csc: ["8.4"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
+    references:
+      - 'CCE-38437-0'
+    condition: all
+    rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\EMET\SysSettings -> ASLR -> 3'
+
+  - id: 16127
+    title: "Ensure 'System DEP' is set to 'Enabled: Application Opt-Out'"
+    description: "This setting determines how applications become enrolled in Data Execution Protection (DEP). The recommended state for this setting is: Enabled: Application Opt-Out ."
+    rationale: "DEP marks pages of application memory as non-executable, which reduces a given exploit's ability to run attacker-controlled code."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Application Opt-Out : Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\EMET\\System DEP Note: This Group Policy path does not exist by default. An additional Group Policy template ( EMET.admx/adml ) is required - it is included with Microsoft Enhanced Mitigation Experience Toolkit (EMET)."
+    compliance:
+      - cis: ["18.9.24.7"]
+      - cis_csc: ["8.4"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
+    references:
+      - 'CCE-38438-8'
+    condition: all
+    rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\EMET\SysSettings -> DEP -> 2'
+
+  - id: 16128
+    title: "Ensure 'System SEHOP' is set to 'Enabled: Application Opt-Out'"
+    description: "This setting determines how applications become enrolled in Structured Exception Handler Overwrite Protection (SEHOP). The recommended state for this setting is: Enabled: Application Opt-Out ."
+    rationale: "When a software component suffers from a memory corruption vulnerability, an exploit may be able to overwrite memory that contains data structures that control how the software handles exceptions. By corrupting these structures in a controlled manner, an exploit may be able to execute arbitrary code. SEHOP verifies the integrity of those structures before they are used to handle exceptions, which reduces the reliability of exploits that leverage structured exception handler overwrites."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Application Opt-Out : Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\EMET\\System SEHOP Note: This Group Policy path does not exist by default. An additional Group Policy template ( EMET.admx/adml ) is required - it is included with Microsoft Enhanced Mitigation Experience Toolkit (EMET)."
+    compliance:
+      - cis: ["18.9.24.7"]
+      - cis_csc: ["8.4"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
+    references:
+      - 'CCE-38438-8'
+    condition: all
+    rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\EMET\SysSettings -> SEHOP -> 2' 
+  
+
+  - id: 15169
     title: "Ensure 'Application: Control Event Log behavior when the log file reaches its maximum size' is set to 'Disabled'"
     description: "This policy setting controls Event Log behavior when the log file reaches its maximum size. The recommended state for this setting is: Disabled. Note: Old events may or may not be retained according to the Backup log automatically when full policy setting."
     rationale: "If new events are not recorded it may be difficult or impossible to determine the root cause of system problems or the unauthorized activities of malicious users."
@@ -3560,7 +3717,60 @@ checks:
 
 
 # Section - 18.9.76.9 - Reporting
-  - id: 15201 
+  
+
+
+  - id: 15142 
+    title: "Ensure 'Configure local setting override for reporting to  Microsoft MAPS' is set to 'Disabled'"
+    description: "This policy setting configures a local override for the configuration to join Microsoft Active Protection Service (MAPS), which Microsoft has now renamed to \"Windows Defender Antivirus Cloud Protection Service\". This setting can only be set by Group Policy. The recommended state for this setting is: Disabled ."
+    rationale: "The decision on whether or not to participate in Microsoft MAPS / Windows Defender Antivirus Cloud Protection Service for malicious software reporting should be made centrally in an enterprise managed environment, so that all computers within it behave consistently in that regard. Configuring this setting to Disabled ensures that the decision remains centrally managed."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled : Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Windows Defender Antivirus\\MAPS\\Configure local setting override for reporting to Microsoft MAPS Note: This Group Policy path may not exist by default. It is provided by the Group Policy template WindowsDefender.admx/adml that is included with the Microsoft Windows 8.1 & Server 2012 R2 Administrative Templates (or newer)."
+    compliance:
+      - cis: ["18.9.76.3.1"]
+      - cis_csc: ["8"]
+      - pci_dss: ["2.2.3"]
+      - nist_800_53: ["CM.1"]
+      - gpg_13: ["4.3"]
+      - gdpr_IV: ["35.7.d"]
+      - hipaa: ["164.312.b"]
+      - tsc: ["CC5.2"]
+    references:
+      - 'CCE-36940-5'
+    condition: all
+    rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\Spynet -> LocalSettingOverrideSpynetReporting -> 0'
+
+
+  - id: 11535
+    title: "Ensure 'Join Microsoft MAPS' is set to 'Disabled'"
+    description: "This policy setting allows you to join Microsoft Active Protection Service (MAPS), which Microsoft has now renamed to 'Windows Defender Antivirus Cloud Protection Service'. Microsoft MAPS / Windows Defender Antivirus Cloud Protection Service is the online community that helps you choose how to respond to potential threats. The community also helps stop the spread of new malicious software infections. You can choose to send basic or additional information about detected software. Additional information helps Microsoft create new definitions and help it to protect your computer. Possible options are: - (0x0) Disabled (default) - (0x1) Basic membership - (0x2) Advanced membership   Basic membership will send basic information to Microsoft about software that has been detected including where the software came from the actions that you apply or that are applied automatically and whether the actions were successful. Advanced membership in addition to basic information will send more information to Microsoft about malicious software spyware and potentially unwanted software including the location of the software file names how the software operates and how it has impacted your computer. The recommended state for this setting is: Disabled."
+    rationale: "The information that would be sent can include things like location of detected items on your computer if harmful software was removed. The information would be automatically collected and sent. In some instances personal information might unintentionally be sent to Microsoft. However, Microsoft states that it will not use this information to identify you or contact you. For privacy reasons in high security environments, it is best to prevent these data submissions altogether."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Windows Defender Antivirus\\MAPS\\Join Microsoft MAPS. Note: This Group Policy path may not exist by default. It is provided by the Group Policy template WindowsDefender.admx/adml that is included with the Microsoft Windows 8.1 & Server 2012 R2 Administrative Templates (or newer)."
+    compliance:
+      - cis: ["18.9.76.3.2"]
+      - pci_dss: ["2.2.5"]
+      - tsc: ["CC6.3"]
+    condition: all
+    rules:
+      - 'not r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\Spynet -> SpynetReporting'
+
+  - id: 15143 
+    title: "Ensure 'Turn on behavior monitoring' is set to 'Enabled'"
+    description: "This policy setting allows you to configure behavior monitoring for Windows Defender Antivirus. The recommended state for this setting is: Enabled ."
+    rationale: "When running an antivirus solution such as Windows Defender Antivirus, it is important to ensure that it is configured to heuristically monitor in real-time for suspicious and known malicious activity."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled : Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Windows Defender Antivirus\\Real-Time Protection\\Turn on behavior monitoring Note: This Group Policy path may not exist by default. It is provided by the Group Policy template WindowsDefender.admx/adml that is included with the Microsoft Windows 8.1 & Server 2012 R2 Administrative Templates (or newer)."
+    compliance:
+      - cis: ["18.9.76.7.1"]
+      - cis_csc: ["8.1"]
+      - pci_dss: ["5.2"]
+    references:
+      - 'CCE-38389-3'
+    condition: all
+    rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\Real-Time Protection -> DisableBehaviorMonitoring -> 0'
+
+
+  - id: 15201
     title: "Ensure 'Configure Watson events' is set to 'Disabled'"
     description: "This policy setting allows you to configure whether or not Watson events are sent."
     rationale: "Watson events are the reports that get sent to Microsoft when a program or service crashes or fails, including the possibility of automatic submission."
@@ -3575,19 +3785,62 @@ checks:
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\Reporting -> DisableGenericRePorts -> 1'
-
-  - id: 15202 
-    title: "Ensure 'Join Microsoft MAPS' is set to 'Disabled'"
-    description: "This policy setting allows you to join Microsoft Active Protection Service (MAPS), which Microsoft has now renamed to 'Windows Defender Antivirus Cloud Protection Service'. Microsoft MAPS / Windows Defender Antivirus Cloud Protection Service is the online community that helps you choose how to respond to potential threats. The community also helps stop the spread of new malicious software infections. You can choose to send basic or additional information about detected software. Additional information helps Microsoft create new definitions and help it to protect your computer. Possible options are: - (0x0) Disabled (default) - (0x1) Basic membership - (0x2) Advanced membership   Basic membership will send basic information to Microsoft about software that has been detected including where the software came from the actions that you apply or that are applied automatically and whether the actions were successful. Advanced membership in addition to basic information will send more information to Microsoft about malicious software spyware and potentially unwanted software including the location of the software file names how the software operates and how it has impacted your computer. The recommended state for this setting is: Disabled."
-    rationale: "The information that would be sent can include things like location of detected items on your computer if harmful software was removed. The information would be automatically collected and sent. In some instances personal information might unintentionally be sent to Microsoft. However, Microsoft states that it will not use this information to identify you or contact you. For privacy reasons in high security environments, it is best to prevent these data submissions altogether."
-    remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Windows Defender Antivirus\\MAPS\\Join Microsoft MAPS. Note: This Group Policy path may not exist by default. It is provided by the Group Policy template WindowsDefender.admx/adml that is included with the Microsoft Windows 8.1 & Server 2012 R2 Administrative Templates (or newer)."
+  
+  - id: 15162 
+    title: "Ensure 'Scan removable drives' is set to 'Enabled'"
+    description: "This policy setting allows you to manage whether or not to scan for malicious software and unwanted software in the contents of removable drives, such as USB flash drives, when running a full scan. The recommended state for this setting is: Enabled ."
+    rationale: "It is important to ensure that any present removable drives are always included in any type of scan, as removable drives are more likely to contain malicious software brought in to the enterprise managed environment from an external, unmanaged computer."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled : Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Windows Defender Antivirus\\Scan\\Scan removable drives Note: This Group Policy path may not exist by default. It is provided by the Group Policy template WindowsDefender.admx/adml that is included with the Microsoft Windows 8.1 & Server 2012 R2 Administrative Templates (or newer)."
     compliance:
-      - cis: ["18.9.76.3.2"]
-      - pci_dss: ["2.2.5"]
-      - tsc: ["CC6.3"]
+      - cis: ["18.9.76.10.1"]
+      - cis_csc: ["13"]
+      - pci_dss: ["2.2.3"]
+      - nist_800_53: ["CM.1"]
+      - gpg_13: ["4.3"]
+      - gdpr_IV: ["35.7.d"]
+      - hipaa: ["164.312.b"]
+      - tsc: ["CC5.2"]
+    references:
+      - 'CCE-38409-9'
     condition: all
     rules:
-      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\Spynet -> SpynetReporting -> 0'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\Scan -> DisableRemovableDriveScanning -> 0'
+
+  - id: 15163 
+    title: "Ensure 'Turn on e-mail scanning' is set to 'Enabled'"
+    description: "This policy setting allows you to configure e-mail scanning. When e-mail scanning is enabled, the engine will parse the mailbox and mail files, according to their specific format, in order to analyze the mail bodies and attachments. Several e-mail formats are currently supported, for example: pst (Outlook), dbx, mbx, mime (Outlook Express), binhex (Mac). The recommended state for this setting is: Enabled ."
+    rationale: "Incoming e-mails should be scanned by an antivirus solution such as Windows Defender Antivirus, as email attachments are a commonly used attack vector to infiltrate computers with malicious software."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled : Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Windows Defender Antivirus\\Scan\\Turn on e-mail scanning Note: This Group Policy path may not exist by default. It is provided by the Group Policy template WindowsDefender.admx/adml that is included with the Microsoft Windows 8.1 & Server 2012 R2 Administrative Templates (or newer)."
+    compliance:
+      - cis: ["18.9.76.10.2"]
+      - cis_csc: ["13"]
+      - pci_dss: ["2.2.3"]
+      - nist_800_53: ["CM.1"]
+      - gpg_13: ["4.3"]
+      - gdpr_IV: ["35.7.d"]
+      - hipaa: ["164.312.b"]
+      - tsc: ["CC5.2"]
+    references:
+      - 'CCE-36958-7'
+    condition: all
+    rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\Scan -> DisableEmailScanning -> 0'
+
+  - id: 15165 
+    title: "Ensure 'Turn off Windows Defender AntiVirus' is set to 'Disabled'"
+    description: "This policy setting turns off Windows Defender Antivirus. If the setting is configured to Disabled, Windows Defender Antivirus runs and computers are scanned for malware and other potentially unwanted software. The recommended state for this setting is: Disabled ."
+    rationale: "It is important to ensure a current, updated antivirus product is scanning each computer for malicious file activity. Microsoft provides a competent solution out of the box in Windows Defender Antivirus. Organizations that choose to purchase a reputable 3rd-party antivirus solution may choose to exempt themselves from this recommendation in lieu of the commercial alternative."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled : Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Windows Defender Antivirus\\Turn off Windows Defender AntiVirus Note: This Group Policy path is provided by the Group Policy template WindowsDefender.admx/adml that is included with all versions of the Microsoft Windows Administrative Templates. Note #2: In older Microsoft Windows Administrative Templates, this setting was initially named Turn off Windows Defender, but it was renamed starting with the Windows 10 Release 1703 Administrative Templates."
+    compliance:
+      - cis: ["18.9.76.14"]
+      - cis_csc: ["8.1"]
+      - pci_dss: ["5.2"]
+      - tsc: ["CC6.8"]
+    references:
+      - 'CCE-36082-6'
+    condition: all
+    rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender -> DisableAntiSpyware -> 0'
 
 
 
