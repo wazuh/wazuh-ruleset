@@ -2748,7 +2748,7 @@ checks:
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services -> fAllowToGetHelp -> 0'
 
-
+# Section 18.8.36 - Remote Procedure Call
   - id: 12116
     title: "Ensure 'Enable RPC Endpoint Mapper Client Authentication' is set to 'Enabled'"
     description: "This policy setting controls whether RPC clients authenticate with the Endpoint Mapper Service when the call they are making contains authentication information. The Endpoint Mapper Service on computers running Windows NT4 (all service packs) cannot process authentication information supplied in this manner. This policy setting can cause a specific issue with 1-way forest trusts if it is applied to the trusting domain DCs (see Microsoft KB3073942), so we do not recommend applying it to Domain Controllers. Note: This policy will not be in effect until the system is rebooted. The recommended state for this setting is: Enabled."
@@ -2770,8 +2770,6 @@ checks:
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Rpc -> EnableAuthEpResolution -> 1'
 
-
-# Section 18.8.36 - Remote Procedure Call
   - id: 12524
     title: "Ensure 'Restrict Unauthenticated RPC clients' is set to 'Enabled: Authenticated'"
     description: "This policy setting controls how the RPC server runtime handles unauthenticated RPC clients connecting to RPC servers."
@@ -3277,7 +3275,7 @@ checks:
       - 'CCE-36939-7'
     condition: all
     rules:
-      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Skydrive -> DisableFileSync -> 1'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Onedrive -> DisableFileSync -> 1'
 
   - id: 12136
     title: "Ensure 'Do not allow passwords to be saved' is set to 'Enabled'"
