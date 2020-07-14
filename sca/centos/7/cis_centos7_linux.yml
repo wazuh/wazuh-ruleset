@@ -3032,13 +3032,12 @@ checks:
       - tsc: ["CC6.1"]
     condition: none
     rules:
-      - 'f:/etc/bash.bashrc -> !r:^\s*\t*# && r:umask \d0\d|umask \d1\d|umask \d4\d|umask \d5\d'      - 'f:/etc/profile -> n:^\s*\t*umask\s+(\d+) compare >= 027'
-      - 'f:/etc/bash.bashrc -> !r:^\s*\t*# && n:umask \d\d(\d) compare != 7'  
+      - 'f:/etc/bash.bashrc -> !r:^\s*\t*# && r:umask \d0\d|umask \d1\d|umask \d4\d|umask \d5\d'
+      - 'f:/etc/bash.bashrc -> !r:^\s*\t*# && n:umask \d\d(\d) compare != 7'
       - 'f:/etc/profile -> !r:^\s*\t*# && r:umask \d0\d|umask \d1\d|umask \d4\d|umask \d5\d'
       - 'f:/etc/profile -> !r:^\s*\t*# && n:umask \d\d(\d) compare != 7'
       - 'd:/etc/profile.d -> .sh -> !r:^\s*\t*# && r:umask \d0\d|umask \d1\d|umask \d4\d|umask \d5\d'
       - 'd:/etc/profile.d -> .sh -> !r:^\s*t*# && n:umask \d\d(\d) compare != 7'
-
 
 
 # 5.4.5 Ensure default user shell timeout is 900 seconds or less (Scored)
