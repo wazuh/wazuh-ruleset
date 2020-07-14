@@ -1091,6 +1091,7 @@ checks:
       - 'r:HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System -> ConsentPromptBehaviorUser -> 0'
 
 # 2.3.17.5 Ensure 'User Account Control: Detect application installations and prompt for elevation' is set to 'Enabled'
+  - id: 15200
     title: "Ensure 'User Account Control: Detect application installations and prompt for elevation' is set to 'Enabled'"
     description: "This policy setting controls the behavior of application installation detection for the computer. The recommended state for this setting is: Enabled."
     rationale: "Some malicious software will attempt to install itself after being given permission to run. For example, malicious software with a trusted application shell. The user may have given permission for the program to run because the program is trusted, but if they are then prompted for installation of an unknown component this provides another way of trapping the software before it can do damage."
