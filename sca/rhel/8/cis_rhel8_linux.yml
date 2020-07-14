@@ -2410,7 +2410,7 @@ checks:
       - pci_dss: ["10.5.1","10.5.2"]
       - nist_800_53: ["CM.1","AU.9"]
       - tsc: ["CC5.2","CC7.2"]
-    condition: all
+    condition: any
     rules:
       - 'f:/etc/rsyslog.conf -> r:^\$FileCreateMode 06\d0|^\$FileCreateMode 04\d0|^\$FileCreateMode 02\d0|^\$FileCreateMode 00\d0'
       - 'f:/etc/rsyslog.conf -> r:^\$FileCreateMode 0\d40|^\$FileCreateMode 0\d20|^\$FileCreateMode 0\d00'
