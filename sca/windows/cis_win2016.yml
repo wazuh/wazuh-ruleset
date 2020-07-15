@@ -379,7 +379,7 @@ checks:
       - 'r:HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System -> InactivityTimeoutSecs -> n:^(\d+) compare <= 900'
 
 # 2.3.7.6 (L2) Ensure 'Interactive logon: Number of previous logons to cache (in case domain controller is not available)' is set to '4 or fewer logon(s)' (MS only) (Scored)
-  - id: 15200 
+  - id: 15700 
     title: "Ensure 'Interactive logon: Number of previous logons to cache (in case domain controller is not available)' is set to '4 or fewer logon(s)'"
     description: "This policy setting determines whether a user can log on to a Windows domain using cached account information. Logon information for domain accounts can be cached locally to allow users to log on even if a Domain Controller cannot be contacted. This policy setting determines the number of unique users for whom logon information is cached locally. If this value is set to 0, the logon cache feature is disabled. An attacker who is able to access the file system of the server could locate this cached information and use a brute force attack to determine user passwords. The recommended state for this setting is: 4 or fewer logon(s) ."
     rationale: "The number that is assigned to this policy setting indicates the number of users whose logon information the computer will cache locally. If the number is set to 4, then the computer caches logon information for 4 users. When a 5th user logs on to the computer, the server overwrites the oldest cached logon session. Users who access the computer console will have their logon credentials cached on that computer. An attacker who is able to access the file system of the computer could locate this cached information and use a brute force attack to attempt to determine user passwords. To mitigate this type of attack, Windows encrypts the information and obscures its physical location."
@@ -1890,7 +1890,7 @@ checks:
       - 'https://docs.microsoft.com/en-us/archive/blogs/secguide/security-baseline-for-windows-10-creators-update-v1703-final'
     condition: all
     rules:
-      - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\mrxsmb10 -> Start -> 1'
+      - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\mrxsmb10 -> Start -> 4'
 
 # 18.3.3 Ensure 'Configure SMB v1 server' is set to 'Disabled' (Scored)
   - id: 15088 
@@ -1932,14 +1932,14 @@ checks:
       - 'https://support.microsoft.com/en-us/help/956607/how-to-enable-structured-exception-handling-overwrite-protection-sehop'
     condition: all
     rules:
-      - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SessionManager\kernel -> DisableExceptionChainValidation -> 1'
+      - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\kernel -> DisableExceptionChainValidation -> 0'
 
 # 18.3.5 Ensure 'Turn on Windows Defender protection against Potentially Unwanted Applications' is set to 'Enabled'
   - id: 15090 
-    title: "Ensure 'WDigest Authentication' is set to 'Disabled'"
-    description: "When WDigest authentication is enabled, Lsass.exe retains a copy of the user's plaintext password in memory, where it can be at risk of theft. If this setting is not configured, WDigest authentication is disabled in Windows 8.1 and in Windows Server 2012 R2; it is enabled by default in earlier versions of Windows and Windows Server. The recommended state for this setting is: Disabled."
+    title: "Ensure 'Turn on Windows Defender protection against Potentially Unwanted Applications' is set to 'Enabled'"
+    description: "Enabling this Windows Defender feature will protect against Potentially Unwanted Applications (PUA), which are sneaky unwanted application bundlers or their bundled applications to deliver adware or malware. The recommended state for this setting is: Enabled ."
     rationale: "Preventing the plaintext storage of credentials in memory may reduce opportunity for credential theft."
-    remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Administrative Templates\\MS Security Guide\\WDigest Authentication (disabling may require KB2871997) Note: This Group Policy path does not exist by default. An additional Group Policy template (SecGuide.admx/adml) is required - it is available from Microsoft."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled : Computer Configuration\\Policies\\Administrative Templates\\MS Security Guide\\Turn on Windows Defender protection against Potentially Unwanted Applications Note: This Group Policy path does not exist by default. An additional Group Policy template ( SecGuide.admx/adml ) is required"
     compliance:
       - cis: ["18.3.5"]
       - cis_csc: ["8.4"]
@@ -1949,17 +1949,16 @@ checks:
       - https://www.microsoft.com/en-us/download/details.aspx?id=36036
       - https://support.microsoft.com/en-us/help/2871997/microsoft-security-advisory-update-to-improve-credentials-protection-a
       - https://blogs.technet.microsoft.com/secguide/2017/08/30/security-baseline-for-windows-10-creators-update-v1703-final/
-      - 'CCE-38444-6'
     condition: all
     rules:
-      - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest -> UseLogonCredential -> 0'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\MpEngine -> MpEnablePus -> 1'
 
 # 18.3.6 Ensure 'WDigest Authentication' is set to 'Disabled'
   - id: 15091 
     title: "Ensure 'WDigest Authentication' is set to 'Disabled'"
-    description: "When WDigest authentication is enabled, Lsass.exe retains a copy of the user's plaintext password in memory, where it can be at risk of theft. If this setting is not configured, WDigest authentication is disabled in Windows 8.1 and in Windows Server 2012 R2; it is enabled by default in earlier versions of Windows and Windows Server."
+    description: "When WDigest authentication is enabled, Lsass.exe retains a copy of the user's plaintext password in memory, where it can be at risk of theft. If this setting is not configured, WDigest authentication is disabled in Windows 8.1 and in Windows Server 2012 R2; it is enabled by default in earlier versions of Windows and Windows Server. For more information about local accounts and credential theft, review the \"Mitigating Pass-the-Hash (PtH) Attacks and Other Credential Theft Techniques\" documents. For more information about UseLogonCredential , see Microsoft Knowledge Base article 2871997: Microsoft Security Advisory Update to improve credentials protection and management May 13, 2014. The recommended state for this setting is: Disabled ."
     rationale: "Preventing the plaintext storage of credentials in memory may reduce opportunity for credential theft."
-    remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled : Computer Configuration\\Policies\\Administrative Templates\\MS Security Guide\\WDigest Authentication (disabling may require KB2871997) Note: This Group Policy path does not exist by default. An additional Group Policy template ( SecGuide.admx/adml ) is required"
+    remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled : Computer Configuration\\Policies\\Administrative Templates\\MS Security Guide\\WDigest Authentication (disabling may require KB2871997) Note: This Group Policy path does not exist by default. An additional Group Policy template ( SecGuide.admx/adml ) is required - it is available from Microsoft at this link."
     compliance:
       - cis: ["18.3.6"]
       - cis_csc: ["16.14"]
@@ -1969,9 +1968,10 @@ checks:
       - 'http://www.microsoft.com/en-us/download/details.aspx?id=36036'
       - 'https://support.microsoft.com/en-us/kb/2871997'
       - 'https://blogs.technet.microsoft.com/secguide/2017/08/30/security-baseline-for-windows-10-creators-update-v1703-final/'
+      - 'CCE-38444-6'
     condition: all
     rules:
-      - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters -> KeepAliveTime -> 300000'
+      - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest -> UseLogonCredential -> 0'
 
 ###############################################
 # 18.4 MSS (Legacy)
@@ -2483,7 +2483,7 @@ checks:
       - 'CCE-38338-0'
     condition: all
     rules:
-      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WcmSvc\GroupPolicy -> fMinimizeConnections -> 0'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WcmSvc\GroupPolicy -> fMinimizeConnections -> 1'
 
 ######################################
 # 18.8 System
@@ -2619,7 +2619,7 @@ checks:
       - 'CCE-37712-7'
     condition: all
     rules:
-      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System -> DisableBkGndGroupPolicy -> 0'
+      - 'not r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System -> DisableBkGndGroupPolicy'
 
 # Section 18.8 - System
   - id: 15112 
@@ -2934,6 +2934,23 @@ checks:
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System -> DontEnumerateConnectedUsers -> 1'
+
+# 18.8.27.4 (L1) Ensure 'Enumerate local users on domain-joined computers' is set to 'Disabled' (MS only) (Scored)
+  - id: 15647
+    title: "Ensure 'Enumerate local users on domain-joined computers' is set to 'Disabled'"
+    description: "This policy setting allows local users to be enumerated on domain-joined computers. The recommended state for this setting is: Disabled."
+    rationale: "A malicious user could use this feature to gather account names of other users, that information could then be used in conjunction with other types of attacks such as guessing passwords or social engineering. The value of this countermeasure is small because a user with domain credentials could gather the same account information using other methods."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Administrative Templates\\System\\Logon\\Enumerate local users on domain-joined computers Note: This Group Policy path may not exist by default. It is provided by the Group Policy template Logon.admx/adml that is included with the Microsoft Windows 8.0 & Server 2012 (non-R2) Administrative Templates (or newer)."
+    compliance:
+      - cis: ["18.8.27.4"]
+      - cis_csc: ["16.9"]
+      - pci_dss: ["2.2.5"]
+      - tsc: ["CC6.3"]
+    references:
+      - 'CCE-35894-5'
+    condition: all
+    rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System -> EnumerateLocalUsers -> 0'
 
 # 18.8.27.5 (L1) Ensure 'Turn off app notifications on the lock screen' is set to 'Enabled' (Scored)
   - id: 15118 
@@ -3466,6 +3483,23 @@ checks:
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\DataCollection -> DisableEnterpriseAuthProxy -> 1'
+
+# 18.9.16.3 (L1) Ensure 'Disable pre-release features or settings' is set to 'Disabled' (Scored)
+  - id: 16136 
+    title: "Ensure 'Disable pre-release features or settings' is set to 'Disabled'"
+    description: "This policy setting determines the level that Microsoft can experiment with the product to study user preferences or device behavior. A value of 1 permits Microsoft to configure device settings only. A value of 2 allows Microsoft to conduct full experimentations. The recommended state for this setting is: Disabled . Note: Although the setting of Disabled seems counter-intuitive (disabling a Disable setting is a double negative, which should mean Enable), this setting is incorrectly worded in the Microsoft templates. Configuring Disabled does indeed achieve the desired result of disabling the pre-release features and settings."
+    rationale: "It can be dangerous in an enterprise managed environment if experimental features are allowed because this can introduce bugs and security holes into systems, making it easier for an attacker to gain access."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled : Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Data Collection and Preview Builds\\Disable pre-release features or settings Note: This Group Policy path may not exist by default. It is provided by the Group Policy template DataCollection.admx/adml that is included with the Microsoft Windows 10 RTM (Release 1507) Administrative Templates (or newer)."
+    compliance:
+      - cis: ["18.9.16.3"]
+      - cis_csc: ["3"]
+      - pci_dss: ["4.1"]
+      - hipaa: ["164.312.a.2.IV", "164.312.e.1", "164.312.e.2.I", "164.312.e.2.II"]
+      - nist_800_53: ["SC.8"]
+      - tsc: ["CC6.1","CC6.7","CC7.2"]
+    condition: all
+    rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\PreviewBuilds -> EnableConfigFlighting -> 0'
 
 # 18.9.16.4 (L1) Ensure 'Do not show feedback notifications' is set to 'Enabled' (Scored)
   - id: 15136 
