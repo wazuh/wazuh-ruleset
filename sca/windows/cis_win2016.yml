@@ -4163,6 +4163,23 @@ checks:
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\Real-Time Protection -> DisableBehaviorMonitoring -> 0'
 
+# 18.9.76.9.1 (L2) Ensure 'Configure Watson events' is set to 'Disabled' (Scored)
+  - id: 15201
+    title: "Ensure 'Configure Watson events' is set to 'Disabled'"
+    description: "This policy setting allows you to configure whether or not Watson events are sent."
+    rationale: "Watson events are the reports that get sent to Microsoft when a program or service crashes or fails, including the possibility of automatic submission."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Windows Defender Antivirus\\Reporting\\Configure Watson events."
+    compliance:
+      - cis: ["18.9.76.9.1"]
+      - cis_csc: ["13"]
+      - pci_dss: ["2.2.5"]
+      - tsc: ["CC6.3"]
+    references:
+      - 'CCE-36950-4'
+    condition: all
+    rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\Reporting -> DisableGenericRePorts -> 1'
+
 # 18.9.76.10.1 (L1) Ensure 'Scan removable drives' is set to 'Enabled' (Scored)
   - id: 16226 
     title: "Ensure 'Scan removable drives' is set to 'Enabled'"
@@ -4205,6 +4222,21 @@ checks:
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\Scan -> DisableEmailScanning -> 0'
 
+# 18.9.76.13.1.1 (L1) Ensure 'Configure Attack Surface Reduction rules' is set to 'Enabled' (Scored)
+  - id: 15564 
+    title: "Ensure 'Configure Attack Surface Reduction rules' is set to 'Enabled'"
+    description: "This policy setting controls the state for the Attack Surface Reduction (ASR) rules. The recommended state for this setting is: Enabled."
+    rationale: "Attack surface reduction helps prevent actions and apps that are typically used by exploit-seeking malware to infect machines."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled : Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Windows Defender Antivirus\\Windows Defender Exploit Guard\\Attack Surface Reduction\\Configure Attack Surface Reduction rules. Note: This Group Policy path may not exist by default. It is provided by the Group Policy template WindowsDefender.admx/adml that is included with the Microsoft Windows 10 Release 1709 Administrative Templates (or newer)."
+    compliance:
+      - cis: ["18.9.76.13.1.1"]
+      - cis_csc: ["8.4"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]   
+      - tsc: ["CC5.2"]
+    condition: all
+    rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\Windows Defender Exploit Guard\ASR -> ExploitGuard_ASR_Rules'
 
 # 18.9.76.13.3.1 (L1) Ensure 'Prevent users and apps from accessing dangerous websites' is set to 'Enabled: Block' (Scored)
   - id: 16228 
@@ -4241,6 +4273,19 @@ checks:
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender -> DisableAntiSpyware -> 0'
+
+# 18.9.79.1.1 (L1) Ensure 'Prevent users from modifying settings' is set to 'Enabled' (Scored)
+  - id: 15565 
+    title: "Ensure 'Prevent users from modifying settings' is set to 'Enabled'"
+    description: "This policy setting prevent users from making changes to the Exploit protection settings area in the Windows Defender Security Center. The recommended state for this setting is: Enabled ."
+    rationale: "Only authorized IT staff should be able to make changes to the exploit protection settings in order to ensure the organizations specific configuration is not modified."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Windows Defender Security Center\\App and browser protection\\Prevent users from modifying settings. Note: This Group Policy path may not exist by default. It is provided by the Group Policy template WindowsDefenderSecurityCenter.admx/adml that is included with the Microsoft Windows 10 Release 1709 Administrative Templates (or newer)."
+    compliance:
+      - cis: ["18.9.79.1.1"]
+      - cis_csc: ["8.4"]
+    condition: all
+    rules:
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender Security Center\App and Browser protection -> DisallowExploitProtectionOverride -> 1'
 
 # 18.9.80.1.1 Ensure 'Configure Windows Defender SmartScreen' is set to 'Enabled: Warn and prevent bypass'
   - id: 16230 
