@@ -1,5 +1,5 @@
 # Security Configuration Assessment
-# CIS Checks for Windows 2016 RTM Domain Controller L1
+# CIS Checks for Windows 2016 
 # Copyright (C) 2015-2020, Wazuh Inc.
 #
 # This program is free software; you can redistribute it
@@ -14,14 +14,14 @@
 policy:
   id: "cis_win2016"
   file: "cis_win2016.yml"
-  name: "CIS benchmark for Windows Server 2016 RTM Domain Controller L1"
+  name: "CIS benchmark for Windows Server 2016"
   description: "This document provides prescriptive guidance for establishing a secure configuration posture for Microsoft Windows Server 2016."
   references:
     - https://www.cisecurity.org/cis-benchmarks/
 
 requirements:
   title: "Check that the Windows platform is Windows Server 2016 RTM"
-  description: "Requirements for running the CIS benchmark Domain Controller L1 under Windows Server 2016 RTM"
+  description: "Requirements for running the CIS benchmark under Windows Server 2016 RTM"
   condition: all
   rules:
     - 'r:HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion -> ProductName -> r:^Windows Server 2016'
