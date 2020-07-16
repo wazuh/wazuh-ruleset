@@ -3995,6 +3995,7 @@ checks:
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services -> MaxIdleTime -> n:^(\d+) compare <= 900000'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services -> MaxIdleTime -> n:^(\d+) compare != 0'
 
 # 18.9.58.3.10.2 Ensure 'Set time limit for disconnected sessions' is set to 'Enabled: 1 minute'
   - id: 15540 
@@ -4178,7 +4179,7 @@ checks:
       - 'CCE-36950-4'
     condition: all
     rules:
-      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\Reporting -> DisableGenericRePorts -> 1'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\Reporting -> DisableGenericRePorts -> 0'
 
 # 18.9.76.10.1 (L1) Ensure 'Scan removable drives' is set to 'Enabled' (Scored)
   - id: 15162 
