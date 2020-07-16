@@ -3485,7 +3485,7 @@ checks:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\DataCollection -> DisableEnterpriseAuthProxy -> 1'
 
 # 18.9.16.3 (L1) Ensure 'Disable pre-release features or settings' is set to 'Disabled' (Scored)
-  - id: 16136 
+  - id: 18136 
     title: "Ensure 'Disable pre-release features or settings' is set to 'Disabled'"
     description: "This policy setting determines the level that Microsoft can experiment with the product to study user preferences or device behavior. A value of 1 permits Microsoft to configure device settings only. A value of 2 allows Microsoft to conduct full experimentations. The recommended state for this setting is: Disabled . Note: Although the setting of Disabled seems counter-intuitive (disabling a Disable setting is a double negative, which should mean Enable), this setting is incorrectly worded in the Microsoft templates. Configuring Disabled does indeed achieve the desired result of disabling the pre-release features and settings."
     rationale: "It can be dangerous in an enterprise managed environment if experimental features are allowed because this can introduce bugs and security holes into systems, making it easier for an attacker to gain access."
@@ -4144,7 +4144,7 @@ checks:
       - tsc: ["CC6.3"]
     condition: all
     rules:
-      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\Spynet -> SpynetReporting -> 0'
+      - 'not r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\Spynet -> SpynetReporting'
 
 # 18.9.76.7.1 (L1) Ensure 'Turn on behavior monitoring' is set to 'Enabled' (Scored)
   - id: 15161 
