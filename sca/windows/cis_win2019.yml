@@ -663,10 +663,10 @@ checks:
     rules:
       - 'r:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Lsa -> EveryoneIncludesAnonymous -> 0'
 
-# 2.3.10.6 Configure 'Network access: Named Pipes that can be accessed anonymously' (Domain Controller)
+# 2.3.10.6 Configure 'Network access: Named Pipes that can be accessed anonymously'
   - id: 15031 
     title: "Configure 'Network access: Named Pipes that can be accessed anonymously'"
-    description: "This policy setting determines which communication sessions, or pipes, will have attributes and permissions that allow anonymous access. The recommended state for this setting is: <blank> (i.e. None), or (when the legacy Computer Browser service is enabled) BROWSER. Note: A Member Server that holds the Remote Desktop Services Role with Remote Desktop Licensing Role Service will require a special exception to this recommendation, to allow the HydraLSPipe and TermServLicensing Named Pipes to be accessed anonymously."
+    description: "This policy setting determines which communication sessions, or pipes, will have attributes and permissions that allow anonymous access. The recommended state for this setting is: (Domain Controller) LSARPC, NETLOGON, SAMR (Member Server) <blank> (i.e. None), or (when the legacy Computer Browser service is enabled) BROWSER. Note: A Member Server that holds the Remote Desktop Services Role with Remote Desktop Licensing Role Service will require a special exception to this recommendation, to allow the HydraLSPipe and TermServLicensing Named Pipes to be accessed anonymously."
     rationale: "Limiting named pipes that can be accessed anonymously will reduce the attack surface of the system."
     remediation: "To establish the recommended configuration via GP, configure the following UI path: Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Local Policies\\Security Options\\Network access: Named Pipes that can be accessed anonymously."
     compliance:
@@ -4822,4 +4822,3 @@ checks:
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU -> NoAutoRebootWithLoggedOnUsers -> 0'
-
