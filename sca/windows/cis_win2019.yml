@@ -2464,14 +2464,15 @@ checks:
       - 'CCE-38338-0'
     condition: all
     rules:
-      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WcmSvc\GroupPolicy -> fMinimizeConnections -> 1'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WcmSvc\GroupPolicy -> fMinimizeConnections
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WcmSvc\GroupPolicy -> fMinimizeConnections -> n:(\d+) compare != 0'
 
 # 18.5.21.2 (L2) Ensure 'Prohibit connection to non-domain networks when connected to domain authenticated network' is set to 'Enabled' (MS only) (Scored)
   - id: 16513 
     title: "Ensure 'Prohibit connection to non-domain networks when connected to domain authenticated network' is set to 'Enabled'"
     description: "This policy setting prevents computers from connecting to both a domain based network and a non-domain based network at the same time."
     rationale: "The potential concern is that a user would unknowingly allow network traffic to flow between the insecure public network and the enterprise managed network."
-    remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\Network\\Windows Connection Manager\\Prohibit connection to non-domain networks when connected to domain authenticated network."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\Network\\Windows Connection Manager\\Prohibit connection to non-domain networks when connected to domain authenticated network."
     compliance:
       - cis: ["18.5.21.2"]
       - cis_csc: ["12"]
@@ -4082,9 +4083,10 @@ checks:
     references:
       - 'CCE-37562-6'
       - https://workbench.cisecurity.org/benchmarks/766
-    condition: all
+    condition: any
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services -> MaxIdleTime -> n:^(\d+) compare <= 900000'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services -> MaxIdleTime -> n:^(\d+) compare != 0'
 
 # 18.9.59.3.10.2 Ensure 'Set time limit for disconnected sessions' is set to 'Enabled: 1 minute'
   - id: 15531 
@@ -4154,24 +4156,6 @@ checks:
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Internet Explorer\Feeds -> DisableEnclosureDownload -> 1'
-
-# Section 18.9.60.3.10 - Session Time Limits
-# 18.9.60.3.10.1 Ensure 'Set time limit for active but idle Remote Desktop Services sessions' is set to 'Enabled: 15 minutes or less'
-  - id: 16546 
-    title: "Ensure 'Set time limit for active but idle Remote Desktop Services sessions' is set to 'Enabled: 15 minutes or less'"
-    description: "This policy setting allows you to specify the maximum amount of time that an active Remote Desktop Services session can be idle (without user input) before it is automatically disconnected."
-    rationale: "This setting helps to prevent active Remote Desktop sessions from tying up the computer for long periods of time while not in use, preventing computing resources from being consumed by large numbers of inactive sessions."
-    remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: 15 minutes or less: Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Remote Desktop Services\\Remote Desktop Session Host\\Session Time Limits\\Set time limit for active but idle Remote Desktop Services sessions."
-    compliance:
-      - cis: ["18.9.60.3.10.1"]
-      - cis_csc: ["16.5"]
-      - pci_dss: ["8.1.8"]
-      - tsc: ["CC6.1"]
-    references:
-      - 'CCE-37562-6'
-    condition: all
-    rules:
-      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services -> MaxIdleTime -> n:^(\d+) compare <= 900000'
 
 # 18.9.61.2 (L2) Ensure 'Allow Cloud Search' is set to 'Enabled: Disable Cloud Search' (Scored)
   - id: 15532 
