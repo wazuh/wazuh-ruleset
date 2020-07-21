@@ -180,7 +180,7 @@ checks:
     title: "Ensure 'Trustworthy' Database Property is set to 'Off'"
     description: "The TRUSTWORTHY database option allows database objects to access objects in other databases under certain circumstances."
     rationale: "Provides protection from malicious CLR assemblies or extended procedures."
-    remediation: "Execute the following T-SQL statement against the databases (replace <dbname> below) returned by the Audit Procedure: ALTER DATABASE [<database_name>] SET TRUSTWORTHY OFF;"
+    remediation: "Execute the following T-SQL statement against the databases (replace <database_name> below) returned by the Audit Procedure: ALTER DATABASE [<database_name>] SET TRUSTWORTHY OFF;"
     compliance:
       - cis: ["2.9"]
       - cis_csc: ["14.4"]
@@ -197,9 +197,9 @@ checks:
 # 2.11 Ensure SQL Server is configured to use non-standard ports (Not Scored)
   - id: 12509
     title: "Ensure SQL Server is configured to use non-standard ports"
-    description: "If installed, a default SQL Server instance will be assigned a default port of TCP:1433 for TCP/IP communication. Administrators can also configure named instances to use TCP:1433 for communication. TCP:1433 is a widely known SQL Server port and this port assignment should be changed. In a multi-instance scenario, each instance must be assigned its own dedicated TCP/IP port."
+    description: "If installed, a default SQL Server instance will be assigned a default port of TCP:1433 for TCP/IP communication. Administrators can also configure named instances to use TCP:1433 for communication TCP:1433 is a widely known SQL Server port and this port assignment should be changed. In a multi-instance scenario, each instance must be assigned its own dedicated TCP/IP port."
     rationale: "Using a non-default port helps protect the database from attacks directed to the default port."
-    remediation: "1: In SQL Server Configuration Manager, in the console pane, expand SQL Server Network Configuration, expand Protocols for <InstanceName> , and then double-click the TCP/IP protocol. 2: In the TCP/IP Properties dialog box, on the IP Addresses tab, several IP addresses appear in the format IP1 , IP2 , up to IPAll . One of these is for the IP address of the loopback adapter, 127.0.0.1 . Additional IP addresses appear for each IP Address on the computer. 3: Under IPALL, Change the TCP Port field from 1433 to a non-standard port or leave the TCP Port field empty and set the TCP Dynamic Ports value to 0 to enable dynamic port assignment and then click OK. 4: In the console pane, click SQL Server Services. 5: In the details pane, right-click SQL Server (<InstanceName>) and then click Restart, to stop and restart SQL Server."
+    remediation: "1: In SQL Server Configuration Manager, in the console pane, expand SQL Server Network Configuration, expand Protocols for <InstanceName> , and then double-click the TCP/IP protocol. 2: In the TCP/IP Properties dialog box, on the IP Addresses tab, several IP addresses appear in the format IP1 , IP2 , up to IPAll . One of these is for the IP address of the loopback adapter, 127.0.0.1 . Additional IP addresses appear for each IP Address on the computer. 3: Under IPALL, change the TCP Port field from 1433 to a non-standard port or leave the TCP Port field empty and set the TCP Dynamic Ports value to 0 to enable dynamic port assignment and then click OK. 4: In the console pane, click SQL Server Services. 5: In the details pane, right-click SQL Server (<InstanceName>) and then click Restart, to stop and restart SQL Server."
     compliance:
       - cis: ["2.11"]
       - cis_csc: ["9"]
@@ -232,9 +232,9 @@ checks:
     rules:  
       - "c:sqlcmd -Q \"SELECT name, is_disabled FROM sys.server_principals WHERE sid = 0x01 AND is_disabled = 0;\" -> r:0 rows affected"
 
-# 2.14 Ensure 'sa' Login Account has been renamed (Scored)
+# 2.14 Ensure the 'sa' Login Account has been renamed (Scored)
   - id: 12511
-    title: "Ensure 'sa' Login Account has been renamed"
+    title: "Ensure the 'sa' Login Account has been renamed"
     description: "The sa account is a widely known and often widely used SQL Server login with sysadmin privileges. The sa login is the original login created during installation and always has principal_id=1 and sid=0x01 ."
     rationale: "It is more difficult to launch password-guessing and brute-force attacks against the sa login if the name is not known."
     remediation: "Replace the <different_user> value within the below syntax and execute to rename the sa login. ALTER LOGIN sa WITH NAME = <different_user>;"
@@ -386,7 +386,7 @@ checks:
       - pci_dss: ["8.2"]
       - tsc: ["CC6.1"]
     references:
-      - 'http://msdn.microsoft.com/en-us/library/ms161959(v=sql.120).aspx'
+      - 'https://docs.microsoft.com/en-us/sql/relational-databases/security/password-policy'
     condition: all
     rules:  
       - "c:sqlcmd -Q \"SELECT l.[name], 'sysadmin membership' AS 'Access_Method' FROM sys.sql_logins AS l WHERE IS_SRVROLEMEMBER('sysadmin',name) = 1 AND l.is_expiration_checked <> 1 UNION ALL SELECT l.[name], 'CONTROL SERVER' AS 'Access_Method' FROM sys.sql_logins AS l JOIN sys.server_permissions AS p ON l.principal_id = p.grantee_principal_id WHERE p.type = 'CL' AND p.state IN ('G', 'W') AND l.is_expiration_checked <> 1;\" -> r:0 rows affected"
