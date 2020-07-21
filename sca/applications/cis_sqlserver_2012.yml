@@ -357,21 +357,6 @@ checks:
     rules:  
       - "c:sqlcmd -Q \"USE [master] SELECT pr.[name] AS LocalGroupName, pe.[permission_name], pe.[state_desc] FROM sys.server_principals pr JOIN sys.server_permissions pe ON pr.[principal_id] = pe.[grantee_principal_id] WHERE pr.[type_desc] = 'WINDOWS_GROUP' AND pr.[name] like CAST(SERVERPROPERTY('MachineName') AS nvarchar) + '%';\" -> r:0 rows affected"
 
-# 3.11 Ensure the public role in the msdb database is not granted access to SQL Agent proxies (Scored)
-  - id: 12519
-    title: "Ensure the public role in the msdb database is not granted access to SQL Agent proxies"
-    description: "The public database role contains every user in the msdb database. SQL Agent proxies define a security context in which a job step can run."
-    rationale: "Granting access to SQL Agent proxies for the public role would allow all users to utilize the proxy which may have high privileges. This would likely break the principle of least privileges."
-    remediation: "1. Ensure the required security principals are explicitly granted access to the proxy (use sp_grant_login_to_proxy ). 2. Revoke access to the <proxyname> from the public role. USE [msdb] GO EXEC dbo.sp_revoke_login_from_proxy @name = N'public', @proxy_name = N'<proxyname>'; GO"
-    compliance:
-      - cis: ["3.11"]
-      - cis_csc: ["14.4"]
-      - pci_dss: ["7.1"]
-    references:
-      - 'https://support.microsoft.com/en-us/help/2160741/best-practices-in-configuring-sql-server-agent-proxy-account'
-    condition: all
-    rules:  
-      - "c:sqlcmd -Q \"USE [msdb] SELECT sp.name AS proxyname FROM dbo.sysproxylogin spl JOIN sys.database_principals dp ON dp.sid = spl.sid JOIN sysproxies sp ON sp.proxy_id = spl.proxy_id WHERE principal_id = USER_ID('public');\" -> r:0 rows affected"
 
 ###########################################################
 # 4 Password Policies
