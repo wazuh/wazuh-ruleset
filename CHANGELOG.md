@@ -6,6 +6,37 @@ All notable changes to this project will be documented in this file.
 ### Changed
 - Changed compliance rules groups and removed `alert_by_email` option by default. ([#559](https://github.com/wazuh/wazuh-ruleset/pull/559))
 
+
+## [v3.13.0]
+
+### Added
+
+- Added rules and decoders for macOS sshd logs ([#593](https://github.com/wazuh/wazuh-ruleset/pull/593))
+- Added TSC/SOC compliance mapping ([#613](https://github.com/wazuh/wazuh-ruleset/pull/613))
+- Added rules and decoders for PaloAlto logs ([#658](https://github.com/wazuh/wazuh-ruleset/pull/658))
+- Added rules and decoder to monitor the FIM database status. ([#4717](https://github.com/wazuh/wazuh/pull/4717))
+- Added rules for WAF. ([#687](https://github.com/wazuh/wazuh-ruleset/pull/687))
+
+### Changed
+
+- Changed description of Vulnerability Detector rules ([#638](https://github.com/wazuh/wazuh-ruleset/pull/638))
+- Changed squid decoders ([#672](https://github.com/wazuh/wazuh-ruleset/pull/672))
+
+### Fixed
+
+- Fix the provider name so that Windows Eventlog logs match with the Wazuh rules. ([#662](https://github.com/wazuh/wazuh-ruleset/pull/662))
+- Fixed static filters related to the system_name field. ([#684](https://github.com/wazuh/wazuh-ruleset/pull/684))
+- Remove trailing whitespaces in the group name section of the ruleset. Thanks to Kevin Branch (@branchnetconsulting). ([#667](https://github.com/wazuh/wazuh-ruleset/pull/667))
+- Remove invalid zeroes from rules id. Thanks to @lucanus81. ([#691](https://github.com/wazuh/wazuh-ruleset/pull/691))
+
+
+## [v3.12.1]
+
+### Fixed
+
+- Fixed the Dropbear brute force rule entrypoint. ([#589](https://github.com/wazuh/wazuh-ruleset/pull/589))
+
+
 ## [v3.12.0]
 
 ### Added
