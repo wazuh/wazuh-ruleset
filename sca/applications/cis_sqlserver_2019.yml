@@ -249,7 +249,7 @@ checks:
       - 'https://docs.microsoft.com/en-us/sql/relational-databases/security/choose-an-authentication-mode'
     condition: none
     rules:  
-      - "c:sqlcmd -Q \"SELECT name FROM sys.server_principals WHERE sid = 0x01;\" -> r:sa"
+      - "c:sqlcmd -Q \"SELECT name FROM sys.server_principals WHERE sid = 0x01;\" -> r:^sa"
 
 # 2.15 Ensure 'AUTO_CLOSE' is set to 'OFF' on contained databases
   - id: 12513
