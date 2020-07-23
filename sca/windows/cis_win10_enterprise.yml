@@ -63,7 +63,7 @@ checks:
     title: "Ensure 'Audit: Force audit policy subcategory settings (Windows Vista or later) to override audit policy category settings' is set to 'Enabled'"
     description: "This policy setting allows administrators to enable the more precise auditing capabilities present in Windows Vista. The Audit Policy settings available in Windows Server 2003 Active Directory do not yet contain settings for managing the new auditing subcategories. To properly apply the auditing policies prescribed in this baseline, the Audit: Force audit policy subcategory settings (Windows Vista or later) to override audit policy category settings setting needs to be configured to Enabled. The recommended state for this setting is: Enabled."
     rationale: "If the computer is unable to record events to the Security log, critical evidence or important troubleshooting information may not be available for review after a security incident. Also, an attacker could potentially generate a large volume of Security log events to purposely force a computer shutdown."
-    remediation: "To establish the recommended configuration via GP, set the following UI path to Disabled: Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Local Policies\\Security Options\\Audit: Shut down system immediately if unable to log security audits."
+    remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled : Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Local Policies\\Security Options\\Audit: Force audit policy subcategory settings (Windows Vista or later) to override audit policy category settings"
     compliance:
       - cis: ["2.3.2.1"]
       - cis_csc: ["6.2", "6.3"]
@@ -108,7 +108,7 @@ checks:
       - 'CCE-34355-8'
     condition: all
     rules:
-      - 'r:HKEY_LOCAL_MACHINE\Software\Microsoft\Windows NT\CurrentVersion\Winlogon -> AllocateDASD -> 0'
+      - 'r:HKEY_LOCAL_MACHINE\Software\Microsoft\Windows NT\CurrentVersion\Winlogon -> AllocateDASD -> 2'
 
   - id: 15505 
     title: "Ensure 'Devices: Prevent users from installing printer drivers' is set to 'Enabled'"
@@ -2249,7 +2249,7 @@ checks:
       - tsc: ["CC6.1"]
     condition: all
     rules:
-      - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\NetBT\Parameters -> NodeType -> 1'
+      - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\NetBT\Parameters -> NodeType -> 2'
 
   - id: 15638 
     title: "Ensure 'WDigest Authentication' is set to 'Disabled'"
@@ -2370,7 +2370,7 @@ checks:
       - 'CCE-35469-6'
     condition: all
     rules:
-      - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters -> KeepAliveTime -> 493e0'
+      - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters -> KeepAliveTime -> 300000'
 
 
 
@@ -2680,7 +2680,7 @@ checks:
       - tsc: ["CC5.2"]
     condition: all
     rules:
-      - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP6\Parameters -> DisabledComponents -> ff'
+      - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP6\Parameters -> DisabledComponents -> 255'
 
   - id: 15663 
     title: "Ensure 'Configuration of wireless settings using Windows Connect Now' is set to 'Disabled'"
@@ -2723,7 +2723,7 @@ checks:
     title: "Ensure 'Minimize the number of simultaneous connections to the Internet or a Windows Domain' is set to 'Enabled: 3 = Prevent Wi-Fi when on Ethernet'"
     description: "This policy setting prevents computers from establishing multiple simultaneous connections to either the Internet or to a Windows domain. The recommended state for this setting is: Enabled: 3 = Prevent Wi-Fi when on Ethernet ."
     rationale: "Preventing bridged network connections can help prevent a user unknowingly allowing traffic to route between internal and external networks, which risks exposure to sensitive internal data."
-    remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\Network\\Windows Connection Manager\\Minimize the number of simultaneous connections to the Internet or a Windows Domain"
+    remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: 3 = Prevent Wi-Fi when on Ethernet: Computer Configuration\\Policies\\Administrative Templates\\Network\\Windows Connection Manager\\Minimize the number of simultaneous connections to the Internet or a Windows Domain"
     compliance:
       - cis: ["18.5.21.1"]
       - cis_csc: ["12"]
@@ -2735,13 +2735,13 @@ checks:
       - 'CCE-35242-7'
     condition: all
     rules:
-      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WcmSvc\GroupPolicy -> fMinimizeConnections -> 1'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WcmSvc\GroupPolicy -> fMinimizeConnections -> 3'
 
   - id: 15666 
     title: "Ensure 'Prohibit connection to non-domain networks when connected to domain authenticated network' is set to 'Enabled'"
     description: "This policy setting prevents computers from connecting to both a domain based network and a non-domain based network at the same time. The recommended state for this setting is: Enabled."
     rationale: "The potential concern is that a user would unknowingly allow network traffic to flow between the insecure public network and the enterprise managed network."
-    remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: 3 = Prevent Wi-Fi when on Ethernet: Computer Configuration\\Policies\\Administrative Templates\\Network\\Windows Connection Manager\\Prohibit connection to non-domain networks when connected to domain authenticated network"
+    remediation: "To establish the recommended configuration via GP, set the following UI path to Enabled: Computer Configuration\\Policies\\Administrative Templates\\Network\\Windows Connection Manager\\Prohibit connection to non-domain networks when connected to domain authenticated network"
     compliance:
       - cis: ["18.5.21.2"]
       - cis_csc: ["12"]
@@ -2896,7 +2896,7 @@ checks:
       - 'CCE-35776-4'
     condition: all
     rules:
-      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System -> DisableBkGndGroupPolicy -> 0'
+      - 'not r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System -> DisableBkGndGroupPolicy'
 
   - id: 15676 
     title: "Ensure 'Turn off access to the Store' is set to 'Enabled'"
@@ -3013,7 +3013,7 @@ checks:
       - 'CCE-33216-3'
     condition: all
     rules:
-      - 'r:HKEY_LOCAL_MACHINE\Policies\Microsoft\Windows\Registration Wizard Control -> NoRegistration -> 1'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Registration Wizard Control -> NoRegistration -> 1'
 
   - id: 15683 
     title: "Ensure 'Turn off Search Companion content file updates' is set to 'Enabled'"
@@ -3110,7 +3110,6 @@ checks:
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Windows Error Reporting -> Disabled -> 1'
-      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\PCHealth\ErrorReporting -> DoReport -> 0'
 
 
 
@@ -3148,7 +3147,7 @@ checks:
       - 'CCE-33783-2'
     condition: all
     rules:
-      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Kernel DMA Protection -> DeviceEnumerationPolicy -> 1'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Kernel DMA Protection -> DeviceEnumerationPolicy -> 0'
 
 
   - id: 15691 
@@ -3692,6 +3691,7 @@ checks:
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Connect -> RequirePinForPairing -> 1'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Connect -> RequirePinForPairing -> 2'
 
   - id: 15724 
     title: "Ensure 'Do not display the password reveal button' is set to 'Enabled'"
@@ -4381,6 +4381,7 @@ checks:
     condition: all
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services -> MaxIdleTime -> n:^(\d+) compare <= 900000'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services -> MaxIdleTime -> n:^(\d+) compare != 0'
 
   - id: 15764 
     title: "Ensure 'Set time limit for disconnected sessions' is set to 'Enabled: 1 minute'"
