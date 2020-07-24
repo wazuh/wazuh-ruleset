@@ -1346,9 +1346,10 @@ checks:
       - cis_csc: ["9.1", "9.2"]
       - pci_dss: ["2.2.5"]
       - tsc: ["CC6.3"]
-    condition: all
+    condition: any
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SNMP -> Start -> 4'
+      - 'not r:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SNMP
 
 
   - id: 15582 
@@ -3563,7 +3564,7 @@ checks:
       - 'CCE-38354-7'
     condition: all
     rules:
-      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\AppPrivacy -> LetAppsActivateWithVoiceAboveLock -> 1'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\AppPrivacy -> LetAppsActivateWithVoiceAboveLock -> 2'
 
   - id: 15716 
     title: "Ensure 'Allow Microsoft accounts to be optional' is set to 'Enabled'"
@@ -3630,7 +3631,7 @@ checks:
       - 'CCE-33791-5'
     condition: all
     rules:
-      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer -> NoDriveTypeAutoRun -> ff'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer -> NoDriveTypeAutoRun -> 255'
 
   - id: 15720 
     title: "Ensure 'Configure enhanced anti-spoofing' is set to 'Enabled'"
@@ -4317,7 +4318,7 @@ checks:
       - 'CCE-35255-9'
     condition: all
     rules:
-      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services -> fDenyTSConnections -> 0'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services -> fDenyTSConnections -> 1'
 
   - id: 15760 
     title: "Ensure 'Do not allow COM port redirection' is set to 'Enabled'"
@@ -4706,7 +4707,7 @@ checks:
       - tsc: ["CC6.3"]
     condition: all
     rules:
-      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\Spynet -> SpynetReporting -> 0'
+      - 'not r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\Spynet -> SpynetReporting'
 
   - id: 15783 
     title: "Ensure 'Configure Watson events' is set to 'Disabled'"
@@ -5014,7 +5015,7 @@ checks:
       - 'CCE-35431-6'
     condition: all
     rules:
-      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Installer -> EnableUserControl -> 1'
+      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Installer -> EnableUserControl -> 0'
 
   - id: 15801 
     title: "Ensure 'Always install with elevated privileges' is set to 'Disabled'"
@@ -5270,7 +5271,6 @@ checks:
     rules:
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate -> DeferFeatureUpdates -> 1'
       - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate -> DeferFeatureUpdatesPeriodInDays -> n:^(\d+) compare >= 180'
-      - 'r:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate -> BranchReadinessLevel -> 32'
 
   - id: 15816 
     title: "Ensure 'Select when Quality Updates are received' is set to 'Enabled: 0 days'"
