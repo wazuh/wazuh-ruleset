@@ -33,7 +33,7 @@ This ruleset currently has more than 3000 rules, and it applies to a huge list o
 - MongoDB
 - Jenkins
 
-And much more, take a look at the full list [here]().
+And much more, take a look at the full list [here](https://documentation.wazuh.com/current/user-manual/ruleset/getting-started.html).
 
 ## Updating the Wazuh Ruleset
 
