@@ -7,9 +7,11 @@
 
 Wazuh ruleset is used to detect attacks, intrusions, software misuse, configuration problems, application errors, malware, rootkits, system anomalies or security policy violations.
 
-The ruleset includes compliance mapping with [PCI DSS v3.1](https://www.pcisecuritystandards.org/), [GDPR](https://gdpr-info.eu/), [CIS](https://www.cisecurity.org/) and [MITRE ATT&CK](https://attack.mitre.org/)
+The ruleset includes compliance mapping with [PCI DSS v3.2](https://www.pcisecuritystandards.org/), [GDPR](https://gdpr-info.eu/), [CIS](https://www.cisecurity.org/) and [MITRE ATT&CK](https://attack.mitre.org/)
 
-This ruleset currently has more than 10k rules, and it applies to a huge list of additional technologies such:
+![image](https://user-images.githubusercontent.com/10210567/90039680-4441ff80-dcc7-11ea-8c2d-2e137652a41c.png)
+
+This ruleset currently has more than 3000 rules, and it applies to a huge list of additional technologies such:
 
 - Syslog
 - Docker
