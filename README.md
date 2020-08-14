@@ -14,12 +14,9 @@ The ruleset includes compliance mapping with [PCI DSS v3.2](https://www.pcisecur
 This ruleset currently has more than 3000 rules, and it applies to a huge list of additional technologies such:
 
 - Syslog
-- Docker
-- Cisco
-- Sendmail
+- SonicWall
+- Cisco Systems
 - Postfix
-- Spamd
-- Imapd
 - Mailscanner
 - Microsoft Exchange
 - Courier
@@ -31,7 +28,6 @@ This ruleset currently has more than 3000 rules, and it applies to a huge list o
 - VirusTotal
 - Suricata
 - MongoDB
-- Jenkins
 
 And much more, take a look at the full list [here](https://documentation.wazuh.com/current/user-manual/ruleset/getting-started.html).
 
