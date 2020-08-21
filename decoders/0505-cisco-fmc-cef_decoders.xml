@@ -16,756 +16,762 @@
 <!-- Event Types Identifier-->
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex offset="after_parent">\|(\w+:\d+:\d+)\|(\.+)\|(\d+)|([\d+:\d+])\|(\.+)\|(\d+)</regex>
+    <regex offset="after_parent">(\w+):(\d+:\d+)\|(\.+)\|(\d+)</regex>
+    <order>Event.Data.Type,Event.ID,Event.Description,Event.Severity</order>
+</decoder>
+
+<decoder name="cisco-fmc-cef">
+    <parent>cisco-fmc-cef</parent>
+    <regex offset="after_parent">[(\d+:\d+)]\|(\.+)\|(\d+)</regex>
     <order>Event.ID,Event.Description,Event.Severity</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>act=(\.+) | act=(\.+)$</regex>
+    <regex>act=(\.+) \w+=| act=(\.+)$</regex>
     <order>Device.Action</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>app=(\.+) | app=(\.+)$</regex>
+    <regex>app=(\.+) \w+=| app=(\.+)$</regex>
     <order>Application.Protocol</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>c6a1=(\S+) | c6a1=(\S+)$</regex>
+    <regex>c6a1=(\S+) \w+=| c6a1=(\S+)$</regex>
     <order>Device.Custom.IPv6.Address.1</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>c6a1Label=(\.+) | c6a1Label=(\.+)$</regex>
+    <regex>c6a1Label=(\.+) \w+=| c6a1Label=(\.+)$</regex>
     <order>Device.Custom.IPv6.Address.1.Label</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>c6a2=(\S+) | c6a2=(\S+)$</regex>
+    <regex>c6a2=(\S+) \w+=| c6a2=(\S+)$</regex>
     <order>Device.Custom.IPv6.Address.2</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>c6a2Label=(\.+) | c6a2Label=(\.+)$</regex>
+    <regex>c6a2Label=(\.+) \w+=| c6a2Label=(\.+)$</regex>
     <order>Device.Custom.IPv6.Address.2.Label</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>c6a3=(\S+) | c6a3=(\S+)$</regex>
+    <regex>c6a3=(\S+) \w+=| c6a3=(\S+)$</regex>
     <order>Device.Custom.IPv6.Address.3</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>c6a3Label=(\.+) | c6a3Label=(\.+)$</regex>
+    <regex>c6a3Label=(\.+) \w+=| c6a3Label=(\.+)$</regex>
     <order>Device.Custom.IPv6.Address.3.Label</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>c6a4=(\S+) | c6a4=(\S+)$</regex>
+    <regex>c6a4=(\S+) \w+=| c6a4=(\S+)$</regex>
     <order>Device.Custom.IPv6.Address.4</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>c6a4Label=(\.+) | c6a4Label=(\.+)$</regex>
+    <regex>c6a4Label=(\.+) \w+=| c6a4Label=(\.+)$</regex>
     <order>Device.Custom.IPv6.Address.4.Label</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>cat=(\.+) | cat=(\.+)$</regex>
+    <regex>cat=(\.+) \w+=| cat=(\.+)$</regex>
     <order>Device.Event.Category</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>cfp1=(\.+) | cfp1=(\.+)$</regex>
+    <regex>cfp1=(\.+) \w+=| cfp1=(\.+)$</regex>
     <order>Device.Custom.Floating.Point.1</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>cfp1Label=(\.+) | cfp1Label=(\.+)$</regex>
+    <regex>cfp1Label=(\.+) \w+=| cfp1Label=(\.+)$</regex>
     <order>Device.Custom.Floating.Point.1.Label</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>cfp2=(\.+) | cfp2=(\.+)$</regex>
+    <regex>cfp2=(\.+) \w+=| cfp2=(\.+)$</regex>
     <order>Device.Custom.Floating.Point.2</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>cfp2Label=(\.+) | cfp2Label=(\.+)$</regex>
+    <regex>cfp2Label=(\.+) \w+=| cfp2Label=(\.+)$</regex>
     <order>Device.Custom.Floating.Point.2.Label</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>cfp3=(\.+) | cfp3=(\.+)$</regex>
+    <regex>cfp3=(\.+) \w+=| cfp3=(\.+)$</regex>
     <order>Device.Custom.Floating.Point.3</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>cfp3Label=(\.+) | cfp3Label=(\.+)$</regex>
+    <regex>cfp3Label=(\.+) \w+=| cfp3Label=(\.+)$</regex>
     <order>Device.Custom.Floating.Point.3.Label</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>cfp4=(\.+) | cfp4=(\.+)$</regex>
+    <regex>cfp4=(\.+) \w+=| cfp4=(\.+)$</regex>
     <order>Device.Custom.Floating.Point.4</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>cfp4Label=(\.+) | cfp4Label=(\.+)$</regex>
+    <regex>cfp4Label=(\.+) \w+=| cfp4Label=(\.+)$</regex>
     <order>Device.Custom.Floating.Point.4.Label</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>cn1=(\.+) | cn1=(\.+)$</regex>
+    <regex>cn1=(\.+) \w+=| cn1=(\.+)$</regex>
     <order>Device.Custom.Number.1</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>cn1Label=(\.+) | cn1Label=(\.+)$</regex>
+    <regex>cn1Label=(\.+) \w+=| cn1Label=(\.+)$</regex>
     <order>Device.Custom.Number.1.Label</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>cn2=(\.+) | cn2=(\.+)$</regex>
+    <regex>cn2=(\.+) \w+=| cn2=(\.+)$</regex>
     <order>Device.Custom.Number.2</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>cn2Label=(\.+) | cn2Label=(\.+)$</regex>
+    <regex>cn2Label=(\.+) \w+=| cn2Label=(\.+)$</regex>
     <order>Device.Custom.Number.2.Label</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>cn3=(\.+) | cn3=(\.+)$</regex>
+    <regex>cn3=(\.+) \w+=| cn3=(\.+)$</regex>
     <order>Device.Custom.Number.3</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>cn3Label=(\.+) | cn3Label=(\.+)$</regex>
+    <regex>cn3Label=(\.+) \w+=| cn3Label=(\.+)$</regex>
     <order>Device.Custom.Number.3.Label</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>cnt=(\d+) | cnt=(\d+)$</regex>
+    <regex>cnt=(\d+) \w+=| cnt=(\d+)$</regex>
     <order>Base.Event.Count</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>cs1=(\.+) | cs1=(\.+)$</regex>
+    <regex>cs1=(\.+) \w+=| cs1=(\.+)$</regex>
     <order>Device.Custom.String.1</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>cs1Label=(\.+) | cs1Label=(\.+)$</regex>
+    <regex>cs1Label=(\.+) \w+=| cs1Label=(\.+)$</regex>
     <order>Device.Custom.String.1.Label</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>cs2=(\.+) | cs2=(\.+)$</regex>
+    <regex>cs2=(\.+) \w+=| cs2=(\.+)$</regex>
     <order>Device.Custom.String.2</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>cs2Label=(\.+) | cs2Label=(\.+)$</regex>
+    <regex>cs2Label=(\.+) \w+=| cs2Label=(\.+)$</regex>
     <order>Device.Custom.String.2.Label</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>cs3=(\.+) | cs3=(\.+)$</regex>
+    <regex>cs3=(\.+) \w+=| cs3=(\.+)$</regex>
     <order>Device.Custom.String.3</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>cs3Label=(\.+) | cs3Label=(\.+)$</regex>
+    <regex>cs3Label=(\.+) \w+=| cs3Label=(\.+)$</regex>
     <order>Device.Custom.String.3.Label</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>cs4=(\.+) | cs4=(\.+)$</regex>
+    <regex>cs4=(\.+) \w+=| cs4=(\.+)$</regex>
     <order>Device.Custom.String.4</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>cs4Label=(\.+) | cs4Label=(\.+)$</regex>
+    <regex>cs4Label=(\.+) \w+=| cs4Label=(\.+)$</regex>
     <order>Device.Custom.String.4.Label</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>cs5=(\.+) | cs5=(\.+)$</regex>
+    <regex>cs5=(\.+) \w+=| cs5=(\.+)$</regex>
     <order>Device.Custom.String.5</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>cs5Label=(\.+) | cs5Label=(\.+)$</regex>
+    <regex>cs5Label=(\.+) \w+=| cs5Label=(\.+)$</regex>
     <order>Device.Custom.String.5.Label</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>cs6=(\.+) | cs6=(\.+)$</regex>
+    <regex>cs6=(\.+) \w+=| cs6=(\.+)$</regex>
     <order>Device.Custom.String.6</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>cs6Label=(\.+) | cs6Label=(\.+)$</regex>
+    <regex>cs6Label=(\.+) \w+=| cs6Label=(\.+)$</regex>
     <order>Device.Custom.String.6.Label</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>destinationDnsDomain=(\S+) | destinationDnsDomain=(\S+)$</regex>
+    <regex>destinationDnsDomain=(\S+) \w+=| destinationDnsDomain=(\S+)$</regex>
     <order>Destination.Dns.Domain</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>destinationServiceName=(\.+) | destinationServiceName=(\.+)$</regex>
+    <regex>destinationServiceName=(\.+) \w+=| destinationServiceName=(\.+)$</regex>
     <order>Destination.Service.Name</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>destinationTranslatedAddress=(\S+) | destinationTranslatedAddress=(\S+)$</regex>
+    <regex>destinationTranslatedAddress=(\S+) \w+=| destinationTranslatedAddress=(\S+)$</regex>
     <order>Destination.Translated.IP.Address</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>destinationTranslatedPort=(\d+) | destinationTranslatedPort=(\d+)$</regex>
+    <regex>destinationTranslatedPort=(\d+) \w+=| destinationTranslatedPort=(\d+)$</regex>
     <order>Destination.Translated.Port</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>deviceCustomDate1=(\S+) | deviceCustomDate1=(\S+)$</regex>
+    <regex>deviceCustomDate1=(\S+) \w+=| deviceCustomDate1=(\S+)$</regex>
     <order>Device.Custom.Date.1</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>deviceCustomDate1Label=(\.+) | deviceCustomDate1Label=(\.+)$</regex>
+    <regex>deviceCustomDate1Label=(\.+) \w+=| deviceCustomDate1Label=(\.+)$</regex>
     <order>Device.Custom.Date.1.Label</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>deviceCustomDate2=(\S+) | deviceCustomDate2=(\S+)$</regex>
+    <regex>deviceCustomDate2=(\S+) \w+=| deviceCustomDate2=(\S+)$</regex>
     <order>Device.Custom.Date.2</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>deviceCustomDate2Label=(\.+) | deviceCustomDate2Label=(\.+)$</regex>
+    <regex>deviceCustomDate2Label=(\.+) \w+=| deviceCustomDate2Label=(\.+)$</regex>
     <order>Device.Custom.Date.2.Label</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>deviceDirection=(\d) | deviceDirection=(\d)$</regex>
+    <regex>deviceDirection=(\d) \w+=| deviceDirection=(\d)$</regex>
     <order>Device.Direction</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>deviceDnsDomain=(\S+) | deviceDnsDomain=(\S+)$</regex>
+    <regex>deviceDnsDomain=(\S+) \w+=| deviceDnsDomain=(\S+)$</regex>
     <order>Device.Dns.Domain</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>deviceExternalId=(\.+) | deviceExternalId=(\.+)$</regex>
+    <regex>deviceExternalId=(\d+) \w+=| deviceExternalId=(\d+)$</regex>
     <order>Device.External.ID</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>deviceFacility=(\.+) | deviceFacility=(\.+)$</regex>
+    <regex>deviceFacility=(\.+) \w+=| deviceFacility=(\.+)$</regex>
     <order>Device.Facility</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>deviceInboundInterface=(\.+) | deviceInboundInterface=(\.+)$</regex>
+    <regex>deviceInboundInterface=(\.+) \w+=| deviceInboundInterface=(\.+)$</regex>
     <order>Device.Inbound.Interface</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>deviceNtDomain=(\S+) | deviceNtDomain=(\S+)$</regex>
+    <regex>deviceNtDomain=(\S+) \w+=| deviceNtDomain=(\S+)$</regex>
     <order>Device.NT.Domain</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>deviceOutboundInterface=(\.+) | deviceOutboundInterface=(\.+)$</regex>
+    <regex>deviceOutboundInterface=(\.+) \w+=| deviceOutboundInterface=(\.+)$</regex>
     <order>Device.Outbound.Interface</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>devicePayloadId=(\.+) | devicePayloadId=(\.+)$</regex>
+    <regex>devicePayloadId=(\.+) \w+=| devicePayloadId=(\.+)$</regex>
     <order>Device.Payload.ID</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>deviceProcessName=(\.+) | deviceProcessName=(\.+)$</regex>
+    <regex>deviceProcessName=(\.+) \w+=| deviceProcessName=(\.+)$</regex>
     <order>Device.Process.Name</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>deviceTranslatedAddress=(\S+) | deviceTranslatedAddress=(\S+)$</regex>
+    <regex>deviceTranslatedAddress=(\S+) \w+=| deviceTranslatedAddress=(\S+)$</regex>
     <order>Device.Translated.IP.Address</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>dhost=(\S+) | dhost=(\S+)$</regex>
+    <regex>dhost=(\S+) \w+=| dhost=(\S+)$</regex>
     <order>Destination.Host.Name</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>dmac=(\S+) | dmac=(\S+)$</regex>
+    <regex>dmac=(\S+) \w+=| dmac=(\S+)$</regex>
     <order>Destination.MAC.Address</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>dntdom=(\S+) | dntdom=(\S+)$</regex>
+    <regex>dntdom=(\S+) \w+=| dntdom=(\S+)$</regex>
     <order>Destination.NT.Domain</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>dpid=(\d+) | dpid=(\d+)$</regex>
+    <regex>dpid=(\d+) \w+=| dpid=(\d+)$</regex>
     <order>Destination.Process.ID</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>dpriv=(\.+) | dpriv=(\.+)$</regex>
+    <regex>dpriv=(\.+) \w+=| dpriv=(\.+)$</regex>
     <order>Destination.User.Privileges</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>dproc=(\.+) | dproc=(\.+)$</regex>
+    <regex>dproc=(\.+) \w+=| dproc=(\.+)$</regex>
     <order>Destination.Process.Name</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>dpt=(\d+) | dpt=(\d+)$</regex>
+    <regex>dpt=(\d+) \w+=| dpt=(\d+)$</regex>
     <order>Destination.Port</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>dst=(\S+) | dst=(\S+)$</regex>
+    <regex>dst=(\S+) \w+=| dst=(\S+)$</regex>
     <order>Destination.IP.Address</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>dtz=(\.+) | dtz=(\.+)$</regex>
+    <regex>dtz=(\.+) \w+=| dtz=(\.+)$</regex>
     <order>Destination.Time.Zone</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>duid=(\S+) | duid=(\S+)$</regex>
+    <regex>duid=(\S+) \w+=| duid=(\S+)$</regex>
     <order>Destination.User.ID</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>duser=(\.+) | duser=(\.+)$</regex>
+    <regex>duser=(\.+) \w+=| duser=(\.+)$</regex>
     <order>Destination.User.Name</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>dvc=(\S+) | dvc=(\S+)$</regex>
+    <regex>dvc=(\S+) \w+=| dvc=(\S+)$</regex>
     <order>Device.IP.Address</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>dvchost=(\S+) | dvchost=(\S+)$</regex>
+    <regex>dvchost=(\S+) \w+=| dvchost=(\S+)$</regex>
     <order>Device.Host.Name</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>dvcmac=(\S+) | dvcmac=(\S+)$</regex>
+    <regex>dvcmac=(\S+) \w+=| dvcmac=(\S+)$</regex>
     <order>Device.MAC.Address</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>dvcpid=(\d+) | dvcpid=(\d+)$</regex>
+    <regex>dvcpid=(\d+) \w+=| dvcpid=(\d+)$</regex>
     <order>Device.Process.ID</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>end=(\.+) | end=(\.+)$</regex>
+    <regex>end=(\.+) \w+=| end=(\.+)$</regex>
     <order>Event.End.Time</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>externalId=(\S+) | externalId=(\S+)$</regex>
+    <regex>externalId=(\d+) \w+=| externalId=(\d+)$</regex>
     <order>External.ID</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>fileCreateTime=(\.+) | fileCreateTime=(\.+)$</regex>
+    <regex>fileCreateTime=(\.+) \w+=| fileCreateTime=(\.+)$</regex>
     <order>File.Create.Time</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>fileHash=(\w+) | fileHash=(\w+)$</regex>
+    <regex>fileHash=(\w+) \w+=| fileHash=(\w+)$</regex>
     <order>File.Hash</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>fileId=(\S+) | fileId=(\S+)$</regex>
+    <regex>fileId=(\S+) \w+=| fileId=(\S+)$</regex>
     <order>File.ID</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>fileModificationTime=(\.+) | fileModificationTime=(\.+)$</regex>
+    <regex>fileModificationTime=(\.+) \w+=| fileModificationTime=(\.+)$</regex>
     <order>File.Modification.Time</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>filePath=(\.+) | filePath=(\.+)$</regex>
+    <regex>filePath=(\.+) \w+=| filePath=(\.+)$</regex>
     <order>File.Path</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>filePermission=(\.+) | filePermission=(\.+)$</regex>
+    <regex>filePermission=(\.+) \w+=| filePermission=(\.+)$</regex>
     <order>File.Permission</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>fileType=(\.+) | fileType=(\.+)$</regex>
+    <regex>fileType=(\.+) \w+=| fileType=(\.+)$</regex>
     <order>File.Type</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>flexDate1=(\.+) | flexDate1=(\.+)$</regex>
+    <regex>flexDate1=(\.+) \w+=| flexDate1=(\.+)$</regex>
     <order>Flex.Date.1</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>flexDate1Label=(\.+) | flexDate1Label=(\.+)$</regex>
+    <regex>flexDate1Label=(\.+) \w+=| flexDate1Label=(\.+)$</regex>
     <order>Flex.Date.1.Label</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>flexString1=(\.+) | flexString1=(\.+)$</regex>
+    <regex>flexString1=(\.+) \w+=| flexString1=(\.+)$</regex>
     <order>Flex.String.1</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>flexString1Label=(\.+) | flexString1Label=(\.+)$</regex>
+    <regex>flexString1Label=(\.+) \w+=| flexString1Label=(\.+)$</regex>
     <order>Flex.String.1.Label</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>flexString2=(\.+) | flexString2=(\.+)$</regex>
+    <regex>flexString2=(\.+) \w+=| flexString2=(\.+)$</regex>
     <order>Flex.String.2</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>flexString2Label=(\.+) | flexString2Label=(\.+)$</regex>
+    <regex>flexString2Label=(\.+) \w+=| flexString2Label=(\.+)$</regex>
     <order>Flex.String.2.Label</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>fname=(\.+) | fname=(\.+)$</regex>
+    <regex>fname=(\.+) \w+=| fname=(\.+)$</regex>
     <order>File.Name</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>fsize=(\d+) | fsize=(\d+)$</regex>
+    <regex>fsize=(\d+) \w+=| fsize=(\d+)$</regex>
     <order>File.Size</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>bytesIn=(\d+) |in=(\d+) | bytesIn=(\d+)$| in=(\d+)$</regex>
+    <regex>bytesIn=(\d+) \w+=|in=(\d+) \w+=| bytesIn=(\d+)$| in=(\d+)$</regex>
     <order>Bytes.Inbound</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>msg=(\.+) | in=(\.+)$</regex>
+    <regex>msg=(\.+) \w+=| in=(\.+)$</regex>
     <order>Event.Message</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>oldFileCreateTime=(\.+) | oldFileCreateTime=(\.+)$</regex>
+    <regex>oldFileCreateTime=(\.+) \w+=| oldFileCreateTime=(\.+)$</regex>
     <order>Old.File.Create.Time</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>oldFileHash=(\w+) | oldFileHash=(\w+)$</regex>
+    <regex>oldFileHash=(\w+) \w+=| oldFileHash=(\w+)$</regex>
     <order>Old.File.Hash</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>oldFileId=(\S+) | oldFileId=(\S+)$</regex>
+    <regex>oldFileId=(\S+) \w+=| oldFileId=(\S+)$</regex>
     <order>Old.File.ID</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>oldFileModificationTime=(\.+) | oldFileModificationTime=(\.+)$</regex>
+    <regex>oldFileModificationTime=(\.+) \w+=| oldFileModificationTime=(\.+)$</regex>
     <order>Old.File.Modification.Time</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>oldFileName=(\.+) | oldFileName=(\.+)$</regex>
+    <regex>oldFileName=(\.+) \w+=| oldFileName=(\.+)$</regex>
     <order>Old.File.Name</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>oldFilePath=(\.+) | oldFilePath=(\.+)$</regex>
+    <regex>oldFilePath=(\.+) \w+=| oldFilePath=(\.+)$</regex>
     <order>Old.File.Path</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>oldFilePermission=(\.+) | oldFilePermission=(\.+)$</regex>
+    <regex>oldFilePermission=(\.+) \w+=| oldFilePermission=(\.+)$</regex>
     <order>Old.File.Permission</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>oldFileSize=(\d+) | oldFileSize=(\d+)$</regex>
+    <regex>oldFileSize=(\d+) \w+=| oldFileSize=(\d+)$</regex>
     <order>Old.File.Size</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>oldFileType=(\.+) | oldFileType=(\.+)$</regex>
+    <regex>oldFileType=(\.+) \w+=| oldFileType=(\.+)$</regex>
     <order>Old.File.Type</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>bytesOut=(\d+) |out=(\d+) | bytesOut=(\d+)$| out=(\d+)$</regex>
+    <regex>bytesOut=(\d+) \w+=|out=(\d+) \w+=| bytesOut=(\d+)$| out=(\d+)$</regex>
     <order>Bytes.Outbound</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>outcome=(\.+) | outcome=(\.+)$</regex>
+    <regex>outcome=(\.+) \w+=| outcome=(\.+)$</regex>
     <order>Event.Outcome</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>proto=(\.+) | proto=(\.+)$</regex>
+    <regex>proto=(\d+) \w+=| proto=(\d+)$</regex>
     <order>Transport.Protocol</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>reason=(\.+) | reason=(\.+)$</regex>
+    <regex>reason=(\.+) \w+=| reason=(\.+)$</regex>
     <order>Event.Reason</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>request="(\.+)" | request="(\.+)"$</regex>
+    <regex>request="(\.+)" \w+=| request="(\.+)"$</regex>
     <order>Request.URL</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>requestClientApplication=(\.+) | requestClientApplication=(\.+)$</regex>
+    <regex>requestClientApplication=(\.+) \w+=| requestClientApplication=(\.+)$</regex>
     <order>Request.Client.Application</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>requestContext=(\.+) | requestContext=(\.+)$</regex>
+    <regex>requestContext=(\.+) \w+=| requestContext=(\.+)$</regex>
     <order>Request.Context</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>requestCookies=(\.+) | requestCookies=(\.+)$</regex>
+    <regex>requestCookies=(\.+) \w+=| requestCookies=(\.+)$</regex>
     <order>Request.Cookies</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>requestMethod=(\.+) | requestMethod=(\.+)$</regex>
+    <regex>requestMethod=(\.+) \w+=| requestMethod=(\.+)$</regex>
     <order>Request.Method</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>rt=(\.+) | rt=(\.+)$</regex>
+    <regex>rt=(\.+) \w+=| rt=(\.+)$</regex>
     <order>Device.Receipt.Time</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>shost=(\S+) | shost=(\S+)$</regex>
+    <regex>shost=(\S+) \w+=| shost=(\S+)$</regex>
     <order>Source.Host.Name</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>smac=(\S+) | smac=(\S+)$</regex>
+    <regex>smac=(\S+) \w+=| smac=(\S+)$</regex>
     <order>Source.MAC.Address</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>sntdom=(\S+) | sntdom=(\S+)$</regex>
+    <regex>sntdom=(\S+) \w+=| sntdom=(\S+)$</regex>
     <order>Source.NT.Domain</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>sourceDnsDomain=(\S+) | sourceDnsDomain=(\S+)$</regex>
+    <regex>sourceDnsDomain=(\S+) \w+=| sourceDnsDomain=(\S+)$</regex>
     <order>Source.Dns.Domain</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>sourceServiceName=(\.+) | sourceServiceName=(\.+)$</regex>
+    <regex>sourceServiceName=(\.+) \w+=| sourceServiceName=(\.+)$</regex>
     <order>Source.Service.Name</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>sourceTranslatedAddress=(\S+) | sourceTranslatedAddress=(\S+)$</regex>
+    <regex>sourceTranslatedAddress=(\S+) \w+=| sourceTranslatedAddress=(\S+)$</regex>
     <order>Source.Translated.IP.Address</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>sourceTranslatedPort=(\d+) | sourceTranslatedPort=(\d+)$</regex>
+    <regex>sourceTranslatedPort=(\d+) \w+=| sourceTranslatedPort=(\d+)$</regex>
     <order>Source.Translated.Port</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>spid=(\d+) | spid=(\d+)$</regex>
+    <regex>spid=(\d+) \w+=| spid=(\d+)$</regex>
     <order>Source.Process.ID</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>spriv=(\.+) | spriv=(\.+)$</regex>
+    <regex>spriv=(\.+) \w+=| spriv=(\.+)$</regex>
     <order>Source.User.Privileges</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>sproc=(\.+) | sproc=(\.+)$</regex>
+    <regex>sproc=(\.+) \w+=| sproc=(\.+)$</regex>
     <order>Source.Process.Name</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>spt=(\d+) | spt=(\d+)$</regex>
+    <regex>spt=(\d+) \w+=| spt=(\d+)$</regex>
     <order>Source.Port</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>src=(\S+) | src=(\S+)$</regex>
+    <regex>src=(\S+) \w+=| src=(\S+)$</regex>
     <order>Source.IP.Address</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>start=(\.+) | start=(\.+)$</regex>
+    <regex>start=(\.+) \w+=| start=(\.+)$</regex>
     <order>Start.Time</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>suid=(\S+) | suid=(\S+)$</regex>
+    <regex>suid=(\S+) \w+=| suid=(\S+)$</regex>
     <order>Source.User.ID</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>suser=(\.+) | suser=(\.+)$</regex>
+    <regex>suser=(\.+) \w+=| suser=(\.+)$</regex>
     <order>Source.User.Name</order>
 </decoder>
 
 <decoder name="cisco-fmc-cef">
     <parent>cisco-fmc-cef</parent>
-    <regex>type=(\d) | suser=(\d)$</regex>
+    <regex>type=(\d) \w+=| suser=(\d)$</regex>
     <order>Event.Type</order>
 </decoder>
