@@ -60,14 +60,14 @@ Jan 28 14:25:49 VPN-SERVER-05892 openvpn: LDAP bind failed: Invalid credentials 
 Jan 28 14:25:49 VPN-SERVER-05892 openvpn: Incorrect password supplied for LDAP DN "CN=Harry T. Hacker,OU=business unit,OU=department,DC=domain,DC=com".
 -->
 
-  <rule id="81810" level="5">
+  <rule id="81805" level="5">
     <if_sid>81800</if_sid>
     <match>^LDAP bind failed:</match>
     <description>OpenVPN LDAP Bind Failure: $(ldap_data.error_message)</description>
     <group>pci_dss_10.2.5,gpg13_7.1,gpg13_7.2,gdpr_IV_32.2,hipaa_164.312.b,nist_800_53_AU.14,nist_800_53_AC.7</group>
   </rule>
 
-  <rule id="81820" level="5">
+  <rule id="81806" level="5">
     <if_sid>81800</if_sid>
     <match>^Incorrect password supplied for LDAP DN</match>
     <description>OpenVPN LDAP Logon Failure: $(ldap_data.Username) [$(ldap_data.Department)]</description>
