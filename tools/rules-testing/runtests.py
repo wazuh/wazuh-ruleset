@@ -10,11 +10,14 @@ import ConfigParser
 import subprocess
 import os
 import sys
-import os.path
 from collections import OrderedDict
 import shutil
 import argparse
+import re
+import signal
 
+rules_test_fname_pattern = re.compile('^test_(.*?)_rules.xml$')
+decoders_test_fname_pattern = re.compile('^test_(.*?)_decoders.xml$')
 
 class MultiOrderedDict(OrderedDict):
     def __setitem__(self, key, value):
@@ -38,22 +41,36 @@ def getOssecConfig(initconf, path):
         sys.exit(1)
 
 
-def provisionDR(bdir):
-    if os.path.isfile("./rules/test_rules.xml") and os.path.isfile("./decoders/test_decoders.xml"):
-        shutil.copy2("./rules/test_rules.xml", ossec_init["DIRECTORY"] + "/etc/rules")
-        shutil.copy2("./decoders/test_decoders.xml", ossec_init["DIRECTORY"] + "/etc/decoders")
-    else:
-        print "Test files are missing."
-        sys.exit(1)
+def provisionDR():
+    base_dir = os.path.dirname(os.path.realpath(__file__))
+    rules_dir = os.path.join(base_dir, "rules")
+    decoders_dir = os.path.join(base_dir, "decoders") 
+
+    for file in os.listdir(rules_dir):
+        file_fullpath = os.path.join(rules_dir, file)
+        if os.path.isfile(file_fullpath) and re.match(r'^test_(.*?)_rules.xml$',file):
+            shutil.copy2(file_fullpath , ossec_init["DIRECTORY"] + "/etc/rules")
+
+    for file in os.listdir(decoders_dir):
+        file_fullpath = os.path.join(decoders_dir, file)
+        if os.path.isfile(file_fullpath) and re.match(r'^test_(.*?)_decoders.xml$',file):
+            shutil.copy2(file_fullpath , ossec_init["DIRECTORY"] + "/etc/decoders")
+
+def cleanDR():
+    rules_dir = ossec_init["DIRECTORY"] + "/etc/rules"
+    decoders_dir = ossec_init["DIRECTORY"] + "/etc/decoders"
+
+    for file in os.listdir(rules_dir):
+        file_fullpath = os.path.join(rules_dir, file)
+        if os.path.isfile(file_fullpath) and re.match(r'^test_(.*?)_rules.xml$',file):
+            os.remove(file_fullpath)
+
+    for file in os.listdir(decoders_dir):
+        file_fullpath = os.path.join(decoders_dir, file)
+        if os.path.isfile(file_fullpath) and re.match(r'^test_(.*?)_decoders.xml$',file):
+            os.remove(file_fullpath)
 
 
-def cleanDR(bdir):
-    if os.path.isfile(bdir + "/etc/rules/test_rules.xml") and os.path.isfile(bdir + "/etc/decoders/test_decoders.xml"):
-        os.remove(bdir + "/etc/rules/test_rules.xml")
-        os.remove(bdir + "/etc/decoders/test_decoders.xml")
-    else:
-        print "Could not clean rules and decoders test files"
-        sys.exit(1)
 
 
 class OssecTester(object):
@@ -109,7 +126,7 @@ class OssecTester(object):
             if aFile.endswith(".ini"):
                 if selective_test and not aFile.endswith(selective_test):
                     continue
-                if aFile == os.path.join(self._test_path, "static_filters_geoip.ini") and geoip is False:
+                if geoip is False and aFile == os.path.join(self._test_path, "test_static_filters_geoip.ini"):
                     continue
                 print "- [ File = %s ] ---------" % (aFile)
                 tGroup = ConfigParser.RawConfigParser(dict_type=MultiOrderedDict)
@@ -132,31 +149,33 @@ class OssecTester(object):
                             self.runTest(value, rule, alert, decoder,
                                          t, name, negate=neg)
                 print ""
-        if self._error:
-            sys.exit(1)
+                print ""
+        return self._error
 
+def cleanup(*args):
+    cleanDR()
+    sys.exit(0)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='This script tests Wazuh rules.')
-    parser.add_argument('--geoip', '-g',
-                        action='store_true',
-                        dest='geoip',
+    parser.add_argument('--geoip', '-g', action='store_true', dest='geoip',
                         help='Use -g or --geoip to enable geoip tests (default: False)')
+    parser.add_argument('--testfile', '-t', action='store', type=str, dest='testfile',
+                        help='Use -t or --testfile to pass the ini file to test')
     args = parser.parse_args()
-
-    if len(sys.argv) == 2:
-        if sys.argv[1] == '-g' or sys.argv[1] == '--geoip':
-            selective_test = False
-        else:
-            selective_test = sys.argv[1]
-            if not selective_test.endswith('.ini'):
-                selective_test += '.ini'
-    else:
-        selective_test = False
+    selective_test = False
+    if args.testfile:
+        selective_test = args.testfile
+        if not selective_test.endswith('.ini'):
+            selective_test += '.ini'
     ossec_init = {}
     initconfigpath = "/etc/ossec-init.conf"
     getOssecConfig(ossec_init, initconfigpath)
-    provisionDR(ossec_init["DIRECTORY"])
+    for sig in (signal.SIGABRT, signal.SIGINT, signal.SIGTERM):
+        signal.signal(sig, cleanup)
+    provisionDR()
     OT = OssecTester(ossec_init["DIRECTORY"])
-    OT.run(selective_test, args.geoip)
-    cleanDR(ossec_init["DIRECTORY"])
+    error = OT.run(selective_test, args.geoip)
+    cleanDR()
+    if error:
+        sys.exit(1)
