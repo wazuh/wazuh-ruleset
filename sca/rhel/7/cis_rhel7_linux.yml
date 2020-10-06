@@ -1071,22 +1071,22 @@ checks:
     rules:
       - 'f:/etc/passwd -> !r:^# && !r:^\s*\t*root: && r:^\w+:\w+:0:'
 
-# 1.1.1.1 Ensure mounting of cramfs filesystems is disabled (Automated)
+# 1.1.1.1 Ensure mounting of cramfs filesystems is disabled
   - id: 5564
-    title: "Ensure mounting of cramfs filesystems is disabled (Automated)"
+    title: "Ensure mounting of cramfs filesystems is disabled"
     description: "The cramfs filesystem type is a compressed read-only Linux filesystem embedded in small footprint systems. A cramfs image can be used without having to first decompress the image."
     rationale: "Removing support for unneeded filesystem types reduces the local attack surface of the server. If this filesystem type is not needed, disable it."
-    remediation: "Edit or create a file in the /etc/modprobe.d/ directory ending in .conf"
+    remediation: "Edit or create a file in the /etc/modprobe.d/ directory ending in .conf and add the following line: install cramfs /bin/true. Run the following command to unload the cramfs module: # rmmod cramfs"
     compliance:
       - cis: ["1.1.1.1"]
     condition: all
     rules:
       - 'c:modprobe -n -v cramfs -> r:\s(cramfs|install)\s'
-      - 'lsmod -> r:\scramfs\s'
+      - 'lsmod -> !r:\scramfs\s'
 
-# 1.1.1.2  Ensure mounting of squashfs filesystems is disabled (Automated)
+# 1.1.1.2  Ensure mounting of squashfs filesystems is disabled
   - id: 5565
-    title: "Ensure mounting of cramfs filesystems is disabled (Automated)"
+    title: "Ensure mounting of cramfs filesystems is disabled"
     description: "The squashfs filesystem type is a compressed read-only Linux filesystem embedded in small footprint systems (similar to cramfs). A squashfs image can be used without having to first decompress the image."
     rationale: "Removing support for unneeded filesystem types reduces the local attack surface of the system. If this filesystem type is not needed, disable it."
     compliance:
@@ -1094,6 +1094,157 @@ checks:
     condition: all
     rules:
       - 'c:modprobe -n -v squashfs -> r:\s(squashfs|install)\s'
-      - 'lsmod -> r:\ssquashfs\s'
-
+      - 'lsmod -> !r:\ssquashfs\s'
+# 1.1.1.3 Ensure mounting of udf filesystems is disabled
+  - id: 5566
+    title: "Ensure mounting of udf filesystems is disabled"
+    description: "The udf filesystem type is the universal disk format used to implement ISO/IEC 13346 and ECMA-167 specifications. This is an open vendor filesystem type for data storage on a broad range of media. This filesystem type is necessary to support writing DVDs and newer optical disc formats."
+    rationale: "Removing support for unneeded filesystem types reduces the local attack surface of the system. If this filesystem type is not needed, disable it."
+    remediation: "Edit or create a file in the /etc/modprobe.d/ directory ending in .conf and add the following line: install udf /bin/true. Run the following command to unload the udf module: # rmmod udf"
+    compliance:
+      - cis: ["1.1.1.3"]
+    condition: all
+    rules:
+      - 'c:modprobe -n -v udf -> r:\s(udf|install)\s'
+      - 'lsmod -> !r:\sudf\s'
+# 1.1.1.4 Ensure mounting of FAT filesystems is limited (Manual)
+  - id: 5567
+    title: "Ensure mounting of FAT filesystems is limited (Manual)"
+    description: "The FAT filesystem format is primarily used on older windows systems and portable USB drives or flash modules. It comes in three types FAT12 , FAT16 , and FAT32 all of which are supported by the vfat kernel module."
+    rationale: "Removing support for unneeded filesystem types reduces the local attack surface of the system. If this filesystem type is not needed, disable it."
+    remediation: "Edit or create a file in the /etc/modprobe.d/ directory ending in .conf and add the following lines: Example: vim /etc/modprobe.d/fat.conf install fat /bin/true install vfat /bin/true install msdos /bin/true. Run the following commands to unload the msdos, vfat, and fat modules: # rmmod msdos # rmmod vfat # rmmod fat"
+    compliance:
+      - cis: ["1.1.1.4"]
+    condition: all
+    rules:
+      - 'c:modprobe -n -v fat -> r:\s(fat|install)\s'
+      - 'lsmod -> !r:\sfat\s'
+      - 'c:modprobe -n -v vfat -> r:\s(vfat|install)\s'
+      - 'lsmod -> !r:\svfat\s'
+      - 'c:modprobe -n -v msdos -> r:\s(msdos|install)\s'
+      - 'lsmod -> !r:\smsdos\s'
+# 1.1.12 Ensure noexec option set on /var/tmp partition
+  - id: 5568
+    title: "Ensure noexec option set on /var/tmp partition"
+    description: "The noexec mount option specifies that the filesystem cannot contain executable binaries."
+    rationale: "Since the /var/tmp filesystem is only intended for temporary file storage, set this option to ensure that users cannot run executable binaries from /var/tmp."
+    remediation: "Edit the /etc/fstab file and add noexec to the fourth field (mounting options) for the /var/tmp partition. See the fstab(5) manual page for more information. Run the following command to remount /var/tmp : # mount -o remount,noexec /var/tmp"
+    compliance:
+      - cis: ["1.1.12"]
+    condition: none
+    rules:
+      - 'c:mount -> r:\s/var/tmp\s && r:\snoexec\s'
+# 1.1.13  Ensure nodev option set on /var/tmp partition
+  - id: 5569
+    title: "Ensure nodev option set on /var/tmp partition"
+    description: "The nodev mount option specifies that the filesystem cannot contain special devices."
+    rationale: "Since the /var/tmp filesystem is not intended to support devices, set this option to ensure that users cannot attempt to create block or character special devices in /var/tmp."
+    remediation: "Edit the /etc/fstab file and add nodev to the fourth field (mounting options) for the /var/tmp partition. See the fstab(5) manual page for more information. Run the following command to remount /var/tmp : # mount -o remount,nodev /var/tmp"
+    compliance:
+      - cis: ["1.1.13"]
+    condition: none
+    rules:
+     - 'c:mount -> r:\s/var/tmp\s && r:\snodev\s'
+# 1.1.22 
+  - id: 5570
+    title: "Ensure sticky bit is set on all world-writable directories"
+    description: "Setting the sticky bit on world writable directories prevents users from deleting or renaming files in that directory that are not owned by them."
+    rationale: "This feature prevents the ability to delete or rename files in world writable directories (such as /tmp ) that are owned by another user."
+    remediation: "Run the following command to set the sticky bit on all world writable directories: # df --local -P | awk '{if (NR!=1) print $6}' | xargs -I '{}' find '{}' -xdev -type d \( -perm -0002 -a ! -perm -1000 \) 2>/dev/null | xargs -I '{}' chmod a+t '{}'"
+    compliance:
+      - cis: ["1.1.22"]
+    condition: none
+    rules:
+      - 'c:df --local -P 2> /dev/null | awk '{if (NR!=1) print $6}' | xargs -I '{}' find '{}' -xdev -type d \( -perm -0002 -a ! -perm -1000 \) 2>/dev/null -> r:\.+'
+# 1.1.23 Disable Automounting
+  - id: 5571
+    title: "Disable Automounting"
+    description: "autofs allows automatic mounting of devices, typically including CD/DVDs and USB drives."
+    rationale: "With automounting enabled anyone with physical access could attach a USB drive or disc and have its contents available in system even if they lacked permissions to mount it themselves."
+    remediation: "Run the following command to mask autofs: # systemctl --now mask autofs"
+    compliance:
+      - cis: ["1.1.23"]
+    condition: all
+    rules:
+      - 'c:systemctl is-enabled autofs -> r:\sdisabled\s'
+# 1.1.24 Disable USB Storage
+  - id: 5572
+    title: "Disable Automounting"
+    description: "USB storage provides a means to transfer and store files insuring persistence and availability of the files independent of network connection status. Its popularity and utility has led to USB-based malware being a simple and common means for network infiltration and a first step to establishing a persistent threat within a networked environment."
+    rationale: "Restricting USB access on the system will decrease the physical attack surface for a device and diminish the possible vectors to introduce malware."
+    remediation: "Edit or create a file in the /etc/modprobe.d/ directory ending in .conf Example: vim /etc/modprobe.d/usb_storage.conf Add the following line: install usb-storage /bin/true. Run the following command to unload the usb-storage module: rmmod usb-storage"
+    compliance:
+      - cis: ["1.1.24"]
+    condition: all
+    rules:
+      - 'c:modprobe -n -v usb-storage -> r:\install /bin/true\s'
+      - 'lsmod -> !r:\susb-storage\s'
+# 1.2.3 Ensure gpgcheck is globally activated
+  - id: 5573
+    title: "Ensure gpgcheck is globally activated"
+    description: "The gpgcheck option, found in the main section of the /etc/yum.conf and individual /etc/yum/repos.d/*.repo files determines if an RPM package's signature is checked prior to its installation."
+    rationale: "It is important to ensure that an RPM's package signature is always checked prior to installation to ensure that the software is obtained from a trusted source."
+    remediation: "Edit /etc/yum.conf and set 'gpgcheck=1' in the [main] section. Edit any failing files in /etc/yum.repos.d/*.repo and set all instances of gpgcheck to 1."
+    compliance:
+      - cis: ["1.2.3"]
+    condition: all
+    rules:
+      - 'c:grep ^\s*gpgcheck /etc/yum.conf -> r:\sgpgcheck=1\s'
+      - 'c:awk -v 'RS=[' -F '\n' '/\n\s*enabled\s*=\s*1(\W.*)?$/ && ! /\n\s*gpgcheck\s*=\s*1(\W.*)?$/ { t=substr($1, 1, index($1, "]")-1); print t, "does not have gpgcheck enabled." }' /etc/yum.repos.d/*.repo -> !r:\s\.+ does not have gpgcheck enabled.\s'
+# 1.3.1 Ensure sudo is installed
+  - id: 5574
+    title: "Ensure sudo is installed"
+    description: "sudo allows a permitted user to execute a command as the superuser or another user, as specified by the security policy. The invoking user's real (not effective) user ID is used to determine the user name with which to query the security policy."
+    rationale: "sudo supports a plugin architecture for security policies and input/output logging. Third parties can develop and distribute their own policy and I/O logging plugins to work seamlessly with the sudo front end. The default security policy is sudoers, which is configured via the file /etc/sudoers.The security policy determines what privileges, if any, a user has to run sudo. The policy may require that users authenticate themselves with a password or another authentication mechanism. If authentication is required, sudo will exit if the user's password is not entered within a configurable time limit. This limit is policy-specific."
+    remediation: "Run the following command to install sudo. # yum install sudo"
+    compliance:
+      - cis: ["1.3.1"]
+    condition: all
+    rules:
+      - 'c:rpm -q sudo -> r:\ssudo-\S+\s'
+# 1.3.2 Ensure sudo commands use pty
+  - id: 5575
+    title: "Ensure sudo commands use pty"
+    description: "sudo can be configured to run only from a pseudo-pty"
+    rationale: "Attackers can run a malicious program using sudo, which would again fork a background process that remains even when the main program has finished executing. This can be mitigated by configuring sudo to run other commands only from a pseudo-pty, whether I/O logging is turned on or not."
+    remediation: "Edit the file /etc/sudoers or a file in /etc/sudoers.d/ with visudo or visudo -f <PATH TO FILE> and add the following line: Defaults use_pty"
+    compliance:
+      - cis: ["1.3.2"]
+    condition: all
+    rules:
+      - 'c:grep -Ei '^\s*Defaults\s+([^#]\S+,\s*)?use_pty\b' /etc/sudoers /etc/sudoers.d/* -> r:\sDefaults use_pty\s'
+# 1.3.3 Ensure sudo log file exists
+  - id: 5576
+    title: "Ensure sudo log file exists"
+    description: "sudo can use a custom log file"
+    rationale: "A sudo log file simplifies auditing of sudo commands"
+    remediation: "edit the file /etc/sudoers or a file in /etc/sudoers.d/ with visudo or visudo -f <PATH TO FILE> and add the following line: Defaults logfile='<PATH TO CUSTOM LOG FILE>'"
+    compliance:
+      - cis: ["1.3.3"]
+    condition: all
+    rules:
+      - 'c:grep -Ei '^\s*Defaults\s+([^#;]+,\s*)?logfile\s*=\s*(")?[^#;]+(")?' /etc/sudoers /etc/sudoers.d/* -> r:\sDefaults logfile="/var/log/sudo.log"\s'
+# 1.4.1 Ensure AIDE is installed
+  - id: 5577
+    title: "Ensure AIDE is installed"
+    description: "AIDE takes a snapshot of filesystem state including modification times, permissions, and file hashes which can then be used to compare against the current state of the filesystem to detect modifications to the system."
+    rationale: "By monitoring the filesystem state compromised files can be detected to prevent or limit the exposure of accidental or malicious misconfigurations or modified binaries."
+    remediation: "Run the following command to install AIDE: # yum install aide. Configure AIDE as appropriate for your environment. Consult the AIDE documentation for options. Initialize AIDE: Run the following commands: # aide --init # mv /var/lib/aide/aide.db.new.gz /var/lib/aide/aide.db.gz"
+    compliance:
+      - cis: ["1.4.1"]
+    condition: all
+    rules:
+      - 'c:rpm -q aide -> r:\saide-\S+\s'
+# 1.4.2 Ensure filesystem integrity is regularly checked
+  - id: 5578
+    title: "Ensure filesystem integrity is regularly checked"
+    description: "Periodic checking of the filesystem integrity is needed to detect changes to the filesystem."
+    rationale: "Periodic file checking allows the system administrator to determine on a regular basis if critical files have been changed in an unauthorized fashion."
+    remediation: "If cron will be used to schedule and run aide check Run the following command: # crontab -u root -e. Add the following line to the crontab: 0 5 * * * /usr/sbin/aide --check"
+    compliance:
+      - cis: ["1.4.2"]
+    condition: all
+    rules:
+      - 'c:crontab -u root -l -> r:\saide\s'
+      - 'c:grep -r aide /etc/cron.* /etc/crontab -> r:\saide\s'
 
