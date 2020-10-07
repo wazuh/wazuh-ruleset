@@ -3508,3 +3508,43 @@ checks:
     condition: none
     rules:
       - 'c:df --local -P 2> /dev/null | awk '{if (NR!=1) print $6}' | xargs -I '{}' find '{}' -xdev -type d \( -perm -0002 -a ! -perm -1000 \) 2>/dev/null -> r:\.+'
+# 1.7.1.4 Ensure filesystem integrity is regularly checked
+  - id: 5580
+    title: "Ensure filesystem integrity is regularly checked"
+    description: "SELinux can run in one of three modes: disabled, permissive, or enforcing:
+       Enforcing - Is the default, and recommended, mode of operation; in enforcing mode SELinux operates normally, enforcing the loaded security policy on the entire system.
+      Permissive - The system acts as if SELinux is enforcing the loaded security policy, including labeling objects and emitting access denial entries in the logs, but it does not actually deny any operations. While not recommended for production systems, permissive mode can be helpful for SELinux policy development.
+      Disabled - Is strongly discouraged; not only does the system avoid enforcing the SELinux policy, it also avoids labeling any persistent objects such as files, making it difficult to enable SELinux in the future"
+    rationale: "Running SELinux in disabled mode is strongly discouraged; not only does the system avoid enforcing the SELinux policy, it also avoids labeling any persistent objects such as files, making it difficult to enable SELinux in the future."
+    remediation: "Run one of the following commands to set SELinux's running mode: To set SELinux mode to Enforcing: # setenforce 1"
+    compliance:
+      - cis: ["1.7.1.4"]
+    condition: any
+    rules:
+      - 'c:getenforce -> r:\sEnforcing\s'
+      - 'c:getenforce -> r:\sPermissive\s'
+# 1.7.1.5 Ensure the SELinux mode is enforcing
+  - id: 5581
+    title: "Ensure the SELinux mode is enforcing"
+    description: "SELinux can run in one of three modes: disabled, permissive, or enforcing:
+       Enforcing - Is the default, and recommended, mode of operation; in enforcing mode SELinux operates normally, enforcing the loaded security policy on the entire system. 
+      Permissive - The system acts as if SELinux is enforcing the loaded security policy, including labeling objects and emitting access denial entries in the logs, but it does not actually deny any operations. While not recommended for production systems, permissive mode can be helpful for SELinux policy development.
+      Disabled - Is strongly discouraged; not only does the system avoid enforcing the SELinux policy, it also avoids labeling any persistent objects such as files, making it difficult to enable SELinux in the future"
+    rationale: "Running SELinux in disabled mode the system not only avoids enforcing the SELinux policy, it also avoids labeling any persistent objects such as files, making it difficult to enable SELinux in the future. Running SELinux in Permissive mode, though helpful for developing SELinux policy, only logs access denial entries, but does not deny any operations."
+    remediation: "Run the following command to set SELinux's running mode: # setenforce 1. Edit the /etc/selinux/config file to set the SELINUX parameter: For Enforcing mode: SELINUX=enforcing"
+    compliance:
+      - cis: ["1.7.1.5"]
+    condition: all
+    rules:
+      - 'c:getenforce -> r:\sEnforcing\s'
+# 1.7.1.6 Ensure no unconfined services exist
+  - id: 5582
+    title: "Ensure no unconfined services exist"
+    description: "Unconfined processes run in unconfined domains"
+    rationale: "For unconfined processes, SELinux policy rules are applied, but policy rules exist that allow processes running in unconfined domains almost all access. Processes running in unconfined domains fall back to using DAC rules exclusively. If an unconfined process is compromised, SELinux does not prevent an attacker from gaining access to system resources and data, but of course, DAC rules are still used. SELinux is a security enhancement on top of DAC rules – it does not replace them."
+    remediation: "Investigate any unconfined processes found during the audit action. They may need to have an existing security context assigned to them or a policy built for them."
+    compliance:
+      - cis: ["1.7.1.6"]
+    condition: none
+    rules:
+      - 'c:ps -eZ | grep unconfined_service_t -> r:\.+'
