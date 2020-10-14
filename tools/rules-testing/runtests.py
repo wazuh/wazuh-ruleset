@@ -126,7 +126,7 @@ class OssecTester(object):
             if aFile.endswith(".ini"):
                 if selective_test and not aFile.endswith(selective_test):
                     continue
-                if geoip is False and aFile == os.path.join(self._test_path, "test_static_filters_geoip.ini"):
+                if geoip is False and aFile.endswith("geoip.ini"):
                     continue
                 print "- [ File = %s ] ---------" % (aFile)
                 tGroup = ConfigParser.RawConfigParser(dict_type=MultiOrderedDict)
