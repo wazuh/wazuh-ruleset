@@ -922,32 +922,14 @@ checks:
 ###############################################
 # 2.1 inetd Services
 ###############################################
-# 2.1.1 Disable chargen services (Scored)
-  - id: 4551 
-    title: "Ensure chargen services are not enabled"
-    description: "chargen is a network service that responds with 0 to 512 ASCII characters for each connection it receives. This service is intended for debugging and testing purposes. It is recommended that this service be disabled."
-    rationale: "Disabling this service will reduce the remote attack surface of the system."
-    remediation: "Run the following commands to disable chargen-dgram and chargen-stream: # chkconfig chargen-dgram off; # chkconfig chargen-stream off"
-    compliance:
-      - cis: ["2.1.1"]
-      - cis_csc: ["9.1"]
-      - pci_dss: ["2.2.3"]
-      - nist_800_53: ["CM.1"]
-      - gpg_13: ["4.3"]
-      - gdpr_IV: ["35.7.d"]
-      - hipaa: ["164.312.b"]
-      - tsc: ["CC5.2"]
-    condition: none
-    rules:
-      - 'c:chkconfig --list -> r:^\s*\t*chargen-dgram:\s*\t*on'
-      - 'c:chkconfig --list -> r:^\s*\t*chargen-stream:\s*\t*on'
 
-# 2.1.2 Disable daytime services (Scored)
+
+# 2.1.2 Ensure xinetd is not installed (Automated)
   - id: 4552 
     title: "Ensure daytime services are not enabled"
-    description: "daytime is a network service that responds with the server's current date and time. This service is intended for debugging and testing purposes. It is recommended that this service be disabled."
-    rationale: "Disabling this service will reduce the remote attack surface of the system."
-    remediation: "Run the following commands to disable daytime-dgram and daytime-stream: # chkconfig daytime-dgram off; # chkconfig daytime-stream off"
+    description: "The eXtended InterNET Daemon ( xinetd ) is an open source super daemon that replaced the original inetd daemon. The xinetd daemon listens for well known services and dispatches the appropriate daemon to properly respond to service requests."
+    rationale: "If there are no xinetd services required, it is recommended that the package be removed to reduce the attack surface are of the system. Note: If an xinetd service or services are required, ensure that any xinetd service not required is stopped and disabled"
+    remediation: "Run the following command to remove xinetd: # yum remove xinetd"
     compliance:
       - cis: ["2.1.2"]
       - cis_csc: ["9.1"]
@@ -959,118 +941,20 @@ checks:
       - tsc: ["CC5.2"]
     condition: none
     rules:
-      - 'c:chkconfig --list -> r:^\s*\t*daytime-dgram:\s*\t*on'
-      - 'c:chkconfig --list -> r:^\s*\t*daytime-stream:\s*\t*on'
+      - 'c:rpm -qa xinetd-> r:xinetd'
 
-# 2.1.3 Disable discard services (Scored)
-  - id: 4553 
-    title: "Ensure discard services are not enabled"
-    description: "discardis a network service that simply discards all data it receives. This service is intended for debugging and testing purposes. It is recommended that this service be disabled."
-    rationale: "Disabling this service will reduce the remote attack surface of the system."
-    remediation: "Run the following commands to disable discard-dgram and discard-stream: # chkconfig discard-dgram off; # chkconfig discard-stream off"
-    compliance:
-      - cis: ["2.1.3"]
-      - cis_csc: ["9.1"]
-      - pci_dss: ["2.2.3"]
-      - nist_800_53: ["CM.1"]
-      - gpg_13: ["4.3"]
-      - gdpr_IV: ["35.7.d"]
-      - hipaa: ["164.312.b"]
-      - tsc: ["CC5.2"]
-    condition: none
-    rules:
-      - 'c:chkconfig --list -> r:^\s*\t*discard-dgram:\s*\t*on'
-      - 'c:chkconfig --list -> r:^\s*\t*discard-stream:\s*\t*on'
-
-# 2.1.4 Disable echo-dgram (Scored)
-  - id: 4554 
-    title: "Ensure echo services are not enabled"
-    description: "echo is a network service that responds to clients with the data sent to it by the client. This service is intended for debugging and testing purposes. It is recommended that this service be disabled."
-    rationale: "Disabling this service will reduce the remote attack surface of the system."
-    remediation: "Run the following commands to disable echo-dgram and echo-stream: # chkconfig echo-dgram off; # chkconfig echo-stream off"
-    compliance:
-      - cis: ["2.1.4"]
-      - cis_csc: ["9.1"]
-      - pci_dss: ["2.2.3"]
-      - nist_800_53: ["CM.1"]
-      - gpg_13: ["4.3"]
-      - gdpr_IV: ["35.7.d"]
-      - hipaa: ["164.312.b"]
-      - tsc: ["CC5.2"]
-    condition: none
-    rules:
-      - 'c:chkconfig --list -> r:^\s*\t*echo-dgram:\s*\t*on'
-      - 'c:chkconfig --list -> r:^\s*\t*echo-stream:\s*\t*on'
-
-# 2.1.5 Disable time-stream (Scored)
-  - id: 4555 
-    title: "Ensure time services are not enabled"
-    description: "time is a network service that responds with the server's current date and time as a 32 bit integer. This service is intended for debugging and testing purposes. It is recommended that this service be disabled."
-    rationale: "Disabling this service will reduce the remote attack surface of the system."
-    remediation: "Run the following commands to disable time-dgram and time-stream: # chkconfig time-dgram off; # chkconfig time-stream off"
-    compliance:
-      - cis: ["2.1.5"]
-      - cis_csc: ["9.1"]
-      - pci_dss: ["2.2.3"]
-      - nist_800_53: ["CM.1"]
-      - gpg_13: ["4.3"]
-      - gdpr_IV: ["35.7.d"]
-      - hipaa: ["164.312.b"]
-      - tsc: ["CC5.2"]
-    condition: none
-    rules:
-      - 'c:chkconfig --list -> r:^\s*\t*time-dgram:\s*\t*on'
-      - 'c:chkconfig --list -> r:^\s*\t*time-stream:\s*\t*on'
-
-# 2.1.6 Ensure tftp server is not enabled (Scored)
-  - id: 4556 
-    title: "Ensure tftp server is not enabled"
-    description: "Trivial File Transfer Protocol (TFTP) is a simple file transfer protocol, typically used to automatically transfer configuration or boot machines from a boot server. The package tftp-server is used to define and support a TFTP server."
-    rationale: "TFTP does not support authentication nor does it ensure the confidentiality or integrity of data. It is recommended that TFTP be removed, unless there is a specific need for TFTP. In that case, extreme caution must be used when configuring the services."
-    remediation: "Run the following command to disable tftp: # chkconfig tftp off"
-    compliance:
-      - cis: ["2.1.6"]
-      - cis_csc: ["9.1"]
-      - pci_dss: ["2.2.3"]
-      - nist_800_53: ["CM.1","AC.4","SC.7"]
-      - gpg_13: ["4.3"]
-      - gdpr_IV: ["35.7.d"]
-      - hipaa: ["164.312.b"]
-      - tsc: ["CC5.2"]
-    condition: none
-    rules:
-      - 'c:chkconfig --list -> r:^\s*\t*tftp:\s*\t*on'
-
- # 2.1.7 Remove xinetd (Scored)
-  - id: 4557 
-    title: "Ensure xinetd is not enabled"
-    description: "The eXtended InterNET Daemon ( xinetd ) is an open source super daemon that replaced the original inetd daemon. The xinetd daemon listens for well known services and dispatches the appropriate daemon to properly respond to service requests."
-    rationale: "If there are no xinetd services required, it is recommended that the daemon be disabled."
-    remediation: "Run the following command to disable xinetd: # systemctl disable xinetd"
-    compliance:
-      - cis: ["2.1.7"]
-      - cis_csc: ["9.1"]
-      - pci_dss: ["2.2.3"]
-      - nist_800_53: ["CM.1"]
-      - gpg_13: ["4.3"]
-      - gdpr_IV: ["35.7.d"]
-      - hipaa: ["164.312.b"]
-      - tsc: ["CC5.2"]
-    condition: none
-    rules:
-      - 'c:systemctl is-enabled xinetd -> r:^enabled'
 
 ###############################################
 # 2.2 Remove Legacy Services
 ###############################################
 
 
-# 2.2.1.1 Ensure time synchronization is in use (Not Scored)
+# 2.2.1.1 Ensure time synchronization is in use (Manual)
   - id: 4558 
     title: "Ensure time synchronization is in use"
     description: "System time should be synchronized between all systems in an environment. This is typically done by establishing an authoritative time server or set of servers and having all systems synchronize their clocks to them."
     rationale: "Time synchronization is important to support time sensitive security mechanisms like Kerberos and also ensures log files have consistent time records across the enterprise, which aids in forensic investigations."
-    remediation: "On physical systems or virtual systems where host based time synchronization is not available run the following commands and verify either ntp or chrony is installed: # rpm -q ntp # rpm -q chrony  On virtual systems where host based time synchronization is available consult your virtualization software documentation and verify that host based synchronization is in use."
+    remediation: "On systems where host based time synchronization is not available, install chrony or NTP: to install chrony run the following command: # yum install chrony OR to install ntp: run the following command: # yum install ntp"
     compliance:
       - cis: ["2.2.1.1"]
       - cis_csc: ["6.1"]
@@ -1082,7 +966,26 @@ checks:
       - 'not c:rpm -q ntp -> r:^package ntp is not installed'
       - 'not c:rpm -q chrony -> r:^package chrony is not installed'
 
-# 2.2.1.2 Configure Network Time Protocol (NTP) (Scored)
+# 2.2.1.2  Ensure chrony is configured (Automated)
+  - id: 4560 
+    title: "Ensure chrony is configured"
+    description: "chrony is a daemon which implements the Network Time Protocol (NTP) and is designed to synchronize system clocks across a variety of systems and use a source that is highly accurate. More information on chrony can be found at http://chrony.tuxfamily.org/. chrony can be configured to be a client and/or a server."
+    rationale: "If chrony is in use on the system proper configuration is vital to ensuring time synchronization is working properly. Note: This recommendation only applies if chrony is in use on the system."
+    remediation: "1) Add or edit server or pool lines to /etc/chrony.conf as appropriate:
+      server <remote-server>. 2) Add or edit the OPTIONS in /etc/sysconfig/chronyd to include '-u chrony':
+        OPTIONS="-u chrony""
+    compliance:
+      - cis: ["2.2.1.3"]
+      - cis_csc: ["6.1"]
+      - pci_dss: ["2.2.2"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
+    condition: all
+    rules:
+      - 'f:/etc/chrony.conf -> r:^server\.+$|^pool\.+$'
+      - 'f:/etc/sysconfig/chronyd -> r:^OPTIONS\s*=\s* && r:-u chrony'
+
+# 2.2.1.3  Ensure ntp is configured (Automated)
   - id: 4559 
     title: "Ensure ntp is configured"
     description: "ntp is a daemon which implements the Network Time Protocol (NTP). It is designed to synchronize system clocks across a variety of systems and use a source that is highly accurate. More information on NTP can be found at https://www.ntp.org. ntp can be configured to be a client and/or a server."
@@ -1102,80 +1005,64 @@ checks:
       - 'f:/etc/sysconfig/ntpd -> r:^OPTIONS\s*=\s* && r:-u ntp:ntp'
       - 'f:/usr/lib/systemd/system/ntpd.service -> r:^Execstart\s*=\s*/usr/sbin/ntpd\s+-u\s+ntp:ntp'
 
-# 2.2.1.3 Configure Network Time Protocol (Chrony) (Scored)
-  - id: 4560 
-    title: "Ensure chrony is configured"
-    description: "chrony is a daemon which implements the Network Time Protocol (NTP). It is designed to synchronize system clocks across a variety of systems and use a source that is highly accurate. More information on NTP can be found at https://www.ntp.org. ntp can be configured to be a client and/or a server."
-    rationale: "If chrony is in use on the system proper configuration is vital to ensuring time synchronization is working properly."
-    remediation: "1) Add or edit restrict lines in /etc/chrony.conf to match the following: - 1) Add or edit server or pool lines to /etc/chrony.conf as appropriate: server <remote-server>. 3) Add or edit the OPTIONS in /etc/sysconfig/chronyd to include: - OPTIONS='-u chronyd'"
-    compliance:
-      - cis: ["2.2.1.3"]
-      - cis_csc: ["6.1"]
-      - pci_dss: ["2.2.2"]
-      - nist_800_53: ["CM.1"]
-      - tsc: ["CC5.2"]
-    condition: all
-    rules:
-      - 'f:/etc/chrony.conf -> r:^server\.+$|^pool\.+$'
-      - 'f:/etc/sysconfig/chronyd -> r:^OPTIONS\s*=\s* && r:-u chrony'
-
 # 2.2.2 Remove X Windows (Scored)
   - id: 4561 
-    title: "Ensure X Window System is not installed"
+    title: " Ensure X11 Server components are not installed"
     description: "The X Window System provides a Graphical User Interface (GUI) where users can have multiple windows in which to run programs and various add on. The X Windows system is typically used on workstations where users login, but not on servers where users typically do not login."
     rationale: "Unless your organization specifically requires graphical login access via X Windows, remove it to reduce the potential attack surface."
     remediation: "Run the following command to remove the X Windows System packages: # yum remove xorg-x11*"
     compliance:
       - cis: ["2.2.2"]
-      - cis_csc: ["2"]
+      - cis_csc: ["2.6"]
       - pci_dss: ["2.2.2"]
       - nist_800_53: ["CM.1"]
       - tsc: ["CC5.2"]
-    condition: none
+    condition: any
     rules:
-      - 'c:rpm -qa xorg-x11* -> r:^xorg-x11'
+      - 'c:rpm -qa xorg-x11-server* -> r:^xorg-x11'
 
-# 2.2.3 Disable Avahi Server (Scored)
+# 2.2.3 Ensure Avahi Server is not installed (Automated)
   - id: 4562 
-    title: "Ensure Avahi Server is not enabled"
+    title: " Ensure Avahi Server is not installed"
     description: "Avahi is a free zeroconf implementation, including a system for multicast DNS/DNS-SD service discovery. Avahi allows programs to publish and discover services and hosts running on a local network with no specific configuration. For example, a user can plug a computer into a network and Avahi automatically finds printers to print to, files to look at and people to talk to, as well as network services running on the machine."
-    rationale: "Automatic discovery of network services is not normally required for system functionality. It is recommended to disable the service to reduce the potential attack surface."
-    remediation: "Run the following command to disable avahi-daemon: # systemctl disable avahi-daemon"
+    rationale: "Automatic discovery of network services is not normally required for system functionality. It is recommended to remove this package to reduce the potential attack surface."
+    remediation: "Run the following commands to stop, mask and remove avahi-autoipd and avahi: # systemctl stop avahi-daemon.socket avahi-daemon.service; # yum remove avahi-autoipd avahi"
     compliance:
       - cis: ["2.2.3"]
-      - cis_csc: ["9.1"]
+      - cis_csc: ["9.2"]
       - pci_dss: ["2.2.2"]
       - nist_800_53: ["CM.1"]
       - tsc: ["CC5.2"]
     condition: none
     rules:
-      - 'c:systemctl is-enabled avahi-daemon -> r:^enabled'
+      - 'c:rpm -qa avahi-autoipd-> r:avahi-autoipd'
+      - 'c:rpm -qa avahi-> r:avahi'
 
-# 2.2.4 Ensure CUPS is not enabled (Scored)
+# 2.2.4 Ensure CUPS is not installed (Automated)
   - id: 4563 
-    title: "Ensure CUPS is not enabled"
+    title: "Ensure CUPS is not installed"
     description: "The Common Unix Print System (CUPS) provides the ability to print to both local and network printers. A system running CUPS can also accept print jobs from remote systems and print them to local printers. It also provides a web based remote administration capability."
-    rationale: "If the system does not need to print jobs or accept print jobs from other systems, it is recommended that CUPS be disabled to reduce the potential attack surface."
-    remediation: "Run the following command to disable cups : # systemctl disable cups"
+    rationale: "If the system does not need to print jobs or accept print jobs from other systems, it is recommended that CUPS be removed to reduce the potential attack surface. Disabling CUPS will prevent printing from the system, a common task for workstation systems."
+    remediation: "Run the following command to remove cups : # yum remove cups"
     compliance:
       - cis: ["2.2.4"]
-      - cis_csc: ["9.1"]
+      - cis_csc: ["9.2"]
       - pci_dss: ["2.2.2"]
       - nist_800_53: ["CM.1"]
       - tsc: ["CC5.2"]
     condition: none
     rules:
-      - 'c:systemctl is-enabled cups -> r:^enabled'
+      - 'c:rpm -qa cups-> r:cups'
 
-# 2.2.5 Remove DHCP Server (Scored)
+# 2.2.5 Ensure DHCP Server is not installed (Automated)
   - id: 4564 
-    title: "Ensure DHCP Server is not enabled"
+    title: "Ensure DHCP Server is not installed"
     description: "The Dynamic Host Configuration Protocol (DHCP) is a service that allows machines to be dynamically assigned IP addresses."
-    rationale: "Unless a system is specifically set up to act as a DHCP server, it is recommended that this service be disabled to reduce the potential attack surface."
-    remediation: "Run the following command to disable dhcpd: # systemctl disable dhcpd"
+    rationale: "Unless a system is specifically set up to act as a DHCP server, it is recommended that this the dhcp package be removed to reduce the potential attack surface."
+    remediation: "Run the following command to remove dhcpd: # yum remove dhcp"
     compliance:
       - cis: ["2.2.5"]
-      - cis_csc: ["9.1"]
+      - cis_csc: ["9.2"]
       - pci_dss: ["2.2.2"]
       - nist_800_53: ["CM.1"]
       - tsc: ["CC5.2"]
@@ -1183,17 +1070,17 @@ checks:
       - More detailed documentation on DHCP is available at https://www.isc.org/software/dhcp
     condition: none
     rules:
-      - 'c:systemctl is-enabled dhcpd -> r:^enabled'
+      - 'c:rpm -qa dhcp-> r:dhcp'
 
-# 2.2.6 Remove LDAP Server (Scored)
+# 2.2.6  Ensure LDAP server is not installed (Automated)
   - id: 4565 
-    title: "Ensure LDAP Server is not enabled"
+    title: "Ensure LDAP Server is not installed"
     description: "The Lightweight Directory Access Protocol (LDAP) was introduced as a replacement for NIS/YP. It is a service that provides a method for looking up information from a central database."
-    rationale: "If the system will not need to act as an LDAP server, it is recommended that the software be disabled to reduce the potential attack surface."
-    remediation: "Run the following command to disable slapd: # systemctl disable slapd"
+    rationale: "If the system will not need to act as an LDAP server, it is recommended that the software be removed to reduce the potential attack surface."
+    remediation: "Run the following command to remove slapd: # yum remove openldap-servers"
     compliance:
       - cis: ["2.2.6"]
-      - cis_csc: ["9.1"]
+      - cis_csc: ["9.2"]
       - pci_dss: ["2.2.2"]
       - nist_800_53: ["CM.1"]
       - tsc: ["CC5.2"]
@@ -1201,27 +1088,45 @@ checks:
       - More detailed documentation on OpenLDAP is available at https://www.openldap.org
     condition: none
     rules:
-      - 'c:systemctl is-enabled sladp -> r:^enabled'
+      - 'c:rpm -qa openldap-servers-> r:openldap-servers'
 
 
 
-# 2.2.7 Disable NFS and RPC (Scored)
+# 2.2.7 Ensure nfs-utils is not installed or the nfs-server service is masked (Automated)
   - id: 4566 
-    title: "Ensure NFS and RPC are not enabled"
+    title: "Ensure nfs-utils is not installed or the nfs-server service is masked"
     description: "The Network File System (NFS) is one of the first and most widely distributed file systems in the UNIX environment. It provides the ability for systems to mount file systems of other servers through the network."
-    rationale: "If the system does not export NFS shares or act as an NFS client, it is recommended that these services be disabled to reduce remote attack surface."
-    remediation: "Run the following commands to disable nfs, nfs-server and rpcbind: # systemctl disable nfs; # systemctl disable nfs-server; # systemctl disable rpcbind"
+    rationale: "If the system does not require network shares, it is recommended that the nfs-utils package be removed to reduce the attack surface of the system."
+    remediation: "Run the following command to remove nfs-utils: # yum remove nfs-utils; OR if the nfs-package is required as a dependency: run the following command to stop and mask the nfs-server service: # systemctl --now mask nfs-server"
     compliance:
       - cis: ["2.2.7"]
-      - cis_csc: ["9.1"]
+      - cis_csc: ["9.2"]
       - pci_dss: ["2.2.2"]
       - nist_800_53: ["CM.1"]
       - tsc: ["CC5.2"]
-    condition: none
+    condition: any
     rules:
-      - 'c:systemctl is-enabled nfs -> r:^enabled'
-      - 'c:systemctl is-enabled nfs-server -> r:^enabled'
-      - 'c:systemctl is-enabled rpcbind -> r:^enabled'
+      - 'not c:rpm -qa nfs-utils-> r: nfs-utils'
+      - 'c:systemctl is-enabled nfs-server -> r:masked'
+
+# 2.2.8 Ensure rpcbind is not installed or the rpcbind services are masked (Automated)
+  - id: 4566 
+    title: "Ensure nfs-utils is not installed or the nfs-server service is masked"
+    description: "The rpcbind utility maps RPC services to the ports on which they listen. RPC processes notify rpcbind when they start, registering the ports they are listening on and the RPC program numbers they expect to serve. The client system then contacts rpcbind on the server with a particular RPC program number. The rpcbind service redirects the client to the proper port number so it can communicate with the requested service Portmapper is an RPC service, which always listens on tcp and udp 111, and is used to map other RPC services (such as nfs, nlockmgr, quotad, mountd, etc.) to their corresponding port number on the server. When a remote host makes an RPC call to that server, it first consults with portmap to determine where the RPC server is listening"
+    rationale: "A small request (~82 bytes via UDP) sent to the Portmapper generates a large response (7x to 28x amplification), which makes it a suitable tool for DDoS attacks. If rpcbind is not required, it is recommended that the rpcbind package be removed to reduce the attack surface of the system."
+    remediation: "Run the following command to remove nfs-utils: # yum remove nfs-utils; OR if the nfs-package is required as a dependency: run the following command to stop and mask the nfs-server service: # systemctl --now mask nfs-server"
+    compliance:
+      - cis: ["2.2.7"]
+      - cis_csc: ["9.2"]
+      - pci_dss: ["2.2.2"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
+    condition: any
+    rules:
+      - 'not c:rpm -qa rpcbind-> r: rpcbind'
+      - 'not c:systemctl is-enabled rpcbind rpcbind.socket -> r:enabled'
+
+
 
 # 2.2.8 Ensure DNS Server is not enabled (Scored)
   - id: 4567 
