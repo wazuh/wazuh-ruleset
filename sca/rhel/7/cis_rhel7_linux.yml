@@ -1492,8 +1492,10 @@ rules:
     condition: all
     rules:
       - 'c:sysctl net.ipv4.ip_forward -> r:^net.ipv4.ip_forward\s*=\s*0$'
-      - 'not f:/etc/sysctl.conf-> r:^\s*net\.ipv4\.ip_forward\s*=\s*1'
-      - 'c:grep -Rh net\.ipv4\.ip_forward /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.ip_forward\s*=\s*0'
+      - 'not c:grep -RhEs "^\s*net\.ipv4\.ip_forward\s*=\s*1" /etc/sysctl.conf /etc/sysctl.d/*.conf /usr/lib/sysctl.d/*.conf /run/sysctl.d/*.conf-> r:ip_forward'
+      - 'c:sysctl net.ipv6.conf.all.forwarding -> r:^net.ipv6.conf.all.forwarding\s*=\s*0$'
+      - 'not c:grep -RhEs "^\s*net\.ipv6\.conf\.all\.forwarding\s*=\s*1" /etc/sysctl.conf /etc/sysctl.d/*.conf /usr/lib/sysctl.d/*.conf /run/sysctl.d/*.conf-> r:forwarding'
+
 
 # 3.2.2 Ensure packet redirect sending is disabled (Automated)
   - id: 4587 
@@ -1536,6 +1538,11 @@ rules:
       - 'c:sysctl net.ipv4.conf.default.accept_source_route -> r:^net.ipv4.conf.default.accept_source_route\s*=\s*0$'
       - 'c:grep -Rh net\.ipv4\.conf\.all\.accept_source_route /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.conf.all.accept_source_route\s*=\s*0'
       - 'c:grep -Rh net\.ipv4\.conf\.default\.accept_source_route /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.conf.default.accept_source_route\s*=\s*0'
+      - 'c:sysctl net.ipv6.conf.all.accept_source_route -> r:^net.ipv6.conf.all.accept_source_route\s*=\s*0$'
+      - 'c:sysctl net.ipv6.conf.default.accept_source_route -> r:^net.ipv6.conf.default.accept_source_route\s*=\s*0$'
+      - 'c:grep -Rh net\.ipv6\.conf\.all\.accept_source_route /etc/sysctl.conf /etc/sysctl.d/* -> r:^net.ipv6.conf.all.accept_source_route\s*=\s*0'
+      - 'c:grep -Rh net\.ipv6\.conf\.default\.accept_source_route /etc/sysctl.conf /etc/sysctl.d/* -> r:^net.ipv6.conf.default.accept_source_route\s*=\s*0'
+
 
 # 3.3.2 Ensure ICMP redirects are not accepted (Automated)  
   - id: 4589 
@@ -1555,6 +1562,8 @@ rules:
       - 'c:sysctl net.ipv4.conf.default.accept_redirects -> r:^net.ipv4.conf.default.accept_redirects\s*=\s*0$'
       - 'c:grep -Rh net\.ipv4\.conf\.all\.accept_redirects /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.conf.all.accept_redirects\s*=\s*0'
       - 'c:grep -Rh net\.ipv4\.conf\.default\.accept_redirects /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.conf.default.accept_redirects\s*=\s*0'
+      - 'c:sysctl net.ipv4.conf.all.accept_redirects -> r:^net.ipv4.conf.all.accept_redirects\s*=\s*0$'
+
 
 # 3.3.3 Ensure secure ICMP redirects are not accepted (Automated)
   - id: 4590 
@@ -1618,7 +1627,7 @@ rules:
     rationale: "Some routers (and some attackers) will send responses that violate RFC-1122 and attempt to fill up a log file system with many useless error messages."
     remediation: "Set the following parameter in /etc/sysctl.conf or a /etc/sysctl.d/* file: net.ipv4.icmp_ignore_bogus_error_responses = 1 and set the active kernel parameters: # sysctl -w net.ipv4.icmp_ignore_bogus_error_responses=1      # sysctl -w net.ipv4.route.flush=1"
     compliance:
-      - cis: ["3.2.6"]
+      - cis: ["3.3.6"]
       - cis_csc: ["5.1"]
       - pci_dss: ["2.2.4"]
       - nist_800_53: ["CM.1"]
@@ -1635,7 +1644,7 @@ rules:
     rationale: "Setting these flags is a good way to deter attackers from sending your server bogus packets that cannot be responded to. One instance where this feature breaks down is if asymmetrical routing is employed. This would occur when using dynamic routing protocols (bgp, ospf, etc) on your system. If you are using asymmetrical routing on your system, you will not be able to enable this feature without breaking the routing."
     remediation: "Set the following parameters in /etc/sysctl.conf or a /etc/sysctl.d/* file: net.ipv4.conf.all.rp_filter = 1; net.ipv4.conf.default.rp_filter = 1 and set the active kernel parameters:   # sysctl -w net.ipv4.conf.all.rp_filter=1         # sysctl -w net.ipv4.conf.default.rp_filter=1         # sysctl -w net.ipv4.route.flush=1"
     compliance:
-      - cis: ["3.2.7"]
+      - cis: ["3.3.7"]
       - cis_csc: ["5.1"]
       - pci_dss: ["2.2.4"]
       - nist_800_53: ["CM.1"]
@@ -1654,7 +1663,7 @@ rules:
     rationale: "Attackers use SYN flood attacks to perform a denial of service attacked on a system by sending many SYN packets without completing the three way handshake. This will quickly use up slots in the kernel's half-open connection queue and prevent legitimate connections from succeeding. SYN cookies allow the system to keep accepting valid connections, even if under a denial of service attack."
     remediation: "Set the following parameter in /etc/sysctl.conf or a /etc/sysctl.d/* file: net.ipv4.tcp_syncookies = 1 and set the active kernel parameters: # sysctl -w net.ipv4.tcp_syncookies=1     # sysctl -w net.ipv4.route.flush=1"
     compliance:
-      - cis: ["3.2.8"]
+      - cis: ["3.3.8"]
       - cis_csc: ["5.1"]
       - pci_dss: ["2.2.4"]
       - nist_800_53: ["CM.1"]
@@ -1671,7 +1680,7 @@ rules:
     rationale: "It is recommended that systems not accept router advertisements as they could be tricked into routing traffic to compromised machines. Setting hard routes within the system (usually a single default route to a trusted router) protects the system from bad routes."
     remediation: "Set the following parameters in /etc/sysctl.conf or a /etc/sysctl.d/* file:       net.ipv6.conf.all.accept_ra = 0        and          net.ipv6.conf.default.accept_ra = 0            Then, run the following commands to set the active kernel parameters:  # sysctl -w net.ipv6.conf.all.accept_ra=0              # sysctl -w net.ipv6.conf.default.accept_ra=0           # sysctl -w net.ipv6.route.flush=1"
     compliance:
-      - cis: ["3.3.1"]
+      - cis: ["3.3.9"]
       - cis_csc: ["5.1"]
       - pci_dss: ["2.2.3"]
       - nist_800_53: ["CM.1"]
@@ -1689,16 +1698,16 @@ rules:
 
 
 ###############################################
-# 3.5 Uncommon Network Protocols
+# 3.4 Uncommon Network Protocols
 ###############################################
-# 3.5.1 Ensure DCCP is disabled (Not Scored)
+# 3.4.1 Ensure DCCP is disabled (Automated)
   - id: 4603 
     title: "Ensure DCCP is disabled"
     description: "The Datagram Congestion Control Protocol (DCCP) is a transport layer protocol that supports streaming media and telephony. DCCP provides a way to gain access to congestion control, without having to do it at the application layer, but does not provide in-sequence delivery."
     rationale: "If the protocol is not required, it is recommended that the drivers not be installed to reduce the potential attack surface."
     remediation: "Edit or create the file /etc/modprobe.d/CIS.conf and add the following line: install dccp /bin/true"
     compliance:
-      - cis: ["3.5.1"]
+      - cis: ["3.4.1"]
       - cis_csc: ["9.2"]
       - pci_dss: ["2.2.3"]
       - nist_800_53: ["CM.1"]
@@ -1713,14 +1722,14 @@ rules:
 
 
 
-# 3.5.2 Ensure SCTP is disabled (Not Scored)
+# 3.4.2 Ensure SCTP is disabled (Automated)
   - id: 4604 
     title: "Ensure SCTP is disabled"
     description: "The Stream Control Transmission Protocol (SCTP) is a transport layer protocol used to support message oriented communication, with several streams of messages in one connection. It serves a similar function as TCP and UDP, incorporating features of both. It is message-oriented like UDP, and ensures reliable in-sequence transport of messages with congestion control like TCP."
     rationale: "If the protocol is not being used, it is recommended that kernel module not be loaded, disabling the service to reduce the potential attack surface."
     remediation: "Edit or create the file /etc/modprobe.d/CIS.conf and add the following line: install sctp /bin/true"
     compliance:
-      - cis: ["3.5.2"]
+      - cis: ["3.4.2"]
       - cis_csc: ["9.2"]
       - pci_dss: ["2.2.3"]
       - nist_800_53: ["CM.1"]
@@ -1734,66 +1743,131 @@ rules:
       - 'not c:lsmod -> r:sctp'
 
 
-# 3.5.3 Ensure RDS is disabled (Not Scored)
-  - id: 4605 
-    title: "Ensure RDS is disabled"
-    description: "The Reliable Datagram Sockets (RDS) protocol is a transport layer protocol designed to provide low-latency, high-bandwidth communications between cluster nodes. It was developed by the Oracle Corporation."
-    rationale: "If the protocol is not being used, it is recommended that kernel module not be loaded, disabling the service to reduce the potential attack surface."
-    remediation: "Edit or create the file /etc/modprobe.d/CIS.conf and add the following line: install rds /bin/true"
-    compliance:
-      - cis: ["3.5.3"]
-      - cis_csc: ["9.2"]
-      - pci_dss: ["2.2.3"]
-      - nist_800_53: ["CM.1"]
-      - gpg_13: ["4.3"]
-      - gdpr_IV: ["35.7.d"]
-      - hipaa: ["164.312.b"]
-      - tsc: ["CC5.2"]
-    condition: all
-    rules:
-      - 'c:modprobe -n -v rds -> r:install /bin/true'
-      - 'not c:lsmod -> r:rds'
-
-
-# 3.5.4 Ensure TIPC is disabled (Not Scored)
-  - id: 4606 
-    title: "Ensure TIPC is disabled"
-    description: "The Transparent Inter-Process Communication (TIPC) protocol is designed to provide communication between cluster nodes."
-    rationale: "If the protocol is not being used, it is recommended that kernel module not be loaded, disabling the service to reduce the potential attack surface."
-    remediation: "Edit or create the file /etc/modprobe.d/CIS.conf and add the following line: install tipc /bin/true"
-    compliance:
-      - cis: ["3.5.4"]
-      - cis_csc: ["9.2"]
-      - pci_dss: ["2.2.3"]
-      - nist_800_53: ["CM.1"]
-      - gpg_13: ["4.3"]
-      - gdpr_IV: ["35.7.d"]
-      - hipaa: ["164.312.b"]
-      - tsc: ["CC5.2"]
-    condition: all
-    rules:
-      - 'c:modprobe -n -v tipc -> r:install /bin/true'
-      - 'not c:lsmod -> r:tipc'
-
 ###############################################
-# 3.6 Firewall Configuration
+# 3.5 Firewall Configuration
 ###############################################
-# 3.6.1 Ensure iptables is installed (Scored)
+###############################################
+# 3.5.1 Configure firewalld
+###############################################
+
+# 3.5.1.1 Ensure FirewallD is installed (Automated)
+# 3.5.2.1 Ensure nftables is installed (Automated)
+# 3.5.3.1.1 Ensure iptables packages are installed (Automated)
+# 3 rules here:
   - id: 4607 
-    title: "Ensure iptables is installed"
-    description: "iptables allows configuration of the IPv4 tables in the linux kernel and the rules stored within them. Most firewall configuration utilities operate as a front end to iptables ."
-    rationale: "iptables is required for firewall management and configuration."
-    remediation: "Run the following command to install iptables : # yum install iptables"
+    title: "Ensure FirewallD or nftables or iptables-services is installed"
+    description: "firewalld is a firewall management tool for Linux operating systems. It provides firewall features by acting as a front-end for the Linux kernel's netfilter framework via the iptables backend or provides firewall features by acting as a front-end for the Linux kernel's netfilter framework via the nftables utility.FirewallD replaces iptables as the default firewall management tool. Use the firewalld utility to configure a firewall for less complex firewalls. The utility is easy to use and covers the typical use cases scenario. FirewallD supports both IPv4 and IPv6 networks and can administer separate firewall zones with varying degrees of trust as defined in zone profiles."
+    rationale: "A firewall utility is required to configure the Linux kernel's netfilter framework via the iptables or nftables back-end.The Linux kernel's netfilter framework host-based firewall can protect against threats originating from within a corporate network to include malicious mobile code and poorly configured softwareon a host."
+    remediation: "Run the following command to install firewalld: # yum install firewalld iptables; OR to  install nftables: # yum install nftables; OR to install  iptables-services: # yum install iptables-services iptables"
     compliance:
-      - cis: ["3.6.1"]
-      - cis_csc: ["9.2"]
+      - cis: ["3.5.1.1"]
+      - cis_csc: ["9.4"]
+      - pci_dss: ["1.1"]
+      - tsc: ["CC8.1"]
+    condition: any
+    rules:
+      - 'not c:rpm -q iptables firewalld-> r:is not installed'
+      - 'not c:rpm -q nftables-> r:is not installed'
+      - 'not c:rpm -q iptables iptables-services-> r:is not installed'
+
+# 3.5.1.2 Ensure iptables-services package is not installed (Automated)
+# 3.5.3.1.3 Ensure firewalld isnot installed or stopped and masked(Automated)
+# both of the rules are here
+  - id: 4607 
+    title: "Ensure iptables-services and FirewallD are not installed at the same time"
+    description: "The iptables-service spackage contains the iptables.serviceand ip6tables.service. These services allow for management of the Host Based Firewall provided by the iptablespackage."
+    rationale: "iptables.service and ip6tables.service are still supported and can be installed with the iptables-services package. Running both firewalld and the services included in the iptables-services package may lead to conflict."
+    remediation: "Run the following commands to stop the services included in the iptables-services package and remove the iptables-services package: # systemctl stop iptables; # systemctl stop ip6tables; # yum remove iptables-services. OR Run the following command to remove firewalld: # yum remove firewalld OR Run the following command to stop and mask firewalld: # systemctl --now mask firewalld" "
+    compliance:
+      - cis: ["3.5.1.2"]
+      - cis_csc: ["9.4"]
+      - pci_dss: ["1.1"]
+      - tsc: ["CC8.1"]
+    condition: any
+    rules:
+      - 'c:rpm -q iptables-services firewalld-> r:is not installed'
+      - 'c:systemctl is-enabled firewalld-> r:masked'
+
+
+
+# 3.5.1.3 Ensure nftables is not installed or stopped and masked (Automated)
+# 3.5.2.2 Ensure firewalld is not installed or stopped and masked (Automated) 
+# Both of the rules are here
+  - id: 4607 
+    title: "Ensure nftables and FirewallD are not installed at the same time or ensure one of them is stopped and masked"
+    description: "nftables is a subsystem of the Linux kernel providing filtering and classification of network packets/datagrams/frames and is thesuccessor to iptables.Note: Support for using nftables as the back-end for firewalld was added in release v0.6.0. In Fedora 19 Linux derivatives, firewalld utilizes iptables as its back-end by default."
+    rationale: "Running both firewalld and nftables may lead to conflict."
+    remediation: "Run the following command to remove nftables :# yum remove nftables; OR run the following command to stop and mask nftables: # systemctl --now mask nftables. OR Run the following command to remove firewalld: # yum remove firewalld OR Run the following command to stop and mask firewalld: # systemctl --now mask firewalld"
+    compliance:
+      - cis: ["3.5.1.3","3.5.3.1.3"]
+      - cis_csc: ["9.4"]
+      - pci_dss: ["1.1"]
+      - tsc: ["CC8.1"]
+    condition: any
+    rules:
+      - 'c:rpm -q iptables-services nftables -> r:is not installed'
+
+# 3.5.2.3 Ensure iptables-services package is not installed (Automated)
+# 3.5.3.1.2 Ensure nftables is not installed (Automated)
+# Both of the rules are here
+
+  - id: 4607 
+    title: "Ensure nftables and iptables-services are not installed at the same time or ensure one of them is stopped and masked"
+    description: "nftables is a subsystem of the Linux kernel providing filtering and classification of network packets/datagrams/frames and is thesuccessor to iptables.Note: Support for using nftables as the back-end for firewalld was added in release v0.6.0. In Fedora 19 Linux derivatives, firewalld utilizes iptables as its back-end by default."
+    rationale: "Running both nftables and nftables may lead to conflict."
+    remediation: "Run the following command to remove nftables :# yum remove nftables; OR run the following command to stop and mask nftables: # systemctl --now mask nftables. OR Run the following command to remove iptables# # systemctl stop iptables; # systemctl stop ip6tables; # yum remove iptables-services"
+    compliance:
+      - cis: ["3.5.1.3","3.5.3.1.3"]
+      - cis_csc: ["9.4"]
+      - pci_dss: ["1.1"]
+      - tsc: ["CC8.1"]
+    condition: any
+    rules:
+      - 'c:rpm -q firewalld nftables -> r:is not installed'
+      - 'c:systemctl is-enabled nftables-> r:masked'
+      - 'c:systemctl is-enabled firewalld-> r:masked'
+
+
+
+# 3.5.1.4 Ensure firewalld service is enabled and running (Automated)
+  - id: 4607 
+    title: "Ensure firewalld service is enabled and running"
+    description: "firewalld.serviceenables the enforcement of firewall rules configured through firewalld"
+    rationale: "Ensure that the firewalld.service is enabled and running to enforce firewall rules configured through firewalld"
+    remediation: "Run the following command to unmask firewalld: # systemctl unmask firewalld; Run the following command to enable and start firewalld: # systemctl --now enable firewalld"
+    compliance:
+      - cis: ["3.5.1.4"]
+      - cis_csc: ["9.4"]
       - pci_dss: ["1.1"]
       - tsc: ["CC8.1"]
     condition: all
     rules:
-      - 'c:rpm -q iptables -> r:iptables-'
+      - 'c:systemctl is-enabled firewalld -> r:enabled'
+      - 'c:firewall-cmd --state-> r:running'
 
-# 3.6.2 Ensure default deny firewall policy (Scored)
+
+###############################################
+# 3.5.2 Configure nftables
+###############################################
+
+# 3.5.2.1 Ensure default deny firewall policy (Automated)
+  - id: 4608 
+  title: "Ensure default deny firewall policy"
+  description: "nftables provides a new in-kernel packet classification framework that is based on a network-specific Virtual Machine (VM) and a new nft userspace command line tool. nftables reuses the existing Netfilter subsystems such as the existing hook infrastructure, the connection tracking system, NAT, userspace queuing and logging subsystem."
+  rationale: "nftables is a subsystem of the Linux kernel that can protect against threats originating from within a corporate network to include malicious mobile code and poorly configured software on a host."
+  remediation: "Run the following commands to implement a default DROP policy: # iptables -P INPUT DROP   # iptables -P OUTPUT DROP      # iptables -P FORWARD DROP"
+  compliance:
+    - cis: ["3.6.2"]
+    - cis_csc: ["9.2"]
+    - pci_dss: ["1.2.1"]
+    - tsc: ["CC8.1"]
+  condition: all
+  rules:
+    - 'c:iptables -L -> r:Chain INPUT \(policy DROP\)'
+    - 'c:iptables -L -> r:Chain FORWARD \(policy DROP\)'
+    - 'c:iptables -L -> r:Chain OUTPUT \(policy DROP\)'
+
+# 3.5.2.9 Ensure default deny firewall policy (Automated)
   - id: 4608 
     title: "Ensure default deny firewall policy"
     description: "A default deny all policy on connections ensures that any unconfigured network usage will be rejected."
