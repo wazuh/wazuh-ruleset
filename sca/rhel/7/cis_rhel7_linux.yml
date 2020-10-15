@@ -932,7 +932,7 @@ checks:
     remediation: "Run the following command to remove xinetd: # yum remove xinetd"
     compliance:
       - cis: ["2.1.2"]
-      - cis_csc: ["9.1"]
+      - cis_csc: ["9.2"]
       - pci_dss: ["2.2.3"]
       - nist_800_53: ["CM.1"]
       - gpg_13: ["4.3"]
@@ -1116,7 +1116,7 @@ checks:
     rationale: "A small request (~82 bytes via UDP) sent to the Portmapper generates a large response (7x to 28x amplification), which makes it a suitable tool for DDoS attacks. If rpcbind is not required, it is recommended that the rpcbind package be removed to reduce the attack surface of the system."
     remediation: "Run the following command to remove nfs-utils: # yum remove nfs-utils; OR if the nfs-package is required as a dependency: run the following command to stop and mask the nfs-server service: # systemctl --now mask nfs-server"
     compliance:
-      - cis: ["2.2.7"]
+      - cis: ["2.2.8"]
       - cis_csc: ["9.2"]
       - pci_dss: ["2.2.2"]
       - nist_800_53: ["CM.1"]
@@ -1128,183 +1128,160 @@ checks:
 
 
 
-# 2.2.8 Ensure DNS Server is not enabled (Scored)
+# 2.2.9 Ensure DNS Server is not installed (Automate)
   - id: 4567 
-    title: "Ensure DNS Server is not enabled"
+    title: " Ensure DNS Server is not installed "
     description: "The Domain Name System (DNS) is a hierarchical naming system that maps names to IP addresses for computers, services and other resources connected to a network."
-    rationale: "Unless a system is specifically designated to act as a DNS server, it is recommended that the service be disabled to reduce the potential attack surface."
-    remediation: "Run the following command to disable named : # systemctl disable named"
-    compliance:
-      - cis: ["2.2.8"]
-      - cis_csc: ["9.1"]
-      - pci_dss: ["2.2.2"]
-      - nist_800_53: ["CM.1"]
-      - tsc: ["CC5.2"]
-    condition: none
-    rules:
-      - 'c:systemctl is-enabled named -> r:^enabled'
-
-# 2.2.9 Remove FTP Server (Scored)
-  - id: 4568 
-    title: "Ensure FTP Server is not enabled"
-    description: "The File Transfer Protocol (FTP) provides networked computers with the ability to transfer files."
-    rationale: "FTP does not protect the confidentiality of data or authentication credentials. It is recommended sftp be used if file transfer is required. Unless there is a need to run the system as a FTP server (for example, to allow anonymous downloads), it is recommended that the service be disabled to reduce the potential attack surface."
-    remediation: "Run the following command to disable vsftpd: # systemctl disable vsftpd"
+    rationale: "Unless a system is specifically designated to act as a DNS server, it is recommended that the package be removed to reduce the potential attack surface."
+    remediation: "Run the following command to disable named : # yum remove bind"
     compliance:
       - cis: ["2.2.9"]
-      - cis_csc: ["9.1"]
+      - cis_csc: ["9.2"]
       - pci_dss: ["2.2.2"]
       - nist_800_53: ["CM.1"]
       - tsc: ["CC5.2"]
     condition: none
     rules:
-      - 'c:systemctl is-enabled vsftpd -> r:^enabled'
+      - 'c:rpm -qa bind-> r: bind'
 
-# 2.2.10 Remove HTTP Server (Scored)
-  - id: 4569 
-    title: "Ensure HTTP server is not enabled"
-    description: "HTTP or web servers provide the ability to host web site content."
-    rationale: "Unless there is a need to run the system as a web server, it is recommended that the service be disabled to reduce the potential attack surface."
-    remediation: "Run the following command to disable httpd: # systemctl disable httpd"
+# 2.2.10 Ensure FTP Server is not installed (Automated)
+  - id: 4568 
+    title: "Ensure FTP Server is not installed"
+    description: "FTP (File Transfer Protocol) is a traditional and widely used standard tool for transferring files between a server and clients over a network, especially where no authentication is necessary (permits anonymous users to connect to a server)"
+    rationale: "FTP does not protect the confidentiality of data or authentication credentials. It is recommended sftp be used if file transfer is required. Unless there is a need to run the system as a FTP server (for example, to allow anonymous downloads), it is recommended that the package be removed to reduce the potential attack surface."
+    remediation: "Run the following command to disable vsftpd: # yum remove vsftpd"
     compliance:
       - cis: ["2.2.10"]
-      - cis_csc: ["9.1"]
+      - cis_csc: ["9.2"]
       - pci_dss: ["2.2.2"]
       - nist_800_53: ["CM.1"]
       - tsc: ["CC5.2"]
     condition: none
     rules:
-      - 'c:systemctl is-enabled httpd -> r:^enabled'
+      - 'c:rpm -qa vsftpd-> r: vsftpd'
 
-# 2.2.11 Remove Dovecot (IMAP and POP3 services) (Scored)
-  - id: 4570 
-    title: "Ensure IMAP and POP3 server is not enabled"
-    description: "dovecot is an open source IMAP and POP3 server for Linux based systems."
-    rationale: "Unless POP3 and/or IMAP servers are to be provided by this system, it is recommended that the service be disabled to reduce the potential attack surface."
-    remediation: "Run the following command to disable dovecot: # systemctl disable dovecot"
+# 2.2.11 Ensure HTTP server is not installed (Automated)
+  - id: 4569 
+    title: "Ensure HTTP server is not installed"
+    description: "HTTP or web servers provide the ability to host web site content."
+    rationale: "Unless there is a need to run the system as a web server, it is recommended that the package be removed to reduce the potential attack surface."
+    remediation: "Run the following command to disable httpd: # yum remove httpd"
     compliance:
       - cis: ["2.2.11"]
-      - cis_csc: ["9.1"]
+      - cis_csc: ["9.2"]
       - pci_dss: ["2.2.2"]
       - nist_800_53: ["CM.1"]
       - tsc: ["CC5.2"]
     condition: none
     rules:
-      - 'c:systemctl is-enabled dovecot -> r:^enabled'
+      - 'c:rpm -qa httpd-> r: httpd'
 
-# 2.2.12 Remove Samba (Scored)
-  - id: 4571 
-    title: "Ensure Samba is not enabled"
-    description: "The Samba daemon allows system administrators to configure their Linux systems to share file systems and directories with Windows desktops. Samba will advertise the file systems and directories via the Small Message Block (SMB) protocol. Windows desktop users will be able to mount these directories and file systems as letter drives on their systems."
-    rationale: "If there is no need to mount directories and file systems to Windows systems, then this service can be disabled to reduce the potential attack surface."
-    remediation: "Run the following command to disable smb: # systemctl disable smb"
+# 2.2.12 Ensure IMAP and POP3 server is not installed (Automated)
+  - id: 4570 
+    title: "Ensure IMAP and POP3 server is not installed"
+    description: "dovecot is an open source IMAP and POP3 server for Linux based systems."
+    rationale: "Unless POP3 and/or IMAP servers are to be provided by this system, it is recommended that the package be removed to reduce the potential attack surface."
+    remediation: "Run the following command to disable dovecot: # yum remove dovecot"
     compliance:
       - cis: ["2.2.12"]
-      - cis_csc: ["9.1"]
+      - cis_csc: ["9.2"]
       - pci_dss: ["2.2.2"]
       - nist_800_53: ["CM.1"]
       - tsc: ["CC5.2"]
     condition: none
     rules:
-      - 'c:systemctl is-enabled smb -> r:^enabled'
+      - 'c:rpm -qa dovecot-> r: dovecot'
 
-# 2.2.13 Remove HTTP Proxy Server (Scored)
-  - id: 4572 
-    title: "Ensure HTTP Proxy Server is not enabled"
-    description: "Squid is a standard proxy server used in many distributions and environments."
-    rationale: "If there is no need for a proxy server, it is recommended that the squid proxy be disabled to reduce the potential attack surface."
-    remediation: "Run the following command to disable squid: # systemctl disable squid"
+# 2.2.13 Ensure Samba is not installed (Automated)
+  - id: 4571 
+    title: "Ensure Samba is not installed"
+    description: "The Samba daemon allows system administrators to configure their Linux systems to share file systems and directories with Windows desktops. Samba will advertise the file systems and directories via the Small Message Block (SMB) protocol. Windows desktop users will be able to mount these directories and file systems as letter drives on their systems."
+    rationale: "If there is no need to mount directories and file systems to Windows systems, then this package can be removed to reduce the potential attack surface."
+    remediation: "Run the following command to disable smb: # yum remove samba"
     compliance:
       - cis: ["2.2.13"]
-      - cis_csc: ["9.1"]
+      - cis_csc: ["9.2"]
       - pci_dss: ["2.2.2"]
       - nist_800_53: ["CM.1"]
       - tsc: ["CC5.2"]
     condition: none
     rules:
-      - 'c:systemctl is-enabled squid -> r:^enabled'
+      - 'c:rpm -qa samba-> r: samba'
 
-# 2.2.14 Remove SNMP Server (Not Scored)
-  - id: 4573 
-    title: "Ensure SNMP Server is not enabled"
-    description: "The Simple Network Management Protocol (SNMP) server is used to listen for SNMP commands from an SNMP management system, execute the commands or collect the information and then send results back to the requesting system."
-    rationale: "The SNMP server can communicate using SNMP v1, which transmits data in the clear and does not require authentication to execute commands. Unless absolutely necessary, it is recommended that the SNMP service not be used. If SNMP is required the server should be configured to disallow SNMP v1."
-    remediation: "Run the following command to disable snmpd: # systemctl disable snmpd"
+# 2.2.14 Ensure HTTP Proxy Server is not installed (Automated)
+  - id: 4572 
+    title: "Ensure HTTP Proxy Server is not installed"
+    description: "Squid is a standard proxy server used in many distributions and environments."
+    rationale: "If there is no need for a proxy server, it is recommended that the squid package be removed to reduce the potential attack surface."
+    remediation: "Run the following command to disable squid: # yum remove squid"
     compliance:
       - cis: ["2.2.14"]
-      - cis_csc: ["9.1"]
+      - cis_csc: ["9.2"]
       - pci_dss: ["2.2.2"]
       - nist_800_53: ["CM.1"]
       - tsc: ["CC5.2"]
     condition: none
     rules:
-      - 'c:systemctl is-enabled snmpd -> r:^enabled'
+      - 'c:rpm -qa squid-> r: squid'
 
-# 2.2.15 Ensure mail transfer agent is configured for local-only mode (Scored)
+# 2.2.15 Ensure net-snmp is not installed (Automated)
+  - id: 4573 
+    title: "Ensure SNMP Server is not installed"
+    description: "The Simple Network Management Protocol (SNMP) server is used to listen for SNMP commands from an SNMP management system, execute the commands or collect the information and then send results back to the requesting system."
+    rationale: "The SNMP server can communicate using SNMPv1, which transmits data in the clear and does not require authentication to execute commands. SNMPv3replaces the simple/clear text password sharing used in SNMPv2with more securely encoded parameters. If the the SNMP service is not required, the net-snmppackage should be removed to reduce the attack surface of the system."
+    remediation: "Run the following command to disable snmpd: # # yum remove net-snmp"
+    compliance:
+      - cis: ["2.2.15"]
+      - cis_csc: ["2.6",9.2"]
+      - pci_dss: ["2.2.2"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
+    condition: none
+    rules:
+      - 'c:rpm -qa net-snmp-> r: net-snmp'
+
+# 2.2.16 Ensure mail transfer agent is configured for local-only mode (Automated)
   - id: 4574 
     title: "Ensure mail transfer agent is configured for local-only mode"
     description: "Mail Transfer Agents (MTA), such as sendmail and Postfix, are used to listen for incoming mail and transfer the messages to the appropriate user or mail server. If the system is not intended to be a mail server, it is recommended that the MTA be configured to only process local mail."
     rationale: "The software for all Mail Transfer Agents is complex and most have a long history of security issues. While it is important to ensure that the system can process local mail messages, it is not necessary to have the MTA's daemon listening on a port unless the server is intended to be a mail server that receives and processes mail from other systems."
     remediation: "Edit /etc/postfix/main.cf and add the following line to the RECEIVING MAIL section. If the line already exists, change it to look like the line below: inet_interfaces = loopback-only . Restart postfix: # systemctl restart postfix"
     compliance:
-      - cis: ["2.2.15"]
-      - cis_csc: ["9.1"]
+      - cis: ["2.2.16"]
+      - cis_csc: ["9.2"]
       - pci_dss: ["2.2.2"]
       - nist_800_53: ["CM.1","AC.4","SC.7"]
       - tsc: ["CC5.2","CC6.4","CC6.6","CC6.7"]
     condition: none
     rules:
-      - 'c:netstat -an -> r:\.*:25\.*LISTEN && !r:127.0.0.1:25\.+LISTEN|::1:25\.*LISTEN'
+      - 'c:ss -lntu -> r:\.*:25\s* && !r:127.0.0.1:25\.*|::1:25\.*'
 
-# 2.2.16 Remove NIS Server (Scored)
+# 2.2.17 Ensure rsync is not installed or the rsyncdservice is masked (Automated)
+- id: 4574 
+  title: "Ensure rsync is not installed or the rsyncdservice is masked"
+  description: "The rsyncdservice can be used to synchronize files between systems over network links."
+  rationale: "Unless required, the rsyncpackage should be removed to reduce the attack surface area of the system.The rsyncdservice presents a security risk as it uses unencrypted protocols for communication."
+  remediation: "Run the following command to remove the rsyncpackage: # yum remove rsync; OR run the following command to mask the rsyncdservice: # systemctl --now mask rsyncd"
+  compliance:
+    - cis: ["2.2.17"]
+    - cis_csc: ["9.2"]
+    - pci_dss: ["2.2.2"]
+    - nist_800_53: ["CM.1","AC.4","SC.7"]
+    - tsc: ["CC5.2","CC6.4","CC6.6","CC6.7"]
+  condition: any
+  rules:
+    - 'not c:rpm -qa rsync-> r: rsync'
+    - 'c: systemctl is-enabled rsyncd->masked'
+
+# 2.2.18 Ensure NIS server is not installed (Automated)
   - id: 4575 
-    title: "Ensure NIS Server is not enabled"
-    description: "The Network Information Service (NIS) (formally known as Yellow Pages) is a client-server directory service protocol for distributing system configuration files. The NIS server is a collection of programs that allow for the distribution of configuration files."
-    rationale: "The NIS service is inherently an insecure system that has been vulnerable to DOS attacks, buffer overflows and has poor authentication for querying NIS maps. NIS generally been replaced by such protocols as Lightweight Directory Access Protocol (LDAP). It is recommended that the service be disabled and other, more secure services be used"
-    remediation: "Run the following command to disable ypserv: # systemctl disable ypserv"
-    compliance:
-      - cis: ["2.2.16"]
-      - cis_csc: ["9.1"]
-      - pci_dss: ["2.2.3"]
-      - nist_800_53: ["CM.1"]
-      - gpg_13: ["4.3"]
-      - gdpr_IV: ["35.7.d"]
-      - hipaa: ["164.312.b"]
-      - tsc: ["CC5.2"]
-    condition: none
-    rules:
-      - 'c:systemctl is-enabled ypserv -> r:^enabled'
-
-# 2.2.17 Remove rsh-server (Scored)
-  - id: 4576 
-    title: "Ensure rsh server is not enabled"
-    description: "The Berkeley rsh-server ( rsh , rlogin , rexec ) package contains legacy services that exchange credentials in clear-text."
-    rationale: "These legacy services contain numerous security exposures and have been replaced with the more secure SSH package."
-    remediation: "Run the following commands to disable rsh, rlogin, and rexec: # systemctl disable rsh.socket   # systemctl disable rlogin.socket   # systemctl disable rexec.socket "
-    compliance:
-      - cis: ["2.2.17"]
-      - cis_csc: ["9.1"]
-      - pci_dss: ["2.2.3"]
-      - nist_800_53: ["CM.1"]
-      - gpg_13: ["4.3"]
-      - gdpr_IV: ["35.7.d"]
-      - hipaa: ["164.312.b"]
-      - tsc: ["CC5.2"]
-    condition: none
-    rules:
-      - 'c:systemctl is-enabled rsh.socket -> r:^enabled'
-      - 'c:systemctl is-enabled rlogin.socket -> r:^enabled'
-      - 'c:systemctl is-enabled rexec.socket -> r:^enabled'
-
-# 2.2.18 Remove talk server (Scored)
-  - id: 4577 
-    title: "Ensure talk server is not enabled"
-    description: "The talk software makes it possible for users to send and receive messages across systems through a terminal session. The talk client (allows initiate of talk sessions) is installed by default."
-    rationale: "The software presents a security risk as it uses unencrypted protocols for communication."
-    remediation: "Run the following command to disable talk: # systemctl disable ntalk"
+    title: "Ensure NIS Server is not installed"
+    description: "The ypservpackage provides the Network Information Service (NIS). This service, formally known as Yellow Pages, is a client-serverdirectory service protocol for distributing system configuration files. The NIS server is a collection of programs that allow for the distribution of configuration files."
+    rationale: "The NIS service is inherently an insecure system that has been vulnerableto DOS attacks, buffer overflows and has poor authentication for querying NIS maps. NIS generally has been replaced by such protocols as Lightweight Directory Access Protocol (LDAP). It is recommended that the ypservpackage be removed, and if required a more secure services be used."
+    remediation: "Run the following command to disable ypserv: # yum remove ypserv"
     compliance:
       - cis: ["2.2.18"]
-      - cis_csc: ["9.1"]
+      - cis_csc: ["2.6","9.2"]
       - pci_dss: ["2.2.3"]
       - nist_800_53: ["CM.1"]
       - gpg_13: ["4.3"]
@@ -1313,17 +1290,18 @@ checks:
       - tsc: ["CC5.2"]
     condition: none
     rules:
-      - 'c:systemctl is-enabled ntalk -> r:^enabled'
+      - 'c:rpm -qa ypserv-> r: ypserv'
 
-# 2.2.19 Remove telnet-server (Scored)
+
+# 2.2.19 Ensure telnet-server is not installed (Automated)
   - id: 4578 
-    title: "Ensure telnet server is not enabled"
+    title: "Ensure telnet server is not installed"
     description: "The telnet-server package contains the telnet daemon, which accepts connections from users from other systems via the telnet protocol."
     rationale: "The telnet protocol is insecure and unencrypted. The use of an unencrypted transmission medium could allow a user with access to sniff network traffic the ability to steal credentials. The ssh package provides an encrypted session and stronger security."
-    remediation: "Run the following command to disable telnet: # systemctl disable telnet.socket"
+    remediation: "Run the following command to disable telnet: # yum remove telnet-server"
     compliance:
       - cis: ["2.2.19"]
-      - cis_csc: ["9.1"]
+      - cis_csc: ["2.6","9.2"]
       - pci_dss: ["2.2.3"]
       - nist_800_53: ["CM.1"]
       - gpg_13: ["4.3"]
@@ -1332,55 +1310,15 @@ checks:
       - tsc: ["CC5.2"]
     condition: none
     rules:
-      - 'c:systemctl is-enabled telnet.socket -> r:^enabled'
-
-# 2.2.20 Remove tftp server (Scored)
-  - id: 4579 
-    title: "Ensure tftp server is not enabled"
-    description: "Trivial File Transfer Protocol (TFTP) is a simple file transfer protocol, typically used to automatically transfer configuration or boot machines from a boot server. The package tftp-server is used to define and support a TFTP server."
-    rationale: "TFTP does not support authentication nor does it ensure the confidentiality or integrity of data. It is recommended that TFTP be removed, unless there is a specific need for TFTP. In that case, extreme caution must be used when configuring the services."
-    remediation: "Run the following command to disable tftp: # systemctl disable tftp.socket"
-    compliance:
-      - cis: ["2.2.20"]
-      - cis_csc: ["9.1"]
-      - pci_dss: ["2.2.3"]
-      - nist_800_53: ["CM.1"]
-      - gpg_13: ["4.3"]
-      - gdpr_IV: ["35.7.d"]
-      - hipaa: ["164.312.b"]
-      - tsc: ["CC5.2"]
-    condition: none
-    rules:
-      - 'c:systemctl is-enabled tftp.socket -> r:^enabled'
-
-# 2.2.21 Remove rsync service (Scored)
-  - id: 4580 
-    title: "Ensure rsync service is not enabled"
-    description: "The rsyncd service can be used to synchronize files between systems over network links."
-    rationale: "The rsyncd service presents a security risk as it uses unencrypted protocols for communication."
-    remediation: "Run the following command to disable rsync: # systemctl disable rsyncd"
-    compliance:
-      - cis: ["2.2.21"]
-      - cis_csc: ["9.1"]
-      - pci_dss: ["2.2.3"]
-      - nist_800_53: ["CM.1"]
-      - gpg_13: ["4.3"]
-      - gdpr_IV: ["35.7.d"]
-      - hipaa: ["164.312.b"]
-      - tsc: ["CC5.2"]
-    condition: none
-    rules:
-      - 'c:systemctl is-enabled rsyncd -> r:^enabled'
-
-
-
+      - 'c:rpm -qa telnet-server-> r: telnet-server'
 
 
 
 ###############################################
 # 2.3 Service Clients
 ###############################################
-# 2.3.1 Remove NIS Client (Scored)
+
+# 2.3.1 Ensure NIS Client is not installed (Automated)
   - id: 4581 
     title: "Ensure NIS Client is not installed"
     description: "The Network Information Service (NIS), formerly known as Yellow Pages, is a client-server directory service protocol used to distribute system configuration files. The NIS client ( ypbind ) was used to bind a machine to an NIS server and receive the distributed configuration files."
@@ -1388,7 +1326,7 @@ checks:
     remediation: "Run the following command to uninstall ypbind: # yum remove ypbind"
     compliance:
       - cis: ["2.3.1"]
-      - cis_csc: ["2"]
+      - cis_csc: ["2.6"]
       - pci_dss: ["2.2.3"]
       - nist_800_53: ["CM.1"]
       - gpg_13: ["4.3"]
@@ -1399,7 +1337,7 @@ checks:
     rules:
       - 'c:rpm -qa ypbind -> r:ypbind'
 
-# 2.3.2 Ensure rsh client is not installed (Scored)
+# 2.3.2 Ensure rsh client is not installed (Automated)
   - id: 4582 
     title: "Ensure rsh client is not installed"
     description: "The rsh package contains the client commands for the rsh services."
@@ -1407,7 +1345,7 @@ checks:
     remediation: "Run the following command to uninstall rsh : # yum remove rsh"
     compliance:
       - cis: ["2.3.2"]
-      - cis_csc: ["2"]
+      - cis_csc: ["2.6"]
       - pci_dss: ["2.2.3"]
       - nist_800_53: ["CM.1"]
       - gpg_13: ["4.3"]
@@ -1416,9 +1354,9 @@ checks:
       - tsc: ["CC5.2"]
     condition: all
     rules:
-      - 'c:rpm -q rsh -> r:^package rsh is not installed'
+      - 'c:rpm -qa rsh -> r:^package rsh is not installed'
 
-# 2.3.3 Ensure talk client is not installed (Scored)
+# 2.3.3 Ensure talk client is not installed (Automated)
   - id: 4583 
     title: "Ensure talk client is not installed"
     description: "The talk software makes it possible for users to send and receive messages across systems through a terminal session. The talk client, which allows initialization of talk sessions, is installed by default."
@@ -1426,7 +1364,7 @@ checks:
     remediation: "Run the following command to uninstall talk : # yum remove talk"
     compliance:
       - cis: ["2.3.3"]
-      - cis_csc: ["2"]
+      - cis_csc: ["2.6"]
       - pci_dss: ["2.2.3"]
       - nist_800_53: ["CM.1"]
       - gpg_13: ["4.3"]
@@ -1437,7 +1375,7 @@ checks:
     rules:
       - 'c:rpm -q talk -> r:^package talk is not installed'
 
-# 2.3.4 Ensure telnet client is not installed (Scored)
+# 2.3.4 Ensure telnet client is not installed (Automated)
   - id: 4584 
     title: "Ensure telnet client is not installed"
     description: "The telnet package contains the telnet client, which allows users to start connections to other systems via the telnet protocol."
@@ -1445,7 +1383,7 @@ checks:
     remediation: "Run the following command to uninstall telnet : # yum remove telnet"
     compliance:
       - cis: ["2.3.4"]
-      - cis_csc: ["2"]
+      - cis_csc: ["2.6"]
       - pci_dss: ["2.2.3"]
       - nist_800_53: ["CM.1"]
       - gpg_13: ["4.3"]
@@ -1456,7 +1394,7 @@ checks:
     rules:
       - 'c:rpm -q telnet -> r:^package telnet is not installed'
 
-# 2.3.5 Ensure LDAP client is not installed (Scored)
+# 2.3.5 Ensure LDAP client is not installed (Automated)
   - id: 4585 
     title: "Ensure LDAP client is not installed"
     description: "The Lightweight Directory Access Protocol (LDAP) was introduced as a replacement for NIS/YP. It is a service that provides a method for looking up information from a central database."
@@ -1464,7 +1402,7 @@ checks:
     remediation: "Run the following command to uninstall openldap-clients : # yum remove openldap-clients"
     compliance:
       - cis: ["2.3.5"]
-      - cis_csc: ["2"]
+      - cis_csc: ["2.6"]
       - pci_dss: ["2.2.3"]
       - nist_800_53: ["CM.1"]
       - gpg_13: ["4.3"]
@@ -1474,6 +1412,25 @@ checks:
     condition: all
     rules:
       - 'c:rpm -q openldap-clients -> r:^package openldap-clients is not installed'
+
+# 2.5 Ensure nonessential services are removed or masked (Manual)
+  - id: 4585 
+    title: "Ensure nonessential services are removed or masked"
+    description: "A network port is identified by its number, the associated IP address, and the type of the communication protocol such as TCP or UDP.A listening port is a network port on which an application or process listens on, acting as a communication endpoint.Each listening port can be open or closed (filtered) using a firewall. In general terms, an open port is a network port that accepts incoming packets from remote locations"
+    rationale: "Services listening on the system pose a potential risk as an attack vector. These services should be reviewed, and if not required, the service should be stopped, and the package containing the service should be removed. If required packages have a dependency, the service should be stopped and masked to reduce the attack surface of the system."
+    remediation: "Review the output of: # lsof -i -P -n | grep -v '(ESTABLISHED)'; to ensure that all services listed are required on the system. If a listed service is not required, remove the package containing the service. If the package containing the service is required, stop and mask the service.un the following command to remove the package containing the service:# yum remove <package_name> OR if required packages have a dependency:run the following command to stop and mask the service:# systemctl --now mask <service_name>"
+    compliance:
+      - cis: ["2.5"]
+      - cis_csc: ["2.6"]
+      - pci_dss: ["2.2.3"]
+      - nist_800_53: ["CM.1"]
+      - gpg_13: ["4.3"]
+      - gdpr_IV: ["35.7.d"]
+      - hipaa: ["164.312.b"]
+      - tsc: ["CC5.2"]
+    condition: none
+    rules:
+      - 'c:lsof -i -P -n -> r:(ESTABLISHED)'
 
 ###############################################
 # 3 Network Configuration and Firewalls
@@ -1813,7 +1770,7 @@ checks:
     remediation: "Edit or create the file /etc/modprobe.d/CIS.conf and add the following line: install dccp /bin/true"
     compliance:
       - cis: ["3.5.1"]
-      - cis_csc: ["9.1"]
+      - cis_csc: ["9.2"]
       - pci_dss: ["2.2.3"]
       - nist_800_53: ["CM.1"]
       - gpg_13: ["4.3"]
@@ -1835,7 +1792,7 @@ checks:
     remediation: "Edit or create the file /etc/modprobe.d/CIS.conf and add the following line: install sctp /bin/true"
     compliance:
       - cis: ["3.5.2"]
-      - cis_csc: ["9.1"]
+      - cis_csc: ["9.2"]
       - pci_dss: ["2.2.3"]
       - nist_800_53: ["CM.1"]
       - gpg_13: ["4.3"]
@@ -1856,7 +1813,7 @@ checks:
     remediation: "Edit or create the file /etc/modprobe.d/CIS.conf and add the following line: install rds /bin/true"
     compliance:
       - cis: ["3.5.3"]
-      - cis_csc: ["9.1"]
+      - cis_csc: ["9.2"]
       - pci_dss: ["2.2.3"]
       - nist_800_53: ["CM.1"]
       - gpg_13: ["4.3"]
@@ -1877,7 +1834,7 @@ checks:
     remediation: "Edit or create the file /etc/modprobe.d/CIS.conf and add the following line: install tipc /bin/true"
     compliance:
       - cis: ["3.5.4"]
-      - cis_csc: ["9.1"]
+      - cis_csc: ["9.2"]
       - pci_dss: ["2.2.3"]
       - nist_800_53: ["CM.1"]
       - gpg_13: ["4.3"]
