@@ -3,10 +3,13 @@ All notable changes to this project will be documented in this file.
 
 ## [v4.1.0]
 
-## [v4.0]
+
+## [v4.0.0]
 
 ### Changed
+
 - Changed compliance rules groups and removed `alert_by_email` option by default. ([#559](https://github.com/wazuh/wazuh-ruleset/pull/559))
+- Let the Ruleset update tool pick up the current version branch by default. ([#753](https://github.com/wazuh/wazuh-ruleset/pull/753))
 
 
 ## [v3.13.0]
