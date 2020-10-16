@@ -1,0 +1,52 @@
+<!-- Program name tests -->
+<decoder name="test_pcre2">
+  <program_name>^test_</program_name>
+  <program_name>pcre2_</program_name>
+  <program_name>pn_</program_name>
+</decoder>
+
+<!-- Dec 19 17:20:08 hostname test_pcre2_pn_0[12345]:some_test HTTPS root@192.168.0.2:1234 192.168.0.1:4321-->
+<decoder name="test_pcre2">
+  <parent>test_pcre2</parent>
+  <regex>\S+ (\w+) (\w+)@(\d+.\d+.\d+.\d+):(\d+)</regex>
+  <regex> (\d+.\d+.\d+.\d+):(\d+)</regex>
+  <order>protocol,user,srcip,srcport,dstip,dstport</order>
+</decoder>
+
+<!-- Dec 19 17:20:08 hostname test_pcre2_pn_1[12345]:some_test https://localhost GET format=json -->
+<decoder name="test_pcre2">
+  <parent>test_pcre2</parent>
+  <regex>\S+ </regex>
+  <regex>(\S+) </regex>
+  <regex>(\w+) </regex>
+  <regex>(\S+)</regex>
+  <order>url,action,querystring</order>
+</decoder>
+
+<!-- Dec 19 17:20:08 hostname test_pcre2_pn_2[12345]:some_test linux-agent123 OK uptime=30days keepalive=1s -->
+<decoder name="test_pcre2">
+  <parent>test_pcre2</parent>
+  <regex>\S+ (\S+)-agent(\d+) (\S+) (\S+) (\S+)</regex>
+  <order>system_name,id,status,data,extra_data</order>
+</decoder>
+
+
+<!-- Prematch and offset tests-->
+<decoder name="test_pcre2_prematch">
+  <prematch>test_pcre2_</prematch>
+  <prematch>prematch</prematch>
+</decoder>
+
+<!-- test_pcre2_prematch this is offset=after_parent test id:X -->
+<decoder name="test_pcre2_prematch_child">
+  <parent>test_pcre2_prematch</parent>
+  <regex offset="after_parent">this is offset=after_parent test id:(\S+)</regex>
+  <order>id</order>
+</decoder>
+
+<!-- test_pcre2_prematch this is offset=after_regex test user:X -->
+<decoder name="test_pcre2_prematch_child">
+  <parent>test_pcre2_prematch</parent>
+  <regex offset="after_regex">this is offset=after_regex test user:(\S+)</regex>
+  <order>user</order>
+</decoder>
