@@ -1847,35 +1847,145 @@ rules:
 
 
 ###############################################
-# 3.5.2 Configure nftables
+# 3.5.2 Configure nftables ####################
 ###############################################
 
-# 3.5.2.1 Ensure default deny firewall policy (Automated)
+# 3.5.2.5 Ensure a table exists (Automated)
   - id: 4608 
-  title: "Ensure default deny firewall policy"
-  description: "nftables provides a new in-kernel packet classification framework that is based on a network-specific Virtual Machine (VM) and a new nft userspace command line tool. nftables reuses the existing Netfilter subsystems such as the existing hook infrastructure, the connection tracking system, NAT, userspace queuing and logging subsystem."
-  rationale: "nftables is a subsystem of the Linux kernel that can protect against threats originating from within a corporate network to include malicious mobile code and poorly configured software on a host."
-  remediation: "Run the following commands to implement a default DROP policy: # iptables -P INPUT DROP   # iptables -P OUTPUT DROP      # iptables -P FORWARD DROP"
-  compliance:
-    - cis: ["3.6.2"]
-    - cis_csc: ["9.2"]
-    - pci_dss: ["1.2.1"]
-    - tsc: ["CC8.1"]
-  condition: all
-  rules:
-    - 'c:iptables -L -> r:Chain INPUT \(policy DROP\)'
-    - 'c:iptables -L -> r:Chain FORWARD \(policy DROP\)'
-    - 'c:iptables -L -> r:Chain OUTPUT \(policy DROP\)'
+    title: "Ensure a table exists"
+    description: "nTables hold chains. Each table only has one address family and only applies to packets of this family. Tables can have one of five families."
+    rationale: "nftables doesn't have any default tables. Without a table being build, nftables will not filter network traffic."
+    remediation: "Run the following command to create a table in nftables: # nft create table inet <table name>"
+    compliance:
+      - cis: ["3.5.2.5"]
+      - cis_csc: ["9.4"]
+      - pci_dss: ["1.2.1"]
+      - tsc: ["CC8.1"]
+    condition: all
+    rules:
+      - 'c:nft list tables-> r:table'
+
+# 3.5.2.6 Ensure base chains exist (Automated)
+  - id: 4608 
+    title: "Ensure base chains exist"
+    description: "Chains are containers for rules. They exist in two kinds, base chains and regular chains. A base chain is an entry point for packets from the networking stack, a regular chain may be used as jump target and is used for better rule organization."
+    rationale: "If a base chain doesn't exist with a hook for input, forward, and delete, packets that would flow through those chains will not be touched by nftables."
+    remediation: "Run the following command to create the base chains: # nft createchain inet <table name> <base chain name> { type filter hook <(input|forward|output)> priority 0 \; }"
+    compliance:
+      - cis: ["3.5.2.6"]
+      - cis_csc: ["9.4"]
+      - pci_dss: ["1.2.1"]
+      - tsc: ["CC8.1"]
+    condition: all
+    rules:
+      - 'c:nft list ruleset-> r:type filter hook input priority 0'
+      - 'c:nft list ruleset-> r:type filter forward priority 0'
+      - 'c:nft list ruleset-> r:type filter hook output priority 0'
+
+# 3.5.2.7 Ensure loopback traffic is configured (Automated)
+  - id: 4608 
+    title: "Ensure loopback traffic is configured"
+    description: "Configure the loopback interface to accept traffic. Configure all other interfaces to deny traffic to the loopback network"
+    rationale: "Loopback traffic is generated between processes on machine and is typically critical to operation of the system. The loopback interface is the only place that loopback network traffic should be seen, all other interfaces should ignore traffic on this network as an anti-spoofing measure."
+    remediation: "Run the following commands to implement the loopback rules: # nft add rule inet filter input iif lo accept;   # nft create rule inet filter input ip saddr 127.0.0.0/8 counter drop; IF IPv6 is enabled: run the following command to implement the IPv6 loopback rules: # nft add rule inet filter input ip6 saddr ::1 counter drop"
+    compliance:iif lo 
+      - cis: ["3.5.2.7"]
+      - cis_csc: ["9.4"]
+      - pci_dss: ["1.2.1"]
+      - tsc: ["CC8.1"]
+    condition: all
+    rules:
+      - 'c:nft list ruleset-> r:iif "lo" accept'
+      - 'c:nft list ruleset-> r:ip saddr 127.0.0.0/8 counter packets 0 bytes 0 drop'
+
+# 3.5.2.8 Ensure outbound and established connections are configured (Manual)
+  - id: 4608 
+    title: "Ensure outbound and established connections are configured"
+    description: "Configure the firewall rules for new outbound and established connections."
+    rationale: "If rules are not in place for new outbound and established connections, all packets will be dropped by the default policy preventing network usage."
+    remediation: "Configure nftables in accordance with site policy. The following commands will implement a policy to allow all outbound connections and all established connections: # nft add rule inet filter input ip protocol tcp ct state established accept; # nft add rule inet filter input ip protocol udp ct state established accept;  # nft add rule inet filter input ip protocol icmp ct state established accept;  # nft add rule inet filter output ip protocol tcp ct state new,related,established accept;  # nft add rule inet filter output ip protocol udp ct state new,related,established accept;   # nft add rule inet filter output ip protocol icmp ct state new,related,established accept"
+    compliance:iif lo 
+      - cis: ["3.5.2.8"]
+      - cis_csc: ["9.4"]
+      - pci_dss: ["1.2.1"]
+      - tsc: ["CC8.1"]
+    condition: all
+    rules:
+      - 'c:nft list ruleset-> r:ip protocol tcp ct state established accept'
+      - 'c:nft list ruleset-> r:ip protocol tcp udp state established accept'
+      - 'c:nft list ruleset-> r:ip protocol tcp icmp state established accept'
+      - 'c:nft list ruleset-> r:ip protocol tcp ct state established,related,new accept'
+      - 'c:nft list ruleset-> r:ip protocol tcp udp state established,related,new accept'
+      - 'c:nft list ruleset-> r:ip protocol tcp icmp state established,related,new accept'
+
 
 # 3.5.2.9 Ensure default deny firewall policy (Automated)
+  - id: 4608 
+    title: "Ensure default deny firewall policy"
+    description: "Base chain policy is the default verdict that will be applied to packets reaching the end of the chain."
+    rationale: "There are two policies: accept (Default) and drop. If the policy is set to accept, the firewall will accept any packet that is not configured to be denied and the packet will continue traversing the network stack.It is easier to white list acceptable usage than to black list unacceptable usage."
+    remediation: "Run the following command for the base chains with the input, forward, and output hooks to implement a default DROP policy: # nft chain <table family> <table name> <chain name> { policy drop \; }"
+    compliance:
+      - cis: ["3.5.2.9"]
+      - cis_csc: ["9.4"]
+      - pci_dss: ["1.2.1"]
+      - tsc: ["CC8.1"]
+    condition: all
+    rules:
+      - 'c:nft list ruleset-> r:type filter hook input priority 0; policy drop;'
+      - 'c:nft list ruleset-> r:type filter hook forward priority 0; policy drop;'
+      - 'c:nft list ruleset-> r:type filter hook output priority 0; policy drop;'
+
+# 3.5.2.10 Ensure nftables service is enabled (Automated)
+  - id: 4608 
+    title: "Ensure nftables service is enabled"
+    description: "The nftables service allows for the loading of nftables rulesets during boot, or starting on the nftables service"
+    rationale: "The nftables service restores the nftables rules from the rules files referenced in the /etc/sysconfig/nftables.conffile during boot or the starting of the nftables service"
+    remediation: "Run the following command to enable the nftables service: # systemctl enable nftables"
+    compliance:
+      - cis: ["3.5.2.10"]
+      - cis_csc: ["9.4"]
+      - pci_dss: ["1.2.1"]
+      - tsc: ["CC8.1"]
+    condition: all
+    rules:
+      - 'c:systemctl is-enabled nftables-> r:enabled'
+      - 'c:nft list ruleset-> r:type filter hook forward priority 0; policy drop;'
+      - 'c:nft list ruleset-> r:type filter hook output priority 0; policy drop;'   
+
+# 3.5.2.11 Ensure nftables rules are permanent (Automated)
+  - id: 4608 
+    title: "Ensure nftables rules are permanent"
+    description: "nftables is a subsystem of the Linux kernel providing filtering and classification of network packets/datagrams/frames.The nftables service reads the /etc/sysconfig/nftables.conffile for a nftables file or files to include in the nftables ruleset.A nftables ruleset containing the input, forward, and output base chains allow network traffic to be filtered."
+    remediation: "Run the following command to enable the nftables service: # systemctl enable nftables"
+    rationale: "Changes made to nftables ruleset only affect the live system, you will also need to configure the nftables ruleset to apply on boot"
+    compliance:
+      - cis: ["3.5.2.11"]
+      - cis_csc: ["9.4"]
+      - pci_dss: ["1.2.1"]
+      - tsc: ["CC8.1"]
+    condition: all
+    rules:
+      - 'f:/etc/sysconfig/nftables.conf-> r:^include "/etc/nftables/nftables.rules"'
+      - 'not f:/etc/sysconfig/nftables.conf-> r:#\s*include "/etc/nftables/nftables.rules"'
+
+
+###############################################
+# 3.5.3 Configure iptables ####################
+###############################################
+###############################################
+#3.5.3.2 Configure IPv4 iptabl
+###############################################
+
+# 3.5.3.2.1 Ensure default deny firewall policy (Automated)
   - id: 4608 
     title: "Ensure default deny firewall policy"
     description: "A default deny all policy on connections ensures that any unconfigured network usage will be rejected."
     rationale: "With a default accept policy the firewall will accept any packet that is not configured to be denied. It is easier to white list acceptable usage than to black list unacceptable usage."
     remediation: "Run the following commands to implement a default DROP policy: # iptables -P INPUT DROP   # iptables -P OUTPUT DROP      # iptables -P FORWARD DROP"
     compliance:
-      - cis: ["3.6.2"]
-      - cis_csc: ["9.2"]
+      - cis: ["3.5.3.2.1"]
+      - cis_csc: ["9.4"]
       - pci_dss: ["1.2.1"]
       - tsc: ["CC8.1"]
     condition: all
@@ -1884,15 +1994,16 @@ rules:
       - 'c:iptables -L -> r:Chain FORWARD \(policy DROP\)'
       - 'c:iptables -L -> r:Chain OUTPUT \(policy DROP\)'
 
-# 3.6.3 Ensure loopback traffic is configured (Scored)
+
+# 3.5.3.2.2 Ensure loopback traffic is configured (Automated)
   - id: 4609 
     title: "Ensure loopback traffic is configured"
     description: "Configure the loopback interface to accept traffic. Configure all other interfaces to deny traffic to the loopback network (127.0.0.0/8)."
     rationale: "Loopback traffic is generated between processes on machine and is typically critical to operation of the system. The loopback interface is the only place that loopback network (127.0.0.0/8) traffic should be seen, all other interfaces should ignore traffic on this network as an anti-spoofing measure."
     remediation: "Run the following commands to implement the loopback rules: # iptables -A INPUT -i lo -j ACCEPT     # iptables -A OUTPUT -o lo -j ACCEPT           # iptables -A INPUT -s 127.0.0.0/8 -j DROP"
     compliance:
-      - cis: ["3.6.3"]
-      - cis_csc: ["9.2"]
+      - cis: ["3.5.3.2.2"]
+      - cis_csc: ["9.4"]
       - pci_dss: ["1.2.1"]
       - tsc: ["CC8.1"]
     condition: all
@@ -1900,6 +2011,96 @@ rules:
       - 'c:iptables -L INPUT -v -n -> r:\.*ACCEPT\.*all\.*lo\.**\.*0.0.0.0/0\.*0.0.0.0/0'
       - 'c:iptables -L INPUT -v -n -> r:\.*DROP\.*all\.**\.**\.*127.0.0.0/8\.*0.0.0.0/0'
       - 'c:iptables -L OUTPUT -v -n -> r:\.*ACCEPT\.*all\.**\.*lo\.*0.0.0.0/0\.*0.0.0.0/0'
+
+# 3.5.3.2.6 Ensure iptables is enabled and running (Automated)
+  - id: 4609 
+    title: "Ensure iptables is enabled and running"
+    description: "iptables.service is a utility for configuring and maintaining iptables."
+    rationale: "iptables.service willload the iptables rules saved in the file /etc/sysconfig/iptablesat boot, otherwise the iptables rules will be cleared during a re-boot of the system."
+    remediation: "Run the following commands to implement a default DROP policy: # ip6tables -P INPUT DROP; # ip6tables -P OUTPUT DROP; # ip6tables -PFORWARD DROP"
+    compliance:
+      - cis: ["3.5.3.2.6"]
+      - cis_csc: ["9.4"]
+      - pci_dss: ["1.2.1"]
+      - tsc: ["CC8.1"]
+    condition: all
+    rules:
+      - 'c:systemctl is-enabled iptables -> r:\.*ACCEPT\.*all\.*lo\.**\.*0.0.0.0/0\.*0.0.0.0/0'
+      - 'c:systemctl status iptables -> r:Active: active (running) since \w+ \d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d'
+
+###############################################
+# 3.5.3.3 Configure IPv6 ip6tables
+###############################################
+
+# 3.5.3.3.1 Ensure IPv6 default deny firewall policy (Automated)
+  - id: 4609 
+    title: "Ensure IPv6 default deny firewall policy"
+    description: "A default deny all policy on connections ensures that any unconfigured network usage will be rejected."
+    rationale: "With a default accept policy the firewall will accept any packet that is not configured to be denied. It is easier to white list acceptable usage than to black list unacceptable usage."
+    remediation: "Run the following commands to implement a default DROP policy: # ip6tables -P INPUT DROP; # ip6tables -P OUTPUT DROP; # ip6tables -PFORWARD DROP"
+    compliance:
+      - cis: ["3.5.3.3.1"]
+      - cis_csc: ["9.4"]
+      - pci_dss: ["1.2.1"]
+      - tsc: ["CC8.1"]
+    condition: all
+    rules:
+      - 'c:ip6tables -L-> r:Chain INPUT (policy DROP)'
+      - 'c:ip6tables -L-> r:Chain FORWARD (policy DROP)'
+      - 'c:ip6tables -L-> r:Chain OUTPUT (policy DROP)'
+
+
+# 3.5.3.3.2 Ensure IPv6 loopback traffic is configured (Automated)
+  - id: 4609 
+    title: "Ensure IPv6 loopback traffic is configured"
+    description: "Configure the loopback interface to accept traffic. Configure all other interfaces to deny traffic tothe loopback network (::1)."
+    rationale: "Loopback traffic is generated between processes on machine and is typically critical to operation of the system. The loopback interface is the only place that loopback network (::1) traffic should be seen, all other interfaces should ignore traffic on this network as an anti-spoofing measure"
+    remediation: "Run the following commands to implement the loopback rules:# ip6tables -A INPUT -i lo -j ACCEPT# ip6tables -A OUTPUT -o lo -j ACCEPT# ip6tables -A INPUT -s ::1 -j DROP"
+    compliance:
+      - cis: ["3.5.3.3.2"]
+      - cis_csc: ["9.4"]
+      - pci_dss: ["1.2.1"]
+      - tsc: ["CC8.1"]
+    condition: all
+    rules:
+      - 'c:ip6tables -L INPUT -v -n-> r:ACCEPT'
+      - 'c:ip6tables -L INPUT -v -n-> r:DROP'
+      - 'c:ip6tables -L OUTPUT -v -n-> r:ACCEPT'
+
+# 3.5.3.3.3 Ensure IPv6 outbound and established connections are configured (Manual)
+  - id: 4609 
+    title: "Ensure IPv6 outbound and established connections are configured"
+    description: "Configure the firewall rules for new outbound, and established IPv6 connections."
+    rationale: "If rules are not in place for new outbound, and established connections all packets will be dropped by the default policy preventing network usage"
+    remediation: "Configure iptables in accordance with site policy. The following commands will implement a policy to allow all outbound connections and all established connections:# ip6tables -AOUTPUT -p tcp -m state --state NEW,ESTABLISHED -j ACCEPT# ip6tables -A OUTPUT -p udp -m state --state NEW,ESTABLISHED -j ACCEPT# ip6tables -A OUTPUT -p icmp -m state --state NEW,ESTABLISHED -j ACCEPT# ip6tables -A INPUT -p tcp -m state --state ESTABLISHED -j ACCEPT# ip6tables -A INPUT -p udp -m state --state ESTABLISHED -j ACCEPT# ip6tables -A INPUT -p icmp -m state --state ESTABLISHED -j ACCEPT"
+    compliance:
+      - cis: ["3.5.3.3.3"]
+      - cis_csc: ["9.4"]
+      - pci_dss: ["1.2.1"]
+      - tsc: ["CC8.1"]
+    condition: all
+    rules:
+      - 'c:ip6tables -L OUTPUT -v -n-> r:state NEW,ESTABLISHED'
+      - 'c:ip6tables -L INPUT -v -n-> r:state ESTABLISHED'
+
+
+# 3.5.3.3.6 Ensure ip6tables isenabled and running (Automated)
+  - id: 4609 
+    title: "Ensure ip6tables isenabled and running"
+    description: "ip6tables.service is a utility for configuring and maintaining ip6tables."
+    rationale: "ip6tables.service will load the iptables rules saved in the file /etc/sysconfig/ip6tables at boot, otherwise the ip6tables rules will be cleared during a re-boot of the system."
+    remediation: "Run the following command to enable and start ip6tables: # systemctl --now start ip6tables"
+    compliance:
+      - cis: ["3.5.3.3.3"]
+      - cis_csc: ["9.4"]
+      - pci_dss: ["1.2.1"]
+      - tsc: ["CC8.1"]
+    condition: all
+    rules:
+      - 'c:systemctl is-enabled ip6tables -> r:\.*ACCEPT\.*all\.*lo\.**\.*0.0.0.0/0\.*0.0.0.0/0'
+      - 'c:systemctl status ip6tables -> r:Active: active (running) since \w+ \d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d'
+
+
 
 ###############################################
 # 4 Logging and Auditing
