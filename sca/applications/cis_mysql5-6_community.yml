@@ -112,7 +112,7 @@ checks:
     title: "Ensure '--skip-symbolic-links' Is Enabled"
     description: "The symbolic-links and skip-symbolic-links options for MySQL determine whether symbolic link support is available.  When use of symbolic links are enabled, they have different effects depending on the host platform.  When symbolic links are disabled, then symbolic links stored in files or entries in tables are not used by the database. "
     rationale: "Prevents sym links being used for data base files. This is especially important when MySQL is executing as root as arbitrary files may be overwritten. The symbolic-links option might allow someone to direct actions by to MySQL server to other files and/or directories."
-    remediation: "Open the MySQL configuration file (my.cnf), locate 'skip_symbolic_links' and set it to YES. If the option does not existe, create it in the 'mysqld' section."
+    remediation: "Open the MySQL configuration file (my.cnf), locate 'skip_symbolic_links' and set it to YES. If the option does not exist, create it in the 'mysqld' section."
     compliance:
       - cis: ["4.6"]
     references:
@@ -150,7 +150,7 @@ checks:
   - id: 10509 
     title: "Ensure 'log_error' is not empty"
     description: "The error log contains information about events such as mysqld starting and stopping, when a table needs to be checked or repaired, and, depending on the host operating system, stack traces when mysqld fails"
-    rationale: "nabling error logging may increase the ability to detect malicious attempts against MySQL, and other critical messages, such as if the error log is not enabled then connection error might go unnoticed."
+    rationale: "Enabling error logging may increase the ability to detect malicious attempts against MySQL, and other critical messages, such as if the error log is not enabled then connection error might go unnoticed."
     remediation: "Set the log-error option to the path for the error log in the MySQL configuration file (my.cnf or my.ini)."
     compliance:
       - cis: ["6.1"]
@@ -277,7 +277,7 @@ checks:
 
 #9 Replication
   - id: 10518 
-    title: "Ensure 'master_info_repositrory' is set to 'TABLE'"
+    title: "Ensure 'master_info_repository' is set to 'TABLE'"
     description: "The master_info_repository setting determines to where a slave logs master status and connection information.  The options are FILE or TABLE. Note also that this setting is associated with the sync_master_info setting as well."
     rationale: "The password which the client uses is stored in the master info repository, which by default is a plaintext file. The TABLE master info repository is a bit safer, but with filesystem access it's still possible to gain access to the password the slave is using."
     remediation: "Open the MySQL configuration file (my.cnf); locate master_info_repository; set the master_info_repository value to TABLE. Add the option if it does not exist."
