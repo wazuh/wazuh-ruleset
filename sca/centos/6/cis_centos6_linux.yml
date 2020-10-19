@@ -708,7 +708,7 @@ checks:
     title: "Ensure SETroubleshoot is not installed"
     description: "The SETroubleshoot service notifies desktop users of SELinux denials through a user-friendly interface. The service provides important information around configuration errors, unauthorized intrusions, and other potential errors."
     rationale: "The SETroubleshoot service is an unnecessary daemon to have running on a server, especially if X Windows is disabled."
-    remediation: "Run the following command to uninstall s etroubleshoot: # yum remove setroubleshoot"
+    remediation: "Run the following command to uninstall setroubleshoot: # yum remove setroubleshoot"
     compliance:
       - cis: ["1.6.1.4"]
       - pci_dss: ["2.2.4"]
@@ -2074,7 +2074,7 @@ the potential attack surface."
   - id: 5613 
     title: "Ensure auditing for processes that start prior to auditd is enabled"
     description: "Configure grub so that processes that are capable of being audited can be audited even if they start up prior to auditd startup."
-    rationale: "Audit events need to be captured on processes that start up prior to auditd, so thatpotential malicious activity cannot go undetected."
+    rationale: "Audit events need to be captured on processes that start up prior to auditd, so that potential malicious activity cannot go undetected."
     remediation: "Edit /boot/grub/grub.conf to include audit=1 on all kernel lines. Notes: This recommendation is designed around the grub bootloader, if LILO or another bootloader is in use in your environment enact equivalent settings."
     compliance:
       - cis: ["4.1.3"]

@@ -1,5 +1,5 @@
 # Security Configuration Assessment
-# CIS Checks for MacOS 10.13
+# CIS Checks for macOS 10.13
 # Copyright (C) 2015-2020, Wazuh Inc.
 #
 # This program is free software; you can redistribute it
@@ -19,8 +19,8 @@ policy:
     - https://www.cisecurity.org/cis-benchmarks/
 
 requirements:
-  title: "Check MacOS version"
-  description: "Requirements for running the SCA scan against MacOS 10.13 (High Sierra)."
+  title: "Check macOS version"
+  description: "Requirements for running the SCA scan against macOS 10.13 (High Sierra)."
   condition: any
   rules:
     - 'c:sw_vers -> r:^ProductVersion:\t*\s*10\p13'
@@ -238,7 +238,7 @@ checks:
     title: "Java 6 is not the default Java runtime"
     description: "Apple had made Java part of the core Operating System for macOS. Apple is no longer providing Java updates for macOS and updated JREs and JDK are made available by Oracle.  The latest version of Java 6 made available by Apple has many unpatched vulnerabilities and should not be the default runtime for Java applets that request one from the Operating System"
     rationale: "Java has been one of the most exploited environments and Java 6, which was provided as an OS component by Apple, is no longer maintained by Apple or Oracle. The old versions provided by Apple are both unsupported and missing the more modern security controls that have limited current exploits. The EOL version may still be installed and should be removed from the computer or not be in the default path."
-    remediation: "Java 6 can be removed completely or, if required Java applications will only work with Java 6, a custom path can be used. Apple is likely to finally pull the plug on Java 6 in upcoming MacOS versions so any applications that still require Java 6 will likely soon be unavailable."
+    remediation: "Java 6 can be removed completely or, if required Java applications will only work with Java 6, a custom path can be used. Apple is likely to finally pull the plug on Java 6 in upcoming macOS versions so any applications that still require Java 6 will likely soon be unavailable."
     compliance:
       - cis: ["2.11"]
     condition: none

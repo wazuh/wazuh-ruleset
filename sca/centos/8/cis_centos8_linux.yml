@@ -110,7 +110,7 @@ checks:
     title: "Ensure /tmp is configured"
     description: "The /tmp directory is a world-writable directory used for temporary storage by all users and some applications."
     rationale: "Making /tmp its own file system allows an administrator to set the noexec option on the mount, making /tmp useless for an attacker to install executable code. It would also prevent an attacker from establishing a hardlink to a system setuid program and wait for it to be updated. Once the program was updated, the hardlink would be broken and the attacker would have his own copy of the program. If the program happened to have a security vulnerability, the attacker could continue to exploit the known flaw. This can be accomplished by either mounting tmpfs to /tmp, or creating a separate partition for /tmp."
-    remediation: "Configure /etc/fstab as appropriate. example: \"tmpfs  /tmp  tmpfs defaults,rw,nosuid,nodev,noexec,relatime  0 0\"  OR  Run the following commands to enable systemd /tmp mounting: # systemctl unmask tmp.mount # systemctl enable tmp.mount    Edit /etc/systemd/system/local-fs.target.wants/tmp.mount to configure the /tmp mount:   [Mount] What=tmpfs Where=/tmp Type=tmpfs Options=mode=1777,strictatime,noexec,nodev,nosuid"
+    remediation: "Configure /etc/fstab as appropriate. example: \"tmpfs  /tmp  tmpfs defaults,rw,nosuid,nodev,noexec,realtime  0 0\"  OR  Run the following commands to enable systemd /tmp mounting: # systemctl unmask tmp.mount # systemctl enable tmp.mount    Edit /etc/systemd/system/local-fs.target.wants/tmp.mount to configure the /tmp mount:   [Mount] What=tmpfs Where=/tmp Type=tmpfs Options=mode=1777,strictatime,noexec,nodev,nosuid"
     compliance:
       - cis: ["1.1.2"]
       - cis_csc: ["9.1"]
@@ -461,7 +461,7 @@ checks:
 # 1.3.2 Ensure sudo commands use pty (Scored)
   - id: 6524 
     title: "Ensure sudo commands use pty"
-    description: "sudo can be configured to run only from a psuedo-pty"
+    description: "sudo can be configured to run only from a pseudo-pty"
     rationale: "Attackers can run a malicious program using sudo which would fork a background process that remains even when the main program has finished executing."
     remediation: "edit the file /etc/sudoers or a file in /etc/sudoers.d/ with visudo -f and add the following line: Defaults use_pty"
     compliance:
@@ -720,7 +720,7 @@ checks:
     title: "Ensure SETroubleshoot is not installed"
     description: "The SETroubleshoot service notifies desktop users of SELinux denials through a user-friendly interface. The service provides important information around configuration errors, unauthorized intrusions, and other potential errors."
     rationale: "The SETroubleshoot service is an unnecessary daemon to have running on a server, especially if X Windows is disabled."
-    remediation: "Run the following command to uninstall s etroubleshoot: # dnf remove setroubleshoot"
+    remediation: "Run the following command to uninstall setroubleshoot: # dnf remove setroubleshoot"
     compliance:
       - cis: ["1.7.1.6"]
       - cis_csc: ["14.6"]
@@ -1825,7 +1825,7 @@ checks:
   - id: 6597 
     title: "Ensure nftables service is enabled"
     description: "The nftables service allows for the loading of nftables rulesets during boot, or starting of the nftables service."
-    rationale: "The nftables service restores the nftables rules from the rules files referenced in the /etc/sysconfig/nftables.conf file durring boot or the starting of the nftables service."
+    rationale: "The nftables service restores the nftables rules from the rules files referenced in the /etc/sysconfig/nftables.conf file during boot or the starting of the nftables service."
     remediation: "Run the following command to enable the nftables service: # systemctl --now enable nftables"
     compliance:
       - cis: ["3.4.3.7"]
@@ -3030,7 +3030,7 @@ checks:
     title: "Ensure password reuse is limited"
     description: "The /etc/security/opasswd file stores the users\" old passwords and can be checked to ensure that users are not recycling recent passwords. remember=<5> - Number of old passwords to remember"
     rationale: "Forcing users not to reuse their past 5 passwords make it less likely that an attacker will be able to guess the password. Note that these change only apply to accounts configured on the local system."
-    remediation: "Set remembered password history to conform to site policy. Run the folloing script to add or modify the pam_pwhistory.so and pam_unix.so lines to include the remember option: CP=$(authselect current | awk \"NR == 1 {print $3}\" | grep custom/) [[ -n $CP ]] && PTF=/etc/authselect/$CP/system-auth || PTF=/etc/authselect/system-auth [[ -n $(grep -E \"^\\s*password\\s+(sufficient\\s+pam_unix|requi(red|site)\\s+pam_pwhistory).so\\s+ ([^#]+\\s+)*remember=\\S+\\s*.*$\" $PTF) ]] && sed -ri \"s/^\\s*(password\\s+(requisite|sufficient)\\s+(pam_pwquality\\.so|pam_unix\\.so)\\s+)(.*)(remember=\\S+\\s*)(.*)$/\\1\\4 remember=5 \\6/\" $PTF || sed -ri \"s/^\\s*(password\\s+(requisite|sufficient)\\s+(pam_pwquality\\.so|pam_unix\\.so)\\s+)(.*)$/\\1\\4 remember=5/\" $PTF authselect apply-changes"
+    remediation: "Set remembered password history to conform to site policy. Run the following script to add or modify the pam_pwhistory.so and pam_unix.so lines to include the remember option: CP=$(authselect current | awk \"NR == 1 {print $3}\" | grep custom/) [[ -n $CP ]] && PTF=/etc/authselect/$CP/system-auth || PTF=/etc/authselect/system-auth [[ -n $(grep -E \"^\\s*password\\s+(sufficient\\s+pam_unix|requi(red|site)\\s+pam_pwhistory).so\\s+ ([^#]+\\s+)*remember=\\S+\\s*.*$\" $PTF) ]] && sed -ri \"s/^\\s*(password\\s+(requisite|sufficient)\\s+(pam_pwquality\\.so|pam_unix\\.so)\\s+)(.*)(remember=\\S+\\s*)(.*)$/\\1\\4 remember=5 \\6/\" $PTF || sed -ri \"s/^\\s*(password\\s+(requisite|sufficient)\\s+(pam_pwquality\\.so|pam_unix\\.so)\\s+)(.*)$/\\1\\4 remember=5/\" $PTF authselect apply-changes"
     compliance:
       - cis: ["5.4.3"]
       - cis_csc: ["16"]
