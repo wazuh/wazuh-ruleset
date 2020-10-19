@@ -2880,10 +2880,8 @@ rules:
       - tsc: ["CC5.2"]
     condition: any
     rules:
-      - 'f:$sshd_file -> !r:^# && n:^MaxAuthTries\s*\t*4'
-      - 'f:$sshd_file -> !r:^# && n:^MaxAuthTries\s*\t*3'
-      - 'f:$sshd_file -> !r:^# && n:^MaxAuthTries\s*\t*2'
-      - 'f:$sshd_file -> !r:^# && n:^MaxAuthTries\s*\t*1'
+      - 'f:$sshd_file -> !r:^# && n:^MaxAuthTries\s*\t*(\d+) compare <= 4'
+
 
 
 # 5.2.8 Ensure SSH IgnoreRhosts is enabled (Automated)
@@ -3023,109 +3021,177 @@ rules:
     - 'not c:sshd -T -C user=root -C host="$(hostname)" -C addr="$(grep $(hostname) /etc/hosts-> r:umac-128-etm@openssh.com'
 
 
+# 5.2.15 Ensure only strong Key Exchange algorithms are used (Automated)
+  - id: 4655 
+  title: "Ensure only strong Key Exchange algorithms are used"
+  description: "Key exchange is any method in cryptography by which cryptographic keys are exchanged between two parties, allowing use of a cryptographic algorithm. If the sender and receiver wish to exchange encrypted messages, each must be equipped to encrypt messages to be sent and decrypt messages received"
+  rationale: "Key exchange methods that are considered weak should be removed. A key exchange method may be weak because too few bits are used, or the hashing algorithm is considered too weak. Using weak algorithms could expose connections to man-in-the-middle attacks"
+  remediation: "Edit the /etc/ssh/sshd_config file add/modify the KexAlgorithms line to contain a comma separated list of the site approved key exchange algorithms.Example:'KexAlgorithms curve25519-sha256,curve25519-sha256@libssh.org,diffie-hellman-group14-sha256,diffie-hellman-group16-sha512,diffie-hellman-group18-sha512,ecdh-sha2-nistp521,ecdh-sha2-nistp384,ecdh-sha2-nistp256,diffie-hellman-group-exchange-sha256'"
+  compliance:
+    - cis: ["5.2.15"]
+    - cis_csc: ["14.4"]
+    - pci_dss: ["12.3.8"]
+  condition: any
+  rules:
+    - 'not c:sshd -T -C user=root -C host="$(hostname)" -C addr="$(grep $(hostname) /etc/hosts-> r:diffie-hellman-group1-sha1'
+    - 'not c:sshd -T -C user=root -C host="$(hostname)" -C addr="$(grep $(hostname) /etc/hosts-> r:diffie-hellman-group14-sha1'
+    - 'not c:sshd -T -C user=root -C host="$(hostname)" -C addr="$(grep $(hostname) /etc/hosts-> r:diffie-hellman-group-exchange-sha1'
 
-# 5.2.12 Ensure SSH Idle Timeout Interval is configured (Scored)
+
+# 5.2.16 Ensure SSH Idle Timeout Interval is configured (Automated)
   - id: 4655 
     title: "Ensure SSH Idle Timeout Interval is configured"
     description: "The two options ClientAliveInterval and ClientAliveCountMax control the timeout of ssh sessions. When the ClientAliveInterval variable is set, ssh sessions that have no activity for the specified length of time are terminated. When the ClientAliveCountMax variable is set, sshd will send client alive messages at every ClientAliveInterval interval. When the number of consecutive client alive messages are sent with no response from the client, the ssh session is terminated. For example, if the ClientAliveInterval is set to 15 seconds and the ClientAliveCountMax is set to 3, the client ssh session will be terminated after 45 seconds of idle time."
     rationale: "Having no timeout value associated with a connection could allow an unauthorized user access to another user's ssh session (e.g. user walks away from their computer and doesn't lock the screen). Setting a timeout value at least reduces the risk of this happening. While the recommended setting is 300 seconds (5 minutes), set this timeout value based on site policy. The recommended setting for ClientAliveCountMax is 0. In this case, the client session will be terminated after 5 minutes of idle time and no keepalive messages will be sent."
     remediation: "Edit the /etc/ssh/sshd_config file to set the parameters according to site policy: ClientAliveInterval 300 and ClientAliveCountMax 0"
     compliance:
-      - cis: ["5.2.12"]
-      - cis_csc: ["16.4"]
+      - cis: ["5.2.16"]
+      - cis_csc: ["16.11"]
       - pci_dss: ["12.3.8"]
     condition: all
     rules:
       - 'f:$sshd_file -> n:^\s*ClientAliveInterval\s*\t*(\d+) compare <= 300'
       - 'f:$sshd_file -> n:^\s*ClientAliveCountMax\s*\t*(\d+) compare <= 3'
 
-
-        
-# 5.2.12 Ensure only strong Ciphers areused (Automated)
-  - id: 4655 
-    title: "Ensure SSH Idle Timeout Interval is configured"
-    description: "This variable limits the ciphers that SSH can use during communication."
-    rationale: "Weak ciphers that are used for authentication to the cryptographic module cannot be relied upon to provide confidentiality or integrity, and system data may be compromised.: The DES, Triple DES, and Blowfish ciphers, as used in SSH, have a birthday bound of approximately four billion blocks, which makes it easier for remote attackers to obtain cleartext data via a birthday attack against a long-duration encrypted session, aka a "Sweet32" attack; The RC4 algorithm, as used in the TLS protocol and SSL protocol, does not properly combine state data with key data during the initialization phase, which makes it easier for remote attackers to conduct plaintext-recovery attacks against the initial bytes of a stream by sniffing network traffic that occasionally relies on keys affected by the Invariance Weakness, and then using a brute-force approach involvingLSB values, aka the "Bar Mitzvah" issue; The passwords used during an SSH session encrypted with RC4 can be recovered by an attacker who is able to capture and replay the session; Error handling in the SSH protocol; Client and Server, when using a block cipher algorithm in Cipher Block Chaining (CBC) mode, makes it easier for remote attackers to recover certain plaintext data from an arbitrary block of ciphertext in an SSH session via unknown vectors; The mm_newkeys_from_blob function in monitor_wrap.c, when an AES-GCM cipher is used, does not properly initialize memory for a MAC context data structure, which allows remote authenticated users to bypass intended ForceCommand and login-shell restrictions via packet data that provides a crafted callback address"
-    remediation: "Edit the /etc/ssh/sshd_config file to set the parameters according to site policy: ClientAliveInterval 300 and ClientAliveCountMax 0"
-    compliance:
-      - cis: ["5.2.12"]
-      - cis_csc: ["16.4"]
-      - pci_dss: ["12.3.8"]
-    condition: all
-    rules:
-      - 'f:/etc/ssh/sshd_config -> n:^\s*ClientAliveInterval\s*\t*(\d+) compare <= 300'
-      - 'f:/etc/ssh/sshd_config -> n:^\s*ClientAliveCountMax\s*\t*(\d+) compare <= 3'
-
-# 5.2.13 Ensure SSH LoginGraceTime is set to one minute or less (Scored)
+# 5.2.17 Ensure SSH LoginGraceTime is set to one minute or less (Automated)
   - id: 4656 
-    title: "Ensure SSH LoginGraceTime is set to one minute or less"
-    description: "The LoginGraceTime parameter specifies the time allowed for successful authentication to the SSH server. The longer the Grace period is the more open unauthenticated connections can exist. Like other session controls in this session the Grace Period should be limited to appropriate organizational limits to ensure the service is available for needed access."
-    rationale: "Setting the LoginGraceTime parameter to a low number will minimize the risk of successful brute force attacks to the SSH server. It will also limit the number of concurrent unauthenticated connections While the recommended setting is 60 seconds (1 Minute), set the number based on site policy."
-    remediation: "Edit the /etc/ssh/sshd_config file to set the parameter as follows: LoginGraceTime 60"
-    compliance:
-      - cis: ["5.2.13"]
-      - pci_dss: ["8.1"]
-      - tsc: ["CC6.1"]
-    condition: all
-    rules:
-      - 'f:/etc/ssh/sshd_config -> n:^\s*LoginGraceTime\s*\t*(\d+) compare <= 60'
+  title: "Ensure SSH LoginGraceTime is set to one minute or less"
+  description: "The LoginGraceTime parameter specifies the time allowed for successful authentication to the SSH server. The longer the Grace period is the more open unauthenticated connections can exist. Like other session controls in this session the Grace Period should be limited to appropriate organizational limits to ensure the service is available for needed access."
+  rationale: "Setting the LoginGraceTime parameter to a low number will minimize the risk of successful brute force attacks to the SSH server. It will also limit the number of concurrent unauthenticated connections While the recommended setting is 60 seconds (1 Minute), set the number based on site policy."
+  remediation: "Edit the /etc/ssh/sshd_config file to set the parameter as follows: LoginGraceTime 60"
+  compliance:
+    - cis: ["5.2.17"]
+    - cis_csc: ["5.1"]
+    - pci_dss: ["4.1"]
+    - tsc: ["CC6.1"]
+  condition: all
+  rules:
+    - 'f:/etc/ssh/sshd_config -> n:^\s*LoginGraceTime\s*\t*(\d+) compare <= 60'
 
-
-# 5.2.14 Ensure SSH access is limited (Scored)
-  - id: 4657 
-    title: "Ensure SSH access is limited"
-    description: "There are several options available to limit which users and group can access the system via SSH. It is recommended that at least one of the following options be leveraged: AllowUsers The AllowUsers variable gives the system administrator the option of allowing specific users to ssh into the system. The list consists of space separated user names. Numeric user IDs are not recognized with this variable. If a system administrator wants to restrict user access further by only allowing the allowed users to log in from a particular host, the entry can be specified in the form of user@host. AllowGroups The AllowGroups variable gives the system administrator the option of allowing specific groups of users to ssh into the system. The list consists of space separated group names. Numeric group IDs are not recognized with this variable. DenyUsers The DenyUsers variable gives the system administrator the option of denying specific users to ssh into the system. The list consists of space separated user names. Numeric user IDs are not recognized with this variable. If a system administrator wants to restrict user access further by specifically denying a user's access from a particular host, the entry can be specified in the form of user@host. DenyGroups The DenyGroups variable gives the system administrator the option of denying specific groups of users to ssh into the system. The list consists of space separated group names. Numeric group IDs are not recognized with this variable."
-    rationale: "Restricting which users can remotely access the system via SSH will help ensure that only authorized users access the system."
-    remediation: "Edit the /etc/ssh/sshd_config file to set one or more of the parameter as follows: AllowUsers <userlist>; AllowGroups <grouplist>; DenyUsers <userlist> and DenyGroups <grouplist>"
-    compliance:
-      - cis: ["5.2.14"]
-      - cis_csc: ["5.1", "5.8"]
-      - pci_dss: ["8.1"]
-      - tsc: ["CC6.1"]
-    condition: any
-    rules:
-      - 'f:/etc/ssh/sshd_config -> r:^\s*AllowUsers'
-      - 'f:/etc/ssh/sshd_config -> r:^\s*AllowGroups'
-      - 'f:/etc/ssh/sshd_config -> r:^\s*DenyUsers'
-      - 'f:/etc/ssh/sshd_config -> r:^\s*DenyGroups'
-
-# 5.2.15 Ensure SSH warning banner is configured (Scored)
+# 5.2.18 Ensure SSH warning banner is configured (Automated)
   - id: 4658 
     title: "Ensure SSH warning banner is configured"
     description: "The Banner parameter specifies a file whose contents must be sent to the remote user before authentication is permitted. By default, no banner is displayed."
     rationale: "Banners are used to warn connecting users of the particular site's policy regarding connection. Presenting a warning message prior to the normal user login may assist the prosecution of trespassers on the computer system."
     remediation: "Edit the /etc/ssh/sshd_config file to set the parameter as follows: Banner /etc/issue.net"
     compliance:
-      - cis: ["5.2.15"]
+      - cis: ["5.2.18"]
+      - cis_csc: ["5.1"]
       - pci_dss: ["2.2.4"]
       - nist_800_53: ["CM.1"]
       - tsc: ["CC5.2"]
     condition: all
     rules:
-      - 'f:/etc/ssh/sshd_config -> r:^\s*Banner\s*\t*/etc/issue.net'
+      - 'f:$sshd_file -> r:^\s*Banner\s*\t*/etc/issue.net'
+
+
+# 5.2.19 Ensure SSH PAMis enabled (Automated)
+  - id: 4658 
+  title: "Ensure SSH PAMis enabled"
+  description: "UsePAM Enables the Pluggable Authentication Module interface. If set to “yes” this will enable PAM authentication using ChallengeResponseAuthenticationand PasswordAuthentication in addition to PAM account and session module processing for all authentication types"
+  rationale: "When usePAM is set to yes, PAM runs through account and session types properly. This is important if you want to restrict access toservices based off of IP, time or other factors of the account. Additionally, you can make sure users inherit certain environment variables on login or disallow access to the server"
+  remediation: "Edit the /etc/ssh/sshd_config file to set the parameter as follows: UsePAM yes"
+  compliance:
+    - cis: ["5.2.19"]
+    - cis_csc: ["5.1"]
+    - pci_dss: ["2.2.4"]
+    - nist_800_53: ["CM.1"]
+    - tsc: ["CC5.2"]
+  condition: all
+  rules:
+    - 'f:$sshd_file -> r:^UsePAM yes'
+
+
+# 5.2.20 Ensure SSH AllowTcpForwarding is disabled (Automated)
+  - id: 4658 
+  title: "Ensure SSH AllowTcpForwarding is disabled"
+  description: "SSH port forwarding is a mechanism in SSH for tunneling application ports from the client to the server, or servers to clients. It can be used for adding encryption to legacy applications, going through firewalls, and some system administrators and IT professionals use it for opening backdoors into the internal network from their home machines"
+  rationale: "Leaving port forwarding enabled can expose the organization to security risks and back-doors.SSH connections are protected with strong encryption. This makes their contents invisible to most deployed network monitoring and traffic filtering solutions. This invisibility carries considerable risk potential if it is used for malicious purposes such as data exfiltration. Cybercriminals or malware could exploit SSH to hide their unauthorized communications, or to exfiltrate stolen data from the target network"
+  remediation: "Edit the /etc/ssh/sshd_config file to set the parameter as follows: AllowTcpForwarding no"
+  compliance:
+    - cis: ["5.2.20"]
+    - cis_csc: ["9.2"]
+    - pci_dss: ["2.2.4"]
+    - nist_800_53: ["CM.1"]
+    - tsc: ["CC5.2"]
+  condition: all
+  rules:
+    - 'f:$sshd_file -> r:^AllowTcpForwarding no'
+
+
+# 5.2.21 Ensure SSH MaxStartups is configured (Automated)
+  - id: 4658 
+  title: "Ensure SSH MaxStartups is configured"
+  description: "The MaxStartupsparameter specifies the maximum number of concurrent unauthenticated connections to the SSH daemon"
+  rationale: "To protect a system from denial of servicedue to a large number of pending authentication connection attempts, use the rate limiting function of MaxStartups to protect availability of sshd logins and prevent overwhelming the daemon"
+  remediation: "Edit the /etc/ssh/sshd_config file to set the parameter as follows: maxstartups 10:30:60"
+  compliance:
+    - cis: ["5.2.21"]
+    - cis_csc: ["5.1"]
+    - pci_dss: ["2.2.4"]
+    - nist_800_53: ["CM.1"]
+    - tsc: ["CC5.2"]
+  condition: all
+  rules:
+    - 'f:$sshd_file -> r:^maxstartups 10:30:60'
+
+
+# 5.2.22 Ensure SSH MaxSessions is limited (Automated)
+- id: 4658 
+title: "Ensure SSH MaxSessions is limited"
+description: "The MaxSessionsparameter specifies the maximum number of open sessions permitted from a given connection."
+rationale: "To protect a system from denial of servicedue to a large number of pending authentication connection attempts, use the rate limiting function of MaxStartups to protect availability of sshd logins and prevent overwhelming the daemon"
+remediation: "Edit the /etc/ssh/sshd_config file to set the parameter as follows: MaxSessions 10"
+compliance:
+  - cis: ["5.2.22"]
+  - cis_csc: ["5.1"]
+  - pci_dss: ["2.2.4"]
+  - nist_800_53: ["CM.1"]
+  - tsc: ["CC5.2"]
+condition: all
+rules:
+  - 'f:$sshd_file -> r:^MaxSessions 10'
+
 
 
 ###############################################
 # 5.3 Configure PAM
 ###############################################
-# 5.3.1 Ensure password creation requirements are configured (Scored)
+# 5.3.1 Ensure password creation requirements are configured (Automated)
   - id: 4659 
     title: "Ensure password creation requirements are configured"
     description: "The pam_pwquality.so module checks the strength of passwords. It performs checks such as making sure a password is not a dictionary word, it is a certain length, contains a mix of characters (e.g. alphabet, numeric, other) and more"
     rationale: "Strong passwords protect systems from being hacked through brute force methods."
-    remediation: "Edit the /etc/pam.d/password-auth and /etc/pam.d/system-auth files to include the appropriate options for pam_pwquality.so and to conform to site policy: password requisite pam_pwquality.so try_first_pass retry=3. Edit /etc/security/pwquality.conf to add or update the following settings to conform to site policy: minlen = 14"
+    remediation: "Edit the file /etc/security/pwquality.conf and add or modify the following line for password length to conform to site policy: minlen = 14     Edit the file /etc/security/pwquality.conf and add or modify the following line for password complexity to conform to site policy: minclass = 4    OR dcredit = -1 ucredit = -1 ocredit = -1 lcredit = -1      Edit the /etc/pam.d/password-auth and /etc/pam.d/system-auth files to include the appropriate options for pam_pwquality.so and to conform to site policy:password requisite pam_pwquality.so try_first_pass retry=3"
     compliance:
       - cis: ["5.3.1"]
-      - cis_csc: ["5.7", "16.12"]
+      - cis_csc: ["4.4"]
       - pci_dss: ["8.2.3"]
       - tsc: ["CC6.1"]
     condition: all
     rules:
-      - 'c:grep pam_pwquality.so /etc/pam.d/password-auth -> r:try_first_pass'
-      - 'c:grep pam_pwquality.so /etc/pam.d/system-auth -> r:try_first_pass'
       - 'f:/etc/security/pwquality.conf -> n:^\s*minlen\s+\t*=\s+\t*(\d+) compare >= 14'
+      - 'f:/etc/security/pwquality.conf -> n:^\s*minclass\s+\t*=\s+\t*(\d+) compare >= 4'
+      - 'f:/etc/pam.d/password-auth -> n:try_first_pass retry=(\d+) compare <=3'
+      - 'f:/etc/pam.d/system-auth -> n:try_first_pass retry=(\d+) compare <=3'
 
-# 5.3.3 Ensure password reuse is limited (Scored)
+# 5.3.3 Ensure password hashing algorithm is SHA-512 (Automated)
+  - id: 4661 
+    title: "Ensure password hashing algorithm is SHA-512"
+    description: "The commands below change password encryption from md5 to sha512 (a much stronger hashing algorithm). All existing accounts will need to perform a password change to upgrade the stored hashes to the new algorithm."
+    rationale: "The SHA-512 algorithm provides much stronger hashing than MD5, thus providing additional protection to the system by increasing the level of effort for an attacker to successfully determine passwords. Note that these change only apply to accounts configured on the local system."
+    remediation: "Edit the /etc/pam.d/password-auth and /etc/pam.d/system-auth files to include the sha512 option for pam_unix.so as shown: password sufficient pam_unix.so sha512"
+    compliance:
+      - cis: ["5.3.3"]
+      - cis_csc: ["16.4"]
+      - pci_dss: ["3.6.1","8.2.1"]
+      - tsc: ["CC6.1","CC6.7"]
+    condition: all
+    rules:
+      - 'f:/etc/pam.d/password-auth -> r:^password\s*sufficient\s*pam_unix.so\s*sha512'
+      - 'f:/etc/pam.d/system-auth -> r:^password\s*sufficient\s*pam_unix.so\s*sha512'
+
+# 5.3.4 Ensure password reuse is limited (Automated)
   - id: 4660 
     title: "Ensure password reuse is limited"
     description: "The /etc/security/opasswd file stores the users' old passwords and can be checked to ensure that users are not recycling recent passwords."
@@ -3141,28 +3207,14 @@ rules:
       - 'f:/etc/pam.d/password-auth -> n:^password\s+sufficient\s+pam_unix.so\.+remember=(\d+)|^password\s+required\s+pam_pwhistory.so\.+remember=(\d+) compare >= 5'
       - 'f:/etc/pam.d/system-auth -> n:^password\s+sufficient\s+pam_unix.so\.+remember=(\d+)|^password\s+required\s+pam_pwhistory.so\.+remember=(\d+) compare >= 5'
 
-# 5.3.4 Ensure password hashing algorithm is SHA-512 (Scored)
-  - id: 4661 
-    title: "Ensure password hashing algorithm is SHA-512"
-    description: "The commands below change password encryption from md5 to sha512 (a much stronger hashing algorithm). All existing accounts will need to perform a password change to upgrade the stored hashes to the new algorithm."
-    rationale: "The SHA-512 algorithm provides much stronger hashing than MD5, thus providing additional protection to the system by increasing the level of effort for an attacker to successfully determine passwords. Note that these change only apply to accounts configured on the local system."
-    remediation: "Edit the /etc/pam.d/password-auth and /etc/pam.d/system-auth files to include the sha512 option for pam_unix.so as shown: password sufficient pam_unix.so sha512"
-    compliance:
-      - cis: ["5.3.4"]
-      - cis_csc: ["16.14"]
-      - pci_dss: ["3.6.1","8.2.1"]
-      - tsc: ["CC6.1","CC6.7"]
-    condition: all
-    rules:
-      - 'f:/etc/pam.d/password-auth -> r:^password\s*sufficient\s*pam_unix.so\s*sha512'
-      - 'f:/etc/pam.d/system-auth -> r:^password\s*sufficient\s*pam_unix.so\s*sha512'
+
 ###############################################
 # 5.4 User Accounts and Environment
 ###############################################
 ###############################################
 # 5.4.1 Set Shadow Password Suite Parameters
 ###############################################
-# 5.4.1.1 Ensure password expiration is 365 days or less (Scored)
+# 5.4.1.1 Ensure password expiration is 365 days or less (Automated)
   - id: 4662 
     title: "Ensure password expiration is 365 days or less"
     description: "The PASS_MAX_DAYS parameter in /etc/login.defs allows an administrator to force passwords to expire once they reach a defined age. It is recommended that the PASS_MAX_DAYS parameter be set to less than or equal to 365 days."
@@ -3170,7 +3222,7 @@ rules:
     remediation: "Set the PASS_MAX_DAYS parameter to conform to site policy in /etc/login.defs : PASS_MAX_DAYS 90 and modify user parameters for all users with a password set to match: chage --maxdays 90 <user>"
     compliance:
       - cis: ["5.4.1.1"]
-      - cis_csc: ["16"]
+      - cis_csc: ["4.4"]
       - pci_dss: ["8.2.4"]
       - tsc: ["CC6.1"]
     condition: all
@@ -3178,22 +3230,22 @@ rules:
       - 'f:/etc/login.defs -> n:^\s*PASS_MAX_DAYS\s*\t*(\d+) compare <= 365'
 
 
-# 5.4.1.2 Ensure minimum days between password changes is 7 or more (Scored)
+# 5.4.1.2 Ensure minimum days between password changes is configured (Automated)
   - id: 4663 
-    title: "Ensure minimum days between password changes is 7 or more"
-    description: "The PASS_MIN_DAYS parameter in /etc/login.defs allows an administrator to prevent users from changing their password until a minimum number of days have passed since the last time the user changed their password. It is recommended that PASS_MIN_DAYS parameter be set to 7 or more days."
+    title: "Ensure minimum days between password changes is  is configured"
+    description: "The PASS_MIN_DAYS parameter in /etc/login.defs allows an administrator to prevent users from changing their password until a minimum number of days have passed since the last time the user changed their password. It is recommended that PASS_MIN_DAYS parameter be set to 1 or more days."
     rationale: "By restricting the frequency of password changes, an administrator can prevent users from repeatedly changing their password in an attempt to circumvent password reuse controls."
-    remediation: "Set the PASS_MIN_DAYS parameter to 7 in /etc/login.defs: PASS_MIN_DAYS 7 and modify user parameters for all users with a password set to match: chage --mindays 7 <user>"
+    remediation: "Set the PASS_MIN_DAYS parameter to 1 in /etc/login.defs: PASS_MIN_DAYS 1 and modify user parameters for all users with a password set to match: chage --mindays 1 <user>"
     compliance:
       - cis: ["5.4.1.2"]
-      - cis_csc: ["16"]
+      - cis_csc: ["4.4"]
       - pci_dss: ["8.2"]
       - tsc: ["CC6.1"]
     condition: all
     rules:
-      - 'f:/etc/login.defs -> n:^\s*PASS_MIN_DAYS\s*\t*(\d+) compare >= 7'
+      - 'f:/etc/login.defs -> n:^\s*PASS_MIN_DAYS\s*\t*(\d+) compare >= 1'
 
-# 5.4.1.3 Ensure password expiration warning days is 7 or more (Scored)
+# 5.4.1.3 Ensure password expiration warning days is 7 or more (Automated)
   - id: 4664 
     title: "Ensure minimum days between password changes is 7 or more"
     description: "The PASS_WARN_AGE parameter in /etc/login.defs allows an administrator to notify users that their password will expire in a defined number of days. It is recommended that the PASS_WARN_AGE parameter be set to 7 or more days."
@@ -3201,14 +3253,15 @@ rules:
     remediation: "Set the PASS_WARN_AGE parameter to 7 in /etc/login.defs: PASS_WARN_AGE 7 and modify user parameters for all users with a password set to match: chage --warndays 7 <user>"
     compliance:
       - cis: ["5.4.1.3"]
-      - cis_csc: ["16"]
+      - cis_csc: ["4.4"]
       - pci_dss: ["8.2"]
       - tsc: ["CC6.1"]
     condition: all
     rules:
       - 'f:/etc/login.defs -> n:^\s*PASS_WARN_AGE\s*\t*(\d+) compare >= 7'
+    
 
-# 5.4.1.4 Ensure inactive password lock is 30 days or less (Scored)
+# 5.4.1.4 Ensure inactive password lock is 30 days or less (Automated)
   - id: 4665 
     title: "Ensure inactive password lock is 30 days or less"
     description: "User accounts that have been inactive for over a given period of time can be automatically disabled. It is recommended that accounts that are inactive for 30 days after password expiration be disabled."
@@ -3224,7 +3277,7 @@ rules:
       - 'c:useradd -D -> n:^\s*INACTIVE\s*=\s*(\d+) compare <= 30'
 
 
-# 5.4.3 Ensure default group for the root account is GID 0 (Scored)
+# 5.4.3 Ensure default group for the root account is GID 0 (Automated)
   - id: 4666 
     title: "Ensure default group for the root account is GID 0"
     description: "The usermod command can be used to specify which group the root user belongs to. This affects permissions of files that are created by the root user."
@@ -3232,17 +3285,35 @@ rules:
     remediation: "Run the following command to set the root user default group to GID 0: usermod -g 0 root"
     compliance:
       - cis: ["5.4.3"]
-      - cis_csc: ["5"]
+      - cis_csc: ["5.1"]
       - pci_dss: ["8.2"]
       - tsc: ["CC6.1"]
     condition: all
     rules:
       - 'f:/etc/passwd -> r:^root:\w:\w:0'
 
-# 5.4.4 Ensure default user umask is 027 or more restrictive (Scored)
+
+# 5.4.4 Ensure default user shell timeout is configured (Automated)
+  - id: 4668 
+  title: " Ensure default user shell timeout is configured"
+  description: "TMOUT is an environmental setting that determines the timeout of a shell in seconds."
+  rationale: "Setting a timeout value reduces the window of opportunity for unauthorized user access to another user's shell session that has been left unattended. It also ends the inactive session and releases the resources associated with that session."
+  remediation: "Edit the /etc/bashrc and /etc/profile files (and the appropriate files for any other shell supported on your system) and add or edit any umask parameters as follows: TMOUT=600"
+  compliance:
+    - cis: ["5.4.4"]
+    - cis_csc: ["16.11"]
+    - pci_dss: ["12.3.8"]
+  condition: all
+  rules:
+    - 'not f:/etc/bashrc -> n:^\s*\t*TMOUT\s*\t*=\s*\t*(\d+) compare > 900'
+    - 'not f:/etc/profile -> n:^\s*\t*TMOUT\s*\t*=\s*\t*(\d+) compare > 900'
+    - 'f:/etc/bashrc -> n:^\s*\t*TMOUT\s*\t*=\s*\t*(\d+) compare <= 900'
+    - 'f:/etc/profile -> n:^\s*\t*TMOUT\s*\t*=\s*\t*(\d+) compare <= 900'
+
+# 5.4.5 Ensure default user umask is configured (Automated)
   - id: 4667 
-    title: "Ensure default user umask is 027 or more restrictive"
-    description: "The default umask determines the permissions of files created by users. The user creating the file has the discretion of making their files and directories readable by others via the chmod command. Users who wish to allow their files and directories to be readable by others by default may choose a different default umask by inserting the umask command into the standard shell configuration files ( .profile , .bashrc , etc.) in their home directories."
+    title: "Ensure default user umask is configured"
+    description: "The user file-creation mode mask (umask) is use to determine the file permission for newly created directories and files. In Linux, the default permissions for any newly created directory is 0777 (rwxrwxrwx), and for any newly created file it is 0666 (rw-rw-rw-). The umask modifies the default Linux permissions by restricting (masking) these permissions. The umask is not simply subtracted, but is processed bitwise. Bits set in the umaskare cleared in the resulting file mode."
     rationale: "Setting a very secure default value for umask ensures that users make a conscious choice about their file permissions. A default umask setting of 077 causes files and directories created by users to not be readable by any other user on the system. A umask of 027 would make files and directories readable by users in the same Unix group, while a umask of 022 would make files readable by every user on the system."
     remediation: "Edit the /etc/bashrc , /etc/profile and /etc/profile.d/*.sh files (and the appropriate files for any other shell supported on your system) and add or edit any umask parameters as follows: umask 027"
     compliance:
@@ -3259,26 +3330,10 @@ rules:
       - 'd:/etc/profile.d -> .sh -> !r:^\s*\t*# && r:umask \d0\d|umask \d1\d|umask \d4\d|umask \d5\d'
       - 'd:/etc/profile.d -> .sh -> !r:^\s*t*# && n:umask \d\d(\d) compare != 7'
 
-# 5.4.5 Ensure default user shell timeout is 900 seconds or less (Scored)
-  - id: 4668 
-    title: "Ensure default user shell timeout is 900 seconds or less"
-    description: "The default TMOUT determines the shell timeout for users. The TMOUT value is measured in seconds."
-    rationale: "Having no timeout value associated with a shell could allow an unauthorized user access to another user's shell session (e.g. user walks away from their computer and doesn't lock the screen). Setting a timeout value at least reduces the risk of this happening."
-    remediation: "Edit the /etc/bashrc and /etc/profile files (and the appropriate files for any other shell supported on your system) and add or edit any umask parameters as follows: TMOUT=600"
-    compliance:
-      - cis: ["5.4.5"]
-      - cis_csc: ["16.4"]
-      - pci_dss: ["12.3.8"]
-    condition: all
-    rules:
-      - 'not f:/etc/bashrc -> n:^\s*\t*TMOUT\s*\t*=\s*\t*(\d+) compare > 900'
-      - 'not f:/etc/profile -> n:^\s*\t*TMOUT\s*\t*=\s*\t*(\d+) compare > 900'
-      - 'f:/etc/bashrc -> n:^\s*\t*TMOUT\s*\t*=\s*\t*(\d+) compare <= 900'
-      - 'f:/etc/profile -> n:^\s*\t*TMOUT\s*\t*=\s*\t*(\d+) compare <= 900'
 
 
 
-# 5.6 Ensure access to the su command is restricted (Scored)
+# 5.6 Ensure access to the su command is restricted (Automated)
   - id: 4669 
     title: "Ensure access to the su command is restricted."
     description: "The su command allows a user to run a command or shell as another user. The program has been superseded by sudo , which allows for more granular control over privileged access. Normally, the su command can be executed by any user. By uncommenting the pam_wheel.so statement in /etc/pam.d/su , the su command will only allow users in the wheel group to execute su ."
