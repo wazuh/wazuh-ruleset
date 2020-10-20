@@ -3525,81 +3525,46 @@ rules:
     rules:
       - 'f:/etc/shadow -> !r:^# && r:^\w+::'
 
-# 6.2.2 Delete legacy entries in /etc/passwd (Scored)
-  - id: 4679 
-    title: "Ensure no legacy \"+\" entries exist in /etc/passwd"
-    description: "The character + in various files used to be markers for systems to insert data from NIS maps at a certain point in a system configuration file. These entries are no longer required on most systems, but may exist in files that have been imported from other platforms."
-    rationale: "These entries may provide an avenue for attackers to gain privileged access on the system."
-    remediation: "Remove any legacy '+' entries from /etc/passwd if they exist."
-    compliance:
-      - cis: ["6.2.2"]
-      - cis_csc: ["16.9"]
-      - pci_dss: ["2.2.3"]
-      - nist_800_53: ["CM.1"]
-      - gpg_13: ["4.3"]
-      - gdpr_IV: ["35.7.d"]
-      - hipaa: ["164.312.b"]
-      - tsc: ["CC5.2"]
-    condition: none
-    rules:
-      - 'f:/etc/passwd -> !r:^# && r:^+:'
-
-# 6.2.3 Delete legacy entries in /etc/shadow (Scored)
-  - id: 4680 
-    title: "Ensure no legacy \"+\" entries exist in /etc/shadow"
-    description: "The character + in various files used to be markers for systems to insert data from NIS maps at a certain point in a system configuration file. These entries are no longer required on most systems, but may exist in files that have been imported from other platforms."
-    rationale: "These entries may provide an avenue for attackers to gain privileged access on the system."
-    remediation: "Remove any legacy '+' entries from /etc/shadow if they exist."
-    compliance:
-      - cis: ["6.2.3"]
-      - cis_csc: ["16.9"]
-      - pci_dss: ["2.2.3"]
-      - nist_800_53: ["CM.1"]
-      - gpg_13: ["4.3"]
-      - gdpr_IV: ["35.7.d"]
-      - hipaa: ["164.312.b"]
-      - tsc: ["CC5.2"]
-    condition: none
-    rules:
-      - 'f:/etc/shadow -> !r:^# && r:^+:'
-
-# 6.2.4 Delete legacy entries in /etc/group (Scored)
-  - id: 4681 
-    title: "Ensure no legacy \"+\" entries exist in /etc/group"
-    description: "The character + in various files used to be markers for systems to insert data from NIS maps at a certain point in a system configuration file. These entries are no longer required on most systems, but may exist in files that have been imported from other platforms."
-    rationale: "These entries may provide an avenue for attackers to gain privileged access on the system."
-    remediation: "Remove any legacy '+' entries from /etc/group if they exist."
-    compliance:
-      - cis: ["6.2.4"]
-      - cis_csc: ["16.9"]
-      - pci_dss: ["2.2.3"]
-      - nist_800_53: ["CM.1"]
-      - gpg_13: ["4.3"]
-      - gdpr_IV: ["35.7.d"]
-      - hipaa: ["164.312.b"]
-      - tsc: ["CC5.2"]
-    condition: none
-    rules:
-      - 'f:/etc/group -> !r:^# && r:^+:'
-
-# 6.2.5 Verify No UID 0 Accounts Exist Other Than root (Scored)
+# 6.2.3 Ensure root is the only UID 0 account (Automated)
   - id: 4682 
-    title: "Ensure root is the only UID 0 account"
-    description: "Any account with UID 0 has superuser privileges on the system."
-    rationale: "This access must be limited to only the default root account and only from the system console. Administrative access must be through an unprivileged account using an approved mechanism as noted in Item 5.6 Ensure access to the su command is restricted."
-    remediation: "Remove any users other than root with UID 0 or assign them a new UID if appropriate."
-    compliance:
-      - cis: ["6.2.5"]
-      - cis_csc: ["5.1"]
-      - pci_dss: ["10.2.5"]
-      - hipaa: ["164.312.b"]
-      - nist_800_53: ["AU.14", "AC.7"]
-      - gpg_13: ["7.8"]
-      - gdpr_IV: ["35.7","32.2"]
-      - tsc: ["CC6.1", "CC6.8", "CC7.2", "CC7.3", "CC7.4"]
-    condition: none
-    rules:
-      - 'f:/etc/passwd -> !r:^# && !r:^\s*\t*root: && r:^\w+:\w+:0:'
+  title: "Ensure root is the only UID 0 account"
+  description: "Any account with UID 0 has superuser privileges on the system."
+  rationale: "This access must be limited to only the default root account and only from the system console. Administrative access must be through an unprivileged account using an approved mechanism as noted in Item 5.6 Ensure access to the su command is restricted."
+  remediation: "Remove any users other than root with UID 0 or assign them a new UID if appropriate."
+  compliance:
+    - cis: ["6.2.3"]
+    - cis_csc: ["5.1"]
+    - pci_dss: ["10.2.5"]
+    - hipaa: ["164.312.b"]
+    - nist_800_53: ["AU.14", "AC.7"]
+    - gpg_13: ["7.8"]
+    - gdpr_IV: ["35.7","32.2"]
+    - tsc: ["CC6.1", "CC6.8", "CC7.2", "CC7.3", "CC7.4"]
+  condition: none
+  rules:
+    - 'f:/etc/passwd -> !r:^# && !r:^\s*\t*root: && r:^\w+:\w+:0:'
+
+
+# 6.2.18 Ensure shadow group is empty (Automated)
+  - id: 4680 
+  title: "Ensure shadow group is empty"
+  description: "The shadow group allows system programs which require access the ability to read the /etc/shadow file. No users should be assigned to the shadow group"
+  rationale: "Any users assigned to the shadow group would be granted read access to the /etc/shadow file. If attackers can gain read access to the /etc/shadow file, they can easily runa password cracking program against the hashed passwords to break them. Other security information that is stored in the /etc/shadow file (such as expiration) could also be useful to subvert additional user accounts."
+  remediation: "Remove any legacy '+' entries from /etc/shadow if they exist."
+  compliance:
+    - cis: ["6.2.18"]
+    - cis_csc: ["5.1"]
+    - pci_dss: ["2.2.3"]
+    - nist_800_53: ["CM.1"]
+    - gpg_13: ["4.3"]
+    - gdpr_IV: ["35.7.d"]
+    - hipaa: ["164.312.b"]
+    - tsc: ["CC5.2"]
+  condition: none
+  rules:
+    - 'not f:/etc/shadow -> !r:^# && r:^shadow:\.+:\.+:\.+:\.+'
+
+
 # 1.1.1.1 Ensure mounting of cramfs filesystems is disabled
   - id: 5564
     title: "Ensure mounting of cramfs filesystems is disabled"
