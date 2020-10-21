@@ -2696,7 +2696,7 @@ checks:
     title: "Ensure permissions on all logfiles are configured"
     description: "Log files stored in /var/log/ contain logged information from many services on the system, or on log hosts others as well."
     rationale: "It is important to ensure that log files have the correct permissions to ensure that sensitivebdata is archived and protected.  Other/world should not have the ability to viewthis information. Group should not have the ability to modify this information."
-    remediation: "Run the following command to set permissions on all existing log files: # find /var/log -type f -exec chmod g-wx,o-rwx \"{}\" + -o -type d -exec chmod g-wx,o-rwx "{}" +"
+    remediation: "Run the following command to set permissions on all existing log files: # find /var/log -type f -exec chmod g-wx,o-rwx \"{}\" + -o -type d -exec chmod g-wx,o-rwx \"{}\" +"
     compliance:
       - cis: ["4.2.3"]
       - cis_csc: ["5.1"]
