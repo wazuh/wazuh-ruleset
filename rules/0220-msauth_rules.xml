@@ -1304,6 +1304,21 @@
     <group>authentication_success,pci_dss_10.2.2,gdpr_IV_32.2,</group>
   </rule>
 
+  <rule id="20128" level="0">
+    <if_sid>20008</if_sid>
+    <field name="win.eventdata.processName">svchost.exe|RuntimeBroker.exe|consent.exe|lsass.exe|explorer.exe</field>
+    <description>Windows: Failed attempt to perform a privileged operation in process $(win.eventdata.processName)</description>
+    <options>no_full_log</options>
+    <group>authentication_success,pci_dss_10.2.2,gdpr_IV_32.2,</group>
+  </rule>
+
+  <rule id="20129" level="4" frequency="2" ignore="30">
+    <if_sid>20128</if_sid>
+    <description>Windows: Failed attempt to perform a privileged operation in process $(win.eventdata.processName)</description>
+    <options>no_full_log</options>
+    <group>authentication_success,pci_dss_10.2.2,gdpr_IV_32.2,</group>
+  </rule>
+
   <rule id="20009" level="3">
     <if_sid>20004</if_sid>
     <field name="win.system.eventID">^682$|^683$|^4778$|^4779$</field>
