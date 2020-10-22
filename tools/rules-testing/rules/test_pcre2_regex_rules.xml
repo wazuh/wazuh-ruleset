@@ -5,44 +5,29 @@
   <rule id="999500" level="3">
     <decoded_as>test_pcre2</decoded_as>
     <match>test_action</match>
-    <action  negate="no">GET</action>
+    <action  type="pcre2" negate="no">(?i)GET</action>
     <description>Testing PCRE2 action</description>
   </rule>
 
   <rule id="999501" level="3">
     <decoded_as>test_pcre2</decoded_as>
     <match>test_action</match>
-    <action negate="yes">POST</action>
+    <action type="pcre2" negate="no">(?i)POST</action>
     <description>Testing PCRE2 action negation</description>
-  </rule>
-
-  <!-- Testing dstip field. -->
-  <rule id="999502" level="3">
-    <decoded_as>test_pcre2</decoded_as>
-    <match>test_dstip</match>
-    <dstip negate="no">172.115.14.241</dstip>
-    <description>Testing PCRE2 dstip</description>
-  </rule>
-
-  <rule id="999503" level="3">
-    <decoded_as>test_pcre2</decoded_as>
-    <match>test_dstip</match>
-    <dstip negate="yes">192.168.0.15</dstip>
-    <description>Testing PCRE2 dstip negation</description>
   </rule>
 
   <!-- Testing extra_data field. -->
   <rule id="999504" level="3">
     <decoded_as>test_pcre2</decoded_as>
     <match>test_extra_data</match>
-    <extra_data negate="no">keepalive=1s</extra_data>
+    <extra_data type="pcre2" negate="no">(?i)keepalive=1s</extra_data>
     <description>Testing PCRE2 extra_data</description>
   </rule>
 
   <rule id="999505" level="3">
     <decoded_as>test_pcre2</decoded_as>
     <match>test_extra_data</match>
-    <extra_data negate="yes">keepalive=no</extra_data>
+    <extra_data type="pcre2" negate="no">(?i)keepalive=no</extra_data>
     <description>Testing PCRE2 extra_data negation</description>
   </rule>
 
@@ -50,14 +35,14 @@
   <rule id="999506" level="3">
     <decoded_as>test_pcre2</decoded_as>
     <match>test_field</match>
-    <field name="querystring" negate="no">format=json</field>
+    <field name="querystring" type="pcre2" negate="no">(?i)format=json</field>
     <description>Testing PCRE2 dynamic field</description>
   </rule>
 
   <rule id="999507" level="3">
     <decoded_as>test_pcre2</decoded_as>
     <match>test_field</match>
-    <field name="querystring" negate="yes">format=xml</field>
+    <field name="querystring" type="pcre2" negate="no">(?i)format=xml</field>
     <description>Testing PCRE2 dynamic field negation</description>
   </rule>
 
@@ -65,14 +50,14 @@
   <rule id="999508" level="3">
     <decoded_as>test_pcre2</decoded_as>
     <match>test_hostname</match>
-    <hostname negate="no">hostname_1</hostname>
+    <hostname type="pcre2" negate="no">(?i)hostname_1</hostname>
     <description>Testing PCRE2 hostname field</description>
   </rule>
 
   <rule id="999509" level="3">
     <decoded_as>test_pcre2</decoded_as>
     <match>test_hostname</match>
-    <hostname negate="yes">hostname_2</hostname>
+    <hostname type="pcre2" negate="no">(?i)hostname_2</hostname>
     <description>Testing PCRE2 hostname negation</description>
   </rule>
 
@@ -80,14 +65,14 @@
   <rule id="999510" level="3">
     <decoded_as>test_pcre2</decoded_as>
     <match>test_id</match>
-    <id negate="no">0</id>
+    <id type="pcre2" negate="no">(?i)0</id>
     <description>Testing PCRE2 id</description>
   </rule>
 
   <rule id="999511" level="3">
     <decoded_as>test_pcre2</decoded_as>
     <match>test_id</match>
-    <id negate="yes">999</id>
+    <id type="pcre2" negate="no">(?i)999</id>
     <description>Testing PCRE2 id negation</description>
   </rule>
 
@@ -95,7 +80,7 @@
   <rule id="999512" level="3">
     <decoded_as>test_pcre2</decoded_as>
     <match>test_location</match>
-    <location negate="no"></location>
+    <location type="pcre2" negate="no">(?i)</location>
     <description>Testing PCRE2 location negation</description>
   </rule>
   
@@ -103,14 +88,14 @@
   <rule id="999514" level="3">
     <decoded_as>test_pcre2</decoded_as>
     <regex>test_match</regex>
-    <match negate="no">match_example_0</match>
+    <match type="pcre2" negate="no">(?i)match_example_0</match>
     <description>Testing PCRE2 match</description>
   </rule>
 
   <rule id="999515" level="3">
     <decoded_as>test_pcre2</decoded_as>
     <regex>test_match</regex>
-    <match negate="yes">match_example_9</match>
+    <match type="pcre2" negate="no">(?i)match_example_9</match>
     <description>Testing PCRE2 match negation</description>
   </rule>
 
@@ -119,14 +104,14 @@
     <decoded_as>test_pcre2</decoded_as>
     <match>test_program_name</match>
     <program_name >test_pcre2_</program_name>
-    <program_name negate="no">pn_4</program_name>
+    <program_name type="pcre2" negate="no">(?i)pn_4</program_name>
     <description>Testing PCRE2 program_name</description>
   </rule>
 
   <rule id="999517" level="3">
     <decoded_as>test_pcre2</decoded_as>
     <match>test_program_name</match>
-    <program_name negate="yes">test_pcre2_pn_\d+</program_name>
+    <program_name type="pcre2" negate="no">(?i)test_pcre2_pn_\d+</program_name>
     <description>Testing PCRE2 program_name negation</description>
   </rule>
 
@@ -134,14 +119,14 @@
   <rule id="999518" level="3">
     <decoded_as>test_pcre2</decoded_as>
     <match>test_protocol</match>
-    <protocol negate="no">HTTP</protocol>
+    <protocol type="pcre2" negate="no">(?i)HTTP</protocol>
     <description>Testing PCRE2 protocol</description>
   </rule>
 
   <rule id="999519" level="3">
     <decoded_as>test_pcre2</decoded_as>
     <match>test_protocol</match>
-    <protocol negate="yes">HTTPS</protocol>
+    <protocol type="pcre2" negate="no">(?i)HTTPS</protocol>
     <description>Testing PCRE2 protocol negation</description>
   </rule>
 
@@ -149,44 +134,29 @@
   <rule id="999520" level="3">
     <decoded_as>test_pcre2</decoded_as>
     <match>test_regex</match>
-    <regex negate="no">regex_example_0</regex>
+    <regex type="pcre2" negate="no">(?i)regex_example_0</regex>
     <description>Testing PCRE2 regex</description>
   </rule>
 
   <rule id="999521" level="3">
     <decoded_as>test_pcre2</decoded_as>
     <match>test_regex</match>
-    <regex negate="yes">regex_example_9</regex>
+    <regex type="pcre2" negate="no">(?i)regex_example_9</regex>
     <description>Testing PCRE2 regex negation</description>
-  </rule>
-
-  <!-- Testing srcip field. -->
-  <rule id="999522" level="3">
-    <decoded_as>test_pcre2</decoded_as>
-    <match>test_srcip</match>
-    <srcip negate="no">172.115.14.241</srcip>
-    <description>Testing PCRE2 srcip</description>
-  </rule>
-
-  <rule id="999523" level="3">
-    <decoded_as>test_pcre2</decoded_as>
-    <match>test_srcip</match>
-    <srcip negate="yes">192.168.0.15</srcip>
-    <description>Testing PCRE2 srcip negation</description>
   </rule>
 
   <!-- Testing user field. -->
   <rule id="999524" level="3">
     <decoded_as>test_pcre2</decoded_as>
     <match>test_user</match>
-    <user negate="no">ltorv</user>
+    <user type="pcre2" negate="no">(?i)ltorv</user>
     <description>Testing PCRE2 user</description>
   </rule>
 
   <rule id="999525" level="3">
     <decoded_as>test_pcre2</decoded_as>
     <match>test_user</match>
-    <user negate="yes">dritch</user>
+    <user type="pcre2" negate="no">(?i)dritch</user>
     <description>Testing PCRE2 user negation</description>
   </rule>
 
@@ -194,14 +164,14 @@
   <rule id="999526" level="3">
     <decoded_as>test_pcre2</decoded_as>
     <match>test_url</match>
-    <url negate="no">/admin/auth_key$</url>
+    <url type="pcre2" negate="no">(?i)/admin/auth_key$</url>
     <description>Testing PCRE2 url</description>
   </rule>
 
   <rule id="999527" level="3">
     <decoded_as>test_pcre2</decoded_as>
     <match>test_url</match>
-    <url negate="yes">/resources/user_info$</url>
+    <url type="pcre2" negate="no">(?i)/resources/user_info$</url>
     <description>Testing PCRE2 url negation</description>
   </rule>
 
@@ -209,14 +179,14 @@
   <rule id="999528" level="3">
     <decoded_as>test_pcre2</decoded_as>
     <match>test_srcport</match>
-    <srcport negate="no">1234</srcport>
+    <srcport type="pcre2" negate="no">(?i)1234</srcport>
     <description>Testing PCRE2 srcport</description>
   </rule>
 
   <rule id="999529" level="3">
     <decoded_as>test_pcre2</decoded_as>
     <match>test_srcport</match>
-    <srcport negate="yes">4321</srcport>
+    <srcport type="pcre2" negate="no">(?i)4321</srcport>
     <description>Testing PCRE2 srcport negation</description>
   </rule>
 
@@ -224,14 +194,14 @@
   <rule id="999530" level="3">
     <decoded_as>test_pcre2</decoded_as>
     <match>test_dstport</match>
-    <dstport negate="no">1234</dstport>
+    <dstport type="pcre2" negate="no">(?i)1234</dstport>
     <description>Testing PCRE2 dstport</description>
   </rule>
 
   <rule id="999531" level="3">
     <decoded_as>test_pcre2</decoded_as>
     <match>test_dstport</match>
-    <dstport negate="yes">4321</dstport>
+    <dstport type="pcre2" negate="no">(?i)4321</dstport>
     <description>Testing PCRE2 dstport negation</description>
   </rule>
 
@@ -239,14 +209,14 @@
   <rule id="999532" level="3">
     <decoded_as>test_pcre2</decoded_as>
     <match>test_status</match>
-    <status negate="no">OK</status>
+    <status type="pcre2" negate="no">(?i)OK</status>
     <description>Testing PCRE2 status</description>
   </rule>
 
   <rule id="999533" level="3">
     <decoded_as>test_pcre2</decoded_as>
     <match>test_status</match>
-    <status negate="yes">WARN</status>
+    <status type="pcre2" negate="no">(?i)WARN</status>
     <description>Testing PCRE2 status negation</description>
   </rule>
 
@@ -254,14 +224,14 @@
   <rule id="999534" level="3">
     <decoded_as>test_pcre2</decoded_as>
     <match>test_system_name</match>
-    <system_name negate="no">linux</system_name>
+    <system_name type="pcre2" negate="no">(?i)linux</system_name>
     <description>Testing PCRE2 system_name</description>
   </rule>
 
   <rule id="999535" level="3">
     <decoded_as>test_pcre2</decoded_as>
     <match>test_system_name</match>
-    <system_name negate="yes">macos</system_name>
+    <system_name type="pcre2" negate="no">(?i)macos</system_name>
     <description>Testing PCRE2 system_name negation</description>
   </rule>
 
@@ -269,14 +239,14 @@
   <rule id="999536" level="3">
     <decoded_as>test_pcre2</decoded_as>
     <match>test_data</match>
-    <data negate="no">uptime=0days</data>
+    <data type="pcre2" negate="no">(?i)uptime=0days</data>
     <description>Testing PCRE2 data</description>
   </rule>
 
   <rule id="999537" level="3">
     <decoded_as>test_pcre2</decoded_as>
     <match>test_data</match>
-    <data negate="yes">uptime=30days</data>
+    <data type="pcre2" negate="no">(?i)uptime=30days</data>
     <description>Testing PCRE2 data negation</description>
   </rule>
 
