@@ -31,7 +31,7 @@ checks:
 # 2 Surface Area Reduction
 ######################################################
 # 2.1 Ensure 'Ad Hoc Distributed Queries' Server Configuration Option is set to '0' (Scored)
-  - id: 12500
+  - id: 13000 
     title: "Ensure 'Ad Hoc Distributed Queries' Server Configuration Option is set to '0'"
     description: "Enabling Ad Hoc Distributed Queries allows users to query data and execute statements on external data sources. This functionality should be disabled."
     rationale: "This feature can be used to remotely access and exploit vulnerabilities on remote SQL Server instances and to run unsafe Visual Basic for Application functions."
@@ -48,7 +48,7 @@ checks:
       - "c:sqlcmd -Q \"SELECT name, CAST(value as int) as value_configured, CAST(value_in_use as int) as value_in_use FROM sys.configurations WHERE name = 'Ad Hoc Distributed Queries' ;\" -> r:Ad Hoc Distributed Queries\\s+0\\s+0"
 
 # 2.2 Ensure 'CLR Enabled' Server Configuration Option is set to '0' (Scored)
-  - id: 12501
+  - id: 13001 
     title: "Ensure 'CLR Enabled' Server Configuration Option is set to '0'"
     description: "The clr enabled option specifies whether user assemblies can be run by SQL Server."
     rationale: "Enabling use of CLR assemblies widens the attack surface of SQL Server and puts it at risk from both inadvertent and malicious assemblies."
@@ -66,7 +66,7 @@ checks:
 
 
 # 2.3 Ensure 'Cross DB Ownership Chaining' Server Configuration Option is set to '0'
-  - id: 12502
+  - id: 13002 
     title: "Ensure 'Cross DB Ownership Chaining' Server Configuration Option is set to '0'"
     description: "The cross db ownership chaining option controls cross-database ownership chaining across all databases at the instance (or server) level."
     rationale: "When enabled, this option allows a member of the db_owner role in a database to gain access to objects owned by a login in any other database, causing an unnecessary information disclosure. When required, cross-database ownership chaining should only be enabled for the specific databases requiring it instead of at the instance level for all databases by using the ALTER DATABASE <database_name> SET DB_CHAINING ON command. This database option may not be changed on the master , model , or tempdb system databases."
@@ -85,7 +85,7 @@ checks:
 
 
 # 2.4 Ensure 'Database Mail XPs' Server Configuration Option is set to '0'
-  - id: 12503
+  - id: 13003 
     title: "Ensure 'Database Mail XPs' Server Configuration Option is set to '0'"
     description: "The Database Mail XPs option controls the ability to generate and transmit email messages from SQL Server."
     rationale: "Disabling the Database Mail XPs option reduces the SQL Server surface, eliminates a DOS attack vector and channel to exfiltrate data from the database server to a remote host."
@@ -103,7 +103,7 @@ checks:
       - "c:sqlcmd -Q \"SELECT name, CAST(value as int) as value_configured, CAST(value_in_use as int) as value_in_use FROM sys.configurations WHERE name = 'Database Mail XPs';\" -> r:0\\s+0"
 
 # 2.5 Ensure 'Ole Automation Procedures' Server Configuration Option is set to '0'
-  - id: 12504
+  - id: 13004 
     title: "Ensure 'Ole Automation Procedures' Server Configuration Option is set to '0'"
     description: "The Ole Automation Procedures option controls whether OLE Automation objects can be instantiated within Transact-SQL batches. These are extended stored procedures that allow SQL Server users to execute functions external to SQL Server."
     rationale: "Enabling this option will increase the attack surface of SQL Server and allow users to execute functions in the security context of SQL Server."
@@ -121,7 +121,7 @@ checks:
       - "c:sqlcmd -Q \"SELECT name, CAST(value as int) as value_configured, CAST(value_in_use as int) as value_in_use FROM sys.configurations WHERE name = 'Ole Automation Procedures';\" -> r:0\\s+0"
 
 # 2.6 Ensure 'Remote Access' Server Configuration Option is set to '0'
-  - id: 12505
+  - id: 13005 
     title: "Ensure 'Remote Access' Server Configuration Option is set to '0'"
     description: "The remote access option controls the execution of local stored procedures on remote servers or remote stored procedures on local server."
     rationale: "Functionality can be abused to launch a Denial-of-Service (DoS) attack on remote servers by off-loading query processing to a target."
@@ -139,7 +139,7 @@ checks:
       - "c:sqlcmd -Q \"SELECT name, CAST(value as int) as value_configured, CAST(value_in_use as int) as value_in_use FROM sys.configurations WHERE name = 'remote access';\" -> r:0\\s+0"
 
 # 2.7 Ensure 'Remote Admin Connections' Server Configuration Option is set to '0' (Scored)
-  - id: 12506
+  - id: 13006 
     title: "Ensure 'Remote Admin Connections' Server Configuration Option is set to '0'"
     description: "The remote admin connections option controls whether a client application on a remote computer can use the Dedicated Administrator Connection (DAC)."
     rationale: "The Dedicated Administrator Connection (DAC) lets an administrator access a running server to execute diagnostic functions or Transact-SQL statements, or to troubleshoot problems on the server, even when the server is locked or running in an abnormal state and not responding to a SQL Server Database Engine connection. In a cluster scenario, the administrator may not actually be logged on to the same node that is currently hosting the SQL Server instance and thus is considered \"remote\". Therefore, this setting should usually be enabled ( 1 ) for SQL Server failover clusters; otherwise it should be disabled ( 0 ) which is the default."
@@ -157,7 +157,7 @@ checks:
       - "c:sqlcmd -Q \"USE master; SELECT name, CAST(value as int) as value_configured, CAST(value_in_use as int) as value_in_use FROM sys.configurations WHERE name = 'remote admin connections' AND SERVERPROPERTY('IsClustered') = 0;\" -> r:0\\s*\\t*0|0 rows affected"
 
 # 2.8 Ensure 'Scan For Startup Procs' Server Configuration Option is set to '0' (Scored)
-  - id: 12507
+  - id: 13007 
     title: "Ensure 'Scan For Startup Procs' Server Configuration Option is set to '0'"
     description: "The scan for startup procs option, if enabled, causes SQL Server to scan for and automatically run all stored procedures that are set to execute upon service startup."
     rationale: "Enforcing this control reduces the threat of an entity leveraging these facilities for malicious purposes."
@@ -175,7 +175,7 @@ checks:
       - "c:sqlcmd -Q \"SELECT name, CAST(value as int) as value_configured, CAST(value_in_use as int) as value_in_use FROM sys.configurations WHERE name = 'scan for startup procs';\" -> r:0\\s+0"
 
 # 2.9 Ensure 'Trustworthy' Database Property is set to 'Off' (Scored)
-  - id: 12508
+  - id: 13008 
     title: "Ensure 'Trustworthy' Database Property is set to 'Off'"
     description: "The TRUSTWORTHY database option allows database objects to access objects in other databases under certain circumstances."
     rationale: "Provides protection from malicious CLR assemblies or extended procedures."
@@ -194,7 +194,7 @@ checks:
       - "c:sqlcmd -Q \"SELECT name FROM sys.databases WHERE is_trustworthy_on = 1 AND name != 'msdb';\" -> r:0 rows affected"
 
 # 2.11 Ensure SQL Server is configured to use non-standard ports (Not Scored)
-  - id: 12509
+  - id: 13009 
     title: "Ensure SQL Server is configured to use non-standard ports"
     description: "If installed, a default SQL Server instance will be assigned a default port of TCP:1433 for TCP/IP communication. Administrators can also configure named instances to use TCP:1433 for communication TCP:1433 is a widely known SQL Server port and this port assignment should be changed. In a multi-instance scenario, each instance must be assigned its own dedicated TCP/IP port."
     rationale: "Using a non-default port helps protect the database from attacks directed to the default port."
@@ -212,7 +212,7 @@ checks:
       - "c:sqlcmd -Q \"DECLARE @value nvarchar(256); EXECUTE master.dbo.xp_instance_regread N'HKEY_LOCAL_MACHINE', N'SOFTWARE\\Microsoft\\Microsoft SQL Server\\MSSQLServer\\SuperSocketNetLib\\Tcp\\IPAll', N'TcpPort', @value OUTPUT, N'no_output'; SELECT @value AS TCP_Port WHERE @value = '1433'; \" -> r:1433"
 
 # 2.13 Ensure the 'sa' Login Account is set to 'Disabled' (Scored)
-  - id: 12510
+  - id: 13010 
     title: "Ensure the 'sa' Login Account is set to 'Disabled'"
     description: "The sa account is a widely known and often widely used SQL Server account with sysadmin privileges. This is the original login created during installation and always has the principal_id=1 and sid=0x01 ."
     rationale: "Enforcing this control reduces the probability of an attacker executing brute force attacks against a well-known principal."
@@ -232,7 +232,7 @@ checks:
       - "c:sqlcmd -Q \"SELECT name, is_disabled FROM sys.server_principals WHERE sid = 0x01 AND is_disabled = 0;\" -> r:0 rows affected"
 
 # 2.14 Ensure the 'sa' Login Account has been renamed (Scored)
-  - id: 12511
+  - id: 13011 
     title: "Ensure the 'sa' Login Account has been renamed"
     description: "The sa account is a widely known and often widely used SQL Server login with sysadmin privileges. The sa login is the original login created during installation and always has principal_id=1 and sid=0x01 ."
     rationale: "It is more difficult to launch password-guessing and brute-force attacks against the sa login if the name is not known."
@@ -250,7 +250,7 @@ checks:
       - "c:sqlcmd -Q \"SELECT name FROM sys.server_principals WHERE sid = 0x01;\" -> r:sa"
 
 # 2.15 Ensure 'xp_cmdshell' Server Configuration Option is set to '0'
-  - id: 12512
+  - id: 13012 
     title: "Ensure 'xp_cmdshell' Server Configuration Option is set to '0'"
     description: "The xp_cmdshell option controls whether the xp_cmdshell extended stored procedure can be used by an authenticated SQL Server user to execute operating-system command shell commands and return results as rows within the SQL client."
     rationale: "The xp_cmdshell procedure is commonly used by attackers to read or write data to/from the underlying Operating System of a database server."
@@ -269,7 +269,7 @@ checks:
       - "c:sqlcmd -Q \"SELECT name, CAST(value as int) as value_configured, CAST(value_in_use as int) as value_in_use FROM sys.configurations WHERE name = 'xp_cmdshell';\" -> r:0\\s+0"
 
 # 2.16 Ensure 'AUTO_CLOSE' is set to 'OFF' on contained databases
-  - id: 12513
+  - id: 13013 
     title: "Ensure 'AUTO_CLOSE' is set to 'OFF' on contained databases"
     description: "AUTO_CLOSE determines if a given database is closed or not after a connection terminates. If enabled, subsequent connections to the given database will require the database to be reopened and relevant procedure caches to be rebuilt."
     rationale: "Because authentication of users for contained databases occurs within the database not at the server\\instance level, the database must be opened every time to authenticate a user. The frequent opening/closing of the database consumes additional server resources and may contribute to a denial of service."
@@ -287,7 +287,7 @@ checks:
       - "c:sqlcmd -Q \"SELECT name, containment, containment_desc, is_auto_close_on FROM sys.databases WHERE containment <> 0 and is_auto_close_on = 1;\" -> r:0 rows affected"
 
 # 2.17 Ensure no login exists with the name 'sa' (Scored)
-  - id: 12514
+  - id: 13014 
     title: "Ensure no login exists with the name 'sa'"
     description: "The sa login (e.g. principal) is a widely known and often widely used SQL Server account. Therefore, there should not be a login called sa even when the original sa login ( principal_id = 1 ) has been renamed."
     rationale: "Enforcing this control reduces the probability of an attacker executing brute force attacks against a well-known principal name."
@@ -306,7 +306,7 @@ checks:
 # 3 Authentication and Authorization
 ###########################################################
 # 3.1 Ensure 'Server Authentication' Property is set to 'Windows Authentication Mode' (Scored)
-  - id: 12515
+  - id: 13015 
     title: "Ensure 'Server Authentication' Property is set to 'Windows Authentication Mode'"
     description: "Uses Windows Authentication to validate attempted connections."
     rationale: "Windows provides a more robust authentication mechanism than SQL Server authentication."
@@ -323,7 +323,7 @@ checks:
       - "c:sqlcmd -Q \"SELECT SERVERPROPERTY('IsIntegratedSecurityOnly') as [login_mode];\" -> r:^1"
 
 # 3.8 Ensure only the default permissions specified by Microsoft are granted to the public server role (Scored)
-  - id: 12516
+  - id: 13016 
     title: "Ensure only the default permissions specified by Microsoft are granted to the public server role"
     description: "public is a special fixed server role containing all logins. Unlike other fixed server roles, permissions can be changed for the public role. In keeping with the principle of least privileges, the public server role should not be used to grant permissions at the server scope as these would be inherited by all users."
     rationale: "Every SQL Server login belongs to the public role and cannot be removed from this role. Therefore, any permissions granted to this role will be available to all logins unless they have been explicitly denied to specific logins or user-defined server roles."
@@ -341,7 +341,7 @@ checks:
 
 
 # 3.10 Ensure Windows local groups are not SQL Logins (Scored)
-  - id: 12518
+  - id: 13017 
     title: "Ensure Windows local groups are not SQL Logins"
     description: "Local Windows groups should not be used as logins for SQL Server instances."
     rationale: "Allowing local Windows groups as SQL Logins provides a loophole whereby anyone with OS level administrator rights (and no SQL Server rights) could add users to the local Windows groups and thereby give themselves or others access to the SQL Server instance."
@@ -359,7 +359,7 @@ checks:
 # 4 Password Policies
 ###########################################################
 # 4.2 Ensure 'CHECK_EXPIRATION' Option is set to 'ON' for All SQL Authenticated Logins Within the Sysadmin Role (Scored)
-  - id: 12601
+  - id: 13018 
     title: "Ensure 'CHECK_EXPIRATION' Option is set to 'ON' for All SQL Authenticated Logins Within the Sysadmin Role"
     description: "Applies the same password expiration policy used in Windows to passwords used inside SQL Server."
     rationale: "Ensuring SQL logins comply with the secure password policy applied by the Windows Server Benchmark will ensure the passwords for SQL logins with sysadmin privileges are changed on a frequent basis to help prevent compromise via a brute force attack. CONTROL SERVER is an equivalent permission to sysadmin and logins with that permission should also be required to have expiring passwords."
@@ -376,7 +376,7 @@ checks:
       - "c:sqlcmd -Q \"SELECT l.[name], 'sysadmin membership' AS 'Access_Method' FROM sys.sql_logins AS l WHERE IS_SRVROLEMEMBER('sysadmin',name) = 1 AND l.is_expiration_checked <> 1 UNION ALL SELECT l.[name], 'CONTROL SERVER' AS 'Access_Method' FROM sys.sql_logins AS l JOIN sys.server_permissions AS p ON l.principal_id = p.grantee_principal_id WHERE p.type = 'CL' AND p.state IN ('G', 'W') AND l.is_expiration_checked <> 1;\" -> r:0 rows affected"
 
 # 4.3 Ensure 'CHECK_POLICY' Option is set to 'ON' for All SQL Authenticated Logins (Scored)
-  - id: 12602
+  - id: 13019 
     title: "Ensure 'CHECK_POLICY' Option is set to 'ON' for All SQL Authenticated Logins"
     description: "Applies the same password complexity policy used in Windows to passwords used insideSQL Server."
     rationale: "Ensure SQL authenticated login passwords comply with the secure password policy applied by the Windows Server Benchmark so that they cannot be easily compromised via brute force attack."
@@ -396,7 +396,7 @@ checks:
 # 5 Auditing and Logging
 ##########################################################
 # 5.1 Ensure 'Maximum number of error log files' is set to greater than or equal to '12'
-  - id: 12520
+  - id: 13020 
     title: "Ensure 'Maximum number of error log files' is set to greater than or equal to '12'"
     description: "SQL Server error log files must be protected from loss. The log files must be backed up before they are overwritten. Retaining more error logs helps prevent loss from frequent recycling before backups can occur."
     rationale: "The SQL Server error log contains important information about major server events and login attempt information as well."
@@ -414,7 +414,7 @@ checks:
       - "c:sqlcmd -Q \"DECLARE @NumErrorLogs int; EXEC master.sys.xp_instance_regread N'HKEY_LOCAL_MACHINE', N'Software\\Microsoft\\MSSQLServer\\MSSQLServer', N'NumErrorLogs', @NumErrorLogs OUTPUT; SELECT ISNULL(@NumErrorLogs, -1) AS [NumberOfLogFiles];\" -> n:^\\s*(\\d+) compare >= 12" 
 
 # 5.2 Ensure 'Default Trace Enabled' Server Configuration Option is set to '1' (Scored)
-  - id: 12521
+  - id: 13021 
     title: "Ensure 'Default Trace Enabled' Server Configuration Option is set to '1'"
     description: "The default trace provides audit logging of database activity including account creations, privilege elevation and execution of DBCC commands."
     rationale: "Default trace provides valuable audit information regarding security-related activities on the server."
@@ -439,7 +439,7 @@ checks:
 # 6 Application Development
 ###########################################################
 # 6.2 Ensure 'CLR Assembly Permission Set' is set to 'SAFE_ACCESS' for All CLR Assemblies (Scored)
-  - id: 12524
+  - id: 13022 
     title: "Ensure 'CLR Assembly Permission Set' is set to 'SAFE_ACCESS' for All CLR Assemblies"
     description: "Setting CLR Assembly Permission Sets to SAFE_ACCESS will prevent assemblies from accessing external system resources such as files, the network, environment variables, or the registry."
     rationale: "Assemblies with EXTERNAL_ACCESS or UNSAFE permission sets can be used to access sensitive areas of the operating system, steal and/or transmit data and alter the state and other protection measures of the underlying Windows Operating System. Assemblies which are Microsoft-created ( is_user_defined = 0 ) are excluded from this check as they are required for overall system functionality."
