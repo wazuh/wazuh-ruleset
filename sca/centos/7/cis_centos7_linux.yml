@@ -2828,7 +2828,7 @@ checks:
 
 # 5.1.9 Ensure at is restricted to authorized users (Automated)
   - id: 6150 
-    title: "Ensure cron is restricted to authorized users"
+    title: "Ensure at is restricted to authorized users"
     description: "If atis installed in the system, configure /etc/at.allowto allow specific users to use these services. If /etc/at.allowdoes not exist, then /etc/at.denyis checked. Any user not specifically defined in those files is allowed to use at. By removing the file, only users in /etc/at.alloware allowed to use at."
     rationale: "On many systems, only the system administrator is authorized to schedule atjobs. Using the at.allowfile to control who can run atjobs enforces this policy. It is easier to manage an allow list than a deny list. In a deny list, you could potentially add a user ID to the system and forget to add it to the deny files."
     remediation: "Run the following commands to remove /etc/cron.deny and /etc/at.deny and create and set permissions and ownership for /etc/cron.allow and /etc/at.allow: rm /etc/cron.deny;rm /etc/at.deny;touch /etc/cron.allow; touch /etc/at.allow; chmod og-rwx /etc/cron.allow; chmod og-rwx /etc/at.allow; chown root:root /etc/cron.allow and chown root:root /etc/at.allow"
@@ -3079,7 +3079,7 @@ checks:
 
 # 5.2.14 Ensure only strong MAC algorithms are used (Automated)
   - id: 6164 
-    title: "Ensure SSH Idle Timeout Interval is configured"
+    title: "Ensure only strong MAC algorithms are used"
     description: "This variable limits the types of MAC algorithms that SSH can use during communication."
     rationale: "MD5 and 96-bit MAC algorithms are considered weak and have been shown to increase exploitability in SSH downgrade attacks. Weak algorithms continue to have a great deal of attention as a weak spot that can be exploited with expanded computing power. An attacker that breaks the algorithm could take advantage of a MiTM position to decrypt the SSH tunnel and capture credentials and information"
     remediation: "Edit the /etc/ssh/sshd_config file and add/modify the MACs line to contain a comma separated list of the site approved MACs Example:MACs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,hmac-sha2-512,hmac-sha2-256"
