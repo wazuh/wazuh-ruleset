@@ -1,6 +1,12 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [v4.0.1]
+
+### Fixed
+
+- Removed duplicated Windows rules for EventChannel. ([#771](https://github.com/wazuh/wazuh-ruleset/pull/771))
+
 ## [v4.0.0]
 
 ### Changed
