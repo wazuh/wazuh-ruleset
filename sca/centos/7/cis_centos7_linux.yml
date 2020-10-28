@@ -493,7 +493,7 @@ checks:
     title: "Ensure sudo commands use pty"
     description: "sudo can be configured to run only from a pseudo-pty"
     rationale: "Attackers can run a malicious program using sudo, which would again fork a background process that remains even when the main program has finished executing. This can be mitigated by configuring sudo to run other commands only from a pseudo-pty, whether I/O logging is turned on or not."
-    remediation: "Run the following command to install sudo. # yum install sudo"
+    remediation: "Edit the file /etc/sudoers or a file in /etc/sudoers.d/ with visudo or visudo -f <PATH TO FILE> and add the following line: Defaults use_pty"
     compliance:
       - cis: ["1.3.2"]
       - cis_csc: ["4"]
