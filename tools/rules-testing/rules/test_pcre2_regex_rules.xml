@@ -1,30 +1,51 @@
 <group name="qa,test">
 
-  <!-- Testing dynamic field. -->
-  <rule id="999506" level="3">
-    <decoded_as>test_pcre2</decoded_as>
+  <!-- Testing OSREGEX protocol field. -->
+  <!-- Dec 19 17:20:08 ubuntu test_pcre2_0[12345]:test_protocol HTTP root@192.168.0.2:1234 192.168.0.1:4321 -->
+  <rule id="999500" level="3">
+    <decoded_as>test_pcre2_0</decoded_as>
+    <match>test_protocol</match>
+    <protocol negate="no">HTTP</protocol>
+    <description>Testing protocol</description>
+  </rule>
+
+  <!-- Dec 19 17:20:08 ubuntu test_pcre2_0[12345]:test_protocol QUIC root@192.168.0.2:1234 192.168.0.1:4321 -->
+  <rule id="999501" level="3">
+    <decoded_as>test_pcre2_0</decoded_as>
+    <match>test_protocol</match>
+    <protocol negate="yes">HTTPS</protocol>
+    <description>Testing protocol negation</description>
+  </rule>
+  
+  <!-- Testing PCRE2 dynamic field. -->
+  <!-- Dec 19 17:20:08 ubuntu test_pcre2_1[12345]:test_field https://localhost GET format=json -->
+  <rule id="999502" level="3">
+    <decoded_as>test_pcre2_1</decoded_as>
     <match>test_field</match>
     <field name="querystring" type="pcre2" negate="no">(?i)format=json</field>
     <description>Testing PCRE2 dynamic field</description>
   </rule>
 
-  <rule id="999507" level="3">
-    <decoded_as>test_pcre2</decoded_as>
+  <!-- Dec 19 17:20:08 ubuntu test_pcre2_1[12345]:test_field https://localhost GET format=raw -->
+  <rule id="999503" level="3">
+    <decoded_as>test_pcre2_1</decoded_as>
     <match>test_field</match>
     <field name="querystring" type="pcre2" negate="yes">(?i)format=xml</field>
     <description>Testing PCRE2 dynamic field negation</description>
   </rule>
 
-  <!-- Testing regex option. -->
-  <rule id="999520" level="3">
-    <decoded_as>test_pcre2</decoded_as>
+  <!-- Testing PCRE2 regex option. -->
+  <!-- test_pcre2_2 test_regex regex_example_0 -->
+  <rule id="999504" level="3">
+    <decoded_as>test_pcre2_2</decoded_as>
     <match>test_regex</match>
     <regex type="pcre2" negate="no">(?i)regex_example_0</regex>
     <description>Testing PCRE2 regex</description>
   </rule>
 
-  <rule id="999521" level="3">
-    <decoded_as>test_pcre2</decoded_as>
+  <!-- test_pcre2_2 test_regex regex_example_1 -->
+  <rule id="999505" level="3">
+    <decoded_as>test_pcre2_2</decoded_as>
     <match>test_regex</match>
     <regex type="pcre2" negate="yes">(?i)regex_example_9</regex>
     <description>Testing PCRE2 regex negation</description>
