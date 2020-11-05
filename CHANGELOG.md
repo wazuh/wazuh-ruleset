@@ -3,6 +3,11 @@ All notable changes to this project will be documented in this file.
 
 ## [v4.1.0]
 
+### Added
+
+- Let the Ruleset update tool to bypass the version check with the force option. ([#773](https://github.com/wazuh/wazuh-ruleset/pull/773))
+
+
 ## [v4.0.1]
 
 ### Fixed
