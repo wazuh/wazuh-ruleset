@@ -21,9 +21,10 @@ policy:
 requirements:
   title: "Check that MySQL is installed on the system"
   description: "Requirements for running the SCA scan against the MySQL policy."
-  condition: all
+  condition: any
   rules:
     - 'd:/etc/mysql'
+    - 'd:/var/lib/mysql'
 
 checks:
 #1 Operating System Level Configuration
