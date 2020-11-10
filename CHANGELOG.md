@@ -6,7 +6,13 @@ All notable changes to this project will be documented in this file.
 ### Added
 
 - Let the Ruleset update tool to bypass the version check with the force option. ([#773](https://github.com/wazuh/wazuh-ruleset/pull/773))
-- Added new child rules for AWS ConfigHistory rules. ([#775](https://github.com/wazuh/wazuh-ruleset/pull/775))
+
+## [v4.0.2]
+
+### Added
+
+- Added new AWS Config-History rules to make it more granular by including every item status supported ([#775](https://github.com/wazuh/wazuh-ruleset/pull/775))
+
 
 ## [v4.0.1]
 
