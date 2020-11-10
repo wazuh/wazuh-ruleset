@@ -34,9 +34,8 @@ Full documentation at [documentation.wazuh.com](https://documentation.wazuh.com/
 
 ## Branches
 
-* `stable` branch on correspond to the last OSSEC Ruleset stable version.
+* `stable` branch on correspond to the last ruleset stable version.
 * `master` branch contains the latest code, be aware of possible bugs on this branch.
-* `development` branch includes all the new features we are adding and testing.
 
 
 ## Contribute
