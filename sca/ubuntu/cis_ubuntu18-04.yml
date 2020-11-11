@@ -148,7 +148,7 @@ checks:
     rationale: "Removing support for unneeded filesystem types reduces the local attack surface of the system. If this filesystem type is not needed, disable it."
     remediation: "Edit or create a file in the /etc/modprobe.d/ directory ending in .conf Example: vi /etc/modprobe.d/vfat.conf: install vfat /bin/true. Run the following command to unload the vfat module: rmmod vfat"
     compliance:
-      - cis: ["1.1.1.7"]
+      - cis: ["1.1.1.8"]
       - cis_csc: ["5.1"]
       - pci_dss: ["2.2.5"]
       - tsc: ["CC6.3"]
@@ -156,7 +156,7 @@ checks:
       - AJ Lewis, "LVM HOWTO", https://tldp.org/HOWTO/LVM-HOWTO/
     condition: all
     rules:
-      - 'c:modprobe -n -v vfat -> r:install /bin/true|Module vfat not found'
+      - 'c:modprobe --showconfig -> r:install vfat /bin/true|Module vfat not found'
       - 'not c:lsmod -> r:vfat'
 
 # 1.1.x Filesystem Configuration
@@ -214,7 +214,7 @@ checks:
     rationale: "Since the /tmp filesystem is only intended for temporary file storage, set this option to ensure that users cannot create set userid files in /tmp."
     remediation: "Edit the /etc/fstab file and add noexecto the fourth field (mounting options) for the /tmp partition. See the fstab(5) manual page for more information. Run the following command to remount /tmp: # mount -o remount,noexec /tmp       OR      Edit /etc/systemd/system/local-fs.target.wants/tmp.mount to add noexecto the /tmp mount options:  [Mount]  Options=mode=1777,strictatime,noexec,nodev,nosuid Run the following command to remount /tmp: # mount -o remount,noexec /tmp"
     compliance:
-      - cis: ["1.1.4"]
+      - cis: ["1.1.5"]
       - cis_csc: ["2.6"]
       - pci_dss: ["2.2.4"]
       - nist_800_53: ["CM.1"]
@@ -522,7 +522,7 @@ checks:
     title: "Ensure filesystem integrity is regularly checked"
     description: "Periodic checking of the filesystem integrity is needed to detect changes to the filesystem."
     rationale: "Periodic file checking allows the system administrator to determine on a regular basis if critical files have been changed in an unauthorized fashion."
-    remediation: "If cron will be used to schedule and run aide check, run the following command:    # crontab -u root -e    Add the following line to the crontab:    0 5 * * * /usr/bin/aide.wrapper --config /etc/aide/aide.conf --check"
+    remediation: "Run the following commands: # cp ./config/aidecheck.service /etc/systemd/system/aidecheck.service  # cp ./config/aidecheck.timer /etc/systemd/system/aidecheck.timer   # chmod 0644 /etc/systemd/system/aidecheck.*  # systemctl reenable aidecheck.timer  # systemctl restart aidecheck.timer  # systemctl daemon-reload    OR  If cron will be used to schedule and run aide check, run the following command:    # crontab -u root -e    Add the following line to the crontab:    0 5 * * * /usr/bin/aide.wrapper --config /etc/aide/aide.conf --check"
     compliance:
       - cis: ["1.4.2"]
       - cis_csc: ["14.9"]
@@ -575,6 +575,21 @@ checks:
     remediation: "Run the following command and follow the prompts to set a password for the root user: # passwd root"
     compliance:
       - cis: ["1.5.3"]
+      - cis_csc: ["5.1"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
+    condition: none
+    rules:
+      - 'f:/etc/shadow -> r:^root:*:|^root:!:'
+
+  - id: 2532 
+    title: "Ensure interactive boot is not enabled"
+    description: "Interactive boot allows console users to interactively select which services start on boot. Not all distributions support this capability.The PROMPT_FOR_CONFIRM option provides console users the ability to interactively boot the system and select which services to start on boot ."
+    rationale: " Turn off the PROMPT_FOR_CONFIRMoption on the console to prevent console users from potentially overriding established security settings."
+    remediation: "If interactive boot is available disable it."
+    compliance:
+      - cis: ["1.5.4"]
       - cis_csc: ["5.1"]
       - pci_dss: ["2.2.4"]
       - nist_800_53: ["CM.1"]
@@ -680,8 +695,8 @@ checks:
       - tsc: ["CC5.2"]
     condition: none
     rules:
-      - 'f:/boot/grub/grub.cfg -> r:^\s*linux && !r:apparmor=1'
-      - 'f:/boot/grub/grub.cfg -> r:^\s*linux && !r:security=apparmor'
+      - 'f:/boot/grub/grub.cfg -> r:^\s*linux && !r:apparmor=1 && !r:/boot/memtest86+.bin'
+      - 'f:/boot/grub/grub.cfg -> r:^\s*linux && !r:security=apparmor && !r:/boot/memtest86+.bin'
 
   - id: 2539 
     title: "Ensure all AppArmor Profiles are in enforce or complain mode"
@@ -875,7 +890,7 @@ checks:
     title: "Ensure openbsd-inetd is not installed"
     description: "The inetd daemon listens for well known services and dispatches the appropriate daemon to properly respond to service requests."
     rationale: "If there are no inetd services required, it is recommended that the daemon be removed."
-    remediation: "Run the following command to uninstall openbsd-inetd: apt purge openbsd-inetd"
+    remediation: "Run the following command to uninstall openbsd-inetd: apt-get remove openbsd-inetd"
     compliance:
       - cis: ["2.1.2"]
       - cis_csc: ["9.2"]
@@ -910,7 +925,7 @@ checks:
     title: "Ensure systemd-timesyncd is configured"
     description: "systemd-timesyncd is a daemon that has been added for synchronizing the system clock across the network. It implements an SNTP client. In contrast to NTP implementations such as chrony or the NTP reference server this only implements a client side, and does not bother with the full NTP complexity, focusing only on querying time from one remote server and synchronizing the local clock to it. The daemon runs with minimal privileges, and has been hooked up with networkd to only operate when network connectivity is available. The daemon saves the current clock to disk every time a new NTP sync has been acquired, and uses this to possibly correct the system clock early at bootup, in order to accommodate for systems that lack an RTC such as the Raspberry Pi and embedded devices, and make sure that time monotonically progresses on these systems, even if it is not always correct. To make use of this daemon a new system user and group \"systemd- timesync\" needs to be created on installation of systemd. Note: The systemd-timesyncd service specifically implements only SNTP. This minimalistic service will set the system clock for large offsets or slowly adjust it for smaller deltas. More complex use cases are not covered by systemd-timesyncd. This recommendation only applies if timesyncd is in use on the system."
     rationale: "Proper configuration is vital to ensuring time synchronization is working properly. This recommendation only applies if timesyncd is in use on the system."
-    remediation: "Run the following command to enable systemd-timesyncd   # systemctl enable systemd-timesyncd.service  ||  Edit the file /etc/systemd/timesyncd.conf and add/modify the following lines:   NTP=0.debian.pool.ntp.org 1.debian.pool.ntp.org   FallbackNTP=2.debian.pool.ntp.org 3.debian.pool.ntp.org    RootDistanceMax=1  || Run the following commands to start systemd-timesyncd.service   # systemctl start systemd-timesyncd.service   # timedatectl set-ntp true  || Notes: Servers listed and RootDistanceMax should be In Accordance With Local Policy some versions of systemd have been compiled without systemd-timesycnd. On these distributions, chrony or NTP should be used instead of systemd-timesycnd. Not all options are available on all versions of systemd-timesyncd"
+    remediation: "Run the following command to enable systemd-timesyncd   # systemctl enable systemd-timesyncd.service  ||  Edit the file /etc/systemd/timesyncd.conf and add/modify the following lines in accordance with local site policy:    (1) NTP=0.ubuntu.pool.ntp.org 1.ubuntu.pool.ntp.org 2.ubuntu.pool.ntp.org        (2) FallbackNTP=ntp.ubuntu.com 3.ubuntu.pool.ntp.org        (3) RootDistanceMaxSec=1    || Run the following commands to start systemd-timesyncd.service   # systemctl start systemd-timesyncd.service   # timedatectl set-ntp true  || Notes: Servers listed and RootDistanceMax should be In Accordance With Local Policy some versions of systemd have been compiled without systemd-timesycnd. On these distributions, chrony or NTP should be used instead of systemd-timesycnd. Not all options are available on all versions of systemd-timesyncd"
     compliance:
       - cis: ["2.2.1.2"]
       - cis_csc: ["6.1"]
@@ -1164,7 +1179,7 @@ checks:
     title: "Ensure mail transfer agent is configured for local-only mode"
     description: "Mail Transfer Agents (MTA), such as sendmail and Postfix, are used to listen for incoming mail and transfer the messages to the appropriate user or mail server. If the system is not intended to be a mail server, it is recommended that the MTA be configured to only process local mail."
     rationale: "The software for all Mail Transfer Agents is complex and most have a long history of security issues. While it is important to ensure that the system can process local mail messages, it is not necessary to have the MTA's daemon listening on a port unless the server is intended to be a mail server that receives and processes mail from other systems."
-    remediation: "Edit /etc/exim4/update-exim4.conf.conf and and or modify following lines to look like the lines below: dc_eximconfig_configtype='local' dc_local_interfaces='127.0.0.1 ; ::1' dc_readhost='' dc_relay_domains='' dc_minimaldns='false' dc_relay_nets='' dc_smarthost='' dc_use_split_config='false' dc_hide_mailname='' dc_mailname_in_oh='true' dc_localdelivery='mail_spool' Restart exim4: # systemctl restart exim4"
+    remediation: "Edit /etc/postfix/main.cf and add thefollowing line to the RECEIVING MAIL section. If the line already exists, change it to look like the line below:   inet_interfaces = loopback-only   Restart postfix:    # systemctl restart postfix"
     compliance:
       - cis: ["2.2.15"]
       - cis_csc: ["9.2"]
@@ -1229,7 +1244,7 @@ checks:
     title: "Ensure rsh client is not installed"
     description: "The rsh-client package contains the client commands for the rsh services."
     rationale: "These legacy clients contain numerous security exposures and have been replaced with the more secure SSH package. Even if the server is removed, it is best to ensure the clients are also removed to prevent users from inadvertently attempting to use these commands and therefore exposing their credentials. Note that removing the rsh package removes the clients for rsh , rcp and rlogin ."
-    remediation: "Uninstall rsh : apt purge rsh-client"
+    remediation: "Uninstall rsh : apt remove rsh-client"
     compliance:
       - cis: ["2.3.2"]
       - cis_csc: ["4.5"]
@@ -1247,7 +1262,7 @@ checks:
     title: "Ensure talk client is not installed"
     description: "The talk software makes it possible for users to send and receive messages across systems through a terminal session. The talkclient, which allows initialization of talk sessions, is installed by default."
     rationale: "The software presents a security risk as it uses unencrypted protocols for communication."
-    remediation: "Uninstall talk : apt purge talk"
+    remediation: "Uninstall talk : apt remove talk"
     compliance:
       - cis: ["2.3.3"]
       - cis_csc: ["2.6"]
@@ -1300,58 +1315,19 @@ checks:
 ############################################################
 # 3 Network Configuration
 ############################################################
-############################################################
-# 3.1 Disable unused network protocols and devices
-############################################################
 
-# 3.1.1 Disable IPv6 (Not Scored)
-  - id: 2576 
-    title: "Disable IPv6"
-    description: "Although IPv6 has many advantages over IPv4, not all organizations have IPv6 or dual stack configurations implemented."
-    rationale: "If IPv6 or dual stack is not to be used, it is recommended that IPv6 be disabled to reduce the attack surface of the system."
-    remediation: "Edit /etc/default/grub and add ipv6.disable=1 to the GRUB_CMDLINE_LINUX parameters: GRUB_CMDLINE_LINUX=\"ipv6.disable=1\" Run the following command to update the grub2 configuration: # update-grub"
-    compliance:
-      - cis: ["3.1.1"]
-      - cis_csc: ["9.4"]
-      - pci_dss: ["2.2.3"]
-      - nist_800_53: ["CM.1"]
-      - gpg_13: ["4.3"]
-      - gdpr_IV: ["35.7.d"]
-      - hipaa: ["164.312.b"]
-      - tsc: ["CC6.6","CC5.2"]
-    condition: none
-    rules:
-      - 'f:/boot/grub/grub.cfg -> r:^\s*\t*linux && !r:ipv6.disable=1'
-
-
-# 3.1.2 Ensure wireless interfaces are disabled (Scored)  
-  - id: 2577 
-    title: "Ensure wireless interfaces are disabled"
-    description: "Wireless networking is used when wired networks are unavailable. Debian contains a wireless tool kit to allow system administrators to configure and use wireless networks."
-    rationale: "If wireless is not to be used, wireless devices can be disabled to reduce the potential attack surface."
-    remediation: "Run the following command to disable any wireless interfaces: # nmcli radio all off"
-    compliance:
-      - cis: ["3.1.2"]
-      - cis_csc: ["15.4", "15.5"]
-      - pci_dss: ["1.2.3"]
-      - tsc: ["CC6.6"]
-    references:
-      - nmcli(1) - Linux man page
-    condition: all
-    rules:
-      - 'c:nmcli radio wifi -> r:^disabled'
-      - 'c:nmcli radio wwan -> r:^disabled'  
+ 
 ##########################################################
-# 3.2 Network Parameters
+# 3.1 Network Parameters
 ##########################################################
-# 3.2.1 Ensure packet redirect sending is disabled
+# 3.1.1 Ensure packet redirect sending is disabled
   - id: 2578 
     title: "Ensure packet redirect sending is disabled"
     description: "ICMP Redirects are used to send routing information to other hosts. As a host itself does not act as a router (in a host only configuration), there is no need to send redirects."
     rationale: "An attacker could use a compromised host to send invalid ICMP redirects to other router devices in an attempt to corrupt routing and have users access a system set up by the attacker as opposed to a valid system."
     remediation: "Set the following parameters in /etc/sysctl.conf or a /etc/sysctl.d/* file: net.ipv4.conf.all.send_redirects = 0 net.ipv4.conf.default.send_redirects = 0 Run the following commands to set the active kernel parameters: # sysctl -w net.ipv4.conf.all.send_redirects=0 # sysctl -w net.ipv4.conf.default.send_redirects=0 # sysctl -w net.ipv4.route.flush=1"
     compliance:
-      - cis: ["3.2.1"]
+      - cis: ["3.1.1"]
       - cis_csc: ["5.1"]
       - pci_dss: ["2.2.4"]
       - nist_800_53: ["CM.1"]
@@ -1362,14 +1338,15 @@ checks:
       - 'c:sysctl net.ipv4.conf.default.send_redirects -> r:=\s*\t*0$'
       - 'c:grep -Rh net\.ipv4\.conf\.all\.send_redirects /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.conf.all.send_redirects\s*=\s*0$'
       - 'c:grep -Rh net\.ipv4\.conf\.default\.send_redirects /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.conf.default.send_redirects\s*=\s*0$'
-# 3.2.2 Ensure IP forwarding is disabled
+
+# 3.1.2 Ensure IP forwarding is disabled
   - id: 2579 
     title: "Ensure IP forwarding is disabled"
     description: "The net.ipv4.ip_forward and net.ipv6.conf.all.forwarding flags are used to tell the system whether it can forward packets or not."
     rationale: "Setting the flags to 0 ensures that a system with multiple interfaces (for example, a hard proxy), will never be able to forward packets, and therefore, never serve as a router."
     remediation: "Run the following command to restore the default parameter and set the active kernel parameter: # grep -Els \"^\\s*net\\.ipv4\\.ip_forward\\s*=\\s*1\" /etc/sysctl.conf /etc/sysctl.d/*.conf /usr/lib/sysctl.d/*.conf /run/sysctl.d/*.conf | while read filename; do sed -ri \"s/^\\s*(net\\.ipv4\\.ip_forward\\s*)(=)(\\s*\\S+\\b).*$/# *REMOVED* \\1/\" $filename; done; sysctl -w net.ipv4.ip_forward=0; sysctl -w net.ipv4.route.flush=1 IF IPv6 is enabled: Run the following command to restore the default parameter and set the active kernel parameter: # grep -Els \"^\\s*net\\.ipv6\\.conf\\.all\\.forwarding\\s*=\\s*1\" /etc/sysctl.conf /etc/sysctl.d/*.conf /usr/lib/sysctl.d/*.conf /run/sysctl.d/*.conf | while read filename; do sed -ri \"s/^\\s*(net\\.ipv6\\.conf\\.all\\.forwarding\\s*)(=)(\\s*\\S+\\b).*$/# *REMOVED* \\1/\" $filename; done; sysctl -w net.ipv6.conf.all.forwarding=0; sysctl -w net.ipv6.route.flush=1"
     compliance:
-      - cis: ["3.2.2"]
+      - cis: ["3.1.2"]
       - cis_csc: ["5.1"]
       - pci_dss: ["2.2.4"]
       - nist_800_53: ["CM.1"]
@@ -1382,16 +1359,16 @@ checks:
       - 'c:grep -Rh net\.ipv6\.conf\.all\.forwarding /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv6.conf.all.forwarding\s*=\s*0$'
 
 #############################################################
-# 3.3 Network Parameters
+# 3.2 Network Parameters
 #############################################################
-# 3.3.1 Ensure source routed packets are not accepted
+# 3.2.1 Ensure source routed packets are not accepted
   - id: 2580 
     title: "Ensure source routed packets are not accepted"
     description: "In networking, source routing allows a sender to partially or fully specify the route packets take through a network. In contrast, non-source routed packets travel a path determined by routers in the network. In some cases, systems may not be routable or reachable from some locations (e.g. private addresses vs. Internet routable), and so source routed packets would need to be used."
     rationale: "Setting net.ipv4.conf.all.accept_source_route, net.ipv4.conf.default.accept_source_route, net.ipv6.conf.all.accept_source_route and net.ipv6.conf.default.accept_source_route to 0 disables the system from accepting source routed packets. Assume this system was capable of routing packets to Internet routable addresses on one interface and private addresses on another interface. Assume that the private addresses were not routable to the Internet routable addresses and vice versa. Under normal routing circumstances, an attacker from the Internet routable addresses could not use the system as a way to reach the private address systems. If, however, source routed packets were allowed, they could be used to gain access to the private address systems as the route could be specified, rather than rely on routing protocols that did not allow this routing."
-    remediation: "Set the following parameters in /etc/sysctl.conf or a /etc/sysctl.d/* file: net.ipv4.conf.all.accept_source_route = 0 net.ipv4.conf.default.accept_source_route = 0 Run the following commands to set the active kernel parameters: # sysctl -w net.ipv4.conf.all.accept_source_route=0 # sysctl -w net.ipv4.conf.default.accept_source_route=0 # sysctl -w net.ipv4.route.flush=1 IF IPv6 is enabled: Set the following parameters in /etc/sysctl.conf or a /etc/sysctl.d/* file: net.ipv6.conf.all.accept_source_route = 0 net.ipv6.conf.default.accept_source_route = 0 Run the following commands to set the active kernel parameters: # sysctl -w net.ipv6.conf.all.accept_source_route=0 # sysctl -w net.ipv6.conf.default.accept_source_route=0 # sysctl -w net.ipv6.route.flush=1"     
+    remediation: "Set the following parameters in /etc/sysctl.conf or a /etc/sysctl.d/* file: net.ipv4.conf.all.accept_source_route = 0 net.ipv4.conf.default.accept_source_route = 0     net.ipv6.conf.all.accept_source_route = 0    net.ipv6.conf.default.accept_source_route = 0   || Run the following commands to set the active kernel parameters: # sysctl -w net.ipv4.conf.all.accept_source_route=0 # sysctl -w net.ipv4.conf.default.accept_source_route=0 # sysctl -w net.ipv4.route.flush=1  # sysctl -w net.ipv6.conf.all.accept_source_route=0 # sysctl -w net.ipv6.conf.default.accept_source_route=0 # sysctl -w net.ipv6.route.flush=1"     
     compliance:
-      - cis: ["3.3.1"]
+      - cis: ["3.2.1"]
       - cis_csc: ["5.1"]
       - pci_dss: ["2.2.4"]
       - nist_800_53: ["CM.1"]
@@ -1407,14 +1384,14 @@ checks:
       - 'c:grep -Rh net\.ipv6\.conf\.all\.accept_source_route /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv6.conf.all.accept_source_route\s*=\s*0$'
       - 'c:grep -Rh net\.ipv6\.conf\.default\.accept_source_route /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv6.conf.default.accept_source_route\s*=\s*0$'
 
-# 3.3.2 Ensure ICMP redirects are not accepted
+# 3.2.2 Ensure ICMP redirects are not accepted
   - id: 2581 
     title: "Ensure ICMP redirects are not accepted"
     description: "ICMP redirect messages are packets that convey routing information and tell your host (acting as a router) to send packets via an alternate path. It is a way of allowing an outside routing device to update your system routing tables. By setting net.ipv4.conf.all.accept_redirects to 0, the system will not accept any ICMP redirect messages, and therefore, won't allow outsiders to update the system's routing tables."
     rationale: "Attackers could use bogus ICMP redirect messages to maliciously alter the system routing tables and get them to send packets to incorrect networks and allow your system packets to be captured."
-    remediation: "Set the following parameters in /etc/sysctl.conf or a /etc/sysctl.d/* file: net.ipv4.conf.all.accept_redirects = 0 net.ipv4.conf.default.accept_redirects = 0 Run the following commands to set the active kernel parameters: # sysctl -w net.ipv4.conf.all.accept_redirects=0 # sysctl -w net.ipv4.conf.default.accept_redirects=0 # sysctl -w net.ipv4.route.flush=1 IF IPv6 is enabled: Set the following parameters in /etc/sysctl.conf or a /etc/sysctl.d/* file: net.ipv6.conf.all.accept_redirects = 0 net.ipv6.conf.default.accept_redirects = 0 Run the following commands to set the active kernel parameters: # sysctl -w net.ipv6.conf.all.accept_redirects=0 # sysctl -w net.ipv6.conf.default.accept_redirects=0 # sysctl -w net.ipv6.route.flush=1"
+    remediation: "Set the following parameters in /etc/sysctl.conf or a /etc/sysctl.d/* file: net.ipv4.conf.all.accept_redirects = 0 net.ipv4.conf.default.accept_redirects = 0 Run the following commands to set the active kernel parameters: # sysctl -w net.ipv4.conf.all.accept_redirects=0 # sysctl -w net.ipv4.conf.default.accept_redirects=0 # sysctl -w net.ipv4.route.flush=1  # sysctl -w net.ipv6.conf.all.accept_redirects=0 # sysctl -w net.ipv6.conf.default.accept_redirects=0 # sysctl -w net.ipv6.route.flush=1"
     compliance:
-      - cis: ["3.3.2"]
+      - cis: ["3.2.2"]
       - cis_csc: ["5.1"]
       - pci_dss: ["2.2.4"]
       - nist_800_53: ["CM.1"]
@@ -1430,14 +1407,14 @@ checks:
       - 'c:grep -Rh net\.ipv6\.conf\.all\.accept_redirects /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv6.conf.all.accept_redirects\s*=\s*0$'
       - 'c:grep -Rh net\.ipv6\.conf\.default\.accept_redirects /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv6.conf.default.accept_redirects\s*=\s*0$'
 
-# 3.3.3 Ensure secure ICMP redirects are not accepted
+# 3.2.3 Ensure secure ICMP redirects are not accepted
   - id: 2582 
     title: "Ensure secure ICMP redirects are not accepted"
     description: "Secure ICMP redirects are the same as ICMP redirects, except they come from gateways listed on the default gateway list. It is assumed that these gateways are known to your system, and that they are likely to be secure."
     rationale: "It is still possible for even known gateways to be compromised. Setting net.ipv4.conf.all.secure_redirects to 0 protects the system from routing table updates by possibly compromised known gateways."
     remediation: "Set the following parameters in /etc/sysctl.conf or a /etc/sysctl.d/* file: net.ipv4.conf.all.secure_redirects = 0 net.ipv4.conf.default.secure_redirects = 0. Run the following commands to set the active kernel parameters: # sysctl -w net.ipv4.conf.all.secure_redirects=0 # sysctl -w net.ipv4.conf.default.secure_redirects=0 # sysctl -w net.ipv4.route.flush=1"
     compliance:
-      - cis: ["3.3.3"]
+      - cis: ["3.2.3"]
       - cis_csc: ["5.1"]
       - pci_dss: ["2.2.4"]
       - nist_800_53: ["CM.1"]
@@ -1449,14 +1426,14 @@ checks:
       - 'c:grep -Rh net\.ipv4\.conf\.all\.secure_redirects /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.conf.all.secure_redirects\s*=\s*0$'
       - 'c:grep -Rh net\.ipv4\.conf\.default\.secure_redirects /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.conf.default.secure_redirects\s*=\s*0$'
 
-# 3.3.4 Ensure suspicious packets are logged (Scored)
+# 3.2.4 Ensure suspicious packets are logged (Scored)
   - id: 2583 
     title: "Ensure suspicious packets are logged"
     description: "When enabled, this feature logs packets with un-routable source addresses to the kernel log."
     rationale: "Enabling this feature and logging these packets allows an administrator to investigate the possibility that an attacker is sending spoofed packets to their server."
     remediation: "Set the following parameters in /etc/sysctl.conf or a /etc/sysctl.d/* file: net.ipv4.conf.all.log_martians = 1 net.ipv4.conf.default.log_martians = 1. Run the following commands to set the active kernel parameters: # sysctl -w net.ipv4.conf.all.log_martians=1 # sysctl -w net.ipv4.conf.default.log_martians=1 # sysctl -w net.ipv4.route.flush=1"
     compliance:
-      - cis: ["3.3.4"]
+      - cis: ["3.2.4"]
       - cis_csc: ["6.2", "6.3"]
       - pci_dss: ["2.2.4"]
       - nist_800_53: ["CM.1"]
@@ -1468,14 +1445,14 @@ checks:
       - 'c:grep -Rh net\.ipv4\.conf\.all\.log_martians /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.conf.all.log_martians\s*=\s*1$'
       - 'c:grep -Rh net\.ipv4\.conf\.default\.log_martians /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.conf.default.log_martians\s*=\s*1$'
 
-# 3.3.5 Ensure broadcast ICMP requests are ignored
+# 3.2.5 Ensure broadcast ICMP requests are ignored
   - id: 2584 
     title: "Ensure broadcast ICMP requests are ignored"
     description: "Setting net.ipv4.icmp_echo_ignore_broadcasts to 1 will cause the system to ignore all ICMP echo and timestamp requests to broadcast and multicast addresses."
     rationale: "Accepting ICMP echo and timestamp requests with broadcast or multicast destinations for your network could be used to trick your host into starting (or participating) in a Smurf attack. A Smurf attack relies on an attacker sending large amounts of ICMP broadcast messages with a spoofed source address. All hosts receiving this message and responding would send echo-reply messages back to the spoofed address, which is probably not routable. If many hosts respond to the packets, the amount of traffic on the network could be significantly multiplied."
     remediation: "Set the following parameters in /etc/sysctl.conf or a /etc/sysctl.d/* file: net.ipv4.icmp_echo_ignore_broadcasts = 1. Run the following commands to set the active kernel parameters: # sysctl -w net.ipv4.icmp_echo_ignore_broadcasts=1 # sysctl -w net.ipv4.route.flush=1"
     compliance:
-      - cis: ["3.3.5"]
+      - cis: ["3.2.5"]
       - cis_csc: ["5.1"]
       - pci_dss: ["2.2.4"]
       - nist_800_53: ["CM.1"]
@@ -1485,14 +1462,14 @@ checks:
       - 'c:sysctl net.ipv4.icmp_echo_ignore_broadcasts -> r:=\s*\t*1$'
       - 'c:grep -Rh net\.ipv4\.icmp_echo_ignore_broadcasts /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.icmp_echo_ignore_broadcasts\s*=\s*1$'
 
-# 3.3.6 Ensure bogus ICMP responses are ignored (Scored)
+# 3.2.6 Ensure bogus ICMP responses are ignored (Scored)
   - id: 2585 
     title: "Ensure bogus ICMP responses are ignored"
     description: "Setting icmp_ignore_bogus_error_responses to 1 prevents the kernel from logging bogus responses (RFC-1122 non-compliant) from broadcast reframes, keeping file systems from filling up with useless log messages."
     rationale: "Some routers (and some attackers) will send responses that violate RFC-1122 and attempt to fill up a log file system with many useless error messages."
     remediation: "Set the following parameter in /etc/sysctl.conf or a /etc/sysctl.d/* file: net.ipv4.icmp_ignore_bogus_error_responses = 1. Run the following commands to set the active kernel parameters: # sysctl -w net.ipv4.icmp_ignore_bogus_error_responses=1 # sysctl -w net.ipv4.route.flush=1"
     compliance:
-      - cis: ["3.3.6"]
+      - cis: ["3.2.6"]
       - cis_csc: ["5.1"]
       - pci_dss: ["2.2.4"]
       - nist_800_53: ["CM.1"]
@@ -1502,14 +1479,14 @@ checks:
       - 'c:sysctl net.ipv4.icmp_ignore_bogus_error_responses -> r:=\s*\t*1$'
       - 'c:grep -Rh net\.ipv4\.icmp_ignore_bogus_error_responses /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.icmp_ignore_bogus_error_responses\s*=\s*1$'
 
-# 3.3.7 Ensure Reverse Path Filtering is enabled (Scored)
+# 3.2.7 Ensure Reverse Path Filtering is enabled (Scored)
   - id: 2586 
     title: "Ensure Reverse Path Filtering is enabled"
     description: "Setting net.ipv4.conf.all.rp_filter and net.ipv4.conf.default.rp_filter to 1 forces the Linux kernel to utilize reverse path filtering on a received packet to determine if the packet was valid. Essentially, with reverse path filtering, if the return packet does not go out the same interface that the corresponding source packet came from, the packet is dropped (and logged if log_martians is set)."
     rationale: "Setting these flags is a good way to deter attackers from sending your system bogus packets that cannot be responded to. One instance where this feature breaks down is if asymmetrical routing is employed. This would occur when using dynamic routing protocols (bgp, ospf, etc) on your system. If you are using asymmetrical routing on your system, you will not be able to enable this feature without breaking the routing."
     remediation: "Set the following parameters in /etc/sysctl.conf or a /etc/sysctl.d/* file: net.ipv4.conf.all.rp_filter = 1 net.ipv4.conf.default.rp_filter = 1. Run the following commands to set the active kernel parameters: # sysctl -w net.ipv4.conf.all.rp_filter=1 # sysctl -w net.ipv4.conf.default.rp_filter=1 # sysctl -w net.ipv4.route.flush=1"
     compliance:
-      - cis: ["3.3.7"]
+      - cis: ["3.2.7"]
       - cis_csc: ["5.1"]
       - pci_dss: ["2.2.4"]
       - nist_800_53: ["CM.1"]
@@ -1521,14 +1498,14 @@ checks:
       - 'c:grep -Rh net\.ipv4\.conf\.all\.rp_filter /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.conf.all.rp_filter\s*=\s*1$'
       - 'c:grep -Rh net\.ipv4\.conf\.default\.rp_filter /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv4.conf.default.rp_filter\s*=\s*1$'
 
-# 3.3.8 Ensure TCP SYN Cookies is enabled (Scored)
+# 3.2.8 Ensure TCP SYN Cookies is enabled (Scored)
   - id: 2587 
     title: "Ensure TCP SYN Cookies is enabled"
     description: "When tcp_syncookies is set, the kernel will handle TCP SYN packets normally until the half-open connection queue is full, at which time, the SYN cookie functionality kicks in. SYN cookies work by not using the SYN queue at all. Instead, the kernel simply replies to the SYN with a SYN|ACK, but will include a specially crafted TCP sequence number that encodes the source and destination IP address and port number and the time the packet was sent. A legitimate connection would send the ACK packet of the three way handshake with the specially crafted sequence number. This allows the system to verify that it has received a valid response to a SYN cookie and allow the connection, even though there is no corresponding SYN in the queue."
     rationale: "Attackers use SYN flood attacks to perform a denial of service attacked on a system by sending many SYN packets without completing the three way handshake. This will quickly use up slots in the kernel's half-open connection queue and prevent legitimate connections from succeeding. SYN cookies allow the system to keep accepting valid connections, even if under a denial of service attack."
     remediation: "Set the following parameters in /etc/sysctl.conf or a /etc/sysctl.d/* file: net.ipv4.tcp_syncookies = 1. Run the following commands to set the active kernel parameters: # sysctl -w net.ipv4.tcp_syncookies=1 # sysctl -w net.ipv4.route.flush=1"
     compliance:
-      - cis: ["3.3.8"]
+      - cis: ["3.2.8"]
       - cis_csc: ["5.1"]
       - pci_dss: ["2.2.4"]
       - nist_800_53: ["CM.1"]
@@ -1559,6 +1536,81 @@ checks:
       - 'c:sysctl net.ipv6.conf.default.accept_ra -> r:=\s*\t*0$'
       - 'c:grep -Rh net\.ipv6\.conf\.all\.accept_ra /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv6.conf.all.accept_ra\s*=\s*0$'
       - 'c:grep -Rh net\.ipv6\.conf\.default\.accept_ra /etc/sysctl.conf /etc/sysctl.d -> r:^net.ipv6.conf.default.accept_ra\s*=\s*0$'
+
+
+#####################################################################
+# 3.3 TCP Wrappers
+#####################################################################
+
+# 3.3.1 Ensure TCP Weappers is installed (Not Scored)
+  - id: 18094 
+    title: "Install TCP Wrappers"
+    description: "TCP Wrappers provides a simple access list and standardized logging method for services capable of supporting it. In the past, services that were called from inetd and xinetd supported the use of tcp wrappers. As inetd and xinetd have been falling in disuse, any service that can support tcp wrappers will have the libwrap.so library attached to it."
+    rationale: "TCP Wrappers provide a good simple access list mechanism to services that may not have that support built in. It is recommended that all services that can support TCP Wrappers, use it."
+    remediation: "Install tcpd : # apt-get install tcpd To verify if a service supports TCP Wrappers, run the following command: # ldd <path-to-daemon> | grep libwrap.so If there is any output, then the service supports TCP Wrappers."
+    compliance:
+      - cis: ["3.4.1"]
+      - cis_csc: ["9.4"]
+      - pci_dss: ["1.3.5"]
+    condition: all
+    rules:
+      - 'c:dpkg -s tcpd -> r:install ok installed'
+
+ - id: 18095 
+    title: "Ensure /etc/hosts.allow is configured"
+    description: "The /etc/hosts.allow file specifies which IP addresses are permitted to connect to the host. It is intended to be used in conjunction with the /etc/hosts.deny file."
+    rationale: "The /etc/hosts.allow file supports access control by IP and helps ensure that only authorized systems can connect to the system."
+    remediation: "Run the following command to create /etc/hosts.allow: # echo \"ALL: <net>/<mask>, <net>/<mask>, ...\" >/etc/hosts.allow. Where each <net>/<mask> combination  (for example, \"192.168.1.0/255.255.255.0\") represents one network block in use by your organization that requires access to this system."
+    compliance:
+      - cis: ["3.3.2"]
+      - cis_csc: ["9.4"]
+      - pci_dss: ["1.3.5"]
+    condition: all
+    rules:
+      - 'f:/etc/hosts.allow'
+
+  - id: 18096 
+    title: "Ensure /etc/hosts.deny is configured"
+    description: "The /etc/hosts.deny file specifies which IP addresses are not permitted to connect to the host. It is intended to be used in conjunction with the /etc/hosts.allow file."
+    rationale: "The /etc/hosts.deny file serves as a failsafe so that any host not specified in /etc/hosts.allow is denied access to the server."
+    remediation: "Run the following command to create /etc/hosts.deny: # echo \"ALL: ALL\" >> /etc/hosts.deny"
+    compliance:
+      - cis: ["3.3.3"]
+      - cis_csc: ["9.4"]
+      - pci_dss: ["1.3.5"]
+    condition: all
+    rules:
+      - 'f:/etc/hosts.deny'
+      - 'f:/etc/hosts.deny -> r:^ALL:\s*ALL'
+
+  - id: 18097 
+    title: "Verify permissions on /etc/hosts.allow are configured"
+    description: "The /etc/hosts.allow file contains network information that is used by many system applications and therefore must be readable for these applications to operate."
+    rationale: "It is critical to ensure that the /etc/hosts.allow file is protected from unauthorized write access. Although it is protected by default, the file permissions could be changed either inadvertently or through malicious actions."
+    remediation: "Run the following commands to set permissions on /etc/hosts.allow :  # chown root:root /etc/hosts.allow  # chmod 644 /etc/hosts.allow"
+    compliance:
+      - cis: ["3.3.4"]
+      - cis_csc: ["5.1"]
+      - pci_dss: ["1.3.5"]
+      - tsc: ["CC5.2"]
+    condition: all
+    rules:
+      - 'c:stat /etc/hosts.allow -> r:^Access: \(0644/-rw-r--r--\)\s*\t*Uid:\s*\t*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\t*\(\s*\t*0/\s*\t*root\)$'
+
+  - id: 18098 
+    title: "Verify permissions on /etc/hosts.deny are configured"
+    description: "The /etc/hosts.deny file contains network information that is used by many system applications and therefore must be readable for these applications to operate."
+    rationale: "It is critical to ensure that the /etc/hosts.deny file is protected from unauthorized write access. Although it is protected by default, the file permissions could be changed either inadvertently or through malicious actions."
+    remediation: "Run the following commands to set permissions on /etc/hosts.deny : # chown root:root /etc/hosts.deny  # chmod 644 /etc/hosts.deny"
+    compliance:
+      - cis: ["3.3.5"]
+      - cis_csc: ["5.1"]
+      - pci_dss: ["1.3.5"]
+      - tsc: ["CC5.2"]
+    condition: all
+    rules:
+      - 'c:stat /etc/hosts.deny -> r:^Access: \(0644/-rw-r--r--\)\s*\t*Uid:\s*\t*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\t*\(\s*\t*0/\s*\t*root\)$'
+
 
 
 #####################################################################
@@ -1712,7 +1764,7 @@ checks:
     title: "Ensure loopback traffic is configured"
     description: "Configure the loopback interface to accept traffic. Configure all other interfaces to deny traffic to the loopback network (127.0.0.0/8 for IPv4 and ::1/128 for IPv6)."
     rationale: "Loopback traffic is generated between processes on machine and is typically critical to operation of the system. The loopback interface is the only place that loopback network traffic should be seen, all other interfaces should ignore traffic on this network as an anti-spoofing measure."
-    remediation: "Run the following commands to implement the loopback rules: # ufw allow in on lo # ufw allow out on lo # sudo ufw deny in from 127.0.0.0/8 # sudo ufw deny in from ::1"
+    remediation: "Run the following commands to implement the loopback rules: # ufw allow in on lo  # ufw deny in from 127.0.0.0/8 # ufw deny in from ::1"
     compliance:
       - cis: ["3.5.2.3"]
       - cis_csc: ["9.4"]
@@ -1874,6 +1926,50 @@ checks:
 
 
 
+# 3.6 Ensure wireless interfaces are disabled (Scored)  
+  - id: 2577 
+    title: "Ensure wireless interfaces are disabled"
+    description: "Wireless networking is used when wired networks are unavailable. Debian contains a wireless tool kit to allow system administrators to configure and use wireless networks."
+    rationale: "If wireless is not to be used, wireless devices can be disabled to reduce the potential attack surface."
+    remediation: "Run the following command to disable any wireless interfaces: # nmcli radio all off"
+    compliance:
+      - cis: ["3.6"]
+      - cis_csc: ["15.4", "15.5"]
+      - pci_dss: ["1.2.3"]
+      - tsc: ["CC6.6"]
+    references:
+      - nmcli(1) - Linux man page
+    condition: all
+    rules:
+      - 'c:nmcli radio wifi -> r:^disabled'
+      - 'c:nmcli radio wwan -> r:^disabled' 
+
+# 3.7 Disable IPv6 (Not Scored)
+  - id: 2576 
+    title: "Disable IPv6"
+    description: "Although IPv6 has many advantages over IPv4, not all organizations have IPv6 or dual stack configurations implemented."
+    rationale: "If IPv6 or dual stack is not to be used, it is recommended that IPv6 be disabled to reduce the attack surface of the system."
+    remediation: "Edit /etc/default/grub and add ipv6.disable=1 to the GRUB_CMDLINE_LINUX parameters: GRUB_CMDLINE_LINUX=\"ipv6.disable=1\" Run the following command to update the grub2 configuration: # update-grub"
+    compliance:
+      - cis: ["3.7"]
+      - cis_csc: ["9.4"]
+      - pci_dss: ["2.2.3"]
+      - nist_800_53: ["CM.1"]
+      - gpg_13: ["4.3"]
+      - gdpr_IV: ["35.7.d"]
+      - hipaa: ["164.312.b"]
+      - tsc: ["CC6.6","CC5.2"]
+    condition: none
+    rules:
+      - 'f:/boot/grub/grub.cfg -> r:^\s*\t*linux && !r:ipv6.disable=1'
+
+
+
+
+
+
+
+
 ############################################################
 # 4 Logging and Auditing
 ############################################################
@@ -1929,7 +2025,7 @@ checks:
       - tsc: ["CC6.1","CC6.8","CC7.2","CC7.3","CC7.4"]
     condition: none
     rules:
-      - 'f:/boot/grub/grub.cfg -> r:^\s*\t*linux && !r:audit=1'
+      - 'f:/boot/grub/grub.cfg -> r:^\s*\t*linux && !r:audit=1 && !r:/boot/memtest86+.bin'
 
   - id: 2608 
     title: "Ensure audit log storage size is configured"
@@ -2427,18 +2523,6 @@ checks:
     rules:
       - 'c:find /var/log -type f -ls -> r:-\w\w\w\ww\w\w\w\w|-\w\w\w\w\wx\w\w\w|-\w\w\w\w\w\w\ww\w|-\w\w\w\w\w\wr\w\w|-\w\w\w\w\w\w\w\wx'
 
-  - id: 2634 
-    title: "Ensure logrotate assigns appropriate permissions"
-    description: "Log files stored in /var/log/ contain logged information from many services on the system, or on log hosts others as well."
-    rationale: "It is important to ensure that log files have the correct permissions to ensure that sensitive data is archived and protected."
-    remediation: "Edit /etc/logrotate.conf and update the create line to read 0640 or more restrictive, following local site policy   Example: create 0640 root utmp"
-    compliance:
-      - cis: ["4.4"]
-      - cis_csc: ["14.6"]
-    condition: all
-    rules:
-      - 'f:/etc/logrotate.conf -> r:^\s*\t*create\s*\t*0\d40|^\s*\t*create\s*\t*0\d00 && r:^\s*\t*create\s*\t*06\d0|^\s*\t*create\s*\t*04\d0|^\s*\t*create\s*\t*02\d0|^\s*\t*create\s*\t*00\d0'
-
 
 ############################################################
 # 5 Access, Authentication and Authorization
@@ -2885,7 +2969,7 @@ checks:
       - tsc: ["CC6.1"]
     condition: all
     rules:
-      - 'c:sshd -T -> n:LoginGraceTime\s*\t*(\d+) compare <= 60 && n:LoginGraceTime\s*\t*(\d+) compare != 0'
+      - 'c:sshd -T -> n:LoginGraceTime\s*\t*(\d+) compare <= 60 && n:LoginGraceTime\s*\t*(\d+) compare >= 1'
 
 # 5.2.18 Ensure SSH access is limited (Scored)
   - id: 2660 
@@ -2967,12 +3051,12 @@ checks:
     rules:
       - 'c:sshd -T -> r:^\s*maxstartups\s+10:30:60'
 
-# 5.2.23 Ensure SSH MaxSessions is limited (Scored)
+# 5.2.23 Ensure SSH MaxSessions is  set to 4 or less (Scored)
   - id: 2665 
-    title: "Ensure SSH MaxSessions is limited"
+    title: "Ensure SSH MaxSessions is set to 4 or less"
     description: "The MaxSessions parameter specifies the maximum number of open sessions permitted from a given connection."
     rationale: "To protect a system from denial of service due to a large number of concurrent sessions, use the rate limiting function of MaxSessions to protect availability of sshd logins and prevent overwhelming the daemon."
-    remediation: "Edit the /etc/ssh/sshd_config file to set the parameter as follows: MaxSessions 10"
+    remediation: "Edit the /etc/ssh/sshd_config file to set the parameter as follows: MaxSessions 4"
     compliance:
       - cis: ["5.2.19"]
       - cis_csc: ["5.1"]
@@ -2981,7 +3065,7 @@ checks:
       - tsc: ["CC5.2"]
     condition: all
     rules:
-      - 'c:sshd -T -> n:^MaxSessions\s+(\d+) compare <= 10'
+      - 'c:sshd -T -> n:^MaxSessions\s+(\d+) compare <= 4'
 
 ######################################################
 # 5.3 Configure PAM
