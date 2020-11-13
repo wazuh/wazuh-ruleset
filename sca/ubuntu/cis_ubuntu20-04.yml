@@ -1814,9 +1814,8 @@ checks:
 # 3.5.2 Configure nftables
 ######################################################################
 
-
   - id: 18599 
-    title: "Ensure Uncomplicated Firewall is not installed or disabled "
+    title: "Ensure Uncomplicated Firewall is not installed or disabled if nftables is installed"
     description: "The iptables-persistentis a boot-time loader for netfilter rules, iptables plugin"
     rationale: "Running both ufwand the services included in theiptables-persistent package may lead to conflict"
     remediation: "Run the following command to install Uncomplicated Firewall (UFW): # apt install ufw OR #  apt install nftables OR # apt install iptables"
@@ -1832,14 +1831,13 @@ checks:
       - 'c:dpkg -s nftables -> r:Status: install ok installed'
       - 'not ufw status -> Status:\s*\t*active'
 
-# 3.5.3.2 Ensure a table exists (Scored)
   - id: 18602 
     title: "Ensure a table exists"
     description: "Tables hold chains. Each table only has one address family and only applies to packets of this family. Tables can have one of five families."
     rationale: "nftables doesn't have any default tables. Without a table being build, nftables will not filter network traffic."
     remediation: "Run the following command to create a table in nftables: # nft create table inet <table name> .Example: # nft create table inet filter"
     compliance:
-      - cis: ["3.5.3.2"]
+      - cis: ["3.5.2.4"]
       - cis_csc: ["9.4"]
       - pci_dss: ["1.2"]
       - tsc: ["CC6.6"]
@@ -1847,14 +1845,13 @@ checks:
     rules:
       - 'c:nft list tables -> r:\w+'
 
-# 3.5.3.3 Ensure base chains exist (Scored)
   - id: 18603 
     title: "Ensure base chains exist"
     description: "Chains are containers for rules. They exist in two kinds, base chains and regular chains. A base chain is an entry point for packets from the networking stack, a regular chain may be used as jump target and is used for better rule organization."
     rationale: "If a base chain doesn't exist with a hook for input, forward, and delete, packets that would flow through those chains will not be touched by nftables."
     remediation: "Run the following command to create the base chains: # nft create chain inet <table name> <base chain name> { type filter hook <(input|forward|output)> priority 0 \\; } . Example: # nft create chain inet filter input { type filter hook input priority 0 \\; } # nft create chain inet filter forward { type filter hook forward priority 0\\; } # nft create chain inet filter output { type filter hook output priority 0 \\; }"
     compliance:
-      - cis: ["3.5.3.3"]
+      - cis: ["3.5.2.5"]
       - cis_csc: ["9.4"]
       - pci_dss: ["1.2"]
       - tsc: ["CC6.6"]
@@ -1864,14 +1861,30 @@ checks:
       - 'c:nft list ruleset -> r:hook forward'
       - 'c:nft list ruleset -> r:hook output'
 
-# 3.5.3.6 Ensure default deny firewall policy (Scored)
+  - id: 18603 
+    title: "Ensure loopback traffic is configured"
+    description: "Configure the loopback interface to accept traffic. Configure all other interfaces to deny traffic to the loopback network."
+    rationale: "Loopback traffic is generated between processes on machine and is typically critical to operation of the system. The loopback interface is the only place that loopback network traffic should be seen, all other interfaces should ignore traffic on this network as an anti-spoofing measure."
+    remediation: "Run the following commands to implement the loopback rules: # nft add rule inet filter input iif lo accept   # nft create rule inet filter input ip saddr 127.0.0.0/8 counter drop   If IPv6 is enabled on the system: Run the following command to implement the IPv6 loopback rule: # nft add rule inet filter input ip6 saddr ::1 counter drop"
+    compliance:
+      - cis: ["3.5.2.6"]
+      - cis_csc: ["9.4"]
+      - pci_dss: ["1.2"]
+      - tsc: ["CC6.6"]
+    condition: all
+    rules:
+      - 'c:nft list ruleset -> r:iif "lo" accept'
+      - 'c:nft list ruleset -> r:ip saddr 127.0.0.0/8'
+      - 'c:nft list ruleset -> r:ip6 saddr ::1 counter packets'
+
+
   - id: 18604 
     title: "Ensure default deny firewall policy"
     description: "Base chain policy is the default verdict that will be applied to packets reaching the end of the chain."
     rationale: "There are two policies: accept (Default) and drop. If the policy is set to accept , the firewall will accept any packet that is not configured to be denied and the packet will continue transversing the network stack. It is easier to white list acceptable usage than to black list unacceptable usage."
     remediation: "Run the following command for the base chains with the input, forward, and output hooks to implement a default DROP policy: # nft chain <table family> <table name> <chain name> { policy drop \\; } . Example: # nft chain inet filter input { policy drop \\; } ; # nft chain inet filter forward { policy drop \\; } and # nft chain inet filter output { policy drop \\; }"
     compliance:
-      - cis: ["3.5.3.6"]
+      - cis: ["3.5.2.8"]
       - cis_csc: ["9.4"]
       - pci_dss: ["1.2.1"]
       - tsc: ["CC6.6"]
@@ -1881,14 +1894,13 @@ checks:
       - 'c:nft list ruleset -> r:hook forward && r:policy drop'
       - 'c:nft list ruleset -> r:hook output && r:policy drop'
 
-# 3.5.3.7 Ensure nftables service is enabled (Scored)
   - id: 18605 
     title: "Ensure nftables service is enabled"
     description: "The nftables service allows for the loading of nftables rulesets during boot, or starting of the nftables service."
     rationale: "The nftables service restores the nftables rules from the rules files referenced in the /etc/sysconfig/nftables.conf file during boot or the starting of the nftables service."
     remediation: "Run the following command to enable the nftables service: # systemctl enable nftables"
     compliance:
-      - cis: ["3.5.3.7"]
+      - cis: ["3.5.2.9"]
       - cis_csc: ["9.4"]
       - pci_dss: ["1.2"]
       - tsc: ["CC6.6"]
@@ -1897,19 +1909,52 @@ checks:
       - 'c:systemctl is-enabled nftables -> enabled'
 
 #######################################################################
-# 3.5.4 Configure iptables
+# 3.5.3 Configure iptables
 #######################################################################
 #######################################################################
-# 3.5.4.1 Configure IPv4 iptables
+# 3.5.3.1 Configure software
 #######################################################################
-# 3.5.4.1.1 Ensure default deny firewall policy (Scored)
+
+  - id: 18606 
+    title: "Ensure nftables is not installed if iptables is installed"
+    description: "nftables is a subsystem of the Linux kernel providing filtering and classification of network packets/datagrams/frames and is the successor to iptables."
+    rationale: "Running both iptablesand nftablesmay lead to conflict"
+    remediation: "RRun the following command to remove nftables:: # apt purge nftables"
+    compliance:
+      - cis: ["3.5.3.1.2"]
+      - cis_csc: ["9.4"]
+      - pci_dss: ["1.2.1"]
+      - tsc: ["CC6.6"]
+    condition: all
+    rules:
+      - 'not c:dpkg -s nftables -> r:Status: install ok installed'
+      - 'c:dpkg -s iptables -> r:Status: install ok installed'
+
+
+  - id: 18606 
+    title: "Ensure Uncomplicated Firewall is not installed or disabled if iptables is installed"
+    description: "Uncomplicated Firewall (UFW) is a program for managing a netfilter firewall designed to be easy to use."
+    rationale: "Running iptables.persistentwith ufw enabled may lead to conflict and unexpected results."
+    remediation: "Run the following command to remove ufw:# apt purge ufw  OR Run the following commands to disable ufw:# ufw disable"
+    compliance:
+      - cis: ["3.5.3.1.3"]
+      - cis_csc: ["9.4"]
+      - pci_dss: ["1.2.1"]
+      - tsc: ["CC6.6"]
+    condition: all
+    rules:
+      - 'c:dpkg -s iptables -> r:Status: install ok installed'
+      - 'not ufw status -> Status:\s*\t*active'
+
+# 3.5.3.2 Configure IPv4 iptables
+
   - id: 18606 
     title: "Ensure default deny firewall policy"
     description: "A default deny all policy on connections ensures that any unconfigured network usage will be rejected."
     rationale: "With a default accept policy the firewall will accept any packet that is not configured to be denied. It is easier to white list acceptable usage than to black list unacceptable usage."
     remediation: "Run the following commands to implement a default DROP policy: # iptables -P INPUT DROP; # iptables -P OUTPUT DROP; # iptables -P FORWARD DROP"
     compliance:
-      - cis: ["3.5.4.1.1"]
+      - cis: ["3.5.3.2.1"]
       - cis_csc: ["9.4"]
       - pci_dss: ["1.2.1"]
       - tsc: ["CC6.6"]
@@ -1926,7 +1971,7 @@ checks:
     rationale: "Loopback traffic is generated between processes on machine and is typically critical to operation of the system. The loopback interface is the only place that loopback network (127.0.0.0/8) traffic should be seen, all other interfaces should ignore traffic on this network as an anti-spoofing measure."
     remediation: "Run the following commands to implement the loopback rules: # iptables -A INPUT -i lo -j ACCEPT # iptables -A OUTPUT -o lo -j ACCEPT # iptables -A INPUT -s 127.0.0.0/8 -j DROP"
     compliance:
-      - cis: ["3.5.4.1.2"]
+      - cis: ["3.5.3.2.2"]
       - cis_csc: ["9.4"]
       - pci_dss: ["1.2.1"]
       - tsc: ["CC6.6"]
@@ -1937,9 +1982,9 @@ checks:
       - 'c:iptables -L OUTPUT -v -n -> r:\.*ACCEPT\.*all\.**\.*lo\.*0.0.0.0/0\.*0.0.0.0/0'
 
 #########################################################################
-# 3.5.4.2 Configure IPv6 ip6tables
+# 3.5.3.3 Configure IPv6 ip6tables
 #########################################################################
-# 3.5.4.2.1 Ensure IPv6 default deny firewall policy (Scored)
+
   - id: 18608 
     title: "Ensure IPv6 default deny firewall policy"
     description: "A default deny all policy on connections ensures that any unconfigured network usage will be rejected."
@@ -1956,7 +2001,6 @@ checks:
       - 'c:ip6tables -L -> r:^Chain FORWARD && r:policy DROP'
       - 'c:ip6tables -L -> r:^Chain OUTPUT && r:policy DROP'
 
-# 3.5.4.2.2 Ensure IPv6 loopback traffic is configured (Scored)
   - id: 18609 
     title: "Ensure IPv6 loopback traffic is configured"
     description: "Configure the loopback interface to accept traffic. Configure all other interfaces to deny traffic to the loopback network (::1)."
@@ -1976,20 +2020,10 @@ checks:
 
 
 
-
-
-
-
-
-
-
-
-
 ############################################################
 # 4 Logging and Auditing
 ############################################################
-
-
+# 4.1.1 Ensure auditing is enabled
 
   - id: 18612 
     title: "Ensure auditd is installed"
@@ -2003,10 +2037,9 @@ checks:
       - nist_800_53: ["AU.2"]
       - hipaa: ["164.312.b"]
       - tsc: ["CC6.1","CC6.2","CC6.3","CC7.2","CC7.3","CC7.4"]
-    condition: all
+    condition: none
     rules:
-      - 'c:dpkg -s auditd -> r:install ok installed'
-      - 'c:dpkg -s audispd-plugins -> r:install ok installed'
+      - 'c:dpkg -s auditd audispd-plugins-> r:is not installed and no information is available'
 
   - id: 18613 
     title: "Ensure auditd service is enabled"
@@ -2041,6 +2074,8 @@ checks:
     condition: none
     rules:
       - 'f:/boot/grub/grub.cfg -> r:^\s*\t*linux && !r:audit=1 && !r:/boot/memtest86+.bin'
+
+# 4.1.2 Configure Data Retention
 
   - id: 18615 
     title: "Ensure audit log storage size is configured"
@@ -2288,6 +2323,7 @@ checks:
       - 'd:/etc/audit'
       - 'd:/etc/audit/rules.d -> r:\.+.rules$'
       - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> r:^-a && r:always,exit|exit,always && r:-F arch=b32 && r:-S mount && r:-F auid>=1000 && r:-F auid!=4294967295 && r:-k mounts'
+      - 'c:auditctl -l -> r:^-a && r:always,exit|exit,always && r:-F arch=b32 && r:-S mount && r:-F auid>=1000 && r:-F auid!=4294967295 && r:-k mounts'
 
   - id: 18627 
     title: "Ensure file deletion events by users are collected"
@@ -2296,7 +2332,7 @@ checks:
     remediation: "For 32 bit systems edit or create a file in the /etc/audit/rules.d/ directory ending in .rules and add the following lines: -a always,exit -F arch=b32 -S unlink -S unlinkat -S rename -S renameat -F auid>=1000 -F auid!=4294967295 -k delete. For 64 bit systems edit or create a file in the /etc/audit/rules.d/ directory ending in .rules and add the following lines: -a always,exit -F arch=b64 -S unlink -S unlinkat -S rename -S renameat -F auid>=1000 -F auid!=4294967295 -k delete | -a always,exit -F arch=b32 -S unlink -S unlinkat -S rename -S renameat -F auid>=1000 -F auid!=4294967295 -k delete. Notes: At a minimum, configure the audit system to collect file deletion events for all users and root. Reloading the auditd config to set active settings may require a system reboot."
     compliance:
       - cis: ["4.1.13"]
-      - cis_csc: ["6.2", "13"]
+      - cis_csc: ["13"]
       - pci_dss: ["10.5.5"]
       - nist_800_53: ["AU.14"]
       - hipaa: ["164.312.b"]
@@ -2306,6 +2342,7 @@ checks:
       - 'd:/etc/audit'
       - 'd:/etc/audit/rules.d -> r:\.+.rules$'
       - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> r:^-a && r:always,exit|exit,always && r:-F arch=b32 && r:-S unlink && r:-S unlinkat && r:-S rename && r:-S renameat && r:-F auid>=1000 && r:-F auid!=4294967295 && r:-k delete'
+      - 'c:auditctl -l -> r:always,exit|exit,always && r:-F arch=b32 && r:-S unlink && r:-S unlinkat && r:-S rename && r:-S renameat && r:-F auid>=1000 && r:-F auid!=4294967295 && r:-k delete'
 
   - id: 18628 
     title: "Ensure changes to system administration scope (sudoers) is collected"
@@ -2325,12 +2362,12 @@ checks:
       - 'd:/etc/audit/rules.d -> r:\.+.rules$'
       - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> r:^-w && r:/etc/sudoers && r:-p wa && r:-k scope'
       - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> r:^-w && r:/etc/sudoers.d/ && r:-p wa && r:-k scope'
+      - 'c: auditctl -l -> r:^-w && r:/etc/sudoers.d/ && r:-p wa && r:-k scope'
 
   - id: 18629 
-    title: "Ensure system administrator actions (sudolog) are collected"
-    description: "Monitor the sudo log file. If the system has been properly configured to disable the use of the su command and force all administrators to have to log in first and then use sudo to execute privileged commands, then all administrator commands will be logged to /var/log/sudo.log . Any time a command is executed, an audit event will be triggered as the /var/log/sudo.log file will be opened for write and the executed administration command will be written to the log."
-    rationale: "Changes in /var/log/sudo.log indicate that an administrator has executed a command or the log file itself has been tampered with. Administrators will want to correlate the events written to the audit trail with the records written to /var/log/sudo.log to verify if unauthorized commands have been executed."
-    remediation: "Edit or create a file in the /etc/audit/rules.d/ directory ending in .rules and add the following lines: -w <Path to sudo logfile> -p wa -k actions. Notes: The system must be configured with sudisabled (See Item 5.6 Ensure access to the su command is restricted) to force all command execution through sudo. This will not be effective on the console, as administrators can log in as root. Reloading the auditd config to set active settings may require a system reboot."
+    title: "Ensure system administrator command executions (sudo) are collected"
+    description: "sudoprovides users with temporary elevated privileges to perform operations. Monitor the administrator with temporary elevated privileges and the operation(s) they performed."
+    rationale: "Creating an audit log of administrators with temporary elevated privileges and the operation(s) they performed is essential to reporting. Administrators will want to correlate the events written to the audit trail with the records written to sudo logfile to verify if unauthorized commands have been executed."
     compliance:
       - cis: ["4.1.15"]
       - cis_csc: ["4.9"]
@@ -2345,6 +2382,7 @@ checks:
       - 'd:/etc/audit'
       - 'd:/etc/audit/rules.d -> r:\.+.rules$'
       - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> r:^-w \.+ && r:-p wa && r:-k actions'
+      - 'c:auditctl -l -> r:^-w \.+ && r:-p wa && r:-k actions'
 
   - id: 18630 
     title: "Ensure kernel module loading and unloading is collected"
@@ -2386,8 +2424,9 @@ checks:
       - 'd:/etc/audit/rules.d -> r:^99-finalize.rules$'
       - 'd:/etc/audit/rules.d -> r:^99-finalize.rules$ -> r:^\s*\t*-e 2$'
 
-
+# 4.2 Configure Logging
 # 4.2,1 Configure rsyslog
+
   - id: 18632 
     title: "Ensure rsyslog is installed"
     description: "The rsyslog software are recommended replacements to the original syslogd daemon which provide improvements over syslogd , such as connection-oriented (i.e. TCP) transmission of logs, the option to log to database formats, and the encryption of log data en route to a central logging server."
@@ -2403,6 +2442,7 @@ checks:
     condition: any
     rules:
       - 'c:dpkg -s rsyslog -> r:install ok installed'
+
   - id: 18633 
     title: "Ensure rsyslog Service is enabled"
     description: "Once the rsyslog package is installed it needs to be activated."
@@ -2468,7 +2508,8 @@ checks:
       - 'c:grep -Rh ^\$ModLoad[[:space:]]*imtcp /etc/rsyslog.conf /etc/rsyslog.d/ -> r:^\$ModLoad\s*\t*imtcp'
       - 'c:grep -Rh ^\$InputTCPServerRun /etc/rsyslog.conf /etc/rsyslog.d/ -> r:^\$InputTCPServerRun\s*\t*514'
 
-# 4.2.2.1 Ensure journald is configured to send logs to rsyslog (Scored)
+# 4.2.2 Configure journald
+
   - id: 18637 
     title: "Ensure journald is configured to send logs to rsyslog"
     description: "Data from journald may be stored in volatile memory or persisted locally on the server. Utilities exist to accept remote export of journald logs, however, use of the rsyslog service provides a consistent means of log collection and export."
@@ -2486,7 +2527,6 @@ checks:
     rules:
       - 'f:/etc/systemd/journald.conf -> r:^\s*\t*ForwardToSyslog\s*=\s*yes'
 
-# 4.2.2.2 Ensure journald is configured to compress large log files (Scored)
   - id: 18638 
     title: "Ensure journald is configured to compress large log files"
     description: "The journald system includes the capability of compressing overly large files to avoid filling up the system with logs or making the logs unmanageably large."
@@ -2504,7 +2544,6 @@ checks:
     rules:
       - 'f:/etc/systemd/journald.conf -> r:^\s*\t*Compress\s*=\s*yes'
 
-# 4.2.2.3 Ensure journald is configured to write logfiles to persistent disk (Scored)
   - id: 18639 
     title: "Ensure journald is configured to write logfiles to persistent disk"
     description: "Data from journald may be stored in volatile memory or persisted locally on the server. Logs in memory will be lost upon a system reboot. By persisting logs to local disk on the server they are protected from loss."
@@ -2543,10 +2582,11 @@ checks:
 # 5 Access, Authentication and Authorization
 ############################################################
 ############################################################
-# 5.1 Configure cron
+# 5.1 Configure time-based job schedulers
 ############################################################
+
   - id: 18641 
-    title: "Ensure cron daemon is enabled"
+    title: "Ensure cron daemon is enabled and running"
     description: "The cron daemon is used to execute batch jobs on the system."
     rationale: "While there may not be user jobs that need to be run on the system, the system does have maintenance jobs that may include security monitoring that have to run, and cron is used to execute them."
     remediation: "Run the following command to enable cron: systemctl --now enable cron"
@@ -2559,6 +2599,8 @@ checks:
     condition: all
     rules:
       - 'c:systemctl is-enabled cron -> enabled'
+      - 'c:systemctl status cron -> Active: active (running)'
+
 
 
 # 5.1.2 Ensure permissions on /etc/crontab are configured (Scored)
@@ -2667,7 +2709,7 @@ checks:
     title: "Ensure at/cron is restricted to authorized users"
     description: "Configure /etc/cron.allow and /etc/at.allow to allow specific users to use these services. If /etc/cron.allow or /etc/at.allow do not exist, then /etc/at.deny and /etc/cron.deny are checked. Any user not specifically defined in those files is allowed to use at and cron. By removing the files, only users in /etc/cron.allow and /etc/at.allow are allowed to use at and cron. Note that even though a given user is not listed in cron.allow, cron jobs can still be run as that user. The cron.allow file only controls administrative access to the crontab command for scheduling and modifying cron jobs."
     rationale: "On many systems, only the system administrator is authorized to schedule cronjobs. Using the cron.allow file to control who can run cron jobs enforces this policy. It is easier to manage an allow list than a deny list. In a deny list, you could potentially add a user ID to the system and forget to add it to the deny files."
-    remediation: "Run the following commands to remove /etc/cron.deny and /etc/at.deny and create and set permissions and ownership for /etc/cron.allow and /etc/at.allow: # rm /etc/cron.deny # rm /etc/at.deny # touch /etc/cron.allow # touch /etc/at.allow # chmod og-rwx /etc/cron.allow # chmod og-rwx /etc/at.allow # chown root:root /etc/cron.allow # chown root:root /etc/at.allow"
+    remediation: "Run the following commands to remove /etc/cron.deny and create and set permissions and ownership for /etc/cron.allow: # rm /etc/cron.deny # touch /etc/cron.allow # chmod og-rwx /etc/cron.allow # chown root:root /etc/cron.allow"
     compliance:
       - cis: ["5.1.8"]
       - cis_csc: ["14.6"]
@@ -2679,14 +2721,29 @@ checks:
       - 'f:/etc/cron.allow'
       - 'f:/etc/at.allow'
       - 'not f:/etc/cron.deny'
-      - 'not f:/etc/at.deny'
       - 'c:stat /etc/cron.allow -> r:^Access: \(0\d\d0/\w\w\w\w\w-----\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
+
+  - id: 18648 
+    title: "Ensure at is restricted to authorized users"
+    description: "Configure /etc/at.allow to allow specific users to use this service. If /etc/at.allow does not exist, then /etc/at.deny is checked. Any user not specifically defined in this file is allowed to use at. By removing the file, only users in /etc/at.allow are allowed to use at."
+    rationale: "On many systems, only the system administrator is authorized to schedule at jobs. Using the at.allow file to control who can run at jobs enforces this policy. It is easier to manage an allow list than a deny list. In a deny list, you could potentially add a user ID to the system and forget to add it to the deny files."
+    remediation: "Run the following commands to remove /etc/at.deny and create and set permissions and ownership for/etc/at.allow: # rm /etc/at.deny # touch /etc/at.allow # chmod og-rwx /etc/at.allow # chown root:root /etc/at.allow"
+    compliance:
+      - cis: ["5.1.9"]
+      - cis_csc: ["14.6"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
+    condition: all
+    rules:
+      - 'f:/etc/at.allow'
+      - 'not f:/etc/at.deny'
       - 'c:stat /etc/at.allow -> r:^Access: \(0\d\d0/\w\w\w\w\w-----\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
 
 ######################################################
 # 5.2 SSH Server Configuration
 ######################################################
-# 5.2.1 Ensure permissions on /etc/ssh/sshd_config are configured
+
   - id: 18649 
     title: "Ensure permissions on /etc/ssh/sshd_config are configured"
     description: "The /etc/ssh/sshd_config file contains configuration specifications for sshd. The command below sets the owner and group of the file to root."
@@ -2702,7 +2759,6 @@ checks:
     rules:
       - 'c:stat /etc/ssh/sshd_config -> r:^Access: \(0\d00/\w\w\w\w------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
 
-# 5.2.2 Ensure permissions on SSH private host key files are configured (Scored)
   - id: 18650 
     title: "Ensure permissions on SSH private host key files are configured"
     description: "An SSH private key is one of two files used in SSH public key authentication. In this authentication method, The possession of the private key is proof of identity. Only a private key that corresponds to a public key will be able to authenticate successfully. The private keys need to be stored and handled carefully, and no copies of the private key should be distributed."
@@ -2720,7 +2776,6 @@ checks:
       - 'c:stat /etc/ssh/ssh_host_ecdsa_key -> r:^Access: \(0\d00/-\w\w\w------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
       - 'c:stat /etc/ssh/ssh_host_ed25519_key -> r:^Access: \(0\d00/-\w\w\w------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
 
-# 5.2.3 Ensure permissions on SSH public host key files are configured (Scored)
   - id: 18651 
     title: "Ensure permissions on SSH public host key files are configured"
     description: "An SSH public key is one of two files used in SSH public key authentication. In this authentication method, a public key is a key that can be used for verifying digital signatures generated using a corresponding private key. Only a public key that corresponds to a private key will be able to authenticate successfully."
@@ -2738,24 +2793,6 @@ checks:
       - 'c:stat /etc/ssh/ssh_host_ecdsa_key.pub -> r:^Access: \(0\d\d\d/-\w\w\w\w--\w--\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
       - 'c:stat /etc/ssh/ssh_host_ed25519_key.pub -> r:^Access: \(0\d\d\d/-\w\w\w\w--\w--\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
 
-# 5.2.4 Ensure SSH Protocol is not set to 1 (Scored)
-  - id: 18652 
-    title: "Ensure SSH Protocol is not set to 1"
-    description: "Older versions of SSH support two different and incompatible protocols: SSH1 and SSH2. SSH1 was the original protocol and was subject to security issues. SSH2 is more advanced and secure."
-    rationale: "SSH v1 suffers from insecurities that do not affect SSH v2. Notes: This command not longer exists in newer versions of SSH. This check is still being included for systems that may be running an older version of SSH. As of openSSH version 7.4 this parameter will not cause an issue when included."
-    remediation: "Edit the /etc/ssh/sshd_config file to set the parameter as follows: Protocol 2"
-    compliance:
-      - cis: ["5.2.4"]
-      - cis_csc: ["4.5", "14.4"]
-      - pci_dss: ["4.1"]
-      - hipaa: ["164.312.a.2.IV", "164.312.e.1", "164.312.e.2.I", "164.312.e.2.II"]
-      - nist_800_53: ["SC.8"]
-      - tsc: ["CC6.7"]
-    condition: none
-    rules:
-      - 'c:sshd -T -> r:Protocol\s*\t*1'
-
-# 5.2.5 Ensure SSH LogLevel is appropriate (Scored)
   - id: 18653 
     title: "Ensure SSH LogLevel is appropriate"
     description: "INFO level is the basic level that only records login activity of SSH users. In many situations, such as Incident Response, it is important to determine when a particular user was active on a system. The logout record can eliminate those users who disconnected, which helps narrow the field. VERBOSE level specifies that login and logout activity as well as the key fingerprint for any SSH key used for login will be logged. This information is important for SSH key management, especially in legacy environments."
@@ -2764,7 +2801,7 @@ checks:
     references:
       - https://www.ssh.com/ssh/sshd_config/
     compliance:
-      - cis: ["5.2.5"]
+      - cis: ["5.2.4"]
       - cis_csc: ["6.2", "6.3"]
       - pci_dss: ["4.1"]
       - hipaa: ["164.312.a.2.IV", "164.312.e.1", "164.312.e.2.I", "164.312.e.2.II"]
@@ -2772,16 +2809,15 @@ checks:
       - tsc: ["CC6.7"]
     condition: all
     rules:
-      - 'c:sshd -T -> r:LogLevel\s+INFO|LogLevel\s+VERBOSE'
+      - 'c:sshd -T -> r:loglevel\s+INFO|loglevel\s+VERBOSE'
 
-# 5.2.6 Ensure SSH X11 forwarding is disabled (Scored)
   - id: 18654 
     title: "Ensure SSH X11 forwarding is disabled"
     description: "The X11Forwarding parameter provides the ability to tunnel X11 traffic through the connection to enable remote graphic connections."
     rationale: "Disable X11 forwarding unless there is an operational requirement to use X11 applications directly. There is a small risk that the remote X11 servers of users who are logged in via SSH with X11 forwarding could be compromised by other users on the X11 server. Note that even if X11 forwarding is disabled, users can always install their own forwarders."
     remediation: "Edit the /etc/ssh/sshd_configfile to set the parameter as follows: X11Forwarding no"
     compliance:
-      - cis: ["5.2.6"]
+      - cis: ["5.2.5"]
       - cis_csc: ["9.2"]
       - pci_dss: ["2.2.3"]
       - nist_800_53: ["CM.1"]
@@ -2791,32 +2827,30 @@ checks:
       - hipaa: ["164.312.b"]
     condition: all
     rules:
-      - 'c:sshd -T -> r:X11Forwarding\s+no'
+      - 'c:sshd -T -> r:x11forwarding\s+no'
 
-# 5.2.7 Ensure SSH MaxAuthTries is set to 4 or less (Scored)
   - id: 18655 
     title: "Ensure SSH MaxAuthTries is set to 4 or less"
     description: "The MaxAuthTries parameter specifies the maximum number of authentication attempts permitted per connection. When the login failure count reaches half the number, error messages will be written to the syslog file detailing the login failure."
     rationale: "Setting the MaxAuthTries parameter to a low number will minimize the risk of successful brute force attacks to the SSH server. While the recommended setting is 4, set the number based on site policy."
     remediation: "Edit the /etc/ssh/sshd_config file to set the parameter as follows: MaxAuthTries 4"
     compliance:
-      - cis: ["5.2.7"]
+      - cis: ["5.2.6"]
       - cis_csc: ["16.13"]
       - pci_dss: ["2.2.4"]
       - nist_800_53: ["CM.1"]
       - tsc: ["CC5.2"]
     condition: all
     rules:
-      - 'c:sshd -T -> n:^MaxAuthTries\s*\t*(\d+) compare <= 4'
+      - 'c:sshd -T -> n:^maxauthtries\s*\t*(\d+) compare <= 4'
 
-# 5.2.8 Ensure SSH IgnoreRhosts is enabled (Scored)
   - id: 18656 
     title: "Ensure SSH IgnoreRhosts is enabled"
     description: "The IgnoreRhosts parameter specifies that .rhostsand .shostsfiles will not be used in RhostsRSAAuthenticationor HostbasedAuthentication."
     rationale: "Setting this parameter forces users to enter a password when authenticating with ssh."
     remediation: "Edit the /etc/ssh/sshd_config file to set the parameter as follows: IgnoreRhosts yes"
     compliance:
-      - cis: ["5.2.8"]
+      - cis: ["5.2.7"]
       - cis_csc: ["9.2"]
       - pci_dss: ["4.1"]
       - hipaa: ["164.312.a.2.IV", "164.312.e.1", "164.312.e.2.I", "164.312.e.2.II"]
@@ -2824,7 +2858,7 @@ checks:
       - tsc: ["CC6.7"]
     condition: all
     rules:
-      - 'c:sshd -T -> r:IgnoreRhosts\s+yes'
+      - 'c:sshd -T -> r:ignorerhosts\s+yes'
 
 # 5.2.9 Ensure SSH HostbasedAuthentication is disabled (Scored)
   - id: 18657 
@@ -2841,16 +2875,15 @@ checks:
       - tsc: ["CC6.7"]
     condition: all
     rules:
-      - 'c:sshd -T -> r:HostbasedAuthentication\s+no'
+      - 'c:sshd -T -> r:hostbasedauthentication\s+no'
 
-# 5.2.10 Ensure SSH root login is disabled (Scored)
   - id: 18658 
     title: "Ensure SSH root login is disabled"
     description: "The PermitRootLogin parameter specifies if the root user can log in using ssh(1). The default is no."
     rationale: "Disallowing root logins over SSH requires server admins to authenticate using their own individual account, then escalating to root via sudo or su. This in turn limits opportunity for non-repudiation and provides a clear audit trail in the event of a security incident."
     remediation: "Edit the /etc/ssh/sshd_config file to set the parameter as follows: PermitRootLogin no"
     compliance:
-      - cis: ["5.2.10"]
+      - cis: ["5.2.9"]
       - cis_csc: ["4.3"]
       - pci_dss: ["4.1"]
       - hipaa: ["164.312.a.2.IV", "164.312.e.1", "164.312.e.2.I", "164.312.e.2.II"]
@@ -2858,16 +2891,15 @@ checks:
       - tsc: ["CC6.7"]
     condition: all
     rules:
-      - 'c:sshd -T -> r:PermitRootLogin\s+no'
+      - 'c:sshd -T -> r:permitrootlogin\s+no'
 
-# 5.2.11 Ensure SSH PermitEmptyPasswords is disabled (Scored)
   - id: 18659 
     title: "Ensure SSH PermitEmptyPasswords is disabled"
     description: "The PermitEmptyPasswords parameter specifies if the server allows login to accounts with empty password strings."
     rationale: "Disallowing remote shell access to accounts that have an empty password reduces the probability of unauthorized access to the system"
     remediation: "Edit the /etc/ssh/sshd_config file to set the parameter as follows: PermitEmptyPasswords no"
     compliance:
-      - cis: ["5.2.11"]
+      - cis: ["5.2.10"]
       - cis_csc: ["16.3"]
       - pci_dss: ["4.1"]
       - hipaa: ["164.312.a.2.IV", "164.312.e.1", "164.312.e.2.I", "164.312.e.2.II"]
@@ -2875,16 +2907,15 @@ checks:
       - tsc: ["CC6.7"]
     condition: all
     rules:
-      - 'c:sshd -T -> r:PermitEmptyPasswords\s+no'
+      - 'c:sshd -T -> r:permitemptypasswords\s+no'
 
-# 5.2.12 Ensure SSH PermitUserEnvironment is disabled (Scored)
   - id: 18660 
     title: "Ensure SSH PermitUserEnvironment is disabled"
     description: "The PermitUserEnvironment option allows users to present environment options to the ssh daemon."
     rationale: "Permitting users the ability to set environment variables through the SSH daemon could potentially allow users to bypass security controls (e.g. setting an execution path that has ssh executing trojan'd programs)"
     remediation: "Edit the /etc/ssh/sshd_config file to set the parameter as follows: PermitUserEnvironment no"
     compliance:
-      - cis: ["5.2.12"]
+      - cis: ["5.2.11"]
       - cis_csc: ["14.6"]
       - pci_dss: ["4.1"]
       - hipaa: ["164.312.a.2.IV", "164.312.e.1", "164.312.e.2.I", "164.312.e.2.II"]
@@ -2892,16 +2923,15 @@ checks:
       - tsc: ["CC6.7", "CC6.1", "CC7.2"]
     condition: all
     rules:
-      - 'c:sshd -T -> r:PermitUserEnvironment\s+no'
+      - 'c:sshd -T -> r:permituserenvironment\s+no'
 
-# 5.2.13 Ensure only strong Ciphers are used (Scored)
   - id: 18661 
     title: "Ensure only strong ciphers are used"
     description: "This variable limits the ciphers that SSH can use during communication."
     rationale: "Weak ciphers that are used for authentication to the cryptographic module cannot be relied upon to provide confidentiality or integrity, and system data may be compromised The DES, Triple DES, and Blowfish ciphers, as used in SSH, have a birthday bound of approximately four billion blocks, which makes it easier for remote attackers to obtain cleartext data via a birthday attack against a long-duration encrypted session, aka a \"Sweet32\" attack The RC4 algorithm, as used in the TLS protocol and SSL protocol, does not properly combine state data with key data during the initialization phase, which makes it easier for remote attackers to conduct plaintext-recovery attacks against the initial bytes of a stream by sniffing network traffic that occasionally relies on keys affected by the Invariance Weakness, and then using a brute-force approach involving LSB values, aka the \"Bar Mitzvah\" issue The passwords used during an SSH session encrypted with RC4 can be recovered by an attacker who is able to capture and replay the session Error handling in the SSH protocol; Client and Server, when using a block cipher algorithm in Cipher Block Chaining (CBC) mode, makes it easier for remote attackers to recover certain plaintext data from an arbitrary block of ciphertext in an SSH session via unknown vectors The mm_newkeys_from_blob function in monitor_wrap.c, when an AES-GCM cipher is used, does not properly initialize memory for a MAC context data structure, which allows remote authenticated users to bypass intended ForceCommand and login-shell restrictions via packet data that provides a crafted callback address" 
     remediation: "Edit the /etc/ssh/sshd_config file add/modify the Ciphers line to contain a comma separated list of the site approved ciphers Example: Ciphers chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr"
     compliance:
-      - cis: ["5.2.13"]
+      - cis: ["5.2.12"]
       - cis_csc: ["14.4"]
       - pci_dss: ["4.1"]
       - hipaa: ["164.312.a.2.IV", "164.312.e.1", "164.312.e.2.I", "164.312.e.2.II"]
@@ -2920,14 +2950,13 @@ checks:
     rules:
       - 'c:sshd -T -> r:ciphers && r:3des-cbc|aes128-cbc|aes192-cbc|aes256-cbc|arcfour|arcfour128|arcfour256|blowfish-cbc|cast128-cbc|rijndael-cbc@lysator.liu.se'
 
-# 5.2.14 Ensure only strong MAC algorithms are used (Scored)
   - id: 18662 
     title: "Ensure only strong MAC algorithms are used"
     description: "This variable limits the types of MAC algorithms that SSH can use during communication."
     rationale: "MD5 and 96-bit MAC algorithms are considered weak and have been shown to increase exploitability in SSH downgrade attacks. Weak algorithms continue to have a great deal of attention as a weak spot that can be exploited with expanded computing power. An attacker that breaks the algorithm could take advantage of a MiTM position to decrypt the SSH tunnel and capture credentials and information" 
     remediation: "Edit the /etc/ssh/sshd_config file and add/modify the MACs line to contain a comma separated list of the site approved MACs Example: MACs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,hmac-sha2-512,hmac-sha2-256"
     compliance:
-      - cis: ["5.2.14"]
+      - cis: ["5.2.13"]
       - cis_csc: ["14.4","16.5"]
       - pci_dss: ["4.1"]
       - hipaa: ["164.312.a.2.IV", "164.312.e.1", "164.312.e.2.I", "164.312.e.2.II"]
@@ -2939,14 +2968,13 @@ checks:
     rules:
       - 'c:sshd -T -> r:MACs && r:hmac-md5|hmac-md5-96|hmac-ripemd160|hmac-sha1|hmac-sha1-96|umac-64@openssh.com|umac-128@openssh.com|hmac-md5-etm@openssh.com|hmac-md5-96-etm@openssh.com|hmac-ripemd160-etm@openssh.com|hmac-sha1-etm@openssh.com|hmac-sha1-96-etm@openssh.com|umac-64-etm@openssh.com|umac-128-etm@openssh.com'
 
-# 5.2.15 Ensure only strong Key Exchange algorithms are used (Scored)
   - id: 18663 
     title: "Ensure only strong Key Exchange algorithms are used"
     description: "Key exchange is any method in cryptography by which cryptographic keys are exchanged between two parties, allowing use of a cryptographic algorithm. If the sender and receiver wish to exchange encrypted messages, each must be equipped to encrypt messages to be sent and decrypt messages received"
     rationale: "Key exchange methods that are considered weak should be removed. A key exchange method may be weak because too few bits are used, or the hashing algorithm is considered too weak. Using weak algorithms could expose connections to man-in-the-middle attacks" 
     remediation: "Edit the /etc/ssh/sshd_config file add/modify the KexAlgorithms line to contain a comma separated list of the site approved key exchange algorithms Example: KexAlgorithms curve25519-sha256,curve25519-sha256@libssh.org,diffie-hellman-group14-sha256,diffie-hellman-group16-sha512,diffie-hellman-group18-sha512,ecdh-sha2-nistp521,ecdh-sha2-nistp384,ecdh-sha2-nistp256,diffie-hellman-group-exchange-sha256"
     compliance:
-      - cis: ["5.2.15"]
+      - cis: ["5.2.14"]
       - cis_csc: ["14.4"]
       - pci_dss: ["4.1"]
       - hipaa: ["164.312.a.2.IV", "164.312.e.1", "164.312.e.2.I", "164.312.e.2.II"]
@@ -2956,57 +2984,68 @@ checks:
     rules:
       - 'c:sshd -T -> r:kexalgorithms && r:diffie-hellman-group1-sha1|diffie-hellman-group14-sha1|diffie-hellman-group-exchange-sha1'
 
-# 5.2.16 Ensure SSH Idle Timeout Interval is configured (Scored)
   - id: 18664 
     title: "Ensure SSH Idle Timeout Interval is configured"
     description: "The two options ClientAliveInterval and ClientAliveCountMax control the timeout of ssh sessions. When the ClientAliveInterval variable is set, ssh sessions that have no activity for the specified length of time are terminated. When the ClientAliveCountMax variable is set, sshd will send client alive messages at every ClientAliveInterval interval. When the number of consecutive client alive messages are sent with no response from the client, the ssh session is terminated. For example, if the ClientAliveInterval is set to 15 seconds and the ClientAliveCountMax is set to 3, the client ssh session will be terminated after 45 seconds of idle time."
     rationale: "Having no timeout value associated with a connection could allow an unauthorized user access to another user's ssh session (e.g. user walks away from their computer and doesn't lock the screen). Setting a timeout value at least reduces the risk of this happening. While the recommended setting is 300 seconds (5 minutes), set this timeout value based on site policy. The recommended setting for ClientAliveCountMax is 0. In this case, the client session will be terminated after 5 minutes of idle time and no keepalive messages will be sent."
     remediation: "Edit the /etc/ssh/sshd_config file to set the parameters according to site policy: ClientAliveInterval 300    ClientAliveCountMax 0"
     compliance:
-      - cis: ["5.2.16"]
+      - cis: ["5.2.15"]
       - cis_csc: ["16.11"]
       - pci_dss: ["12.3.8"]
     condition: all
     rules:
-      - 'c:sshd -T -> n:ClientAliveInterval\s*\t*(\d+) compare <= 300 && n:ClientAliveInterval\s*\t*(\d+) compare != 0'
-      - 'c:sshd -T -> n:ClientAliveCountMax\s*\t*(\d+) compare <= 3'
+      - 'c:sshd -T -> n:clientaliveinterval\s*\t*(\d+) compare <= 300 && n:clientaliveinterval\s*\t*(\d+) compare != 0'
+      - 'c:sshd -T -> n:clientalivecountmax\s*\t*(\d+) compare <= 3'
 
-# 5.2.17 Ensure SSH LoginGraceTime is set to one minute or less (Scored)
   - id: 18665 
     title: "Ensure SSH LoginGraceTime is set to one minute or less"
     description: "The LoginGraceTime parameter specifies the time allowed for successful authentication to the SSH server. The longer the Grace period is the more open unauthenticated connections can exist. Like other session controls in this session the Grace Period should be limited to appropriate organizational limits to ensure the service is available for needed access."
     rationale: "Setting the LoginGraceTime parameter to a low number will minimize the risk of successful brute force attacks to the SSH server. It will also limit the number of concurrent unauthenticated connections While the recommended setting is 60 seconds (1 Minute), set the number based on site policy."
     remediation: "Edit the /etc/ssh/sshd_config file to set the parameter as follows: LoginGraceTime 60"
     compliance:
-      - cis: ["5.2.17"]
+      - cis: ["5.2.16"]
       - cis_csc: ["5.1"]
       - pci_dss: ["8.1"]
       - tsc: ["CC6.1"]
     condition: all
     rules:
-      - 'c:sshd -T -> n:LoginGraceTime\s*\t*(\d+) compare <= 60 && n:LoginGraceTime\s*\t*(\d+) compare >= 1'
+      - 'c:sshd -T -> n:logingracetime\s*\t*(\d+) compare <= 60 && n:logingracetime\s*\t*(\d+) compare >= 1'
 
-# 5.2.18 Ensure SSH access is limited (Scored)
   - id: 18666 
     title: "Ensure SSH access is limited"
     description: "There are several options available to limit which users and group can access the system via SSH. It is recommended that at least one of the following options be leveraged: AllowUsers, AllowGroups, DenyUsers, DenyGroups."
     rationale: "Restricting which users can remotely access the system via SSH will help ensure that only authorized users access the system."
     remediation: "Edit the /etc/ssh/sshd_config file to set one or more of the parameter as follows: AllowUsers <userlist>    AllowGroups <grouplist>    DenyUsers <userlist>    DenyGroups <grouplist>"
     compliance:
-      - cis: ["5.2.18"]
+      - cis: ["5.2.17"]
       - cis_csc: ["4.3"]
       - pci_dss: ["8.1"]
       - tsc: ["CC6.1"]
     condition: all
     rules:
-      - 'c:sshd -T -> r:AllowUsers\s+\w+|AllowGroups\s+\w+|DenyUsers\s+\w+|DenyGroups\s+\w+'
+      - 'c:sshd -T -> r:allowusers\s+\w+|allowgroups\s+\w+|denyusers\s+\w+|denygroups\s+\w+'
 
-# 5.2.19 Ensure SSH warning banner is configured (Scored)
   - id: 18667 
     title: "Ensure SSH warning banner is configured"
     description: "The Banner parameter specifies a file whose contents must be sent to the remote user before authentication is permitted. By default, no banner is displayed."
     rationale: "Banners are used to warn connecting users of the particular site's policy regarding connection. Presenting a warning message prior to the normal user login may assist the prosecution of trespassers on the computer system."
     remediation: "Edit the /etc/ssh/sshd_config file to set the parameter as follows: Banner /etc/issue.net"
+    compliance:
+      - cis: ["5.2.18"]
+      - cis_csc: ["5.1"]
+      - pci_dss: ["2.2.4"]
+      - nist_800_53: ["CM.1"]
+      - tsc: ["CC5.2"]
+    condition: all
+    rules:
+      - 'c:sshd -T -> r:banner\s*\t*/etc/issue.net'
+
+  - id: 18668 
+    title: "Ensure SSH PAM is enabled"
+    description: "UsePAM Enables the Pluggable Authentication Module interface. If set to “yes” this will enable PAM authentication using ChallengeResponseAuthentication and PasswordAuthentication in addition to PAM account and session module processing for all authentication types."
+    rationale: "When usePAM is set to yes, PAM runs through account and session types properly. This is important if you want to restrict access to services based off of IP, time or other factors of the account. Additionally, you can make sure users inherit certain environment variables on login or disallow access to the server."
+    remediation: "Edit the /etc/ssh/sshd_config file to set the parameter as follows: UsePAM yes"
     compliance:
       - cis: ["5.2.19"]
       - cis_csc: ["5.1"]
@@ -3015,33 +3054,15 @@ checks:
       - tsc: ["CC5.2"]
     condition: all
     rules:
-      - 'c:sshd -T -> r:Banner\s*\t*/etc/issue.net'
-
-# 5.2.20 Ensure SSH PAM is enabled (Scored)
-  - id: 18668 
-    title: "Ensure SSH PAM is enabled"
-    description: "UsePAM Enables the Pluggable Authentication Module interface. If set to “yes” this will enable PAM authentication using ChallengeResponseAuthentication and PasswordAuthentication in addition to PAM account and session module processing for all authentication types."
-    rationale: "When usePAM is set to yes, PAM runs through account and session types properly. This is important if you want to restrict access to services based off of IP, time or other factors of the account. Additionally, you can make sure users inherit certain environment variables on login or disallow access to the server."
-    remediation: "Edit the /etc/ssh/sshd_config file to set the parameter as follows: UsePAM yes"
-    compliance:
-      - cis: ["5.2.20"]
-      - cis_csc: ["5.1"]
-      - pci_dss: ["2.2.4"]
-      - nist_800_53: ["CM.1"]
-      - tsc: ["CC5.2"]
-    condition: all
-    rules:
       - 'c:sshd -T -> r:^\s*usepam\s+yes'
 
-
-# 5.2.21 Ensure SSH AllowTcpForwarding is disabled (Scored)
   - id: 18669 
     title: "Ensure SSH AllowTcpForwarding is disabled"
     description: "SSH port forwarding is a mechanism in SSH for tunneling application ports from the client to the server, or servers to clients. It can be used for adding encryption to legacy applications, going through firewalls, and some system administrators and IT professionals use it for opening backdoors into the internal network from their home machines."
     rationale: "Leaving port forwarding enabled can expose the organization to security risks and back-doors. SSH connections are protected with strong encryption. This makes their contents invisible to most deployed network monitoring and traffic filtering solutions. This invisibility carries considerable risk potential if it is used for malicious purposes such as data exfiltration. Cybercriminals or malware could exploit SSH to hide their unauthorized communications, or to exfiltrate stolen data from the target network."
     remediation: "Edit the /etc/ssh/sshd_config file to set the parameter as follows: AllowTcpForwarding no"
     compliance:
-      - cis: ["5.2.21"]
+      - cis: ["5.2.20"]
       - cis_csc: ["9.2"]
       - pci_dss: ["4.1"]
       - hipaa: ["164.312.a.2.IV", "164.312.e.1", "164.312.e.2.I", "164.312.e.2.II"]
@@ -3051,7 +3072,7 @@ checks:
       - https://www.ssh.com/ssh/tunneling/example
     condition: all
     rules:
-      - 'c:sshd -T -> r:^\s*AllowTcpForwarding\s+no'
+      - 'c:sshd -T -> r:^\s*allowtcpforwarding\s+no'
 
 
   - id: 18670 
@@ -3060,27 +3081,26 @@ checks:
     rationale: "To protect a system from denial of service due to a large number of pending authentication connection attempts, use the rate limiting function of MaxStartups to protect availability of sshd logins and prevent overwhelming the daemon."
     remediation: "Edit the /etc/ssh/sshd_config file to set the parameter as follows: maxstartups 10:30:60"
     compliance:
-      - cis: ["5.2.22"]
+      - cis: ["5.2.21"]
       - cis_csc: ["5.1"]
     condition: all
     rules:
       - 'c:sshd -T -> r:^\s*maxstartups\s+10:30:60'
 
-# 5.2.23 Ensure SSH MaxSessions is  set to 4 or less (Scored)
   - id: 18671 
-    title: "Ensure SSH MaxSessions is set to 4 or less"
-    description: "The MaxSessions parameter specifies the maximum number of open sessions permitted from a given connection."
+    title: "Ensure SSH MaxSessions is limited"
+    description: "The MaxSessionsparameter specifies the maximum number of open sessions permitted from a given connection."
     rationale: "To protect a system from denial of service due to a large number of concurrent sessions, use the rate limiting function of MaxSessions to protect availability of sshd logins and prevent overwhelming the daemon."
-    remediation: "Edit the /etc/ssh/sshd_config file to set the parameter as follows: MaxSessions 4"
+    remediation: "Edit the /etc/ssh/sshd_config file to set the parameter as follows: MaxSessions 10"
     compliance:
-      - cis: ["5.2.19"]
+      - cis: ["5.2.21"]
       - cis_csc: ["5.1"]
       - pci_dss: ["2.2.4"]
       - nist_800_53: ["CM.1"]
       - tsc: ["CC5.2"]
     condition: all
     rules:
-      - 'c:sshd -T -> n:^MaxSessions\s+(\d+) compare <= 4'
+      - 'c:sshd -T -> n:^MaxSessions\s+(\d+) compare <= 10'
 
 ######################################################
 # 5.3 Configure PAM
@@ -3431,7 +3451,6 @@ checks:
 # 6.2 User and Group Settings
 ####################################################
 
-# 6.2.1 Ensure password fields are not empty (Scored)
   - id: 18692 
     title: "Ensure password fields are not empty"
     description: "An account with an empty password field means that anybody may log in as that user without providing a password."
@@ -3446,71 +3465,13 @@ checks:
     rules:
       - 'f:/etc/shadow -> r:^\w+::'
 
-# 6.2.2 Ensure no legacy "+" entries exist in /etc/passwd (Scored)
-  - id: 18693 
-    title: "Ensure no legacy \"+\" entries exist in /etc/passwd"
-    description: "The character + in various files used to be markers for systems to insert data from NIS maps at a certain point in a system configuration file. These entries are no longer required on most systems, but may exist in files that have been imported from other platforms."
-    rationale: "These entries may provide an avenue for attackers to gain privileged access on the system."
-    remediation: "Remove any legacy + entries from /etc/passwd if they exist."
-    compliance:
-      - cis: ["6.2.2"]
-      - cis_csc: ["16.2"]
-      - pci_dss: ["2.2.3"]
-      - nist_800_53: ["CM.1"]
-      - tsc: ["CC5.2"]
-      - gpg_13: ["4.3"]
-      - gdpr_IV: ["35.7.d"]
-      - hipaa: ["164.312.b"]
-    condition: none
-    rules:
-      - 'f:/etc/passwd -> !r:^# && r:^+:'
-
-# 6.2.4 Ensure no legacy "+" entries exist in /etc/shadow (Scored)
-  - id: 18694 
-    title: "Ensure no legacy \"+\" entries exist in /etc/shadow"
-    description: "The character + in various files used to be markers for systems to insert data from NIS maps at a certain point in a system configuration file. These entries are no longer required on most systems, but may exist in files that have been imported from other platforms."
-    rationale: "These entries may provide an avenue for attackers to gain privileged access on the system."
-    remediation: "Remove any legacy + entries from /etc/shadow if they exist."
-    compliance:
-      - cis: ["6.2.4"]
-      - cis_csc: ["16.9"]
-      - pci_dss: ["2.2.3"]
-      - nist_800_53: ["CM.1"]
-      - tsc: ["CC5.2"]
-      - gpg_13: ["4.3"]
-      - gdpr_IV: ["35.7.d"]
-      - hipaa: ["164.312.b"]
-    condition: none
-    rules:
-      - 'f:/etc/shadow -> !r:^# && r:^+:'
-
-# 6.2.5 Ensure no legacy "+" entries exist in /etc/group (Scored)
-  - id: 18695 
-    title: "Ensure no legacy \"+\" entries exist in /etc/group"
-    description: "The character + in various files used to be markers for systems to insert data from NIS maps at a certain point in a system configuration file. These entries are no longer required on most systems, but may exist in files that have been imported from other platforms."
-    rationale: "These entries may provide an avenue for attackers to gain privileged access on the system."
-    remediation: "Remove any legacy + entries from /etc/group if they exist."
-    compliance:
-      - cis: ["6.2.5"]
-      - cis_csc: ["16.2"]
-      - pci_dss: ["2.2.3"]
-      - nist_800_53: ["CM.1"]
-      - tsc: ["CC5.2"]
-      - gpg_13: ["4.3"]
-      - gdpr_IV: ["35.7.d"]
-      - hipaa: ["164.312.b"]
-    condition: none
-    rules:
-      - 'f:/etc/group -> !r:^# && r:^+:'
-
-# 6.2.6 Ensure root is the only UID 0 account (Scored)
   - id: 18696 
     title: "Ensure root is the only UID 0 account"
     description: "Any account with UID 0 has superuser privileges on the system."
     rationale: "This access must be limited to only the default root account and only from the system console. Administrative access must be through an unprivileged account using an approved mechanism as noted in Item 5.6 Ensure access to the su command is restricted."
     remediation: "Remove any users other than root with UID 0 or assign them a new UID if appropriate."
     compliance:
-      - cis: ["6.2.6"]
+      - cis: ["6.2.2"]
       - pci_dss: ["10.2.5"]
       - hipaa: ["164.312.b"]
       - nist_800_53: ["AU.14", "AC.7"]
@@ -3528,7 +3489,8 @@ checks:
     rationale: "Any users assigned to the shadow group would be granted read access to the /etc/shadow file. If attackers can gain read access to the /etc/shadow file, they can easily run a password cracking program against the hashed passwords to break them. Other security information that is stored in the /etc/shadow file (such as expiration) could also be useful to subvert additional user accounts."
     remediation: "Remove all users from the shadow group, and change the primary group of any users with shadow as their primary group."
     compliance:
-      - cis: ["6.2.20"]
+      - cis: ["6.2.17"]
+      - cis_csc: ["14.6"]
       - pci_dss: ["10.2.5"]
       - hipaa: ["164.312.b"]
       - nist_800_53: ["AU.14", "AC.7"]
