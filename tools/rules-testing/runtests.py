@@ -70,26 +70,21 @@ def cleanDR():
         if os.path.isfile(file_fullpath) and re.match(r'^test_(.*?)_decoders.xml$',file):
             os.remove(file_fullpath)
 
-
-
+def restart_analysisd():
+    print "Restarting wazuh-manager..."
+    ret = os.system('systemctl restart wazuh-manager')
 
 class OssecTester(object):
     def __init__(self, bdir):
         self._error = False
         self._debug = False
         self._quiet = False
-        self._ossec_conf = bdir + "/etc/ossec.conf"
-        self._base_dir = bdir
         self._ossec_path = bdir + "/bin/"
         self._test_path = "./tests"
 
     def buildCmd(self, rule, alert, decoder):
-        cmd = ['%s/ossec-logtest' % (self._ossec_path), ]
+        cmd = ['%s/wazuh-logtest' % (self._ossec_path), ]
         cmd += ['-q']
-        if self._ossec_conf:
-            cmd += ["-c", self._ossec_conf]
-        if self._base_dir:
-            cmd += ["-D", self._base_dir]
         cmd += ['-U', "%s:%s:%s" % (rule, alert, decoder)]
         return cmd
 
@@ -120,8 +115,10 @@ class OssecTester(object):
             sys.stdout.write(".")
             sys.stdout.flush()
 
-    def run(self, selective_test=False, geoip=False):
+    def run(self, selective_test=False, geoip=False, custom=False):
         for aFile in os.listdir(self._test_path):
+            if re.match(r'^test_(.*?).ini$',aFile) and not custom:
+                continue
             aFile = os.path.join(self._test_path, aFile)
             if aFile.endswith(".ini"):
                 if selective_test and not aFile.endswith(selective_test):
@@ -162,6 +159,8 @@ if __name__ == "__main__":
                         help='Use -g or --geoip to enable geoip tests (default: False)')
     parser.add_argument('--testfile', '-t', action='store', type=str, dest='testfile',
                         help='Use -t or --testfile to pass the ini file to test')
+    parser.add_argument('--custom-ruleset', '-c', action='store_true', dest='custom',
+                        help='Use -c or --custom-ruleset to test custom rules and decoders. WARNING: This will cause wazuh-manager restart')
     args = parser.parse_args()
     selective_test = False
     if args.testfile:
@@ -173,9 +172,13 @@ if __name__ == "__main__":
     getOssecConfig(ossec_init, initconfigpath)
     for sig in (signal.SIGABRT, signal.SIGINT, signal.SIGTERM):
         signal.signal(sig, cleanup)
-    provisionDR()
+    if args.custom:
+        provisionDR()
+        restart_analysisd()
     OT = OssecTester(ossec_init["DIRECTORY"])
-    error = OT.run(selective_test, args.geoip)
-    cleanDR()
+    error = OT.run(selective_test, args.geoip, args.custom)
+    if args.custom:
+        cleanDR()
+        restart_analysisd()
     if error:
         sys.exit(1)
