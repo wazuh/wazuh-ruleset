@@ -1011,9 +1011,9 @@ checks:
       - gdpr_IV: ["35.7.d"]
       - hipaa: ["164.312.b"]
       - tsc: ["CC5.2"]
-    condition: none
+    condition: all
     rules:
-      - 'c:rpm -qa xinetd-> r:xinetd'
+      - 'c:rpm -q xinetd-> r:package xinetd is not installed'
 
 
 ###############################################
@@ -1087,9 +1087,9 @@ checks:
       - pci_dss: ["2.2.2"]
       - nist_800_53: ["CM.1"]
       - tsc: ["CC5.2"]
-    condition: any
+    condition: all
     rules:
-      - 'c:rpm -qa xorg-x11-server* -> r:^xorg-x11'
+      - 'c:rpm -q xorg-x11-server* -> r:package xorg-x11 is not installed'
 
 # 2.2.3 Ensure Avahi Server is not installed (Automated)
   - id: 4557 
@@ -1105,8 +1105,8 @@ checks:
       - tsc: ["CC5.2"]
     condition: none
     rules:
-      - 'c:rpm -qa avahi-autoipd-> r:avahi-autoipd'
-      - 'c:rpm -qa avahi-> r:avahi'
+      - 'c:rpm -q avahi-autoipd-> r:package avahi-autoipd is not installed'
+      - 'c:rpm -q avahi-> r:pacakge avahi is not installed'
 
 # 2.2.4 Ensure CUPS is not installed (Automated)
   - id: 4558 
@@ -1120,9 +1120,9 @@ checks:
       - pci_dss: ["2.2.2"]
       - nist_800_53: ["CM.1"]
       - tsc: ["CC5.2"]
-    condition: none
+    condition: all
     rules:
-      - 'c:rpm -qa cups-> r:cups'
+      - 'c:rpm -q cups-> r:package cups is not installed'
 
 # 2.2.5 Ensure DHCP Server is not installed (Automated)
   - id: 4559 
@@ -1138,9 +1138,9 @@ checks:
       - tsc: ["CC5.2"]
     references:
       - More detailed documentation on DHCP is available at https://www.isc.org/software/dhcp
-    condition: none
+    condition: all
     rules:
-      - 'c:rpm -qa dhcp-> r:dhcp'
+      - 'c:rpm -q dhcp-> r:package dhcp is not installed'
 
 # 2.2.6  Ensure LDAP server is not installed (Automated)
   - id: 4560 
@@ -1156,9 +1156,9 @@ checks:
       - tsc: ["CC5.2"]
     references:
       - More detailed documentation on OpenLDAP is available at https://www.openldap.org
-    condition: none
+    condition: all
     rules:
-      - 'c:rpm -qa openldap-servers-> r:openldap-servers'
+      - 'c:rpm -q openldap-servers-> r:package openldap-servers is not installed'
 
 
 
@@ -1176,7 +1176,7 @@ checks:
       - tsc: ["CC5.2"]
     condition: any
     rules:
-      - 'not c:rpm -qa nfs-utils-> r: nfs-utils'
+      - 'c:rpm -q nfs-utils-> r:package nfs-utils is not installed'
       - 'c:systemctl is-enabled nfs-server -> r:masked'
 
 # 2.2.8 Ensure rpcbind is not installed or the rpcbind services are masked (Automated)
@@ -1193,7 +1193,7 @@ checks:
       - tsc: ["CC5.2"]
     condition: any
     rules:
-      - 'not c:rpm -qa rpcbind-> r: rpcbind'
+      - 'c:rpm -q rpcbind-> r:package rpcbind is not installed'
       - 'not c:systemctl is-enabled rpcbind rpcbind.socket -> r:enabled'
 
 
@@ -1210,9 +1210,9 @@ checks:
       - pci_dss: ["2.2.2"]
       - nist_800_53: ["CM.1"]
       - tsc: ["CC5.2"]
-    condition: none
+    condition: all
     rules:
-      - 'c:rpm -qa bind-> r: bind'
+      - 'c:rpm -q bind-> r:package bind is not installed'
 
 # 2.2.10 Ensure FTP Server is not installed (Automated)
   - id: 4564 
@@ -1226,9 +1226,9 @@ checks:
       - pci_dss: ["2.2.2"]
       - nist_800_53: ["CM.1"]
       - tsc: ["CC5.2"]
-    condition: none
+    condition: all
     rules:
-      - 'c:rpm -qa vsftpd-> r: vsftpd'
+      - 'c:rpm -q vsftpd-> r:package vsftpd is not installed'
 
 # 2.2.11 Ensure HTTP server is not installed (Automated)
   - id: 4565 
@@ -1242,9 +1242,9 @@ checks:
       - pci_dss: ["2.2.2"]
       - nist_800_53: ["CM.1"]
       - tsc: ["CC5.2"]
-    condition: none
+    condition: all
     rules:
-      - 'c:rpm -qa httpd-> r: httpd'
+      - 'c:rpm -q httpd-> r:package httpd is not installed'
 
 # 2.2.12 Ensure IMAP and POP3 server is not installed (Automated)
   - id: 4566 
@@ -1258,9 +1258,9 @@ checks:
       - pci_dss: ["2.2.2"]
       - nist_800_53: ["CM.1"]
       - tsc: ["CC5.2"]
-    condition: none
+    condition: all
     rules:
-      - 'c:rpm -qa dovecot-> r: dovecot'
+      - 'c:rpm -q dovecot-> r:package dovecot is not installed'
 
 # 2.2.13 Ensure Samba is not installed (Automated)
   - id: 4567 
@@ -1274,9 +1274,9 @@ checks:
       - pci_dss: ["2.2.2"]
       - nist_800_53: ["CM.1"]
       - tsc: ["CC5.2"]
-    condition: none
+    condition: all
     rules:
-      - 'c:rpm -qa samba-> r: samba'
+      - 'c:rpm -q samba-> r:package samba is not installed'
 
 # 2.2.14 Ensure HTTP Proxy Server is not installed (Automated)
   - id: 4568 
@@ -1290,9 +1290,9 @@ checks:
       - pci_dss: ["2.2.2"]
       - nist_800_53: ["CM.1"]
       - tsc: ["CC5.2"]
-    condition: none
+    condition: all
     rules:
-      - 'c:rpm -qa squid-> r: squid'
+      - 'c:rpm -q squid-> r:package squid is not installed'
 
 # 2.2.15 Ensure net-snmp is not installed (Automated)
   - id: 4569 
@@ -1306,9 +1306,9 @@ checks:
       - pci_dss: ["2.2.2"]
       - nist_800_53: ["CM.1"]
       - tsc: ["CC5.2"]
-    condition: none
+    condition: all
     rules:
-      - 'c:rpm -qa net-snmp-> r: net-snmp'
+      - 'c:rpm -q net-snmp-> r:package net-snmp is not installed'
 
 # 2.2.16 Ensure mail transfer agent is configured for local-only mode (Automated)
   - id: 4570 
@@ -1340,8 +1340,8 @@ checks:
       - tsc: ["CC5.2","CC6.4","CC6.6","CC6.7"]
     condition: any
     rules:
-      - 'not c:rpm -qa rsync-> r: rsync'
-      - 'c: systemctl is-enabled rsyncd-> r:masked'
+      - 'c:rpm -q rsync-> r:package rsync is not installed'
+      - 'c:systemctl is-enabled rsyncd-> r:masked'
 
   # 2.2.18 Ensure NIS server is not installed (Automated)
   - id: 4572 
@@ -1358,9 +1358,9 @@ checks:
       - gdpr_IV: ["35.7.d"]
       - hipaa: ["164.312.b"]
       - tsc: ["CC5.2"]
-    condition: none
+    condition: all
     rules:
-    - 'c:rpm -qa ypserv-> r: ypserv'
+    - 'c:rpm -q ypserv-> r:package ypserv is not installed'
 
 
 # 2.2.19 Ensure telnet-server is not installed (Automated)
@@ -1380,7 +1380,7 @@ checks:
       - tsc: ["CC5.2"]
     condition: none
     rules:
-      - 'c:rpm -qa telnet-server-> r: telnet-server'
+      - 'c:rpm -q telnet-server-> r:package telnet-server is not installed'
 
 
 
@@ -1403,9 +1403,9 @@ checks:
       - gdpr_IV: ["35.7.d"]
       - hipaa: ["164.312.b"]
       - tsc: ["CC5.2"]
-    condition: none
+    condition: all
     rules:
-      - 'c:rpm -qa ypbind -> r:ypbind'
+      - 'c:rpm -q ypbind -> r:package ypbind is not installed'
 
 # 2.3.2 Ensure rsh client is not installed (Automated)
   - id: 4575 
@@ -1424,7 +1424,7 @@ checks:
       - tsc: ["CC5.2"]
     condition: all
     rules:
-      - 'c:rpm -qa rsh -> r:^package rsh is not installed'
+      - 'c:rpm -q rsh -> r:^package rsh is not installed'
 
 # 2.3.3 Ensure talk client is not installed (Automated)
   - id: 4576 
@@ -1542,7 +1542,7 @@ checks:
       - tsc: ["CC5.2"]
     condition: all
     rules:
-      - 'c:iw list-> r: Interface'
+      - 'c:iw list-> r:Interface'
 
 ##################################################
 # 3.2 Network Parameters (Host Only)
