@@ -162,6 +162,33 @@ ID: 80200 - 80499
     </rule>
 
 
+    <!-- AWS ELB -->
+    <!-- Documentation: https://docs.aws.amazon.com/elasticloadbalancing/index.html -->
+    <rule id="80325" level="0">
+        <if_sid>80200</if_sid>
+        <field name="aws.source">alb</field>
+        <description>AWS ALB alert.</description>
+        <group>aws_elb,</group>
+        <options>no_full_log</options>
+    </rule>
+
+    <rule id="80330" level="0">
+        <if_sid>80200</if_sid>
+        <field name="aws.source">clb</field>
+        <description>AWS CLB alert.</description>
+        <group>aws_elb,</group>
+        <options>no_full_log</options>
+    </rule>
+
+    <rule id="80335" level="0">
+        <if_sid>80200</if_sid>
+        <field name="aws.source">nlb</field>
+        <description>AWS NLB alert.</description>
+        <group>aws_elb,</group>
+        <options>no_full_log</options>
+    </rule>
+
+
     <!-- Macie Alerts -->
     <!-- Documentation: https://docs.aws.amazon.com/macie/latest/userguide/macie-alerts.html#macie-alert-severity -->
     <rule id="80350" level="0">
