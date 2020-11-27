@@ -33,9 +33,9 @@
 | php_rules.xml              | PHP is a server-side scripting language designed for web development but also used as a general-purpose programming language. |
 | mysql_rules.xml            | MySQL is an open-source relational database management system (RDBMS). |
 | postgresql_rules.xml       | PostgreSQL is an object-relational database management system (ORDBMS) with an emphasis on extensibility and on standards-compliance. |
-| ids_rules.xml              | IDS events detected by OSSEC. |
+| ids_rules.xml              | IDS events detected by Wazuh. |
 | squid_rules.xml            | Squid is a caching and forwarding web proxy. |
-| firewall_rules.xml         | Firewall events detected by OSSEC. |
+| firewall_rules.xml         | Firewall events detected by Wazuh. |
 | apparmor_rules.xml         | AppArmor is a Linux kernel security module that allows the system administrator to restrict programs's capabilities with per-program profiles. |
 | cisco-ios_rules.xml        | Cisco IOS is a software used on most Cisco Systems routers and current Cisco network switches. |
 | netscreenfw_rules.xml      | Netscreen is a high performance firewall. |
@@ -49,7 +49,7 @@
 | racoon_rules.xml           | Racoon is a key management daemon used for VPN connections. |
 | vpn_concentrator_rules.xml | Cisco VPN Concentrator. |
 | spamd_rules.xml            | spamd is a spam-deferral daemon and works directly with smtp connections. |
-| msauth_rules.xml           | Microsoft Windows events deteced by OSSEC. |
+| msauth_rules.xml           | Microsoft Windows events deteced by Wazuh. |
 | mcafee_av_rules.xml        | McAfee is an antivirus program. |
 | trend-osce_rules.xml       | Trend Micro OSCE (Office Scan) rules. |
 | ms-se_rules.xml            | Microsoft Security Essentials (MSE) is an antivirus software (AV) product that provides protection against different types of malicious software. |
@@ -60,7 +60,7 @@
 | ms_dhcp_rules.xml          | Microsoft DHCP rules. |
 | asterisk_rules.xml         | Asterisk is a software implementation of a telephone private branch exchange (PBX). |
 | ossec_rules.xml            | Main rules. |
-| attack_rules.xml           | Signatures of different attacks detected by OSSEC. |
+| attack_rules.xml           | Signatures of different attacks detected by Wazuh. |
 | openbsd_rules.xml          | OpenBSD is a Unix-like computer operating system descended from BSD. |
 | clam_av_rules.xml          | Clam AntiVirus (ClamAV) is a free and open-source, cross-platform antivirus software tool-kit able to detect many types of malicious software. |
 | dropbear_rules.xml         | Dropbear provides a Secure Shell-compatible server and client. It is designed as a replacement for OpenSSH for environments with low resources. |
