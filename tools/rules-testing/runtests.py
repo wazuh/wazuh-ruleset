@@ -27,7 +27,7 @@ class MultiOrderedDict(OrderedDict):
             super(MultiOrderedDict, self).__setitem__(key, value)
 
 
-def getOssecConfig(initconf, path):
+def getWazuhConfig(initconf, path):
     if os.path.isfile(path):
         with open(path) as f:
             for line in f.readlines():
@@ -44,21 +44,21 @@ def getOssecConfig(initconf, path):
 def provisionDR():
     base_dir = os.path.dirname(os.path.realpath(__file__))
     rules_dir = os.path.join(base_dir, "rules")
-    decoders_dir = os.path.join(base_dir, "decoders") 
+    decoders_dir = os.path.join(base_dir, "decoders")
 
     for file in os.listdir(rules_dir):
         file_fullpath = os.path.join(rules_dir, file)
         if os.path.isfile(file_fullpath) and re.match(r'^test_(.*?)_rules.xml$',file):
-            shutil.copy2(file_fullpath , ossec_init["DIRECTORY"] + "/etc/rules")
+            shutil.copy2(file_fullpath , wazuh_init["DIRECTORY"] + "/etc/rules")
 
     for file in os.listdir(decoders_dir):
         file_fullpath = os.path.join(decoders_dir, file)
         if os.path.isfile(file_fullpath) and re.match(r'^test_(.*?)_decoders.xml$',file):
-            shutil.copy2(file_fullpath , ossec_init["DIRECTORY"] + "/etc/decoders")
+            shutil.copy2(file_fullpath , wazuh_init["DIRECTORY"] + "/etc/decoders")
 
 def cleanDR():
-    rules_dir = ossec_init["DIRECTORY"] + "/etc/rules"
-    decoders_dir = ossec_init["DIRECTORY"] + "/etc/decoders"
+    rules_dir = wazuh_init["DIRECTORY"] + "/etc/rules"
+    decoders_dir = wazuh_init["DIRECTORY"] + "/etc/decoders"
 
     for file in os.listdir(rules_dir):
         file_fullpath = os.path.join(rules_dir, file)
@@ -74,16 +74,16 @@ def restart_analysisd():
     print "Restarting wazuh-manager..."
     ret = os.system('systemctl restart wazuh-manager')
 
-class OssecTester(object):
+class WazuhTester(object):
     def __init__(self, bdir):
         self._error = False
         self._debug = False
         self._quiet = False
-        self._ossec_path = bdir + "/bin/"
+        self._wazuh_path = bdir + "/bin/"
         self._test_path = "./tests"
 
     def buildCmd(self, rule, alert, decoder):
-        cmd = ['%s/wazuh-logtest' % (self._ossec_path), ]
+        cmd = ['%s/wazuh-logtest' % (self._wazuh_path), ]
         cmd += ['-q']
         cmd += ['-U', "%s:%s:%s" % (rule, alert, decoder)]
         return cmd
@@ -167,15 +167,15 @@ if __name__ == "__main__":
         selective_test = args.testfile
         if not selective_test.endswith('.ini'):
             selective_test += '.ini'
-    ossec_init = {}
+    wazuh_init = {}
     initconfigpath = "/etc/ossec-init.conf"
-    getOssecConfig(ossec_init, initconfigpath)
+    getWazuhConfig(wazuh_init, initconfigpath)
     for sig in (signal.SIGABRT, signal.SIGINT, signal.SIGTERM):
         signal.signal(sig, cleanup)
     if args.custom:
         provisionDR()
         restart_analysisd()
-    OT = OssecTester(ossec_init["DIRECTORY"])
+    OT = WazuhTester(wazuh_init["DIRECTORY"])
     error = OT.run(selective_test, args.geoip, args.custom)
     if args.custom:
         cleanDR()
