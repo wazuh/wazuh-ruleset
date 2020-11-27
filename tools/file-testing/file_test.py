@@ -9,7 +9,7 @@
 
 # Requirements:
 #  Python 2.6 or later
-#  OSSEC 2.8 or later
+#  Wazuh 2.8 or later
 #  root privileges
 
 # Instructions:
@@ -33,9 +33,9 @@ def signal_handler(n_signal, frame):
 
 def usage():
     msg = """
-OSSEC Wazuh Ruleset Tools: File Test
+Wazuh Ruleset Tools: File Test
 Github repository: https://github.com/wazuh/wazuh-ruleset
-Full documentation: http://documentation.wazuh.com/en/latest/ossec_ruleset.html
+Full documentation: https://documentation.wazuh.com/current/user-manual/ruleset/index.html
 
 Usage: ./file_test.py -d decoder1,decoder2,decoderN -r [ruleID_Min:ruleID_Max|ruleID1,ruleID2,ruleIDN|ruleID] -f file.log [-v]
 
@@ -54,7 +54,7 @@ if __name__ == "__main__":
     R_TYPE_LIST = 1
     R_TYPE_RULE = 2
 
-    logtest_path = "/var/ossec/bin/ossec-logtest"
+    logtest_path = "/var/ossec/bin/wazuh-logtest"
 
     logger = logging.getLogger('logger_verbose')
 
