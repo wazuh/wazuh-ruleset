@@ -9,7 +9,6 @@
 
 # Requirements:
 #  Python 2.6 or later
-#  Wazuh 2.8 or later
 #  root privileges
 
 # Instructions:
