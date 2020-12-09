@@ -105,7 +105,7 @@ ID: 80200 - 80499
     <!-- IAM -->
     <rule id="80260" level="5">
         <if_sid>80202</if_sid>
-        <list field="aws.eventName" lookup="match_key" check_value="^IAM">etc/lists/amazon/aws-eventnames</list>
+        <list field="aws.eventName" lookup="match_key_value" check_value="^IAM">etc/lists/amazon/aws-eventnames</list>
         <description>AWS Cloudtrail: $(aws.eventSource) - $(aws.eventName) - IAM event.</description>
         <mitre>
             <id>T1078</id>
@@ -195,7 +195,7 @@ ID: 80200 - 80499
     <!-- Cloud Infrastructure Discovery -->
     <rule id="80272" level="5">
         <if_sid>80202</if_sid>
-        <list field="aws.eventName" lookup="match_key" check_value="^EC2">etc/lists/amazon/aws-eventnames</list>
+        <list field="aws.eventName" lookup="match_key_value" check_value="^EC2\w*|^S3">etc/lists/amazon/aws-eventnames</list>
         <description>AWS Cloudtrail: $(aws.eventSource) - $(aws.eventName) - EC2 event.</description>
         <group>aws_cloudtrail,pci_dss_10.6.1,gdpr_IV_35.7.d,hipaa_164.312.b,nist_800_53_AU.6,tsc_CC7.2,tsc_CC7.3,</group>
         <options>no_full_log</options>
@@ -204,11 +204,12 @@ ID: 80200 - 80499
     <rule id="80273" level="5">
         <if_sid>80272</if_sid>
         <field name="aws.eventName">^Get\w+|^Describe\w+</field>
-        <description>AWS Cloudtrail: $(aws.eventSource) - $(aws.eventName) - EC2 event.</description>
+        <description>AWS Cloudtrail: $(aws.eventSource) - $(aws.eventName)</description>
+        <mitre>
+            <id>T1580</id>
+        </mitre>
         <group>aws_cloudtrail,pci_dss_10.6.1,gdpr_IV_35.7.d,hipaa_164.312.b,nist_800_53_AU.6,tsc_CC7.2,tsc_CC7.3,</group>
         <options>no_full_log</options>
     </rule>
-
-
 
 </group>
