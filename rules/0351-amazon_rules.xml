@@ -107,13 +107,16 @@ ID: 80200 - 80499
         <if_sid>80202</if_sid>
         <list field="aws.eventName" lookup="match_key" check_value="^IAM">etc/lists/amazon/aws-eventnames</list>
         <description>AWS Cloudtrail: $(aws.eventSource) - $(aws.eventName) - IAM event.</description>
+        <mitre>
+            <id>T1078</id>
+        </mitre>
         <group>aws_cloudtrail,pci_dss_10.6.1,gdpr_IV_35.7.d,hipaa_164.312.b,nist_800_53_AU.6,tsc_CC7.2,tsc_CC7.3,</group>
         <options>no_full_log</options>
     </rule>
 
-    <rule id="80261" level="10">
+    <rule id="80261" level="7">
         <if_sid>80260</if_sid>
-        <description>AWS Cloudtrail: $(aws.eventSource) - $(aws.eventName) - Possible Privilege Scalation</description>
+        <description>AWS Cloudtrail: $(aws.eventSource) - $(aws.eventName)</description>
         <field name="aws.eventName">CreateUser</field>
         <mitre>
             <id>T1136</id>
@@ -122,7 +125,6 @@ ID: 80200 - 80499
         <options>no_full_log</options>
     </rule>
 
-    <!-- Account Discovery -->
     <rule id="80262" level="5">
         <if_sid>80260</if_sid>
         <description>AWS Cloudtrail: $(aws.eventSource) - $(aws.eventName) - IAM Request.</description>
@@ -131,7 +133,8 @@ ID: 80200 - 80499
         <options>no_full_log</options>
     </rule>
 
-    <rule id="80263" level="15" frequency="6" timeframe="360" >
+    <!-- Account Discovery -->
+    <rule id="80263" level="10" frequency="6" timeframe="360" >
         <if_matched_sid>80262</if_matched_sid>
         <description>AWS Cloudtrail: $(aws.eventSource) - $(aws.eventName) - Possible Account Discovery (high number of IAM requests).</description>
         <mitre>
@@ -144,7 +147,7 @@ ID: 80200 - 80499
     <!-- Account Manipulation -->
     <rule id="80264" level="5">
         <if_sid>80260</if_sid>
-        <description>AWS Cloudtrail: $(aws.eventSource) - $(aws.eventName) - Possible Account Manipulation.</description>
+        <description>AWS Cloudtrail: $(aws.eventSource) - $(aws.eventName)</description>
         <mitre>
             <id>T1098</id>
         </mitre>
@@ -156,7 +159,7 @@ ID: 80200 - 80499
     <!-- Permissions Group Discovery -->
     <rule id="80265" level="5">
         <if_sid>80262</if_sid>
-        <description>AWS Cloudtrail: $(aws.eventSource) - $(aws.eventName) - Possible Permissions Group Discovery.</description>
+        <description>AWS Cloudtrail: $(aws.eventSource) - $(aws.eventName)</description>
         <mitre>
             <id>T1098</id>
         </mitre>
@@ -166,6 +169,46 @@ ID: 80200 - 80499
     </rule>
 
     <!-- Modify Infrastructure -->
+    <rule id="80270" level="5">
+        <if_sid>80202</if_sid>
+        <description>AWS Cloudtrail: $(aws.eventSource) - $(aws.eventName)</description>
+        <mitre>
+            <id>T1578</id>
+        </mitre>
+        <field name="aws.eventName">^CreateFunction|^UpdateFunction\w*|^Modify\w+</field>
+        <group>aws_cloudtrail,pci_dss_11.4,pci_dss_10.2.4,pci_dss_10.2.5,gdpr_IV_35.7.d,gdpr_IV_32.2,hipaa_164.312.b,nist_800_53_SI.4,nist_800_53_AU.14,nist_800_53_AC.7,tsc_CC6.1,tsc_CC6.8,tsc_CC7.2,tsc_CC7.3,</group>
+        <options>no_full_log</options>
+    </rule>
+
+    <!-- Implant Container Image -->
+    <rule id="80271" level="5">
+        <if_sid>80202</if_sid>
+        <description>AWS Cloudtrail: $(aws.eventSource) - $(aws.eventName)</description>
+        <mitre>
+            <id>T1525</id>
+        </mitre>
+        <field name="aws.eventName">^ModifyImageAttributes|^RegisterImage|^CreateImage</field>
+        <group>aws_cloudtrail,pci_dss_11.4,pci_dss_10.2.4,pci_dss_10.2.5,gdpr_IV_35.7.d,gdpr_IV_32.2,hipaa_164.312.b,nist_800_53_SI.4,nist_800_53_AU.14,nist_800_53_AC.7,tsc_CC6.1,tsc_CC6.8,tsc_CC7.2,tsc_CC7.3,</group>
+        <options>no_full_log</options>
+    </rule>
+
+    <!-- Cloud Infrastructure Discovery -->
+    <rule id="80272" level="5">
+        <if_sid>80202</if_sid>
+        <list field="aws.eventName" lookup="match_key" check_value="^EC2">etc/lists/amazon/aws-eventnames</list>
+        <description>AWS Cloudtrail: $(aws.eventSource) - $(aws.eventName) - EC2 event.</description>
+        <group>aws_cloudtrail,pci_dss_10.6.1,gdpr_IV_35.7.d,hipaa_164.312.b,nist_800_53_AU.6,tsc_CC7.2,tsc_CC7.3,</group>
+        <options>no_full_log</options>
+    </rule>
+
+    <rule id="80273" level="5">
+        <if_sid>80272</if_sid>
+        <field name="aws.eventName">^Get\w+|^Describe\w+</field>
+        <description>AWS Cloudtrail: $(aws.eventSource) - $(aws.eventName) - EC2 event.</description>
+        <group>aws_cloudtrail,pci_dss_10.6.1,gdpr_IV_35.7.d,hipaa_164.312.b,nist_800_53_AU.6,tsc_CC7.2,tsc_CC7.3,</group>
+        <options>no_full_log</options>
+    </rule>
+
 
 
 </group>
