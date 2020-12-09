@@ -131,8 +131,7 @@ ID: 80200 - 80499
         <options>no_full_log</options>
     </rule>
 
-    <!-- CHECK THE AMMOUNT OF ALERTS THAT SHOULD TRIGGER AN ACCOUNT DISCOVERY -->
-    <rule id="80263" level="15" frequency="5" timeframe="360" >
+    <rule id="80263" level="15" frequency="6" timeframe="360" >
         <if_matched_sid>80262</if_matched_sid>
         <description>AWS Cloudtrail: $(aws.eventSource) - $(aws.eventName) - Possible Account Discovery (high number of IAM requests).</description>
         <mitre>
@@ -165,6 +164,8 @@ ID: 80200 - 80499
         <group>aws_cloudtrail,pci_dss_11.4,pci_dss_10.2.4,pci_dss_10.2.5,gdpr_IV_35.7.d,gdpr_IV_32.2,hipaa_164.312.b,nist_800_53_SI.4,nist_800_53_AU.14,nist_800_53_AC.7,tsc_CC6.1,tsc_CC6.8,tsc_CC7.2,tsc_CC7.3,</group>
         <options>no_full_log</options>
     </rule>
+
+    <!-- Modify Infrastructure -->
 
 
 </group>
