@@ -6,17 +6,24 @@ All notable changes to this project will be documented in this file.
 ### Added
 
 - Let the Ruleset update tool to bypass the version check with the force option. ([#773](https://github.com/wazuh/wazuh-ruleset/pull/773))
-- Added new AWS Config-History rules to make it more granular by including every item status supported ([#775](https://github.com/wazuh/wazuh-ruleset/pull/775))
+- Added new AWS Config-History rules to make it more granular by including every item status supported. ([#775](https://github.com/wazuh/wazuh-ruleset/pull/775))
+
+### Changed
+
+- FIM rules have been adapted to the improvements for Windows Registry monitoring. ([#768](https://github.com/wazuh/wazuh-ruleset/pull/768))
 
 ### Fixed
 
-- Updated MITRE techniques in web rules ([#810](https://github.com/wazuh/wazuh-ruleset/pull/810))
+- Updated MITRE techniques in web rules. ([#810](https://github.com/wazuh/wazuh-ruleset/pull/810))
+- Fixed Sonicwall predecoder to accept whitespaces at the beginning. ([#503](https://github.com/wazuh/wazuh-ruleset/pull/503))
+
 
 ## [v4.0.1]
 
 ### Fixed
 
 - Removed duplicated Windows rules for EventChannel. ([#771](https://github.com/wazuh/wazuh-ruleset/pull/771))
+
 
 ## [v4.0.0]
 
