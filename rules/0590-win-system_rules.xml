@@ -320,4 +320,24 @@
     <options>no_email_alert</options>
   </rule>
 
+  <rule id="61139" level="8">
+    <if_sid>61102</if_sid>
+    <field name="win.system.eventID">^6008$</field>
+    <description>Unexpected system shutdown.</description>
+    <mitre>
+      <id>T1529</id>
+    </mitre>
+    <options>no_full_log</options>
+  </rule>
+
+  <rule id="61140" level="8">
+    <if_sid>61100</if_sid>
+    <field name="win.system.eventID">^1074$</field>
+    <description>System has been shutdown by a process/user.</description>
+    <mitre>
+      <id>T1529</id>
+    </mitre>
+    <options>no_full_log</options>
+  </rule>
+
 </group>
