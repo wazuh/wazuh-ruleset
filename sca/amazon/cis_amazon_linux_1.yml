@@ -518,7 +518,7 @@ checks:
 # 1.4.1 Configure bootloader
   - id: 5528 
     title: "Ensure permissions on bootloader config are configured"
-    description: "The grub configuration file contains information on boot settings and passwords for unlocking boot options. The grub configuration is usually located at /boot/grub/grub.conf and linked as /boot/grub/menu.lst and /etc/grub.conf ."
+    description: "The grub configuration file contains information on boot settings and passwords for unlocking boot options. The grub configuration is usually located at /boot/grub/menu.lst and linked as /boot/grub/grub.conf and /etc/grub.conf ."
     rationale: "Setting the permissions to read and write for root only prevents non-root users from seeing the boot parameters or changing them. Non-root users who read the boot parameters may be able to identify weaknesses in security upon boot and be able to exploit them."
     remediation: "Run the following commands to set permissions on your grub configuration: # chown root:root /boot/grub/menu.lst # chmod og-rwx /boot/grub/menu.lst"
     compliance:
