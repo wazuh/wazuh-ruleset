@@ -1,0 +1,43 @@
+<!--
+  -  Falco rules
+  -  Author: Pawel Krawczyk
+  -  Copyright (C) 2019 Pawel Krawczyk
+  -  This program is a free software; you can redistribute it and/or modify it under the terms of GPLv2.
+-->
+
+<group name="syslog,falco,">
+
+  <rule id="65000" level="0" noalert="1">
+    <decoded_as>falco</decoded_as>
+    <description>Grouping for the Falco rules.</description>
+  </rule>
+
+<!--
+  - Levels wording in logs: Emergency, Alert, Critical, Error, Warning, Notice, Info, Debug
+  -->
+
+  <rule id="65001" level="2">
+      <if_sid>65000</if_sid>
+      <field name="falco.level">Notice|Info|Debug</field>
+      <description>Falco informational messages.</description>
+  </rule>
+
+  <rule id="65002" level="4">
+      <if_sid>65000</if_sid>
+      <field name="falco.level">Warning</field>
+      <description>Falco warning messages.</description>
+  </rule>
+
+  <rule id="65003" level="6">
+      <if_sid>65000</if_sid>
+      <field name="falco.level">Error</field>
+      <description>Falco warning messages.</description>
+  </rule>
+
+  <rule id="65004" level="12">
+      <if_sid>65000</if_sid>
+      <field name="falco.level">Critical|Emergency|Alert</field>
+      <description>Falco alert messages.</description>
+  </rule>
+    	
+</group>

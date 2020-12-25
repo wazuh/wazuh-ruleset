@@ -1,0 +1,59 @@
+<!--
+  -  Falco decoders
+  -  Reference: https://falco.org/docs/
+  -  Author: Pawel Krawczyk
+  -  Copyright (C) Pawel Krawczyk
+  -  This program is a free software; you can redistribute it and/or modify it under the terms of GPLv2.
+-->
+
+<!--
+  - Nov 16 20:09:02 otto falco: 20:09:02.899472129: Notice Database-related program spawned process other than itself (user=postgres program=sh -c /usr/bin/envdir /etc/wal-e.d /usr/local/bin/wal-e wal-push pg_wal/0000000100000050000000ED parent=postgres)
+  - Nov 16 20:16:24 otto falco: 20:16:24.017025350: Error File below /etc opened for writing (user=root command=vi /etc/falco/falco.yaml parent=bash pcmdline=bash file=/etc/falco/.falco.yaml.swp program=vi gparent=sudo ggparent=bash gggparent=sshd)
+  -->
+
+<decoder name="falco">
+    <program_name>^falco</program_name>
+</decoder>
+
+<!-- 
+  - Levels wording in logs: Emergency, Alert, Critical, Error, Warning, Notice, Info, Debug
+  - Level wording in falco_rules.yaml is all caps e.g. ALERT, CRITICAL etc
+  - Level wording in falco.yaml is all lowercase e.g. "alert", "critical" etc
+-->
+
+<decoder name="falco-field">
+  <parent>falco</parent>
+  <prematch offset="after_parent">:\s</prematch>
+  <regex offset="after_prematch">(\S+)\s</regex>
+  <order>falco.level</order>
+</decoder>
+
+<decoder name="falco-field">
+  <parent>falco</parent>
+  <regex offset="after_regex">user=(\S+)</regex>
+  <order>falco.user</order>
+</decoder>
+
+<decoder name="falco-field">
+  <parent>falco</parent>
+  <regex offset="after_regex">command=(\S+)</regex>
+  <order>falco.command</order>
+</decoder>
+
+<decoder name="falco-field">
+  <parent>falco</parent>
+  <regex offset="after_regex">parent=(\S+)</regex>
+  <order>falco.parent</order>
+</decoder>
+
+<decoder name="falco-field">
+  <parent>falco</parent>
+  <regex offset="after_regex">file=(\S+)</regex>
+  <order>falco.file</order>
+</decoder>
+
+<decoder name="falco-field">
+  <parent>falco</parent>
+  <regex offset="after_regex">program=(\S+)</regex>
+  <order>falco.program</order>
+</decoder>

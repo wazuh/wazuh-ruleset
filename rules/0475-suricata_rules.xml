@@ -48,4 +48,41 @@
         <options>no_full_log</options>
     </rule>
 
+    <!--
+          Severity 3 alerts are very frequent e.g.:
+
+          Suricata: Alert - SURICATA TLS invalid handshake message
+    -->
+
+    <rule id="86605" level="4">
+       <if_sid>86601</if_sid>
+       <field name="alert.severity">3</field>
+       <description>Suricata LOW severity alert - $(alert.signature).</description>
+    </rule>
+
+    <!--
+      Severity 2 example:
+
+      ET SCAN MS Terminal Server Traffic on Non-standard Port
+    -->
+
+    <rule id="86606" level="5">
+       <if_sid>86601</if_sid>
+       <field name="alert.severity">2</field>
+       <description>Suricata medium severity alert - $(alert.signature).</description>
+    </rule>
+
+    <!--
+      Severity 1 example:
+
+      ET WEB_SERVER 401TRG Generic Webshell Request - POST with wget in body
+    -->
+
+    <rule id="86607" level="6">
+       <if_sid>86601</if_sid>
+       <field name="alert.severity">1</field>
+       <description>Suricata high severity alert - $(alert.signature).</description>
+    </rule>
+
+
 </group>
