@@ -1,0 +1,1273 @@
+<!--
+    - Cisco Firepower Threat Defense : Syslog Decoder
+    - Author : Isuru Tharanga
+    - Reference : https://www.cisco.com/c/en/us/td/docs/security/firepower/Syslogs/b_fptd_syslog_guide/security-event-syslog-messages.html
+-->
+
+<!--
+    - Sample Log : "2020-07-13T13:21:19Z id2  %FTD-6-430005: DeviceUUID: d485c23e-54be-11ea-8c46-8149212fbc0e, SrcIP: Y.Y.Y.Y, DstIP: X.X.X.X, SrcPort: 62948, DstPort: 445, Protocol: tcp, FileDirection: Download, FileAction: Malware Cloud Lookup, FileSHA256: b9e336dbc9ac1acc643eb5caecd0f9950766e0443305b0566f2be074321b8eff, SHA_Disposition: Unknown, SperoDisposition: Spero detection not performed on file, ThreatName: Unknown, FileName: Machine\Scripts\Startup\MFEagent.msi, FileType: MSOLE2, FileSize: 8312832, ApplicationProtocol: NetBIOS-ssn (SMB), Client: NetBIOS-ssn (SMB) client, User: userabc, FirstPacketSecond: 2020-07-13T13:11:03Z, FilePolicy: Malware-Policy, FileSandboxStatus: File Size Is Too Large"
+-->
+
+<!-- Cisco Firepower Threat Defense Logs Identifier -->
+<decoder name="cisco-ftd">
+    <prematch>^\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\dZ id\d+  %FTD-</prematch>
+</decoder>
+
+<!-- Event Types -->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex offset="after_parent">(\w+):</regex>
+    <order>id</order>
+</decoder>
+
+<!--
+DeviceUUID (Syslog Only)
+The unique identifier of the Firepower device that generated an event.
+
+The follwing fields collectively uniquely identify the connection event associated with a particular file or malware event: DeviceUUID, First Packet Time, Connection Instance ID, and Connection Counter.
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>DeviceUUID: (\w+), | DeviceUUID: (\w+)$</regex>
+    <order>device.uuid</order>
+</decoder>
+
+<!--
+SrcIP (Syslog Only)
+The IP address of the host that initiated the connection. This may be the IP address of the sender or the recipient of the file, depending on the value in the FileDirection field:
+
+If FileDirection is Upload, this is the IP address of the file sender.
+
+If FileDirection is Download, this is the IP address of the file recipient.
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>SrcIP: (\S+), | SrcIP: (\S+)$</regex>
+    <order>srcip</order>
+</decoder>
+
+<!--
+DstIP (Syslog Only)
+The IP address of the host that responded to the connection. This may be the IP address of the sender or the recipient of the file, depending on the value in the FileDirection field:
+
+If FileDirection is Upload, then this is the IP address of the file recipient.
+
+If FileDirection is Download, then this is the IP address of the file sender.
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>DstIP: (\S+), | DstIP: (\S+)$</regex>
+    <order>dstip</order>
+</decoder>
+
+<!--
+SrcPort (Syslog Only)
+The port used in the connection described under SrcIP.
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>SrcPort: (\d+), | SrcPort: (\d+)$</regex>
+    <order>srcport</order>
+</decoder>
+
+<!--
+DstPort (Syslog Only)
+The port used in the connection described under DstIP.
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>DstPort: (\d+), | DstPort: (\d+)$</regex>
+    <order>dstport</order>
+</decoder>
+
+<!--
+Protocol (Syslog Only)
+The protocol used for the connection, for example TCP or UDP.
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>Protocol: (\w+), | Protocol: (\w+)$</regex>
+    <order>protocol</order>
+</decoder>
+
+<!--
+FileDirection (Syslog Only)
+Whether the file was downloaded or uploaded during the connection. Possible values are:
+
+    Download — the file was transferred from the DstIP to the SrcIP.
+    Upload — the file was transferred from the SrcIP to the DstIP.
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>FileDirection: (\w+), | FileDirection: (\w+)$</regex>
+    <order>file.direction</order>
+</decoder>
+
+<!--
+Action (Syslog: FileAction)
+The action associated with file policy rule that detected the file, and any associated file rule action options.
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>FileAction: (\.+), | FileAction: (\.+)$</regex>
+    <order>file.action</order>
+</decoder>
+
+<!--
+SHA256 / File SHA256 (Syslog: FileSHA256)
+The SHA-256 hash value of the file.
+
+To have a SHA256 value, the file must have been handled by one of:
+
+    a Detect Files file rule with Store files enabled
+    a Block Files file rule with Store files enabled
+    a Malware Cloud Lookup file rule
+    a Block Malware file rule
+    AMP for Endpoints
+
+This column also displays a network file trajectory icon that represents the most recently detected file event and file disposition, and that links to the network file trajectory.
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>FileSHA256: (\w+), | FileSHA256: (\w+)$</regex>
+    <order>file.hash</order>
+</decoder>
+
+<!--
+Disposition / File Disposition (Syslog: SHA_Disposition)
+The file’s disposition:
+
+    Malware - Indicates that the AMP cloud categorized the file as malware, local malware analysis identified malware, or the file’s threat score exceeded the malware threshold defined in the file policy.
+    Clean - Indicates that the AMP cloud categorized the file as clean, or that a user added the file to the clean list. Clean files appear in the malware table only if they were changed to clean.
+    Unknown - Indicates that the system queried the AMP cloud, but the file has not been assigned a disposition; in other words, the AMP cloud has not categorized the file.
+    Custom Detection - Indicates that a user added the file to the custom detection list.
+    Unavailable - Indicates that the system could not query the AMP cloud. You may see a small percentage of events with this disposition; this is expected behavior.
+    N/A - Indicates a Detect Files or Block Files rule handled the file and the Firepower Management Center did not query the AMP cloud.
+
+File dispositions appear only for files for which the system queried the AMP cloud.
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>SHA_Disposition: (\.+), | SHA_Disposition: (\.+),$</regex>
+    <order>hash.description</order>
+</decoder>
+
+<!--
+SperoDisposition (Syslog Only)
+Indicates whether the SPERO signature was used in file analysis. Possible values:
+
+    Spero detection performed on file
+    Spero detection not performed on file
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>SperoDisposition: (\.+), | SperoDisposition: (\.+)$</regex>
+    <order>spero.description</order>
+</decoder>
+
+<!--
+Threat Name (Syslog: ThreatName)
+The name of the detected malware.
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>ThreatName: (\.+), | ThreatName: (\.+)$</regex>
+    <order>threat.name</order>
+</decoder>
+
+<!--
+Threat Score (Syslog: ThreatScore)
+The threat score most recently associated with this file. This is a value from 0 to 100 based on the potentially malicious behaviors observed during dynamic analysis.
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>ThreatScore: (\d+), | ThreatScore: (\d+)$</regex>
+    <order>threat.score</order>
+</decoder>
+
+<!--
+File Name (Syslog: FileName)
+The name of the file.
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>FileName: (\.+), | FileName: (\.+)$</regex>
+    <order>file.name</order>
+</decoder>
+
+<!--
+Type / File Type (Syslog: FileType)
+The type of file, for example, HTML or MSEXE.
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>FileType: (\w+), | FileType: (\w+)$</regex>
+    <order>file.type</order>
+</decoder>
+
+<!--
+Size (KB) / File Size (KB) (Syslog: FileSize)
+In the FMC web interface: The size of the file, in kilobytes.
+
+In syslog messages: The size of the file, in bytes.
+
+Note that if the system determines the file type of a file before the file is fully received, the file size may not be calculated. In this case, this field is blank.
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>FileSize: (\d+), | FileSize: (\d+)$</regex>
+    <order>file.size</order>
+</decoder>
+
+<!--
+Application Protocol (Syslog: ApplicationProtocol)
+The application protocol used by the traffic in which a managed device detected the file.
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>ApplicationProtocol: (\.+), | ApplicationProtocol: (\.+)$</regex>
+    <order>application.protocol</order>
+</decoder>
+
+<!--
+Client (Syslog: Client)
+The client application that runs on one host and relies on a server to send a file.
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>Client: (\.+), | Client: (\.+)$</regex>
+    <order>client</order>
+</decoder>
+
+<!--
+User (Syslog: User)
+In the FMC web interface:
+
+    The username associated with the host (Receiving IP) where the event occurred.
+
+In syslog messages:
+
+    The username associated with the internal host that downloaded the file.
+
+For file events and for malware events generated by AMP for Networks, this user is determined by network discovery. Because the user is associated with the destination host, users are not associated with malware events in which the internal host uploaded a malware file.
+
+For malware events generated by AMP for Endpoints, AMP for Endpoints determines user names. These users cannot be tied to user discovery or control. They do not appear in the Users table, nor can you view details for these users.
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>User: (\w+), | User: (\w+)$</regex>
+    <order>user</order>
+</decoder>
+
+<!--
+First Packet Time
+The time the system encountered the first packet.
+
+The follwing fields collectively uniquely identify the connection event associated with a particular file or malware event: DeviceUUID, First Packet Time, Connection Instance ID, and Connection Counter.
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>FirstPacketTime: (\.+), | FirstPacketTime: (\.+)$</regex>
+    <order>first.packet.time</order>
+</decoder>
+
+<!--
+FirstPacketSecond (Syslog Only)
+The time at which the file download or upload flow started.
+
+The time the event occurred is captured in the message header timestamp.
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>FirstPacketSecond: (\.+), | FirstPacketSecond: (\.+)$</regex>
+    <order>first.packet.second</order>
+</decoder>
+
+<!--
+File Policy (Syslog: FilePolicy)
+The file policy that detected the file.
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>FilePolicy: (\.+), | FilePolicy: (\.+)$</regex>
+    <order>file.policy</order>
+</decoder>
+
+<!--
+FileSandboxStatus (Syslog Only)
+Indicates whether the file was sent for dynamic analysis and if so, the status.
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>FileSandboxStatus: (\.+), | FileSandboxStatus: (\.+)$</regex>
+    <order>file.sandbox.status</order>
+</decoder>
+
+<!--
+SSL Failure Reason (Syslog: SSLFlowStatus)
+The reason the system failed to decrypt encrypted traffic:
+
+    Unknown
+    No Match
+    Success
+    Uncached Session
+    Unknown Cipher Suite
+    Unsupported Cipher Suite
+    Unsupported SSL Version
+    SSL Compression Used
+    Session Undecryptable in Passive Mode
+    Handshake Error
+    Decryption Error
+    Pending Server Name Category Lookup
+    Pending Common Name Category Lookup
+    Internal Error
+    Network Parameters Unavailable
+    Invalid Server Certificate Handle
+    Server Certificate Fingerprint Unavailable
+    Cannot Cache Subject DN
+    Cannot Cache Issuer DN
+    Unknown SSL Version
+    External Certificate List Unavailable
+    External Certificate Fingerprint Unavailable
+    Internal Certificate List Invalid
+    Internal Certificate List Unavailable
+    Internal Certificate Unavailable
+    Internal Certificate Fingerprint Unavailable
+    Server Certificate Validation Unavailable
+    Server Certificate Validation Failure
+    Invalid Action
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>SSLFlowStatus: (\w+), | SSLFlowStatus: (\w+)$</regex>
+    <order>ssl.flow.status</order>
+</decoder>
+
+<!--
+SSL Actual Action (Syslog: SSLActualAction)
+The action the system applied to encrypted traffic:
+
+    Block or Block with reset - Represents blocked encrypted connections.
+    Decrypt (Resign) - Represents an outgoing connection decrypted using a re-signed server certificate.
+    Decrypt (Replace Key) - Represents an outgoing connection decrypted using a self-signed server certificate with a substituted public key.
+    Decrypt (Known Key) - Represents an incoming connection decrypted using a known private key.
+    Default Action - Indicates the connection was handled by the default action.
+    Do not Decrypt - Represents a connection the system did not decrypt.
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>SSLActualAction: (\.+), | SSLActualAction: (\.+)$</regex>
+    <order>ssl.actual.action</order>
+</decoder>
+
+<!--
+URI / File URI (Syslog: URI)
+The URI of the connection associated with the file transaction, for example, the URL from which a user downloaded the file.
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>URI: (\.+), | URI: (\.+)$</regex>
+    <order>url</order>
+</decoder>
+
+<!--
+Archive Name (Syslog: ArchiveFileName)
+The name of the archive file (if any) which contained the malware file.
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>ArchiveFileName: (\.+), | ArchiveFileName: (\.+)$</regex>
+    <order>archive.file.name</order>
+</decoder>
+
+<!--
+Archive Depth (Syslog: ArchiveDepth)
+The level (if any) at which the file was nested in an archive file.
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>ArchiveDepth: (\d+), | ArchiveDepth: (\d+)$</regex>
+    <order>archive.depth</order>
+</decoder>
+
+<!--
+Archive SHA256 (Syslog: ArchiveSHA256)
+The SHA-256 hash value of the archive file (if any) which contains the malware file.
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>ArchiveSHA256: (\w+), | ArchiveSHA256: (\w+)$</regex>
+    <order>archive.hash</order>
+</decoder>
+
+<!--
+ArchiveFileStatus (Syslog Only)
+The status of an archive being inspected. Can have the following values:
+
+    Pending — Archive is being inspected
+    Extracted — Successfully inspected without any problems
+    Failed — Failed to inspect, insufficient system resources
+    Depth Exceeded — Successful, but archive exceeded the nested inspection depth
+    Encrypted — Partially successful, archive was or contains an archive that is encrypted
+    Not Inspectable — Partially successful, file is possibly malformed or corrupt
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>ArchiveFileStatus: (\.+), | ArchiveFileStatus: (\.+)$</regex>
+    <order>archive.file.status</order>
+</decoder>
+
+<!--
+Web Application (Syslog: WebApplication)
+The application that represents the content or requested URL for HTTP traffic detected in the connection.
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>WebApplication: (\.+), | WebApplication: (\.+)$</regex>
+    <order>web.application</order>
+</decoder>
+
+<!--
+File Storage / Stored (Syslog: FileStorageStatus)
+The storage status of the file associated with the event:
+
+    Stored - Returns all events where the associated file is currently stored.
+    Stored in connection - Returns all events where the system captured and stored the associated file, regardless of whether the associated file is currently stored.
+    Failed - Returns all events where the system failed to store the associated file.
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>FileStorageStatus: (\.+), | FileStorageStatus: (\.+)$</regex>
+    <order>file.storage.status</order>
+</decoder>
+
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>FileStaticAnalysisStatus: (\.+), | FileStaticAnalysisStatus: (\.+)$</regex>
+    <order>file.static.analysis.status</order>
+</decoder>
+
+<!--
+Connection Counter
+This field was added in release 6.5.
+
+A counter that distinguishes one connection from another simultaneous connection. This field has no significance on its own.
+
+The follwing fields collectively uniquely identify the connection event associated with a particular file or malware event: DeviceUUID, First Packet Time, Connection Instance ID, and Connection Counter.
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>ConnectionCounter: (\d+), | ConnectionCounter: (\d+)$</regex>
+    <order>connection.counter</order>
+</decoder>
+
+<!--
+Connection Instance ID
+This field was added in release 6.5.
+
+The Snort instance that processed the connection event. This field has no significance on its own.
+
+The follwing fields collectively uniquely identify the connection event associated with a particular file or malware event: DeviceUUID, First Packet Time, Connection Instance ID, and Connection Counter.
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>ConnectionInstanceID: (\d+), | ConnectionInstanceID: (\d+)$</regex>
+    <order>connection.instance.id</order>
+</decoder>
+
+<!--
+SSLCertificate
+The certificate fingerprint of the TLS/SSL server.
+
+The information stored on the public key certificate used to encrypt traffic, including:
+
+    Subject/Issuer Common Name
+    Subject/Issuer Organization
+    Subject/Issuer Organization Unit
+    Not Valid Before/After
+    Serial Number
+    Certificate Fingerprint
+    Public Key Fingerprint
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>SSLCertificate: (\.+), | SSLCertificate: (\.+)$</regex>
+    <order>ssl.certificate</order>
+</decoder>
+
+<!--
+AccessControlRuleName
+This field is included in applicable intrusion event syslog messages starting in release 6.5.
+
+The access control rule that invoked the intrusion policy that generated the event. Default Action indicates that the intrusion policy where the rule is enabled is not associated with a specific access control rule but, instead, is configured as the default action of the access control policy.
+
+This field is empty (or, for syslog messages, omitted) if there is:
+
+    No associated rule/default action: Intrusion inspection was associated with neither an access control rule nor the default action, for example, if the packet was examined by the intrusion policy specified to handle packets that must pass before the system can determine which rule to apply. (This policy is specified in the Advanced tab of the access control policy.)
+    No associated connection event: The connection event logged for the session has been purged from the database, for example, if connection events have higher turnover than intrusion events.
+
+The access control rule or default action that handled the connection, as well as up to eight Monitor rules matched by that connection.
+
+If the connection matched one Monitor rule, the Firepower Management Center displays the name of the rule that handled the connection, followed by the Monitor rule name. If the connection matched more than one Monitor rule, the number of matching Monitor rules is displayed, for example, Default Action + 2 Monitor Rules.
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>AccessControlRuleName: (\.+), | AccessControlRuleName: (\.+)$</regex>
+    <order>access.control.rule.name</order>
+</decoder>
+
+<!--
+ACPolicy
+The access control policy associated with the intrusion policy where the intrusion, preprocessor, or decoder rule that generated the event is enabled.
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>ACPolicy: (\.+), | ACPolicy: (\.+)$</regex>
+    <order>access.control.policy</order>
+</decoder>
+
+<!--
+Classification
+The classification where the rule that generated the event belongs.
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>Classification: (\w+), | Classification: (\w+)$</regex>
+    <order>classification</order>
+</decoder>
+
+<!--
+EgressInterface
+The egress interface of the packet that triggered the event. This interface column is not populated for a passive interface.
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>EgressInterface: (\w+), | EgressInterface: (\w+)$</regex>
+    <order>egress.interface</order>
+</decoder>
+
+<!--
+EgressZone
+The egress security zone of the packet that triggered the event. This security zone field is not populated in a passive deployment.
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>EgressZone: (\w+), | EgressZone: (\w+)$</regex>
+    <order>egress.zone</order>
+</decoder>
+
+<!--
+GID
+Generator ID; the ID of the component that generated the event.
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>GID: (\d+), | GID: (\d+)$</regex>
+    <order>generator.id</order>
+</decoder>
+
+<!--
+HTTPResponse
+The HTTP status code sent in response to a client's HTTP request over the connection that triggered the event.
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>HTTPResponse: (\.+), | HTTPResponse: (\.+)$</regex>
+    <order>http.response</order>
+</decoder>
+
+<!--
+IngressInterface
+The ingress interface of the packet that triggered the event. Only this interface column is populated for a passive interface.
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>IngressInterface: (\.+), | IngressInterface: (\.+)$</regex>
+    <order>ingress.interface</order>
+</decoder>
+
+<!--
+IngressZone
+The ingress security zone or tunnel zone of the packet that triggered the event. Only this security zone field is populated in a passive deployment.
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>IngressZone: (\w+), | IngressZone: (\w+)$</regex>
+    <order>ingress.zone</order>
+</decoder>
+
+<!--
+InlineResult
+This field became available via syslog in version 6.3.
+
+This field has:
+
+    Dropped - if the packet is dropped in an inline deployment
+    Would have dropped - if the packet would have been dropped if the intrusion policy had been set to drop packets in an inline deployment
+
+In a passive deployment, the system does not drop packets, including when an inline interface is in tap mode, regardless of the rule state or the inline drop behavior of the intrusion policy.
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>InlineResult: (\.+), | InlineResult: (\.+)$</regex>
+    <order>inline.result</order>
+</decoder>
+
+<!--
+IntrusionPolicy
+This field became available via syslog in version 6.4.
+
+The intrusion policy where the intrusion, preprocessor, or decoder rule that generated the event was enabled. You can choose an intrusion policy as the default action for an access control policy, or you can associate an intrusion policy with an access control rule.
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>IntrusionPolicy: (\.+), | IntrusionPolicy: (\.+)$</regex>
+    <order>intrusion.policy</order>
+</decoder>
+
+<!--
+MPLS_Label
+This field is new in version 6.3.
+
+The Multiprotocol Label Switching label associated with the packet that triggered the intrusion event.
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>MPLS_Label: (\.+), | MPLS_Label: (\.+)$</regex>
+    <order>mpls.label</order>
+</decoder>
+
+<!--
+Message
+The explanatory text for the event. For rule-based intrusion events, the event message is pulled from the rule. For decoder- and preprocessor-based events, the event message is hard coded.
+
+The Generator and Snort IDs (GID and SID) and the SID version (Revision) are appended in parentheses to the end of each message in the format of numbers separated by colons (GID:SID:version). For example (1:36330:2).
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>Message: (\.+), | Message: (\.+)$</regex>
+    <order>message</order>
+</decoder>
+
+<!--
+NAPPolicy
+The network analysis policy, if any, associated with the generation of the event.
+
+This field displays the first fifty characters of the extracted URI. You can hover your pointer over the displayed portion of an abbreviated URI to display the complete URI, up to 2048 bytes. You can also display the complete URI, up to 2048 bytes, in the packet view.
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>NAPPolicy: (\.+), | NAPPolicy: (\.+)$</regex>
+    <order>nap.policy</order>
+</decoder>
+
+<!--
+NumIOC
+Whether the traffic that triggered the intrusion event also triggered an indication of compromise (IOC) for a host involved in the connection.
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>NumIOC: (\.+), | NumIOC: (\.+)$</regex>
+    <order>num.ioc</order>
+</decoder>
+
+<!--
+Priority
+The event priority as determined by the Cisco Talos Intelligence Group (Talos). The priority corresponds to either the value of the priority keyword or the value for the classtype keyword. For other intrusion events, the priority is determined by the decoder or preprocessor. Valid values are high, medium, and low.
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>Priority: (\w+), | Priority: (\w+)$</regex>
+    <order>priority</order>
+</decoder>
+
+<!--
+Revision
+The version of the signature that was used to generate the event.
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>Revision: (\.+), | Revision: (\.+)$</regex>
+    <order>revision</order>
+</decoder>
+
+<!--
+SID
+The signature ID (also known as the Snort ID) of the rule that generated the event.
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>SID: (\w+), | SID: (\w+)$</regex>
+    <order>snort.id</order>
+</decoder>
+
+<!--
+VLAN_ID
+This field is new in version 6.3.
+
+The innermost VLAN ID associated with the packet that triggered the intrusion event.
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>VLAN_ID: (\d+), | VLAN_ID: (\d+)$</regex>
+    <order>vlan.id</order>
+</decoder>
+
+<!--
+AccessControlRuleAction
+The action associated with the configuration that logged the connection.
+
+For Security Intelligence-monitored connections, the action is that of the first non-Monitor access control rule triggered by the connection, or the default action. Similarly, because traffic matching a Monitor rule is always handled by a subsequent rule or by the default action, the action associated with a connection logged due to a Monitor rule is never Monitor. However, you can still trigger correlation policy violations on connections that match Monitor rules.
+
+    Allow - Connections either allowed by access control explicitly, or allowed because a user bypassed an interactive block.
+    Block, Block with reset - Blocked connections, including:
+
+                                tunnels and other connections blocked by the prefilter policy
+                                connections blacklisted by Security Intelligence
+                                encrypted connections blocked by an SSL policy
+                                connections where an exploit was blocked by an intrusion policy
+                                connections where a file (including malware) was blocked by a file policy
+                              For connections where the system blocks an intrusion or file, system displays Block, even though you use access control Allow rules to invoke deep inspection.
+    Fastpath - Non-encrypted tunnels and other connections fastpathed by the prefilter policy.
+    Interactive Block, Interactive Block with reset - Connections logged when the system initially blocks a user’s HTTP request using an Interactive Block rule. If the user clicks through the warning page that the system displays, additional connections logged for the session have an action of Allow.
+    Trust - Connections trusted by access control. The system logs trusted TCP connections differently depending on the device model.
+    Default Action - Connections handled by the access control policy's default action.
+    (Blank/empty) - The connection closed before enough packets had passed to match a rule.
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>AccessControlRuleAction: (\.+), | AccessControlRuleAction: (\.+)$</regex>
+    <order>access.control.rule.action</order>
+</decoder>
+
+<!--
+AccessControlRuleReason
+The reason or reasons the connection was logged, if available.
+
+Connections with a Reason of IP Block, DNS Block, and URL Block have a threshold of 15 seconds per unique initiator-responder pair. After the system blocks one of those connections, it does not generate connection events for additional blocked connections between those two hosts for the next 15 seconds, regardless of port or protocol.
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>AccessControlRuleReason: (\.+), | AccessControlRuleReason: (\.+)$</regex>
+    <order>access.control.rule.reason</order>
+</decoder>
+
+<!--
+ClientVersion
+The version of the client application detected in the connection, if available.
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>ClientVersion: (\.+), | ClientVersion: (\.+)$</regex>
+    <order>client.version</order>
+</decoder>
+
+<!--
+ConnectionDuration
+This field was introduced in version 6.3.
+
+This field has a value only when logging occurs at the end of the connection. For a start-of-connection syslog message, this field is not output, as it is not known at that time.
+
+For an end-of-connection syslog message, this field indicates the number of seconds between the first packet and the last packet, which may be zero for a short connection. For example, if the timestamp of the syslog is 12:34:56 and the ConnectionDuration is 5, then the first packet was seen at 12:34:51.
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>ConnectionDuration: (\.+), | ConnectionDuration: (\.+)$</regex>
+    <order>connection.duration</order>
+</decoder>
+
+<!--
+DestinationSecurityGroup
+This field was introduced in release 6.5.
+
+The Security Group of the destination involved in the connection.
+
+This field holds the text value associated with the numeric value in DestinationSecurityGroupTag, if available. If the group name is not available as a text value, then this field contains the same integer value as the DestinationSecurityGroupTag field.
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>DestinationSecurityGroup: (\.+), | DestinationSecurityGroup: (\.+)$</regex>
+    <order>destination.security.group</order>
+</decoder>
+
+<!--
+DestinationSecurityGroupTag
+This field was introduced in release 6.5.
+
+The numeric Security Group Tag (SGT) attribute of the destination involved in the connection.
+
+In release 6.6, this value is obtained from the source specified in the DestinationSecurityGroupType field.
+
+In release 6.5, this value is obtained from ISE, either from SXP or from a user session.
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>DestinationSecurityGroupTag: (\.+), | DestinationSecurityGroupTag: (\.+)$</regex>
+    <order>destination.security.group.tag</order>
+</decoder>
+
+<!--
+DestinationSecurityGroupType
+This field was introduced in release 6.6.
+
+This field displays the source from which a security group tag was obtained.
+
+    Inline - Destination SGT value is from packet
+    Session Directory - Destination SGT value is from ISE via session directory topic
+    SXP - Destination SGT value is from ISE via SXP topic
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>DestinationSecurityGroupType: (\.+), | DestinationSecurityGroupType: (\.+)$</regex>
+    <order>destination.security.group.type</order>
+</decoder>
+
+<!--
+DNS_Sinkhole
+The name of the sinkhole server where the system redirected a connection.
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>DNS_Sinkhole: (\.+), | DNS_Sinkhole: (\.+)$</regex>
+    <order>dns.sinkhole.server</order>
+</decoder>
+
+<!--
+DNS_TTL
+The number of seconds a DNS server caches the DNS resource record.
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>DNS_TTL: (\.+), | DNS_TTL: (\.+)$</regex>
+    <order>dns.cache.ttl</order>
+</decoder>
+
+<!--
+DNSQuery
+The DNS query submitted in a connection to the name server to look up a domain name.
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>DNSQuery: (\.+), | DNSQuery: (\.+)$</regex>
+    <order>dns.query</order>
+</decoder>
+
+<!--
+DNSRecordType
+The type of the DNS resource record used to resolve a DNS query submitted in a connection.
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>DNSRecordType: (\w+), | DNSRecordType: (\w+)$</regex>
+    <order>dns.record.type</order>
+</decoder>
+
+<!--
+DNSResponseType
+The DNS response returned in a connection to the name server when queried.
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>DNSResponseType: (\.+), | DNSResponseType: (\.+)$</regex>
+    <order>dns.response.type</order>
+</decoder>
+
+<!--
+EgressVRF
+Support for this field was added in version 6.6.
+
+In networks using virtual routing and forwarding, the name of the virtual router through which traffic exited the network.
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>EgressVRF: (\.+), | EgressVRF: (\.+)$</regex>
+    <order>egress.virtual.routing.and.forwarding</order>
+</decoder>
+
+<!--
+IngressVRF
+Support for this field was added in version 6.6.
+
+In networks using virtual routing and forwarding, the name of the virtual router through which traffic entered the network.
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>IngressVRF: (\.+), | IngressVRF: (\.+)$</regex>
+    <order>ingress.virtual.routing.and.forwarding</order>
+</decoder>
+
+<!--
+FileCount
+The number of files (including malware files) detected or blocked in a connection associated with one or more file events.
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>FileCount: (\d+), | FileCount: (\d+)$</regex>
+    <order>file.count</order>
+</decoder>
+
+<!--
+HTTPReferer
+The HTTP referrer, which represents the referrer of a requested URL for HTTP traffic detected in the connection (such as a website that provided a link to, or imported a link from, another URL).
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>HTTPReferer: (\.+), | HTTPReferer: (\.+)$</regex>
+    <order>http.referer</order>
+</decoder>
+
+<!--
+ICMPCode
+The ICMP code used by the session responder.
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>ICMPCode: (\.+), | ICMPCode: (\.+)$</regex>
+    <order>icmp.code</order>
+</decoder>
+
+<!--
+ICMPType
+The ICMP type used by the session initiator.
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>ICMPType: (\.+), | ICMPType: (\.+)$</regex>
+    <order>icmp.type</order>
+</decoder>
+
+<!--
+InitiatorBytes
+The total number of bytes transmitted by the session initiator.
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>InitiatorBytes: (\d+), | InitiatorBytes: (\d+)$</regex>
+    <order>initiator.bytes</order>
+</decoder>
+
+<!--
+InitiatorPackets
+The total number of packets transmitted by the session initiator.
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>InitiatorPackets: (\d+), | InitiatorPackets: (\d+)$</regex>
+    <order>initiator.packets</order>
+</decoder>
+
+<!--
+IPReputationSICategory
+The name of the blacklisted object that represents or contains the blacklisted URL, domain, or IP address in the connection. The Security Intelligence category can be the name of a network object or group, a blacklist, a custom Security Intelligence list or feed, a TID category related to an observation, or one of the categories in the Intelligence Feed.
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>IPReputationSICategory: (\.+), | IPReputationSICategory: (\.+)$</regex>
+    <order>ip.reputation.security.intelligence.category</order>
+</decoder>
+
+<!--
+IPSCount
+The number of intrusion events, if any, associated with the connection.
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>IPSCount: (\d+), | IPSCount: (\d+)$</regex>
+    <order>ips.count</order>
+</decoder>
+
+<!--
+NetBIOSDomain
+The NetBIOS domain used in the session.
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>NetBIOSDomain: (\S+), | NetBIOSDomain: (\S+)$</regex>
+    <order>netbios.domain</order>
+</decoder>
+
+<!--
+originalClientSrcIP
+The original client IP address from an X-Forwarded-For (XFF), True-Client-IP, or custom-defined HTTP header. To populate this field, you must enable an access control rule that handles proxied traffic based on its original client.
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>originalClientSrcIP: (\S+), | originalClientSrcIP: (\S+)$</regex>
+    <order>original.client.source.ip</order>
+</decoder>
+
+<!--
+ReferencedHost
+If the protocol in the connection is HTTP or HTTPS, this field displays the host name that the respective protocol was using.
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>ReferencedHost: (\S+), | ReferencedHost: (\S+)$</regex>
+    <order>referenced.host</order>
+</decoder>
+
+<!--
+ResponderBytes
+The total number of bytes received by the session responder.
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>ResponderBytes: (\d+), | ResponderBytes: (\d+)$</regex>
+    <order>responder.bytes</order>
+</decoder>
+
+<!--
+ResponderPackets
+The total number of packets received by the session responder.
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>ResponderPackets: (\d+), | ResponderPackets: (\d+)$</regex>
+    <order>responder.packets</order>
+</decoder>
+
+<!--
+SecIntMatchingIP
+Which IP address matched.
+
+Possible values: None, Destination, or Source.
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>SecIntMatchingIP: (\w+), | SecIntMatchingIP: (\w+)$</regex>
+    <order>matching.ip</order>
+</decoder>
+
+<!--
+SourceSecurityGroup
+This field was introduced in release 6.5.
+
+The Security Group of the source involved in the connection.
+
+This field holds the text value associated with the numeric value in SourceSecurityGroupTag, if available. If the group name is not available as a text value, then this field contains the same integer value as the SourceSecurityGroupTag field. Tags can be obtained from inline devices (no source SGT name specified) or from ISE (which specifies a source).
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>SourceSecurityGroup: (\.+), | SourceSecurityGroup: (\.+)$</regex>
+    <order>source.security.group</order>
+</decoder>
+
+<!--
+SourceSecurityGroupTag
+In release 6.5, this field replaced the Security Group field.
+
+The numeric representation of the Security Group Tag (SGT) attribute of the packet involved in the connection. The SGT specifies the privileges of a traffic source within a trusted network. Security Group Access (a feature of both Cisco TrustSec and Cisco ISE) applies the attribute as packets enter the network.
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>SourceSecurityGroupTag: (\.+), | SourceSecurityGroupTag: (\.+)$</regex>
+    <order>source.security.group.tag</order>
+</decoder>
+
+<!--
+SourceSecurityGroupType
+This field was introduced in release 6.6.
+
+This field displays the source from which a security group tag was obtained.
+
+    Inline - Source SGT value is from packet
+    Session Directory - Source SGT value is from ISE via session directory topic
+    SXP - Source SGT value is from ISE via SXP topic
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>SourceSecurityGroupType: (\.+), | SourceSecurityGroupType: (\.+)$</regex>
+    <order>source.security.group.type</order>
+</decoder>
+
+<!--
+SSLExpectedAction
+The action the system expected to apply to encrypted traffic, given the SSL rules in effect.
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>SSLExpectedAction: (\.+), | SSLExpectedAction: (\.+)$</regex>
+    <order>ssl.expected.action</order>
+</decoder>
+
+<!--
+SSLPolicy
+The SSL policy that handled the connection.
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>SSLPolicy: (\.+), | SSLPolicy: (\.+)$</regex>
+    <order>ssl.policy</order>
+</decoder>
+
+<!--
+SSLRuleName
+The SSL rule or default action that handled the connection, as well as the first Monitor rule matched by that connection. If the connection matched a Monitor rule, the field displays the name of the rule that handled the connection, followed by the Monitor rule name.
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>SSLRuleName: (\.+), | SSLRuleName: (\.+)$</regex>
+    <order>ssl.rule.name</order>
+</decoder>
+
+<!--
+SSLServerCertStatus
+This applies only if you configured a Certificate Status SSL rule condition. If encrypted traffic matches an SSL rule, this field displays one or more of the following server certificate status values:
+
+    Self Signed
+    Valid
+    Invalid Signature
+    Invalid Issuer
+    Expired
+    Unknown
+    Not Valid Yet
+    Revoked
+
+If undecryptable traffic matches an SSL rule, this field displays Not Checked.
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>SSLServerCertStatus: (\.+), | SSLServerCertStatus: (\.+)$</regex>
+    <order>ssl.server.certificate.status</order>
+</decoder>
+
+<!--
+SSLServerName
+Hostname of the server with which the client established an encrypted connection.
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>SSLServerName: (\.+), | SSLServerName: (\.+)$</regex>
+    <order>ssl.server.name</order>
+</decoder>
+
+<!--
+SSLSessionID
+The hexadecimal Session ID negotiated between the client and server during the TLS/SSL handshake.
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>SSLSessionID: (\w+), | SSLSessionID: (\w+)$</regex>
+    <order>ssl.session.id</order>
+</decoder>
+
+<!--
+SSLTicketID
+A hexadecimal hash value of the session ticket information sent during the TLS/SSL handshake.
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>SSLTicketID: (\w+), | SSLTicketID: (\w+)$</regex>
+    <order>ssl.ticket.id</order>
+</decoder>
+
+<!--
+SSLURLCategory
+URL categories for the URL visited in the encrypted connection.
+
+If the system identifies or blocks a TLS/SSL application, the requested URL is in encrypted traffic, so the system identifies the traffic based on an SSL certificate. For TLS/SSL applications, therefore, this field indicates the common name contained in the certificate.
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>SSLURLCategory: (\.+), | SSLURLCategory: (\.+)$</regex>
+    <order>ssl.url.category</order>
+</decoder>
+
+<!--
+SSLVersion
+The TLS/SSL protocol version used to encrypt the connection:
+
+    Unknown
+    SSLv2.0
+    SSLv3.0
+    TLSv1.0
+    TLSv1.1
+    TLSv1.2
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>SSLVersion: (\S+), | SSLVersion: (\S+)$</regex>
+    <order>ssl.version</order>
+</decoder>
+
+<!--
+SSSLCipherSuite
+A macro value representing a cipher suite used to encrypt the connection. See www.iana.org/assignments/tls-parameters/tls-parameters.xhtml for cipher suite value designations.
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>SSLCipherSuite: (\.+), | SSLCipherSuite: (\.+)$</regex>
+    <order>ssl.cipher.suite</order>
+</decoder>
+
+<!--
+TCPFlags
+For connections generated from NetFlow data, the TCP flags detected in the connection.
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>TCPFlags: (\.+), | TCPFlags: (\.+)$</regex>
+    <order>tcp.flags</order>
+</decoder>
+
+<!--
+URL
+The URL requested by the monitored host during the session.
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>URL: (\.+), | URL: (\.+)$</regex>
+    <order>url</order>
+</decoder>
+
+<!--
+URLCategory
+The category, if available, of the URL requested by the monitored host during the session.
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>URLCategory: (\.+), | URLCategory: (\.+)$</regex>
+    <order>url.category</order>
+</decoder>
+
+<!--
+URLReputation
+The reputation, if available, of the URL requested by the monitored host during the session.
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>URLReputation: (\.+), | URLReputation: (\.+)$</regex>
+    <order>url.reputation</order>
+</decoder>
+
+<!--
+DNSSICategory
+The name of the blacklisted object that represents or contains the blacklisted URL, domain, or IP address in the connection. The Security Intelligence category can be the name of a network object or group, a blacklist, a custom Security Intelligence list or feed, a TID category related to an observation, or one of the categories in the Intelligence Feed.
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>DNSSICategory: (\.+), | DNSSICategory: (\.+)$</regex>
+    <order>dns.security.intelligence.category</order>
+</decoder>
+
+<!--
+URLSICategory
+The name of the blacklisted object that represents or contains the blacklisted URL, domain, or IP address in the connection. The Security Intelligence category can be the name of a network object or group, a blacklist, a custom Security Intelligence list or feed, a TID category related to an observation, or one of the categories in the Intelligence Feed.
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>URLSICategory: (\.+), | URLSICategory: (\.+)$</regex>
+    <order>url.security.intelligence.category</order>
+</decoder>
+
+<!--
+UserAgent
+The user-agent string application information extracted from HTTP traffic detected in the connection.
+-->
+<decoder name="cisco-ftd">
+    <parent>cisco-ftd</parent>
+    <regex>UserAgent: (\.+), | UserAgent: (\.+)$</regex>
+    <order>user.agent</order>
+</decoder>
+
+
