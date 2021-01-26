@@ -97,7 +97,7 @@ Example:
 <decoder name="iptables-OpenWRT">
    <parent>kernel</parent>
    <type>firewall</type>
-   <prematch>^[\d+.\d+] \S+\.*IN=</prematch>
+   <prematch>^[\d+.\d+] \S+\(\.*IN=</prematch>
    <regex>^[\d+.\d+] (\S*)\(</regex>
    <order>action</order>
 </decoder>
@@ -117,6 +117,41 @@ Example:
 </decoder>
 
 <decoder name="iptables-OpenWRT">
+   <parent>kernel</parent>
+   <type>firewall</type>
+   <regex offset="after_regex">SPT=(\d+) DPT=(\d+) </regex>
+   <order>srcport,dstport</order>
+</decoder>
+
+<!-- UFW firewall
+Example:
+ - Nov 18 13:39:49 UFW kernel: [10051.313745] [UFW BLOCK] IN=eth0 OUT= MAC=c2:56:27:73:33:cf:c4:f0:81:b0:93:24:08:00 SRC=205.205.205.205 DST=192.168.8.100 LEN=44 TOS=0x00 PREC=0x00 TTL=128 ID=43131 PROTO=UDP SPT=40952 DPT=23 LEN=194
+ - Nov 18 13:39:49 UFW kernel: [10051.313745] [UFW BLOCK] IN=eth0 OUT= MAC=01:00:5e:00:00:01:00:17:08:ae:7a:40:08:00 SRC=205.205.205.205 DST=192.168.8.100 LEN=44 TOS=0x00 PREC=0x00 TTL=1 ID=4949 PROTO=2
+-->
+
+<decoder name="iptables-UFW">
+   <parent>kernel</parent>
+   <type>firewall</type>
+   <prematch>^[\d+.\d+] [UFW \S+] IN=</prematch>
+   <regex>^[\d+.\d+] [UFW (\S+)]</regex>
+   <order>action</order>
+</decoder>
+
+<decoder name="iptables-UFW">
+   <parent>kernel</parent>
+   <type>firewall</type>
+   <regex offset="after_regex">SRC=(\S+) DST=(\S+)</regex>
+   <order>srcip,dstip</order>
+</decoder>
+
+<decoder name="iptables-UFW">
+   <parent>kernel</parent>
+   <type>firewall</type>
+   <regex offset="after_regex">PROTO=(\w+)</regex>
+   <order>protocol</order>
+</decoder>
+
+<decoder name="iptables-UFW">
    <parent>kernel</parent>
    <type>firewall</type>
    <regex offset="after_regex">SPT=(\d+) DPT=(\d+) </regex>
