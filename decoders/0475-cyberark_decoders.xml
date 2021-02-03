@@ -1,0 +1,52 @@
+<!--
+09/25/2017
+Log example:
+Sep 21 13:49:33 GADC-VAULT001 CEF:0|Cyber-Ark|Vault|1.10.0000|165|Retrieve password|1|act=Retrieve password suser=PasswordManager fname=Root\Operating System-HP-WindowsServerLocalAccounts dvc= SessionDuration= shost=192.168.1.2 dhost=gadc-spfsrvp01. duser=GSH001 SessionID=1 ApplicationType=2 UUID=3 Protocol=4 Command=5 CurrentWorkingDirectory=6 Hostname=7 MachineIP=8.9.8.9 AccountUsername=myacount cs1Label="Affected User Name" cs1=123 cs2Label="Safe Name" cs2=WIN-P-SPOTFIRE-LA cs3Label="Device Type" cs3=Operating System cs4Label="Database" cs4=123 cs5Label="Other info" cs5=123 cn1Label="Request Id" cn1=123 cn2Label="Ticket Id" cn2=CPM  msg=CPM
+-->
+
+<decoder name= "cyberark">
+  <program_name>cef</program_name>
+  <prematch>\.+\|Cyber-Ark\|</prematch>
+</decoder>
+
+<decoder name="cyberark_fields">
+  <parent>cyberark</parent>
+  <regex offset="after_parent">^\.+\|\.+\|\.+\|(\.+)\|</regex>
+  <order>type</order>
+</decoder>
+
+<decoder name="cyberark_fields">
+  <parent>cyberark</parent>
+  <regex offset="after_regex">suser=(\.+) fname=(\.+) dvc=\.+ shost=(\S+)</regex>
+  <order>suser,fname,shost</order>
+</decoder>
+
+<decoder name="cyberark_fields">
+  <parent>cyberark</parent>
+  <regex offset="after_regex">dhost=(\.+) duser=(\S+)</regex>
+  <order>dsthost,duser</order>
+</decoder>
+
+<decoder name="cyberark_fields">
+  <parent>cyberark</parent>
+  <regex offset="after_regex">SessionID=(\S*)</regex>
+  <order>sessionID</order>
+</decoder>
+
+<decoder name="cyberark_fields">
+  <parent>cyberark</parent>
+  <regex offset="after_regex">Protocol=(\S*) Command=(\S*)</regex>
+  <order>protocol_,command</order>
+</decoder>
+
+<decoder name="cyberark_fields">
+  <parent>cyberark</parent>
+  <regex offset="after_regex">cs1=(\.*) cs2Label="Safe Name" cs2=(\.*) cs3Label="Device Type" cs3=(\.*) cs4Label="Database" cs4=(\.*) cs5Label="Other info" cs5=(\.*) cn1Label="Request Id"</regex>
+  <order>affected-user-name,safe-name,device-type,database,other-info</order>
+</decoder>
+
+<decoder name="cyberark_fields">
+  <parent>cyberark</parent>
+  <regex offset="after_regex">cn1=(\.*) cn2Label="Ticket Id" cn2=(\.*) msg=(\.+)</regex>
+  <order>request_id,ticket_id,msg</order>
+</decoder>
