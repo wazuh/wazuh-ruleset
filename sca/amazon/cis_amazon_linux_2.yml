@@ -891,7 +891,7 @@ checks:
       - tsc: ["CC5.2"]
     condition: none
     rules:
-      - 'c:systemctl is-enabled cups-> r:enabled'
+      - 'c:systemctl is-enabled cups ->  r:enabled'
 
 # 2.1.5 Ensure DHCP Server is not enabled (Automated)
   - id: 20549 
@@ -909,7 +909,7 @@ checks:
       - More detailed documentation on DHCP is available at https://www.isc.org/software/dhcp
     condition: none
     rules:
-      - 'c:systemctl is-enabled dhcp-> r:enabled'
+      - 'c:systemctl is-enabled dhcp ->  r:enabled'
 
 
 # 2.1.6  Ensure LDAP server is not enabled (Automated)
@@ -928,7 +928,7 @@ checks:
       - More detailed documentation on OpenLDAP is available at https://www.openldap.org
     condition: none
     rules:
-      - 'c:systemctl is-enabled slapd-> r:enabled'
+      - 'c:systemctl is-enabled slapd ->  r:enabled'
 
 
 
@@ -946,9 +946,9 @@ checks:
       - tsc: ["CC5.2"]
     condition: none
     rules:
-      - 'c:ystemctl is-enabled nfs-> r:enabled'
-      - 'c:ystemctl is-enabled nfs-server-> r:enabled'
-      - 'c:ystemctl is-enabled rpcbind-> r:enabled'
+      - 'c:ystemctl is-enabled nfs ->  r:enabled'
+      - 'c:ystemctl is-enabled nfs-server ->  r:enabled'
+      - 'c:ystemctl is-enabled rpcbind ->  r:enabled'
 
 # 2.1.8 Ensure DNS Server is not enabled (Automate)
   - id: 20552 
@@ -1169,7 +1169,7 @@ checks:
       - tsc: ["CC5.2","CC6.4","CC6.6","CC6.7"]
     condition: none
     rules:
-      - 'c:systemctl is-enabled rsyncd-> r:enabled'
+      - 'c:systemctl is-enabled rsyncd ->  r:enabled'
 
 
 ###############################################
@@ -1295,7 +1295,7 @@ checks:
       - 'c:sysctl net.ipv4.ip_forward -> r:^net.ipv4.ip_forward\s*=\s*0$'
       - 'c:grep -RhEs "^\s*net\.ipv4\.ip_forward\s*=\s*0" /etc/sysctl.conf /etc/sysctl.d/*.conf -> r:net.ipv4.ip_forward\s*=\s*0'
       - 'c:sysctl net.ipv6.conf.all.forwarding -> r:^net.ipv6.conf.all.forwarding\s*=\s*0$'
-      - 'c:grep -RhEs "^\s*net\.ipv6\.conf\.all\.forwarding\s*=\s*0" /etc/sysctl.conf /etc/sysctl.d/*.conf /usr/lib/sysctl.d/*.conf /run/sysctl.d/*.conf-> r:^net.ipv6.conf.all.forwarding\s*=\s*0$'
+      - 'c:grep -RhEs "^\s*net\.ipv6\.conf\.all\.forwarding\s*=\s*0" /etc/sysctl.conf /etc/sysctl.d/*.conf /usr/lib/sysctl.d/*.conf /run/sysctl.d/*.conf ->  r:^net.ipv6.conf.all.forwarding\s*=\s*0$'
 
 
 # 3.1.2 Ensure packet redirect sending is disabled (Automated)
@@ -1679,8 +1679,8 @@ checks:
       - tsc: ["CC8.1"]
     condition: all
     rules:
-      - 'c:nft list ruleset-> r:iif "lo" accept'
-      - 'c:nft list ruleset-> r:ip saddr 127.0.0.0/8 counter packets 0 bytes 0 drop'
+      - 'c:nft list ruleset ->  r:iif "lo" accept'
+      - 'c:nft list ruleset ->  r:ip saddr 127.0.0.0/8 counter packets 0 bytes 0 drop'
 
 ###############################################
 # 3.5.2 Configure IPv6 ip6tables
@@ -1699,9 +1699,9 @@ checks:
       - tsc: ["CC8.1"]
     condition: all
     rules:
-      - 'c:ip6tables -L-> r:Chain INPUT (policy DROP)'
-      - 'c:ip6tables -L-> r:Chain FORWARD (policy DROP)'
-      - 'c:ip6tables -L-> r:Chain OUTPUT (policy DROP)'
+      - 'c:ip6tables -L ->  r:Chain INPUT (policy DROP)'
+      - 'c:ip6tables -L ->  r:Chain FORWARD (policy DROP)'
+      - 'c:ip6tables -L ->  r:Chain OUTPUT (policy DROP)'
 
 
 # 3.5.2.2 Ensure IPv6 loopback traffic is configured (Automated)
@@ -1717,9 +1717,9 @@ checks:
       - tsc: ["CC8.1"]
     condition: all
     rules:
-      - 'c:ip6tables -L INPUT -v -n-> r:ACCEPT'
-      - 'c:ip6tables -L INPUT -v -n-> r:DROP'
-      - 'c:ip6tables -L OUTPUT -v -n-> r:ACCEPT'
+      - 'c:ip6tables -L INPUT -v -n ->  r:ACCEPT'
+      - 'c:ip6tables -L INPUT -v -n ->  r:DROP'
+      - 'c:ip6tables -L OUTPUT -v -n ->  r:ACCEPT'
 
   - id: 20593 
     title: "Ensure iptables is installed"
@@ -1750,8 +1750,8 @@ checks:
     condition: none
     rules:
       - 'f:/boot/grub2/grub.cfg -> r:^\s*\t*linux && !r:ipv6.disable=1'
-      - 'c:sysctl net.ipv6.conf.all.disable_ipv6-> r:net.ipv6.conf.all.disable_ipv6\s*=\s*0'
-      - 'c:sysctl net.ipv6.conf.default.disable_ipv6-> r:net.ipv6.conf.default.disable_ipv6\s*=\s*0'
+      - 'c:sysctl net.ipv6.conf.all.disable_ipv6 ->  r:net.ipv6.conf.all.disable_ipv6\s*=\s*0'
+      - 'c:sysctl net.ipv6.conf.default.disable_ipv6 ->  r:net.ipv6.conf.default.disable_ipv6\s*=\s*0'
 
 ###############################################
 # 4 Logging and Auditing
@@ -2404,9 +2404,9 @@ checks:
       - tsc: ["CC5.2"]
     condition: all
     rules:
-      - 'c:find /etc/ssh -xdev -type f -name "ssh_host_rsa_key" -exec stat {} \;->^Access: \(0\d40/\w\w\w\w------\)  Uid: \(    0/    root\)   Gid: \(    998/ssh keys\)$'
-      - 'c:find /etc/ssh -xdev -type f -name "ssh_host_ecdsa_key" -exec stat {} \;->^Access: \(0\d40/\w\w\w\w------\)  Uid: \(    0/    root\)   Gid: \(    998/ssh keys\)$'
-      - 'c:find /etc/ssh -xdev -type f -name "ssh_host_ed25519_key" -exec stat {} \;->^Access: \(0\d000/\w\w\w\w------\)  Uid: \(    0/    root\)   Gid: \(    998/ssh keys\)$'
+      - 'c:find /etc/ssh -xdev -type f -name "ssh_host_rsa_key" -exec stat {} \; -> r:^Access: \(0\d40/\w\w\w\w------\)  Uid: \(    0/    root\)   Gid: \(    998/ssh keys\)$'
+      - 'c:find /etc/ssh -xdev -type f -name "ssh_host_ecdsa_key" -exec stat {} \; -> r:^Access: \(0\d40/\w\w\w\w------\)  Uid: \(    0/    root\)   Gid: \(    998/ssh keys\)$'
+      - 'c:find /etc/ssh -xdev -type f -name "ssh_host_ed25519_key" -exec stat {} \; -> r:^Access: \(0\d000/\w\w\w\w------\)  Uid: \(    0/    root\)   Gid: \(    998/ssh keys\)$'
 
 
 # 5.2.3 Ensure permissions on SSH public host key files are configured  (Automated)
@@ -2423,9 +2423,9 @@ checks:
       - tsc: ["CC5.2"]
     condition: all
     rules:
-      - 'c:find /etc/ssh -xdev -type f -name "ssh_host_rsa_key.pub" -exec stat {} \;->^Access: \(0\d444/\w\w\w\w------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
-      - 'c:find /etc/ssh -xdev -type f -name "ssh_host_ecdsa_key.pub" -exec stat {} \;->^Access: \(0\d44/\w\w\w\w------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
-      - 'c:find /etc/ssh -xdev -type f -name "ssh_host_ed25519_key.pub" -exec stat {} \;->^Access: \(0\d44/\w\w\w\w------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
+      - 'c:find /etc/ssh -xdev -type f -name "ssh_host_rsa_key.pub" -exec stat {} \; -> r:^Access: \(0\d444/\w\w\w\w------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
+      - 'c:find /etc/ssh -xdev -type f -name "ssh_host_ecdsa_key.pub" -exec stat {} \; -> r:^Access: \(0\d44/\w\w\w\w------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
+      - 'c:find /etc/ssh -xdev -type f -name "ssh_host_ed25519_key.pub" -exec stat {} \; -> r:^Access: \(0\d44/\w\w\w\w------\)  Uid: \(    0/    root\)   Gid: \(    0/    root\)$'
 
  # 5.2.4 Ensure SSH Protocol is set to 2 (Scored)
   - id: 20632 
