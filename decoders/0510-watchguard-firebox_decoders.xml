@@ -384,6 +384,7 @@ Apr 15 12:18:24 FW-125852 FVE1001001001 firewall: msg_id="3000-0150" Deny 1-Trus
 # Traffic connection terminated
 Apr 15 12:18:24 FW-125852 FVE1001001001 firewall: msg_id="3000-0151" Allow 1-Trusted 0-External tcp 10.0.1.2 220.181.90.24 53018 80 app_id="63" app_cat_id="18" app_ctl_disp="2" duration="80" sent_bytes="652" rcvd_bytes="423" (HTTP-00)
 Apr 15 12:18:24 FW-125852 FVE1001001001 firewall: msg_id="3000-0151" Allow Firebox Iface_Bouygues icmp 89.87.170.163 8.8.4.4 duration="30" sent_bytes="48" rcvd_bytes="48"  (Any From Firebox-00)
+
 # Hostile traffic
 May 28 06:58:26 FW-123346 FVE1010101001 firewall: msg_id="3000-0173" Deny 0-External Firebox 52 tcp 20 127 206.190.60.138 10.0.0.1 62443 80 offset 8 S 832026162 win 8192 blocked sites (Internal Policy)
 
@@ -566,9 +567,9 @@ Mar 21 15:48:45 FW-125852 FVE1001001001 wgcgi[29063]: SSL VPN user testuser@Fire
 </decoder>
 
 <decoder name="watchguard-firebox-auth-info">
-  <parent>watchguard-firebox-auth</parent>
+  <parent>watchguard-firebox-auth</parent> <!-- NOOK -->
   <regex type="pcre2" offset="after_parent">msg_id="[0-9a-fA-F]{4}-[0-9a-fA-F]{4}"\s(Authentication of)?\s?(.*\s[Uu]ser)\s\[?(\S+)\]?\s</regex>
-  <order>extra_data, data, srcuser</order>
+  <order>extra_data, account_type, srcuser</order>
 </decoder>
 
 <decoder name="watchguard-firebox-auth-info">
@@ -580,14 +581,20 @@ Mar 21 15:48:45 FW-125852 FVE1001001001 wgcgi[29063]: SSL VPN user testuser@Fire
 <decoder name="watchguard-firebox-auth-info">
   <parent>watchguard-firebox-auth</parent>
   <regex type="pcre2" offset="after_parent">(logged in)</regex>
-  <order>status</order>
+  <order>action</order>
+</decoder>
+
+<decoder name="watchguard-firebox-auth-info">
+  <parent>watchguard-firebox-auth</parent>
+  <regex type="pcre2" offset="after_parent">(rejected)</regex>
+  <order>action</order>
 </decoder>
 
 <!-- Special case for wgcgi auth where no msg id is given... Thanks WG -->
 <decoder name="watchguard-firebox-auth-info">
   <parent>watchguard-firebox-auth</parent>
-  <regex type="pcre2" offset="after_parent">^(SSL VPN) user.*</regex>
-  <order>id</order>
+  <regex type="pcre2" offset="after_parent">^(SSL VPN) user\s(\S+)\s</regex>
+  <order>id, srcuser</order>
 </decoder>
 
 <!-- SECURITY EVENTS DECODER -->
