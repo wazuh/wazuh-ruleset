@@ -17,6 +17,9 @@
   - proftpd[2344]: refused connect from 192.168.1.2 (192.168.1.2)
   - proftpd[15181]: valhalla (crawl-66-249-66-80.googlebot.com[66.249.66.80]) - Connection from crawl-66-249-66-80.googlebot.com [66.249.66.80] denied.
   - proftpd[26169] server.example.net: Fatal: unable to open incoming connection: Der Socket ist nicht verbunden
+  - proftpd[13378]: 10.22.136.85 (111.250.52.78[111.250.52.78]) - USER root (Login failed): Incorrect password
+  - proftpd[17655]: 10.22.136.85 (10.22.126.169[10.22.126.169]) - USER cronftp (Login failed): authentication via 'ssh-dss' public key failed
+  - proftpd[19969]: 10.22.136.85 (10.22.33.14[10.22.33.14]) - USER anonymous: no such user found from 10.22.33.14 [10.22.33.14] to ::ffff:10.22.136.85:21
   -->
 <decoder name="proftpd">
   <program_name>^proftpd</program_name>
@@ -31,8 +34,26 @@
   <fts>name, user, srcip, location</fts>
 </decoder>
 
-<decoder name="proftpd-ip">
+<decoder name="proftpd-fail_password">
   <parent>proftpd</parent>
-  <regex>^\S+ \(\S+[(\S+)]\)|^\S+ \(\S+[(\S+)]\)</regex>
-  <order>srcip</order>
+  <prematch> \(Login failed\): Incorrect password</prematch>
+  <regex>^\S+ \(\S+[(\S+)]\)\s*\S \w+ (\S+) </regex>
+  <regex>\(Login failed\): Incorrect password</regex>
+  <order>srcip, srcuser</order>
+</decoder>
+
+<decoder name="proftpd-fail_publickey">
+  <parent>proftpd</parent>
+  <prematch> \(Login failed\): authentication via '\S+' public key failed</prematch>
+  <regex>^\S+ \\S+[(\S+)]\)\s*\S \w+ (\S+) </regex>
+  <regex>\(Login failed\): authentication via '\S+' public key failed</regex>
+  <order>srcip, srcuser</order>
+</decoder>
+
+<decoder name="proftpd-non_existent">
+  <parent>proftpd</parent>
+  <prematch>: no such user found from </prematch>
+  <regex>^\S+ \(\S+[(\S+)]\)\s*\S \w+ (\S+): </regex>
+  <regex>no such user found from \S+ [\S+] to \S+</regex>
+  <order>srcip, srcuser</order>
 </decoder>
