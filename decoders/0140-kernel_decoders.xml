@@ -27,6 +27,14 @@
    <program_name>^kernel</program_name>
 </decoder>
 
+<decoder name="kernel">
+  <parent>kernel</parent>
+  <!--<prematch>^/[\d+.\d+/]</prematch>-->
+  <prematch>Memory cgroup out of memory</prematch>
+  <regex>Memory cgroup out of memory: Kill process (\d+) \((\w+)\) score (\d+) or sacrifice child</regex>
+  <order>process_id, process_name, score</order>
+</decoder>
+
 <decoder name="iptables-1">
    <parent>kernel</parent>
    <type>firewall</type>
@@ -139,7 +147,7 @@ Example:
   <parent>kernel</parent>
   <prematch> apparmor=</prematch>
   <regex> apparmor="(\S+)" operation="(\S+)"</regex>
-  <order>status, extra_data</order>
+  <order>status, operation</order>
 </decoder>
 
 
@@ -186,4 +194,10 @@ Mar 23 15:05:23 manager kernel: [62859.373865] usb 1-1: USB disconnect, device n
     <prematch offset="after_parent">^usb|^[\S+] usb</prematch>
     <regex offset="after_parent">^(usb) |^[\S+] (usb)</regex>
     <order>id</order>
+</decoder>
+
+<decoder name="promiscuous-mode">
+    <parent>kernel</parent>
+    <regex>device (\S+) entered promiscuous mode</regex>
+    <order>host</order>
 </decoder>

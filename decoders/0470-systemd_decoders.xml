@@ -1,0 +1,17 @@
+<!--
+  - Systemd decoder
+  - Author : Ankur Sinha
+  - Will extract the service_name
+  - Examples:
+  - systemd[1]: consul.service: Unit entered failed state.
+-->
+
+ <decoder name="systemd">
+  <program_name>^systemd$|^systemctl$</program_name>
+</decoder>
+
+ <decoder name="systemd-failed-state">
+  <parent>systemd</parent>
+  <regex>^(\S+\S):</regex>
+  <order>service_name</order>
+</decoder>
