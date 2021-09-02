@@ -333,10 +333,10 @@ Default linux ping packet size + IPv6 Header + ICMP Header
     <if_sid>110060</if_sid>
     <protocol>icmp</protocol>
     <field name="packetlen" type="pcre2">([0-9]{4,}|[1-9]0[5-9]|1[1-9][0-9]|[2-9][0-9]{2})</field>
-    <description>Watchguard: firewall: $(action) from $(srcip) to $(dstip) using protocol $(protocol) packet size is bigger than usual: $(packetlen)</description>
+    <description>Watchguard: firewall: $(action) from $(srcip) to $(dstip) using protocol $(protocol) [icmp] packet size is bigger than usual: $(packetlen)</description>
   </rule>
   
-  <rule id="110081" level="14" frequency="10" timeframe="240" ignore="90">
+  <rule id="110081" level="13" frequency="10" timeframe="240" ignore="90">
     <if_matched_sid>110080</if_matched_sid>
     <same_srcip />
     <description>Watchguard: firewall: Possible $(protocol) tunnel attack from $(srcip) on interface $(src) to $(dstip) on interface $(dst)</description>
@@ -359,10 +359,10 @@ Mar 21 23:47:28 FW-125852 FVE1032175935 firewall: msg_id="3000-0148" Allow Fireb
     <if_sid>110060</if_sid>
     <dstport>53</dstport>
     <field name="packetlen" type="pcre2">([0-9]{4,}|[1-9]3[3-9]|1[4-9][0-9]|[2-9][0-9]{2})</field>
-    <description>Watchguard: firewall: $(action) from $(srcip) to $(dstip) using protocol $(protocol) packet size is bigger than usual: $(packetlen)</description>
+    <description>Watchguard: firewall: $(action) from $(srcip) to $(dstip) using protocol $(protocol):$(dstport) [dns] packet size is bigger than usual: $(packetlen)</description>
   </rule>
   
-  <rule id="110083" level="14" frequency="10" timeframe="240" ignore="90">
+  <rule id="110083" level="13" frequency="10" timeframe="240" ignore="90">
     <if_matched_sid>110082</if_matched_sid>
     <same_srcip />
     <description>Watchguard: firewall: Possible $(protocol) tunnel attack from $(srcip) on interface $(src) to $(dstip) on interface $(dst)</description>
@@ -382,10 +382,10 @@ Apr 15 12:10:53 FW-125852 FVE1032175935 firewall: msg_id="3000-0148" Allow Trust
     <if_sid>110060</if_sid>
     <dstport>123</dstport>
     <field name="packetlen" type="pcre2">([1-9][0-9]{2,}|[2-9][0-9]|1[0-9])[0-9]{1}|([9-9][7-9])</field>
-    <description>Watchguard: firewall: $(action) from $(srcip) to $(dstip) using protocol $(protocol) packet size is bigger than usual: $(packetlen)</description>
+    <description>Watchguard: firewall: $(action) from $(srcip) to $(dstip) using protocol $(protocol):$(dstport) [ntp] packet size is bigger than usual: $(packetlen)</description>
   </rule>
   
-  <rule id="110085" level="14" frequency="10" timeframe="240" ignore="90">
+  <rule id="110085" level="13" frequency="10" timeframe="240" ignore="90">
     <if_matched_sid>110084</if_matched_sid>
     <same_srcip />
     <description>Watchguard: firewall: Possible $(protocol) tunnel attack from $(srcip) on interface $(src) to $(dstip) on interface $(dst)</description>
