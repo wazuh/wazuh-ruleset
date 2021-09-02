@@ -567,9 +567,9 @@ Mar 21 15:48:45 FW-125852 FVE1001001001 wgcgi[29063]: SSL VPN user testuser@Fire
 </decoder>
 
 <decoder name="watchguard-firebox-auth-info">
-  <parent>watchguard-firebox-auth</parent> <!-- NOOK -->
-  <regex type="pcre2" offset="after_parent">msg_id="[0-9a-fA-F]{4}-[0-9a-fA-F]{4}"\s(Authentication of)?\s?(.*\s[Uu]ser)\s\[?(\S+)\]?\s</regex>
-  <order>extra_data, account_type, srcuser</order>
+  <parent>watchguard-firebox-auth</parent>
+  <regex type="pcre2" offset="after_parent">msg_id="[0-9a-fA-F]{4}-[0-9a-fA-F]{4}"(?:\sAuthentication of)?\s(.*?\s[Uu]ser)\s\[?([^\[\]\s]+)</regex>
+  <order>account_type, srcuser</order>
 </decoder>
 
 <decoder name="watchguard-firebox-auth-info">
