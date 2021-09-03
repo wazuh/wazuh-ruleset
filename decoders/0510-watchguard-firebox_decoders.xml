@@ -382,9 +382,10 @@ Apr 15 12:18:24 FW-125852 FVE1001001001 firewall: msg_id="3000-0149" Allow 1-Tru
 Apr 15 12:18:24 FW-125852 FVE1001001001 firewall: msg_id="3000-0150" Deny 1-Trusted 0-External 1440 tcp 20 61 10.0.1.2 192.168.130.126 55810 80 offset 5A 447868619 win 54 signature_name="EXPLOIT Apple QuickTime FLIC Animation file buffer overflow -1-2" signature_cat="Misc" signature_id="1112464" severity="4" sig_vers="18.124" msg="IPS detected" (HTTP-00)
 
 # Traffic connection terminated
-Apr 15 12:18:24 FW-125852 FVE1001001001 firewall: msg_id="3000-0151" Allow 1-Trusted 0-External tcp 10.0.1.2 220.181.90.24 53018 80 app_id="63" app_cat_id="18" app_ctl_disp="2" duration="80" sent_bytes="652" rcvd_bytes="423" (HTTP-00)
+Apr 15 12:18:24 FW-125852 FVE1001001001 firewall: msg_id="3000-0151" Allow 1-Trusted 0-External tcp 10.0.1.2 192.168.0.1 53018 80 app_id="63" app_cat_id="18" app_ctl_disp="2" duration="80" sent_bytes="652" rcvd_bytes="423" (HTTP-00)
 Apr 15 12:18:24 FW-125852 FVE1001001001 firewall: msg_id="3000-0151" Allow Firebox Iface_Bouygues icmp 89.87.170.163 8.8.4.4 duration="30" sent_bytes="48" rcvd_bytes="48"  (Any From Firebox-00)
-
+Apr 15 12:18:24 FW-125852 FVE1001001001 firewall: msg_id="3000-0151" Allow 1-Trusted 0-External tcp 10.0.1.2 192.168.0.1 53018 80 app_id="63" app_cat_id="18" app_ctl_disp="2" duration="80" sent_bytes="652" rcvd_bytes="423" (HTTP-00)
+Sep  3 10:39:59 FireboxV_CLIENT FVE1001001001 (2021-09-03T08:39:59) firewall: msg_id="3000-0151" Allow SITE BO Trusted tcp 192.168.95.223 192.168.90.153 38430 11194 duration="121" sent_bytes="60" rcvd_bytes="0"  (BOVPN-Allow.in-00)
 # Hostile traffic
 May 28 06:58:26 FW-123346 FVE1010101001 firewall: msg_id="3000-0173" Deny 0-External Firebox 52 tcp 20 127 206.190.60.138 10.0.0.1 62443 80 offset 8 S 832026162 win 8192 blocked sites (Internal Policy)
 
@@ -459,12 +460,13 @@ May 28 06:58:26 FW-123346 FVE1010101001 firewall: msg_id="2DFF-0007" Deny 1-Trus
   <order>action, src, dst, packetlen, protocol, iphlen, ttl, srcip, dstip, srcport, dstport</order>
 </decoder>
 
-<!-- traffic connection terminated filter when not using tcp -->
+<!-- traffic connection terminated filter when not using tcp
+This one is tricky since source might be something with a space, so we drop src and dst to be sure to catch this one-->
 <decoder name="watchguard-firebox-firewall-info">
   <parent>watchguard-firebox-firewall</parent>
-  <regex type="pcre2" offset="after_parent">([Dd]eny|[Aa]llow)\s(\S+)\s(\S+)\s(\w+)\s(\S+)\s(\S+)\sduration="(\d+)\"</regex>
-  <order>action, src, dst, protocol, srcip, dstip, duration</order>
-</decoder>  
+  <regex type="pcre2" offset="after_parent">([Dd]eny|[Aa]llow).*(SYN|syn|TCP|tcp|UDP|udp|ICMP|icmp|IGMP|igmp|[Ii][Pp][Ss][Ee][Cc]|[Ii][Kk][Ee]|http|HTTP|https|HTTPS|smtp|SMTP|IMAP|imap|dns|DNS)\s(\S+)\s(\S+)\s.*duration="(\d+)\"</regex>
+  <order>action, protocol, srcip, dstip, duration</order>
+</decoder>
 
 <!-- PROXY LOGS -->
 <!-- Also works with "traffic connection terminated" packet filter when using tcp -->
