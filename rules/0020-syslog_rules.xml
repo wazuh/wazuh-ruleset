@@ -501,7 +501,7 @@
 
   <rule id="2833" level="8">
     <if_sid>2832</if_sid>
-    <match>^(root)</match>
+    <match>REPLACE (root)</match>
     <description>Root's crontab entry changed.</description>
     <mitre>
       <id>T1169</id>
@@ -561,7 +561,7 @@
 
   <rule id="5305" level="4">
     <if_sid>5303, 5304</if_sid>
-    <if_fts></if_fts>
+    <if_fts />
     <description>First time (su) is executed by user.</description>
   </rule>
 
@@ -671,7 +671,7 @@
 
   <rule id="5403" level="4">
     <if_sid>5400</if_sid>
-    <if_fts></if_fts>
+    <if_fts />
     <description>First time user executed sudo.</description>
     <mitre>
       <id>T1169</id>
@@ -735,7 +735,7 @@
 <group name="syslog,fts,">
   <rule id="10100" level="4">
     <if_group>authentication_success</if_group>
-    <if_fts></if_fts>
+    <if_fts />
     <group>authentication_success,</group>
     <description>First time user logged in.</description>
     <mitre>
@@ -950,3 +950,4 @@
   </rule>
 
 </group>
+
