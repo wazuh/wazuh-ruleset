@@ -22,6 +22,7 @@
   -  sshd[12914]: Failed password for invalid user lala6 from ...
   -  sshd[8267]: Failed password for illegal user test from 62.67.45.4 port 39141 ssh2
   -  sshd[11259]: Invalid user abc from 127.0.0.1
+  -  sshd[11262]: Invalid user from 127.0.0.1
   -  "" Failed keyboard-interactive for root from 192.1.1.1 port 1066 ssh2
   -  sshd[23857]: [ID 702911 auth.notice] User xxx, coming from zzzz,
   -  authenticated.
@@ -130,6 +131,13 @@
   <prematch>^Invalid user|^Illegal user</prematch>
   <regex offset="after_prematch">(\S+) from (\S+)</regex>
   <order>srcuser,srcip</order>
+</decoder>
+
+<decoder name="ssh-invalid-blank-user">
+  <parent>sshd</parent>
+  <prematch>^Invalid user from</prematch>
+  <regex offset="after_prematch">(\S+)</regex>
+  <order>srcip</order>
 </decoder>
 
 <decoder name="ssh-invalid-user">
