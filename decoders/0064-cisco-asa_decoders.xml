@@ -182,6 +182,17 @@
 </decoder>
 
 <!--
+Child of the decoder above
+%ASA-1-106022: Deny protocol connection spoof from 192.168.0.1 to 192.168.0.2 on interface interface_name.
+-->
+<decoder name="cisco-asa-attacks">
+  <parent>cisco-asa</parent>
+  <regex offset="after_regex"> to (\S+) on interface (\S+)</regex>
+  <order>dstip, interface</order>
+</decoder> 
+
+
+<!--
 %ASA-4-401004 Shunned packet: 192.168.0.1 = 192.168.0.2 on interface interfacename
 -->
 <decoder name="cisco-asa-shunned">
