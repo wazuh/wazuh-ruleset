@@ -1,0 +1,26 @@
+<!--
+  - Crontab decoders
+  - Author : Ankur Sinha
+  - Will extract the status
+  - Examples:
+  - Jan 1 23:00:59 *********** crontab[180541]: (root) REPLACE (root)
+  - May 29 12:49:21 ************ crontab[136702]: (root) BEGIN EDIT (root)
+-->
+
+ <decoder name="crontab">
+  <program_name>crond|crontab</program_name>
+</decoder>
+
+ <decoder name="crontab-replace">
+  <parent>crontab</parent>
+  <prematch>REPLACE</prematch>
+  <regex>\) (\S+) \(</regex>
+  <order>status</order>
+</decoder>
+
+ <decoder name="crontab-edit">
+  <parent>crontab</parent>
+  <prematch>BEGIN</prematch>
+  <regex>\) (\S+ \S+) \(</regex>
+  <order>status</order>
+</decoder>
