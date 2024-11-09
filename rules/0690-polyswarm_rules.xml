@@ -1,0 +1,35 @@
+<group name="polyswarm,syscheck,">
+    <rule id="91000" level="0">
+        <decoded_as>json</decoded_as>
+        <field name="integration">custom-polyswarm</field>
+        <description>Polyswarm integration messages.</description>
+        <options>no_full_log</options>
+    </rule>
+    <rule id="91001" level="3">
+        <if_sid>91000</if_sid>
+        <field name="polyswarm.error">1</field>
+        <description>PolySwarm: Error with Endpoint</description>
+        <group>gdpr_IV_35.7.d,</group>
+        <options>no_full_log</options>
+    </rule>
+    <rule id="91002" level="3">
+        <if_sid>91000</if_sid>
+        <field name="polyswarm.found">0</field>
+        <description>PolySwarm: Alert - File not found in PolySwarm</description>
+        <options>no_full_log</options>
+    </rule>
+    <rule id="91003" level="3">
+        <if_sid>91000</if_sid>
+        <field name="polyswarm.found">1</field>
+        <field name="polyswarm.malicious">0</field>
+        <description>PolySwarm: Alert - $(polyswarm.source.file) - No positives found</description>
+        <options>no_full_log</options>
+    </rule>
+    <rule id="91004" level="3">
+        <if_sid>91000</if_sid>
+        <field name="polyswarm.malicious">1</field>
+        <description>PolySwarm: Alert - $(polyswarm.source.file) - $(polyswarm.positives) engines detected this file</description>
+        <group>gdpr_IV_35.7.d,</group>
+        <options>no_full_log</options>
+    </rule>
+</group>
