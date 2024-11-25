@@ -1,0 +1,27 @@
+<!--JUPYTERHUB-->
+
+<!--
+-  JupyterHub ruleset
+-  Created by banditopazzo.
+-  Copyright (C) 2015-2019, Wazuh Inc.
+-  This program is a free software; you can redistribute it and/or modify it under the terms of GPLv2.
+-->
+
+<!-- ID: 88300 - 88399 -->
+
+<decoder name="jupyterhub">
+	<program_name>^python3</program_name>
+	<prematch>JupyterHub</prematch>
+</decoder>
+
+<decoder name="jupyterhub-add">
+	<parent>jupyterhub</parent>
+	<regex>(\d\d\d\d-\d\d-\d\d) (\d\d:\d\d:\d\d)</regex>
+	<order>date,time</order>
+</decoder>
+
+<decoder name="jupyterhub-add">
+	<parent>jupyterhub</parent>
+	<regex offset="after_regex">User logged out: (\S+)|User logged in: (\S+)|Failed login for (\S+)</regex>
+	<order>user</order>
+</decoder>
