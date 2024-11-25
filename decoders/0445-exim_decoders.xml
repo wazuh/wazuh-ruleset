@@ -10,12 +10,19 @@
 
 <!-- Exim
   - Examples:
+  - 2020-04-29 11:59:31 dovecot_login authenticator failed for ([141.98.80.32]) [141.98.80.32]:5222: 535 Incorrect authentication data
   - 2017-01-23 03:44:14 dovecot_login authenticator failed for (hydra) [10.101.1.18]:35686: 535 Incorrect authentication data (set_id=user)
   - 2017-01-24 05:22:29 dovecot_plain authenticator failed for (test) [::1]:39454: 535 Incorrect authentication data (set_id=test)
   - 2017-01-24 03:09:46 SMTP connection from [10.101.1.10]:55010 (TCP/IP connection count = 1)
   - 2017-01-24 02:53:13 SMTP connection from (hydra) [10.101.1.10]:53682 lost
   - 2017-01-24 05:36:23 SMTP call from (000000) [::1]:39480 dropped: too many syntax or protocol errors (last command was "123")
 -->
+<decoder name="exim-authfailed-nouser">
+  <parent>windows-date-format</parent>
+  <prematch offset="after_parent">dovecot_login authenticator failed for </prematch>
+  <regex offset="after_prematch">\(\.+\) [(\S+)]:\d+: \d+ Incorrect authentication data$</regex>
+  <order>srcip</order>
+</decoder>
 
 <decoder name="exim-authfailed">
   <parent>windows-date-format</parent>
