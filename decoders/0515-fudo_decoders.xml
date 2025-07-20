@@ -1,0 +1,205 @@
+<!--
+  -  Fudo PAM (Privileged Access Management) / https://fudosecurity.com/
+  -  Author: Beyrak A. / beyraklnc@gmail.com
+-->
+
+<decoder name="FudoPAM">
+  <prematch>fudo[\d*]</prematch>
+</decoder>
+
+<decoder name="fudo_password_failure">
+  <parent>FudoPAM</parent>
+  <prematch offset="after_parent">passwdd</prematch>
+  <regex>account (\S+)</regex>
+  <order>account</order>
+</decoder>
+
+<decoder name="fudo_connection">
+  <parent>FudoPAM</parent>
+  <prematch offset="after_parent">fudod</prematch>
+  <regex>from (\S+):(\d+) to (\S+):(\d+)</regex>
+  <order>srcip, srcport, dstip, dstport</order>
+</decoder>
+
+<decoder name="fudossh">
+  <parent>FudoPAM</parent>
+  <prematch offset="after_parent">fudossh</prematch>
+  <regex>Successfully authenticated against server (\S+) (\S+) as user (\S+) using (\w+)</regex>
+  <order>server_ip, server_name, username, auth_method</order>
+</decoder>
+
+<!-- Session Access - FAI0234 -->
+<decoder name="fudo_session_access">
+  <parent>FudoPAM</parent>
+  <prematch offset="after_parent">FAI0234</prematch>
+  <regex>User (\S+) from IP address (\S+) accessed session (\d+)</regex>
+  <order>username, src_ip, session_id</order>
+</decoder>
+
+<!-- X509 Certificate User Authentication - FUI0763 -->
+<decoder name="fudo_user_auth_x509">
+  <parent>FudoPAM</parent>
+  <prematch offset="after_parent">FUI0763</prematch>
+  <regex>User (\S+) authenticated using X509 certificate logged in from address: (\S+)</regex>
+  <order>username, src_ip</order>
+</decoder>
+
+<!-- Successful User Authentication (Password) - FUI0049 -->
+<decoder name="fudo_user_auth_password">
+  <parent>FudoPAM</parent>
+  <prematch offset="after_parent">FUI0049</prematch>
+  <regex>User (\S+) authenticated using password logged in from address: (\S+)</regex>
+  <order>username, src_ip</order>
+</decoder>
+
+<!-- Successful User Authentication (SSH Key) - FUI0684 -->
+<decoder name="fudo_user_auth_ssh_key">
+  <parent>FudoPAM</parent>
+  <prematch offset="after_parent">FUI0684</prematch>
+  <regex>User (\S+) authenticated using SSH key logged in from address: (\S+)</regex>
+  <order>username, src_ip</order>
+</decoder>
+
+<!-- Failed Authentication - FUE0146 -->
+<decoder name="fudo_auth_failed">
+  <parent>FudoPAM</parent>
+  <prematch offset="after_parent">FUE0146</prematch>
+  <regex>User (\S+) failed to authenticate logging in from address: (\S+)</regex>
+  <order>username, src_ip</order>
+</decoder>
+
+<!-- User Authorization Failure - FUE0144 -->
+<decoder name="fudo_user_auth_failure">
+  <parent>FudoPAM</parent>
+  <prematch offset="after_parent">FUE0144</prematch>
+  <regex>User (\S+) failed to authorize logging in from address: (\S+)</regex>
+  <order>username, src_ip</order>
+</decoder>
+
+<!-- Connection Establishment - FSI0374 -->
+<decoder name="fudo_connection_established">
+  <parent>FudoPAM</parent>
+  <prematch offset="after_parent">FSI0374</prematch>
+  <regex>Established (\S+) connection from (\S+):(\d+) to (\S+):(\d+)</regex>
+  <order>protocol, srcip, srcport, dstip, dstport</order>
+</decoder>
+
+<!-- Server Authentication Success - FUI0119 -->
+<decoder name="fudo_server_auth_success">
+  <parent>FudoPAM</parent>
+  <prematch offset="after_parent">FUI0119</prematch>
+  <regex>Successfully authenticated against server (\S+) \S* as user (\S+) using (\w+)</regex>
+  <order>server_ip, username, auth_method</order>
+</decoder>
+
+<!-- User Blocked - FUI0086 -->
+<decoder name="fudo_user_blocked">
+  <parent>FudoPAM</parent>
+  <prematch offset="after_parent">FUI0086</prematch>
+  <regex>User (\S+) blocked due to connection policy violation</regex>
+  <order>username</order>
+</decoder>
+
+<!-- Authentication Timeout - FUE0079 -->
+<decoder name="fudo_auth_timeout">
+  <parent>FudoPAM</parent>
+  <prematch offset="after_parent">FUE0079</prematch>
+  <regex>Authentication timeout after (\d+) key attempt\S* and (\d+) password attempt</regex>
+  <order>key_attempts, password_attempts</order>
+</decoder>
+
+<!-- Connection Error - FSE0082 -->
+<decoder name="fudo_connection_error">
+  <parent>FudoPAM</parent>
+  <prematch offset="after_parent">FSE0082</prematch>
+  <regex>Unable to establish connection to server (\S+) \((\S+)\)</regex>
+  <order>server_name, server_ip</order>
+</decoder>
+
+<!-- Password Change Success - FSI0389 -->
+<decoder name="fudo_password_change_success">
+  <parent>FudoPAM</parent>
+  <prematch offset="after_parent">FSI0389</prematch>
+  <regex>Password for account (\S+) changed successfully</regex>
+  <order>account</order>
+</decoder>
+
+<!-- Admin User Creation - FAI0303 -->
+<decoder name="fudo_admin_user_created">
+  <parent>FudoPAM</parent>
+  <prematch offset="after_parent">FAI0303</prematch>
+  <regex>User (\S+) created user (\S+) with role (\S+)</regex>
+  <order>admin_user, created_user, role</order>
+</decoder>
+
+<!-- Server Creation - FAI0299 -->
+<decoder name="fudo_server_created">
+  <parent>FudoPAM</parent>
+  <prematch offset="after_parent">FAI0299</prematch>
+  <regex>User (\S+) created server (\S+)</regex>
+  <order>admin_user, server_name</order>
+</decoder>
+
+<!-- System Configuration Import - FAI0185 -->
+<decoder name="fudo_config_import">
+  <parent>FudoPAM</parent>
+  <prematch offset="after_parent">FAI0185</prematch>
+  <regex>User (\S+) imported system configuration</regex>
+  <order>admin_user</order>
+</decoder>
+
+<!-- System Upgrade - FAI0174 -->
+<decoder name="fudo_system_upgrade">
+  <parent>FudoPAM</parent>
+  <prematch offset="after_parent">FAI0174</prematch>
+  <regex>User (\S+) upgraded Fudo</regex>
+  <order>admin_user</order>
+</decoder>
+
+<!-- OTP Authentication - FUI0370 -->
+<decoder name="fudo_otp_auth">
+  <parent>FudoPAM</parent>
+  <prematch offset="after_parent">FUI0370</prematch>
+  <regex>User (\S+) authenticated using OTP logged in from IP address: (\S+)</regex>
+  <order>username, src_ip</order>
+</decoder>
+
+<!-- Session Approval/Rejection - FAI0570 -->
+<decoder name="fudo_session_approved">
+  <parent>FudoPAM</parent>
+  <prematch offset="after_parent">FAI0570</prematch>
+  <regex>User (\S+) approved session (\d+)</regex>
+  <order>admin_user, session_id</order>
+</decoder>
+
+<!-- AI Suspicious Activity Detection - FSW0708 -->
+<decoder name="fudo_ai_suspicious_activity">
+  <parent>FudoPAM</parent>
+  <prematch offset="after_parent">FSW0708</prematch>
+  <regex>AI Identified suspicious activity in session (\d+)</regex>
+  <order>session_id</order>
+</decoder>
+
+<!-- LDAP Authentication - FUI0053 -->
+<decoder name="fudo_ldap_auth">
+  <parent>FudoPAM</parent>
+  <prematch offset="after_parent">FUI0053</prematch>
+  <regex>User (\S+) authenticated through LDAP \(Host: (\S+), Port: (\d+)\) logged in from address: (\S+)</regex>
+  <order>username, ldap_host, ldap_port, src_ip</order>
+</decoder>
+
+<!-- Active Directory Authentication - FUI0055 -->
+<decoder name="fudo_ad_auth">
+  <parent>FudoPAM</parent>
+  <prematch offset="after_parent">FUI0055</prematch>
+  <regex>User (\S+) \(domain (\S+)\) authenticated through Active Directory \(Host: (\S+), Port: (\d+)\) logged in from address: (\S+)</regex>
+  <order>username, domain, ad_host, ad_port, src_ip</order>
+</decoder>
+
+<!-- Admin Logout - FAI0281 -->
+<decoder name="fudo_admin_logout">
+  <parent>FudoPAM</parent>
+  <prematch offset="after_parent">FAI0281</prematch>
+  <regex>User (\S+) logged out from Fudo administration panel</regex>
+  <order>admin_user</order>
+</decoder>
