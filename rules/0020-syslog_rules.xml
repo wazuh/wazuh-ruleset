@@ -23,10 +23,14 @@
   </rule>
 
   <rule id="1002" level="2">
-    <match>$BAD_WORDS</match>
-    <description>Unknown problem somewhere in the system.</description>
-    <group>gpg13_4.3,</group>
-  </rule>
+  <match>$BAD_WORDS</match>
+  <description>Generic system error detected in syslog message.</description>
+  <mitre>
+    <id>T1499</id>
+  </mitre>
+  <group>gpg13_4.3,</group>
+</rule>
+
 
   <rule id="1003" level="13" maxsize="1025" noalert="1">
     <description>Non standard syslog message (size too large).</description>
